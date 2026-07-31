@@ -20,6 +20,9 @@ Previewは `DEPLOYMENT_ENV=preview`、Productionは `DEPLOYMENT_ENV=production` 
 - `PUBLIC_SITE_URL`
 - `PUBLIC_RAKUTEN_PREMIUM_URL`
 - `PUBLIC_RAKUTEN_SARASARA_URL`
+
+次の変数は任意です（未設定時はaboutページが「準備中」表示にフォールバックします）。
+
 - `PUBLIC_CONTACT_URL`
 
 楽天APIから購入リンクを補完する場合は次も設定します。
