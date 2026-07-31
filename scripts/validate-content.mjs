@@ -13,7 +13,8 @@ const includedExtensions = new Set([
   ".yml",
 ]);
 const banned = ["大人気", "話題", "絶対におすすめ", "これ一択"];
-const placeholderUrl = /https?:\/\/(?:[^\s"'<>/]+\.)?example\.com(?:[\s"'<>/]|$)/gi;
+const placeholderUrl =
+  /https?:\/\/(?:[^\s"'<>/]+\.)?example\.com(?:[\s"'<>/]|$)/gi;
 const files = [];
 
 function walk(directory) {
