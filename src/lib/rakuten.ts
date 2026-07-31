@@ -1,3 +1,5 @@
+import { isAllowedRakutenUrl } from "../../config/runtime-env.mjs";
+
 export type RakutenProduct = {
   id: string;
   name: string;
@@ -6,9 +8,17 @@ export type RakutenProduct = {
   price: number;
 };
 
+export const RAKUTEN_API_TIMEOUT_MS = 5_000;
+
 const cache = new Map<string, Promise<RakutenProduct[]>>();
 
 type UnknownRecord = Record<string, unknown>;
+type FetchImplementation = typeof fetch;
+
+type RequestRakutenOptions = {
+  fetchImpl?: FetchImplementation;
+  timeoutMs?: number;
+};
 
 function asRecord(value: unknown): UnknownRecord {
   return value !== null && typeof value === "object"
@@ -35,15 +45,25 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
     .map((entry) => {
       const wrapper = asRecord(entry);
       const item = asRecord(wrapper.item ?? wrapper.Item ?? wrapper);
+      const itemUrl = String(item.itemUrl ?? "");
+      const affiliateUrl = item.affiliateUrl
+        ? String(item.affiliateUrl)
+        : undefined;
+
       return {
         id: String(item.itemCode ?? ""),
         name: String(item.itemName ?? ""),
-        url: String(item.itemUrl ?? ""),
-        affiliateUrl: item.affiliateUrl ? String(item.affiliateUrl) : undefined,
+        url: itemUrl,
+        affiliateUrl:
+          affiliateUrl && isAllowedRakutenUrl(affiliateUrl)
+            ? affiliateUrl
+            : undefined,
         price: Number(item.itemPrice ?? 0),
       } satisfies RakutenProduct;
     })
-    .filter((item) => item.id && item.name && /^https:\/\//.test(item.url));
+    .filter(
+      (item) => item.id && item.name && isAllowedRakutenUrl(item.url),
+    );
 }
 
 /** 必須語をすべて含む候補を選び、広告URLがある商品を優先する。 */
@@ -57,6 +77,49 @@ export function selectRakutenProduct(
     return normalizedTerms.every((term) => name.includes(term));
   });
   return matches.find((item) => item.affiliateUrl) ?? matches[0];
+}
+
+export async function requestRakutenProducts(
+  url: URL,
+  accessKey: string,
+  options: RequestRakutenOptions = {},
+): Promise<RakutenProduct[]> {
+  const fetchImpl = options.fetchImpl ?? fetch;
+  const timeoutMs =
+    Number.isFinite(options.timeoutMs) && Number(options.timeoutMs) > 0
+      ? Number(options.timeoutMs)
+      : RAKUTEN_API_TIMEOUT_MS;
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+
+  let response: Response;
+  try {
+    response = await fetchImpl(url, {
+      headers: { accessKey },
+      signal: controller.signal,
+    });
+  } catch {
+    console.warn(
+      "楽天API接続失敗またはタイムアウト: 購入リンクを未設定として続行します",
+    );
+    return [];
+  } finally {
+    clearTimeout(timeout);
+  }
+
+  if (!response.ok) {
+    console.warn(`楽天APIエラー: HTTP ${response.status}`);
+    return [];
+  }
+
+  try {
+    return parseRakutenProducts(await response.json());
+  } catch {
+    console.warn(
+      "楽天APIレスポンス解析失敗: 購入リンクを未設定として続行します",
+    );
+    return [];
+  }
 }
 
 /** rakuten-x-automation と同じ IchibaItem Search API を利用する。 */
@@ -79,7 +142,7 @@ async function fetchRakutenProductsUncached(
   const applicationId = import.meta.env.RAKUTEN_APPLICATION_ID;
   const accessKey = import.meta.env.RAKUTEN_ACCESS_KEY;
   const affiliateId = import.meta.env.RAKUTEN_AFFILIATE_ID;
-  if (!applicationId || !accessKey) return [];
+  if (!applicationId || !accessKey || !affiliateId) return [];
 
   const url = new URL(
     "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701",
@@ -89,27 +152,7 @@ async function fetchRakutenProductsUncached(
   url.searchParams.set("applicationId", applicationId);
   url.searchParams.set("keyword", keyword);
   url.searchParams.set("hits", String(hits));
-  if (affiliateId) url.searchParams.set("affiliateId", affiliateId);
+  url.searchParams.set("affiliateId", affiliateId);
 
-  let response: Response;
-  try {
-    response = await fetch(url, { headers: { accessKey } });
-  } catch (error) {
-    console.warn("楽天API接続失敗: 購入リンクを未設定として続行します", error);
-    return [];
-  }
-  if (!response.ok) {
-    console.warn(`楽天APIエラー: HTTP ${response.status}`);
-    return [];
-  }
-
-  try {
-    return parseRakutenProducts(await response.json());
-  } catch (error) {
-    console.warn(
-      "楽天APIレスポンス解析失敗: 購入リンクを未設定として続行します",
-      error,
-    );
-    return [];
-  }
+  return requestRakutenProducts(url, accessKey);
 }
