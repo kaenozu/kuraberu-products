@@ -2,6 +2,8 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import AffiliateButton from '../../../components/AffiliateButton.astro';
 import XPostEmbed from '../../../components/XPostEmbed.astro';
+import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import DifferenceList from '../../../components/DifferenceList.astro';
 
 const premium = 'https://www.jp.pampers.com/';
 const xSearch = 'https://x.com/search?q=%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9%20%E6%96%B0%E7%94%9F%E5%85%90&src=typed_query';
@@ -13,12 +15,16 @@ const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 更新日 2026-07-31</p>
     <h1>パンパースの新生児用、どっち？「肌へのいちばん」と「さらさらケア」を比較</h1>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <ThirtySecondComparison />
+
     <p>パンパースの新生児用を探すと、「肌へのいちばん」と「さらさらケア」が候補になります。この記事では、確認できた情報と購入前に確認が必要な項目を分けて、選ぶときの見方を整理します。</p>
 
     <h2>先に結論</h2>
     <p>肌あたりを優先したい人と、価格・買いやすさを優先したい人では、確認したいページが変わります。赤ちゃんの体型や肌状態で合う・合わないは変わるため、少量から試す前提で公式のサイズ案内を確認してください。</p>
 
-    <h2>比較表</h2>
+    <div id="comparison-details"><DifferenceList items={[{label: '選び方の軸', left: '肌あたりを優先したい人の候補', right: '価格・買いやすさを優先したい人の候補', leftStatus: '編集上の判断軸', rightStatus: '編集上の判断軸'}, {label: '購入前の確認先', left: '公式ページでサイズ・仕様を確認', right: '販売ページで価格・在庫を確認', leftStatus: '公式確認済み', rightStatus: '販売ページ確認'}]} /></div>
+
+    <h2>確認できる項目</h2>
     <div class="table-scroll">
       <table class="comparison">
         <thead><tr><th scope="col">比較項目</th><th scope="col">肌へのいちばん</th><th scope="col">さらさらケア</th><th scope="col">根拠・確認先</th></tr></thead>
@@ -57,7 +63,7 @@ const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83
 
     <h2>購入時の注意</h2>
     <p>新生児用でも体重や体型には個人差があります。漏れや肌トラブルが続く場合は使用を中止し、必要に応じて専門家へ相談してください。</p>
-    <div class="grid two">
+    <div class="grid two" id="purchase">
       <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PREMIUM_URL} label="肌へのいちばんを楽天市場で確認" merchant="楽天" productId="pampers-premium-newborn" placement="article-end" />
       <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_SARASARA_URL} label="さらさらケアを楽天市場で確認" merchant="楽天" productId="pampers-sarasara-newborn" placement="article-end" />
     </div>

@@ -1,0 +1,14 @@
+---
+import VerificationStatus from './VerificationStatus.astro';
+const {product, line, tone, audience, note, status = 'unverified', compact = false} = Astro.props;
+---
+<article class={`product-identity product-${tone} ${compact ? 'product-identity-compact' : ''}`}>
+  <div class="product-swatch" aria-hidden="true"><span>{tone === 'premium' ? 'A' : 'B'}</span></div>
+  <div class="product-identity-body">
+    <p class="product-kicker">候補 {tone === 'premium' ? 'A' : 'B'} · {product}</p>
+    <h3>{line}</h3>
+    <p class="product-audience">{audience}</p>
+    {!compact && <p class="product-note">{note}</p>}
+    <VerificationStatus status={status} />
+  </div>
+</article>

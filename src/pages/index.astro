@@ -1,9 +1,32 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import ProductIdentity from '../components/ProductIdentity.astro';
+import VerificationStatus from '../components/VerificationStatus.astro';
 ---
 <BaseLayout title="くらべる商品メモ｜商品比較" description="公式情報と確認できる口コミで商品を比べます">
-  <section class="hero hero-rich"><div class="wrap hero-grid"><div><p class="eyebrow">買う前に、ひと呼吸</p><h1>気になる商品を、買う前にひと比べ。</h1><p>公式仕様、販売ページ、購入者の声。あとで確認できる情報を、短く整理しています。</p><div class="hero-actions"><a class="cta" href="/articles/">比較記事を見る →</a><a class="secondary-link" href="#latest">最新の比較メモへ</a></div></div><div class="memo-card" aria-label="比較メモの例"><span class="memo-label">COMPARISON MEMO / 01</span><div class="versus"><div><small>候補 A</small><strong>肌への<br/>いちばん</strong></div><b>VS</b><div><small>候補 B</small><strong>さらさら<br/>ケア</strong></div></div><p>公式情報と口コミを並べて、選ぶポイントを見つける。</p></div></div></section>
-  <section class="section wrap"><div class="guide-strip"><span class="tag">How to read</span><strong>3つのリンクで、納得の選び方。</strong><span>公式仕様</span><i>→</i><span>販売ページ</span><i>→</i><span>口コミ原文</span></div></section>
-  <section class="section wrap" id="latest"><div class="section-heading"><div><p class="eyebrow">Latest note</p><h2>いま読む比較</h2></div><a class="category-link" href="/articles/">育児用品の記事一覧 →</a></div><article class="featured-card"><div class="featured-index">01</div><div class="featured-copy"><span class="tag">育児用品 / First article</span><h3><a href="/articles/pampers-newborn/">パンパースの新生児用、どっち？<br/>「肌へのいちばん」と「さらさらケア」</a></h3><p>公式仕様と、確認できたレビュー・公開投稿を分けて整理しました。</p><a class="cta" href="/articles/pampers-newborn/">比較記事を読む →</a></div><div class="featured-mark" aria-hidden="true">01<br/><small>NOTE</small></div></article></section>
-  <section class="section wrap"><div class="about-strip"><div><p class="eyebrow">About this site</p><h2>リンクをたどれば、<br/>判断できる。</h2></div><p>価格や仕様は販売先で、口コミは原文で確認できるようにしています。広告を含む場合は、そのこともページ内に表示します。</p></div></section>
+  <section class="hero hero-editorial">
+    <div class="wrap hero-editorial-inner">
+      <p class="section-label">比較メモ / おむつ</p>
+      <h1>パンパースの新生児用、<br />どちらを確認する？</h1>
+      <p class="hero-intro">「肌へのいちばん」と「さらさらケア」。同じ新生児用でも、先に見るポイントが違います。</p>
+      <div class="hero-actions"><a class="cta" href="/articles/">比較記事を見る →</a><a class="secondary-link" href="#featured">2商品の違いを見る</a></div>
+    </div>
+  </section>
+
+  <main class="section wrap" id="featured">
+    <article class="featured-editorial">
+      <div class="featured-editorial-head">
+        <div><p class="section-label">今回の比較</p><h2>パンパース 新生児用</h2></div>
+        <p class="meta">更新日 2026-07-31</p>
+      </div>
+      <p class="featured-lead">まず見る違いは、肌あたりを優先するか、価格・買いやすさを優先するか。商品ページで確認できる事実と、今回採用していない口コミを分けて表示しています。</p>
+      <div class="product-pair">
+        <ProductIdentity product="パンパース 新生児用" line="肌へのいちばん" tone="premium" audience="肌あたりを優先したい人の候補" note="商品仕様は公式ページで確認" status="official" />
+        <ProductIdentity product="パンパース 新生児用" line="さらさらケア" tone="standard" audience="価格・買いやすさを優先したい人の候補" note="価格・在庫は販売ページで確認" status="retailer" />
+      </div>
+      <div class="featured-editorial-foot"><div class="status-row"><VerificationStatus status="official" /><VerificationStatus status="retailer" /><VerificationStatus status="insufficient" /></div><a class="cta" href="/articles/pampers-newborn/">比較記事を読む →</a></div>
+    </article>
+  </main>
+
+  <section class="section section-rule"><div class="wrap editor-note"><p class="section-label">このサイトの見方</p><h2>判断材料を、盛らない。</h2><p>公式仕様、販売ページ、口コミ原文を分け、確認できない数字や体験談は「未確認」として残します。</p><a class="text-link" href="/about/">運営方針を見る →</a></div></section>
 </BaseLayout>

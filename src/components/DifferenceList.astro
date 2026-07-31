@@ -1,0 +1,13 @@
+---
+const {items = []} = Astro.props;
+---
+<section class="difference-list" aria-labelledby="difference-heading">
+  <div class="subsection-heading"><p class="section-label">差分だけ</p><h2 id="difference-heading">同じ点を省いて、違うところだけ</h2></div>
+  <div class="difference-table" role="list">
+    {items.map((item: {label: string; left: string; right: string; leftStatus?: string; rightStatus?: string}) => <div class="difference-row" role="listitem">
+      <div class="difference-label">{item.label}</div>
+      <div class="difference-value"><strong>肌へのいちばん</strong><span>{item.left}</span>{item.leftStatus && <span class="difference-status">{item.leftStatus}</span>}</div>
+      <div class="difference-value"><strong>さらさらケア</strong><span>{item.right}</span>{item.rightStatus && <span class="difference-status">{item.rightStatus}</span>}</div>
+    </div>)}
+  </div>
+</section>
