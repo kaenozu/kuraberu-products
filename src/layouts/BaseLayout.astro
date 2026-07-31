@@ -20,6 +20,36 @@ const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
 const canonical = new URL(Astro.url.pathname, `${site.url}/`).toString();
 const robotsContent = robots ?? (isProduction ? 'index,follow' : 'noindex,nofollow');
 const resolvedOgType = ogType ?? (Astro.url.pathname.startsWith('/articles/') && Astro.url.pathname !== '/articles/' ? 'article' : 'website');
+const organization = {
+  '@type': 'Organization',
+  name: site.name,
+  url: site.url,
+};
+const structuredData = resolvedOgType === 'article'
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: title,
+      description,
+      url: canonical,
+      mainEntityOfPage: canonical,
+      author: organization,
+      publisher: organization,
+      isAccessibleForFree: true,
+    }
+  : {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: title,
+      description,
+      url: canonical,
+      isPartOf: {
+        '@type': 'WebSite',
+        name: site.name,
+        url: site.url,
+      },
+    };
+const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u003c');
 ---
 <html lang="ja">
   <head>
@@ -37,6 +67,7 @@ const resolvedOgType = ogType ?? (Astro.url.pathname.startsWith('/articles/') &&
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
+    <script type="application/ld+json" set:html={structuredDataJson} />
   </head>
   <body>
     <header class="site-header">
