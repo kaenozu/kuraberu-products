@@ -34,7 +34,13 @@ async function fetchRakutenProductsUncached(
   url.searchParams.set("keyword", keyword);
   url.searchParams.set("hits", String(hits));
   if (affiliateId) url.searchParams.set("affiliateId", affiliateId);
-  const response = await fetch(url, { headers: { accessKey } });
+  let response: Response;
+  try {
+    response = await fetch(url, { headers: { accessKey } });
+  } catch (error) {
+    console.warn("楽天API接続失敗: 購入リンクを未設定として続行します", error);
+    return [];
+  }
   if (!response.ok) {
     console.warn(`楽天APIエラー: HTTP ${response.status}`);
     return [];
