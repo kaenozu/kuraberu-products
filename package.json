@@ -2,6 +2,7 @@
   "name": "kuraberu-ikuji",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.11.1",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
