@@ -22,6 +22,11 @@ jobs:
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Show required formatting changes
+        run: |
+          pnpm format
+          git diff --color=never
+          git diff --exit-code
       - name: Verify preview build
         env:
           DEPLOYMENT_ENV: preview
