@@ -61,3 +61,27 @@ Google Chrome（Playwright）でAstro previewを起動し、320 / 390 / 1440px�
 `npm run verify` を実行し、format、lint、Astro typecheck、content validation、Vitest（1 file / 1 test）、Astro build（7 pages）がすべて成功した。
 
 Cloudflare Pagesの公開URLは、この環境ではDNS/ネットワーク制限のため未確認。
+
+## Cloudflare Production確認
+
+Wranglerで `kuraberu-products` のProductionデプロイを確認した。
+
+- デプロイID: `7d203258-7afe-4254-bcaa-d2ee71ea3255`
+- Source: `2b0c937`
+- 公開URL: `https://kuraberu-products.pages.dev`
+- デプロイURL: `https://7d203258.kuraberu-products.pages.dev`
+- Status: Production / 成功
+- プロジェクトはGit連携ではなく直接アップロード方式
+
+公開URLに対するシステムChrome + DevTools接続の確認結果：
+
+- `/`、`/articles/`、`/articles/pampers-newborn/` はHTTP 200
+- canonical URLは `https://kuraberu-products.pages.dev/`
+- 320 / 390 / 1440pxで横スクロールなし
+- console error、page error、request failureなし
+- 記事タイトルは「くらべる商品メモ」
+- 比較表は6行、画面上に `article-end` は表示されない
+- トップ → 記事一覧 → 比較記事のクリック導線が成立
+- 楽天CTAは2件とも `hb.afl.rakuten.co.jp` のアフィリエイトURLで、`pc` パラメータに対応する楽天商品URLを含む
+
+なお、直接アップロード方式のためCloudflare Pagesのsecret一覧は空で、今回のProduction HTMLはローカルビルド時に生成した静的CTA URLを配信している。将来Git連携へ切り替える場合は、`PUBLIC_SITE_URL` と2つの `PUBLIC_RAKUTEN_*_URL` をProductionのBuild variablesへ設定する必要がある。
