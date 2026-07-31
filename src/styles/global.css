@@ -102,6 +102,182 @@ a {
   font-family: Georgia, "Yu Mincho", serif;
   font-size: 1.08rem;
 }
+.hero-grid {
+  display: grid;
+  gap: 3rem;
+  align-items: center;
+}
+@media (min-width: 800px) {
+  .hero-grid {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+.memo-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 20px rgba(26, 47, 35, 0.06);
+  transform: rotate(1deg);
+}
+.memo-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+}
+.versus {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 0 1rem;
+}
+.versus div {
+  background: var(--sage);
+  padding: 1rem;
+  min-height: 100px;
+}
+.versus div:last-child {
+  background: #fff0eb;
+}
+.versus small {
+  display: block;
+  color: var(--muted);
+  font-size: 0.7rem;
+  margin-bottom: 0.5rem;
+}
+.versus strong {
+  font-size: 1.15rem;
+  line-height: 1.25;
+}
+.versus b {
+  font-size: 0.75rem;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+}
+.memo-card p {
+  font-family: Georgia, "Yu Mincho", serif;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.guide-strip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  border-block: 1px solid var(--line);
+  padding: 1rem 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+.guide-strip strong {
+  color: var(--ink);
+  margin-right: auto;
+}
+.guide-strip i {
+  color: var(--accent);
+  font-style: normal;
+}
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.chips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.chips span {
+  background: var(--sage);
+  color: var(--green);
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  font-size: 0.75rem;
+}
+.featured-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1.5rem;
+  align-items: start;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  box-shadow: 0 4px 20px rgba(26, 47, 35, 0.06);
+}
+.featured-index {
+  font-family: Georgia, serif;
+  font-size: 2.5rem;
+  color: var(--accent);
+  line-height: 1;
+}
+.featured-copy h3 {
+  font-size: clamp(1.35rem, 3vw, 2rem);
+  line-height: 1.4;
+  margin: 0.5rem 0;
+}
+.featured-copy h3 a {
+  text-decoration: none;
+}
+.featured-copy p {
+  color: var(--muted);
+  max-width: 600px;
+}
+.featured-mark {
+  font-family: Georgia, serif;
+  font-size: 4rem;
+  line-height: 0.8;
+  color: var(--sage);
+  text-align: right;
+}
+.featured-mark small {
+  font: 700 0.65rem ui-sans-serif;
+  letter-spacing: 0.15em;
+  color: var(--muted);
+}
+.about-strip {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  background: var(--sage);
+  padding: clamp(1.5rem, 4vw, 3rem);
+  border-radius: 8px;
+}
+.about-strip h2 {
+  margin: 0;
+}
+.about-strip > p {
+  font-family: Georgia, "Yu Mincho", serif;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+@media (max-width: 700px) {
+  .section-heading,
+  .about-strip {
+    display: block;
+  }
+  .chips {
+    margin-top: 1rem;
+  }
+  .featured-card {
+    grid-template-columns: auto 1fr;
+  }
+  .featured-mark {
+    display: none;
+  }
+  .guide-strip strong {
+    width: 100%;
+  }
+}
 .section {
   padding: clamp(3rem, 7vw, 6rem) 0;
 }
