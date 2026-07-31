@@ -84,4 +84,4 @@ Wranglerで `kuraberu-products` のProductionデプロイを確認した。
 - トップ → 記事一覧 → 比較記事のクリック導線が成立
 - 楽天CTAは2件とも `hb.afl.rakuten.co.jp` のアフィリエイトURLで、`pc` パラメータに対応する楽天商品URLを含む
 
-なお、直接アップロード方式のためCloudflare Pagesのsecret一覧は空で、今回のProduction HTMLはローカルビルド時に生成した静的CTA URLを配信している。将来Git連携へ切り替える場合は、`PUBLIC_SITE_URL` と2つの `PUBLIC_RAKUTEN_*_URL` をProductionのBuild variablesへ設定する必要がある。
+直接アップロード方式だが、再ビルド時の再現性を確保するため、Production secretに次の6項目を登録済み（値は暗号化表示）：`PUBLIC_SITE_URL`、`PUBLIC_RAKUTEN_PREMIUM_URL`、`PUBLIC_RAKUTEN_SARASARA_URL`、`RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID`。今回のProduction HTMLはローカルビルド時に生成した静的CTA URLを配信している。将来Git連携へ切り替える場合は、同じ6項目をProductionのBuild variablesへ設定する必要がある。
