@@ -67,7 +67,7 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u00
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
-    <script type="application/ld+json" set:html={structuredDataJson} />
+    <script is:inline type="application/ld+json" set:html={structuredDataJson} />
   </head>
   <body>
     <header class="site-header">
