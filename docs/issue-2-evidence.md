@@ -81,3 +81,12 @@
 - Issue #2の変更をCloudflare Productionへはまだデプロイしていない。
 - 商品画像の利用規約は一次資料未確認のため、今後も画像を追加しない限り残存リスクは発生しない。
 - 5秒確認は独立レビューによる画面評価であり、実ユーザー調査ではない。
+
+## Cloudflare切り分け（2026-07-31）
+
+- PRチェックの失敗Build ID: `638ed61e-5903-42ce-9303-4552a94762ae`
+- Cloudflare Dashboardの認証付きログ本文はこの環境から取得できず、失敗フェーズ・最終エラーは未確定。
+- `src/lib/rakuten.ts`でfetch接続例外を捕捉後、ローカル`pnpm run verify`は成功し7ページを生成。
+- Wrangler手動デプロイ検証URL: `https://dcf07e4b.kuraberu-products.pages.dev`
+- 手動デプロイURLの`/`、`/articles/`、`/articles/pampers-newborn/`はHTTP 200。
+- 手動デプロイはローカル環境変数なしで生成したため楽天CTAが0件であり、Production受入成功とは扱わない。Git連携のProduction環境変数を注入した再ビルドが必要。
