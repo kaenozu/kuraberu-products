@@ -11,9 +11,11 @@
     "lint": "eslint .",
     "typecheck": "astro check",
     "test": "vitest run",
+    "validate:env": "node scripts/validate-build-env.mjs",
     "validate:content": "node scripts/validate-content.mjs",
+    "check:rendered": "node scripts/check-rendered-html.mjs",
     "check:external-links": "node scripts/check-external-links.mjs",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run validate:content && npm run test && npm run build"
+    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run validate:env && npm run validate:content && npm run build && npm run check:rendered && npm run check:external-links && npm run test"
   },
   "dependencies": {
     "astro": "6.0.3",
