@@ -1,10 +1,17 @@
 import { describe, expect, it, vi } from "vitest";
 import {
   classifyExternalStatus,
+  decodeHtmlAttribute,
   probeExternalUrl,
 } from "../scripts/check-external-link-reachability.mjs";
 
 describe("external link reachability classification", () => {
+  it("decodes generated HTML attribute entities", () => {
+    expect(
+      decodeHtmlAttribute("https://example.test/?a=1&amp;b=2"),
+    ).toBe("https://example.test/?a=1&b=2");
+  });
+
   it("treats success and redirects as reachable", () => {
     expect(classifyExternalStatus(200)).toBe("reachable");
     expect(classifyExternalStatus(301)).toBe("reachable");
