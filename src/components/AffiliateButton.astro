@@ -1,0 +1,4 @@
+---
+const {href,label,merchant,productId,placement} = Astro.props; const valid = typeof href==='string' && /^https:\/\//.test(href) && !href.includes('example.com');
+---
+{valid ? <a class="cta" href={href} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}アフィリエイトURL未設定（{placement}）</span>}
