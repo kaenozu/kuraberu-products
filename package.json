@@ -21,8 +21,8 @@
     "check:rendered": "node scripts/check-rendered-html.mjs",
     "check:deployment": "node scripts/check-deployment-html.mjs",
     "check:external-link-syntax": "node scripts/check-external-links.mjs",
-    "check:external-links": "npm run check:external-link-syntax",
-    "verify": "npm run format:check && npm run lint && npm run typecheck && npm run validate:env && npm run validate:content && npm run build && npm run check:rendered && npm run check:deployment && npm run check:external-link-syntax && npm run test"
+    "check:external-links": "pnpm check:external-link-syntax",
+    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm validate:env && pnpm validate:content && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax && pnpm test"
   },
   "dependencies": {
     "astro": "6.0.3",
