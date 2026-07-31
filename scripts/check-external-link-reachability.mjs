@@ -13,6 +13,14 @@ function walkHtmlFiles(directory, files = []) {
   return files;
 }
 
+export function decodeHtmlAttribute(value) {
+  return value
+    .replaceAll("&amp;", "&")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'")
+    .replaceAll("&#x27;", "'");
+}
+
 export function collectExternalAnchorUrls(directory = "dist") {
   const urls = new Set();
   for (const file of walkHtmlFiles(directory)) {
@@ -20,7 +28,7 @@ export function collectExternalAnchorUrls(directory = "dist") {
     for (const match of html.matchAll(
       /<a\b[^>]*\bhref="(https:\/\/[^"#]+)"[^>]*>/gi,
     )) {
-      urls.add(match[1]);
+      urls.add(decodeHtmlAttribute(match[1]));
     }
   }
   return [...urls].sort();
