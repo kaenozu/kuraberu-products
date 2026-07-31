@@ -71,6 +71,8 @@ describe("external embed URL validation", () => {
     expect(component).not.toContain("set:html");
     expect(component).toContain("data-external-embed-load");
     expect(component).toContain("元の投稿へのリンク");
+    expect(component).toContain("scriptLoads.delete(src)");
+    expect(component).toContain("script.remove()");
   });
 
   it("limits phase-one providers to reviewed implementations", () => {
