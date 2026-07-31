@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-検証は `npm run verify`（format check / lint / typecheck / content validation / test / build）です。楽天URLは `.env` の `PUBLIC_RAKUTEN_PREMIUM_URL` と `PUBLIC_RAKUTEN_SARASARA_URL` に設定してください。未設定時はCTAを無効表示します。
+検証は `npm run verify`（format check / lint / typecheck / content validation / test / build）です。楽天連携は `rakuten-x-automation` と同じ `RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID` を利用します。未設定時はAPI検索を行わず、CTAを無効表示します。
 
 ## Cloudflare Pages
 
