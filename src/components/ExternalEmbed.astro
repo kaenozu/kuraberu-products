@@ -97,15 +97,24 @@ const providerLabel = externalEmbedProviderLabel(provider);
         },
         { once: true },
       );
-      script.addEventListener("error", () => reject(new Error("script load failed")), {
-        once: true,
-      });
+      script.addEventListener(
+        "error",
+        () => {
+          script.remove();
+          reject(new Error("script load failed"));
+        },
+        { once: true },
+      );
 
       if (!present) document.head.append(script);
     });
 
-    scriptLoads.set(src, load);
-    return load;
+    const trackedLoad = load.catch((error: unknown) => {
+      scriptLoads.delete(src);
+      throw error;
+    });
+    scriptLoads.set(src, trackedLoad);
+    return trackedLoad;
   }
 
   function appendSourceLink(target: HTMLElement, config: EmbedConfig): HTMLAnchorElement {
