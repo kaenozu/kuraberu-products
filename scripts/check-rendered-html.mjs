@@ -28,9 +28,14 @@ for (const file of htmlFiles) {
   const mainCount = (html.match(/<main(?:\s|>)/g) ?? []).length;
   const h1Count = (html.match(/<h1(?:\s|>)/g) ?? []).length;
 
-  if (mainCount !== 1) errors.push(`${file}: expected one main, found ${mainCount}`);
+  if (mainCount !== 1)
+    errors.push(`${file}: expected one main, found ${mainCount}`);
   if (h1Count !== 1) errors.push(`${file}: expected one h1, found ${h1Count}`);
-  if (!/<meta name="robots" content="(?:index,follow|noindex,nofollow)"/.test(html)) {
+  if (
+    !/<meta name="robots" content="(?:index,follow|noindex,nofollow)"/.test(
+      html,
+    )
+  ) {
     errors.push(`${file}: missing robots metadata`);
   }
   if (!/<link rel="canonical" href="https:\/\//.test(html)) {

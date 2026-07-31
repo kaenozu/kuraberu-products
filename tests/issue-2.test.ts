@@ -86,11 +86,8 @@ describe("product search parsing", () => {
     ];
 
     expect(
-      selectRakutenProduct(products, [
-        "パンパース",
-        "肌へのいちばん",
-        "新生児",
-      ])?.id,
+      selectRakutenProduct(products, ["パンパース", "肌へのいちばん", "新生児"])
+        ?.id,
     ).toBe("premium-tracked");
     expect(
       selectRakutenProduct(products, ["パンパース", "おやすみパンツ"]),

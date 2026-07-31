@@ -23,8 +23,12 @@ for (const file of htmlFiles) {
 for (const value of externalUrls) {
   try {
     const url = new URL(value);
-    if (url.protocol !== "https:") errors.push(`non-HTTPS external URL: ${value}`);
-    if (url.hostname === "example.com" || url.hostname.endsWith(".example.com")) {
+    if (url.protocol !== "https:")
+      errors.push(`non-HTTPS external URL: ${value}`);
+    if (
+      url.hostname === "example.com" ||
+      url.hostname.endsWith(".example.com")
+    ) {
       errors.push(`placeholder external URL: ${value}`);
     }
   } catch {

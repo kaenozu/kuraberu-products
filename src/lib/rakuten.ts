@@ -39,9 +39,7 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         id: String(item.itemCode ?? ""),
         name: String(item.itemName ?? ""),
         url: String(item.itemUrl ?? ""),
-        affiliateUrl: item.affiliateUrl
-          ? String(item.affiliateUrl)
-          : undefined,
+        affiliateUrl: item.affiliateUrl ? String(item.affiliateUrl) : undefined,
         price: Number(item.itemPrice ?? 0),
       } satisfies RakutenProduct;
     })
@@ -108,7 +106,10 @@ async function fetchRakutenProductsUncached(
   try {
     return parseRakutenProducts(await response.json());
   } catch (error) {
-    console.warn("楽天APIレスポンス解析失敗: 購入リンクを未設定として続行します", error);
+    console.warn(
+      "楽天APIレスポンス解析失敗: 購入リンクを未設定として続行します",
+      error,
+    );
     return [];
   }
 }

@@ -2,7 +2,9 @@ const deploymentEnv = process.env.DEPLOYMENT_ENV ?? "preview";
 const allowed = new Set(["development", "preview", "production"]);
 
 if (!allowed.has(deploymentEnv)) {
-  throw new Error(`DEPLOYMENT_ENV must be development, preview, or production: ${deploymentEnv}`);
+  throw new Error(
+    `DEPLOYMENT_ENV must be development, preview, or production: ${deploymentEnv}`,
+  );
 }
 
 function requireHttpsUrl(name) {
