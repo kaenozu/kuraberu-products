@@ -18,6 +18,7 @@ export interface ExternalLinkCheckOptions extends ExternalLinkProbeOptions {
 }
 
 export const DEFAULT_LINK_TIMEOUT_MS: number;
+export function decodeHtmlAttribute(value: string): string;
 export function collectExternalAnchorUrls(directory?: string): string[];
 export function classifyExternalStatus(status: number): ExternalLinkOutcome;
 export function probeExternalUrl(
