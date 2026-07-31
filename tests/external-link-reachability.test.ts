@@ -31,7 +31,13 @@ describe("external link reachability classification", () => {
 
 describe("external link probe", () => {
   it("uses HEAD when the provider supports it", async () => {
-    const fetchMock = vi.fn(async () => new Response(null, { status: 204 }));
+    const requests: RequestInit[] = [];
+    const fetchMock = vi.fn(
+      async (_input: RequestInfo | URL, init?: RequestInit) => {
+        requests.push(init ?? {});
+        return new Response(null, { status: 204 });
+      },
+    );
 
     const result = await probeExternalUrl("https://example.test/resource", {
       fetchImpl: fetchMock as unknown as typeof fetch,
@@ -41,14 +47,21 @@ describe("external link probe", () => {
     expect(result.outcome).toBe("reachable");
     expect(result.status).toBe(204);
     expect(fetchMock).toHaveBeenCalledTimes(1);
-    expect(fetchMock.mock.calls[0]?.[1]).toMatchObject({ method: "HEAD" });
+    expect(requests[0]).toMatchObject({ method: "HEAD" });
   });
 
   it("falls back to a bounded GET when HEAD is unsupported", async () => {
-    const fetchMock = vi
-      .fn()
-      .mockResolvedValueOnce(new Response(null, { status: 405 }))
-      .mockResolvedValueOnce(new Response("x", { status: 200 }));
+    const requests: RequestInit[] = [];
+    let requestCount = 0;
+    const fetchMock = vi.fn(
+      async (_input: RequestInfo | URL, init?: RequestInit) => {
+        requests.push(init ?? {});
+        requestCount += 1;
+        return requestCount === 1
+          ? new Response(null, { status: 405 })
+          : new Response("x", { status: 200 });
+      },
+    );
 
     const result = await probeExternalUrl("https://example.test/resource", {
       fetchImpl: fetchMock as unknown as typeof fetch,
@@ -57,7 +70,7 @@ describe("external link probe", () => {
 
     expect(result.outcome).toBe("reachable");
     expect(fetchMock).toHaveBeenCalledTimes(2);
-    expect(fetchMock.mock.calls[1]?.[1]).toMatchObject({
+    expect(requests[1]).toMatchObject({
       method: "GET",
       headers: expect.objectContaining({ range: "bytes=0-0" }),
     });
