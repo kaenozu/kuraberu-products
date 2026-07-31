@@ -38,12 +38,33 @@ function readAttribute(html, pattern, label, file, errors) {
   return match[1];
 }
 
+function readStructuredData(html, file, errors) {
+  const matches = [
+    ...html.matchAll(
+      /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+    ),
+  ];
+  if (matches.length !== 1) {
+    errors.push(`${file}: expected one JSON-LD block, found ${matches.length}`);
+    return undefined;
+  }
+
+  try {
+    return JSON.parse(matches[0][1]);
+  } catch {
+    errors.push(`${file}: invalid JSON-LD`);
+    return undefined;
+  }
+}
+
 walk("dist");
 const errors = [];
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
   const pathname = pathnameFor(file);
   const is404 = path.relative("dist", file) === "404.html";
+  const isArticle =
+    pathname.startsWith("/articles/") && pathname !== "/articles/";
   const expectedRobots = is404 ? "noindex,nofollow" : expectedDefaultRobots;
   const expectedCanonical = new URL(pathname, `${expectedSiteUrl}/`).toString();
 
@@ -86,6 +107,28 @@ for (const file of htmlFiles) {
   }
   if (!/<meta property="og:description" content="[^"]+"/.test(html)) {
     errors.push(`${file}: missing Open Graph description`);
+  }
+
+  const structuredData = readStructuredData(html, file, errors);
+  if (structuredData) {
+    const expectedType = isArticle ? "Article" : "WebPage";
+    if (structuredData["@context"] !== "https://schema.org") {
+      errors.push(`${file}: unexpected JSON-LD context`);
+    }
+    if (structuredData["@type"] !== expectedType) {
+      errors.push(
+        `${file}: expected JSON-LD type ${expectedType}, found ${structuredData["@type"]}`,
+      );
+    }
+    if (structuredData.url !== expectedCanonical) {
+      errors.push(`${file}: JSON-LD URL does not match canonical`);
+    }
+    const serialized = JSON.stringify(structuredData);
+    for (const unsupportedClaim of ["aggregateRating", "review", "offers"]) {
+      if (serialized.includes(`"${unsupportedClaim}"`)) {
+        errors.push(`${file}: unsupported JSON-LD claim ${unsupportedClaim}`);
+      }
+    }
   }
 }
 
