@@ -1,10 +1,24 @@
 ---
-import {fetchRakutenProducts} from '../lib/rakuten';
+import {fetchRakutenProducts, selectRakutenProduct} from '../lib/rakuten';
 const {href,label,merchant,productId,placement} = Astro.props;
-const keyword = productId === 'pampers-premium-newborn' ? 'パンパース 肌へのいちばん 新生児' : productId === 'pampers-sarasara-newborn' ? 'パンパース さらさらケア 新生児' : '';
+
+const productQueries = {
+  'pampers-premium-newborn': {
+    keyword: 'パンパース 肌へのいちばん 新生児',
+    requiredTerms: ['パンパース', '肌へのいちばん', '新生児'],
+  },
+  'pampers-sarasara-newborn': {
+    keyword: 'パンパース さらさらケア 新生児',
+    requiredTerms: ['パンパース', 'さらさらケア', '新生児'],
+  },
+} as const;
+
 const directHref = typeof href === 'string' && /^https:\/\//.test(href) && !href.includes('example.com') ? href : undefined;
-const generated = !directHref && keyword ? (await fetchRakutenProducts(keyword)).find((item) => /新生児/.test(item.name))?.affiliateUrl : undefined;
+const query = productQueries[productId as keyof typeof productQueries];
+const generated = !directHref && query
+  ? selectRakutenProduct(await fetchRakutenProducts(query.keyword), query.requiredTerms)?.affiliateUrl
+  : undefined;
 const resolvedHref = directHref ?? generated;
-const valid = typeof resolvedHref==='string' && /^https:\/\//.test(resolvedHref) && !resolvedHref.includes('example.com');
+const valid = typeof resolvedHref === 'string' && /^https:\/\//.test(resolvedHref) && !resolvedHref.includes('example.com');
 ---
 {valid ? <a class="cta" href={resolvedHref} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>}
