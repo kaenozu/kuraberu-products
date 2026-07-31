@@ -1,4 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import {site} from '../config/site';
 ---
-<BaseLayout title="運営者情報｜くらべる商品メモ"><div class="wrap section article"><h1>運営者情報</h1><dl><dt>運営者名</dt><dd>サイト運営者</dd><dt>目的</dt><dd>商品の選択に役立つ情報を、出典とともに整理すること</dd><dt>編集方針</dt><dd>公式情報を優先し、口コミは商品・仕様・投稿日を確認できたものだけ扱います。</dd><dt>連絡先</dt><dd>現在未設定です。</dd></dl></div></BaseLayout>
+<BaseLayout title="運営者情報｜くらべる商品メモ">
+  <div class="wrap section article">
+    <h1>運営者情報</h1>
+    <dl>
+      <dt>運営者名</dt>
+      <dd>くらべる商品メモ運営者</dd>
+      <dt>目的</dt>
+      <dd>商品の選択に役立つ情報を、出典と確認状況を分けて整理すること</dd>
+      <dt>編集方針</dt>
+      <dd>公式情報を優先し、確認できない数値や使用体験は掲載しません。</dd>
+      <dt>連絡先</dt>
+      <dd>
+        {site.contactUrl
+          ? <a href={site.contactUrl} target="_blank" rel="noopener noreferrer">お問い合わせフォームを開く</a>
+          : <span>問い合わせ先は準備中です。公開時は環境設定から登録します。</span>}
+      </dd>
+    </dl>
+  </div>
+</BaseLayout>
