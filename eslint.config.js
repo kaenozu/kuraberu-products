@@ -6,8 +6,12 @@ export default [
       ecmaVersion: "latest",
       sourceType: "module",
       globals: {
+        AbortController: "readonly",
+        clearTimeout: "readonly",
         console: "readonly",
+        fetch: "readonly",
         process: "readonly",
+        setTimeout: "readonly",
         URL: "readonly",
       },
     },
