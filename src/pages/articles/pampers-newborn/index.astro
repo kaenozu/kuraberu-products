@@ -5,55 +5,59 @@ import XPostEmbed from '../../../components/XPostEmbed.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 
-const premium = 'https://www.jp.pampers.com/';
+const premium = 'https://www.jp.pampers.com/products/pampers-premium-line-tape';
+const sarasara = 'https://www.jp.pampers.com/products/pampers-mainline-tape';
 const xSearch = 'https://x.com/search?q=%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9%20%E6%96%B0%E7%94%9F%E5%85%90&src=typed_query';
 const premiumSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E8%82%8C%E3%81%B8%E3%81%AE%E3%81%84%E3%81%A1%E3%81%B0%E3%82%93+%E6%96%B0%E7%94%9F%E5%85%90/';
 const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E3%81%95%E3%82%89%E3%81%95%E3%82%89%E3%82%B1%E3%82%A2+%E6%96%B0%E7%94%9F%E5%85%90/';
 ---
-<BaseLayout title="パンパースの新生児用、どっち？｜くらべる商品メモ" description="パンパース肌へのいちばんとさらさらケアを、公式情報と確認できる口コミで比較">
+<BaseLayout title="パンパースの新生児用、どっち？｜くらべる商品メモ" description="パンパース肌へのいちばんとさらさらケアの新生児用テープを、公式の商品機能と確認状況で比較">
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 更新日 2026-07-31</p>
     <h1>パンパースの新生児用、どっち？「肌へのいちばん」と「さらさらケア」を比較</h1>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <ThirtySecondComparison />
 
-    <p>パンパースの新生児用を探すと、「肌へのいちばん」と「さらさらケア」が候補になります。この記事では、確認できた情報と購入前に確認が必要な項目を分けて、選ぶときの見方を整理します。</p>
+    <p>パンパースの新生児用テープには「肌へのいちばん」と「さらさらケア」があります。この記事では、公式商品ページで確認できる機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>
 
     <h2>先に結論</h2>
-    <p>肌あたりを優先したい人と、価格・買いやすさを優先したい人では、確認したいページが変わります。赤ちゃんの体型や肌状態で合う・合わないは変わるため、少量から試す前提で公式のサイズ案内を確認してください。</p>
+    <p>公式情報上、「肌へのいちばん」は肌へのやさしさに関する機能、「さらさらケア」はモレ・ムレ対策に関する機能が詳しく案内されています。どちらも新生児5kgまでのテープサイズがあります。実際の合いやすさは赤ちゃんの体型や肌状態でも変わるため、機能表示とサイズを確認して少量から試してください。</p>
 
-    <div id="comparison-details"><DifferenceList items={[{label: '選び方の軸', left: '肌あたりを優先したい人の候補', right: '価格・買いやすさを優先したい人の候補', leftStatus: '編集上の判断軸', rightStatus: '編集上の判断軸'}, {label: '購入前の確認先', left: '公式ページでサイズ・仕様を確認', right: '販売ページで価格・在庫を確認', leftStatus: '公式確認済み', rightStatus: '販売ページ確認'}]} /></div>
+    <div id="comparison-details"><DifferenceList items={[{label: '公式が案内する主な機能', left: 'ゆるうんちを素早く吸収、ワセリン配合シート、ふかふか肌ざわり', right: 'ゆるうんちモレガード、のびのびフィットテープ、進化した吸収体', leftStatus: '公式確認済み', rightStatus: '公式確認済み'}, {label: '新生児サイズ', left: '5kgまで。小さめ新生児3,000gも掲載', right: '5kgまで', leftStatus: '公式確認済み', rightStatus: '公式確認済み'}]} /></div>
 
     <h2>確認できる項目</h2>
     <div class="table-scroll">
       <table class="comparison">
         <thead><tr><th scope="col">比較項目</th><th scope="col">肌へのいちばん</th><th scope="col">さらさらケア</th><th scope="col">根拠・確認先</th></tr></thead>
         <tbody>
-          <tr><th scope="row">選び方の軸</th><td>肌あたりを優先したい人の候補</td><td>価格・買いやすさを優先したい人の候補</td><td>記事内の判断軸</td></tr>
-          <tr><th scope="row">新生児用の有無</th><td>商品ページで確認</td><td>商品ページで確認</td><td><a href={premium} target="_blank" rel="noopener noreferrer">パンパース公式</a></td></tr>
-          <tr><th scope="row">サイズ・体重目安</th><td>購入前に公式のサイズ表を確認</td><td>購入前に公式のサイズ表を確認</td><td>公式ページ・パッケージ</td></tr>
-          <tr><th scope="row">素材・仕様</th><td>商品ページで確認</td><td>商品ページで確認</td><td>公式ページ・パッケージ</td></tr>
+          <tr><th scope="row">公式上の位置づけ</th><td>肌にやさしいテープ</td><td>モレ・ムレ対策を案内するテープ</td><td>各公式商品ページ</td></tr>
+          <tr><th scope="row">新生児サイズ</th><td>5kg。小さめ新生児は3,000g</td><td>5kgまで</td><td><a href={premium} target="_blank" rel="noopener noreferrer">肌へのいちばん公式</a> / <a href={sarasara} target="_blank" rel="noopener noreferrer">さらさらケア公式</a></td></tr>
+          <tr><th scope="row">主な機能</th><td>ゆるうんちを素早く吸収、ワセリン配合シート、ふかふか肌ざわり</td><td>360°ゆるうんちモレガード、のびのびフィットテープ、進化した吸収体</td><td>各公式商品ページ</td></tr>
           <tr><th scope="row">価格・在庫</th><td>販売ページで確認</td><td>販売ページで確認</td><td>楽天市場の検索結果</td></tr>
           <tr><th scope="row">個別口コミ</th><td>今回の比較では採用なし</td><td>今回の比較では採用なし</td><td><a href={xSearch} target="_blank" rel="noopener noreferrer">X検索結果</a></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="meta">数値やサイズ展開は変更される可能性があるため、確認できない値を補っていません。</p>
+    <p class="meta">商品仕様やサイズ展開は変更される可能性があります。購入時点の公式商品ページとパッケージを確認してください。</p>
 
     <h2>公式情報</h2>
-    <p>一次情報としてパンパース公式サイトを確認しました。体重目安、小さめ新生児用の有無、素材や注意事項は商品ページ・パッケージで更新される可能性があります。</p>
-    <p><a class="text-link" href={premium} target="_blank" rel="noopener noreferrer">パンパース公式サイトで確認する →</a></p>
+    <p>肌へのいちばんの公式ページでは、ゆるうんちを肌に残りにくくする設計、ワセリン配合シート、ふかふか素材が案内されています。さらさらケアの公式ページでは、ゆるうんちモレガード、フィットテープ、吸収体が案内されています。</p>
+    <div class="source-links">
+      <a class="card-link" href={premium} target="_blank" rel="noopener noreferrer">肌へのいちばん公式商品ページ →</a>
+      <a class="card-link" href={sarasara} target="_blank" rel="noopener noreferrer">さらさらケア公式商品ページ →</a>
+    </div>
 
     <h2>口コミの確認状況</h2>
-    <p>楽天・Amazonは商品バリエーションやサイズが混在しやすく、今回の確認では新生児用・投稿日・対象商品を同時に安定確認できる個別レビューを採用していません。レビューを読む際は、サイズと購入時期を確認してください。</p>
+    <p>商品バリエーションやサイズ、購入時期が混在するため、今回の比較では個別レビューを根拠として採用していません。レビューを読む場合は、対象ライン、テープタイプ、サイズ、投稿日を確認してください。</p>
     <h3>公開投稿を自分で確認する</h3>
     <XPostEmbed url={xSearch} summary="公開投稿は検索結果から対象商品・サイズ・利用経験を確認してください。" />
 
-    <h2>どんな人に向くか</h2>
+    <h2>どんな確認を優先するか</h2>
     <ul>
-      <li>肌へのいちばん：肌あたりを第一に考え、価格差を許容できる人。</li>
-      <li>さらさらケア：買いやすさや価格を優先し、赤ちゃんに合うか少量で試したい人。</li>
+      <li>肌へのいちばん：摩擦、ゆるうんちの肌残り、肌ざわりに関する公式機能を確認したい場合。</li>
+      <li>さらさらケア：ゆるうんちモレ、フィット、吸収に関する公式機能を確認したい場合。</li>
     </ul>
+    <p>これは公式ページに掲載された機能の整理であり、どちらがすべての赤ちゃんに合うと断定するものではありません。</p>
 
     <h2>購入前に確認するページ</h2>
     <div class="source-links">
@@ -70,12 +74,13 @@ const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83
 
     <h2>情報源一覧</h2>
     <ul class="source-list">
-      <li><a href={premium} target="_blank" rel="noopener noreferrer">パンパース公式サイト</a>（2026-07-31確認）</li>
+      <li><a href={premium} target="_blank" rel="noopener noreferrer">パンパース：肌へのいちばん テープ</a>（2026-07-31確認）</li>
+      <li><a href={sarasara} target="_blank" rel="noopener noreferrer">パンパース：さらさらケア テープ</a>（2026-07-31確認）</li>
       <li><a href={premiumSearch} target="_blank" rel="noopener noreferrer">楽天市場：肌へのいちばん検索</a>（価格・在庫確認用）</li>
       <li><a href={sarasaraSearch} target="_blank" rel="noopener noreferrer">楽天市場：さらさらケア検索</a>（価格・在庫確認用）</li>
       <li><a href={xSearch} target="_blank" rel="noopener noreferrer">X検索結果</a>（個別投稿の確認用）</li>
     </ul>
     <h2>調査方法・免責事項</h2>
-    <p>公式ページを優先し、レビューは対象商品・サイズ・投稿日を確認できる場合のみ採用します。口コミは個人の感想であり、商品の性能や健康状態を保証しません。</p>
+    <p>メーカー公式の商品ページを優先し、レビューは対象商品・サイズ・投稿日を確認できる場合のみ採用します。口コミは個人の感想であり、商品の性能や健康状態を保証しません。</p>
   </article>
 </BaseLayout>
