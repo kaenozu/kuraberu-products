@@ -34,10 +34,8 @@ describe("environment variable configuration", () => {
   it("accepts production with both direct Rakuten URLs", () => {
     const result = validateBuildEnvironment({
       ...productionBase,
-      PUBLIC_RAKUTEN_PREMIUM_URL:
-        "https://hb.afl.rakuten.co.jp/ci/premium",
-      PUBLIC_RAKUTEN_SARASARA_URL:
-        "https://search.rakuten.co.jp/ci/sarasara",
+      PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
+      PUBLIC_RAKUTEN_SARASARA_URL: "https://search.rakuten.co.jp/ci/sarasara",
     });
 
     expect(result.deploymentEnv).toBe("production");
@@ -62,8 +60,7 @@ describe("environment variable configuration", () => {
     expect(() =>
       validateBuildEnvironment({
         ...productionBase,
-        PUBLIC_RAKUTEN_PREMIUM_URL:
-          "https://hb.afl.rakuten.co.jp/ci/premium",
+        PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
       }),
     ).toThrow(/Production purchase links/);
   });
@@ -94,9 +91,9 @@ describe("environment variable configuration", () => {
       "https://example.test",
     );
     expect(() => normalizeSiteUrl("http://example.test/")).toThrow(/https/);
-    expect(() =>
-      normalizeSiteUrl("https://user:pass@example.test/"),
-    ).toThrow(/credentials/);
+    expect(() => normalizeSiteUrl("https://user:pass@example.test/")).toThrow(
+      /credentials/,
+    );
     expect(() => normalizeSiteUrl("https://example.test/subpath")).toThrow(
       /site root/,
     );
