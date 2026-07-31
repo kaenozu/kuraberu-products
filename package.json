@@ -21,6 +21,7 @@
     "check:rendered": "node scripts/check-rendered-html.mjs",
     "check:deployment": "node scripts/check-deployment-html.mjs",
     "check:external-link-syntax": "node scripts/check-external-links.mjs",
+    "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
     "check:external-links": "pnpm check:external-link-syntax",
     "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm validate:env && pnpm validate:content && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax && pnpm test"
   },
