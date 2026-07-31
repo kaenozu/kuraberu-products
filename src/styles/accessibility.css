@@ -1,0 +1,8 @@
+:root {
+  --accent: #b04c3b;
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}

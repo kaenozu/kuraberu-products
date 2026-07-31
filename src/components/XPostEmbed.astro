@@ -1,4 +1,7 @@
 ---
-const {url,summary} = Astro.props;
+const {url, summary} = Astro.props;
 ---
-<figure class="post"><blockquote class="twitter-tweet"><p>{summary}</p></blockquote><figcaption><a href={url} target="_blank" rel="noopener noreferrer">Xで原文を確認する</a></figcaption></figure>
+<aside class="post" aria-label="Xの公開投稿を確認する">
+  <p>{summary}</p>
+  <p><a href={url} target="_blank" rel="noopener noreferrer">Xの検索結果を開く</a></p>
+</aside>

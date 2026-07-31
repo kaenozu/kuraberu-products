@@ -1,5 +1,37 @@
 ---
-import '../styles/global.css'; import {site} from '../config/site';
-const {title=site.name, description=site.description} = Astro.props;
+import '../styles/global.css';
+import '../styles/accessibility.css';
+import {site} from '../config/site';
+const {title = site.name, description = site.description} = Astro.props;
+const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
+const canonical = new URL(Astro.url.pathname, `${site.url}/`).toString();
 ---
-<html lang="ja"><head><meta charset="utf-8" /><meta name="viewport" content="width=device-width" /><link rel="icon" href="/favicon.svg" type="image/svg+xml" /><title>{title}</title><meta name="description" content={description}/><meta name="robots" content={import.meta.env.PUBLIC_SITE_URL ? 'index,follow':'noindex,nofollow'}/><link rel="canonical" href={site.url + Astro.url.pathname}/></head><body><header class="site-header"><div class="wrap nav"><a class="brand" href="/">{site.name}</a><nav class="navlinks" aria-label="主要メニュー"><a href="/articles/">比較記事</a><a href="/about/">運営者情報</a></nav></div></header><main><slot/></main><footer class="footer"><div class="wrap"><p>広告を含みます。価格・在庫・仕様は販売先でご確認ください。</p><p><a href="/privacy/">プライバシーポリシー</a> · <a href="/disclaimer/">広告・免責事項</a></p></div></footer></body></html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content={isProduction ? 'index,follow' : 'noindex,nofollow'} />
+    <link rel="canonical" href={canonical} />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="wrap nav">
+        <a class="brand" href="/">{site.name}</a>
+        <nav class="navlinks" aria-label="主要メニュー">
+          <a href="/articles/">比較記事</a>
+          <a href="/about/">運営者情報</a>
+        </nav>
+      </div>
+    </header>
+    <main><slot /></main>
+    <footer class="footer">
+      <div class="wrap">
+        <p>広告を含みます。価格・在庫・仕様は販売先でご確認ください。</p>
+        <p><a href="/privacy/">プライバシーポリシー</a> · <a href="/disclaimer/">広告・免責事項</a></p>
+      </div>
+    </footer>
+  </body>
+</html>
