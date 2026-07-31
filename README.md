@@ -16,7 +16,15 @@ pnpm dev
 
 検証は `pnpm verify` です。format、lint、typecheck、環境・コンテンツ検証、build、生成HTML・デプロイ契約・外部URL構文検査、Vitestを実行します。
 
-`check:external-link-syntax` はURLの構文、HTTPS、危険なスキーム、placeholderを検査します。外部サイトへHTTPリクエストを送る到達性検査ではありません。
+`check:external-link-syntax` はURLの構文、HTTPS、危険なスキーム、placeholderを検査します。通常PRでは外部ネットワークへ依存しません。
+
+外部リンクの到達性は `pnpm check:external-link-reachability` で確認します。GitHub Actionsの `external link reachability` workflowが毎週月曜日と手動実行で動作します。
+
+- 200〜399: 到達可能
+- 404 / 410: 確定リンク切れとして失敗
+- 403 / 429 / 5xx / タイムアウト: bot制限や一時障害の可能性があるため判定不能として警告
+- HEAD非対応時だけ、1byte Range付きGETへフォールバック
+- 1URLあたり10秒でタイムアウトし、順次実行する
 
 ## 環境変数
 
@@ -44,12 +52,18 @@ Productionでは次が必須です。
 - `robots.txt` はProductionのみクロールを許可
 - `sitemap.xml` は公開ページのみを列挙し、404を含めない
 - canonicalとOpen Graph URLは `PUBLIC_SITE_URL` から生成
+- JSON-LDは通常ページを`WebPage`、記事詳細を`Article`として出力
+- 未確認の価格、評価、レビュー数、在庫をJSON-LDへ含めない
+
+## 依存関係のinstall script
+
+pnpm 10では依存パッケージのinstall scriptを既定で実行しません。`pnpm-workspace.yaml` の `onlyBuiltDependencies` で、現行ビルドに必要な `esbuild` と `sharp` だけを明示的に許可します。許可対象を追加する場合は、用途とサプライチェーン上の影響をレビューしてください。
 
 ## CI
 
 GitHub ActionsはPreviewの `pnpm verify` に加え、秘密値を使わないテスト用HTTPS URLでProduction設定と生成HTMLを検証します。CIはデプロイやProduction traffic変更を行いません。
 
-branch protectionの必須チェック設定はリポジトリ設定で別途有効化し、失敗中のマージを禁止してください。
+GitHub公式ActionはNode 24対応のv6系commit SHAへ固定しています。branch protectionの必須チェック設定はリポジトリ設定で別途有効化し、失敗中のマージを禁止してください。
 
 ## Cloudflare Workers Builds
 
