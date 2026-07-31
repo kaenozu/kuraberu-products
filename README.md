@@ -20,14 +20,13 @@ Previewは `DEPLOYMENT_ENV=preview`、Productionは `DEPLOYMENT_ENV=production` 
 - `PUBLIC_SITE_URL`
 - `PUBLIC_RAKUTEN_PREMIUM_URL`
 - `PUBLIC_RAKUTEN_SARASARA_URL`
+- `PUBLIC_CONTACT_URL`
 
 楽天APIから購入リンクを補完する場合は次も設定します。
 
 - `RAKUTEN_APPLICATION_ID`
 - `RAKUTEN_ACCESS_KEY`
 - `RAKUTEN_AFFILIATE_ID`
-
-問い合わせ先を変更する場合は `PUBLIC_CONTACT_URL` を設定します。
 
 ## Cloudflare Workers Builds
 
