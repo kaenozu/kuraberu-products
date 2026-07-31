@@ -51,7 +51,7 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
 /** 必須語をすべて含む候補を選び、広告URLがある商品を優先する。 */
 export function selectRakutenProduct(
   products: RakutenProduct[],
-  requiredTerms: string[],
+  requiredTerms: readonly string[],
 ): RakutenProduct | undefined {
   const normalizedTerms = requiredTerms.map(normalize);
   const matches = products.filter((product) => {
@@ -66,10 +66,11 @@ export async function fetchRakutenProducts(
   keyword: string,
   hits = 10,
 ): Promise<RakutenProduct[]> {
-  const cached = cache.get(keyword);
+  const cacheKey = `${keyword}\u0000${hits}`;
+  const cached = cache.get(cacheKey);
   if (cached) return cached;
   const request = fetchRakutenProductsUncached(keyword, hits);
-  cache.set(keyword, request);
+  cache.set(cacheKey, request);
   return request;
 }
 
