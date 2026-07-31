@@ -90,3 +90,12 @@
 - Wrangler手動デプロイ検証URL: `https://dcf07e4b.kuraberu-products.pages.dev`
 - 手動デプロイURLの`/`、`/articles/`、`/articles/pampers-newborn/`はHTTP 200。
 - 手動デプロイはローカル環境変数なしで生成したため楽天CTAが0件であり、Production受入成功とは扱わない。Git連携のProduction環境変数を注入した再ビルドが必要。
+
+## Cloudflare設定照合（2026-07-31 再調査）
+
+- `wrangler pages project list` の`kuraberu-products`は `Git Provider: No`。
+- `wrangler pages deployment list --project-name kuraberu-products` はPagesのProductionデプロイ一覧を返す。
+- 一方、PRの失敗Check Run名は `Workers Builds: kuraberu-products` で、CloudflareのWorkersサービスURLとBuild IDを持つ。
+- したがって、PRチェックが監視しているWorkers Buildsサービスと、手動確認したPagesプロジェクトは同一のGit連携経路ではないことを確認した。
+- Pages Productionの秘密変数名は `PUBLIC_RAKUTEN_PREMIUM_URL`、`PUBLIC_RAKUTEN_SARASARA_URL`、`PUBLIC_SITE_URL`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID`、`RAKUTEN_APPLICATION_ID` の6件が登録済み（値は出力していない）。
+- Pagesの秘密変数はWranglerのローカル`dist`アップロードには注入されないため、手動アップロードのCTA 0件は環境変数未注入で説明できる。
