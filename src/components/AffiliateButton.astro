@@ -6,4 +6,4 @@ const generated = keyword ? (await fetchRakutenProducts(keyword)).find((item) =>
 const resolvedHref = typeof href === 'string' && /^https:\/\//.test(href) && !href.includes('example.com') ? href : generated;
 const valid = typeof resolvedHref==='string' && /^https:\/\//.test(resolvedHref) && !resolvedHref.includes('example.com');
 ---
-{valid ? <a class="cta" href={resolvedHref} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}アフィリエイトURL未設定（{placement}）</span>}
+{valid ? <a class="cta" href={resolvedHref} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>}

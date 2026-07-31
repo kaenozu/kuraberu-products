@@ -102,6 +102,21 @@ a {
   font-family: Georgia, "Yu Mincho", serif;
   font-size: 1.08rem;
 }
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+.secondary-link,
+.category-link,
+.text-link {
+  color: var(--ink);
+  font-weight: 800;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #efb19b;
+}
 .hero-grid {
   display: grid;
   gap: 3rem;
@@ -260,6 +275,36 @@ a {
   color: var(--muted);
   font-size: 1.05rem;
 }
+.article-index {
+  max-width: 900px;
+}
+.article-index h1 {
+  font-size: clamp(2.4rem, 6vw, 4.8rem);
+  line-height: 1.05;
+  letter-spacing: -0.07em;
+  margin: 0 0 1.25rem;
+}
+.lead {
+  max-width: 650px;
+  color: var(--muted);
+  font-family: Georgia, "Yu Mincho", serif;
+  font-size: 1.08rem;
+}
+.article-list {
+  display: grid;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+.article-list-card {
+  max-width: 700px;
+}
+.article-list-card h2 {
+  margin: 0.6rem 0;
+  font-size: clamp(1.5rem, 3vw, 2.3rem);
+}
+.article-list-card h2 a {
+  text-decoration: none;
+}
 @media (max-width: 700px) {
   .section-heading,
   .about-strip {
@@ -324,6 +369,11 @@ a {
   border-radius: 14px;
   overflow: hidden;
 }
+.table-scroll {
+  overflow-x: auto;
+  margin-inline: -0.25rem;
+  padding-inline: 0.25rem;
+}
 .comparison th,
 .comparison td {
   border-bottom: 1px solid var(--line);
@@ -378,6 +428,23 @@ a {
   background: #fff;
   border-radius: 14px;
 }
+.source-links {
+  display: grid;
+  gap: 0.75rem;
+}
+.card-link {
+  display: block;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  padding: 1rem 1.1rem;
+  border-radius: 8px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.card-link:hover,
+.card-link:focus-visible {
+  border-color: var(--accent);
+}
 .tag {
   display: inline-block;
   color: var(--accent);
@@ -423,6 +490,14 @@ a {
   }
   .wrap {
     width: min(100% - 1.5rem, 1120px);
+  }
+  .hero-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .category-link {
+    display: inline-block;
+    margin-top: 0.25rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {

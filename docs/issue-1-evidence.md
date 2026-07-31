@@ -1,0 +1,63 @@
+# Issue #1 実装・検証記録
+
+## 実装結果
+
+| 指摘 | 対応 |
+| --- | --- |
+| トップに主CTAがない | ヒーローに「比較記事を見る」を追加 |
+| 操作できないカテゴリチップ | 未実装カテゴリを撤去し、実在する「育児用品の記事一覧」へ変更 |
+| ナビが個別記事へ直リンク | `/articles/` の一覧ページへ変更 |
+| `/articles/index.astro` がない | 比較記事一覧ページを追加 |
+| 比較表が3項目 | 6項目（選び方、新生児用、サイズ・体重、素材・仕様、価格・在庫、個別口コミ）へ拡充 |
+| 「実際の口コミ」が検索結果だけ | 「口コミの確認状況」に変更し、個別レビュー未採用を明記 |
+| CTA未設定時に内部 `placement` が露出 | 利用者向けの購入リンク準備中メッセージへ変更 |
+| ブランド名が「くらべる育児」 | ページタイトルを「くらべる商品メモ」へ統一 |
+
+## 情報源対応表
+
+| 記事の記載・判断材料 | 確認先 | 記事内の扱い |
+| --- | --- | --- |
+| 商品の公式仕様、サイズ、注意事項 | [パンパース公式サイト](https://www.jp.pampers.com/) | 一次情報。数値は未確認のため断定しない |
+| 肌へのいちばんの価格・在庫 | [楽天市場検索](https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E8%82%8C%E3%81%B8%E3%81%AE%E3%81%84%E3%81%A1%E3%81%B0%E3%82%93+%E6%96%B0%E7%94%9F%E5%85%90/) | 販売ページで購入前に確認 |
+| さらさらケアの価格・在庫 | [楽天市場検索](https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E3%81%95%E3%82%89%E3%81%95%E3%82%89%E3%82%B1%E3%82%A2+%E6%96%B0%E7%94%9F%E5%85%90/) | 販売ページで購入前に確認 |
+| 公開投稿 | [X検索結果](https://x.com/search?q=%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9%20%E6%96%B0%E7%94%9F%E5%85%90&src=typed_query) | 個別レビューとしては採用せず、原文確認先のみ掲載 |
+
+## ブラウザ検証
+
+Google Chrome（Playwright）でAstro previewを起動し、320 / 390 / 1440pxで以下を確認した。
+
+- `/`、`/articles/`、`/articles/pampers-newborn/`、`/about/`、`/privacy/` がHTTP 200
+- 全幅で横スクロールなし
+- 各ページにh1が1つ
+- Tab操作でリンクにフォーカス可能
+- トップ → 記事一覧 → 個別記事 → 楽天CTAの導線をクリック確認
+- console error、page error、request failureなし
+- 記事の比較表は6行
+- 旧ブランド名と `article-end` の表示なし
+
+変更前コミット `256de4e` と改修後を、それぞれ一時プレビューで起動してスクリーンショットを保存している。改修後は3幅、変更前は代表2幅を比較できる。
+
+変更前：
+
+- `issue-1-before-390-home.png`
+- `issue-1-before-390-article.png`
+- `issue-1-before-1440-home.png`
+- `issue-1-before-1440-article.png`
+
+改修後：
+
+- `issue-1-after-320-home.png`
+- `issue-1-after-390-home.png`
+- `issue-1-after-1440-home.png`
+- `issue-1-after-320-index.png`
+- `issue-1-after-390-index.png`
+- `issue-1-after-1440-index.png`
+- `issue-1-after-320-article.png`
+- `issue-1-after-390-article.png`
+- `issue-1-after-1440-article.png`
+
+## コマンド検証
+
+`npm run verify` を実行し、format、lint、Astro typecheck、content validation、Vitest（1 file / 1 test）、Astro build（7 pages）がすべて成功した。
+
+Cloudflare Pagesの公開URLは、この環境ではDNS/ネットワーク制限のため未確認。
