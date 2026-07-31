@@ -200,3 +200,53 @@ Cloudflare Pages APIのrollbackエンドポイントにより、Productionを既
 - 楽天API秘密変数3件は未設定。値の保管場所を確認し、無ければ楽天側で再発行し、Cloudflare Dashboardから登録する必要がある（値のやり取りはチャット・ログ・コミットに載せない）。
 - ローカル変更（`PUBLIC_CONTACT_URL`任意化、回帰テスト）はGitHubのmainに未反映。Phase 4でPR化・マージが必要。
 - `b4477a4b`のデプロイはgitの記録上`f20c949`（`96103bc`とツリー同一）だが、ビルドには上記ローカル変更が含まれる。
+
+## Phase 4: mainとの整合（PR #12）と正式デプロイ（2026-07-31）
+
+### 経緯
+
+Phase 3のProduction（`b4477a4b`）は未コミットのローカル変更を含むビルドだったため、Gitからの再現性が保証できない状態だった。そのため以下を実施した。
+
+### PR #12 の内容
+
+- ブランチ: `agent/11-env-config-fix` → `feat/affiliate-site-foundation` にマージ（Squash）
+- マージコミット: `397e600c282477a3abd26a9c07ba823aab892f7b`
+- 変更: `astro.config.mjs`・`scripts/validate-build-env.mjs`（`PUBLIC_CONTACT_URL`必須チェック削除）、`.env.example`・`README.md`（同期）、`tests/env-config.test.ts`（回帰テスト新規）、`docs/issue-2-evidence.md`（証跡追記）
+- CI: verify（SUCCESS）、Workers Builds（SUCCESS）、GitGuardian（SUCCESS）
+- マージ前にローカル3wayマージでコンフリクトを解消（`96103bc`と`f20c949`はツリー同一だが履歴が別経路のため、`--ours`で解決）
+
+### 正式デプロイと受入
+
+| 項目                             | 値                                                                                                                                |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| 新しいProduction Deployment ID   | `b9645791-f080-4848-8ef6-7b050056ef5f`                                                                                            |
+| Deploymentに記録されたSource SHA | `397e600`（マージ後mainのHEADと完全一致）                                                                                         |
+| ビルド対象                       | マージ後main `397e600` のツリー（`agent/12-deploy-main`ブランチでチェックアウト、`git diff --stat 397e600 de1b245`差分0行を確認） |
+| デプロイ方式                     | Wrangler Direct Upload（`wrangler pages deploy dist --project-name kuraberu-products --branch main`）                             |
+| デプロイ前のProduction           | `b4477a4b-90fb-4ae8-bda2-7c7596195fa7`（Phase 3）                                                                                 |
+
+ローカル検証（`DEPLOYMENT_ENV=production`、`corepack pnpm run verify`）は全PASS（format、lint、typecheck、validate:env、validate:content、build 7ページ、check:rendered、check:external-links、test 3 files / 8 tests）。
+
+公開受入結果（Phase 3と同一項目、全てPASS）:
+
+| 確認項目                                        | 結果                                                                                                                                  |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`、`/articles/`、`/articles/pampers-newborn/` | HTTP 200（3件とも）                                                                                                                   |
+| 楽天CTA                                         | 記事ページに6件（`hb.afl.rakuten.co.jp`アフィリエイト2件＋`search.rakuten.co.jp`検索4件）。アフィリエイト先はnetbaby、hikaritvの2商品 |
+| CTAリンク                                       | 空hrefなし（全ページ0件）                                                                                                             |
+| canonical                                       | `https://kuraberu-products.pages.dev/` と一致（全ページ）                                                                             |
+| robots                                          | `index,follow`（全ページ）                                                                                                            |
+| console error / warn                            | なし（Chrome DevToolsで確認）                                                                                                         |
+| レイアウト                                      | 320 / 390 / 1440pxで横スクロール・はみ出し要素なし（`scrollWidth === clientWidth`）                                                   |
+
+### Deployment保持方針
+
+- 現時点ではどのDeploymentも削除していない。
+- `7d203258`（Source `2b0c937`）: 既知のロールバック先として保持。
+- `b4477a4b`（Phase 3）: 履歴・ロールバック用途として保持。
+- ロールバック手順: `POST /accounts/3d144b7779afca3d1a896bc5796c0ad8/pages/projects/kuraberu-products/deployments/7d203258-7afe-4254-bcaa-d2ee71ea3255/rollback`
+
+### 残存リスク（Phase 4後）
+
+- 楽天API秘密変数3件（`RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID`）は未設定。別タスクとして保管場所確認→権限・利用状況確認→無ければ再発行→Cloudflareへの秘密登録→API補完動作確認を実施する。値はチャット・ログ・コミットに載せない。
+- このworktreeの`core.autocrlf`はシステム設定（`C:\Program Files\Git\etc\gitconfig`）が`true`のため、checkout時にCRLF化される。コミット内容はLFのまま（blobを確認済み）。
