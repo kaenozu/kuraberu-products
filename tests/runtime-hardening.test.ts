@@ -10,9 +10,9 @@ describe("public URL boundaries", () => {
     expect(
       isAllowedRakutenUrl("https://hb.afl.rakuten.co.jp/hgc/example"),
     ).toBe(true);
-    expect(
-      isAllowedRakutenUrl("https://item.rakuten.co.jp/shop/item"),
-    ).toBe(true);
+    expect(isAllowedRakutenUrl("https://item.rakuten.co.jp/shop/item")).toBe(
+      true,
+    );
     expect(isAllowedRakutenUrl("https://r10.to/example")).toBe(true);
     expect(isAllowedRakutenUrl("https://example.test/item")).toBe(false);
     expect(isAllowedRakutenUrl("javascript:alert(1)")).toBe(false);
@@ -21,21 +21,22 @@ describe("public URL boundaries", () => {
 
 describe("Rakuten API request", () => {
   it("parses an approved response without logging credentials", async () => {
-    const fetchImpl = vi.fn(async () =>
-      new Response(
-        JSON.stringify({
-          items: [
-            {
-              itemCode: "shop:item-1",
-              itemName: "パンパース 肌へのいちばん 新生児",
-              itemUrl: "https://item.rakuten.co.jp/shop/item-1",
-              affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/item-1",
-              itemPrice: 1980,
-            },
-          ],
-        }),
-        { status: 200 },
-      ),
+    const fetchImpl = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            items: [
+              {
+                itemCode: "shop:item-1",
+                itemName: "パンパース 肌へのいちばん 新生児",
+                itemUrl: "https://item.rakuten.co.jp/shop/item-1",
+                affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/item-1",
+                itemPrice: 1980,
+              },
+            ],
+          }),
+          { status: 200 },
+        ),
     ) as unknown as typeof fetch;
 
     const products = await requestRakutenProducts(
@@ -79,21 +80,22 @@ describe("Rakuten API request", () => {
   });
 
   it("rejects non-Rakuten URLs returned by the API", async () => {
-    const fetchImpl = vi.fn(async () =>
-      new Response(
-        JSON.stringify({
-          items: [
-            {
-              itemCode: "shop:item-1",
-              itemName: "パンパース 肌へのいちばん 新生児",
-              itemUrl: "https://example.test/item-1",
-              affiliateUrl: "https://example.test/ad-1",
-              itemPrice: 1980,
-            },
-          ],
-        }),
-        { status: 200 },
-      ),
+    const fetchImpl = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            items: [
+              {
+                itemCode: "shop:item-1",
+                itemName: "パンパース 肌へのいちばん 新生児",
+                itemUrl: "https://example.test/item-1",
+                affiliateUrl: "https://example.test/ad-1",
+                itemPrice: 1980,
+              },
+            ],
+          }),
+          { status: 200 },
+        ),
     ) as unknown as typeof fetch;
 
     await expect(
