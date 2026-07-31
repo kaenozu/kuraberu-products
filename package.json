@@ -24,5 +24,10 @@
     "eslint": "latest",
     "prettier": "latest",
     "vitest": "latest"
+  },
+  "pnpm": {
+    "overrides": {
+      "cookie": "1.0.2"
+    }
   }
 }
