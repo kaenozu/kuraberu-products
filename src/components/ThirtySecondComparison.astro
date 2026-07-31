@@ -5,15 +5,15 @@ const {ctaHref = '#purchase'} = Astro.props;
 ---
 <section class="thirty-second" aria-labelledby="thirty-second-heading">
   <div class="thirty-second-heading"><div><p class="section-label">30秒比較</p><h2 id="thirty-second-heading">まず、違いはこの3つ</h2></div><a class="text-link" href="#comparison-details">詳細比較へ ↓</a></div>
-  <p class="summary-conclusion"><strong>結論：</strong>肌あたりを優先するか、価格・買いやすさを優先するかで候補を分けます。サイズや体重目安は購入前に公式ページで確認してください。</p>
+  <p class="summary-conclusion"><strong>結論：</strong>肌へのやさしさに関する機能を詳しく確認するなら「肌へのいちばん」、モレ・ムレ対策の機能を確認するなら「さらさらケア」から見ます。どちらも新生児5kgまでのテープサイズが公式掲載されています。</p>
   <div class="summary-products">
-    <ProductIdentity product="パンパース 新生児用" line="肌へのいちばん" tone="premium" audience="肌あたりを優先したい人の候補" note="公式ページでサイズ・仕様を確認" status="official" compact={true} />
-    <ProductIdentity product="パンパース 新生児用" line="さらさらケア" tone="standard" audience="価格・買いやすさを優先したい人の候補" note="販売ページで価格・在庫を確認" status="retailer" compact={true} />
+    <ProductIdentity product="パンパース 新生児用" line="肌へのいちばん" tone="premium" audience="肌へのやさしさに関する機能を確認したい人の候補" note="公式ページでサイズ・仕様を確認" status="official" compact={true} />
+    <ProductIdentity product="パンパース 新生児用" line="さらさらケア" tone="standard" audience="モレ・ムレ対策の機能を確認したい人の候補" note="公式ページでサイズ・仕様を確認" status="official" compact={true} />
   </div>
   <ul class="summary-differences">
-    <li><b>選び方</b><span>肌あたり重視</span><span>価格・買いやすさ重視</span></li>
-    <li><b>仕様</b><span>公式ページで確認</span><span>公式ページで確認</span></li>
+    <li><b>主な機能</b><span>摩擦・ゆるうんち・肌ざわり</span><span>モレガード・フィット・吸収体</span></li>
+    <li><b>新生児</b><span>5kgまで</span><span>5kgまで</span></li>
     <li><b>口コミ</b><span>個別レビュー未採用</span><span>個別レビュー未採用</span></li>
   </ul>
-  <div class="summary-footer"><VerificationStatus status="insufficient" /><a class="cta" href={ctaHref}>購入リンクへ ↓</a></div>
+  <div class="summary-footer"><VerificationStatus status="official" /><VerificationStatus status="insufficient" /><a class="cta" href={ctaHref}>購入リンクへ ↓</a></div>
 </section>
