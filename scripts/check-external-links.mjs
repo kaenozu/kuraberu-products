@@ -15,8 +15,17 @@ const externalUrls = new Set();
 const errors = [];
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  for (const match of html.matchAll(/href="(https?:\/\/[^"]+)"/g)) {
-    externalUrls.add(match[1]);
+  for (const match of html.matchAll(/href="([^"]+)"/g)) {
+    const value = match[1];
+    if (/^(?:javascript|data):/i.test(value)) {
+      errors.push(`${file}: unsafe link scheme: ${value.split(":", 1)[0]}`);
+      continue;
+    }
+    if (/^http:\/\//i.test(value)) {
+      errors.push(`${file}: non-HTTPS external URL: ${value}`);
+      continue;
+    }
+    if (/^https:\/\//i.test(value)) externalUrls.add(value);
   }
 }
 
@@ -25,6 +34,8 @@ for (const value of externalUrls) {
     const url = new URL(value);
     if (url.protocol !== "https:")
       errors.push(`non-HTTPS external URL: ${value}`);
+    if (url.username || url.password)
+      errors.push(`credential-bearing external URL: ${url.hostname}`);
     if (
       url.hostname === "example.com" ||
       url.hostname.endsWith(".example.com")
