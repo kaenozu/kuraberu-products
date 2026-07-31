@@ -1,4 +1,9 @@
 ---
-const {href,label,merchant,productId,placement} = Astro.props; const valid = typeof href==='string' && /^https:\/\//.test(href) && !href.includes('example.com');
+import {fetchRakutenProducts} from '../lib/rakuten';
+const {href,label,merchant,productId,placement} = Astro.props;
+const keyword = productId === 'pampers-premium-newborn' ? 'パンパース 肌へのいちばん 新生児' : productId === 'pampers-sarasara-newborn' ? 'パンパース さらさらケア 新生児' : '';
+const generated = keyword ? (await fetchRakutenProducts(keyword)).find((item) => /新生児/.test(item.name))?.affiliateUrl : undefined;
+const resolvedHref = typeof href === 'string' && /^https:\/\//.test(href) && !href.includes('example.com') ? href : generated;
+const valid = typeof resolvedHref==='string' && /^https:\/\//.test(resolvedHref) && !resolvedHref.includes('example.com');
 ---
-{valid ? <a class="cta" href={href} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}アフィリエイトURL未設定（{placement}）</span>}
+{valid ? <a class="cta" href={resolvedHref} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}アフィリエイトURL未設定（{placement}）</span>}
