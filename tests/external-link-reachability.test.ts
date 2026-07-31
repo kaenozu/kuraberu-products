@@ -7,9 +7,9 @@ import {
 
 describe("external link reachability classification", () => {
   it("decodes generated HTML attribute entities", () => {
-    expect(
-      decodeHtmlAttribute("https://example.test/?a=1&amp;b=2"),
-    ).toBe("https://example.test/?a=1&b=2");
+    expect(decodeHtmlAttribute("https://example.test/?a=1&amp;b=2")).toBe(
+      "https://example.test/?a=1&b=2",
+    );
   });
 
   it("treats success and redirects as reachable", () => {
@@ -31,9 +31,7 @@ describe("external link reachability classification", () => {
 
 describe("external link probe", () => {
   it("uses HEAD when the provider supports it", async () => {
-    const fetchMock = vi.fn(
-      async () => new Response(null, { status: 204 }),
-    );
+    const fetchMock = vi.fn(async () => new Response(null, { status: 204 }));
 
     const result = await probeExternalUrl("https://example.test/resource", {
       fetchImpl: fetchMock as unknown as typeof fetch,
