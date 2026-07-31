@@ -26,7 +26,7 @@ function pathnameFor(file) {
   if (relative.endsWith("/index.html")) {
     return `/${relative.slice(0, -"index.html".length)}`;
   }
-  return `/${relative.slice(0, -".html".length)}`;
+  return `/${relative.slice(0, -".html".length)}/`;
 }
 
 function readAttribute(html, pattern, label, file, errors) {
