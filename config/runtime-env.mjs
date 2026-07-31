@@ -60,10 +60,7 @@ export function normalizeSiteUrl(value, name = "PUBLIC_SITE_URL") {
   return url.origin;
 }
 
-export function normalizeOptionalPublicUrl(
-  value,
-  name = "PUBLIC_CONTACT_URL",
-) {
+export function normalizeOptionalPublicUrl(value, name = "PUBLIC_CONTACT_URL") {
   if (!nonEmpty(value)) return undefined;
   return parseHttpsUrl(value, name).toString();
 }
@@ -105,9 +102,7 @@ export function validateBuildEnvironment(environment = process.env) {
   const siteUrl = nonEmpty(environment.PUBLIC_SITE_URL)
     ? normalizeSiteUrl(environment.PUBLIC_SITE_URL)
     : undefined;
-  const contactUrl = normalizeOptionalPublicUrl(
-    environment.PUBLIC_CONTACT_URL,
-  );
+  const contactUrl = normalizeOptionalPublicUrl(environment.PUBLIC_CONTACT_URL);
   const rakutenPremiumUrl = normalizeOptionalRakutenUrl(
     environment.PUBLIC_RAKUTEN_PREMIUM_URL,
     "PUBLIC_RAKUTEN_PREMIUM_URL",
@@ -136,9 +131,7 @@ export function validateBuildEnvironment(environment = process.env) {
       throw new Error("Missing required production variable: PUBLIC_SITE_URL");
     }
 
-    const directUrlsReady = Boolean(
-      rakutenPremiumUrl && rakutenSarasaraUrl,
-    );
+    const directUrlsReady = Boolean(rakutenPremiumUrl && rakutenSarasaraUrl);
     if (!directUrlsReady && !rakutenApiReady) {
       throw new Error(
         "Production purchase links require both direct Rakuten URLs or all Rakuten API credentials",
