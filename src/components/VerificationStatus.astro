@@ -1,0 +1,11 @@
+---
+const {status} = Astro.props;
+const states = {
+  official: {icon: '✓', label: '公式確認済み'},
+  retailer: {icon: '↗', label: '販売ページ確認'},
+  insufficient: {icon: '…', label: '口コミ不足'},
+  unverified: {icon: '?', label: '未確認'},
+} as const;
+const state = states[status as keyof typeof states] ?? states.unverified;
+---
+<span class={`status status-${status}`} aria-label={`確認状態: ${state.label}`}><b aria-hidden="true">{state.icon}</b>{state.label}</span>
