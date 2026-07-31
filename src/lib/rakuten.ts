@@ -61,9 +61,7 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         price: Number(item.itemPrice ?? 0),
       } satisfies RakutenProduct;
     })
-    .filter(
-      (item) => item.id && item.name && isAllowedRakutenUrl(item.url),
-    );
+    .filter((item) => item.id && item.name && isAllowedRakutenUrl(item.url));
 }
 
 /** 必須語をすべて含む候補を選び、広告URLがある商品を優先する。 */
