@@ -183,7 +183,8 @@ const providerLabel = externalEmbedProviderLabel(provider);
         } else {
           await renderWidget(target, config);
         }
-        status.textContent = "外部コンテンツを表示しました。";
+        status.textContent =
+          "読み込み処理を完了しました。表示されない場合は元の投稿へのリンクから確認してください。";
         button.remove();
       } catch {
         target.hidden = true;

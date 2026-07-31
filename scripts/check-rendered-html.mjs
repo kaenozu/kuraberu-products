@@ -53,5 +53,18 @@ for (const file of htmlFiles) {
   }
 }
 
+const embedPage = path.join(dist, "articles", "pampers-newborn", "index.html");
+if (fs.existsSync(embedPage)) {
+  const html = fs.readFileSync(embedPage, "utf8");
+  const thirdPartyScript = /<script[^>]+\bsrc=/i.test(html);
+  const thirdPartyIframe = /<iframe(?:\s|>)/i.test(html);
+  const preconnect = /<link[^>]+rel=["']?preconnect/i.test(html);
+
+  if (thirdPartyScript)
+    errors.push(`${embedPage}: third-party script tag in initial HTML`);
+  if (thirdPartyIframe) errors.push(`${embedPage}: iframe tag in initial HTML`);
+  if (preconnect) errors.push(`${embedPage}: preconnect in initial HTML`);
+}
+
 if (errors.length) throw new Error(errors.join("\n"));
 console.log(`rendered html ok: ${htmlFiles.length} pages`);
