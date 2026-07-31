@@ -18,6 +18,7 @@ if (deploymentEnv === "production") {
   requireHttpsUrl("PUBLIC_SITE_URL");
   requireHttpsUrl("PUBLIC_RAKUTEN_PREMIUM_URL");
   requireHttpsUrl("PUBLIC_RAKUTEN_SARASARA_URL");
+  requireHttpsUrl("PUBLIC_CONTACT_URL");
 }
 
 console.log(`build environment ok: ${deploymentEnv}`);
