@@ -31,8 +31,11 @@
   },
   "devDependencies": {
     "@astrojs/check": "latest",
+    "@typescript-eslint/parser": "8.65.0",
     "eslint": "latest",
+    "eslint-plugin-astro": "3.0.1",
     "prettier": "latest",
+    "typescript-eslint": "8.65.0",
     "vitest": "latest"
   }
 }
