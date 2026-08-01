@@ -1,9 +1,10 @@
-/// <reference types="vitest/config" />
-
 import { getViteConfig } from "astro/config";
+import type { UserConfig as VitestUserConfig } from "vitest/config";
 
-export default getViteConfig({
+const vitestConfig: VitestUserConfig = {
   test: {
     environment: "node",
   },
-});
+};
+
+export default getViteConfig(vitestConfig);
