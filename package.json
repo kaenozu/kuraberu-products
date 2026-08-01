@@ -2,10 +2,10 @@
   "name": "kuraberu-ikuji",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.34.5",
   "engines": {
     "node": "^20.19.1 || >=22.12.0",
-    "pnpm": "10.11.1"
+    "pnpm": "10.34.5"
   },
   "scripts": {
     "dev": "astro dev",
@@ -30,14 +30,9 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@astrojs/check": "latest",
-    "eslint": "latest",
-    "prettier": "latest",
-    "vitest": "latest"
-  },
-  "pnpm": {
-    "overrides": {
-      "cookie": "1.0.2"
-    }
+    "@astrojs/check": "0.9.10",
+    "eslint": "10.8.0",
+    "prettier": "3.9.6",
+    "vitest": "4.1.10"
   }
 }
