@@ -42,7 +42,7 @@ jobs:
               echo "unexpected source class token: $class_name" >&2
               failures=$((failures + 1))
             fi
-            if grep -R --line-number --extended-regexp "$pattern" dist; then
+            if grep -R --line-number --extended-regexp "$pattern" dist --include='*.html'; then
               echo "unexpected generated HTML class token: $class_name" >&2
               failures=$((failures + 1))
             fi
