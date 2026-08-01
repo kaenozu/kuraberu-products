@@ -1,7 +1,11 @@
 packages:
   - .
+# Astro/Viteの実行に必要なネイティブ成果物だけinstall scriptを許可する。
+# 追加パッケージを許可する場合は、用途と供給網リスクを個別にレビューする。
 onlyBuiltDependencies:
   - esbuild
   - sharp
+# cookie <0.7.0のCVE-2024-47764を回避するため、推移依存を修正版へ固定する。
+# 全直接依存がcookie >=1.0.2を要求する状態になったら、このoverrideを削除する。
 overrides:
   cookie: 1.0.2
