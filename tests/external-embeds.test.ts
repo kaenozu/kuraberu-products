@@ -124,6 +124,19 @@ describe("external embed URL validation", () => {
     ]);
   });
 
+  it("keeps the reviewed Pinterest acceptance embed in the related article", () => {
+    const article = readFileSync(
+      "src/pages/articles/pampers-newborn/index.astro",
+      "utf8",
+    );
+
+    expect(article).toContain('provider="pinterest"');
+    expect(article).toContain(
+      "https://www.pinterest.com/pin/1095922890543405483/",
+    );
+    expect(article.match(/<ExternalEmbed\s/g)).toHaveLength(2);
+  });
+
   it("does not keep real external embed screenshots in evidence", () => {
     const evidenceFiles = readdirSync("docs/evidence").filter((file) =>
       /^issue-15-embed-.*\.(?:png|jpe?g|webp|gif)$/i.test(file),
