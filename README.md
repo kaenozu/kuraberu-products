@@ -61,7 +61,7 @@ Productionでは次が必須です。
 
 pnpm 10では依存パッケージのinstall scriptを既定で実行しません。`pnpm-workspace.yaml` の `onlyBuiltDependencies` で、現行ビルドに必要な `esbuild` と `sharp` だけを明示的に許可します。許可対象を追加する場合は、用途とサプライチェーン上の影響をレビューしてください。
 
-`cookie`はCVE-2024-47764の修正版へ推移依存を固定しています。全直接依存が`cookie >=1.0.2`を要求する状態になったらoverrideを削除します。
+`cookie`はCVE-2024-47764の修正版へ推移依存を固定しています。overrideなしでも全依存経路が`cookie >=1.0.2`へ解決すると確認できたら削除します。
 
 ## CI
 
