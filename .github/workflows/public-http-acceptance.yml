@@ -1,0 +1,67 @@
+name: public HTTP acceptance
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  public-http:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check public HTTP behavior
+        shell: bash
+        env:
+          BASE_URL: https://kuraberu-products.pages.dev
+        run: |
+          set -euo pipefail
+          work="$(mktemp -d)"
+          trap 'rm -rf "$work"' EXIT
+
+          request() {
+            local name="$1"
+            local path="$2"
+            curl --silent --show-error --location \
+              --max-time 20 \
+              --dump-header "$work/$name.headers" \
+              --output "$work/$name.body" \
+              --write-out '%{http_code}' \
+              "$BASE_URL$path"
+          }
+
+          home_status="$(request home /)"
+          article_status="$(request article /articles/pampers-newborn/)"
+          missing_status="$(request missing /__definitely-not-found-20260801__/)"
+          robots_status="$(request robots /robots.txt)"
+          sitemap_status="$(request sitemap /sitemap.xml)"
+
+          printf 'home=%s article=%s missing=%s robots=%s sitemap=%s\n' \
+            "$home_status" "$article_status" "$missing_status" "$robots_status" "$sitemap_status"
+
+          test "$home_status" = 200
+          test "$article_status" = 200
+          test "$missing_status" = 404
+          test "$robots_status" = 200
+          test "$sitemap_status" = 200
+
+          grep -Fq 'ページが見つかりません' "$work/missing.body"
+          grep -Eq '<meta name="robots" content="noindex,nofollow"' "$work/missing.body"
+          grep -Eq '<a[^>]+href="/"[^>]*>トップへ戻る</a>' "$work/missing.body"
+
+          grep -Eq '<meta name="robots" content="index,follow"' "$work/home.body"
+          grep -Eq '<meta name="robots" content="index,follow"' "$work/article.body"
+          grep -Fq '<link rel="canonical" href="https://kuraberu-products.pages.dev/"' "$work/home.body"
+          grep -Fq '<link rel="canonical" href="https://kuraberu-products.pages.dev/articles/pampers-newborn/"' "$work/article.body"
+
+          grep -Fq 'Allow: /' "$work/robots.body"
+          grep -Fq 'Sitemap: https://kuraberu-products.pages.dev/sitemap.xml' "$work/robots.body"
+          grep -Fq '<loc>https://kuraberu-products.pages.dev/</loc>' "$work/sitemap.body"
+          grep -Fq '<loc>https://kuraberu-products.pages.dev/articles/pampers-newborn/</loc>' "$work/sitemap.body"
+          if grep -Fq '/404' "$work/sitemap.body"; then
+            echo 'sitemap unexpectedly contains 404' >&2
+            exit 1
+          fi
+
+          echo 'public HTTP acceptance passed'
