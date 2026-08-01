@@ -82,11 +82,37 @@ describe("rendered external embed limit", () => {
     ).toEqual([]);
   });
 
+  it("does not count embeds inside a terminated multiline comment", () => {
+    const html = `<!--
+${embed.repeat(4)}
+-->
+${embed}`;
+    expect(countRenderedExternalEmbeds(html)).toBe(1);
+    expect(
+      validateRenderedExternalEmbedCounts([
+        { filePath: "dist/comment-ok/index.html", html },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("rejects an unterminated comment that hides four embeds", () => {
+    const html = `<!--
+${embed.repeat(4)}`;
+    expect(
+      validateRenderedExternalEmbedCounts([
+        { filePath: "dist/comment-hidden/index.html", html },
+      ]),
+    ).toEqual([
+      "dist/comment-hidden/index.html: malformed rendered HTML while checking external embeds",
+    ]);
+  });
+
   it.each([
     "<div data-external-embed",
     '<div data-external-embed="',
     "<div foo='unterminated",
     "<script>unterminated",
+    "<!--",
   ])("rejects malformed HTML in finite time: %s", (html) => {
     const startedAt = performance.now();
     expect(countRenderedExternalEmbeds(html)).toBeLessThanOrEqual(1);

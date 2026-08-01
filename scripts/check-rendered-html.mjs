@@ -93,7 +93,12 @@ function inspectRenderedExternalEmbeds(html) {
   while (index < html.length) {
     if (html.startsWith("<!--", index)) {
       const commentEnd = html.indexOf("-->", index + 4);
-      index = commentEnd === -1 ? html.length : commentEnd + 3;
+      if (commentEnd === -1) {
+        malformed = true;
+        index = html.length;
+      } else {
+        index = commentEnd + 3;
+      }
       continue;
     }
     if (html[index] !== "<") {
