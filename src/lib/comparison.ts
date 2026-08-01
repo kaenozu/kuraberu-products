@@ -35,7 +35,9 @@ const statusLabels: Record<VerificationStatus, string> = {
   unverified: "未確認",
 };
 
-export function normalizeVerificationStatus(status: unknown): VerificationStatus {
+export function normalizeVerificationStatus(
+  status: unknown,
+): VerificationStatus {
   return typeof status === "string" &&
     verificationStatuses.includes(status as VerificationStatus)
     ? (status as VerificationStatus)
