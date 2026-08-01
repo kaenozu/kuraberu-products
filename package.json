@@ -11,8 +11,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "format": "node node_modules/.pnpm/prettier@3.9.6/node_modules/prettier/bin/prettier.cjs --write .",
-    "format:check": "node node_modules/.pnpm/prettier@3.9.6/node_modules/prettier/bin/prettier.cjs --check .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "astro check",
     "test": "vitest run",
@@ -30,9 +30,9 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@astrojs/check": "0.9.10",
-    "eslint": "10.8.0",
-    "prettier": "3.9.6",
-    "vitest": "4.1.10"
+    "@astrojs/check": "latest",
+    "eslint": "latest",
+    "prettier": "latest",
+    "vitest": "latest"
   }
 }
