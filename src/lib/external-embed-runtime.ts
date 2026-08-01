@@ -18,6 +18,11 @@ export interface TimerAdapter {
   clearTimeout(handle: unknown): void;
 }
 
+export interface ConditionObserver {
+  observe(onChange: () => void): void;
+  disconnect(): void;
+}
+
 const defaultTimers: TimerAdapter = {
   setTimeout: (callback, delay) => globalThis.setTimeout(callback, delay),
   clearTimeout: (handle) => globalThis.clearTimeout(handle as number),
@@ -85,6 +90,59 @@ export async function assertProviderCallResult(result: unknown): Promise<void> {
   if (resolved !== undefined) {
     throw new Error("provider returned an invalid result");
   }
+}
+
+export function createExternalConditionWaiter(
+  condition: () => boolean,
+  observer: ConditionObserver,
+  timeoutMs: number,
+  timers: TimerAdapter = defaultTimers,
+): { promise: Promise<void>; cancel: () => void } {
+  let settled = false;
+  let timeoutHandle: unknown;
+  let resolvePromise: () => void = () => undefined;
+  let rejectPromise: (error: Error) => void = () => undefined;
+
+  const cleanup = () => {
+    observer.disconnect();
+    if (timeoutHandle !== undefined) timers.clearTimeout(timeoutHandle);
+  };
+
+  const settle = (error?: Error) => {
+    if (settled) return;
+    settled = true;
+    cleanup();
+    if (error) rejectPromise(error);
+    else resolvePromise();
+  };
+
+  const check = () => {
+    try {
+      if (condition()) settle();
+    } catch (error) {
+      settle(error instanceof Error ? error : new Error("condition failed"));
+    }
+  };
+
+  const promise = new Promise<void>((resolve, reject) => {
+    resolvePromise = resolve;
+    rejectPromise = reject;
+    try {
+      observer.observe(check);
+      timeoutHandle = timers.setTimeout(
+        () => settle(new Error("external provider render timed out")),
+        timeoutMs,
+      );
+      check();
+    } catch (error) {
+      settle(error instanceof Error ? error : new Error("observer failed"));
+    }
+  });
+
+  return {
+    promise,
+    cancel: () => settle(new Error("external provider render cancelled")),
+  };
 }
 
 export function createExternalEmbedRuntime(

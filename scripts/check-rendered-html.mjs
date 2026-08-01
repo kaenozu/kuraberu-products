@@ -23,39 +23,72 @@ function findTagEnd(source, start) {
       return index + 1;
     }
   }
-  return source.length;
+  return { end: source.length, closed: false };
 }
 
-function hasAttribute(tag, tagName) {
+function findTagEndWithStatus(source, start) {
+  const tagEnd = findTagEnd(source, start);
+  if (typeof tagEnd === "number") {
+    return { end: tagEnd, closed: true };
+  }
+  return tagEnd;
+}
+
+function inspectAttributes(tag, tagName) {
   let index = 1 + tagName.length;
   while (index < tag.length) {
     while (/\s/.test(tag[index] ?? "")) index += 1;
-    if (tag[index] === ">" || tag[index] === "/") return false;
+    if (index >= tag.length || tag[index] === ">") {
+      return { hasExternalEmbed: false, malformed: !tag.endsWith(">") };
+    }
+    if (tag[index] === "/") {
+      if (tag[index + 1] === ">")
+        return { hasExternalEmbed: false, malformed: false };
+      index += 1;
+      continue;
+    }
 
     const nameStart = index;
-    while (!/[\s=/>]/.test(tag[index] ?? "")) index += 1;
+    while (index < tag.length && !/[\s=/>]/.test(tag[index] ?? "")) {
+      index += 1;
+    }
+    if (index === nameStart) {
+      index += 1;
+      continue;
+    }
     const name = tag.slice(nameStart, index).toLowerCase();
-    if (name === "data-external-embed") return true;
+    if (name === "data-external-embed") {
+      return { hasExternalEmbed: true, malformed: !tag.endsWith(">") };
+    }
 
     while (/\s/.test(tag[index] ?? "")) index += 1;
     if (tag[index] !== "=") continue;
     index += 1;
     while (/\s/.test(tag[index] ?? "")) index += 1;
+    if (index >= tag.length) {
+      return { hasExternalEmbed: false, malformed: true };
+    }
     if (tag[index] === '"' || tag[index] === "'") {
       const quote = tag[index];
       index += 1;
       while (index < tag.length && tag[index] !== quote) index += 1;
+      if (index >= tag.length) {
+        return { hasExternalEmbed: false, malformed: true };
+      }
       index += 1;
     } else {
-      while (!/[\s>]/.test(tag[index] ?? "")) index += 1;
+      while (index < tag.length && !/[\s>]/.test(tag[index] ?? "")) {
+        index += 1;
+      }
     }
   }
-  return false;
+  return { hasExternalEmbed: false, malformed: !tag.endsWith(">") };
 }
 
-export function countRenderedExternalEmbeds(html) {
+function inspectRenderedExternalEmbeds(html) {
   let count = 0;
   let index = 0;
+  let malformed = false;
 
   while (index < html.length) {
     if (html.startsWith("<!--", index)) {
@@ -75,23 +108,34 @@ export function countRenderedExternalEmbeds(html) {
     }
 
     const tagName = tagMatch[1].toLowerCase();
-    const tagEnd = findTagEnd(html, index + tagMatch[0].length);
-    const tag = html.slice(index, tagEnd);
+    const tagEndInfo = findTagEndWithStatus(html, index + tagMatch[0].length);
+    const tag = html.slice(index, tagEndInfo.end);
     const isClosingTag = html[index + 1] === "/";
 
-    if (!isClosingTag && hasAttribute(tag, tagName)) count += 1;
+    if (!tagEndInfo.closed) malformed = true;
+    if (!isClosingTag) {
+      const attributes = inspectAttributes(tag, tagName);
+      if (attributes.hasExternalEmbed) count += 1;
+      if (attributes.malformed) malformed = true;
+    }
 
     if (!isClosingTag && (tagName === "script" || tagName === "style")) {
       const closingTag = new RegExp(`<\\/${tagName}\\s*>`, "i").exec(
-        html.slice(tagEnd),
+        html.slice(tagEndInfo.end),
       );
-      index = closingTag ? tagEnd + closingTag.index : html.length;
+      if (!closingTag) malformed = true;
+      index = closingTag ? tagEndInfo.end + closingTag.index : html.length;
       continue;
     }
-    index = tagEnd;
+    const nextIndex = tagEndInfo.end;
+    index = nextIndex > index ? nextIndex : index + 1;
   }
 
-  return count;
+  return { count, malformed };
+}
+
+export function countRenderedExternalEmbeds(html) {
+  return inspectRenderedExternalEmbeds(html).count;
 }
 
 export function validateRenderedExternalEmbedCounts(
@@ -99,12 +143,16 @@ export function validateRenderedExternalEmbedCounts(
   maximum = MAX_EXTERNAL_EMBEDS_PER_PAGE,
 ) {
   return files.flatMap(({ filePath, html }) => {
-    const count = countRenderedExternalEmbeds(html);
-    return count > maximum
-      ? [
-          `${filePath}: rendered external embed limit exceeded: found ${count}, maximum is ${maximum}`,
-        ]
+    const result = inspectRenderedExternalEmbeds(html);
+    const errors = result.malformed
+      ? [`${filePath}: malformed rendered HTML while checking external embeds`]
       : [];
+    if (result.count > maximum) {
+      errors.push(
+        `${filePath}: rendered external embed limit exceeded: found ${result.count}, maximum is ${maximum}`,
+      );
+    }
+    return errors;
   });
 }
 

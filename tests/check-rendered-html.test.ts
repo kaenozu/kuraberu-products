@@ -82,6 +82,32 @@ describe("rendered external embed limit", () => {
     ).toEqual([]);
   });
 
+  it.each([
+    "<div data-external-embed",
+    '<div data-external-embed="',
+    "<div foo='unterminated",
+    "<script>unterminated",
+  ])("rejects malformed HTML in finite time: %s", (html) => {
+    const startedAt = performance.now();
+    expect(countRenderedExternalEmbeds(html)).toBeLessThanOrEqual(1);
+    expect(performance.now() - startedAt).toBeLessThan(100);
+    expect(
+      validateRenderedExternalEmbedCounts([
+        { filePath: "dist/malformed/index.html", html },
+      ]),
+    ).toEqual([
+      "dist/malformed/index.html: malformed rendered HTML while checking external embeds",
+    ]);
+  });
+
+  it("counts four normal embeds so the limit check can reject them", () => {
+    expect(countRenderedExternalEmbeds(validPage(embed.repeat(4)))).toBe(4);
+  });
+
+  it("counts one normal embed", () => {
+    expect(countRenderedExternalEmbeds(validPage(embed))).toBe(1);
+  });
+
   it("checks all HTML files under dist and reports the generated path", () => {
     const directory = mkdtempSync(path.join(os.tmpdir(), "kuraberu-rendered-"));
     fixtureDirectories.push(directory);

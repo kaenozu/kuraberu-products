@@ -43,6 +43,8 @@ const providerLabel = externalEmbedProviderLabel(provider);
   <div
     class="external-embed__target"
     data-external-embed-target
+    tabindex="-1"
+    aria-label={`${providerLabel}の埋め込み結果`}
     style={`--external-embed-min-height: ${config.minimumHeight}px`}
     hidden
   ></div>
@@ -54,8 +56,10 @@ const providerLabel = externalEmbedProviderLabel(provider);
 <script>
   import {
     assertProviderCallResult,
+    createExternalConditionWaiter,
     createExternalEmbedRuntime,
     createExternalLoadWaiter,
+    type ConditionObserver,
     type EmbedTargetAdapter,
   } from "../lib/external-embed-runtime";
   import type { ExternalEmbedConfig } from "../lib/external-embeds";
@@ -78,6 +82,7 @@ const providerLabel = externalEmbedProviderLabel(provider);
   };
 
   const IFRAME_LOAD_TIMEOUT_MS = 15_000;
+  const WIDGET_RENDER_TIMEOUT_MS = 15_000;
   const scriptLoads = new Map<string, Promise<void>>();
 
   function loadScriptOnce(src: string): Promise<void> {
@@ -143,6 +148,12 @@ const providerLabel = externalEmbedProviderLabel(provider);
   async function renderWidget(
     target: HTMLElement,
     config: EmbedConfig,
+    attempt: number,
+    currentAttempt: () => number,
+    setActiveCancel: (
+      cancel: (() => void) | undefined,
+      expected?: () => void,
+    ) => void,
   ): Promise<void> {
     if (!config.scriptSrc) throw new Error("widget script is missing");
 
@@ -153,9 +164,43 @@ const providerLabel = externalEmbedProviderLabel(provider);
       appendSourceLink(quote, config);
       target.append(quote);
       await loadScriptOnce(config.scriptSrc);
+      if (attempt !== currentAttempt() || !quote.isConnected) {
+        throw new Error("external widget render cancelled");
+      }
       const widgets = (window as XWindow).twttr?.widgets;
       if (!widgets?.load) throw new Error("X widget API is unavailable");
-      await assertProviderCallResult(widgets.load(target));
+      await assertProviderCallResult(widgets.load(quote));
+
+      const observer: ConditionObserver = {
+        observe(onChange) {
+          const mutationObserver = new MutationObserver(onChange);
+          mutationObserver.observe(quote, { childList: true, subtree: true });
+          observer.disconnect = () => mutationObserver.disconnect();
+        },
+        disconnect() {},
+      };
+      const waiter = createExternalConditionWaiter(
+        () =>
+          quote.isConnected &&
+          (quote.matches(".twitter-tweet-rendered") ||
+            Boolean(
+              quote.querySelector(
+                "iframe, [data-tweet-id], [data-testid='tweet']",
+              ),
+            )),
+        observer,
+        WIDGET_RENDER_TIMEOUT_MS,
+        {
+          setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+          clearTimeout: (handle) => window.clearTimeout(handle as number),
+        },
+      );
+      setActiveCancel(waiter.cancel);
+      try {
+        await waiter.promise;
+      } finally {
+        setActiveCancel(undefined, waiter.cancel);
+      }
       return;
     }
 
@@ -172,11 +217,13 @@ const providerLabel = externalEmbedProviderLabel(provider);
     title: string,
   ): EmbedTargetAdapter {
     let activeCancel: (() => void) | undefined;
+    let attempt = 0;
 
     const adapter: EmbedTargetAdapter = {
       clear() {
         activeCancel?.();
         activeCancel = undefined;
+        attempt += 1;
         target.replaceChildren();
       },
 
@@ -186,6 +233,7 @@ const providerLabel = externalEmbedProviderLabel(provider);
       ): Promise<void> {
         if (!embedConfig.embedUrl) throw new Error("iframe URL is missing");
 
+        const currentAttempt = ++attempt;
         const iframe = document.createElement("iframe");
         iframe.src = embedConfig.embedUrl;
         iframe.title = embedTitle || title;
@@ -210,10 +258,22 @@ const providerLabel = externalEmbedProviderLabel(provider);
           if (activeCancel === waiter.cancel) activeCancel = undefined;
         });
         await loadPromise;
+        if (currentAttempt !== attempt || !iframe.isConnected) {
+          throw new Error("external iframe render cancelled");
+        }
       },
 
       renderWidget(embedConfig: ExternalEmbedConfig): Promise<void> {
-        return renderWidget(target, embedConfig);
+        const currentAttempt = ++attempt;
+        return renderWidget(
+          target,
+          embedConfig,
+          currentAttempt,
+          () => attempt,
+          (cancel, expected) => {
+            if (!expected || activeCancel === expected) activeCancel = cancel;
+          },
+        );
       },
     };
 
@@ -255,8 +315,8 @@ const providerLabel = externalEmbedProviderLabel(provider);
         try {
           await loadPromise;
           root.dataset.embedState = runtime.state;
-          status.textContent =
-            "読み込み処理を完了しました。表示されない場合は元の投稿へのリンクから確認してください。";
+          status.textContent = "外部コンテンツを表示しました。";
+          target.focus({ preventScroll: true });
           button.remove();
         } catch {
           targetAdapter.clear();
@@ -265,6 +325,7 @@ const providerLabel = externalEmbedProviderLabel(provider);
           button.disabled = false;
           status.textContent =
             "埋め込みを読み込めませんでした。元の投稿へのリンクから確認してください。";
+          button.focus({ preventScroll: true });
         }
       })().finally(() => {
         actionPromise = undefined;

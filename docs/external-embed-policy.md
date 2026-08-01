@@ -1,6 +1,6 @@
 # 外部投稿・動画の埋め込み方針
 
-確認日: 2026-07-31  
+確認日: 2026-07-31
 対象: Issue #15
 
 ## 結論
@@ -101,6 +101,20 @@ externalEmbeds:
 - 外部scriptは同一URLにつき1回だけ読み込む。
 - YouTubeはプライバシー強化モードを使う。
 - 固定の最小領域を確保し、読み込み時の大きなレイアウトシフトを避ける。
+
+### CSPとレスポンスヘッダー
+
+Cloudflare Workers Static Assetsの正式な`public/_headers`方式で、生成された静的ファイルのレスポンスへCSPを付与する。`wrangler.jsonc`の`assets.directory`は`dist`であり、Astroが`public/_headers`を`dist/_headers`へコピーするため、build時のdeployment checkでもヘッダーファイルの存在と必須ディレクティブを検査する。
+
+許可する外部originは、Phase 1の公式読み込み先に限定する。
+
+- `script-src`: Xの`platform.twitter.com`、Pinterestの`assets.pinterest.com`。初期HTMLの第三者scriptは0件で、クリック後だけ読み込む。
+- `frame-src`: Xの`platform.twitter.com`、Pinterestの`assets.pinterest.com`、YouTubeの`www.youtube-nocookie.com`、TikTokの`www.tiktok.com`。
+- `connect-src`: Xウィジェットが使用する`platform.twitter.com`、`cdn.syndication.twimg.com`、`api.twitter.com`と、Pinterestの`assets.pinterest.com`。
+- `img-src`: Xの`pbs.twimg.com` / `abs.twimg.com`、Pinterestの`i.pinimg.com`、サイト自身、`data:`。
+- `style-src`: サイト自身と、Astroの静的出力に必要な`unsafe-inline`。外部style originは許可しない。
+
+`unsafe-eval`、任意の`*`、外部の`style-src`は許可しない。実際のPreviewで各providerのクリック後networkとCSP violationを確認し、通信先が変わった場合は許可リストとこの文書を同時に更新する。
 
 ## プライバシー
 

@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   assertProviderCallResult,
   createExternalEmbedRuntime,
+  createExternalConditionWaiter,
   createExternalLoadWaiter,
+  type ConditionObserver,
   type EmbedTargetAdapter,
   type ExternalLoadEventSource,
   type TimerAdapter,
@@ -65,6 +67,24 @@ type FakeTarget = EmbedTargetAdapter & {
   iframePromise: Promise<void>;
   widgetPromise: Promise<void>;
 };
+
+class FakeConditionObserver implements ConditionObserver {
+  callback: (() => void) | undefined;
+  disconnectCalls = 0;
+
+  observe(onChange: () => void): void {
+    this.callback = onChange;
+  }
+
+  disconnect(): void {
+    this.disconnectCalls += 1;
+    this.callback = undefined;
+  }
+
+  emit(): void {
+    this.callback?.();
+  }
+}
 
 function fakeTarget(): FakeTarget {
   let iframePromise: Promise<void> = Promise.resolve();
@@ -142,6 +162,52 @@ describe("provider result validation", () => {
     await expect(
       assertProviderCallResult(Promise.reject(new Error("provider"))),
     ).rejects.toThrow("provider");
+  });
+});
+
+describe("provider DOM render waiter", () => {
+  it("does not treat an undefined X API result as rendered DOM", async () => {
+    await expect(assertProviderCallResult(undefined)).resolves.toBeUndefined();
+    const observer = new FakeConditionObserver();
+    const timerState = fakeTimers();
+    const waiter = createExternalConditionWaiter(
+      () => false,
+      observer,
+      1000,
+      timerState.timers,
+    );
+
+    timerState.fireTimeout();
+    await expect(waiter.promise).rejects.toThrow("timed out");
+    expect(observer.disconnectCalls).toBe(1);
+  });
+
+  it("resolves on generated DOM and ignores late mutation after cancellation", async () => {
+    let generated = false;
+    const observer = new FakeConditionObserver();
+    const waiter = createExternalConditionWaiter(
+      () => generated,
+      observer,
+      1000,
+      fakeTimers().timers,
+    );
+
+    generated = true;
+    observer.emit();
+    await expect(waiter.promise).resolves.toBeUndefined();
+    expect(observer.disconnectCalls).toBe(1);
+
+    const retryObserver = new FakeConditionObserver();
+    const retry = createExternalConditionWaiter(
+      () => false,
+      retryObserver,
+      1000,
+      fakeTimers().timers,
+    );
+    retry.cancel();
+    retryObserver.emit();
+    await expect(retry.promise).rejects.toThrow("cancelled");
+    expect(retryObserver.disconnectCalls).toBe(1);
   });
 });
 

@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
 import { isAllowedRakutenUrl } from "../config/runtime-env.mjs";
 import {
@@ -16,6 +17,27 @@ describe("public URL boundaries", () => {
     expect(isAllowedRakutenUrl("https://r10.to/example")).toBe(true);
     expect(isAllowedRakutenUrl("https://example.test/item")).toBe(false);
     expect(isAllowedRakutenUrl("javascript:alert(1)")).toBe(false);
+  });
+});
+
+describe("static asset security headers", () => {
+  it("defines a scoped CSP for the Workers Static Assets response", () => {
+    const headers = readFileSync("public/_headers", "utf8");
+    const csp = headers.match(/Content-Security-Policy:\s*(.+)/)?.[1] ?? "";
+
+    for (const directive of [
+      "default-src",
+      "script-src",
+      "frame-src",
+      "connect-src",
+      "img-src",
+      "style-src",
+    ]) {
+      expect(csp).toContain(`${directive} `);
+    }
+    expect(csp).not.toContain("unsafe-eval");
+    expect(csp).not.toMatch(/(?:^|;)\s*script-src[^;]*\*/);
+    expect(headers).toContain("X-Content-Type-Options: nosniff");
   });
 });
 
