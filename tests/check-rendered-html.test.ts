@@ -83,6 +83,7 @@ describe("rendered external embed limit", () => {
   });
 
   it.each([
+    "<!-- unterminated comment",
     "<div data-external-embed",
     '<div data-external-embed="',
     "<div foo='unterminated",
@@ -96,7 +97,20 @@ describe("rendered external embed limit", () => {
         { filePath: "dist/malformed/index.html", html },
       ]),
     ).toEqual([
-      "dist/malformed/index.html: malformed rendered HTML while checking external embeds",
+      `dist/malformed/index.html: malformed rendered HTML while checking external embeds${
+        html.startsWith("<!--") ? ": unterminated HTML comment" : ""
+      }`,
+    ]);
+  });
+
+  it("cannot bypass the four-embed limit with an unterminated comment", () => {
+    const html = validPage(`<!-- ${embed.repeat(4)}`);
+    expect(
+      validateRenderedExternalEmbedCounts([
+        { filePath: "fixtures/unterminated-four.html", html },
+      ]),
+    ).toEqual([
+      "fixtures/unterminated-four.html: malformed rendered HTML while checking external embeds: unterminated HTML comment",
     ]);
   });
 

@@ -23,6 +23,26 @@ export interface ConditionObserver {
   disconnect(): void;
 }
 
+export interface ProviderRenderScope {
+  readonly isConnected: boolean;
+  querySelector(selectors: string): { readonly isConnected: boolean } | null;
+}
+
+const PROVIDER_DOM_SELECTORS = {
+  x: ".twitter-tweet-rendered, iframe, [data-tweet-id], [data-testid='tweet']",
+  pinterest: "[data-pin-href], iframe[src*='assets.pinterest.com']",
+} as const;
+
+export function hasConnectedProviderDom(
+  provider: keyof typeof PROVIDER_DOM_SELECTORS,
+  scope: ProviderRenderScope,
+): boolean {
+  if (!scope.isConnected) return false;
+  return Boolean(
+    scope.querySelector(PROVIDER_DOM_SELECTORS[provider])?.isConnected,
+  );
+}
+
 const defaultTimers: TimerAdapter = {
   setTimeout: (callback, delay) => globalThis.setTimeout(callback, delay),
   clearTimeout: (handle) => globalThis.clearTimeout(handle as number),

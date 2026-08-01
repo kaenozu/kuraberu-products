@@ -4,6 +4,7 @@ import {
   createExternalEmbedRuntime,
   createExternalConditionWaiter,
   createExternalLoadWaiter,
+  hasConnectedProviderDom,
   type ConditionObserver,
   type EmbedTargetAdapter,
   type ExternalLoadEventSource,
@@ -166,6 +167,43 @@ describe("provider result validation", () => {
 });
 
 describe("provider DOM render waiter", () => {
+  it("detects connected X DOM in the stable container after the source is detached", () => {
+    const generated = { isConnected: true };
+    const stableContainer = {
+      isConnected: true,
+      querySelector: (selector: string) =>
+        selector.includes("twitter-tweet-rendered") ? generated : null,
+    };
+
+    expect(hasConnectedProviderDom("x", stableContainer)).toBe(true);
+  });
+
+  it("does not accept detached provider DOM", () => {
+    const detached = { isConnected: false };
+    const stableContainer = {
+      isConnected: true,
+      querySelector: () => detached,
+    };
+
+    expect(hasConnectedProviderDom("x", stableContainer)).toBe(false);
+    expect(hasConnectedProviderDom("pinterest", stableContainer)).toBe(false);
+  });
+
+  it("requires generated Pinterest DOM instead of the build call result", () => {
+    const emptyContainer = {
+      isConnected: true,
+      querySelector: () => null,
+    };
+    const generatedContainer = {
+      isConnected: true,
+      querySelector: (selector: string) =>
+        selector.includes("data-pin-href") ? { isConnected: true } : null,
+    };
+
+    expect(hasConnectedProviderDom("pinterest", emptyContainer)).toBe(false);
+    expect(hasConnectedProviderDom("pinterest", generatedContainer)).toBe(true);
+  });
+
   it("does not treat an undefined X API result as rendered DOM", async () => {
     await expect(assertProviderCallResult(undefined)).resolves.toBeUndefined();
     const observer = new FakeConditionObserver();

@@ -108,9 +108,8 @@ describe("external embed URL validation", () => {
     expect(component).toContain("target.focus({ preventScroll: true })");
     expect(component).toContain("button.focus({ preventScroll: true })");
     expect(component).toContain("createExternalConditionWaiter");
-    expect(component).toContain(
-      "iframe, [data-tweet-id], [data-testid='tweet']",
-    );
+    expect(component).toContain("hasConnectedProviderDom(provider, target)");
+    expect(component).toContain("mutationObserver.observe(target");
     expect(component).not.toContain(
       "読み込み処理を完了しました。表示されない場合は元の投稿へのリンクから確認してください。",
     );

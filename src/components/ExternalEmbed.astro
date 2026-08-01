@@ -59,6 +59,7 @@ const providerLabel = externalEmbedProviderLabel(provider);
     createExternalConditionWaiter,
     createExternalEmbedRuntime,
     createExternalLoadWaiter,
+    hasConnectedProviderDom,
     type ConditionObserver,
     type EmbedTargetAdapter,
   } from "../lib/external-embed-runtime";
@@ -171,36 +172,13 @@ const providerLabel = externalEmbedProviderLabel(provider);
       if (!widgets?.load) throw new Error("X widget API is unavailable");
       await assertProviderCallResult(widgets.load(quote));
 
-      const observer: ConditionObserver = {
-        observe(onChange) {
-          const mutationObserver = new MutationObserver(onChange);
-          mutationObserver.observe(quote, { childList: true, subtree: true });
-          observer.disconnect = () => mutationObserver.disconnect();
-        },
-        disconnect() {},
-      };
-      const waiter = createExternalConditionWaiter(
-        () =>
-          quote.isConnected &&
-          (quote.matches(".twitter-tweet-rendered") ||
-            Boolean(
-              quote.querySelector(
-                "iframe, [data-tweet-id], [data-testid='tweet']",
-              ),
-            )),
-        observer,
-        WIDGET_RENDER_TIMEOUT_MS,
-        {
-          setTimeout: (callback, delay) => window.setTimeout(callback, delay),
-          clearTimeout: (handle) => window.clearTimeout(handle as number),
-        },
+      await waitForProviderDom(
+        target,
+        "x",
+        attempt,
+        currentAttempt,
+        setActiveCancel,
       );
-      setActiveCancel(waiter.cancel);
-      try {
-        await waiter.promise;
-      } finally {
-        setActiveCancel(undefined, waiter.cancel);
-      }
       return;
     }
 
@@ -210,6 +188,50 @@ const providerLabel = externalEmbedProviderLabel(provider);
     const pinUtils = (window as PinterestWindow).PinUtils;
     if (!pinUtils?.build) throw new Error("Pinterest widget API is unavailable");
     await assertProviderCallResult(pinUtils.build());
+    await waitForProviderDom(
+      target,
+      "pinterest",
+      attempt,
+      currentAttempt,
+      setActiveCancel,
+    );
+  }
+
+  async function waitForProviderDom(
+    target: HTMLElement,
+    provider: "x" | "pinterest",
+    attempt: number,
+    currentAttempt: () => number,
+    setActiveCancel: (
+      cancel: (() => void) | undefined,
+      expected?: () => void,
+    ) => void,
+  ): Promise<void> {
+    const observer: ConditionObserver = {
+      observe(onChange) {
+        const mutationObserver = new MutationObserver(onChange);
+        mutationObserver.observe(target, { childList: true, subtree: true });
+        observer.disconnect = () => mutationObserver.disconnect();
+      },
+      disconnect() {},
+    };
+    const waiter = createExternalConditionWaiter(
+      () =>
+        attempt === currentAttempt() &&
+        hasConnectedProviderDom(provider, target),
+      observer,
+      WIDGET_RENDER_TIMEOUT_MS,
+      {
+        setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+        clearTimeout: (handle) => window.clearTimeout(handle as number),
+      },
+    );
+    setActiveCancel(waiter.cancel);
+    try {
+      await waiter.promise;
+    } finally {
+      setActiveCancel(undefined, waiter.cancel);
+    }
   }
 
   function createTargetAdapter(

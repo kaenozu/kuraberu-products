@@ -89,10 +89,15 @@ function inspectRenderedExternalEmbeds(html) {
   let count = 0;
   let index = 0;
   let malformed = false;
+  let malformedReason;
 
   while (index < html.length) {
     if (html.startsWith("<!--", index)) {
       const commentEnd = html.indexOf("-->", index + 4);
+      if (commentEnd === -1) {
+        malformed = true;
+        malformedReason = "unterminated HTML comment";
+      }
       index = commentEnd === -1 ? html.length : commentEnd + 3;
       continue;
     }
@@ -131,7 +136,7 @@ function inspectRenderedExternalEmbeds(html) {
     index = nextIndex > index ? nextIndex : index + 1;
   }
 
-  return { count, malformed };
+  return { count, malformed, malformedReason };
 }
 
 export function countRenderedExternalEmbeds(html) {
@@ -145,7 +150,11 @@ export function validateRenderedExternalEmbedCounts(
   return files.flatMap(({ filePath, html }) => {
     const result = inspectRenderedExternalEmbeds(html);
     const errors = result.malformed
-      ? [`${filePath}: malformed rendered HTML while checking external embeds`]
+      ? [
+          `${filePath}: malformed rendered HTML while checking external embeds${
+            result.malformedReason ? `: ${result.malformedReason}` : ""
+          }`,
+        ]
       : [];
     if (result.count > maximum) {
       errors.push(
