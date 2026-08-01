@@ -58,11 +58,12 @@ export function normalizeIdPrefix(
     .replace(/^-+|-+$/g, "")
     .slice(0, 64);
 
-  const safeFallback = fallback
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/^-+|-+$/g, "") || "comparison";
+  const safeFallback =
+    fallback
+      .trim()
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "comparison";
 
   const candidate = normalized || safeFallback;
   return /^[a-z_]/.test(candidate) ? candidate : `comparison-${candidate}`;
