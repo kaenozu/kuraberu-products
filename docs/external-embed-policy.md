@@ -66,6 +66,8 @@ import ExternalEmbed from "../../../components/ExternalEmbed.astro";
 />
 ```
 
+`ExternalEmbed` は記事ページ（`src/pages`）へ直接配置し、共通コンポーネントのラッパー経由では配置しない。`validate-content` が記事ごとの件数とラッパーによる迂回をビルド時に検証する。
+
 記事データへ生のHTMLやscriptタグは保存しない。将来コンテンツコレクションへ移行する場合も、保存するのは以下の値だけとする。
 
 ```yaml
@@ -143,6 +145,7 @@ externalEmbeds:
 - ボタン操作後に対象providerだけが読み込まれる。
 - 読み込み拒否、通信失敗、投稿削除時に元リンクと記事本文が残る。
 - format、lint、typecheck、test、production build、生成HTML検査が通る。
+- 実投稿を含むスクリーンショットをリポジトリやIssue・PRへ保存せず、DOM状態、network request、assertion結果を証跡にする。
 
 ## 残存リスク
 

@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   createExternalEmbedConfig,
@@ -82,5 +82,12 @@ describe("external embed URL validation", () => {
       "tiktok",
       "pinterest",
     ]);
+  });
+
+  it("does not keep real external embed screenshots in evidence", () => {
+    const evidenceFiles = readdirSync("docs/evidence").filter((file) =>
+      /^issue-15-embed-.*\.(?:png|jpe?g|webp|gif)$/i.test(file),
+    );
+    expect(evidenceFiles).toEqual([]);
   });
 });
