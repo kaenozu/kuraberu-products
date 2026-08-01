@@ -2,17 +2,17 @@
   "name": "kuraberu-ikuji",
   "private": true,
   "type": "module",
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.34.5",
   "engines": {
     "node": "^20.19.1 || >=22.12.0",
-    "pnpm": "10.11.1"
+    "pnpm": "10.34.5"
   },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "format": "node node_modules/.pnpm/prettier@3.9.6/node_modules/prettier/bin/prettier.cjs --write .",
-    "format:check": "node node_modules/.pnpm/prettier@3.9.6/node_modules/prettier/bin/prettier.cjs --check .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "astro check",
     "test": "vitest run",
@@ -34,10 +34,5 @@
     "eslint": "latest",
     "prettier": "latest",
     "vitest": "latest"
-  },
-  "pnpm": {
-    "overrides": {
-      "cookie": "1.0.2"
-    }
   }
 }

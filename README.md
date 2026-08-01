@@ -6,7 +6,7 @@ Astro + TypeScript の静的な楽天アフィリエイト商品紹介・比較�
 
 ## ローカル
 
-Node.jsは `^20.19.1` または `>=22.12.0` が必要です。標準の開発・CI環境は `.node-version` に記載したNode 24、パッケージマネージャーはpnpm 10.11.1です。
+Node.jsは `^20.19.1` または `>=22.12.0` が必要です。標準の開発・CI環境は `.node-version` に記載したNode 24、パッケージマネージャーはpnpm 10.34.5です。
 
 ```bash
 corepack enable
@@ -55,9 +55,13 @@ Productionでは次が必須です。
 - JSON-LDは通常ページを`WebPage`、記事詳細を`Article`として出力
 - 未確認の価格、評価、レビュー数、在庫をJSON-LDへ含めない
 
-## 依存関係のinstall script
+## 依存関係の管理
+
+通常のinstallは、commit済みの`pnpm-lock.yaml`と`pnpm install --frozen-lockfile`により解決済みバージョンを固定します。devDependenciesの`latest`は、lockfileを明示的に更新する依存更新PRでだけ新しい候補を取得するために維持しています。Dependabotは週次でnpmとGitHub Actionsの更新PRを作成しますが、自動マージは行いません。
 
 pnpm 10では依存パッケージのinstall scriptを既定で実行しません。`pnpm-workspace.yaml` の `onlyBuiltDependencies` で、現行ビルドに必要な `esbuild` と `sharp` だけを明示的に許可します。許可対象を追加する場合は、用途とサプライチェーン上の影響をレビューしてください。
+
+`cookie`はCVE-2024-47764の修正版へ推移依存を固定しています。overrideなしでも全依存経路が`cookie >=1.0.2`へ解決すると確認できたら削除します。
 
 ## CI
 
