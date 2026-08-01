@@ -12,7 +12,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "format": "prettier --write .",
-    "format:check": "prettier --write src/lib/comparison.ts && cat src/lib/comparison.ts && exit 1",
+    "format:check": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "astro check",
     "test": "vitest run",
