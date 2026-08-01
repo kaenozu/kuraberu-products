@@ -36,13 +36,14 @@ jobs:
           )
           failures=0
           for class_name in "${candidates[@]}"; do
-            if grep -R --line-number --fixed-strings "$class_name" src \
+            pattern="(^|[^a-zA-Z0-9_-])${class_name}([^a-zA-Z0-9_-]|$)"
+            if grep -R --line-number --extended-regexp "$pattern" src \
               --exclude='*.css' --exclude='report-css-usage.mjs'; then
-              echo "unexpected source reference: $class_name" >&2
+              echo "unexpected source class token: $class_name" >&2
               failures=$((failures + 1))
             fi
-            if grep -R --line-number --fixed-strings "class=\"$class_name\"" dist; then
-              echo "unexpected generated HTML reference: $class_name" >&2
+            if grep -R --line-number --extended-regexp "$pattern" dist; then
+              echo "unexpected generated HTML class token: $class_name" >&2
               failures=$((failures + 1))
             fi
           done
