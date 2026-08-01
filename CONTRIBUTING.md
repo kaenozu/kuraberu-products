@@ -80,7 +80,10 @@ pnpm validate:env
 
 ## 依存更新
 
-- `pnpm-lock.yaml` を意図せず再生成しません。
-- 依存更新は変更理由、互換性、セキュリティ影響を確認します。
-- overrideには理由と解除条件を記録します。
-- 依存更新PRでも全品質ゲートを実行します。
+- 通常のinstallは`pnpm install --frozen-lockfile`を使い、commit済みlockfileから逸脱させません。
+- devDependenciesの`latest`は、lockfileを更新する専用PRでのみ新しい候補を解決するために維持します。
+- DependabotはnpmとGitHub Actionsを週次確認しますが、自動マージしません。
+- 依存更新PRは1つの目的に絞り、変更理由、互換性、セキュリティ影響、lockfile差分を確認します。
+- install scriptの許可対象は`pnpm-workspace.yaml`の`onlyBuiltDependencies`へ必要最小限で記載します。
+- overrideには脆弱性または互換性上の理由と、削除できる条件をコメントで残します。
+- 依存更新PRでもPreview・Productionの全品質ゲートを実行します。
