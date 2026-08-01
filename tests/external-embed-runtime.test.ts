@@ -306,4 +306,23 @@ describe("external embed runtime", () => {
     resolveIframe();
     await expect(first).resolves.toBeUndefined();
   });
+
+  it("disposes an in-flight attempt and rejects future retries", async () => {
+    let rejectIframe!: (error: Error) => void;
+    const iframePromise = new Promise<void>((_, reject) => {
+      rejectIframe = reject;
+    });
+    const target = fakeTarget();
+    target.iframePromise = iframePromise;
+    const runtime = createExternalEmbedRuntime(iframeConfig, "video", target);
+
+    const attempt = runtime.load();
+    await Promise.resolve();
+    runtime.dispose();
+    rejectIframe(new Error("late iframe"));
+    await expect(attempt).rejects.toThrow();
+    expect(runtime.state).toBe("idle");
+    await expect(runtime.load()).rejects.toThrow("disposed");
+    expect(target.clearCalls).toBe(2);
+  });
 });

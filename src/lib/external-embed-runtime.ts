@@ -172,12 +172,15 @@ export function createExternalEmbedRuntime(
 ): {
   readonly state: EmbedState;
   load: () => Promise<void>;
+  dispose: () => void;
 } {
   let state: EmbedState = "idle";
   let current: Promise<void> | undefined;
   let generation = 0;
+  let disposed = false;
 
   const load = (): Promise<void> => {
+    if (disposed) return Promise.reject(new Error("external embed disposed"));
     if (current) return current;
 
     const run = ++generation;
@@ -185,11 +188,14 @@ export function createExternalEmbedRuntime(
     target.clear();
 
     const operation = Promise.resolve()
-      .then(() =>
-        config.renderer === "iframe"
+      .then(() => {
+        if (disposed || run !== generation) {
+          throw new Error("external embed disposed");
+        }
+        return config.renderer === "iframe"
           ? target.renderIframe(config, title)
-          : target.renderWidget(config),
-      )
+          : target.renderWidget(config);
+      })
       .then(() => {
         if (run === generation) state = "loaded";
       })
@@ -205,10 +211,19 @@ export function createExternalEmbedRuntime(
     return operation;
   };
 
+  const dispose = (): void => {
+    if (disposed) return;
+    disposed = true;
+    generation += 1;
+    target.clear();
+    state = "idle";
+  };
+
   return {
     get state() {
       return state;
     },
     load,
+    dispose,
   };
 }

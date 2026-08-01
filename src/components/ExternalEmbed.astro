@@ -83,6 +83,8 @@ const providerLabel = externalEmbedProviderLabel(provider);
   };
 
   const IFRAME_LOAD_TIMEOUT_MS = 15_000;
+  // A provider script should not leave the consented embed in an indefinite loading state.
+  const SCRIPT_LOAD_TIMEOUT_MS = 15_000;
   const WIDGET_RENDER_TIMEOUT_MS = 15_000;
   const scriptLoads = new Map<string, Promise<void>>();
 
@@ -105,21 +107,23 @@ const providerLabel = externalEmbedProviderLabel(provider);
       script.async = true;
       script.src = src;
       script.dataset.externalEmbedScript = src;
-      script.addEventListener(
-        "load",
+      const waiter = createExternalLoadWaiter(
+        script,
+        SCRIPT_LOAD_TIMEOUT_MS,
+        {
+          setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+          clearTimeout: (handle) => window.clearTimeout(handle as number),
+        },
+      );
+      waiter.promise.then(
         () => {
           script.dataset.loaded = "true";
           resolve();
         },
-        { once: true },
-      );
-      script.addEventListener(
-        "error",
-        () => {
+        (error: unknown) => {
           script.remove();
-          reject(new Error("script load failed"));
+          reject(error instanceof Error ? error : new Error("script load failed"));
         },
-        { once: true },
       );
 
       if (!present) document.head.append(script);
@@ -164,7 +168,9 @@ const providerLabel = externalEmbedProviderLabel(provider);
       quote.dataset.dnt = "true";
       appendSourceLink(quote, config);
       target.append(quote);
-      await loadScriptOnce(config.scriptSrc);
+      if (!(window as XWindow).twttr?.widgets?.load) {
+        await loadScriptOnce(config.scriptSrc);
+      }
       if (attempt !== currentAttempt() || !quote.isConnected) {
         throw new Error("external widget render cancelled");
       }
@@ -184,7 +190,9 @@ const providerLabel = externalEmbedProviderLabel(provider);
 
     const link = appendSourceLink(target, config);
     link.dataset.pinDo = "embedPin";
-    await loadScriptOnce(config.scriptSrc);
+    if (!(window as PinterestWindow).PinUtils?.build) {
+      await loadScriptOnce(config.scriptSrc);
+    }
     const pinUtils = (window as PinterestWindow).PinUtils;
     if (!pinUtils?.build) throw new Error("Pinterest widget API is unavailable");
     await assertProviderCallResult(pinUtils.build());
@@ -323,8 +331,23 @@ const providerLabel = externalEmbedProviderLabel(provider);
       targetAdapter,
     );
     let actionPromise: Promise<void> | undefined;
-
-    button.addEventListener("click", () => {
+    let disposed = false;
+    const dispose = () => {
+      if (disposed) return;
+      disposed = true;
+      lifecycleObserver.disconnect();
+      button.removeEventListener("click", onClick);
+      runtime.dispose();
+    };
+    const lifecycleObserver = new MutationObserver(() => {
+      if (!root.isConnected) dispose();
+    });
+    lifecycleObserver.observe(root.parentElement ?? document, {
+      childList: true,
+      subtree: true,
+    });
+    const onClick = () => {
+      if (disposed) return;
       if (actionPromise) return;
 
       actionPromise = (async () => {
@@ -336,11 +359,13 @@ const providerLabel = externalEmbedProviderLabel(provider);
 
         try {
           await loadPromise;
+          if (disposed || !root.isConnected) return;
           root.dataset.embedState = runtime.state;
           status.textContent = "外部コンテンツを表示しました。";
           target.focus({ preventScroll: true });
           button.remove();
         } catch {
+          if (disposed || !root.isConnected) return;
           targetAdapter.clear();
           target.hidden = true;
           root.dataset.embedState = runtime.state;
@@ -352,7 +377,8 @@ const providerLabel = externalEmbedProviderLabel(provider);
       })().finally(() => {
         actionPromise = undefined;
       });
-    });
+    };
+    button.addEventListener("click", onClick);
   }
 </script>
 
