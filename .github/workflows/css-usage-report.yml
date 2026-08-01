@@ -1,0 +1,27 @@
+name: CSS usage report
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # releases/v6
+        with:
+          persist-credentials: false
+      - name: Generate report
+        env:
+          CSS_USAGE_REPORT: css-usage-report.json
+        run: node scripts/report-css-usage.mjs
+      - name: Upload report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: issue-27-css-usage
+          path: css-usage-report.json
+          if-no-files-found: error
+          retention-days: 1
