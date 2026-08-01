@@ -2,7 +2,14 @@ import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-const SOURCE_EXTENSIONS = new Set([".astro", ".html", ".js", ".mjs", ".ts", ".tsx"]);
+const SOURCE_EXTENSIONS = new Set([
+  ".astro",
+  ".html",
+  ".js",
+  ".mjs",
+  ".ts",
+  ".tsx",
+]);
 const CSS_EXTENSIONS = new Set([".css"]);
 const DYNAMIC_CLASS_PATTERNS = [
   /^status-(official|retailer|insufficient|unverified)$/,
@@ -23,7 +30,9 @@ function walk(directory, predicate, files = []) {
 function extractCssClasses(css) {
   const classes = new Set();
   const withoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
-  for (const match of withoutComments.matchAll(/(^|[^a-zA-Z0-9_-])\.([a-zA-Z_][a-zA-Z0-9_-]*)/g)) {
+  for (const match of withoutComments.matchAll(
+    /(^|[^a-zA-Z0-9_-])\.([a-zA-Z_][a-zA-Z0-9_-]*)/g,
+  )) {
     classes.add(match[2]);
   }
   return classes;
@@ -37,9 +46,15 @@ function sourceMentionsClass(source, className) {
 
 export function createCssUsageReport({ root = process.cwd() } = {}) {
   const srcDirectory = path.join(root, "src");
-  const cssFiles = walk(srcDirectory, (file) => CSS_EXTENSIONS.has(path.extname(file)));
-  const sourceFiles = walk(srcDirectory, (file) => SOURCE_EXTENSIONS.has(path.extname(file)));
-  const sourceText = sourceFiles.map((file) => fs.readFileSync(file, "utf8")).join("\n");
+  const cssFiles = walk(srcDirectory, (file) =>
+    CSS_EXTENSIONS.has(path.extname(file)),
+  );
+  const sourceFiles = walk(srcDirectory, (file) =>
+    SOURCE_EXTENSIONS.has(path.extname(file)),
+  );
+  const sourceText = sourceFiles
+    .map((file) => fs.readFileSync(file, "utf8"))
+    .join("\n");
   const classes = new Map();
 
   for (const file of cssFiles) {
@@ -53,8 +68,11 @@ export function createCssUsageReport({ root = process.cwd() } = {}) {
 
   const selectors = [...classes.values()]
     .map((entry) => {
-      const dynamic = DYNAMIC_CLASS_PATTERNS.some((pattern) => pattern.test(entry.className));
-      const referenced = dynamic || sourceMentionsClass(sourceText, entry.className);
+      const dynamic = DYNAMIC_CLASS_PATTERNS.some((pattern) =>
+        pattern.test(entry.className),
+      );
+      const referenced =
+        dynamic || sourceMentionsClass(sourceText, entry.className);
       return { ...entry, dynamic, referenced };
     })
     .sort((left, right) => left.className.localeCompare(right.className));
@@ -62,7 +80,9 @@ export function createCssUsageReport({ root = process.cwd() } = {}) {
   const unused = selectors.filter((selector) => !selector.referenced);
   return {
     generatedAt: new Date().toISOString(),
-    cssFiles: cssFiles.map((file) => path.relative(root, file).split(path.sep).join("/")),
+    cssFiles: cssFiles.map((file) =>
+      path.relative(root, file).split(path.sep).join("/"),
+    ),
     sourceFileCount: sourceFiles.length,
     selectorCount: selectors.length,
     referencedCount: selectors.length - unused.length,
@@ -91,4 +111,7 @@ if (invokedPath === import.meta.url) {
   printCssUsageReport(report);
   const output = process.env.CSS_USAGE_REPORT;
   if (output) fs.writeFileSync(output, `${JSON.stringify(report, null, 2)}\n`);
+  if (process.argv.includes("--fail-on-unused") && report.unusedCount > 0) {
+    process.exitCode = 1;
+  }
 }
