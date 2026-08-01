@@ -36,6 +36,10 @@ function parseHttpsUrl(input: string): URL {
     throw new Error("外部埋め込みURLはhttpsのみ使用できます。");
   }
 
+  if (url.port) {
+    throw new Error("外部埋め込みURLは標準HTTPSポートのみ使用できます。");
+  }
+
   if (url.username || url.password) {
     throw new Error("認証情報を含む外部埋め込みURLは使用できません。");
   }
