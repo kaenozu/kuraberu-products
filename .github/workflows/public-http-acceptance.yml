@@ -13,55 +13,106 @@ jobs:
     steps:
       - name: Check public HTTP behavior
         shell: bash
-        env:
-          BASE_URL: https://kuraberu-products.pages.dev
         run: |
-          set -euo pipefail
+          set -uo pipefail
           work="$(mktemp -d)"
           trap 'rm -rf "$work"' EXIT
+          failures=0
 
           request() {
-            local name="$1"
-            local path="$2"
+            local base="$1"
+            local name="$2"
+            local path="$3"
             curl --silent --show-error --location \
               --max-time 20 \
               --dump-header "$work/$name.headers" \
               --output "$work/$name.body" \
               --write-out '%{http_code}' \
-              "$BASE_URL$path"
+              "$base$path" || printf '000'
           }
 
-          home_status="$(request home /)"
-          article_status="$(request article /articles/pampers-newborn/)"
-          missing_status="$(request missing /__definitely-not-found-20260801__/)"
-          robots_status="$(request robots /robots.txt)"
-          sitemap_status="$(request sitemap /sitemap.xml)"
+          expect_status() {
+            local label="$1"
+            local actual="$2"
+            local expected="$3"
+            if [[ "$actual" == "$expected" ]]; then
+              echo "PASS $label: HTTP $actual"
+            else
+              echo "FAIL $label: expected HTTP $expected, got $actual"
+              failures=$((failures + 1))
+            fi
+          }
 
-          printf 'home=%s article=%s missing=%s robots=%s sitemap=%s\n' \
-            "$home_status" "$article_status" "$missing_status" "$robots_status" "$sitemap_status"
+          expect_text() {
+            local label="$1"
+            local pattern="$2"
+            local file="$3"
+            if grep -Eq "$pattern" "$file"; then
+              echo "PASS $label"
+            else
+              echo "FAIL $label"
+              failures=$((failures + 1))
+            fi
+          }
 
-          test "$home_status" = 200
-          test "$article_status" = 200
-          test "$missing_status" = 404
-          test "$robots_status" = 200
-          test "$sitemap_status" = 200
+          check_site() {
+            local key="$1"
+            local base="$2"
+            local required="$3"
+            echo "::group::$key $base"
 
-          grep -Fq 'ページが見つかりません' "$work/missing.body"
-          grep -Eq '<meta name="robots" content="noindex,nofollow"' "$work/missing.body"
-          grep -Eq '<a[^>]+href="/"[^>]*>トップへ戻る</a>' "$work/missing.body"
+            local home_status article_status missing_status robots_status sitemap_status
+            home_status="$(request "$base" "$key-home" /)"
+            article_status="$(request "$base" "$key-article" /articles/pampers-newborn/)"
+            missing_status="$(request "$base" "$key-missing" /__definitely-not-found-20260801__/)"
+            robots_status="$(request "$base" "$key-robots" /robots.txt)"
+            sitemap_status="$(request "$base" "$key-sitemap" /sitemap.xml)"
 
-          grep -Eq '<meta name="robots" content="index,follow"' "$work/home.body"
-          grep -Eq '<meta name="robots" content="index,follow"' "$work/article.body"
-          grep -Fq '<link rel="canonical" href="https://kuraberu-products.pages.dev/"' "$work/home.body"
-          grep -Fq '<link rel="canonical" href="https://kuraberu-products.pages.dev/articles/pampers-newborn/"' "$work/article.body"
+            printf 'home=%s article=%s missing=%s robots=%s sitemap=%s\n' \
+              "$home_status" "$article_status" "$missing_status" "$robots_status" "$sitemap_status"
 
-          grep -Fq 'Allow: /' "$work/robots.body"
-          grep -Fq 'Sitemap: https://kuraberu-products.pages.dev/sitemap.xml' "$work/robots.body"
-          grep -Fq '<loc>https://kuraberu-products.pages.dev/</loc>' "$work/sitemap.body"
-          grep -Fq '<loc>https://kuraberu-products.pages.dev/articles/pampers-newborn/</loc>' "$work/sitemap.body"
-          if grep -Fq '/404' "$work/sitemap.body"; then
-            echo 'sitemap unexpectedly contains 404' >&2
-            exit 1
-          fi
+            if [[ "$required" == true ]]; then
+              expect_status "$key home" "$home_status" 200
+              expect_status "$key article" "$article_status" 200
+              expect_status "$key missing" "$missing_status" 404
+              expect_status "$key robots" "$robots_status" 200
+              expect_status "$key sitemap" "$sitemap_status" 200
+            fi
 
-          echo 'public HTTP acceptance passed'
+            if [[ "$missing_status" == 404 ]]; then
+              expect_text "$key custom 404 body" 'ページが見つかりません' "$work/$key-missing.body"
+              expect_text "$key 404 noindex" '<meta name="robots" content="noindex,nofollow"' "$work/$key-missing.body"
+              expect_text "$key 404 top link" '<a[^>]+href="/"[^>]*>トップへ戻る</a>' "$work/$key-missing.body"
+            fi
+
+            if [[ "$home_status" == 200 ]]; then
+              expect_text "$key home indexable" '<meta name="robots" content="index,follow"' "$work/$key-home.body"
+              expect_text "$key home canonical" '<link rel="canonical" href="https://kuraberu-products.pages.dev/"' "$work/$key-home.body"
+            fi
+            if [[ "$article_status" == 200 ]]; then
+              expect_text "$key article indexable" '<meta name="robots" content="index,follow"' "$work/$key-article.body"
+              expect_text "$key article canonical" '<link rel="canonical" href="https://kuraberu-products.pages.dev/articles/pampers-newborn/"' "$work/$key-article.body"
+            fi
+            if [[ "$robots_status" == 200 ]]; then
+              expect_text "$key robots allow" '^Allow: /$' "$work/$key-robots.body"
+              expect_text "$key robots sitemap" '^Sitemap: https://kuraberu-products.pages.dev/sitemap.xml$' "$work/$key-robots.body"
+            fi
+            if [[ "$sitemap_status" == 200 ]]; then
+              expect_text "$key sitemap home" '<loc>https://kuraberu-products.pages.dev/</loc>' "$work/$key-sitemap.body"
+              expect_text "$key sitemap article" '<loc>https://kuraberu-products.pages.dev/articles/pampers-newborn/</loc>' "$work/$key-sitemap.body"
+              if grep -Fq '/404' "$work/$key-sitemap.body"; then
+                echo "FAIL $key sitemap contains 404"
+                failures=$((failures + 1))
+              else
+                echo "PASS $key sitemap excludes 404"
+              fi
+            fi
+
+            echo "::endgroup::"
+          }
+
+          check_site pages https://kuraberu-products.pages.dev true
+          check_site workers https://kuraberu-products.neoenox.workers.dev false
+
+          echo "acceptance_failures=$failures"
+          test "$failures" -eq 0
