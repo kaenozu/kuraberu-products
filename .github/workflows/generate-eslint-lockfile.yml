@@ -1,6 +1,7 @@
 name: generate ESLint lockfile
 
 on:
+  pull_request:
   push:
     branches:
       - agent/25-eslint-astro-typescript
