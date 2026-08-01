@@ -1,11 +1,20 @@
 ---
-const {status} = Astro.props;
+import {
+  normalizeVerificationStatus,
+  type VerificationStatus,
+} from '../lib/comparison';
+
+interface Props {
+  status?: VerificationStatus | string;
+}
+
+const normalizedStatus = normalizeVerificationStatus(Astro.props.status);
 const states = {
   official: {icon: '✓', label: '公式確認済み'},
   retailer: {icon: '↗', label: '販売ページ確認'},
   insufficient: {icon: '…', label: '口コミ不足'},
   unverified: {icon: '?', label: '未確認'},
 } as const;
-const state = states[status as keyof typeof states] ?? states.unverified;
+const state = states[normalizedStatus];
 ---
-<span class={`status status-${status}`} aria-label={`確認状態: ${state.label}`}><b aria-hidden="true">{state.icon}</b>{state.label}</span>
+<span class={`status status-${normalizedStatus}`} aria-label={`確認状態: ${state.label}`}><b aria-hidden="true">{state.icon}</b>{state.label}</span>
