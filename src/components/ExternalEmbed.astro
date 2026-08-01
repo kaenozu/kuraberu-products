@@ -22,6 +22,7 @@ const providerLabel = externalEmbedProviderLabel(provider);
   data-external-embed
   data-config={JSON.stringify(config)}
   data-provider={provider}
+  data-embed-state="idle"
   aria-label={`${providerLabel}の外部コンテンツ`}
 >
   <div class="external-embed__intro">
@@ -51,6 +52,14 @@ const providerLabel = externalEmbedProviderLabel(provider);
 </aside>
 
 <script>
+  import {
+    assertProviderCallResult,
+    createExternalEmbedRuntime,
+    createExternalLoadWaiter,
+    type EmbedTargetAdapter,
+  } from "../lib/external-embed-runtime";
+  import type { ExternalEmbedConfig } from "../lib/external-embeds";
+
   type EmbedConfig = {
     provider: "x" | "youtube" | "tiktok" | "pinterest";
     canonicalUrl: string;
@@ -68,6 +77,7 @@ const providerLabel = externalEmbedProviderLabel(provider);
     PinUtils?: { build: () => void };
   };
 
+  const IFRAME_LOAD_TIMEOUT_MS = 15_000;
   const scriptLoads = new Map<string, Promise<void>>();
 
   function loadScriptOnce(src: string): Promise<void> {
@@ -117,7 +127,10 @@ const providerLabel = externalEmbedProviderLabel(provider);
     return trackedLoad;
   }
 
-  function appendSourceLink(target: HTMLElement, config: EmbedConfig): HTMLAnchorElement {
+  function appendSourceLink(
+    target: HTMLElement,
+    config: EmbedConfig,
+  ): HTMLAnchorElement {
     const link = document.createElement("a");
     link.href = config.canonicalUrl;
     link.target = "_blank";
@@ -127,7 +140,10 @@ const providerLabel = externalEmbedProviderLabel(provider);
     return link;
   }
 
-  async function renderWidget(target: HTMLElement, config: EmbedConfig): Promise<void> {
+  async function renderWidget(
+    target: HTMLElement,
+    config: EmbedConfig,
+  ): Promise<void> {
     if (!config.scriptSrc) throw new Error("widget script is missing");
 
     if (config.provider === "x") {
@@ -137,27 +153,71 @@ const providerLabel = externalEmbedProviderLabel(provider);
       appendSourceLink(quote, config);
       target.append(quote);
       await loadScriptOnce(config.scriptSrc);
-      await (window as XWindow).twttr?.widgets?.load(target);
+      const widgets = (window as XWindow).twttr?.widgets;
+      if (!widgets?.load) throw new Error("X widget API is unavailable");
+      await assertProviderCallResult(widgets.load(target));
       return;
     }
 
     const link = appendSourceLink(target, config);
     link.dataset.pinDo = "embedPin";
     await loadScriptOnce(config.scriptSrc);
-    (window as PinterestWindow).PinUtils?.build();
+    const pinUtils = (window as PinterestWindow).PinUtils;
+    if (!pinUtils?.build) throw new Error("Pinterest widget API is unavailable");
+    await assertProviderCallResult(pinUtils.build());
   }
 
-  function renderIframe(target: HTMLElement, config: EmbedConfig, title: string): void {
-    if (!config.embedUrl) throw new Error("iframe URL is missing");
+  function createTargetAdapter(
+    target: HTMLElement,
+    title: string,
+  ): EmbedTargetAdapter {
+    let activeCancel: (() => void) | undefined;
 
-    const iframe = document.createElement("iframe");
-    iframe.src = config.embedUrl;
-    iframe.title = title;
-    iframe.loading = "lazy";
-    iframe.referrerPolicy = "strict-origin-when-cross-origin";
-    iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
-    iframe.allowFullscreen = true;
-    target.append(iframe);
+    const adapter: EmbedTargetAdapter = {
+      clear() {
+        activeCancel?.();
+        activeCancel = undefined;
+        target.replaceChildren();
+      },
+
+      async renderIframe(
+        embedConfig: ExternalEmbedConfig,
+        embedTitle: string,
+      ): Promise<void> {
+        if (!embedConfig.embedUrl) throw new Error("iframe URL is missing");
+
+        const iframe = document.createElement("iframe");
+        iframe.src = embedConfig.embedUrl;
+        iframe.title = embedTitle || title;
+        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+        iframe.allow =
+          embedConfig.provider === "youtube"
+            ? "autoplay; encrypted-media; picture-in-picture"
+            : "encrypted-media";
+        iframe.allowFullscreen = true;
+
+        const waiter = createExternalLoadWaiter(
+          iframe,
+          IFRAME_LOAD_TIMEOUT_MS,
+          {
+            setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+            clearTimeout: (handle) => window.clearTimeout(handle as number),
+          },
+        );
+        activeCancel = waiter.cancel;
+        target.append(iframe);
+        const loadPromise = waiter.promise.finally(() => {
+          if (activeCancel === waiter.cancel) activeCancel = undefined;
+        });
+        await loadPromise;
+      },
+
+      renderWidget(embedConfig: ExternalEmbedConfig): Promise<void> {
+        return renderWidget(target, embedConfig);
+      },
+    };
+
+    return adapter;
   }
 
   for (const root of document.querySelectorAll<HTMLElement>("[data-external-embed]")) {
@@ -171,28 +231,44 @@ const providerLabel = externalEmbedProviderLabel(provider);
     if (!button || !target || !status || !rawConfig) continue;
 
     const config = JSON.parse(rawConfig) as EmbedConfig;
+    const targetAdapter = createTargetAdapter(
+      target,
+      button.textContent ?? "外部コンテンツ",
+    );
+    const runtime = createExternalEmbedRuntime(
+      config as ExternalEmbedConfig,
+      button.textContent ?? "外部コンテンツ",
+      targetAdapter,
+    );
+    let actionPromise: Promise<void> | undefined;
 
-    button.addEventListener("click", async () => {
-      button.disabled = true;
-      status.textContent = "外部コンテンツを読み込んでいます。";
-      target.hidden = false;
+    button.addEventListener("click", () => {
+      if (actionPromise) return;
 
-      try {
-        if (config.renderer === "iframe") {
-          renderIframe(target, config, button.textContent ?? "外部コンテンツ");
-        } else {
-          await renderWidget(target, config);
+      actionPromise = (async () => {
+        button.disabled = true;
+        target.hidden = false;
+        const loadPromise = runtime.load();
+        root.dataset.embedState = runtime.state;
+        status.textContent = "外部コンテンツを読み込んでいます。";
+
+        try {
+          await loadPromise;
+          root.dataset.embedState = runtime.state;
+          status.textContent =
+            "読み込み処理を完了しました。表示されない場合は元の投稿へのリンクから確認してください。";
+          button.remove();
+        } catch {
+          targetAdapter.clear();
+          target.hidden = true;
+          root.dataset.embedState = runtime.state;
+          button.disabled = false;
+          status.textContent =
+            "埋め込みを読み込めませんでした。元の投稿へのリンクから確認してください。";
         }
-        status.textContent =
-          "読み込み処理を完了しました。表示されない場合は元の投稿へのリンクから確認してください。";
-        button.remove();
-      } catch {
-        target.hidden = true;
-        target.replaceChildren();
-        button.disabled = false;
-        status.textContent =
-          "埋め込みを読み込めませんでした。元の投稿へのリンクから確認してください。";
-      }
+      })().finally(() => {
+        actionPromise = undefined;
+      });
     });
   }
 </script>

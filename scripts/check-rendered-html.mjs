@@ -56,7 +56,9 @@ for (const file of htmlFiles) {
 const embedPage = path.join(dist, "articles", "pampers-newborn", "index.html");
 if (fs.existsSync(embedPage)) {
   const html = fs.readFileSync(embedPage, "utf8");
-  const thirdPartyScript = /<script[^>]+\bsrc=/i.test(html);
+  const thirdPartyScript = [
+    ...html.matchAll(/<script[^>]+\bsrc=["']([^"']+)/gi),
+  ].some(([, src]) => /^(?:https?:)?\/\//i.test(src));
   const thirdPartyIframe = /<iframe(?:\s|>)/i.test(html);
   const preconnect = /<link[^>]+rel=["']?preconnect/i.test(html);
 
