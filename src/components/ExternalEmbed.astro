@@ -1,0 +1,293 @@
+---
+import {
+  createExternalEmbedConfig,
+  externalEmbedProviderLabel,
+  type ExternalEmbedProvider,
+} from "../lib/external-embeds";
+
+interface Props {
+  provider: ExternalEmbedProvider;
+  url: string;
+  title: string;
+  purpose?: string;
+}
+
+const { provider, url, title, purpose } = Astro.props;
+const config = createExternalEmbedConfig(provider, url);
+const providerLabel = externalEmbedProviderLabel(provider);
+---
+
+<aside
+  class="external-embed"
+  data-external-embed
+  data-config={JSON.stringify(config)}
+  data-provider={provider}
+  aria-label={`${providerLabel}の外部コンテンツ`}
+>
+  <div class="external-embed__intro">
+    <p class="external-embed__label">外部コンテンツ</p>
+    <h3>{title}</h3>
+    {purpose && <p>{purpose}</p>}
+    <p class="external-embed__privacy">
+      表示すると、{providerLabel}へIPアドレスや閲覧環境などの情報が送信される場合があります。
+    </p>
+    <div class="external-embed__actions">
+      <button type="button" data-external-embed-load>{providerLabel}の投稿を表示</button>
+      <a href={config.canonicalUrl} target="_blank" rel="noopener noreferrer">
+        {providerLabel}で直接見る
+      </a>
+    </div>
+    <p class="external-embed__status" data-external-embed-status aria-live="polite"></p>
+  </div>
+  <div
+    class="external-embed__target"
+    data-external-embed-target
+    style={`--external-embed-min-height: ${config.minimumHeight}px`}
+    hidden
+  ></div>
+  <noscript>
+    <p>埋め込み表示にはJavaScriptが必要です。上のリンクから元の投稿を確認できます。</p>
+  </noscript>
+</aside>
+
+<script>
+  type EmbedConfig = {
+    provider: "x" | "youtube" | "tiktok" | "pinterest";
+    canonicalUrl: string;
+    renderer: "iframe" | "widget";
+    embedUrl?: string;
+    scriptSrc?: string;
+    minimumHeight: number;
+  };
+
+  type XWindow = Window & {
+    twttr?: { widgets?: { load: (element?: HTMLElement) => Promise<void> | void } };
+  };
+
+  type PinterestWindow = Window & {
+    PinUtils?: { build: () => void };
+  };
+
+  const scriptLoads = new Map<string, Promise<void>>();
+
+  function loadScriptOnce(src: string): Promise<void> {
+    const existing = scriptLoads.get(src);
+    if (existing) return existing;
+
+    const load = new Promise<void>((resolve, reject) => {
+      const present = Array.from(
+        document.querySelectorAll<HTMLScriptElement>(
+          "script[data-external-embed-script]",
+        ),
+      ).find((script) => script.dataset.externalEmbedScript === src);
+      if (present?.dataset.loaded === "true") {
+        resolve();
+        return;
+      }
+
+      const script = present ?? document.createElement("script");
+      script.async = true;
+      script.src = src;
+      script.dataset.externalEmbedScript = src;
+      script.addEventListener(
+        "load",
+        () => {
+          script.dataset.loaded = "true";
+          resolve();
+        },
+        { once: true },
+      );
+      script.addEventListener(
+        "error",
+        () => {
+          script.remove();
+          reject(new Error("script load failed"));
+        },
+        { once: true },
+      );
+
+      if (!present) document.head.append(script);
+    });
+
+    const trackedLoad = load.catch((error: unknown) => {
+      scriptLoads.delete(src);
+      throw error;
+    });
+    scriptLoads.set(src, trackedLoad);
+    return trackedLoad;
+  }
+
+  function appendSourceLink(target: HTMLElement, config: EmbedConfig): HTMLAnchorElement {
+    const link = document.createElement("a");
+    link.href = config.canonicalUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "元の投稿を開く";
+    target.append(link);
+    return link;
+  }
+
+  async function renderWidget(target: HTMLElement, config: EmbedConfig): Promise<void> {
+    if (!config.scriptSrc) throw new Error("widget script is missing");
+
+    if (config.provider === "x") {
+      const quote = document.createElement("blockquote");
+      quote.className = "twitter-tweet";
+      quote.dataset.dnt = "true";
+      appendSourceLink(quote, config);
+      target.append(quote);
+      await loadScriptOnce(config.scriptSrc);
+      await (window as XWindow).twttr?.widgets?.load(target);
+      return;
+    }
+
+    const link = appendSourceLink(target, config);
+    link.dataset.pinDo = "embedPin";
+    await loadScriptOnce(config.scriptSrc);
+    (window as PinterestWindow).PinUtils?.build();
+  }
+
+  function renderIframe(target: HTMLElement, config: EmbedConfig, title: string): void {
+    if (!config.embedUrl) throw new Error("iframe URL is missing");
+
+    const iframe = document.createElement("iframe");
+    iframe.src = config.embedUrl;
+    iframe.title = title;
+    iframe.loading = "lazy";
+    iframe.referrerPolicy = "strict-origin-when-cross-origin";
+    iframe.allow = "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture";
+    iframe.allowFullscreen = true;
+    target.append(iframe);
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-external-embed]")) {
+    if (root.dataset.initialized === "true") continue;
+    root.dataset.initialized = "true";
+
+    const button = root.querySelector<HTMLButtonElement>("[data-external-embed-load]");
+    const target = root.querySelector<HTMLElement>("[data-external-embed-target]");
+    const status = root.querySelector<HTMLElement>("[data-external-embed-status]");
+    const rawConfig = root.dataset.config;
+    if (!button || !target || !status || !rawConfig) continue;
+
+    const config = JSON.parse(rawConfig) as EmbedConfig;
+
+    button.addEventListener("click", async () => {
+      button.disabled = true;
+      status.textContent = "外部コンテンツを読み込んでいます。";
+      target.hidden = false;
+
+      try {
+        if (config.renderer === "iframe") {
+          renderIframe(target, config, button.textContent ?? "外部コンテンツ");
+        } else {
+          await renderWidget(target, config);
+        }
+        status.textContent =
+          "読み込み処理を完了しました。表示されない場合は元の投稿へのリンクから確認してください。";
+        button.remove();
+      } catch {
+        target.hidden = true;
+        target.replaceChildren();
+        button.disabled = false;
+        status.textContent =
+          "埋め込みを読み込めませんでした。元の投稿へのリンクから確認してください。";
+      }
+    });
+  }
+</script>
+
+<style>
+  .external-embed {
+    margin-block: 1.5rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--paper);
+  }
+
+  .external-embed__intro {
+    padding: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .external-embed__label {
+    margin: 0 0 0.35rem;
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+  }
+
+  .external-embed h3 {
+    margin: 0 0 0.75rem;
+  }
+
+  .external-embed__privacy,
+  .external-embed__status {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  .external-embed__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .external-embed button {
+    border: 0;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    background: var(--green);
+    color: #fff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .external-embed button:disabled {
+    cursor: progress;
+    opacity: 0.65;
+  }
+
+  .external-embed__target {
+    min-height: var(--external-embed-min-height);
+    padding: 1rem;
+    border-top: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .external-embed__target[hidden] {
+    display: none;
+  }
+
+  .external-embed__target iframe {
+    display: block;
+    width: 100%;
+    min-height: var(--external-embed-min-height);
+    border: 0;
+  }
+
+  .external-embed[data-provider="youtube"] .external-embed__target iframe {
+    aspect-ratio: 16 / 9;
+    min-height: auto;
+  }
+
+  .external-embed[data-provider="tiktok"] .external-embed__target iframe {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 390px) {
+    .external-embed__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .external-embed button {
+      width: 100%;
+    }
+  }
+</style>
