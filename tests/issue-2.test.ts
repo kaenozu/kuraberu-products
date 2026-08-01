@@ -38,8 +38,8 @@ describe("product search parsing", () => {
         {
           itemCode: "shop:item-1",
           itemName: "パンパース 肌へのいちばん 新生児 66枚",
-          itemUrl: "https://valid.test/item-1",
-          affiliateUrl: "https://valid.test/ad-1",
+          itemUrl: "https://item.rakuten.co.jp/shop/item-1",
+          affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/ad-1",
           itemPrice: 1980,
         },
       ],
@@ -50,7 +50,7 @@ describe("product search parsing", () => {
           Item: {
             itemCode: "shop:item-2",
             itemName: "パンパース さらさらケア 新生児",
-            itemUrl: "https://valid.test/item-2",
+            itemUrl: "https://item.rakuten.co.jp/shop/item-2",
             itemPrice: "1280",
           },
         },
@@ -66,21 +66,21 @@ describe("product search parsing", () => {
       {
         id: "wrong-line",
         name: "パンパース さらさらケア 新生児",
-        url: "https://valid.test/wrong",
-        affiliateUrl: "https://valid.test/wrong-ad",
+        url: "https://item.rakuten.co.jp/shop/wrong",
+        affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/wrong-ad",
         price: 1000,
       },
       {
         id: "premium-basic",
         name: "パンパース 肌へのいちばん 新生児",
-        url: "https://valid.test/basic",
+        url: "https://item.rakuten.co.jp/shop/basic",
         price: 2000,
       },
       {
         id: "premium-tracked",
         name: "パンパース　肌へのいちばん　新生児 66枚",
-        url: "https://valid.test/tracked",
-        affiliateUrl: "https://valid.test/tracked-ad",
+        url: "https://item.rakuten.co.jp/shop/tracked",
+        affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/tracked-ad",
         price: 2100,
       },
     ];
@@ -92,5 +92,21 @@ describe("product search parsing", () => {
     expect(
       selectRakutenProduct(products, ["パンパース", "おやすみパンツ"]),
     ).toBeUndefined();
+  });
+
+  it("drops products and affiliate URLs from unapproved hosts", () => {
+    expect(
+      parseRakutenProducts({
+        items: [
+          {
+            itemCode: "shop:item-1",
+            itemName: "パンパース 肌へのいちばん 新生児",
+            itemUrl: "https://example.test/item-1",
+            affiliateUrl: "https://example.test/ad-1",
+            itemPrice: 1980,
+          },
+        ],
+      }),
+    ).toEqual([]);
   });
 });

@@ -1,4 +1,5 @@
 ---
+import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
 import {fetchRakutenProducts, selectRakutenProduct} from '../lib/rakuten';
 const {href,label,merchant,productId,placement} = Astro.props;
 
@@ -13,12 +14,12 @@ const productQueries = {
   },
 } as const;
 
-const directHref = typeof href === 'string' && /^https:\/\//.test(href) && !href.includes('example.com') ? href : undefined;
+const directHref = typeof href === 'string' && isAllowedRakutenUrl(href) ? href : undefined;
 const query = productQueries[productId as keyof typeof productQueries];
 const generated = !directHref && query
   ? selectRakutenProduct(await fetchRakutenProducts(query.keyword), query.requiredTerms)?.affiliateUrl
   : undefined;
 const resolvedHref = directHref ?? generated;
-const valid = typeof resolvedHref === 'string' && /^https:\/\//.test(resolvedHref) && !resolvedHref.includes('example.com');
+const valid = isAllowedRakutenUrl(resolvedHref);
 ---
 {valid ? <a class="cta" href={resolvedHref} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>}
