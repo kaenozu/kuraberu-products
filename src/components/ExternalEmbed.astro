@@ -1,0 +1,505 @@
+---
+import {
+  createExternalEmbedConfig,
+  externalEmbedProviderLabel,
+  type ExternalEmbedProvider,
+} from "../lib/external-embeds";
+
+interface Props {
+  provider: ExternalEmbedProvider;
+  url: string;
+  title: string;
+  purpose?: string;
+}
+
+const { provider, url, title, purpose } = Astro.props;
+const config = createExternalEmbedConfig(provider, url);
+const providerLabel = externalEmbedProviderLabel(provider);
+---
+
+<aside
+  class="external-embed"
+  data-external-embed
+  data-config={JSON.stringify(config)}
+  data-provider={provider}
+  data-embed-state="idle"
+  aria-label={`${providerLabel}の外部コンテンツ`}
+>
+  <div class="external-embed__intro">
+    <p class="external-embed__label">外部コンテンツ</p>
+    <h3>{title}</h3>
+    {purpose && <p>{purpose}</p>}
+    <p class="external-embed__privacy">
+      表示すると、{providerLabel}へIPアドレスや閲覧環境などの情報が送信される場合があります。
+    </p>
+    <div class="external-embed__actions">
+      <button type="button" data-external-embed-load>{providerLabel}の投稿を表示</button>
+      <a href={config.canonicalUrl} target="_blank" rel="noopener noreferrer">
+        {providerLabel}で直接見る
+      </a>
+    </div>
+    <p class="external-embed__status" data-external-embed-status aria-live="polite"></p>
+  </div>
+  <div
+    class="external-embed__target"
+    data-external-embed-target
+    tabindex="-1"
+    aria-label={`${providerLabel}の埋め込み結果`}
+    style={`--external-embed-min-height: ${config.minimumHeight}px`}
+    hidden
+  ></div>
+  <noscript>
+    <p>埋め込み表示にはJavaScriptが必要です。上のリンクから元の投稿を確認できます。</p>
+  </noscript>
+</aside>
+
+<script>
+  import {
+    assertProviderCallResult,
+    createExternalConditionWaiter,
+    createExternalEmbedRuntime,
+    createExternalLoadWaiter,
+    hasConnectedProviderDom,
+    renderPinterestWidget,
+    type ConditionObserver,
+    type EmbedTargetAdapter,
+    type PinterestRenderScope,
+  } from "../lib/external-embed-runtime";
+  import type { ExternalEmbedConfig } from "../lib/external-embeds";
+
+  type EmbedConfig = {
+    provider: "x" | "youtube" | "tiktok" | "pinterest";
+    canonicalUrl: string;
+    renderer: "iframe" | "widget";
+    embedUrl?: string;
+    scriptSrc?: string;
+    minimumHeight: number;
+  };
+
+  type XWindow = Window & {
+    twttr?: { widgets?: { load: (element?: HTMLElement) => Promise<void> | void } };
+  };
+
+  type PinterestWindow = Window & {
+    PinUtils?: { build: () => void };
+  };
+
+  const IFRAME_LOAD_TIMEOUT_MS = 15_000;
+  // A provider script should not leave the consented embed in an indefinite loading state.
+  const SCRIPT_LOAD_TIMEOUT_MS = 15_000;
+  // Shared deadline for Pinterest: pinit.js loads pinit_main.js asynchronously,
+  // so the API wait and the card render wait share one bounded budget after
+  // the script has loaded.
+  const WIDGET_RENDER_TIMEOUT_MS = 15_000;
+  const PINTEREST_API_POLL_INTERVAL_MS = 150;
+  const scriptLoads = new Map<string, Promise<void>>();
+
+  function loadScriptOnce(src: string): Promise<void> {
+    const existing = scriptLoads.get(src);
+    if (existing) return existing;
+
+    const load = new Promise<void>((resolve, reject) => {
+      const present = Array.from(
+        document.querySelectorAll<HTMLScriptElement>(
+          "script[data-external-embed-script]",
+        ),
+      ).find((script) => script.dataset.externalEmbedScript === src);
+      if (present?.dataset.loaded === "true") {
+        resolve();
+        return;
+      }
+
+      const script = present ?? document.createElement("script");
+      script.async = true;
+      script.src = src;
+      script.dataset.externalEmbedScript = src;
+      const waiter = createExternalLoadWaiter(
+        script,
+        SCRIPT_LOAD_TIMEOUT_MS,
+        {
+          setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+          clearTimeout: (handle) => window.clearTimeout(handle as number),
+        },
+      );
+      waiter.promise.then(
+        () => {
+          script.dataset.loaded = "true";
+          resolve();
+        },
+        (error: unknown) => {
+          script.remove();
+          reject(error instanceof Error ? error : new Error("script load failed"));
+        },
+      );
+
+      if (!present) document.head.append(script);
+    });
+
+    const trackedLoad = load.catch((error: unknown) => {
+      scriptLoads.delete(src);
+      throw error;
+    });
+    scriptLoads.set(src, trackedLoad);
+    return trackedLoad;
+  }
+
+  function appendSourceLink(
+    target: HTMLElement,
+    config: EmbedConfig,
+  ): HTMLAnchorElement {
+    const link = document.createElement("a");
+    link.href = config.canonicalUrl;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "元の投稿を開く";
+    target.append(link);
+    return link;
+  }
+
+  async function renderWidget(
+    target: HTMLElement,
+    config: EmbedConfig,
+    attempt: number,
+    currentAttempt: () => number,
+    setActiveCancel: (
+      cancel: (() => void) | undefined,
+      expected?: () => void,
+    ) => void,
+  ): Promise<void> {
+    if (!config.scriptSrc) throw new Error("widget script is missing");
+
+    if (config.provider === "x") {
+      const quote = document.createElement("blockquote");
+      quote.className = "twitter-tweet";
+      quote.dataset.dnt = "true";
+      appendSourceLink(quote, config);
+      target.append(quote);
+      if (!(window as XWindow).twttr?.widgets?.load) {
+        await loadScriptOnce(config.scriptSrc);
+      }
+      if (attempt !== currentAttempt() || !quote.isConnected) {
+        throw new Error("external widget render cancelled");
+      }
+      const widgets = (window as XWindow).twttr?.widgets;
+      if (!widgets?.load) throw new Error("X widget API is unavailable");
+      await assertProviderCallResult(widgets.load(quote));
+
+      await waitForProviderDom(
+        target,
+        "x",
+        attempt,
+        currentAttempt,
+        setActiveCancel,
+      );
+      return;
+    }
+
+    const link = appendSourceLink(target, config);
+    link.dataset.pinDo = "embedPin";
+    if (!(window as PinterestWindow).PinUtils?.build) {
+      await loadScriptOnce(config.scriptSrc);
+    }
+    if (attempt !== currentAttempt() || !target.isConnected) {
+      throw new Error("external widget render cancelled");
+    }
+
+    // Share one deadline between the PinUtils.build wait and the card render
+    // wait so the total wait after script load stays within
+    // WIDGET_RENDER_TIMEOUT_MS instead of stacking two 15s timeouts.
+    const deadline = Date.now() + WIDGET_RENDER_TIMEOUT_MS;
+    const remaining = () => Math.max(0, deadline - Date.now());
+    const pinterestScope: PinterestRenderScope = {
+      isConnected: () => attempt === currentAttempt() && target.isConnected,
+      apiReady: () => Boolean((window as PinterestWindow).PinUtils?.build),
+      callBuild: () => (window as PinterestWindow).PinUtils?.build?.(),
+      hasRenderedDom: () => hasConnectedProviderDom("pinterest", target),
+      observeDom(onChange) {
+        const mutationObserver = new MutationObserver(onChange);
+        mutationObserver.observe(target, { childList: true, subtree: true });
+        return () => mutationObserver.disconnect();
+      },
+    };
+    await renderPinterestWidget(
+      pinterestScope,
+      PINTEREST_API_POLL_INTERVAL_MS,
+      remaining,
+      {
+        setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+        clearTimeout: (handle) => window.clearTimeout(handle as number),
+      },
+      setActiveCancel,
+    );
+    return;
+  }
+
+  async function waitForProviderDom(
+    target: HTMLElement,
+    provider: "x" | "pinterest",
+    attempt: number,
+    currentAttempt: () => number,
+    setActiveCancel: (
+      cancel: (() => void) | undefined,
+      expected?: () => void,
+    ) => void,
+  ): Promise<void> {
+    const observer: ConditionObserver = {
+      observe(onChange) {
+        const mutationObserver = new MutationObserver(onChange);
+        mutationObserver.observe(target, { childList: true, subtree: true });
+        observer.disconnect = () => mutationObserver.disconnect();
+      },
+      disconnect() {},
+    };
+    const waiter = createExternalConditionWaiter(
+      () =>
+        attempt === currentAttempt() &&
+        hasConnectedProviderDom(provider, target),
+      observer,
+      WIDGET_RENDER_TIMEOUT_MS,
+      {
+        setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+        clearTimeout: (handle) => window.clearTimeout(handle as number),
+      },
+    );
+    setActiveCancel(waiter.cancel);
+    try {
+      await waiter.promise;
+    } finally {
+      setActiveCancel(undefined, waiter.cancel);
+    }
+  }
+
+  function createTargetAdapter(
+    target: HTMLElement,
+    title: string,
+  ): EmbedTargetAdapter {
+    let activeCancel: (() => void) | undefined;
+    let attempt = 0;
+
+    const adapter: EmbedTargetAdapter = {
+      clear() {
+        activeCancel?.();
+        activeCancel = undefined;
+        attempt += 1;
+        target.replaceChildren();
+      },
+
+      async renderIframe(
+        embedConfig: ExternalEmbedConfig,
+        embedTitle: string,
+      ): Promise<void> {
+        if (!embedConfig.embedUrl) throw new Error("iframe URL is missing");
+
+        const currentAttempt = ++attempt;
+        const iframe = document.createElement("iframe");
+        iframe.src = embedConfig.embedUrl;
+        iframe.title = embedTitle || title;
+        iframe.referrerPolicy = "strict-origin-when-cross-origin";
+        iframe.allow =
+          embedConfig.provider === "youtube"
+            ? "autoplay; encrypted-media; picture-in-picture"
+            : "encrypted-media";
+        iframe.allowFullscreen = true;
+
+        const waiter = createExternalLoadWaiter(
+          iframe,
+          IFRAME_LOAD_TIMEOUT_MS,
+          {
+            setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+            clearTimeout: (handle) => window.clearTimeout(handle as number),
+          },
+        );
+        activeCancel = waiter.cancel;
+        target.append(iframe);
+        const loadPromise = waiter.promise.finally(() => {
+          if (activeCancel === waiter.cancel) activeCancel = undefined;
+        });
+        await loadPromise;
+        if (currentAttempt !== attempt || !iframe.isConnected) {
+          throw new Error("external iframe render cancelled");
+        }
+      },
+
+      renderWidget(embedConfig: ExternalEmbedConfig): Promise<void> {
+        const currentAttempt = ++attempt;
+        return renderWidget(
+          target,
+          embedConfig,
+          currentAttempt,
+          () => attempt,
+          (cancel, expected) => {
+            if (!expected || activeCancel === expected) activeCancel = cancel;
+          },
+        );
+      },
+    };
+
+    return adapter;
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-external-embed]")) {
+    if (root.dataset.initialized === "true") continue;
+    root.dataset.initialized = "true";
+
+    const button = root.querySelector<HTMLButtonElement>("[data-external-embed-load]");
+    const target = root.querySelector<HTMLElement>("[data-external-embed-target]");
+    const status = root.querySelector<HTMLElement>("[data-external-embed-status]");
+    const rawConfig = root.dataset.config;
+    if (!button || !target || !status || !rawConfig) continue;
+
+    const config = JSON.parse(rawConfig) as EmbedConfig;
+    const targetAdapter = createTargetAdapter(
+      target,
+      button.textContent ?? "外部コンテンツ",
+    );
+    const runtime = createExternalEmbedRuntime(
+      config as ExternalEmbedConfig,
+      button.textContent ?? "外部コンテンツ",
+      targetAdapter,
+    );
+    let actionPromise: Promise<void> | undefined;
+    let disposed = false;
+    const dispose = () => {
+      if (disposed) return;
+      disposed = true;
+      lifecycleObserver.disconnect();
+      button.removeEventListener("click", onClick);
+      runtime.dispose();
+    };
+    const lifecycleObserver = new MutationObserver(() => {
+      if (!root.isConnected) dispose();
+    });
+    lifecycleObserver.observe(root.parentElement ?? document, {
+      childList: true,
+      subtree: true,
+    });
+    const onClick = () => {
+      if (disposed) return;
+      if (actionPromise) return;
+
+      actionPromise = (async () => {
+        button.disabled = true;
+        target.hidden = false;
+        const loadPromise = runtime.load();
+        root.dataset.embedState = runtime.state;
+        status.textContent = "外部コンテンツを読み込んでいます。";
+
+        try {
+          await loadPromise;
+          if (disposed || !root.isConnected) return;
+          root.dataset.embedState = runtime.state;
+          status.textContent = "外部コンテンツを表示しました。";
+          target.focus({ preventScroll: true });
+          button.remove();
+        } catch {
+          if (disposed || !root.isConnected) return;
+          targetAdapter.clear();
+          target.hidden = true;
+          root.dataset.embedState = runtime.state;
+          button.disabled = false;
+          status.textContent =
+            "埋め込みを読み込めませんでした。元の投稿へのリンクから確認してください。";
+          button.focus({ preventScroll: true });
+        }
+      })().finally(() => {
+        actionPromise = undefined;
+      });
+    };
+    button.addEventListener("click", onClick);
+  }
+</script>
+
+<style>
+  .external-embed {
+    margin-block: 1.5rem;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--paper);
+  }
+
+  .external-embed__intro {
+    padding: clamp(1rem, 3vw, 1.5rem);
+  }
+
+  .external-embed__label {
+    margin: 0 0 0.35rem;
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+  }
+
+  .external-embed h3 {
+    margin: 0 0 0.75rem;
+  }
+
+  .external-embed__privacy,
+  .external-embed__status {
+    color: var(--muted);
+    font-size: 0.88rem;
+  }
+
+  .external-embed__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .external-embed button {
+    border: 0;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    background: var(--green);
+    color: #fff;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .external-embed button:disabled {
+    cursor: progress;
+    opacity: 0.65;
+  }
+
+  .external-embed__target {
+    min-height: var(--external-embed-min-height);
+    padding: 1rem;
+    border-top: 1px solid var(--line);
+    background: #fff;
+  }
+
+  .external-embed__target[hidden] {
+    display: none;
+  }
+
+  .external-embed__target iframe {
+    display: block;
+    width: 100%;
+    min-height: var(--external-embed-min-height);
+    border: 0;
+  }
+
+  .external-embed[data-provider="youtube"] .external-embed__target iframe {
+    aspect-ratio: 16 / 9;
+    min-height: auto;
+  }
+
+  .external-embed[data-provider="tiktok"] .external-embed__target iframe {
+    max-width: 420px;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 390px) {
+    .external-embed__actions {
+      align-items: stretch;
+      flex-direction: column;
+    }
+
+    .external-embed button {
+      width: 100%;
+    }
+  }
+</style>

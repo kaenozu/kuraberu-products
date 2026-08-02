@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { validateExternalEmbedDirectory } from "./external-embed-limit.mjs";
 
 const root = "src";
 const includedExtensions = new Set([
@@ -46,6 +47,26 @@ for (const file of files) {
     errors.push(
       `${file}:${lineNumber(text, match.index ?? 0)}: placeholder URL`,
     );
+  }
+}
+
+for (const error of validateExternalEmbedDirectory("src/pages")) {
+  errors.push(error);
+}
+
+const evidenceDirectory = "docs/evidence";
+if (fs.existsSync(evidenceDirectory)) {
+  for (const entry of fs.readdirSync(evidenceDirectory, {
+    withFileTypes: true,
+  })) {
+    if (
+      entry.isFile() &&
+      /^issue-15-embed-.*\.(?:png|jpe?g|webp|gif)$/i.test(entry.name)
+    ) {
+      errors.push(
+        `${path.join(evidenceDirectory, entry.name)}: real external embed evidence images are forbidden; use DOM or text evidence`,
+      );
+    }
   }
 }
 

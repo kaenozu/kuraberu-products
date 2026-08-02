@@ -11,6 +11,39 @@ const expectedSiteUrl = normalizeSiteUrl(siteUrl ?? DEFAULT_SITE_URL);
 const expectedDefaultRobots =
   deploymentEnv === "production" ? "index,follow" : "noindex,nofollow";
 const htmlFiles = [];
+const headersFile = path.join("dist", "_headers");
+
+function validateSecurityHeaders() {
+  if (!fs.existsSync(headersFile)) {
+    return [`${headersFile}: missing Cloudflare static-assets headers file`];
+  }
+
+  const headers = fs.readFileSync(headersFile, "utf8");
+  const csp = headers.match(/^\s*Content-Security-Policy:\s*(.+)$/m)?.[1];
+  if (!csp) return [`${headersFile}: missing Content-Security-Policy`];
+
+  const requiredDirectives = [
+    "default-src",
+    "script-src",
+    "frame-src",
+    "connect-src",
+    "img-src",
+    "style-src",
+  ];
+  return requiredDirectives
+    .filter((directive) => !new RegExp(`(?:^|;)\\s*${directive}\\s`).test(csp))
+    .map((directive) => `${headersFile}: CSP missing ${directive}`)
+    .concat(
+      /(?:^|;)\s*script-src[^;]*\s\*\s*(?:;|$)/.test(csp)
+        ? [`${headersFile}: CSP script-src must not allow *`]
+        : [],
+    )
+    .concat(
+      /(?:^|;)\s*script-src[^;]*\bunsafe-eval\b/.test(csp)
+        ? [`${headersFile}: CSP must not allow unsafe-eval`]
+        : [],
+    );
+}
 
 function walk(directory) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -58,7 +91,7 @@ function readStructuredData(html, file, errors) {
 }
 
 walk("dist");
-const errors = [];
+const errors = [...validateSecurityHeaders()];
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
   const pathname = pathnameFor(file);
