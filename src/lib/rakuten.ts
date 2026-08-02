@@ -124,18 +124,35 @@ export async function requestRakutenProducts(
 export async function fetchRakutenProducts(
   keyword: string,
   hits = 10,
+  options: RequestRakutenOptions = {},
 ): Promise<RakutenProduct[]> {
   const cacheKey = `${keyword}\u0000${hits}`;
   const cached = cache.get(cacheKey);
   if (cached) return cached;
-  const request = fetchRakutenProductsUncached(keyword, hits);
+  const request = fetchRakutenProductsUncached(keyword, hits, options);
   cache.set(cacheKey, request);
+
+  // Keep only successful, non-empty results. Attach a rejection handler here
+  // as well as returning the original promise so an unexpected failure can
+  // evict the entry without creating an unhandled rejection.
+  void request.then(
+    (products) => {
+      if (products.length === 0 && cache.get(cacheKey) === request) {
+        cache.delete(cacheKey);
+      }
+    },
+    () => {
+      if (cache.get(cacheKey) === request) cache.delete(cacheKey);
+    },
+  );
+
   return request;
 }
 
 async function fetchRakutenProductsUncached(
   keyword: string,
   hits: number,
+  options: RequestRakutenOptions,
 ): Promise<RakutenProduct[]> {
   const applicationId = import.meta.env.RAKUTEN_APPLICATION_ID;
   const accessKey = import.meta.env.RAKUTEN_ACCESS_KEY;
@@ -152,5 +169,5 @@ async function fetchRakutenProductsUncached(
   url.searchParams.set("hits", String(hits));
   url.searchParams.set("affiliateId", affiliateId);
 
-  return requestRakutenProducts(url, accessKey);
+  return requestRakutenProducts(url, accessKey, options);
 }
