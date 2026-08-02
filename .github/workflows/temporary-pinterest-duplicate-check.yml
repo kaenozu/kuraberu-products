@@ -64,7 +64,6 @@ jobs:
                   tag: element.tagName,
                   pinId: element.getAttribute("data-pin-id"),
                   hasPinHref: element.hasAttribute("data-pin-href"),
-                  className: typeof element.className === "string" ? element.className : "",
                 })),
                 scripts: document.querySelectorAll(
                   'script[data-external-embed-script="https://assets.pinterest.com/js/pinit.js"]',
