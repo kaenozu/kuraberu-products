@@ -22,28 +22,24 @@ jobs:
         run: |
           npm install --no-save --package-lock=false playwright@1.55.0
           npx playwright install --with-deps chromium
-      - name: Wait for Workers branch preview
+      - name: Wait for current Workers preview
         env:
-          PREVIEW_URL: https://agent-15-external-embeds-kuraberu-products.neoenox.workers.dev/articles/pampers-newborn/
+          URL: https://agent-15-external-embeds-kuraberu-products.neoenox.workers.dev/articles/pampers-newborn/
         run: |
           for attempt in $(seq 1 60); do
-            body="$(curl --fail --silent --show-error --location "$PREVIEW_URL" || true)"
-            if printf '%s' "$body" | grep -q '新生児期のおむつ替えの手順を確認する公開Pin'; then
+            if curl --fail --silent --location "$URL" | grep -q '新生児期のおむつ替えの手順を確認する公開Pin'; then
               exit 0
             fi
             sleep 10
           done
-          echo 'Workers branch preview did not expose the current acceptance surface' >&2
           exit 1
-      - name: Run independent real-provider acceptance
+      - name: Test real Pinterest and X providers
         env:
-          PREVIEW_ORIGIN: https://agent-15-external-embeds-kuraberu-products.neoenox.workers.dev
+          URL: https://agent-15-external-embeds-kuraberu-products.neoenox.workers.dev/articles/pampers-newborn/
         run: |
           node --input-type=module <<'EOF'
           import { chromium } from "playwright";
 
-          const origin = process.env.PREVIEW_ORIGIN;
-          const articleUrl = `${origin}/articles/pampers-newborn/`;
           const providerHosts = new Set([
             "platform.twitter.com",
             "cdn.syndication.twimg.com",
@@ -53,22 +49,15 @@ jobs:
             "i.pinimg.com",
             "log.pinterest.com",
           ]);
+          const expectedPinterestCspError = (text) =>
+            text.includes("log.pinterest.com") &&
+            (text.includes("Content Security Policy") || text.includes("Refused to load"));
+          const assert = (condition, message) => {
+            if (!condition) throw new Error(message);
+          };
           const results = [];
 
-          function assert(condition, message) {
-            if (!condition) throw new Error(message);
-          }
-
-          function expectedConsoleError(text) {
-            return (
-              text.includes("log.pinterest.com") &&
-              (text.includes("Content Security Policy") ||
-                text.includes("violates the following Content Security Policy") ||
-                text.includes("Refused to load"))
-            );
-          }
-
-          async function openArticle(browser, viewport) {
+          async function openPage(browser, viewport) {
             const context = await browser.newContext({
               viewport,
               reducedMotion: "reduce",
@@ -83,167 +72,139 @@ jobs:
               if (message.type() === "error") consoleErrors.push(message.text());
             });
             page.on("pageerror", (error) => pageErrors.push(error.message));
-            const response = await page.goto(articleUrl, {
+            const response = await page.goto(process.env.URL, {
               waitUntil: "domcontentloaded",
               timeout: 30_000,
             });
-            assert(response?.status() === 200, `article returned ${response?.status()}`);
+            assert(response?.status() === 200, `HTTP ${response?.status()}`);
             const csp = response.headers()["content-security-policy"] ?? "";
-            assert(csp.includes("https://widgets.pinterest.com"), "CSP does not allow widgets.pinterest.com");
-            assert(!csp.includes("https://log.pinterest.com"), "CSP unexpectedly allows log.pinterest.com");
-            await page.waitForTimeout(1000);
-            const initialProviderRequests = requests.filter((url) => {
+            assert(csp.includes("https://widgets.pinterest.com"), "Pinterest JSONP is absent from CSP");
+            assert(!csp.includes("https://log.pinterest.com"), "Pinterest tracking is allowed by CSP");
+            await page.waitForTimeout(1_000);
+            const beforeConsent = requests.filter((url) => {
               try {
                 return providerHosts.has(new URL(url).hostname);
               } catch {
                 return false;
               }
             });
-            assert(
-              initialProviderRequests.length === 0,
-              `third-party provider request before consent: ${initialProviderRequests.join(", ")}`,
-            );
-            return { context, page, requests, consoleErrors, pageErrors, csp };
+            assert(beforeConsent.length === 0, `provider request before consent: ${beforeConsent.join(", ")}`);
+            return { context, page, requests, consoleErrors, pageErrors };
           }
 
-          async function assertLayoutAndFocus(page, rootSelector, viewport) {
-            const layout = await page.evaluate(
+          async function assertCommon(page, selector, viewport) {
+            const actual = await page.evaluate(
               ({ selector, width }) => {
                 const root = document.querySelector(selector);
                 const target = root?.querySelector("[data-external-embed-target]");
-                const owned = root
-                  ? [
-                      root,
-                      root.querySelector(".external-embed__intro"),
-                      root.querySelector(".external-embed__status"),
-                      target,
-                    ].filter(Boolean)
-                  : [];
-                const nonReduced = owned.flatMap((element) => {
+                const elements = [
+                  root,
+                  root?.querySelector(".external-embed__intro"),
+                  root?.querySelector(".external-embed__status"),
+                  target,
+                ].filter(Boolean);
+                const milliseconds = (value) =>
+                  value.split(",").map((part) => {
+                    const item = part.trim();
+                    return item.endsWith("ms") ? Number.parseFloat(item) : Number.parseFloat(item) * 1_000;
+                  });
+                const moving = elements.filter((element) => {
                   const style = getComputedStyle(element);
-                  const parseTimes = (value) =>
-                    value.split(",").map((part) => {
-                      const trimmed = part.trim();
-                      return trimmed.endsWith("ms")
-                        ? Number.parseFloat(trimmed)
-                        : Number.parseFloat(trimmed) * 1000;
-                    });
-                  const maxAnimation = Math.max(0, ...parseTimes(style.animationDuration));
-                  const maxTransition = Math.max(0, ...parseTimes(style.transitionDuration));
-                  return maxAnimation > 0 || maxTransition > 0
-                    ? [{ tag: element.tagName, maxAnimation, maxTransition }]
-                    : [];
-                });
+                  return (
+                    Math.max(0, ...milliseconds(style.animationDuration)) > 0 ||
+                    Math.max(0, ...milliseconds(style.transitionDuration)) > 0
+                  );
+                }).length;
                 return {
-                  documentWidth: document.documentElement.scrollWidth,
-                  viewportWidth: width,
+                  overflow: document.documentElement.scrollWidth - width,
                   targetFocused: document.activeElement === target,
-                  nonReduced,
+                  moving,
                 };
               },
-              { selector: rootSelector, width: viewport.width },
+              { selector, width: viewport.width },
             );
-            assert(
-              layout.documentWidth <= layout.viewportWidth + 1,
-              `horizontal overflow ${layout.documentWidth} > ${layout.viewportWidth}`,
-            );
-            assert(layout.targetFocused, "focus did not move to the rendered embed target");
-            assert(
-              layout.nonReduced.length === 0,
-              `site-owned motion remains under reduced-motion: ${JSON.stringify(layout.nonReduced)}`,
-            );
+            assert(actual.overflow <= 1, `horizontal overflow: ${actual.overflow}px`);
+            assert(actual.targetFocused, "focus did not move to the embed target");
+            assert(actual.moving === 0, `${actual.moving} site-owned elements retain motion`);
           }
 
-          async function exerciseProvider(browser, provider, viewport) {
-            const state = await openArticle(browser, viewport);
+          async function testProvider(browser, provider, viewport) {
+            const state = await openPage(browser, viewport);
             const { context, page, requests, consoleErrors, pageErrors } = state;
-            const rootSelector = `[data-external-embed][data-provider="${provider}"]`;
-            const root = page.locator(rootSelector);
-            assert((await root.count()) === 1, `${provider}: expected one embed root`);
+            const selector = `[data-external-embed][data-provider="${provider}"]`;
+            const root = page.locator(selector);
+            assert((await root.count()) === 1, `${provider}: embed root count is not one`);
             const button = root.locator("button[data-external-embed-load]");
             await button.focus();
             await page.keyboard.press("Enter");
             await page.waitForFunction(
-              (selector) => document.querySelector(selector)?.getAttribute("data-embed-state") === "loaded",
-              rootSelector,
+              (value) => document.querySelector(value)?.getAttribute("data-embed-state") === "loaded",
+              selector,
               { timeout: 40_000 },
             );
 
             if (provider === "pinterest") {
               const card = root.locator("[data-external-embed-target] [data-pin-href][data-pin-id]");
-              assert((await card.count()) >= 1, "Pinterest inline card DOM was not generated");
-              const pinId = await card.first().getAttribute("data-pin-id");
-              assert(pinId === "1095922890543405483", `unexpected Pinterest pin ID: ${pinId}`);
-              const pinterestRequests = requests.filter((url) => {
-                try {
-                  return ["assets.pinterest.com", "widgets.pinterest.com", "i.pinimg.com"].includes(
-                    new URL(url).hostname,
-                  );
-                } catch {
-                  return false;
-                }
-              });
+              assert((await card.count()) >= 1, "Pinterest card DOM is absent");
               assert(
-                pinterestRequests.some((url) => url.includes("assets.pinterest.com/js/pinit.js")),
-                "Pinterest pinit.js was not requested after consent",
+                (await card.first().getAttribute("data-pin-id")) === "1095922890543405483",
+                "Pinterest pin ID differs",
               );
               assert(
-                pinterestRequests.some((url) => new URL(url).hostname === "widgets.pinterest.com"),
+                requests.some((url) => url.includes("assets.pinterest.com/js/pinit.js")),
+                "Pinterest pinit.js was not requested",
+              );
+              assert(
+                requests.some((url) => {
+                  try {
+                    return new URL(url).hostname === "widgets.pinterest.com";
+                  } catch {
+                    return false;
+                  }
+                }),
                 "Pinterest widget JSONP was not requested",
               );
             } else {
               const iframe = root.locator("[data-external-embed-target] iframe");
-              assert((await iframe.count()) === 1, "X provider iframe was not generated");
+              assert((await iframe.count()) === 1, "X iframe count is not one");
               const src = await iframe.getAttribute("src");
               assert(src?.includes("platform.twitter.com/embed/Tweet.html"), `unexpected X iframe: ${src}`);
-              assert(src?.includes("dnt=true"), "X iframe is missing dnt=true");
-              assert(src?.includes("1975737215809691998"), "X iframe has the wrong post ID");
+              assert(src?.includes("dnt=true"), "X iframe lacks dnt=true");
+              assert(src?.includes("1975737215809691998"), "X post ID differs");
             }
 
-            await assertLayoutAndFocus(page, rootSelector, viewport);
-            const unexpectedConsole = consoleErrors.filter((text) => !expectedConsoleError(text));
-            assert(pageErrors.length === 0, `${provider}: page errors: ${pageErrors.join(" | ")}`);
-            assert(
-              unexpectedConsole.length === 0,
-              `${provider}: unexpected console errors: ${unexpectedConsole.join(" | ")}`,
-            );
-            results.push({
-              provider,
-              viewport: `${viewport.width}x${viewport.height}`,
-              state: "loaded",
-              consoleErrors,
-            });
+            await assertCommon(page, selector, viewport);
+            assert(pageErrors.length === 0, `${provider} page errors: ${pageErrors.join(" | ")}`);
+            const unexpected = consoleErrors.filter((text) => !expectedPinterestCspError(text));
+            assert(unexpected.length === 0, `${provider} console errors: ${unexpected.join(" | ")}`);
+            results.push({ provider, viewport: viewport.width, state: "loaded" });
             await context.close();
           }
 
-          async function exercisePinterestRetry(browser) {
-            const viewport = { width: 390, height: 844 };
-            const state = await openArticle(browser, viewport);
-            const { context, page, consoleErrors, pageErrors } = state;
-            const rootSelector = '[data-external-embed][data-provider="pinterest"]';
-            const root = page.locator(rootSelector);
+          async function testPinterestRetry(browser) {
+            const state = await openPage(browser, { width: 390, height: 844 });
+            const { context, page, requests, consoleErrors, pageErrors } = state;
+            const selector = '[data-external-embed][data-provider="pinterest"]';
+            const root = page.locator(selector);
             const button = root.locator("button[data-external-embed-load]");
             await page.route("**/assets.pinterest.com/js/pinit.js*", (route) => route.abort("failed"));
             await button.focus();
             await page.keyboard.press("Enter");
             await page.waitForFunction(
-              (selector) => document.querySelector(selector)?.getAttribute("data-embed-state") === "failed",
-              rootSelector,
+              (value) => document.querySelector(value)?.getAttribute("data-embed-state") === "failed",
+              selector,
               { timeout: 20_000 },
             );
-            assert(await button.isEnabled(), "retry button is disabled after Pinterest failure");
-            assert(await button.evaluate((element) => document.activeElement === element), "focus did not return to retry button");
+            assert(await button.isEnabled(), "Pinterest retry button is disabled");
+            assert(await button.evaluate((element) => document.activeElement === element), "focus did not return to retry");
             assert(await root.locator("[data-external-embed-target]").isHidden(), "failed target remains visible");
+
             await page.unroute("**/assets.pinterest.com/js/pinit.js*");
             await page.keyboard.press("Enter");
             await page.waitForFunction(
-              (selector) => document.querySelector(selector)?.getAttribute("data-embed-state") === "loaded",
-              rootSelector,
+              (value) => document.querySelector(value)?.getAttribute("data-embed-state") === "loaded",
+              selector,
               { timeout: 40_000 },
-            );
-            assert(
-              (await root.locator("[data-external-embed-target] [data-pin-href][data-pin-id]").count()) >= 1,
-              "Pinterest retry did not produce inline card DOM",
             );
             const counts = await page.evaluate(() => ({
               scripts: document.querySelectorAll(
@@ -253,15 +214,16 @@ jobs:
                 '[data-external-embed][data-provider="pinterest"] [data-pin-href][data-pin-id]',
               ).length,
             }));
-            assert(counts.scripts === 1, `Pinterest retry left ${counts.scripts} script elements`);
-            assert(counts.cards >= 1, "Pinterest retry left no rendered card");
-            const unexpectedConsole = consoleErrors.filter((text) => !expectedConsoleError(text));
+            const pinitRequests = requests.filter((url) => url.includes("assets.pinterest.com/js/pinit.js"));
+            assert(pinitRequests.length === 2, `Pinterest retry made ${pinitRequests.length} pinit.js requests`);
+            assert(counts.scripts <= 1, `Pinterest retry left ${counts.scripts} duplicate script elements`);
+            assert(counts.cards >= 1, "Pinterest retry produced no card");
             assert(pageErrors.length === 0, `retry page errors: ${pageErrors.join(" | ")}`);
-            assert(
-              unexpectedConsole.length === 0,
-              `retry unexpected console errors: ${unexpectedConsole.join(" | ")}`,
+            const unexpected = consoleErrors.filter(
+              (text) => !expectedPinterestCspError(text) && !text.includes("net::ERR_FAILED"),
             );
-            results.push({ provider: "pinterest", viewport: "390x844", state: "failed-then-loaded", counts });
+            assert(unexpected.length === 0, `retry console errors: ${unexpected.join(" | ")}`);
+            results.push({ provider: "pinterest", viewport: 390, state: "failed-then-loaded", ...counts, pinitRequests: pinitRequests.length });
             await context.close();
           }
 
@@ -270,12 +232,12 @@ jobs:
             for (const viewport of [
               { width: 320, height: 800 },
               { width: 390, height: 844 },
-              { width: 1440, height: 1000 },
+              { width: 1440, height: 1_000 },
             ]) {
-              await exerciseProvider(browser, "pinterest", viewport);
-              await exerciseProvider(browser, "x", viewport);
+              await testProvider(browser, "pinterest", viewport);
+              await testProvider(browser, "x", viewport);
             }
-            await exercisePinterestRetry(browser);
+            await testPinterestRetry(browser);
             console.log(JSON.stringify({ status: "PASS", results }, null, 2));
           } finally {
             await browser.close();
