@@ -1,14 +1,40 @@
 ---
 import VerificationStatus from './VerificationStatus.astro';
-const {product, line, tone, audience, note, status = 'unverified', compact = false} = Astro.props;
+import {
+  normalizeVerificationStatus,
+  type CandidateTone,
+  type VerificationStatus as VerificationStatusValue,
+} from '../lib/comparison';
+
+interface Props {
+  product: string;
+  line: string;
+  tone: CandidateTone;
+  audience: string;
+  note: string;
+  status?: VerificationStatusValue | string;
+  compact?: boolean;
+}
+
+const {
+  product,
+  line,
+  tone,
+  audience,
+  note,
+  status,
+  compact = false,
+} = Astro.props;
+const normalizedStatus = normalizeVerificationStatus(status);
+const candidateLabel = tone === 'premium' ? 'A' : 'B';
 ---
 <article class={`product-identity product-${tone} ${compact ? 'product-identity-compact' : ''}`}>
-  <div class="product-swatch" aria-hidden="true"><span>{tone === 'premium' ? 'A' : 'B'}</span></div>
+  <div class="product-swatch" aria-hidden="true"><span>{candidateLabel}</span></div>
   <div class="product-identity-body">
-    <p class="product-kicker">候補 {tone === 'premium' ? 'A' : 'B'} · {product}</p>
+    <p class="product-kicker">候補 {candidateLabel} · {product}</p>
     <h3>{line}</h3>
     <p class="product-audience">{audience}</p>
     {!compact && <p class="product-note">{note}</p>}
-    <VerificationStatus status={status} />
+    <VerificationStatus status={normalizedStatus} />
   </div>
 </article>

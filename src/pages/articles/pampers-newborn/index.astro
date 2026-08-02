@@ -5,6 +5,11 @@ import XPostEmbed from '../../../components/XPostEmbed.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
+import type {
+  ComparisonCandidate,
+  ComparisonRow,
+  DifferenceRow,
+} from '../../../lib/comparison';
 
 const premium = 'https://www.jp.pampers.com/products/pampers-premium-line-tape';
 const sarasara = 'https://www.jp.pampers.com/products/pampers-mainline-tape';
@@ -12,20 +17,84 @@ const xSearch = 'https://x.com/search?q=%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%
 const pinterestPin = 'https://www.pinterest.com/pin/1095922890543405483/';
 const premiumSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E8%82%8C%E3%81%B8%E3%81%AE%E3%81%84%E3%81%A1%E3%81%B0%E3%82%93+%E6%96%B0%E7%94%9F%E5%85%90/';
 const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E3%81%95%E3%82%89%E3%81%95%E3%82%89%E3%82%B1%E3%82%A2+%E6%96%B0%E7%94%9F%E5%85%90/';
+
+const premiumCandidate: ComparisonCandidate = {
+  product: 'パンパース 新生児用',
+  line: '肌へのいちばん',
+  tone: 'premium',
+  audience: '肌へのやさしさに関する機能を確認したい人の候補',
+  note: '公式ページでサイズ・仕様を確認',
+  status: 'official',
+};
+
+const standardCandidate: ComparisonCandidate = {
+  product: 'パンパース 新生児用',
+  line: 'さらさらケア',
+  tone: 'standard',
+  audience: 'モレ・ムレ対策の機能を確認したい人の候補',
+  note: '公式ページでサイズ・仕様を確認',
+  status: 'official',
+};
+
+const summaryRows: ComparisonRow[] = [
+  {
+    label: '主な機能',
+    left: '摩擦・ゆるうんち・肌ざわり',
+    right: 'モレガード・フィット・吸収体',
+  },
+  {label: '新生児', left: '5kgまで', right: '5kgまで'},
+  {
+    label: '口コミ',
+    left: '個別レビュー未採用',
+    right: '個別レビュー未採用',
+  },
+];
+
+const differenceRows: DifferenceRow[] = [
+  {
+    label: '公式が案内する主な機能',
+    left: 'ゆるうんちを素早く吸収、ワセリン配合シート、ふかふか肌ざわり',
+    right: 'ゆるうんちモレガード、のびのびフィットテープ、進化した吸収体',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '新生児サイズ',
+    left: '5kgまで。小さめ新生児3,000gも掲載',
+    right: '5kgまで',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+];
 ---
 <BaseLayout title="パンパースの新生児用、どっち？｜くらべる商品メモ" description="パンパース肌へのいちばんとさらさらケアの新生児用テープを、公式の商品機能と確認状況で比較">
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 更新日 2026-07-31</p>
     <h1>パンパースの新生児用、どっち？「肌へのいちばん」と「さらさらケア」を比較</h1>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison />
+    <ThirtySecondComparison
+      idPrefix="pampers-newborn-summary"
+      heading="まず、違いはこの3つ"
+      conclusion="肌へのやさしさに関する機能を詳しく確認するなら「肌へのいちばん」、モレ・ムレ対策の機能を確認するなら「さらさらケア」から見ます。どちらも新生児5kgまでのテープサイズが公式掲載されています。"
+      left={premiumCandidate}
+      right={standardCandidate}
+      rows={summaryRows}
+      detailHref="#comparison-details"
+    />
 
     <p>パンパースの新生児用テープには「肌へのいちばん」と「さらさらケア」があります。この記事では、公式商品ページで確認できる機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>
 
     <h2>先に結論</h2>
     <p>公式情報上、「肌へのいちばん」は肌へのやさしさに関する機能、「さらさらケア」はモレ・ムレ対策に関する機能が詳しく案内されています。どちらも新生児5kgまでのテープサイズがあります。実際の合いやすさは赤ちゃんの体型や肌状態でも変わるため、機能表示とサイズを確認して少量から試してください。</p>
 
-    <div id="comparison-details"><DifferenceList items={[{label: '公式が案内する主な機能', left: 'ゆるうんちを素早く吸収、ワセリン配合シート、ふかふか肌ざわり', right: 'ゆるうんちモレガード、のびのびフィットテープ、進化した吸収体', leftStatus: '公式確認済み', rightStatus: '公式確認済み'}, {label: '新生児サイズ', left: '5kgまで。小さめ新生児3,000gも掲載', right: '5kgまで', leftStatus: '公式確認済み', rightStatus: '公式確認済み'}]} /></div>
+    <div id="comparison-details">
+      <DifferenceList
+        idPrefix="pampers-newborn-differences"
+        leftLabel="肌へのいちばん"
+        rightLabel="さらさらケア"
+        items={differenceRows}
+      />
+    </div>
 
     <h2>確認できる項目</h2>
     <div class="table-scroll">
