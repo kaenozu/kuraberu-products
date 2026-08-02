@@ -28,9 +28,22 @@ export interface ProviderRenderScope {
   querySelector(selectors: string): { readonly isConnected: boolean } | null;
 }
 
+export interface PinterestRenderScope {
+  isConnected(): boolean;
+  apiReady(): boolean;
+  callBuild(): unknown;
+  hasRenderedDom(): boolean;
+  observeDom(onChange: () => void): () => void;
+}
+
 const PROVIDER_DOM_SELECTORS = {
   x: ".twitter-tweet-rendered, iframe, [data-tweet-id], [data-testid='tweet']",
-  pinterest: "[data-pin-href], iframe[src*='assets.pinterest.com']",
+  // The official widget replaces the source anchor with an inline card whose
+  // wrapper carries both data-pin-href and data-pin-id. Requiring both
+  // attributes prevents a partially processed source anchor from being
+  // mistaken for a rendered card.
+  pinterest:
+    "[data-pin-href][data-pin-id], iframe[src*='assets.pinterest.com']",
 } as const;
 
 export function hasConnectedProviderDom(
@@ -109,6 +122,122 @@ export async function assertProviderCallResult(result: unknown): Promise<void> {
   const resolved = await result;
   if (resolved !== undefined) {
     throw new Error("provider returned an invalid result");
+  }
+}
+
+export function createExternalPollingWaiter(
+  condition: () => boolean,
+  intervalMs: number,
+  timeoutMs: number,
+  timers: TimerAdapter = defaultTimers,
+): { promise: Promise<void>; cancel: () => void } {
+  let settled = false;
+  let pollHandle: unknown;
+  let timeoutHandle: unknown;
+  let resolvePromise: () => void = () => undefined;
+  let rejectPromise: (error: Error) => void = () => undefined;
+
+  const cleanup = () => {
+    if (pollHandle !== undefined) timers.clearTimeout(pollHandle);
+    if (timeoutHandle !== undefined) timers.clearTimeout(timeoutHandle);
+  };
+
+  const settle = (error?: Error) => {
+    if (settled) return;
+    settled = true;
+    cleanup();
+    if (error) rejectPromise(error);
+    else resolvePromise();
+  };
+
+  const check = () => {
+    if (settled) return;
+    let ready = false;
+    try {
+      ready = condition();
+    } catch (error) {
+      settle(error instanceof Error ? error : new Error("condition failed"));
+      return;
+    }
+    if (ready) {
+      settle();
+      return;
+    }
+    pollHandle = timers.setTimeout(check, intervalMs);
+  };
+
+  const promise = new Promise<void>((resolve, reject) => {
+    resolvePromise = resolve;
+    rejectPromise = reject;
+    timeoutHandle = timers.setTimeout(
+      () => settle(new Error("external provider API timed out")),
+      timeoutMs,
+    );
+    check();
+  });
+
+  return {
+    promise,
+    cancel: () => settle(new Error("external provider API cancelled")),
+  };
+}
+
+export async function renderPinterestWidget(
+  scope: PinterestRenderScope,
+  apiPollIntervalMs: number,
+  remainingTimeout: () => number,
+  timers: TimerAdapter = defaultTimers,
+  registerCancel: (
+    cancel: (() => void) | undefined,
+    expected?: () => void,
+  ) => void = () => undefined,
+): Promise<void> {
+  if (!scope.apiReady()) {
+    // pinit.js loads pinit_main.js asynchronously, so PinUtils.build may not
+    // exist yet when the script load event fires. Poll for it within a
+    // bounded budget instead of failing immediately.
+    const apiWaiter = createExternalPollingWaiter(
+      scope.apiReady,
+      apiPollIntervalMs,
+      remainingTimeout(),
+      timers,
+    );
+    registerCancel(apiWaiter.cancel);
+    try {
+      await apiWaiter.promise;
+    } finally {
+      registerCancel(undefined, apiWaiter.cancel);
+      apiWaiter.cancel();
+    }
+    if (!scope.isConnected()) {
+      throw new Error("external widget render cancelled");
+    }
+  }
+
+  if (!scope.apiReady()) {
+    throw new Error("Pinterest widget API is unavailable");
+  }
+  await assertProviderCallResult(scope.callBuild());
+
+  const observer: ConditionObserver = {
+    observe(onChange) {
+      const unsubscribe = scope.observeDom(onChange);
+      observer.disconnect = unsubscribe;
+    },
+    disconnect() {},
+  };
+  const domWaiter = createExternalConditionWaiter(
+    () => scope.isConnected() && scope.hasRenderedDom(),
+    observer,
+    remainingTimeout(),
+    timers,
+  );
+  registerCancel(domWaiter.cancel);
+  try {
+    await domWaiter.promise;
+  } finally {
+    registerCancel(undefined, domWaiter.cancel);
+    domWaiter.cancel();
   }
 }
 

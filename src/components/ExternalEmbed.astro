@@ -60,8 +60,10 @@ const providerLabel = externalEmbedProviderLabel(provider);
     createExternalEmbedRuntime,
     createExternalLoadWaiter,
     hasConnectedProviderDom,
+    renderPinterestWidget,
     type ConditionObserver,
     type EmbedTargetAdapter,
+    type PinterestRenderScope,
   } from "../lib/external-embed-runtime";
   import type { ExternalEmbedConfig } from "../lib/external-embeds";
 
@@ -85,7 +87,11 @@ const providerLabel = externalEmbedProviderLabel(provider);
   const IFRAME_LOAD_TIMEOUT_MS = 15_000;
   // A provider script should not leave the consented embed in an indefinite loading state.
   const SCRIPT_LOAD_TIMEOUT_MS = 15_000;
+  // Shared deadline for Pinterest: pinit.js loads pinit_main.js asynchronously,
+  // so the API wait and the card render wait share one bounded budget after
+  // the script has loaded.
   const WIDGET_RENDER_TIMEOUT_MS = 15_000;
+  const PINTEREST_API_POLL_INTERVAL_MS = 150;
   const scriptLoads = new Map<string, Promise<void>>();
 
   function loadScriptOnce(src: string): Promise<void> {
@@ -193,16 +199,37 @@ const providerLabel = externalEmbedProviderLabel(provider);
     if (!(window as PinterestWindow).PinUtils?.build) {
       await loadScriptOnce(config.scriptSrc);
     }
-    const pinUtils = (window as PinterestWindow).PinUtils;
-    if (!pinUtils?.build) throw new Error("Pinterest widget API is unavailable");
-    await assertProviderCallResult(pinUtils.build());
-    await waitForProviderDom(
-      target,
-      "pinterest",
-      attempt,
-      currentAttempt,
+    if (attempt !== currentAttempt() || !target.isConnected) {
+      throw new Error("external widget render cancelled");
+    }
+
+    // Share one deadline between the PinUtils.build wait and the card render
+    // wait so the total wait after script load stays within
+    // WIDGET_RENDER_TIMEOUT_MS instead of stacking two 15s timeouts.
+    const deadline = Date.now() + WIDGET_RENDER_TIMEOUT_MS;
+    const remaining = () => Math.max(0, deadline - Date.now());
+    const pinterestScope: PinterestRenderScope = {
+      isConnected: () => attempt === currentAttempt() && target.isConnected,
+      apiReady: () => Boolean((window as PinterestWindow).PinUtils?.build),
+      callBuild: () => (window as PinterestWindow).PinUtils?.build?.(),
+      hasRenderedDom: () => hasConnectedProviderDom("pinterest", target),
+      observeDom(onChange) {
+        const mutationObserver = new MutationObserver(onChange);
+        mutationObserver.observe(target, { childList: true, subtree: true });
+        return () => mutationObserver.disconnect();
+      },
+    };
+    await renderPinterestWidget(
+      pinterestScope,
+      PINTEREST_API_POLL_INTERVAL_MS,
+      remaining,
+      {
+        setTimeout: (callback, delay) => window.setTimeout(callback, delay),
+        clearTimeout: (handle) => window.clearTimeout(handle as number),
+      },
       setActiveCancel,
     );
+    return;
   }
 
   async function waitForProviderDom(

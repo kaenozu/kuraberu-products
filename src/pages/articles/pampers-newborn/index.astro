@@ -9,6 +9,7 @@ import DifferenceList from '../../../components/DifferenceList.astro';
 const premium = 'https://www.jp.pampers.com/products/pampers-premium-line-tape';
 const sarasara = 'https://www.jp.pampers.com/products/pampers-mainline-tape';
 const xSearch = 'https://x.com/search?q=%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9%20%E6%96%B0%E7%94%9F%E5%85%90&src=typed_query';
+const pinterestPin = 'https://www.pinterest.com/pin/1095922890543405483/';
 const premiumSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E8%82%8C%E3%81%B8%E3%81%AE%E3%81%84%E3%81%A1%E3%81%B0%E3%82%93+%E6%96%B0%E7%94%9F%E5%85%90/';
 const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9+%E3%81%95%E3%82%89%E3%81%95%E3%82%89%E3%82%B1%E3%82%A2+%E6%96%B0%E7%94%9F%E5%85%90/';
 ---
@@ -58,6 +59,12 @@ const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83
       title="新生児サイズのテープ選びに関する体験談"
       purpose="新生児サイズの目安は5kgまでですが、実際の合いやすさは赤ちゃんの体型によって変わります。この投稿はサイズ選びの参考例として紹介しています。"
     />
+    <ExternalEmbed
+      provider="pinterest"
+      url={pinterestPin}
+      title="新生児期のおむつ替えの手順を確認する公開Pin"
+      purpose="おむつ替えの一般的な手順（7ステップ）を確認するための参考リンクです。商品の機能や使用感を示すものではありません。"
+    />
 
     <h2>どんな確認を優先するか</h2>
     <ul>
@@ -86,6 +93,7 @@ const sarasaraSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83
       <li><a href={premiumSearch} target="_blank" rel="noopener noreferrer">楽天市場：肌へのいちばん検索</a>（価格・在庫確認用）</li>
       <li><a href={sarasaraSearch} target="_blank" rel="noopener noreferrer">楽天市場：さらさらケア検索</a>（価格・在庫確認用）</li>
       <li><a href={xSearch} target="_blank" rel="noopener noreferrer">X検索結果</a>（個別投稿の確認用）</li>
+      <li><a href={pinterestPin} target="_blank" rel="noopener noreferrer">Pinterest：おむつ替え手順の公開Pin</a>（一般的な手順の確認用）</li>
     </ul>
     <h2>調査方法・免責事項</h2>
     <p>メーカー公式の商品ページを優先し、レビューは対象商品・サイズ・投稿日を確認できる場合のみ採用します。口コミは個人の感想であり、商品の性能や健康状態を保証しません。</p>

@@ -108,7 +108,7 @@ Cloudflare Workers Static Assetsの正式な`public/_headers`方式で、生成�
 
 許可する外部originは、Phase 1の公式読み込み先に限定する。
 
-- `script-src`: Xの`platform.twitter.com`、Pinterestの`assets.pinterest.com`。初期HTMLの第三者scriptは0件で、クリック後だけ読み込む。
+- `script-src`: Xの`platform.twitter.com`、Pinterestの`assets.pinterest.com`と`widgets.pinterest.com`。初期HTMLの第三者scriptは0件で、クリック後だけ読み込む。`widgets.pinterest.com`は公式PinウィジェットがPin情報を取得するJSONPの配信元で、描画に必須の機能ドメインである。追跡用の`log.pinterest.com`ビーコンは`img-src`で許可せず、描画はこのビーコンなしで成立する。
 - `frame-src`: Xの`platform.twitter.com`、Pinterestの`assets.pinterest.com`、YouTubeの`www.youtube-nocookie.com`、TikTokの`www.tiktok.com`。
 - `connect-src`: Xウィジェットが使用する`platform.twitter.com`、`cdn.syndication.twimg.com`、`api.twitter.com`と、Pinterestの`assets.pinterest.com`。
 - `img-src`: Xの`pbs.twimg.com` / `abs.twimg.com`、Pinterestの`i.pinimg.com`、サイト自身、`data:`。
@@ -141,6 +141,10 @@ Cloudflare Workers Static Assetsの正式な`public/_headers`方式で、生成�
 ### Pinterest
 
 公式Pinウィジェットを使用し、`pinit.js` は1ページにつき1回だけ読み込む。商品レビューの根拠ではなく、収納例や利用アイデアなど補足用途に限定する。
+
+`pinit.js` は読込後に `pinit_main.js` を非同期的に追加ロードするため、最初のscriptのloadイベント時点では `window.PinUtils.build` が未定義の場合がある。実装はscript読込後に `PinUtils.build` が利用可能になるまで有限時間でポーリングし、API準備待機とカード描画待機を共通のdeadlineで管理する（script読込後の合計待機は15秒以内）。ポーリングはretry・破棄・DOM切断で停止し、timeout後に遅れて定義されたAPIから `build()` を呼ばない。
+
+Pin情報の取得に `widgets.pinterest.com` のJSONPが必須であるため、`script-src` へ許可している（機能要件）。追跡用の `log.pinterest.com` ビーコンは許可せず、描画はブロックされたまま正常に完了する。
 
 ## セキュリティ
 
