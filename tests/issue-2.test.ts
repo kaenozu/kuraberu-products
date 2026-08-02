@@ -61,7 +61,7 @@ describe("product search parsing", () => {
     expect(nested[0]).toMatchObject({ id: "shop:item-2", price: 1280 });
   });
 
-  it("requires all product terms and prefers a tracked URL", () => {
+  it("requires all product terms and does not prefer a tracked URL", () => {
     const products: RakutenProduct[] = [
       {
         id: "wrong-line",
@@ -86,9 +86,12 @@ describe("product search parsing", () => {
     ];
 
     expect(
-      selectRakutenProduct(products, ["パンパース", "肌へのいちばん", "新生児"])
-        ?.id,
-    ).toBe("premium-tracked");
+      selectRakutenProduct(products, [
+        "パンパース",
+        "肌へのいちばん",
+        "新生児",
+      ]),
+    ).toBeUndefined();
     expect(
       selectRakutenProduct(products, ["パンパース", "おやすみパンツ"]),
     ).toBeUndefined();
@@ -108,5 +111,17 @@ describe("product search parsing", () => {
         ],
       }),
     ).toEqual([]);
+  });
+
+  it("passes typed fail-closed selection criteria from each CTA query", () => {
+    const button = read("src/components/AffiliateButton.astro");
+    expect(button).toContain("type ProductQuery");
+    expect(button).toContain(
+      "const productQueries: Record<ProductId, ProductQuery>",
+    );
+    expect(button).toContain("selection:");
+    expect(button).toMatch(
+      /selectRakutenProduct\(await fetchRakutenProducts\(query\.keyword\), query\.requiredTerms, query\.selection\)/,
+    );
   });
 });

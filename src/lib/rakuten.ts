@@ -15,6 +15,12 @@ const cache = new Map<string, Promise<RakutenProduct[]>>();
 type UnknownRecord = Record<string, unknown>;
 type FetchImplementation = typeof fetch;
 
+export type RakutenSelectionOptions = {
+  excludedTerms?: readonly string[];
+  exactItemCodes?: readonly string[];
+  exactIdentifiers?: readonly string[];
+};
+
 type RequestRakutenOptions = {
   fetchImpl?: FetchImplementation;
   timeoutMs?: number;
@@ -28,6 +34,59 @@ function asRecord(value: unknown): UnknownRecord {
 
 function normalize(value: string): string {
   return value.normalize("NFKC").replace(/\s+/g, "").toLowerCase();
+}
+
+function normalizeTerms(terms: readonly string[]): string[] | undefined {
+  const normalized = terms.map(normalize);
+  return normalized.some((term) => term.length === 0) ? undefined : normalized;
+}
+
+function containsExactIdentifier(
+  product: RakutenProduct,
+  identifier: string,
+): boolean {
+  const normalizedIdentifier = identifier
+    .normalize("NFKC")
+    .trim()
+    .toLowerCase();
+  if (!normalizedIdentifier) return false;
+  if (normalize(product.id) === normalize(normalizedIdentifier)) return true;
+
+  const normalizedName = product.name.normalize("NFKC").toLowerCase();
+  const index = normalizedName.indexOf(normalizedIdentifier);
+  if (index < 0) return false;
+
+  const before = normalizedName[index - 1];
+  const after = normalizedName[index + normalizedIdentifier.length];
+  const isAlphaNumeric = (value: string | undefined) =>
+    value !== undefined && /[a-z0-9]/.test(value);
+  return !isAlphaNumeric(before) && !isAlphaNumeric(after);
+}
+
+function stableDuplicateRepresentative(
+  products: RakutenProduct[],
+): RakutenProduct {
+  if (
+    products.length === 1 &&
+    (!products[0].affiliateUrl || isAllowedRakutenUrl(products[0].affiliateUrl))
+  ) {
+    return products[0];
+  }
+
+  const sorted = [...products].sort((left, right) => {
+    const leftKey = `${left.id}\u0000${left.name}\u0000${left.url}\u0000${left.price}`;
+    const rightKey = `${right.id}\u0000${right.name}\u0000${right.url}\u0000${right.price}`;
+    return leftKey.localeCompare(rightKey, "en");
+  });
+  const representative = sorted[0];
+  const affiliateUrl = sorted
+    .map((product) => product.affiliateUrl)
+    .filter((value): value is string => isAllowedRakutenUrl(value))
+    .sort((left, right) => left.localeCompare(right, "en"))[0];
+
+  return affiliateUrl
+    ? { ...representative, affiliateUrl }
+    : { ...representative, affiliateUrl: undefined };
 }
 
 /**
@@ -64,17 +123,57 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
     .filter((item) => item.id && item.name && isAllowedRakutenUrl(item.url));
 }
 
-/** 必須語をすべて含む候補を選び、広告URLがある商品を優先する。 */
+/**
+ * 商品名・識別子で候補を fail-closed に絞り、曖昧な候補は選択しない。
+ * `requiredTerms` だけの既存呼び出しも維持する。
+ */
 export function selectRakutenProduct(
   products: RakutenProduct[],
   requiredTerms: readonly string[],
+  options: RakutenSelectionOptions = {},
 ): RakutenProduct | undefined {
-  const normalizedTerms = requiredTerms.map(normalize);
+  const normalizedRequiredTerms = normalizeTerms(requiredTerms);
+  const normalizedExcludedTerms = normalizeTerms(options.excludedTerms ?? []);
+  const normalizedItemCodes = normalizeTerms(options.exactItemCodes ?? []);
+  const normalizedIdentifiers = normalizeTerms(options.exactIdentifiers ?? []);
+  if (
+    !normalizedRequiredTerms ||
+    !normalizedExcludedTerms ||
+    !normalizedItemCodes ||
+    !normalizedIdentifiers ||
+    products.length === 0
+  ) {
+    return undefined;
+  }
+
   const matches = products.filter((product) => {
     const name = normalize(product.name);
-    return normalizedTerms.every((term) => name.includes(term));
+    const requiredMatch = normalizedRequiredTerms.every((term) =>
+      name.includes(term),
+    );
+    const excludedMatch = normalizedExcludedTerms.some((term) =>
+      name.includes(term),
+    );
+    const itemCodeMatch =
+      normalizedItemCodes.length === 0 ||
+      normalizedItemCodes.includes(normalize(product.id));
+    const identifierMatch =
+      normalizedIdentifiers.length === 0 ||
+      normalizedIdentifiers.some((identifier) =>
+        containsExactIdentifier(product, identifier),
+      );
+    return requiredMatch && !excludedMatch && itemCodeMatch && identifierMatch;
   });
-  return matches.find((item) => item.affiliateUrl) ?? matches[0];
+
+  const identities = new Map<string, RakutenProduct[]>();
+  for (const product of matches) {
+    const identity = `${normalize(product.id)}\u0000${normalize(product.name)}\u0000${normalize(product.url)}`;
+    const group = identities.get(identity) ?? [];
+    group.push(product);
+    identities.set(identity, group);
+  }
+  if (identities.size !== 1) return undefined;
+  return stableDuplicateRepresentative([...identities.values()][0]);
 }
 
 export async function requestRakutenProducts(
