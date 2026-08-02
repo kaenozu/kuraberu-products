@@ -1,1 +1,0 @@
-Temporary CI synchronization marker for PR #35. This file is deleted in the immediately following commit.
