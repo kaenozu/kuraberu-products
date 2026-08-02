@@ -1,19 +1,58 @@
 ---
 import ProductIdentity from './ProductIdentity.astro';
 import VerificationStatus from './VerificationStatus.astro';
-const {ctaHref = '#purchase'} = Astro.props;
+import {
+  normalizeIdPrefix,
+  normalizeVerificationStatus,
+  type ComparisonCandidate,
+  type ComparisonRow,
+  type VerificationStatus as VerificationStatusValue,
+} from '../lib/comparison';
+
+interface Props {
+  idPrefix: string;
+  heading: string;
+  conclusion: string;
+  left: ComparisonCandidate;
+  right: ComparisonCandidate;
+  rows?: ComparisonRow[];
+  detailHref: string;
+  ctaHref?: string;
+  eyebrow?: string;
+  footerStatuses?: Array<VerificationStatusValue | string>;
+  emptyMessage?: string;
+}
+
+const {
+  idPrefix,
+  heading,
+  conclusion,
+  left,
+  right,
+  rows = [],
+  detailHref,
+  ctaHref = '#purchase',
+  eyebrow = '30秒比較',
+  footerStatuses = ['official', 'insufficient'],
+  emptyMessage = '比較項目を確認中です。',
+} = Astro.props;
+const headingId = `${normalizeIdPrefix(idPrefix, 'thirty-second')}-heading`;
+const comparisonRows = Array.isArray(rows) ? rows : [];
+const statuses = Array.isArray(footerStatuses) ? footerStatuses : [];
 ---
-<section class="thirty-second" aria-labelledby="thirty-second-heading">
-  <div class="thirty-second-heading"><div><p class="section-label">30秒比較</p><h2 id="thirty-second-heading">まず、違いはこの3つ</h2></div><a class="text-link" href="#comparison-details">詳細比較へ ↓</a></div>
-  <p class="summary-conclusion"><strong>結論：</strong>肌へのやさしさに関する機能を詳しく確認するなら「肌へのいちばん」、モレ・ムレ対策の機能を確認するなら「さらさらケア」から見ます。どちらも新生児5kgまでのテープサイズが公式掲載されています。</p>
+<section class="thirty-second" aria-labelledby={headingId}>
+  <div class="thirty-second-heading"><div><p class="section-label">{eyebrow}</p><h2 id={headingId}>{heading}</h2></div><a class="text-link" href={detailHref}>詳細比較へ ↓</a></div>
+  <p class="summary-conclusion"><strong>結論：</strong>{conclusion}</p>
   <div class="summary-products">
-    <ProductIdentity product="パンパース 新生児用" line="肌へのいちばん" tone="premium" audience="肌へのやさしさに関する機能を確認したい人の候補" note="公式ページでサイズ・仕様を確認" status="official" compact={true} />
-    <ProductIdentity product="パンパース 新生児用" line="さらさらケア" tone="standard" audience="モレ・ムレ対策の機能を確認したい人の候補" note="公式ページでサイズ・仕様を確認" status="official" compact={true} />
+    <ProductIdentity {...left} status={normalizeVerificationStatus(left.status)} compact={true} />
+    <ProductIdentity {...right} status={normalizeVerificationStatus(right.status)} compact={true} />
   </div>
-  <ul class="summary-differences">
-    <li><b>主な機能</b><span>摩擦・ゆるうんち・肌ざわり</span><span>モレガード・フィット・吸収体</span></li>
-    <li><b>新生児</b><span>5kgまで</span><span>5kgまで</span></li>
-    <li><b>口コミ</b><span>個別レビュー未採用</span><span>個別レビュー未採用</span></li>
-  </ul>
-  <div class="summary-footer"><VerificationStatus status="official" /><VerificationStatus status="insufficient" /><a class="cta" href={ctaHref}>購入リンクへ ↓</a></div>
+  {comparisonRows.length > 0 ? (
+    <ul class="summary-differences">
+      {comparisonRows.map((row) => <li><b>{row.label}</b><span>{row.left}</span><span>{row.right}</span></li>)}
+    </ul>
+  ) : (
+    <p class="summary-empty">{emptyMessage}</p>
+  )}
+  <div class="summary-footer">{statuses.map((status) => <VerificationStatus status={normalizeVerificationStatus(status)} />)}<a class="cta" href={ctaHref}>購入リンクへ ↓</a></div>
 </section>
