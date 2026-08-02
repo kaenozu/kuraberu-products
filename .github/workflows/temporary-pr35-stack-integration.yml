@@ -1,47 +1,39 @@
-name: temporary PR 35 stack integration
+name: temporary PR 35 integration verification
 
 on:
   pull_request:
-  push:
-    branches:
-      - agent/24-integration-runner
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
-  group: temporary-pr35-stack-integration
+  group: temporary-pr35-integration-verification
   cancel-in-progress: false
 
 jobs:
-  integrate-and-verify:
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.ref == 'agent/24-integration-runner'
+  verify-current-pr35-head:
+    if: github.event.pull_request.head.ref == 'agent/24-integration-runner'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # releases/v6
         with:
           ref: agent/24-generic-comparison-components
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
 
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # releases/v6
         with:
           node-version-file: .node-version
 
-      - name: Integrate the squashed base without rewriting history
+      - name: Verify integration ancestry and exact scope
         env:
-          EXPECTED_HEAD: 987ab46416871454a876ae9745e8baf74529521b
-          STACK_MERGE: 9bf5a3831da116f05a46be347560f300145ac56a
+          EXPECTED_HEAD: 61f8b10d7516149dab6e2bc2b273c246105feaa2
           CURRENT_BASE: f299e8f09162d8192c4f843499c1db986a5330fa
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git fetch --no-tags origin "$STACK_MERGE" "$CURRENT_BASE"
-          git merge --ff-only "$STACK_MERGE"
-          git merge --no-ff "$CURRENT_BASE" -m "merge: integrate PR #16 squash base into #24"
+          git merge-base --is-ancestor "$CURRENT_BASE" HEAD
 
           expected_files="$(cat <<'FILES'
           src/components/DifferenceList.astro
@@ -57,7 +49,7 @@ jobs:
           actual_files="$(git diff --name-only "$CURRENT_BASE"...HEAD | sort)"
           test "$actual_files" = "$expected_files"
           git diff --check "$CURRENT_BASE"...HEAD
-          git status --short
+          test -z "$(git status --short)"
           git log --oneline --decorate -5
 
       - name: Enable Corepack
@@ -80,7 +72,120 @@ jobs:
           PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
         run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
 
-      - name: Push verified integration commit
+      - name: Install Chromium
         run: |
-          set -euo pipefail
-          git push origin HEAD:agent/24-generic-comparison-components
+          npm install --no-save --package-lock=false playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Verify current Workers Preview in a real browser
+        env:
+          PREVIEW_URL: https://agent-24-generic-comparison-components-kuraberu-products.neoenox.workers.dev/articles/pampers-newborn/
+        run: |
+          node --input-type=module <<'EOF'
+          import { chromium } from "playwright";
+
+          const assert = (condition, message) => {
+            if (!condition) throw new Error(message);
+          };
+          const results = [];
+          const browser = await chromium.launch({ headless: true });
+
+          try {
+            for (const viewport of [
+              { width: 320, height: 800 },
+              { width: 390, height: 844 },
+              { width: 1440, height: 1000 },
+            ]) {
+              const context = await browser.newContext({
+                viewport,
+                reducedMotion: "reduce",
+                locale: "ja-JP",
+              });
+              const page = await context.newPage();
+              const consoleErrors = [];
+              const pageErrors = [];
+              page.on("console", (message) => {
+                if (message.type() === "error") consoleErrors.push(message.text());
+              });
+              page.on("pageerror", (error) => pageErrors.push(error.message));
+
+              let response;
+              for (let attempt = 0; attempt < 60; attempt += 1) {
+                response = await page.goto(process.env.PREVIEW_URL, {
+                  waitUntil: "domcontentloaded",
+                  timeout: 30_000,
+                });
+                if (
+                  response?.status() === 200 &&
+                  (await page.locator("#pampers-newborn-summary-heading").count()) === 1
+                ) break;
+                await page.waitForTimeout(10_000);
+              }
+
+              assert(response?.status() === 200, `HTTP ${response?.status()}`);
+              assert(
+                (await page.locator("#pampers-newborn-summary-heading").count()) === 1,
+                "summary heading ID is missing or duplicated",
+              );
+              assert(
+                (await page.locator("#pampers-newborn-differences-heading").count()) === 1,
+                "difference heading ID is missing or duplicated",
+              );
+              assert((await page.getByText("肌へのいちばん", { exact: true }).count()) >= 2, "left product label missing");
+              assert((await page.getByText("さらさらケア", { exact: true }).count()) >= 2, "right product label missing");
+              assert((await page.getByText("公式確認済み", { exact: true }).count()) >= 2, "verification labels missing");
+
+              const layout = await page.evaluate((width) => {
+                const ids = [...document.querySelectorAll("[id]")].map((element) => element.id);
+                const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
+                const link = [...document.querySelectorAll("a")].find(
+                  (element) => element.textContent?.trim() === "詳細比較へ ↓",
+                );
+                link?.focus();
+                const outline = link ? getComputedStyle(link).outlineStyle : "none";
+                const duration = (value) =>
+                  value.split(",").some((item) => {
+                    const text = item.trim();
+                    return text.endsWith("ms")
+                      ? Number.parseFloat(text) > 0
+                      : Number.parseFloat(text) > 0;
+                  });
+                const moving = [...document.querySelectorAll("body *")].filter((element) => {
+                  const style = getComputedStyle(element);
+                  return duration(style.animationDuration) || duration(style.transitionDuration);
+                }).length;
+                return {
+                  overflow: document.documentElement.scrollWidth - width,
+                  duplicateIds,
+                  linkFocused: document.activeElement === link,
+                  outline,
+                  moving,
+                };
+              }, viewport.width);
+
+              assert(layout.overflow <= 1, `horizontal overflow: ${layout.overflow}px`);
+              assert(layout.duplicateIds.length === 0, `duplicate IDs: ${layout.duplicateIds.join(", ")}`);
+              assert(layout.linkFocused, "keyboard target cannot receive focus");
+              assert(layout.outline !== "none", "focused detail link has no outline");
+              assert(layout.moving === 0, `${layout.moving} elements retain motion under reduced-motion`);
+
+              const longTextOverflow = await page.evaluate((width) => {
+                const labels = document.querySelectorAll(".product-identity h3");
+                labels.forEach((element, index) => {
+                  element.textContent = `${index === 0 ? "左" : "右"}の商品名・非常に長い日本語の商品バリエーション名称・新生児向けテープタイプ`;
+                });
+                return document.documentElement.scrollWidth - width;
+              }, viewport.width);
+              assert(longTextOverflow <= 1, `long Japanese product name overflow: ${longTextOverflow}px`);
+              assert(pageErrors.length === 0, `page errors: ${pageErrors.join(" | ")}`);
+              assert(consoleErrors.length === 0, `console errors: ${consoleErrors.join(" | ")}`);
+
+              results.push({ width: viewport.width, status: "PASS" });
+              await context.close();
+            }
+
+            console.log(JSON.stringify({ status: "PASS", results }, null, 2));
+          } finally {
+            await browser.close();
+          }
+          EOF
