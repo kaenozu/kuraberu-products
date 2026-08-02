@@ -3,11 +3,15 @@ import '../styles/global.css';
 import '../styles/accessibility.css';
 import {site} from '../config/site';
 
+type RobotsDirective = 'index,follow' | 'noindex,nofollow';
+type PageKind = 'default' | 'not-found';
+
 interface Props {
   title?: string;
   description?: string;
-  robots?: 'index,follow' | 'noindex,nofollow';
+  robots?: RobotsDirective;
   ogType?: 'website' | 'article';
+  pageKind?: PageKind;
 }
 
 const {
@@ -15,11 +19,13 @@ const {
   description = site.description,
   robots,
   ogType,
+  pageKind = 'default',
 } = Astro.props;
 const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
+const isNotFound = pageKind === 'not-found';
 const canonical = new URL(Astro.url.pathname, `${site.url}/`).toString();
-const robotsContent = robots ?? (isProduction ? 'index,follow' : 'noindex,nofollow');
-const resolvedOgType = ogType ?? (Astro.url.pathname.startsWith('/articles/') && Astro.url.pathname !== '/articles/' ? 'article' : 'website');
+const robotsContent = isNotFound ? 'noindex,nofollow' : robots ?? (isProduction ? 'index,follow' : 'noindex,nofollow');
+const resolvedOgType = isNotFound ? 'website' : ogType ?? (Astro.url.pathname.startsWith('/articles/') && Astro.url.pathname !== '/articles/' ? 'article' : 'website');
 const organization = {
   '@type': 'Organization',
   name: site.name,
