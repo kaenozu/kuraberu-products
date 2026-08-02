@@ -1,9 +1,7 @@
 name: temporary external embed acceptance
 
 on:
-  push:
-    branches:
-      - agent/15-external-embeds
+  pull_request:
   workflow_dispatch:
 
 permissions:
