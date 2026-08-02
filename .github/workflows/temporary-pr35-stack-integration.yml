@@ -1,0 +1,84 @@
+name: temporary PR 35 stack integration
+
+on:
+  push:
+    branches:
+      - agent/24-integration-runner
+
+permissions:
+  contents: write
+
+concurrency:
+  group: temporary-pr35-stack-integration
+  cancel-in-progress: false
+
+jobs:
+  integrate-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # releases/v6
+        with:
+          ref: agent/24-generic-comparison-components
+          fetch-depth: 0
+          persist-credentials: true
+
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # releases/v6
+        with:
+          node-version-file: .node-version
+
+      - name: Integrate the squashed base without rewriting history
+        env:
+          EXPECTED_HEAD: 987ab46416871454a876ae9745e8baf74529521b
+          STACK_MERGE: 9bf5a3831da116f05a46be347560f300145ac56a
+          CURRENT_BASE: f299e8f09162d8192c4f843499c1db986a5330fa
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch --no-tags origin "$STACK_MERGE" "$CURRENT_BASE"
+          git merge --ff-only "$STACK_MERGE"
+          git merge --no-ff "$CURRENT_BASE" -m "merge: integrate PR #16 squash base into #24"
+
+          expected_files="$(cat <<'FILES'
+          src/components/DifferenceList.astro
+          src/components/ProductIdentity.astro
+          src/components/ThirtySecondComparison.astro
+          src/components/VerificationStatus.astro
+          src/lib/comparison.ts
+          src/pages/articles/pampers-newborn/index.astro
+          tests/comparison-components.test.ts
+          vitest.config.ts
+          FILES
+          )"
+          actual_files="$(git diff --name-only "$CURRENT_BASE"...HEAD | sort)"
+          test "$actual_files" = "$expected_files"
+          git diff --check "$CURRENT_BASE"...HEAD
+          git status --short
+          git log --oneline --decorate -5
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify Preview integration
+        env:
+          DEPLOYMENT_ENV: preview
+        run: pnpm verify
+
+      - name: Verify Production contract
+        env:
+          DEPLOYMENT_ENV: production
+          PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
+          PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
+          PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
+          PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
+        run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
+
+      - name: Push verified integration commit
+        run: |
+          set -euo pipefail
+          git push origin HEAD:agent/24-generic-comparison-components
