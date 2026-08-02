@@ -63,6 +63,32 @@ function containsExactIdentifier(
   return !isAlphaNumeric(before) && !isAlphaNumeric(after);
 }
 
+function stableDuplicateRepresentative(
+  products: RakutenProduct[],
+): RakutenProduct {
+  if (
+    products.length === 1 &&
+    (!products[0].affiliateUrl || isAllowedRakutenUrl(products[0].affiliateUrl))
+  ) {
+    return products[0];
+  }
+
+  const sorted = [...products].sort((left, right) => {
+    const leftKey = `${left.id}\u0000${left.name}\u0000${left.url}\u0000${left.price}`;
+    const rightKey = `${right.id}\u0000${right.name}\u0000${right.url}\u0000${right.price}`;
+    return leftKey.localeCompare(rightKey, "en");
+  });
+  const representative = sorted[0];
+  const affiliateUrl = sorted
+    .map((product) => product.affiliateUrl)
+    .filter((value): value is string => isAllowedRakutenUrl(value))
+    .sort((left, right) => left.localeCompare(right, "en"))[0];
+
+  return affiliateUrl
+    ? { ...representative, affiliateUrl }
+    : { ...representative, affiliateUrl: undefined };
+}
+
 /**
  * 楽天APIのformatVersion=2形式を優先し、旧ネスト形式も安全に読み取る。
  */
@@ -139,14 +165,15 @@ export function selectRakutenProduct(
     return requiredMatch && !excludedMatch && itemCodeMatch && identifierMatch;
   });
 
-  const uniqueProducts = new Map(
-    matches.map((product) => [
-      `${normalize(product.id)}\u0000${normalize(product.name)}\u0000${normalize(product.url)}`,
-      product,
-    ]),
-  );
-  if (uniqueProducts.size !== 1) return undefined;
-  return [...uniqueProducts.values()][0];
+  const identities = new Map<string, RakutenProduct[]>();
+  for (const product of matches) {
+    const identity = `${normalize(product.id)}\u0000${normalize(product.name)}\u0000${normalize(product.url)}`;
+    const group = identities.get(identity) ?? [];
+    group.push(product);
+    identities.set(identity, group);
+  }
+  if (identities.size !== 1) return undefined;
+  return stableDuplicateRepresentative([...identities.values()][0]);
 }
 
 export async function requestRakutenProducts(

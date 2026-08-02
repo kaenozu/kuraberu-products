@@ -112,4 +112,16 @@ describe("product search parsing", () => {
       }),
     ).toEqual([]);
   });
+
+  it("passes typed fail-closed selection criteria from each CTA query", () => {
+    const button = read("src/components/AffiliateButton.astro");
+    expect(button).toContain("type ProductQuery");
+    expect(button).toContain(
+      "const productQueries: Record<ProductId, ProductQuery>",
+    );
+    expect(button).toContain("selection:");
+    expect(button).toMatch(
+      /selectRakutenProduct\(await fetchRakutenProducts\(query\.keyword\), query\.requiredTerms, query\.selection\)/,
+    );
+  });
 });

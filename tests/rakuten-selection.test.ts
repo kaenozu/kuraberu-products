@@ -128,6 +128,33 @@ describe("selectRakutenProduct", () => {
     ).toBeUndefined();
   });
 
+  it("merges same-identity duplicates deterministically and keeps only an allowed affiliate URL", () => {
+    const withoutAffiliate = product(
+      "SHOP:DUPLICATE",
+      "パンパース 新生児 テープ 66枚",
+      { affiliateUrl: "https://example.test/invalid" },
+    );
+    const withAffiliate = product(
+      "shop:duplicate",
+      "パンパース　新生児 テープ ６６枚",
+      { affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/duplicate" },
+    );
+
+    const first = selectRakutenProduct(
+      [withoutAffiliate, withAffiliate],
+      ["パンパース", "新生児"],
+    );
+    const second = selectRakutenProduct(
+      [withAffiliate, withoutAffiliate],
+      ["パンパース", "新生児"],
+    );
+
+    expect(first).toEqual(second);
+    expect(first?.affiliateUrl).toBe(
+      "https://hb.afl.rakuten.co.jp/hgc/duplicate",
+    );
+  });
+
   it("normalizes long names, full-width text, and whitespace", () => {
     expect(
       selectRakutenProduct(
