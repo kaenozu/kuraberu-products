@@ -1,23 +1,36 @@
 ---
 import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
-import {fetchRakutenProducts, selectRakutenProduct} from '../lib/rakuten';
+import {fetchRakutenProducts, selectRakutenProduct, type RakutenSelectionOptions} from '../lib/rakuten';
 const {href,label,merchant,productId,placement} = Astro.props;
 
-const productQueries = {
+type ProductId = 'pampers-premium-newborn' | 'pampers-sarasara-newborn';
+type ProductQuery = {
+  keyword: string;
+  requiredTerms: readonly string[];
+  selection: RakutenSelectionOptions;
+};
+
+const productQueries: Record<ProductId, ProductQuery> = {
   'pampers-premium-newborn': {
     keyword: 'パンパース 肌へのいちばん 新生児',
     requiredTerms: ['パンパース', '肌へのいちばん', '新生児'],
+    selection: {
+      excludedTerms: ['90枚', '2パック', 'セット', '旧モデル'],
+    },
   },
   'pampers-sarasara-newborn': {
     keyword: 'パンパース さらさらケア 新生児',
     requiredTerms: ['パンパース', 'さらさらケア', '新生児'],
+    selection: {
+      excludedTerms: ['パンツ', '2パック', 'セット', '旧モデル'],
+    },
   },
 } as const;
 
 const directHref = typeof href === 'string' && isAllowedRakutenUrl(href) ? href : undefined;
-const query = productQueries[productId as keyof typeof productQueries];
+const query = productQueries[productId as ProductId];
 const generated = !directHref && query
-  ? selectRakutenProduct(await fetchRakutenProducts(query.keyword), query.requiredTerms)?.affiliateUrl
+  ? selectRakutenProduct(await fetchRakutenProducts(query.keyword), query.requiredTerms, query.selection)?.affiliateUrl
   : undefined;
 const resolvedHref = directHref ?? generated;
 const valid = isAllowedRakutenUrl(resolvedHref);
