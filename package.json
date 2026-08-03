@@ -23,8 +23,8 @@
     "check:deployment": "node scripts/check-deployment-html.mjs",
     "check:external-link-syntax": "node scripts/check-external-links.mjs",
     "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
-    "check:external-links": "pnpm check:external-link-syntax",
-    "verify": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm validate:env && pnpm validate:content && pnpm check:css-usage && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax && pnpm test"
+    "check:external-links": "corepack pnpm check:external-link-syntax",
+    "verify": "corepack pnpm format:check && corepack pnpm lint && corepack pnpm typecheck && corepack pnpm validate:env && corepack pnpm validate:content && corepack pnpm check:css-usage && corepack pnpm build && corepack pnpm check:rendered && corepack pnpm check:deployment && corepack pnpm check:external-link-syntax && corepack pnpm test"
   },
   "dependencies": {
     "astro": "6.0.3",
