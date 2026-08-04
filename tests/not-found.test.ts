@@ -17,15 +17,11 @@ describe("not-found output", () => {
     const html = readFileSync("dist/404.html", "utf8");
     const expectedCanonical = new URL("/404/", `${site.url}/`).toString();
 
-    expect(html).toContain(
-      '<meta name="robots" content="noindex,nofollow">',
-    );
+    expect(html).toContain('<meta name="robots" content="noindex,nofollow">');
     expect(html).toContain(
       `<link rel="canonical" href="${expectedCanonical}">`,
     );
-    expect(html).toMatch(
-      /<a\b[^>]*\bhref="\/"[^>]*>トップへ戻る<\/a>/,
-    );
+    expect(html).toMatch(/<a\b[^>]*\bhref="\/"[^>]*>トップへ戻る<\/a>/);
 
     const jsonLd = html.match(
       /<script type="application\/ld\+json">([\s\S]*?)<\/script>/,
