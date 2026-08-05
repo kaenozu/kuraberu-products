@@ -1,0 +1,110 @@
+# Production operations
+
+Production traffic, account credentials, and repository policy remain privileged actions. The repository now automates every value-independent step and requires explicit confirmation for mutations.
+
+## 1. Configure the protected GitHub environment
+
+Dry run:
+
+```powershell
+pwsh ./tools/production/Configure-GitHubProductionEnvironment.ps1 `
+  -SiteUrl https://example.invalid/ `
+  -UseRakutenApi
+```
+
+Apply after reviewing names:
+
+```powershell
+pwsh ./tools/production/Configure-GitHubProductionEnvironment.ps1 `
+  -SiteUrl https://your-production-host.example/ `
+  -ContactUrl https://your-contact-form.example/ `
+  -UseRakutenApi `
+  -Apply `
+  -ConfirmApply CONFIGURE_PRODUCTION
+```
+
+The script creates the `production` environment, stores public configuration as environment variables, and prompts securely for:
+
+- `CLOUDFLARE_API_TOKEN`
+- `CLOUDFLARE_ACCOUNT_ID`
+- `RAKUTEN_APPLICATION_ID`
+- `RAKUTEN_ACCESS_KEY`
+- `RAKUTEN_AFFILIATE_ID`
+
+For direct purchase links, omit `-UseRakutenApi` and provide both Rakuten URLs. Secret values are written through `gh secret set`; they are never printed or read back.
+
+Because the current Astro code reads Rakuten credentials through build-time `import.meta.env`, the protected GitHub Environment is the authoritative secret source for the production build. Cloudflare runtime secrets alone do not populate a static Astro build.
+
+## 2. Rehearse locally without publishing
+
+```powershell
+pwsh ./tools/production/Invoke-ProductionBuildAndDeploy.ps1 `
+  -SiteUrl https://your-production-host.example/ `
+  -UseRakutenApi `
+  -ExpectedHead <40-character-sha>
+```
+
+Without `-Apply`, the script runs frozen install, environment validation, full `verify`, production build, rendered HTML, deployment HTML, and external-link syntax checks. It produces a privacy-safe local report.
+
+## 3. Deploy exact HEAD
+
+Use **Actions → Deploy production → Run workflow** on the default branch.
+
+Inputs:
+
+- `expected_sha`: exact 40-character default-branch SHA;
+- `confirm`: `DEPLOY`.
+
+The job uses the protected `production` environment, checks out the exact SHA, builds with protected secrets, runs all production gates, deploys with Wrangler, waits for propagation, then verifies the public site. Environment approval can be enabled in GitHub settings so a human approval is the last irreversible action.
+
+The local script can also deploy with `-Apply`, but only when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are present in the process environment.
+
+## 4. Public verification
+
+```powershell
+pwsh ./tools/production/Invoke-PostDeployVerification.ps1 `
+  -BaseUrl https://your-production-host.example/ `
+  -ExpectedCommitSha <40-character-sha>
+```
+
+Checks include:
+
+- required pages return 200;
+- generated unknown route returns 404 and `noindex`;
+- canonical URLs match the production origin;
+- production pages are indexable;
+- no mixed-content references;
+- article JSON-LD parses and contains article URL and dates;
+- Rakuten CTAs exist only on the approved host allowlist.
+
+## 5. Required `verify` ruleset
+
+Dry run and inspect the generated payload:
+
+```powershell
+pwsh ./tools/github/Configure-VerifyRuleset.ps1
+```
+
+Apply with no administrator bypass:
+
+```powershell
+pwsh ./tools/github/Configure-VerifyRuleset.ps1 `
+  -AdminBypass None `
+  -Apply `
+  -ConfirmApply APPLY_RULESET
+```
+
+`PullRequest` or `Always` administrator bypass must be selected explicitly. The script protects the default branch from deletion and force-push, requires pull requests, requires review-thread resolution, and requires a strict `verify` status check.
+
+## Rollback
+
+Before deployment, record the current public deployment ID and the exact target SHA. If public verification fails:
+
+1. stop further production runs;
+2. use Cloudflare deployment history to redeploy the recorded previous deployment;
+3. run `Invoke-PostDeployVerification.ps1` against the restored site;
+4. record only deployment IDs, SHAs, timestamps, and PASS/BLOCKER—never secrets or product credentials.
+
+## Human-only boundary
+
+After this automation is merged, the remaining privileged actions are entering secret values, selecting the canonical public domain, approving the protected production environment, deciding administrator bypass policy, and initiating or rolling back public traffic changes.
