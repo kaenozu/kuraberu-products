@@ -22,7 +22,7 @@ jobs:
         run: corepack enable
       - name: Apply Astro upgrade
         run: |
-          pnpm add astro@7.1.6 --save-exact
+          pnpm add astro@7.1.6 cookie@2.0.1 --save-exact
           pnpm exec prettier --write package.json pnpm-lock.yaml
           git show origin/feat/affiliate-site-foundation:.github/workflows/verify.yml > .github/workflows/verify.yml
       - name: Verify preview
