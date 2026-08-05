@@ -21,7 +21,45 @@ jobs:
       - run: corepack enable
       - run: pnpm install --frozen-lockfile
       - name: Apply implementation
-        run: python3 .github/agent-apply-42.py
+        shell: bash
+        run: |
+          python3 .github/agent-apply-42.py
+          python3 - <<'PY'
+          from pathlib import Path
+
+          metadata = Path('src/content/articles.ts')
+          text = metadata.read_text(encoding='utf-8')
+          old = '''    if (!isoDate.test(value) || Number.isNaN(Date.parse(`${value}T00:00:00Z`))) {
+      throw new TypeError(`${label} must be an ISO 8601 calendar date`);
+    }
+'''
+          new = '''    const parsed = new Date(`${value}T00:00:00Z`);
+    if (
+      !isoDate.test(value) ||
+      Number.isNaN(parsed.getTime()) ||
+      parsed.toISOString().slice(0, 10) !== value
+    ) {
+      throw new TypeError(`${label} must be an ISO 8601 calendar date`);
+    }
+'''
+          if text.count(old) != 1:
+              raise SystemExit(f'date validation block count={text.count(old)}')
+          metadata.write_text(text.replace(old, new, 1), encoding='utf-8')
+
+          test = Path('tests/article-metadata.test.ts')
+          text = test.read_text(encoding='utf-8')
+          old = '''    expect(pampersNewbornArticle.modifiedAt).not.toBeLessThan(
+      pampersNewbornArticle.publishedAt,
+    );
+'''
+          new = '''    expect(
+      pampersNewbornArticle.modifiedAt >= pampersNewbornArticle.publishedAt,
+    ).toBe(true);
+'''
+          if text.count(old) != 1:
+              raise SystemExit(f'date comparison block count={text.count(old)}')
+          test.write_text(text.replace(old, new, 1), encoding='utf-8')
+          PY
       - name: Verify preview and production contracts
         shell: bash
         run: |
