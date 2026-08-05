@@ -1,0 +1,35 @@
+name: Format operations once
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/format-operations-once.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  format-and-remove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: agent/production-operations-automation-20260805
+          fetch-depth: 0
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+        with:
+          node-version-file: .node-version
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - name: Format and remove one-shot workflow
+        run: |
+          pnpm format
+          rm .github/workflows/format-operations-once.yml
+      - name: Commit formatted operations files
+        run: |
+          git config user.name 'ChatGPT Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'style: format production operations files'
+          git push origin HEAD:agent/production-operations-automation-20260805
