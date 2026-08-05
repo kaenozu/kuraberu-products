@@ -6,6 +6,7 @@ import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import {pampersNewbornArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
 import type {
   ComparisonCandidate,
   ComparisonRow,
@@ -51,6 +52,15 @@ const summaryRows: ComparisonRow[] = [
   },
 ];
 
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(
+  articleMetadata.productInfoCheckedAt,
+  contentAsOf,
+);
+const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
+  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
+  : '最終確認日は未記録';
+
 const differenceRows: DifferenceRow[] = [
   {
     label: '公式が案内する主な機能',
@@ -72,6 +82,11 @@ const differenceRows: DifferenceRow[] = [
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
+      <p>購入リンク：{purchaseLinkLabel}</p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <ThirtySecondComparison
       idPrefix="pampers-newborn-summary"
@@ -150,11 +165,22 @@ const differenceRows: DifferenceRow[] = [
     </div>
 
     <h2>購入時の注意</h2>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
     <p>新生児用でも体重や体型には個人差があります。漏れや肌トラブルが続く場合は使用を中止し、必要に応じて専門家へ相談してください。</p>
     <div class="grid two" id="purchase">
       <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PREMIUM_URL} label="肌へのいちばんを楽天市場で確認" merchant="楽天" productId="pampers-premium-newborn" placement="article-end" />
       <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_SARASARA_URL} label="さらさらケアを楽天市場で確認" merchant="楽天" productId="pampers-sarasara-newborn" placement="article-end" />
     </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog
+        .slice()
+        .sort((left, right) => right.date.localeCompare(left.date))
+        .map((entry) => (
+          <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+        ))}
+    </ol>
 
     <h2>情報源一覧</h2>
     <ul class="source-list">
