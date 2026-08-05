@@ -49,12 +49,14 @@ foreach ($entry in $variables.GetEnumerator()) {
 foreach ($name in $secretNames) {
     $secure = Read-Host "$name value" -AsSecureString
     $pointer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure)
+    $plain = $null
     try {
         $plain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer)
+        if ([string]::IsNullOrWhiteSpace($plain)) { throw "$name must not be empty." }
         $plain | & $gh secret set $name --env $Environment --repo $Repository --body -
         if ($LASTEXITCODE -ne 0) { throw "Failed to set environment secret $name." }
     } finally {
-        if ($plain) { $plain = $null }
+        $plain = $null
         [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer)
     }
 }
