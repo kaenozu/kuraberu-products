@@ -20,6 +20,9 @@ const {
   article,
 } = Astro.props;
 const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
+if (isProduction && !site.buildSha) {
+  throw new Error('Production HTML requires PUBLIC_BUILD_SHA');
+}
 const canonical = new URL(Astro.url.pathname, `${site.url}/`).toString();
 const robotsContent = robots ?? (isProduction ? 'index,follow' : 'noindex,nofollow');
 const resolvedOgType = article ? 'article' : (ogType ?? 'website');
@@ -68,6 +71,7 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u00
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={robotsContent} />
+    {site.buildSha && <meta name="x-build-sha" content={site.buildSha} />}
     <link rel="canonical" href={canonical} />
     <meta property="og:locale" content="ja_JP" />
     <meta property="og:site_name" content={site.name} />
