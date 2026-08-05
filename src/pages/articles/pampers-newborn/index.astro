@@ -6,7 +6,9 @@ import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {pampersNewbornArticle as articleMetadata} from '../../../content/articles';
+import {pampersCandidateLabels, pampersPriorityOptions, pampersStandardConclusion} from '../../../content/pampers-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
   ComparisonCandidate,
@@ -101,6 +103,8 @@ const differenceRows: DifferenceRow[] = [
     />
 
     <p>パンパースの新生児用テープには「肌へのいちばん」と「さらさらケア」があります。この記事では、公式商品ページで確認できる機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>
+
+    <PriorityConclusion options={pampersPriorityOptions} labels={pampersCandidateLabels} standard={pampersStandardConclusion} />
 
     <h2>先に結論</h2>
     <p>公式情報上、「肌へのいちばん」は肌へのやさしさに関する機能、「さらさらケア」はモレ・ムレ対策に関する機能が詳しく案内されています。どちらも新生児5kgまでのテープサイズがあります。実際の合いやすさは赤ちゃんの体型や肌状態でも変わるため、機能表示とサイズを確認して少量から試してください。</p>

@@ -746,3 +746,50 @@ a {
   color: var(--muted);
   cursor: not-allowed;
 }
+
+.priority-conclusion {
+  margin: 2rem 0;
+}
+.priority-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  border: 0;
+  padding: 0;
+  margin: 0 0 1rem;
+}
+.priority-options legend {
+  width: 100%;
+  margin-bottom: 0.35rem;
+  font-weight: 850;
+}
+.priority-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+}
+.priority-options label:has(input:checked) {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+.priority-result {
+  padding: 1.25rem;
+}
+.priority-result h3 {
+  margin-top: 0;
+}
+@media (max-width: 390px) {
+  .priority-options {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .priority-options label {
+    border-radius: 6px;
+  }
+}
