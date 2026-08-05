@@ -39,7 +39,9 @@ export function validateGeneratedBuildSha({
   for (const filePath of htmlFiles) {
     const actual = extractBuildSha(fs.readFileSync(filePath, "utf8"));
     if (actual !== normalized) {
-      errors.push(`${filePath}: build SHA actual=${actual} expected=${normalized}`);
+      errors.push(
+        `${filePath}: build SHA actual=${actual} expected=${normalized}`,
+      );
     }
   }
   return { pageCount: htmlFiles.length, expectedSha: normalized, errors };
