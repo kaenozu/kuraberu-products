@@ -36,6 +36,16 @@ function Read-Secret([string]$Prompt) {
     try { [Runtime.InteropServices.Marshal]::PtrToStringBSTR($pointer) }
     finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($pointer) }
 }
+function Resolve-SecretValue([string]$Name, [string]$Prompt) {
+    $current = [Environment]::GetEnvironmentVariable($Name, 'Process')
+    if (-not [string]::IsNullOrWhiteSpace($current)) { return $current }
+    if ($env:GITHUB_ACTIONS -eq 'true' -or -not [Environment]::UserInteractive) {
+        throw "$Name is required but was not provided to this non-interactive run."
+    }
+    $value = Read-Secret $Prompt
+    if ([string]::IsNullOrWhiteSpace($value)) { throw "$Name must not be empty." }
+    return $value
+}
 
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $git = Require-Command 'git'
@@ -51,7 +61,6 @@ New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
 $oldEnv = @{}
 $names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID')
 foreach ($name in $names) { $oldEnv[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
-$deploymentOutput = ''
 
 try {
     $env:DEPLOYMENT_ENV = 'production'
@@ -60,9 +69,9 @@ try {
     if ($UseRakutenApi) {
         $env:PUBLIC_RAKUTEN_PREMIUM_URL = $null
         $env:PUBLIC_RAKUTEN_SARASARA_URL = $null
-        if (-not $env:RAKUTEN_APPLICATION_ID) { $env:RAKUTEN_APPLICATION_ID = Read-Secret 'Rakuten application ID' }
-        if (-not $env:RAKUTEN_ACCESS_KEY) { $env:RAKUTEN_ACCESS_KEY = Read-Secret 'Rakuten access key' }
-        if (-not $env:RAKUTEN_AFFILIATE_ID) { $env:RAKUTEN_AFFILIATE_ID = Read-Secret 'Rakuten affiliate ID' }
+        $env:RAKUTEN_APPLICATION_ID = Resolve-SecretValue 'RAKUTEN_APPLICATION_ID' 'Rakuten application ID'
+        $env:RAKUTEN_ACCESS_KEY = Resolve-SecretValue 'RAKUTEN_ACCESS_KEY' 'Rakuten access key'
+        $env:RAKUTEN_AFFILIATE_ID = Resolve-SecretValue 'RAKUTEN_AFFILIATE_ID' 'Rakuten affiliate ID'
     } else {
         $env:PUBLIC_RAKUTEN_PREMIUM_URL = $PremiumUrl
         $env:PUBLIC_RAKUTEN_SARASARA_URL = $SarasaraUrl
@@ -83,8 +92,7 @@ try {
         if ($Apply) {
             if (-not $env:CLOUDFLARE_API_TOKEN) { throw 'CLOUDFLARE_API_TOKEN is required for -Apply.' }
             if (-not $env:CLOUDFLARE_ACCOUNT_ID) { throw 'CLOUDFLARE_ACCOUNT_ID is required for -Apply.' }
-            $deploy = Run $pnpm @('exec', 'wrangler', 'deploy', '--config', 'wrangler.jsonc') (Join-Path $runDirectory 'wrangler-deploy.log')
-            $deploymentOutput = $deploy.Text
+            Run $pnpm @('exec', 'wrangler', 'deploy', '--config', 'wrangler.jsonc') (Join-Path $runDirectory 'wrangler-deploy.log') | Out-Null
         }
     } finally { Pop-Location }
 
