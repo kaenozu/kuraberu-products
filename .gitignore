@@ -4,3 +4,7 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Local production and ruleset evidence; may contain deployment identifiers.
+.acceptance/
+acceptance-results/
