@@ -2,12 +2,14 @@
 import '../styles/global.css';
 import '../styles/accessibility.css';
 import {site} from '../config/site';
+import type {ArticleMetadata} from '../content/articles';
 
 interface Props {
   title?: string;
   description?: string;
   robots?: 'index,follow' | 'noindex,nofollow';
   ogType?: 'website' | 'article';
+  article?: ArticleMetadata;
 }
 
 const {
@@ -15,11 +17,15 @@ const {
   description = site.description,
   robots,
   ogType,
+  article,
 } = Astro.props;
 const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
 const canonical = new URL(Astro.url.pathname, `${site.url}/`).toString();
 const robotsContent = robots ?? (isProduction ? 'index,follow' : 'noindex,nofollow');
-const resolvedOgType = ogType ?? (Astro.url.pathname.startsWith('/articles/') && Astro.url.pathname !== '/articles/' ? 'article' : 'website');
+const resolvedOgType = article ? 'article' : (ogType ?? 'website');
+const articleImage = article?.imagePath
+  ? new URL(article.imagePath, `${site.url}/`).toString()
+  : undefined;
 const organization = {
   '@type': 'Organization',
   name: site.name,
@@ -29,10 +35,13 @@ const structuredData = resolvedOgType === 'article'
   ? {
       '@context': 'https://schema.org',
       '@type': 'Article',
-      headline: title,
-      description,
+      headline: article?.headline ?? title,
+      description: article?.description ?? description,
       url: canonical,
       mainEntityOfPage: canonical,
+      datePublished: article?.publishedAt,
+      dateModified: article?.modifiedAt,
+      ...(articleImage ? {image: articleImage} : {}),
       author: organization,
       publisher: organization,
       isAccessibleForFree: true,
@@ -66,7 +75,11 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u00
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta name="twitter:card" content="summary" />
+    {articleImage && <meta property="og:image" content={articleImage} />}
+    {article?.publishedAt && <meta property="article:published_time" content={article.publishedAt} />}
+    {article?.modifiedAt && <meta property="article:modified_time" content={article.modifiedAt} />}
+    <meta name="twitter:card" content={articleImage ? 'summary_large_image' : 'summary'} />
+    {articleImage && <meta name="twitter:image" content={articleImage} />}
     <script is:inline type="application/ld+json" set:html={structuredDataJson} />
   </head>
   <body>
