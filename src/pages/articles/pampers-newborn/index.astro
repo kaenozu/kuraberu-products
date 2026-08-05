@@ -5,6 +5,7 @@ import XPostEmbed from '../../../components/XPostEmbed.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {pampersNewbornArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
@@ -82,6 +83,7 @@ const differenceRows: DifferenceRow[] = [
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
       <p>購入リンク：{purchaseLinkLabel}</p>

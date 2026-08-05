@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { articleMetadata } from '../content/articles';
+---
+<BaseLayout title="比較メモ｜くらべる商品メモ" description="端末内に保存した比較記事を確認するページ">
+  <section class="section wrap article-index" data-memo-page>
+    <p class="eyebrow">Local comparison memo</p>
+    <h1>比較メモ</h1>
+    <p class="lead">保存状態はこのブラウザの端末内だけに保存されます。価格・在庫など変化する情報は保存せず、記事の最新版へ移動します。</p>
+    <p class="meta" role="status" aria-live="polite" data-memo-page-status>保存状態を確認しています</p>
+    <div class="article-list" data-memo-list>
+      {articleMetadata.map((article) => (
+        <article class="card article-list-card" data-memo-item data-article-id={article.id}>
+          <span class="tag">{article.category}</span>
+          <h2><a href={article.path}>{article.headline}</a></h2>
+          <p>{article.summary}</p>
+          <p class="meta">商品情報確認日 {article.productInfoCheckedAt ?? '未記録'}</p>
+          <a class="cta" href={article.path}>記事を確認する →</a>
+          <button type="button" class="text-button" data-memo-remove>比較メモから外す</button>
+        </article>
+      ))}
+    </div>
+    <div class="card discovery-empty" hidden data-memo-empty>
+      <h2>保存した記事はありません</h2>
+      <p><a href="/articles/">比較記事一覧から記事を探す →</a></p>
+    </div>
+    <noscript><p class="notice">比較メモの保存状態を表示するにはJavaScriptが必要です。下の記事リンクから通常どおり閲覧できます。</p></noscript>
+  </section>
+
+  <script>
+    import { comparisonMemoStorageKey, encodeComparisonMemo, sanitizeComparisonMemo } from '../lib/comparison-memo';
+    import { articleMetadata } from '../content/articles';
+
+    const root = document.querySelector('[data-memo-page]');
+    if (root instanceof HTMLElement) {
+      const knownIds = articleMetadata.map((article) => article.id);
+      const status = root.querySelector('[data-memo-page-status]');
+      const empty = root.querySelector('[data-memo-empty]');
+      const items = [...root.querySelectorAll('[data-memo-item]')];
+      let ids: string[] = [];
+      let storageAvailable = true;
+      try {
+        ids = [...sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds).ids];
+        localStorage.setItem(comparisonMemoStorageKey, encodeComparisonMemo(ids));
+      } catch {
+        storageAvailable = false;
+      }
+      const render = () => {
+        let visible = 0;
+        items.forEach((item) => {
+          if (!(item instanceof HTMLElement)) return;
+          const saved = ids.includes(item.dataset.articleId || '');
+          item.hidden = storageAvailable && !saved;
+          item.querySelector('[data-memo-remove]')?.toggleAttribute('disabled', !storageAvailable);
+          if (saved) visible += 1;
+        });
+        if (empty instanceof HTMLElement) empty.hidden = !storageAvailable || visible !== 0;
+        if (status) status.textContent = storageAvailable ? visible + '件保存されています' : 'このブラウザでは比較メモを利用できません。記事リンクは通常どおり利用できます';
+      };
+      root.querySelectorAll('[data-memo-remove]').forEach((button) => button.addEventListener('click', () => {
+        const item = button.closest('[data-memo-item]');
+        if (!(item instanceof HTMLElement)) return;
+        ids = ids.filter((id) => id !== item.dataset.articleId);
+        try {
+          localStorage.setItem(comparisonMemoStorageKey, encodeComparisonMemo(ids));
+          render();
+        } catch {
+          storageAvailable = false;
+          render();
+        }
+      }));
+      render();
+    }
+  </script>
+</BaseLayout>
