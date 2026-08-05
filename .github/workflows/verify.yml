@@ -2,88 +2,35 @@ name: verify
 
 on:
   pull_request:
+  push:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  apply-and-verify:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # releases/v6
         with:
-          ref: agent/42-article-metadata-jsonld-20260805
-          fetch-depth: 0
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # releases/v6
         with:
           node-version-file: .node-version
-      - run: corepack enable
-      - run: pnpm install --frozen-lockfile
-      - name: Apply implementation
-        shell: bash
-        run: |
-          python3 .github/agent-apply-42.py
-          python3 - <<'PY'
-          from pathlib import Path
-
-          metadata = Path('src/content/articles.ts')
-          text = metadata.read_text(encoding='utf-8')
-          old = '''    if (!isoDate.test(value) || Number.isNaN(Date.parse(`${value}T00:00:00Z`))) {
-      throw new TypeError(`${label} must be an ISO 8601 calendar date`);
-    }
-'''
-          new = '''    const parsed = new Date(`${value}T00:00:00Z`);
-    if (
-      !isoDate.test(value) ||
-      Number.isNaN(parsed.getTime()) ||
-      parsed.toISOString().slice(0, 10) !== value
-    ) {
-      throw new TypeError(`${label} must be an ISO 8601 calendar date`);
-    }
-'''
-          if text.count(old) != 1:
-              raise SystemExit(f'date validation block count={text.count(old)}')
-          metadata.write_text(text.replace(old, new, 1), encoding='utf-8')
-
-          test = Path('tests/article-metadata.test.ts')
-          text = test.read_text(encoding='utf-8')
-          old = '''    expect(pampersNewbornArticle.modifiedAt).not.toBeLessThan(
-      pampersNewbornArticle.publishedAt,
-    );
-'''
-          new = '''    expect(
-      pampersNewbornArticle.modifiedAt >= pampersNewbornArticle.publishedAt,
-    ).toBe(true);
-'''
-          if text.count(old) != 1:
-              raise SystemExit(f'date comparison block count={text.count(old)}')
-          test.write_text(text.replace(old, new, 1), encoding='utf-8')
-          PY
-      - name: Verify preview and production contracts
-        shell: bash
-        run: |
-          pnpm format
-          DEPLOYMENT_ENV=preview pnpm verify
-          DEPLOYMENT_ENV=production \
-          PUBLIC_SITE_URL=https://ci.kuraberu-products.invalid \
-          PUBLIC_RAKUTEN_PREMIUM_URL=https://hb.afl.rakuten.co.jp/ci/premium \
-          PUBLIC_RAKUTEN_SARASARA_URL=https://hb.afl.rakuten.co.jp/ci/sarasara \
-          PUBLIC_CONTACT_URL=https://contact.kuraberu-products.invalid/form \
-          pnpm validate:env
-          DEPLOYMENT_ENV=production \
-          PUBLIC_SITE_URL=https://ci.kuraberu-products.invalid \
-          PUBLIC_RAKUTEN_PREMIUM_URL=https://hb.afl.rakuten.co.jp/ci/premium \
-          PUBLIC_RAKUTEN_SARASARA_URL=https://hb.afl.rakuten.co.jp/ci/sarasara \
-          PUBLIC_CONTACT_URL=https://contact.kuraberu-products.invalid/form \
-          pnpm build
-          DEPLOYMENT_ENV=production PUBLIC_SITE_URL=https://ci.kuraberu-products.invalid pnpm check:rendered
-          git diff --check
-      - name: Commit verified changes
-        shell: bash
-        run: |
-          git config user.name 'ChatGPT Agent'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'feat: centralize article metadata and JSON-LD [agent-applied]'
-          git push origin HEAD:agent/42-article-metadata-jsonld-20260805
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Verify preview build
+        env:
+          DEPLOYMENT_ENV: preview
+        run: pnpm verify
+      - name: Verify production configuration and output
+        env:
+          DEPLOYMENT_ENV: production
+          PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
+          PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
+          PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
+          PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
+        run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax

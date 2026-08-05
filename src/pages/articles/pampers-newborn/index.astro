@@ -5,6 +5,7 @@ import XPostEmbed from '../../../components/XPostEmbed.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
+import {pampersNewbornArticle as articleMetadata} from '../../../content/articles';
 import type {
   ComparisonCandidate,
   ComparisonRow,
@@ -67,10 +68,10 @@ const differenceRows: DifferenceRow[] = [
   },
 ];
 ---
-<BaseLayout title="パンパースの新生児用、どっち？｜くらべる商品メモ" description="パンパース肌へのいちばんとさらさらケアの新生児用テープを、公式の商品機能と確認状況で比較">
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 更新日 2026-07-31</p>
-    <h1>パンパースの新生児用、どっち？「肌へのいちばん」と「さらさらケア」を比較</h1>
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <ThirtySecondComparison
       idPrefix="pampers-newborn-summary"
