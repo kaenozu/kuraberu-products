@@ -33,6 +33,7 @@ pnpm dev
 Productionでは次が必須です。
 
 - `PUBLIC_SITE_URL`: query、fragment、資格情報、サブパスを含まないHTTPSのサイトルート
+- `PUBLIC_BUILD_SHA`: 公開対象となるExact Git commit SHA。小文字化後に40文字の16進数である必要があり、全生成HTMLの`x-build-sha`メタデータへ埋め込まれる
 - 購入リンクは次のどちらか
   - `PUBLIC_RAKUTEN_PREMIUM_URL` と `PUBLIC_RAKUTEN_SARASARA_URL` の両方
   - `RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID` の3件すべて
@@ -52,6 +53,7 @@ Productionでは次が必須です。
 - `robots.txt` はProductionのみクロールを許可
 - `sitemap.xml` は公開ページのみを列挙し、404を含めない
 - canonicalとOpen Graph URLは `PUBLIC_SITE_URL` から生成
+- 全HTMLの`x-build-sha`は `PUBLIC_BUILD_SHA` と一致し、`pnpm check:build-sha`で検証する
 - JSON-LDは通常ページを`WebPage`、記事詳細を`Article`として出力
 - 未確認の価格、評価、レビュー数、在庫をJSON-LDへ含めない
 
@@ -65,7 +67,7 @@ pnpm 10では依存パッケージのinstall scriptを既定で実行しませ�
 
 ## CI
 
-GitHub ActionsはPreviewの `pnpm verify` に加え、秘密値を使わないテスト用HTTPS URLでProduction設定と生成HTMLを検証します。CIはデプロイやProduction traffic変更を行いません。
+GitHub ActionsはPreviewの `pnpm verify` に加え、秘密値を使わないテスト用HTTPS URLと固定test SHAでProduction設定、生成HTML、build provenanceを検証します。CIはデプロイやProduction traffic変更を行いません。
 
 GitHub公式ActionはNode 24対応のv6系commit SHAへ固定しています。branch protectionの必須チェック設定はリポジトリ設定で別途有効化し、失敗中のマージを禁止してください。
 
