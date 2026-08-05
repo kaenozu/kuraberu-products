@@ -16,6 +16,7 @@ function exampleEnvVars(): Set<string> {
 const productionBase = {
   DEPLOYMENT_ENV: "production",
   PUBLIC_SITE_URL: "https://kuraberu-products.pages.dev",
+  PUBLIC_BUILD_SHA: "0123456789abcdef0123456789abcdef01234567",
 } as const;
 
 describe("environment variable configuration", () => {
@@ -39,6 +40,7 @@ describe("environment variable configuration", () => {
     });
 
     expect(result.deploymentEnv).toBe("production");
+    expect(result.buildSha).toBe(productionBase.PUBLIC_BUILD_SHA);
     expect(result.rakutenApiReady).toBe(false);
   });
 
@@ -50,6 +52,7 @@ describe("environment variable configuration", () => {
       RAKUTEN_AFFILIATE_ID: "affiliate-id",
     });
 
+    expect(result.buildSha).toBe(productionBase.PUBLIC_BUILD_SHA);
     expect(result.rakutenApiReady).toBe(true);
   });
 
