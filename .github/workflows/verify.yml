@@ -2,37 +2,31 @@ name: verify
 
 on:
   pull_request:
+  push:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  apply-and-verify:
+  verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
-          ref: agent/43-local-comparison-memo-20260805
-          fetch-depth: 0
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
         with:
           node-version-file: .node-version
       - name: Enable Corepack
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Apply comparison memo
-        run: |
-          node .github/agent-apply-comparison-memo.mjs
-          node .github/agent-fix-comparison-memo.mjs
-          pnpm format
-          git show origin/feat/affiliate-site-foundation:.github/workflows/verify.yml > .github/workflows/verify.yml
-      - name: Verify preview
+      - name: Verify preview build
         env:
           DEPLOYMENT_ENV: preview
         run: pnpm verify
-      - name: Verify production
+      - name: Verify production configuration and output
         env:
           DEPLOYMENT_ENV: production
           PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
@@ -40,10 +34,3 @@ jobs:
           PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
           PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
         run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
-      - name: Commit verified implementation
-        run: |
-          git config user.name 'ChatGPT Agent'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -A
-          git commit -m 'feat: add local comparison memo [agent-applied]'
-          git push origin HEAD:agent/43-local-comparison-memo-20260805

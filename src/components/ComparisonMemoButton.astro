@@ -1,0 +1,60 @@
+---
+interface Props {
+  articleId: string;
+}
+const { articleId } = Astro.props;
+---
+<div class="memo-control" data-memo-control data-article-id={articleId}>
+  <button type="button" class="secondary-button memo-toggle" aria-pressed="false" data-memo-toggle>比較メモに保存</button>
+  <span class="meta" role="status" aria-live="polite" data-memo-status></span>
+</div>
+
+<script>
+  import { comparisonMemoStorageKey, encodeComparisonMemo, sanitizeComparisonMemo, toggleComparisonMemo } from '../lib/comparison-memo';
+  import type { ComparisonMemoState } from '../lib/comparison-memo';
+  import { articleMetadata } from '../content/articles';
+
+  const knownIds = articleMetadata.map((article) => article.id);
+  document.querySelectorAll('[data-memo-control]').forEach((node) => {
+    if (!(node instanceof HTMLElement) || node.dataset.memoBound === 'true') return;
+    node.dataset.memoBound = 'true';
+    const articleId = node.dataset.articleId;
+    const button = node.querySelector('[data-memo-toggle]');
+    const status = node.querySelector('[data-memo-status]');
+    if (!articleId || !(button instanceof HTMLButtonElement)) return;
+
+    const render = (ids: readonly string[]) => {
+      const saved = ids.includes(articleId);
+      button.setAttribute('aria-pressed', saved ? 'true' : 'false');
+      button.textContent = saved ? '比較メモから外す' : '比較メモに保存';
+    };
+
+    let state: ComparisonMemoState;
+    try {
+      state = sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds);
+      localStorage.setItem(comparisonMemoStorageKey, encodeComparisonMemo(state.ids));
+      render(state.ids);
+    } catch {
+      button.disabled = true;
+      if (status) status.textContent = 'このブラウザでは比較メモを利用できません';
+      return;
+    }
+
+    button.addEventListener('click', () => {
+      const result = toggleComparisonMemo(state, articleId);
+      if (result.atLimit) {
+        if (status) status.textContent = '保存上限の50件に達しています';
+        return;
+      }
+      try {
+        localStorage.setItem(comparisonMemoStorageKey, encodeComparisonMemo(result.state.ids));
+        state = result.state;
+        render(state.ids);
+        if (status) status.textContent = result.added ? '比較メモに保存しました' : '比較メモから外しました';
+        window.dispatchEvent(new CustomEvent('comparison-memo-change', { detail: state.ids }));
+      } catch {
+        if (status) status.textContent = '保存できませんでした。ブラウザの保存設定を確認してください';
+      }
+    });
+  });
+</script>
