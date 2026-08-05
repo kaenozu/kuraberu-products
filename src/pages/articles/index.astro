@@ -1,22 +1,107 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {articleMetadata} from '../../content/articles';
+
+const categories = [...new Set(articleMetadata.map((article) => article.category))].sort();
+const tags = [...new Set(articleMetadata.flatMap((article) => article.tags))].sort();
 ---
 <BaseLayout title="比較記事一覧｜くらべる商品メモ" description="公式情報と確認できる口コミで商品を比べる記事一覧">
-  <section class="section wrap article-index">
+  <section class="section wrap article-index" data-article-discovery>
     <p class="eyebrow">Comparison articles</p>
     <h1>比較記事一覧</h1>
     <p class="lead">確認できる公式情報と販売ページを起点に、商品を選ぶときの判断材料を整理しています。</p>
-    <div class="article-list">
+
+    <form class="article-filters" role="search" aria-label="比較記事を検索" data-discovery-form>
+      <label>
+        <span>キーワード</span>
+        <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索" data-discovery-query />
+      </label>
+      <label>
+        <span>カテゴリ</span>
+        <select name="category" data-discovery-category>
+          <option value="">すべて</option>
+          {categories.map((category) => <option value={category}>{category}</option>)}
+        </select>
+      </label>
+      <label>
+        <span>タグ</span>
+        <select name="tag" data-discovery-tag>
+          <option value="">すべて</option>
+          {tags.map((tag) => <option value={tag}>{tag}</option>)}
+        </select>
+      </label>
+      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
+    </form>
+    <p class="meta" aria-live="polite" data-discovery-count>{articleMetadata.length}件の記事</p>
+
+    <div class="article-list" data-discovery-results>
       {articleMetadata.map((article) => (
-        <article class="card article-list-card">
+        <article
+          class="card article-list-card"
+          data-article-card
+          data-search={[article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' ').normalize('NFKC').toLocaleLowerCase('ja-JP')}
+          data-category={article.category}
+          data-tags={JSON.stringify(article.tags)}
+        >
           <span class="tag">{article.category}</span>
           <h2><a href={article.path}>{article.headline}</a></h2>
           <p>{article.summary}</p>
+          <ul class="article-tags" aria-label="記事タグ">
+            {article.tags.map((tag) => <li>{tag}</li>)}
+          </ul>
           <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
           <a class="cta" href={article.path}>記事を読む →</a>
         </article>
       ))}
     </div>
+    <div class="card discovery-empty" hidden data-discovery-empty>
+      <h2>条件に合う記事がありません</h2>
+      <p>キーワードを短くするか、カテゴリ・タグをクリアしてください。</p>
+      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
+    </div>
   </section>
+
+  <script is:inline>
+    (() => {
+      const root = document.querySelector('[data-article-discovery]');
+      if (!(root instanceof HTMLElement)) return;
+      const query = root.querySelector('[data-discovery-query]');
+      const category = root.querySelector('[data-discovery-category]');
+      const tag = root.querySelector('[data-discovery-tag]');
+      const count = root.querySelector('[data-discovery-count]');
+      const empty = root.querySelector('[data-discovery-empty]');
+      const cards = [...root.querySelectorAll('[data-article-card]')];
+      if (!(query instanceof HTMLInputElement) || !(category instanceof HTMLSelectElement) || !(tag instanceof HTMLSelectElement)) return;
+      const normalize = (value) => value.normalize('NFKC').toLocaleLowerCase('ja-JP').trim().replace(/\s+/g, ' ');
+      const allowed = (select, value) => [...select.options].some((option) => option.value === value) ? value : '';
+      const initial = new URLSearchParams(location.search);
+      query.value = (initial.get('q') || '').slice(0, 100);
+      category.value = allowed(category, initial.get('category') || '');
+      tag.value = allowed(tag, initial.get('tag') || '');
+      const apply = () => {
+        const terms = normalize(query.value).split(' ').filter(Boolean);
+        let visible = 0;
+        cards.forEach((card) => {
+          if (!(card instanceof HTMLElement)) return;
+          const tags = JSON.parse(card.dataset.tags || '[]');
+          const matches = (!category.value || card.dataset.category === category.value) && (!tag.value || tags.includes(tag.value)) && terms.every((term) => (card.dataset.search || '').includes(term));
+          card.hidden = !matches;
+          if (matches) visible += 1;
+        });
+        if (count) count.textContent = visible + '件の記事';
+        if (empty instanceof HTMLElement) empty.hidden = visible !== 0;
+        const params = new URLSearchParams();
+        if (query.value.trim()) params.set('q', query.value.trim());
+        if (category.value) params.set('category', category.value);
+        if (tag.value) params.set('tag', tag.value);
+        history.replaceState(null, '', location.pathname + (params.size ? '?' + params.toString() : '') + location.hash);
+      };
+      root.querySelector('[data-discovery-form]')?.addEventListener('submit', (event) => event.preventDefault());
+      query.addEventListener('input', apply);
+      category.addEventListener('change', apply);
+      tag.addEventListener('change', apply);
+      root.querySelectorAll('[data-discovery-clear]').forEach((button) => button.addEventListener('click', () => { query.value = ''; category.value = ''; tag.value = ''; apply(); query.focus(); }));
+      apply();
+    })();
+  </script>
 </BaseLayout>

@@ -10,6 +10,9 @@ export interface ArticleMetadata {
   headline: string;
   description: string;
   category: string;
+  tags: readonly string[];
+  audiences: readonly string[];
+  uses: readonly string[];
   summary: string;
   publishedAt: string;
   modifiedAt: string;
@@ -68,6 +71,22 @@ export function defineArticleMetadata(
   ) {
     throw new TypeError("verified purchase links require a checked date");
   }
+  for (const [label, values] of [
+    ["tags", metadata.tags],
+    ["audiences", metadata.audiences],
+    ["uses", metadata.uses],
+  ] as const) {
+    if (values.length === 0) {
+      throw new TypeError(`${label} must contain at least one value`);
+    }
+    const normalized = values.map((value) => value.normalize("NFKC").trim());
+    if (normalized.some((value) => value.length === 0)) {
+      throw new TypeError(`${label} must not contain empty values`);
+    }
+    if (new Set(normalized).size !== normalized.length) {
+      throw new TypeError(`${label} must not contain duplicate values`);
+    }
+  }
   if (metadata.changeLog.length === 0) {
     throw new TypeError("changeLog must contain at least one factual entry");
   }
@@ -94,6 +113,9 @@ export const pampersNewbornArticle = defineArticleMetadata({
   description:
     "パンパース肌へのいちばんとさらさらケアの新生児用テープを、公式の商品機能と確認状況で比較",
   category: "育児用品",
+  tags: ["紙おむつ", "新生児", "パンパース"],
+  audiences: ["新生児の保護者", "出産準備中の人"],
+  uses: ["毎日使う", "肌への配慮を比較"],
   summary:
     "「肌へのいちばん」と「さらさらケア」を、公式情報・販売ページ・口コミの確認状況に分けて比較します。",
   publishedAt: "2026-07-31",
