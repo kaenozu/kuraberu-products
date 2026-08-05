@@ -21,6 +21,7 @@
     "check:css-usage": "node scripts/report-css-usage.mjs --fail-on-unused",
     "check:rendered": "node scripts/check-rendered-html.mjs",
     "check:deployment": "node scripts/check-deployment-html.mjs",
+    "check:build-sha": "node scripts/check-build-sha.mjs",
     "check:external-link-syntax": "node scripts/check-external-links.mjs",
     "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
     "check:external-links": "node scripts/check-external-links.mjs",
