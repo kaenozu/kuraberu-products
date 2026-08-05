@@ -22,7 +22,7 @@ permissions:
   contents: read
 
 jobs:
-  parse-powershell:
+  validate-powershell:
     runs-on: windows-latest
     timeout-minutes: 10
     steps:
@@ -33,7 +33,10 @@ jobs:
         shell: pwsh
         run: |
           $ErrorActionPreference = 'Stop'
-          $files = Get-ChildItem tools/production,tools/github -Recurse -Filter *.ps1
+          $files = @(
+            Get-ChildItem tools/production,tools/github -Recurse -File |
+              Where-Object { $_.Extension -in @('.ps1', '.psm1') }
+          )
           if (-not $files) { throw 'No operations scripts found.' }
           foreach ($file in $files) {
             $tokens = $null
@@ -48,3 +51,6 @@ jobs:
               throw "PowerShell parse failed: $($file.FullName)"
             }
           }
+      - name: Test verify ruleset contracts
+        shell: pwsh
+        run: ./tools/github/Test-VerifyRulesetContract.ps1
