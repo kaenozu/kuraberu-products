@@ -25,8 +25,9 @@ jobs:
       - name: Apply comparison memo
         run: |
           node .github/agent-apply-comparison-memo.mjs
+          node .github/agent-fix-comparison-memo.mjs
           pnpm format
-          git show origin/agent/44-article-discovery-20260805:.github/workflows/verify.yml > .github/workflows/verify.yml
+          git show origin/feat/affiliate-site-foundation:.github/workflows/verify.yml > .github/workflows/verify.yml
       - name: Verify preview
         env:
           DEPLOYMENT_ENV: preview
