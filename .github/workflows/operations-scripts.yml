@@ -1,0 +1,50 @@
+name: Production operations script validation
+
+on:
+  pull_request:
+    paths:
+      - 'tools/production/**'
+      - 'tools/github/**'
+      - 'docs/production-operations.md'
+      - '.github/workflows/deploy-production.yml'
+      - '.github/workflows/operations-scripts.yml'
+  push:
+    branches:
+      - feat/affiliate-site-foundation
+    paths:
+      - 'tools/production/**'
+      - 'tools/github/**'
+      - 'docs/production-operations.md'
+      - '.github/workflows/deploy-production.yml'
+      - '.github/workflows/operations-scripts.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  parse-powershell:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          persist-credentials: false
+      - name: Parse production and repository scripts
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $files = Get-ChildItem tools/production,tools/github -Recurse -Filter *.ps1
+          if (-not $files) { throw 'No operations scripts found.' }
+          foreach ($file in $files) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              $file.FullName,
+              [ref]$tokens,
+              [ref]$errors
+            ) | Out-Null
+            if ($errors.Count -gt 0) {
+              $errors | Format-List | Out-String | Write-Error
+              throw "PowerShell parse failed: $($file.FullName)"
+            }
+          }
