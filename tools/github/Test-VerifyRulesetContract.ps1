@@ -13,6 +13,9 @@ function Assert-Equal($Actual, $Expected, [string]$Message) {
         throw "$Message. actual=[$Actual] expected=[$Expected]"
     }
 }
+function Has-Match([string[]]$Values, [string]$Pattern) {
+    return @($Values | Where-Object { $_ -match $Pattern }).Count -gt 0
+}
 
 $payload = New-VerifyRulesetPayload `
     -Branch 'feat/affiliate-site-foundation' `
@@ -70,10 +73,11 @@ $statusRule.parameters.required_status_checks[0].context = 'other-check'
 $drifted.rules = @($drifted.rules | Where-Object type -ne 'deletion')
 $driftedContract = ConvertTo-VerifyRulesetContract -Ruleset $drifted
 $errors = @(Compare-VerifyRulesetContract -Actual $driftedContract -Expected $contract)
-Assert-True ($errors -match '^deletion differs') 'Deletion drift was not detected'
-Assert-True ($errors -match 'required_status_checks.strict') `
+Assert-True (Has-Match -Values $errors -Pattern '^deletion differs') `
+    'Deletion drift was not detected'
+Assert-True (Has-Match -Values $errors -Pattern 'required_status_checks.strict') `
     'Strict status drift was not detected'
-Assert-True ($errors -match 'required_status_checks.contexts') `
+Assert-True (Has-Match -Values $errors -Pattern 'required_status_checks.contexts') `
     'Required-check drift was not detected'
 
 $hashA = Get-CanonicalJsonSha256 -Value $payload
