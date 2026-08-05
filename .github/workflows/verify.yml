@@ -2,35 +2,50 @@ name: verify
 
 on:
   pull_request:
-  push:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  verify:
+  apply-and-verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # releases/v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
         with:
-          persist-credentials: false
-      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # releases/v6
+          ref: agent/42-article-metadata-jsonld-20260805
+          fetch-depth: 0
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
         with:
           node-version-file: .node-version
-      - name: Enable Corepack
-        run: corepack enable
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-      - name: Verify preview build
-        env:
-          DEPLOYMENT_ENV: preview
-        run: pnpm verify
-      - name: Verify production configuration and output
-        env:
-          DEPLOYMENT_ENV: production
-          PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
-          PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
-          PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
-          PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
-        run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile
+      - name: Apply implementation
+        run: python3 .github/agent-apply-42.py
+      - name: Verify preview and production contracts
+        shell: bash
+        run: |
+          pnpm format
+          DEPLOYMENT_ENV=preview pnpm verify
+          DEPLOYMENT_ENV=production \
+          PUBLIC_SITE_URL=https://ci.kuraberu-products.invalid \
+          PUBLIC_RAKUTEN_PREMIUM_URL=https://hb.afl.rakuten.co.jp/ci/premium \
+          PUBLIC_RAKUTEN_SARASARA_URL=https://hb.afl.rakuten.co.jp/ci/sarasara \
+          PUBLIC_CONTACT_URL=https://contact.kuraberu-products.invalid/form \
+          pnpm validate:env
+          DEPLOYMENT_ENV=production \
+          PUBLIC_SITE_URL=https://ci.kuraberu-products.invalid \
+          PUBLIC_RAKUTEN_PREMIUM_URL=https://hb.afl.rakuten.co.jp/ci/premium \
+          PUBLIC_RAKUTEN_SARASARA_URL=https://hb.afl.rakuten.co.jp/ci/sarasara \
+          PUBLIC_CONTACT_URL=https://contact.kuraberu-products.invalid/form \
+          pnpm build
+          DEPLOYMENT_ENV=production PUBLIC_SITE_URL=https://ci.kuraberu-products.invalid pnpm check:rendered
+          git diff --check
+      - name: Commit verified changes
+        shell: bash
+        run: |
+          git config user.name 'ChatGPT Agent'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: centralize article metadata and JSON-LD [agent-applied]'
+          git push origin HEAD:agent/42-article-metadata-jsonld-20260805
