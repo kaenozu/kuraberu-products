@@ -24,7 +24,12 @@ export function defineArticleMetadata(
     ["publishedAt", metadata.publishedAt],
     ["modifiedAt", metadata.modifiedAt],
   ] as const) {
-    if (!isoDate.test(value) || Number.isNaN(Date.parse(`${value}T00:00:00Z`))) {
+    const parsed = new Date(`${value}T00:00:00Z`);
+    if (
+      !isoDate.test(value) ||
+      Number.isNaN(parsed.getTime()) ||
+      parsed.toISOString().slice(0, 10) !== value
+    ) {
       throw new TypeError(`${label} must be an ISO 8601 calendar date`);
     }
   }
@@ -185,9 +190,9 @@ describe("article metadata", () => {
   it("keeps one typed canonical source for article listings and pages", () => {
     expect(articleMetadata).toEqual([pampersNewbornArticle]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
-    expect(pampersNewbornArticle.modifiedAt).not.toBeLessThan(
-      pampersNewbornArticle.publishedAt,
-    );
+    expect(
+      pampersNewbornArticle.modifiedAt >= pampersNewbornArticle.publishedAt,
+    ).toBe(true);
   });
 
   it("rejects invalid and contradictory dates", () => {
@@ -238,4 +243,5 @@ describe("article metadata", () => {
 Path('.github/workflows/verify.yml').write_bytes(
     subprocess.check_output(['git', 'show', 'origin/feat/affiliate-site-foundation:.github/workflows/verify.yml'])
 )
+Path('.ci-trigger-pr58').unlink(missing_ok=True)
 Path(__file__).unlink(missing_ok=True)
