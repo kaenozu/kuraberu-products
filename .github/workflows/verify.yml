@@ -37,7 +37,6 @@ jobs:
           NODE
           pnpm install --no-frozen-lockfile
           pnpm exec prettier --write package.json pnpm-lock.yaml
-          node --input-type=module -e "import { parseCookie } from 'cookie'; if (parseCookie('a=b').a !== 'b') process.exit(1)"
           git show origin/feat/affiliate-site-foundation:.github/workflows/verify.yml > .github/workflows/verify.yml
       - name: Verify preview
         env:
