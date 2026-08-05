@@ -30,6 +30,7 @@ jobs:
         env:
           DEPLOYMENT_ENV: production
           PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
+          PUBLIC_BUILD_SHA: 0123456789abcdef0123456789abcdef01234567
           PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
           PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
           PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
