@@ -25,6 +25,7 @@ jobs:
       - name: Apply article discovery
         run: |
           node .github/agent-apply-article-discovery.mjs
+          pnpm exec prettier --write src/content/articles.ts src/lib/article-discovery.ts src/pages/articles/index.astro src/styles/global.css tests/article-discovery.test.ts
           git show origin/feat/affiliate-site-foundation:.github/workflows/verify.yml > .github/workflows/verify.yml
       - name: Verify preview
         env:
