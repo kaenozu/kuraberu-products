@@ -25,6 +25,7 @@ jobs:
       - name: Apply priority conclusion
         run: |
           node .github/agent-apply-priority-conclusion.mjs
+          node .github/agent-fix-priority-conclusion.mjs
           pnpm format
           git show origin/feat/affiliate-site-foundation:.github/workflows/verify.yml > .github/workflows/verify.yml
       - name: Verify preview
