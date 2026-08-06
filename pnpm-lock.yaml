@@ -23,6 +23,9 @@ importers:
       "@typescript-eslint/parser":
         specifier: 8.65.0
         version: 8.65.0(eslint@10.8.0)(typescript@5.9.3)
+      cookie:
+        specifier: 2.0.1
+        version: 2.0.1
       eslint:
         specifier: latest
         version: 10.8.0
