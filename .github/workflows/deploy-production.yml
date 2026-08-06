@@ -21,24 +21,25 @@ concurrency:
 
 jobs:
   deploy:
-    if: inputs.confirm == 'DEPLOY'
+    if: inputs.confirm == 'DEPLOY' && github.ref_name == github.event.repository.default_branch
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: production
-    env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
-      RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
-      RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
     steps:
       - name: Validate dispatch contract
         shell: bash
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          DEPLOYMENT_ENVIRONMENT: ${{ vars.DEPLOYMENT_ENV }}
+          PURCHASE_LINK_MODE_VALUE: ${{ vars.PURCHASE_LINK_MODE }}
         run: |
-          [[ "${{ inputs.expected_sha }}" =~ ^[0-9a-fA-F]{40}$ ]]
-          test -n "${{ vars.PUBLIC_SITE_URL }}"
-          test "${{ vars.DEPLOYMENT_ENV }}" = "production"
-          test "${{ vars.PURCHASE_LINK_MODE }}" = "api" -o "${{ vars.PURCHASE_LINK_MODE }}" = "direct"
+          test "$CONFIRM" = "DEPLOY"
+          [[ "$EXPECTED_SHA" =~ ^[0-9a-fA-F]{40}$ ]]
+          test -n "$SITE_URL"
+          test "$DEPLOYMENT_ENVIRONMENT" = "production"
+          test "$PURCHASE_LINK_MODE_VALUE" = "api" -o "$PURCHASE_LINK_MODE_VALUE" = "direct"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
@@ -48,7 +49,13 @@ jobs:
 
       - name: Verify exact checkout
         shell: bash
-        run: test "$(git rev-parse HEAD)" = "${{ inputs.expected_sha }}"
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+          remote_sha="$(git ls-remote origin "refs/heads/$DEFAULT_BRANCH" | awk '{print $1}')"
+          test "$remote_sha" = "$EXPECTED_SHA"
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
         with:
@@ -59,19 +66,31 @@ jobs:
 
       - name: Build and deploy exact HEAD
         shell: pwsh
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+          SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          CONTACT_URL: ${{ vars.PUBLIC_CONTACT_URL }}
+          PURCHASE_LINK_MODE_VALUE: ${{ vars.PURCHASE_LINK_MODE }}
+          PREMIUM_URL: ${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}
+          SARASARA_URL: ${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}
         run: |
           $arguments = @(
-            '-SiteUrl', '${{ vars.PUBLIC_SITE_URL }}',
-            '-ExpectedHead', '${{ inputs.expected_sha }}',
-            '-ContactUrl', '${{ vars.PUBLIC_CONTACT_URL }}',
+            '-SiteUrl', $env:SITE_URL,
+            '-ExpectedHead', $env:EXPECTED_SHA,
+            '-ContactUrl', $env:CONTACT_URL,
             '-Apply'
           )
-          if ('${{ vars.PURCHASE_LINK_MODE }}' -eq 'api') {
+          if ($env:PURCHASE_LINK_MODE_VALUE -eq 'api') {
             $arguments += '-UseRakutenApi'
           } else {
             $arguments += @(
-              '-PremiumUrl', '${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}',
-              '-SarasaraUrl', '${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}'
+              '-PremiumUrl', $env:PREMIUM_URL,
+              '-SarasaraUrl', $env:SARASARA_URL
             )
           }
           & ./tools/production/Invoke-ProductionBuildAndDeploy.ps1 @arguments
@@ -81,20 +100,26 @@ jobs:
 
       - name: Verify public deployment
         shell: pwsh
+        env:
+          SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: |
           & ./tools/production/Invoke-PostDeployVerification.ps1 `
-            -BaseUrl '${{ vars.PUBLIC_SITE_URL }}' `
-            -ExpectedCommitSha '${{ inputs.expected_sha }}'
+            -BaseUrl $env:SITE_URL `
+            -ExpectedCommitSha $env:EXPECTED_SHA
 
       - name: Publish privacy-safe summary
         if: always()
         shell: bash
+        env:
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+          SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
         run: |
           {
             echo '## Production deployment'
             echo
-            echo '- Expected SHA: `${{ inputs.expected_sha }}`'
-            echo '- Site: `${{ vars.PUBLIC_SITE_URL }}`'
+            echo "- Expected SHA: \`$EXPECTED_SHA\`"
+            echo "- Site: \`$SITE_URL\`"
             echo '- Secret values are not printed.'
             find .acceptance -name report.md -type f -print -exec cat {} \; 2>/dev/null || true
           } >> "$GITHUB_STEP_SUMMARY"

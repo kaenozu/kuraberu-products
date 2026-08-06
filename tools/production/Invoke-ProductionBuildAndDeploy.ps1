@@ -50,21 +50,26 @@ function Resolve-SecretValue([string]$Name, [string]$Prompt) {
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $git = Require-Command 'git'
 $pnpm = Require-Command 'pnpm'
-$head = (Run $git @('-C', $repo, 'rev-parse', 'HEAD') '').Text.Trim()
-if ($ExpectedHead -and $head -ne $ExpectedHead) { throw "HEAD changed: actual=$head expected=$ExpectedHead" }
+$head = (Run $git @('-C', $repo, 'rev-parse', 'HEAD') '').Text.Trim().ToLowerInvariant()
+if ($head -notmatch '^[0-9a-f]{40}$') { throw "HEAD is not an exact 40-character Git SHA: $head" }
+if ($ExpectedHead -and $head -ne $ExpectedHead.Trim().ToLowerInvariant()) {
+    throw "HEAD changed: actual=$head expected=$ExpectedHead"
+}
 $dirty = (Run $git @('-C', $repo, 'status', '--porcelain') '').Text
 if (-not $AllowDirty -and -not [string]::IsNullOrWhiteSpace($dirty)) { throw 'Working tree is not clean.' }
+if ($Apply -and -not [string]::IsNullOrWhiteSpace($dirty)) { throw 'Production Apply requires a clean working tree.' }
 
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $repo "$OutputRoot/production-build-$stamp"))
 New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
 $oldEnv = @{}
-$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID')
+$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_BUILD_SHA','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID')
 foreach ($name in $names) { $oldEnv[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
 
 try {
     $env:DEPLOYMENT_ENV = 'production'
     $env:PUBLIC_SITE_URL = $SiteUrl.GetLeftPart([System.UriPartial]::Authority)
+    $env:PUBLIC_BUILD_SHA = $head
     $env:PUBLIC_CONTACT_URL = $ContactUrl
     if ($UseRakutenApi) {
         $env:PUBLIC_RAKUTEN_PREMIUM_URL = $null
@@ -88,6 +93,7 @@ try {
         Run $pnpm @('build') (Join-Path $runDirectory 'build.log') | Out-Null
         Run $pnpm @('check:rendered') (Join-Path $runDirectory 'check-rendered.log') | Out-Null
         Run $pnpm @('check:deployment') (Join-Path $runDirectory 'check-deployment.log') | Out-Null
+        Run $pnpm @('check:build-sha') (Join-Path $runDirectory 'check-build-sha.log') | Out-Null
         Run $pnpm @('check:external-link-syntax') (Join-Path $runDirectory 'check-links.log') | Out-Null
         if ($Apply) {
             if (-not $env:CLOUDFLARE_API_TOKEN) { throw 'CLOUDFLARE_API_TOKEN is required for -Apply.' }

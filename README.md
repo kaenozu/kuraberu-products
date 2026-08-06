@@ -33,6 +33,7 @@ pnpm dev
 Productionでは次が必須です。
 
 - `PUBLIC_SITE_URL`: query、fragment、資格情報、サブパスを含まないHTTPSのサイトルート
+- `PUBLIC_BUILD_SHA`: 公開対象となるExact Git commit SHA（40文字の16進数）。生成HTMLへ埋め込み、公開後検証で照合します
 - 購入リンクは次のどちらか
   - `PUBLIC_RAKUTEN_PREMIUM_URL` と `PUBLIC_RAKUTEN_SARASARA_URL` の両方
   - `RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID` の3件すべて

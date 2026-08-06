@@ -5,6 +5,7 @@ export type EnvironmentValues = Record<string, string | undefined>;
 export interface ValidatedBuildEnvironment {
   deploymentEnv: DeploymentEnvironment;
   siteUrl?: string;
+  buildSha?: string;
   contactUrl?: string;
   rakutenPremiumUrl?: string;
   rakutenSarasaraUrl?: string;
@@ -16,6 +17,10 @@ export const CONFIGURED_ENVIRONMENT_VARIABLES: readonly string[];
 
 export function normalizeSiteUrl(value: string, name?: string): string;
 export function normalizeOptionalPublicUrl(
+  value: string | undefined,
+  name?: string,
+): string | undefined;
+export function normalizeOptionalBuildSha(
   value: string | undefined,
   name?: string,
 ): string | undefined;

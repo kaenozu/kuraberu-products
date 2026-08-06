@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)][uri]$BaseUrl,
-    [string]$ExpectedCommitSha,
+    [Parameter(Mandatory)][ValidatePattern('^[0-9a-fA-F]{40}$')][string]$ExpectedCommitSha,
     [string]$OutputRoot = '.acceptance',
     [string[]]$RequiredPaths = @('/', '/articles/', '/articles/pampers-newborn/', '/memo/', '/about/', '/privacy/', '/disclaimer/', '/robots.txt', '/sitemap.xml')
 )
@@ -11,6 +11,7 @@ $ErrorActionPreference = 'Stop'
 if ($BaseUrl.Scheme -ne 'https') { throw 'BaseUrl must use HTTPS.' }
 if ($BaseUrl.AbsolutePath -ne '/') { throw 'BaseUrl must point to the site root.' }
 $origin = $BaseUrl.GetLeftPart([System.UriPartial]::Authority)
+$expectedSha = $ExpectedCommitSha.ToLowerInvariant()
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $OutputRoot "post-deploy-$stamp"))
 New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
@@ -32,6 +33,46 @@ function Fetch([uri]$Uri, [switch]$AllowHttpError) {
     }
 }
 
+function Get-TagAttribute(
+    [string]$Html,
+    [string]$TagName,
+    [string]$SelectorName,
+    [string]$SelectorValue,
+    [string]$TargetName
+) {
+    foreach ($tag in [regex]::Matches($Html, "(?is)<$TagName\b[^>]*>")) {
+        $attributes = @{}
+        foreach ($match in [regex]::Matches(
+            $tag.Value,
+            '(?is)(?<name>[a-z_:][-a-z0-9_:.]*)\s*=\s*["''](?<value>.*?)["'']'
+        )) {
+            $attributes[$match.Groups['name'].Value.ToLowerInvariant()] = $match.Groups['value'].Value
+        }
+        $selector = $attributes[$SelectorName.ToLowerInvariant()]
+        if ($null -ne $selector -and $selector -eq $SelectorValue) {
+            return [string]$attributes[$TargetName.ToLowerInvariant()]
+        }
+    }
+    return ''
+}
+
+function Check-HtmlContract([string]$Path, [object]$Response, [string]$ExpectedRobots, [switch]$SkipCanonical) {
+    $html = [string]$Response.Content
+    $contentType = [string]$Response.Headers.'Content-Type'
+    Check "HTML content type $Path" ($contentType -match '(?i)text/html') "Content-Type=$contentType"
+    if (-not $SkipCanonical) {
+        $canonical = Get-TagAttribute $html 'link' 'rel' 'canonical' 'href'
+        $expectedCanonical = "$origin$Path"
+        Check "Canonical $Path" ($canonical -eq $expectedCanonical) "actual=$canonical expected=$expectedCanonical"
+    }
+    $robots = Get-TagAttribute $html 'meta' 'name' 'robots' 'content'
+    Check "Robots $Path" (($robots -replace '\s+', '').ToLowerInvariant() -eq $ExpectedRobots) "actual=$robots expected=$ExpectedRobots"
+    $buildSha = Get-TagAttribute $html 'meta' 'name' 'x-build-sha' 'content'
+    Check "Build SHA $Path" ($buildSha.ToLowerInvariant() -eq $expectedSha) "actual=$buildSha expected=$expectedSha"
+    Check "No mixed content $Path" ($html -notmatch '(?i)(?:src|href)=["'']http://') 'No http:// asset or link reference.'
+    return $html
+}
+
 foreach ($path in $RequiredPaths) {
     $uri = [uri]::new($BaseUrl, $path)
     $response = Fetch $uri
@@ -40,14 +81,7 @@ foreach ($path in $RequiredPaths) {
     Check "HTTP $path" $ok "status=$([int]$response.StatusCode) final=$($response.BaseResponse.RequestMessage.RequestUri)"
     $contentType = [string]$response.Headers.'Content-Type'
     if ($path -notin @('/robots.txt', '/sitemap.xml')) {
-        Check "HTML content type $path" ($contentType -match 'text/html') "Content-Type=$contentType"
-        $html = [string]$response.Content
-        $canonicalMatch = [regex]::Match($html, '<link[^>]+rel=["'']canonical["''][^>]+href=["''](?<href>[^"'']+)', 'IgnoreCase')
-        $expectedCanonical = "$origin$path"
-        Check "Canonical $path" ($canonicalMatch.Success -and $canonicalMatch.Groups['href'].Value -eq $expectedCanonical) "actual=$($canonicalMatch.Groups['href'].Value) expected=$expectedCanonical"
-        $robotsMatch = [regex]::Match($html, '<meta[^>]+name=["'']robots["''][^>]+content=["''](?<value>[^"'']+)', 'IgnoreCase')
-        Check "Indexable $path" ($robotsMatch.Success -and $robotsMatch.Groups['value'].Value -notmatch 'noindex') "robots=$($robotsMatch.Groups['value'].Value)"
-        Check "No mixed content $path" ($html -notmatch '(?i)(?:src|href)=["'']http://') 'No http:// asset or link reference.'
+        $html = Check-HtmlContract $path $response 'index,follow'
         $pages.Add([ordered]@{ path = $path; status = [int]$response.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($html) })
     }
 }
@@ -74,9 +108,22 @@ if ($articleJson) {
     Check 'Article dates' (-not [string]::IsNullOrWhiteSpace($articleJson.datePublished) -and -not [string]::IsNullOrWhiteSpace($articleJson.dateModified)) 'datePublished and dateModified are present.'
 }
 
+$requiredProducts = @('pampers-premium-newborn', 'pampers-sarasara-newborn')
+$ctaTags = @([regex]::Matches($articleHtml, '(?is)<a\b[^>]*\bclass=["''][^"'']*\bcta\b[^"'']*["''][^>]*>'))
+foreach ($productId in $requiredProducts) {
+    $productPattern = '(?i)\bdata-product-id=["'']' + [regex]::Escape($productId) + '["'']'
+    $matches = @($ctaTags | Where-Object { $_.Value -match $productPattern })
+    Check "Rakuten CTA $productId count" ($matches.Count -eq 1) "count=$($matches.Count)"
+    foreach ($tag in $matches) {
+        $href = [regex]::Match($tag.Value, '(?i)\bhref=["''](?<href>https://[^"'']+)["'']').Groups['href'].Value
+        $rel = [regex]::Match($tag.Value, '(?i)\brel=["''](?<rel>[^"'']+)["'']').Groups['rel'].Value
+        $hostAllowed = $false
+        try { $hostAllowed = ([uri]$href).Host -match '(^|\.)rakuten\.co\.jp$|^r10\.to$' } catch {}
+        Check "Rakuten CTA $productId host" $hostAllowed "href=$href"
+        Check "Rakuten CTA $productId sponsored" (($rel -split '\s+') -contains 'sponsored' -and ($rel -split '\s+') -contains 'nofollow') "rel=$rel"
+    }
+}
 $allLinks = [regex]::Matches($articleHtml, '(?i)href=["''](?<href>https://[^"'']+)["'']') | ForEach-Object { $_.Groups['href'].Value }
-$rakutenLinks = @($allLinks | Where-Object { ([uri]$_).Host -match '(^|\.)rakuten\.co\.jp$|^r10\.to$' })
-Check 'Rakuten CTA present' ($rakutenLinks.Count -ge 1) "allowed Rakuten links=$($rakutenLinks.Count)"
 $disallowedRakuten = @($allLinks | Where-Object { $_ -match '(?i)rakuten' -and ([uri]$_).Host -notmatch '(^|\.)rakuten\.co\.jp$|^r10\.to$' })
 Check 'Rakuten CTA host allowlist' ($disallowedRakuten.Count -eq 0) "disallowed count=$($disallowedRakuten.Count)"
 
@@ -84,7 +131,7 @@ $report = [ordered]@{
     result = $(if ($hasFailure) { 'BLOCKER' } else { 'PASS' })
     generatedAt = (Get-Date).ToString('o')
     baseUrl = $origin
-    expectedCommitSha = $ExpectedCommitSha
+    expectedCommitSha = $expectedSha
     pages = @($pages)
     checks = @($checks)
     secretsIncluded = $false

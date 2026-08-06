@@ -9,6 +9,7 @@ export const DEFAULT_SITE_URL = "https://kuraberu-products.pages.dev";
 export const CONFIGURED_ENVIRONMENT_VARIABLES = Object.freeze([
   "DEPLOYMENT_ENV",
   "PUBLIC_SITE_URL",
+  "PUBLIC_BUILD_SHA",
   "PUBLIC_RAKUTEN_PREMIUM_URL",
   "PUBLIC_RAKUTEN_SARASARA_URL",
   "RAKUTEN_APPLICATION_ID",
@@ -65,6 +66,15 @@ export function normalizeOptionalPublicUrl(value, name = "PUBLIC_CONTACT_URL") {
   return parseHttpsUrl(value, name).toString();
 }
 
+export function normalizeOptionalBuildSha(value, name = "PUBLIC_BUILD_SHA") {
+  if (!nonEmpty(value)) return undefined;
+  const normalized = value.trim().toLowerCase();
+  if (!/^[0-9a-f]{40}$/.test(normalized)) {
+    throw new Error(`${name} must be an exact 40-character Git commit SHA`);
+  }
+  return normalized;
+}
+
 export function isAllowedRakutenUrl(value) {
   if (!nonEmpty(value)) return false;
 
@@ -102,6 +112,7 @@ export function validateBuildEnvironment(environment = process.env) {
   const siteUrl = nonEmpty(environment.PUBLIC_SITE_URL)
     ? normalizeSiteUrl(environment.PUBLIC_SITE_URL)
     : undefined;
+  const buildSha = normalizeOptionalBuildSha(environment.PUBLIC_BUILD_SHA);
   const contactUrl = normalizeOptionalPublicUrl(environment.PUBLIC_CONTACT_URL);
   const rakutenPremiumUrl = normalizeOptionalRakutenUrl(
     environment.PUBLIC_RAKUTEN_PREMIUM_URL,
@@ -130,6 +141,9 @@ export function validateBuildEnvironment(environment = process.env) {
     if (!siteUrl) {
       throw new Error("Missing required production variable: PUBLIC_SITE_URL");
     }
+    if (!buildSha) {
+      throw new Error("Missing required production variable: PUBLIC_BUILD_SHA");
+    }
 
     const directUrlsReady = Boolean(rakutenPremiumUrl && rakutenSarasaraUrl);
     if (!directUrlsReady && !rakutenApiReady) {
@@ -142,6 +156,7 @@ export function validateBuildEnvironment(environment = process.env) {
   return {
     deploymentEnv,
     siteUrl,
+    buildSha,
     contactUrl,
     rakutenPremiumUrl,
     rakutenSarasaraUrl,
