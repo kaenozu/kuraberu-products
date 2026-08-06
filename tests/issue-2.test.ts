@@ -125,3 +125,19 @@ describe("product search parsing", () => {
     );
   });
 });
+
+describe("public Issue #2 evidence privacy", () => {
+  it("does not publish provider identifiers or private URLs", () => {
+    const evidence = read("docs/issue-2-evidence.md");
+
+    expect(evidence).not.toMatch(/\b[0-9a-f]{32}\b/i);
+    expect(evidence).not.toMatch(
+      /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i,
+    );
+    expect(evidence).not.toMatch(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i);
+    expect(evidence).not.toMatch(
+      /https?:\/\/[^\s`"')>]+(?:pages\.dev|workers\.dev|dash\.cloudflare\.com)/i,
+    );
+    expect(evidence).not.toMatch(/\/accounts\/[^\s`"')>]+/i);
+  });
+});
