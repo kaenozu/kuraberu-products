@@ -5,7 +5,5 @@ packages:
 onlyBuiltDependencies:
   - esbuild
   - sharp
-# cookie <0.7.0のCVE-2024-47764を回避するため、推移依存を修正版へ固定する。
-# overrideなしでも全依存経路がcookie >=1.0.2へ解決すると確認できたら削除する。
-overrides:
-  cookie: 1.0.2
+# 供給網上の重要な推移依存は、ルートpackage.jsonのpnpm.overridesで
+# バージョンと理由を一元管理する。
