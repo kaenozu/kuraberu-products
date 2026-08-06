@@ -6,3 +6,23 @@
   outline: 3px solid var(--accent);
   outline-offset: 3px;
 }
+
+.skip-link {
+  position: absolute;
+  z-index: 10;
+  top: 0.5rem;
+  left: 0.75rem;
+  transform: translateY(-200%);
+  background: var(--ink);
+  color: #fff;
+  padding: 0.65rem 0.9rem;
+  font-weight: 800;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+main:focus {
+  outline: none;
+}

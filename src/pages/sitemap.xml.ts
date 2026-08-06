@@ -5,6 +5,7 @@ const publicPaths = [
   "/",
   "/articles/",
   "/articles/pampers-newborn/",
+  "/memo/",
   "/about/",
   "/privacy/",
   "/disclaimer/",
