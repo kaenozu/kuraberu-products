@@ -39,6 +39,15 @@ not the canonical Production route. The preview HTML did not contain the
 Production build SHA marker, which is expected because the preview probe did
 not establish Production configuration.
 
+The preview responses returned `https://kuraberu-products.pages.dev/` as their
+canonical URL. This is a code/configuration observation only: it does not
+prove that Pages is the authorized Production route, and it leaves the
+Preview-versus-canonical URL policy unresolved.
+
+The `/about/` page currently renders the operator name as
+`くらべる商品メモ運営者`. This is a placeholder-style display value, not
+evidence of a formally confirmed legal operator identity.
+
 ## Still unconfirmed
 
 - Canonical Cloudflare Production route, environment, deployment version,
@@ -46,6 +55,8 @@ not establish Production configuration.
 - The Rakuten product selected by the live API and its exact identity match
   with each public CTA.
 - The formal operator identity and contact URL used in Production.
+- The Preview canonical URL policy and its relationship to the authorized
+  Production route.
 - Ruleset failure-side and success-side acceptance with the Draft constraint
   removed.
 
