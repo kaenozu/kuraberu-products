@@ -162,8 +162,10 @@ Cloudflare Pages APIのrollbackエンドポイントにより、Productionを既
 
 ### Phase 3の変更内容
 
+- 以下は2026-07-31時点の履歴であり、現在の統合HEADやProduction反映を示す受入証跡ではない。
 - `PUBLIC_CONTACT_URL`はフォールバック実装があるためproduction必須から任意へ変更した。
 - `.env.example`と`README.md`を実装と同期し、環境変数の不一致を回帰テストで検出する。
+- 現在の統合HEADではProductionの`PUBLIC_CONTACT_URL`を必須へ戻しているが、実際のProduction値、正式な運営者情報、正規Cloudflare経路は未確認である。
 
 ### ロールバック手順
 
