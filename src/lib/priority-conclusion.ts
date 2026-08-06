@@ -92,7 +92,7 @@ export function resolvePriorityConclusion(
     selectedId: option.id,
     outcome: leftWins ? "left" : "right",
     heading: `${option.label}：${winner}を先に確認`,
-    summary: `記事内で公式確認済みの項目では、${winner}がこの重視ポイントに対応する機能を多く示しています。`,
+    summary: `メーカー公式ページに記載された項目では、${winner}がこの重視ポイントに対応する機能を多く示しています。`,
     reasons,
     caution: option.caution,
     evidenceHref: option.evidenceHref,

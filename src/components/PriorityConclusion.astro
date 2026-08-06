@@ -7,7 +7,7 @@ interface Props {
   standard: StandardPriorityConclusion;
 }
 const { options, labels, standard } = Astro.props;
-const serialized = JSON.stringify({ options, labels, standard }).replaceAll('<', '\u003c');
+const serialized = JSON.stringify({ options, labels, standard }).replaceAll('<', '\\u003c');
 ---
 <section class="priority-conclusion" aria-labelledby="priority-conclusion-heading" data-priority-conclusion>
   <p class="section-label">重視ポイントで確認</p>

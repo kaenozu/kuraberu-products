@@ -54,6 +54,9 @@ describe("comparison memo", () => {
       "utf8",
     );
     const memoHtml = readFileSync("dist/memo/index.html", "utf8");
+    expect(memoHtml).toContain(
+      '<meta name="robots" content="noindex,nofollow">',
+    );
     expect(articleHtml).toContain("比較メモに保存");
     expect(memoHtml).toContain("このブラウザの端末内だけ");
     expect(memoHtml).toContain(articleMetadata[0].path);

@@ -5,6 +5,7 @@ import {
   normalizeSiteUrl,
   validateBuildEnvironment,
 } from "../config/runtime-env.mjs";
+import { validateProductionCtas } from "./production-cta-contract.mjs";
 
 const { deploymentEnv, siteUrl } = validateBuildEnvironment(process.env);
 const expectedSiteUrl = normalizeSiteUrl(siteUrl ?? DEFAULT_SITE_URL);
@@ -98,7 +99,9 @@ for (const file of htmlFiles) {
   const is404 = path.relative("dist", file) === "404.html";
   const isArticle =
     pathname.startsWith("/articles/") && pathname !== "/articles/";
-  const expectedRobots = is404 ? "noindex,nofollow" : expectedDefaultRobots;
+  const isPrivateUtility = pathname === "/memo/";
+  const expectedRobots =
+    is404 || isPrivateUtility ? "noindex,nofollow" : expectedDefaultRobots;
   const expectedCanonical = new URL(pathname, `${expectedSiteUrl}/`).toString();
 
   const robots = readAttribute(
@@ -174,6 +177,27 @@ if (deploymentEnv === "production") {
   }
 } else if (!robotsFile.includes("Disallow: /")) {
   errors.push("robots.txt: non-production must disallow crawling");
+}
+
+if (deploymentEnv === "production") {
+  const articleFile = path.join(
+    "dist",
+    "articles",
+    "pampers-newborn",
+    "index.html",
+  );
+  if (fs.existsSync(articleFile)) {
+    errors.push(
+      ...validateProductionCtas(
+        fs.readFileSync(articleFile, "utf8"),
+        articleFile,
+      ),
+    );
+  } else {
+    errors.push(
+      `${articleFile}: missing article HTML for production CTA validation`,
+    );
+  }
 }
 
 const sitemap = fs.readFileSync(path.join("dist", "sitemap.xml"), "utf8");

@@ -17,6 +17,7 @@ const productionBase = {
   DEPLOYMENT_ENV: "production",
   PUBLIC_SITE_URL: "https://kuraberu-products.pages.dev",
   PUBLIC_BUILD_SHA: "0123456789abcdef0123456789abcdef01234567",
+  PUBLIC_CONTACT_URL: "https://contact.kuraberu-products.invalid/form",
 } as const;
 
 describe("environment variable configuration", () => {
@@ -66,6 +67,18 @@ describe("environment variable configuration", () => {
         PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
       }),
     ).toThrow(/Production purchase links/);
+  });
+
+  it("requires a production contact URL", () => {
+    const { PUBLIC_CONTACT_URL: _contactUrl, ...withoutContact } =
+      productionBase;
+    expect(() =>
+      validateBuildEnvironment({
+        ...withoutContact,
+        PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
+        PUBLIC_RAKUTEN_SARASARA_URL: "https://search.rakuten.co.jp/ci/sarasara",
+      }),
+    ).toThrow(/PUBLIC_CONTACT_URL/);
   });
 
   it("rejects partial API credentials and unsafe public URLs", () => {

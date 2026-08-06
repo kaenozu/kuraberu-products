@@ -81,7 +81,8 @@ foreach ($path in $RequiredPaths) {
     Check "HTTP $path" $ok "status=$([int]$response.StatusCode) final=$($response.BaseResponse.RequestMessage.RequestUri)"
     $contentType = [string]$response.Headers.'Content-Type'
     if ($path -notin @('/robots.txt', '/sitemap.xml')) {
-        $html = Check-HtmlContract $path $response 'index,follow'
+        $expectedRobots = if ($path -eq '/memo/') { 'noindex,nofollow' } else { 'index,follow' }
+        $html = Check-HtmlContract $path $response $expectedRobots
         $pages.Add([ordered]@{ path = $path; status = [int]$response.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($html) })
     }
 }
@@ -89,8 +90,8 @@ foreach ($path in $RequiredPaths) {
 $notFoundPath = "/__acceptance_missing_$([guid]::NewGuid().ToString('N')).html"
 $notFound = Fetch ([uri]::new($BaseUrl, $notFoundPath))
 Check 'Generated 404 status' ([int]$notFound.StatusCode -eq 404) "status=$([int]$notFound.StatusCode)"
-$notFoundHtml = [string]$notFound.Content
-Check 'Generated 404 noindex' ($notFoundHtml -match '(?is)<meta[^>]+name=["'']robots["''][^>]+content=["''][^"'']*noindex') '404 contains robots noindex.'
+$notFoundHtml = Check-HtmlContract $notFoundPath $notFound 'noindex,nofollow' -SkipCanonical
+Check 'Generated 404 body' ($notFoundHtml -match 'ページが見つかりません') '404 contains the not-found recovery copy.'
 
 $article = Fetch ([uri]::new($BaseUrl, '/articles/pampers-newborn/'))
 $articleHtml = [string]$article.Content

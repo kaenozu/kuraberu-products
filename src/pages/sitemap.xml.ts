@@ -1,14 +1,19 @@
 import type { APIRoute } from "astro";
 import { site } from "../config/site";
+import { articleMetadata } from "../content/articles";
 
-const publicPaths = [
+const staticPaths = [
   "/",
   "/articles/",
-  "/articles/pampers-newborn/",
   "/about/",
   "/privacy/",
   "/disclaimer/",
 ] as const;
+
+const publicPaths = [
+  ...staticPaths,
+  ...articleMetadata.map((article) => article.path),
+];
 
 function escapeXml(value: string): string {
   return value

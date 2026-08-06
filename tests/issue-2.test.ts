@@ -24,9 +24,9 @@ describe("Issue #2 editorial comparison UI", () => {
     expect(article).toContain('id="comparison-details"');
 
     const status = read("src/components/VerificationStatus.astro");
-    expect(status).toContain("公式確認済み");
-    expect(status).toContain("販売ページ確認");
-    expect(status).toContain("口コミ不足");
+    expect(status).toContain("メーカー公式記載");
+    expect(status).toContain("販売ページ記載");
+    expect(status).toContain("口コミ情報不足");
     expect(status).toContain("未確認");
   });
 });

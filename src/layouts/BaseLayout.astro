@@ -87,6 +87,7 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u00
     <script is:inline type="application/ld+json" set:html={structuredDataJson} />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">本文へ移動</a>
     <header class="site-header">
       <div class="wrap nav">
         <a class="brand" href="/">{site.name}</a>
@@ -97,7 +98,7 @@ const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u00
         </nav>
       </div>
     </header>
-    <main><slot /></main>
+    <main id="main-content" tabindex="-1"><slot /></main>
     <footer class="footer">
       <div class="wrap">
         <p>広告を含みます。価格・在庫・仕様は販売先でご確認ください。</p>
