@@ -33,16 +33,13 @@ pnpm dev
 Productionでは次が必須です。
 
 - `PUBLIC_SITE_URL`: query、fragment、資格情報、サブパスを含まないHTTPSのサイトルート
-- `PUBLIC_BUILD_SHA`: 公開対象となるExact Git commit SHA。小文字化後に40文字の16進数である必要があり、全生成HTMLの`x-build-sha`メタデータへ埋め込まれる
+- `PUBLIC_BUILD_SHA`: 公開対象となるExact Git commit SHA（小文字化後に40文字の16進数）。全生成HTMLの`x-build-sha`メタデータへ埋め込み、公開後検証で照合します
+- `PUBLIC_CONTACT_URL`: Productionでは運営者への問い合わせ先として必須。Previewでは未設定時に「準備中」表示へフォールバックするHTTPS URL
 - 購入リンクは次のどちらか
   - `PUBLIC_RAKUTEN_PREMIUM_URL` と `PUBLIC_RAKUTEN_SARASARA_URL` の両方
   - `RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID` の3件すべて
 
 直接購入URLとAPIレスポンス由来URLは、HTTPSの楽天公式ホストだけを許可します。直接URLが設定されている商品では直接URLを優先し、未設定の商品だけAPI補完を試みます。APIは5秒でタイムアウトし、失敗時は購入リンクを「準備中」として静的ビルドを続行します。
-
-次は任意です。
-
-- `PUBLIC_CONTACT_URL`: aboutページの問い合わせ先HTTPS URL。未設定時は「準備中」表示
 
 `.env.example` をコピーして使用してください。`.env` と `.env.*` は `.env.example` を除いてGit管理対象外です。秘密値をログ、Issue、PR、証跡へ記載しないでください。
 
@@ -63,7 +60,7 @@ Productionでは次が必須です。
 
 pnpm 10では依存パッケージのinstall scriptを既定で実行しません。`pnpm-workspace.yaml` の `onlyBuiltDependencies` で、現行ビルドに必要な `esbuild` と `sharp` だけを明示的に許可します。許可対象を追加する場合は、用途とサプライチェーン上の影響をレビューしてください。
 
-`cookie`はCVE-2024-47764の修正版へ推移依存を固定しています。overrideなしでも全依存経路が`cookie >=1.0.2`へ解決すると確認できたら削除します。
+`cookie`は生成済みHTMLからの裸のimportを安定させるため、実行時依存として`2.0.1`を直接宣言しています。`sharp`は既知のHigh advisoryを含まない`0.35.3`へoverrideで固定し、CIのProduction auditで再確認します。
 
 ## CI
 

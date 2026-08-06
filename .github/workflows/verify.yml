@@ -22,6 +22,8 @@ jobs:
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Audit production dependencies
+        run: pnpm audit:prod
       - name: Verify preview build
         env:
           DEPLOYMENT_ENV: preview

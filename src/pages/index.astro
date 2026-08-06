@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProductIdentity from '../components/ProductIdentity.astro';
 import VerificationStatus from '../components/VerificationStatus.astro';
+import {pampersNewbornArticle} from '../content/articles';
 ---
 <BaseLayout title="くらべる商品メモ｜商品比較" description="公式情報と確認状況を分けて商品を比べます">
   <section class="hero hero-editorial">
@@ -17,7 +18,7 @@ import VerificationStatus from '../components/VerificationStatus.astro';
     <article class="featured-editorial">
       <div class="featured-editorial-head">
         <div><p class="section-label">今回の比較</p><h2 id="featured-heading">パンパース 新生児用</h2></div>
-        <p class="meta">更新日 2026-07-31</p>
+        <p class="meta">更新日 <time datetime={pampersNewbornArticle.modifiedAt}>{pampersNewbornArticle.modifiedAt}</time></p>
       </div>
       <p class="featured-lead">「肌へのいちばん」は肌へのやさしさに関する機能、「さらさらケア」はモレ・ムレ対策に関する機能を公式商品ページで確認できます。価格ではなく、必要な機能から確認先を分けます。</p>
       <div class="product-pair">

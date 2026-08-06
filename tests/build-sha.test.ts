@@ -1,6 +1,6 @@
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   extractBuildSha,
@@ -12,17 +12,17 @@ import {
 } from "../config/runtime-env.mjs";
 
 const validSha = "0123456789abcdef0123456789abcdef01234567";
-const directories: string[] = [];
+const temporaryDirectories: string[] = [];
 
 afterEach(() => {
-  for (const directory of directories.splice(0)) {
+  for (const directory of temporaryDirectories.splice(0)) {
     rmSync(directory, { recursive: true, force: true });
   }
 });
 
 function fixture(files: Record<string, string>) {
   const root = mkdtempSync(join(tmpdir(), "kuraberu-build-sha-"));
-  directories.push(root);
+  temporaryDirectories.push(root);
   for (const [relativePath, content] of Object.entries(files)) {
     const filePath = join(root, relativePath);
     mkdirSync(join(filePath, ".."), { recursive: true });
@@ -60,6 +60,7 @@ describe("public build SHA", () => {
         DEPLOYMENT_ENV: "production",
         PUBLIC_SITE_URL: "https://example.invalid",
         PUBLIC_BUILD_SHA: validSha,
+        PUBLIC_CONTACT_URL: "https://contact.example.invalid/form",
         PUBLIC_RAKUTEN_PREMIUM_URL:
           "https://hb.afl.rakuten.co.jp/example/premium",
         PUBLIC_RAKUTEN_SARASARA_URL:

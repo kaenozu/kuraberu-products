@@ -91,18 +91,18 @@ const differenceRows: DifferenceRow[] = [
       <p>購入リンク：{purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。ここでいう「メーカー公式記載」は公式ページの説明を確認したという意味で、第三者による性能検証や使用体験の再現ではありません。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <ThirtySecondComparison
       idPrefix="pampers-newborn-summary"
       heading="まず、違いはこの3つ"
-      conclusion="肌へのやさしさに関する機能を詳しく確認するなら「肌へのいちばん」、モレ・ムレ対策の機能を確認するなら「さらさらケア」から見ます。どちらも新生児5kgまでのテープサイズが公式掲載されています。"
+      conclusion="肌へのやさしさに関する機能を詳しく確認するなら「肌へのいちばん」、モレ・ムレ対策の機能を確認するなら「さらさらケア」から見ます。どちらも新生児5kgまでのテープサイズがメーカー公式ページに掲載されています。"
       left={premiumCandidate}
       right={standardCandidate}
       rows={summaryRows}
       detailHref="#comparison-details"
     />
 
-    <p>パンパースの新生児用テープには「肌へのいちばん」と「さらさらケア」があります。この記事では、公式商品ページで確認できる機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>
+    <p>パンパースの新生児用テープには「肌へのいちばん」と「さらさらケア」があります。この記事では、メーカー公式商品ページに記載された機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>
 
     <PriorityConclusion options={pampersPriorityOptions} labels={pampersCandidateLabels} standard={pampersStandardConclusion} />
 
@@ -154,7 +154,7 @@ const differenceRows: DifferenceRow[] = [
       provider="pinterest"
       url={pinterestPin}
       title="新生児期のおむつ替えの手順を確認する公開Pin"
-      purpose="おむつ替えの一般的な手順（7ステップ）を確認するための参考リンクです。商品の機能や使用感を示すものではありません。"
+      purpose="おむつ替えの一般的な手順（公開Pinの説明では9ステップ）を確認するための参考リンクです。商品の機能や使用感を示すものではありません。"
     />
 
     <h2>どんな確認を優先するか</h2>
@@ -162,7 +162,7 @@ const differenceRows: DifferenceRow[] = [
       <li>肌へのいちばん：摩擦、ゆるうんちの肌残り、肌ざわりに関する公式機能を確認したい場合。</li>
       <li>さらさらケア：ゆるうんちモレ、フィット、吸収に関する公式機能を確認したい場合。</li>
     </ul>
-    <p>これは公式ページに掲載された機能の整理であり、どちらがすべての赤ちゃんに合うと断定するものではありません。</p>
+    <p>これはメーカー公式ページに記載された機能の整理であり、独立検証に基づく点数や、どちらがすべての赤ちゃんに合うという断定ではありません。</p>
 
     <h2>購入前に確認するページ</h2>
     <div class="source-links">
@@ -198,6 +198,6 @@ const differenceRows: DifferenceRow[] = [
       <li><a href={pinterestPin} target="_blank" rel="noopener noreferrer">Pinterest：おむつ替え手順の公開Pin</a>（一般的な手順の確認用）</li>
     </ul>
     <h2>調査方法・免責事項</h2>
-    <p>メーカー公式の商品ページを優先し、レビューは対象商品・サイズ・投稿日を確認できる場合のみ採用します。口コミは個人の感想であり、商品の性能や健康状態を保証しません。</p>
+    <p>メーカー公式の商品ページを優先し、レビューは対象商品・サイズ・投稿日を確認できる場合のみ採用します。この記事の比較結論は公式記載の整理であり、独立検証・性能保証・医療上の助言ではありません。口コミは個人の感想であり、商品の性能や健康状態を保証しません。</p>
   </article>
 </BaseLayout>

@@ -29,9 +29,9 @@ export interface DifferenceRow extends ComparisonRow {
 }
 
 const statusLabels: Record<VerificationStatus, string> = {
-  official: "公式確認済み",
-  retailer: "販売ページ確認",
-  insufficient: "口コミ不足",
+  official: "メーカー公式記載",
+  retailer: "販売ページ記載",
+  insufficient: "口コミ情報不足",
   unverified: "未確認",
 };
 

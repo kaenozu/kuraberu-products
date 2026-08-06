@@ -125,7 +125,7 @@ describe("generic comparison components", () => {
     expect(populated).toContain('id="difference-one-heading"');
     expect(populated).toContain("左の商品名");
     expect(populated).toContain("右の商品名");
-    expect(populated).toContain("公式確認済み");
+    expect(populated).toContain("メーカー公式記載");
     expect(populated).toContain("未確認");
     expect(empty).toContain("比較できる差分はまだありません。");
   });

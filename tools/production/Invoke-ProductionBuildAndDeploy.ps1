@@ -59,6 +59,7 @@ if ($ExpectedHead -and $head -ne $ExpectedHead.Trim().ToLowerInvariant()) {
 }
 $dirty = (Run $git @('-C', $repo, 'status', '--porcelain') '').Text
 if (-not $AllowDirty -and -not [string]::IsNullOrWhiteSpace($dirty)) { throw 'Working tree is not clean.' }
+if ($Apply -and -not [string]::IsNullOrWhiteSpace($dirty)) { throw 'Production Apply requires a clean working tree.' }
 
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $repo "$OutputRoot/production-build-$stamp"))

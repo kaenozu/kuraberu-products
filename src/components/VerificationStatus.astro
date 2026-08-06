@@ -10,9 +10,9 @@ interface Props {
 
 const normalizedStatus = normalizeVerificationStatus(Astro.props.status);
 const states = {
-  official: {icon: '✓', label: '公式確認済み'},
-  retailer: {icon: '↗', label: '販売ページ確認'},
-  insufficient: {icon: '…', label: '口コミ不足'},
+  official: {icon: '✓', label: 'メーカー公式記載'},
+  retailer: {icon: '↗', label: '販売ページ記載'},
+  insufficient: {icon: '…', label: '口コミ情報不足'},
   unverified: {icon: '?', label: '未確認'},
 } as const;
 const state = states[normalizedStatus];

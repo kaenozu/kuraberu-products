@@ -21,6 +21,12 @@ describe("article metadata", () => {
     expect(
       pampersNewbornArticle.modifiedAt >= pampersNewbornArticle.publishedAt,
     ).toBe(true);
+    expect(
+      pampersNewbornArticle.changeLog
+        .map((entry) => entry.date)
+        .sort()
+        .at(-1),
+    ).toBe(pampersNewbornArticle.modifiedAt);
   });
 
   it("rejects invalid and contradictory dates", () => {

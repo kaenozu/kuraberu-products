@@ -139,7 +139,8 @@ foreach ($path in $RequiredPaths) {
         "finalPath=$($final.AbsolutePath) expected=$path"
 
     if ($path -notin @('/robots.txt', '/sitemap.xml')) {
-        $html = Check-HtmlContract $path $response 'index,follow'
+        $expectedRobots = if ($path -eq '/memo/') { 'noindex,nofollow' } else { 'index,follow' }
+        $html = Check-HtmlContract $path $response $expectedRobots
         $pages.Add([ordered]@{
             path = $path
             status = [int]$response.StatusCode
@@ -220,6 +221,23 @@ $allLinks = @(
     [regex]::Matches($articleHtml, '(?i)href=["''](?<href>https://[^"'']+)["'']') |
         ForEach-Object { $_.Groups['href'].Value }
 )
+$requiredProducts = @('pampers-premium-newborn', 'pampers-sarasara-newborn')
+$ctaTags = @(
+    [regex]::Matches($articleHtml, '(?is)<a\b[^>]*\bclass=["''][^"'']*\bcta\b[^"'']*["''][^>]*>')
+)
+foreach ($productId in $requiredProducts) {
+    $productPattern = '(?i)\bdata-product-id=["'']' + [regex]::Escape($productId) + '["'']'
+    $matches = @($ctaTags | Where-Object { $_.Value -match $productPattern })
+    Check "Rakuten CTA $productId count" ($matches.Count -eq 1) "count=$($matches.Count)"
+    foreach ($tag in $matches) {
+        $href = [regex]::Match($tag.Value, '(?i)\bhref=["''](?<href>https://[^"'']+)["'']').Groups['href'].Value
+        $rel = [regex]::Match($tag.Value, '(?i)\brel=["''](?<rel>[^"'']+)["'']').Groups['rel'].Value
+        $hostAllowed = $false
+        try { $hostAllowed = ([uri]$href).Host -match '(^|\.)rakuten\.co\.jp$|^r10\.to$' } catch {}
+        Check "Rakuten CTA $productId host" $hostAllowed "href=$href"
+        Check "Rakuten CTA $productId sponsored" (($rel -split '\s+') -contains 'sponsored' -and ($rel -split '\s+') -contains 'nofollow') "rel=$rel"
+    }
+}
 $rakutenLinks = @(
     $allLinks | Where-Object { ([uri]$_).Host -match '(^|\.)rakuten\.co\.jp$|^r10\.to$' }
 )

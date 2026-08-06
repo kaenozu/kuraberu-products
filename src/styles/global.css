@@ -69,6 +69,10 @@ a {
   color: var(--muted);
 }
 .navlinks a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  white-space: nowrap;
   text-decoration: none;
 }
 .navlinks a:hover {
@@ -579,11 +583,17 @@ a {
 }
 @media (max-width: 560px) {
   .nav {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.35rem;
     min-height: 64px;
+    padding-block: 0.65rem;
   }
   .navlinks {
+    width: 100%;
     gap: 0.75rem;
     font-size: 0.78rem;
+    flex-wrap: wrap;
   }
   .hero {
     padding-top: 4rem;

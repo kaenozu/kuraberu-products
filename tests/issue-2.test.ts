@@ -24,9 +24,9 @@ describe("Issue #2 editorial comparison UI", () => {
     expect(article).toContain('id="comparison-details"');
 
     const status = read("src/components/VerificationStatus.astro");
-    expect(status).toContain("公式確認済み");
-    expect(status).toContain("販売ページ確認");
-    expect(status).toContain("口コミ不足");
+    expect(status).toContain("メーカー公式記載");
+    expect(status).toContain("販売ページ記載");
+    expect(status).toContain("口コミ情報不足");
     expect(status).toContain("未確認");
   });
 });
@@ -123,5 +123,21 @@ describe("product search parsing", () => {
     expect(button).toMatch(
       /selectRakutenProduct\(await fetchRakutenProducts\(query\.keyword\), query\.requiredTerms, query\.selection\)/,
     );
+  });
+});
+
+describe("public Issue #2 evidence privacy", () => {
+  it("does not publish provider identifiers or private URLs", () => {
+    const evidence = read("docs/issue-2-evidence.md");
+
+    expect(evidence).not.toMatch(/\b[0-9a-f]{32}\b/i);
+    expect(evidence).not.toMatch(
+      /\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/i,
+    );
+    expect(evidence).not.toMatch(/\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b/i);
+    expect(evidence).not.toMatch(
+      /https?:\/\/[^\s`"')>]+(?:pages\.dev|workers\.dev|dash\.cloudflare\.com)/i,
+    );
+    expect(evidence).not.toMatch(/\/accounts\/[^\s`"')>]+/i);
   });
 });

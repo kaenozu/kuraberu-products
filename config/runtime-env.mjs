@@ -144,6 +144,11 @@ export function validateBuildEnvironment(environment = process.env) {
     if (!buildSha) {
       throw new Error("Missing required production variable: PUBLIC_BUILD_SHA");
     }
+    if (!contactUrl) {
+      throw new Error(
+        "Missing required production variable: PUBLIC_CONTACT_URL",
+      );
+    }
 
     const directUrlsReady = Boolean(rakutenPremiumUrl && rakutenSarasaraUrl);
     if (!directUrlsReady && !rakutenApiReady) {
