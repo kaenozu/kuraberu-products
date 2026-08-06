@@ -48,5 +48,9 @@ describe("article discovery", () => {
     expect(html).toContain(pampersNewbornArticle.path);
     expect(html).toContain("条件に合う記事がありません");
     expect(html).toContain("紙おむつ");
+    expect(html).toContain(
+      '<script src="/scripts/article-discovery.js" defer></script>',
+    );
+    expect(html).not.toContain("data-discovery-form]");
   });
 });
