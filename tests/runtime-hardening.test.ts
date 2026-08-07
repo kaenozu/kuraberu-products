@@ -4,6 +4,7 @@ import { isAllowedRakutenUrl } from "../config/runtime-env.mjs";
 import {
   requestRakutenProducts,
   RAKUTEN_API_TIMEOUT_MS,
+  selectRakutenProduct,
 } from "../src/lib/rakuten";
 
 describe("public URL boundaries", () => {
@@ -42,6 +43,23 @@ describe("static asset security headers", () => {
 });
 
 describe("Rakuten API request", () => {
+  it("matches exact product identifiers embedded in Rakuten item URLs", () => {
+    expect(
+      selectRakutenProduct(
+        [
+          {
+            id: "shop:internal-id",
+            name: "パンパース さらさらケア 新生児",
+            url: "https://item.rakuten.co.jp/shop/1710000040/",
+            price: 1980,
+          },
+        ],
+        ["パンパース", "さらさらケア", "新生児"],
+        { exactIdentifiers: ["1710000040"] },
+      ),
+    ).toMatchObject({ id: "shop:internal-id", price: 1980 });
+  });
+
   it("parses an approved response without logging credentials", async () => {
     const fetchImpl = vi.fn(
       async () =>

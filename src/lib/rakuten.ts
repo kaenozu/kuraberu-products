@@ -52,15 +52,19 @@ function containsExactIdentifier(
   if (!normalizedIdentifier) return false;
   if (normalize(product.id) === normalize(normalizedIdentifier)) return true;
 
-  const normalizedName = product.name.normalize("NFKC").toLowerCase();
-  const index = normalizedName.indexOf(normalizedIdentifier);
-  if (index < 0) return false;
+  const isExactOccurrence = (value: string) => {
+    const normalizedValue = value.normalize("NFKC").toLowerCase();
+    const index = normalizedValue.indexOf(normalizedIdentifier);
+    if (index < 0) return false;
 
-  const before = normalizedName[index - 1];
-  const after = normalizedName[index + normalizedIdentifier.length];
-  const isAlphaNumeric = (value: string | undefined) =>
-    value !== undefined && /[a-z0-9]/.test(value);
-  return !isAlphaNumeric(before) && !isAlphaNumeric(after);
+    const before = normalizedValue[index - 1];
+    const after = normalizedValue[index + normalizedIdentifier.length];
+    const isAlphaNumeric = (character: string | undefined) =>
+      character !== undefined && /[a-z0-9]/.test(character);
+    return !isAlphaNumeric(before) && !isAlphaNumeric(after);
+  };
+
+  return isExactOccurrence(product.name) || isExactOccurrence(product.url);
 }
 
 function stableDuplicateRepresentative(
