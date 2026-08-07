@@ -98,7 +98,9 @@ for (const file of htmlFiles) {
   const is404 = path.relative("dist", file) === "404.html";
   const isArticle =
     pathname.startsWith("/articles/") && pathname !== "/articles/";
-  const expectedRobots = is404 ? "noindex,nofollow" : expectedDefaultRobots;
+  const isPrivateMemo = pathname === "/memo/";
+  const expectedRobots =
+    is404 || isPrivateMemo ? "noindex,nofollow" : expectedDefaultRobots;
   const expectedCanonical = new URL(pathname, `${expectedSiteUrl}/`).toString();
 
   const robots = readAttribute(
