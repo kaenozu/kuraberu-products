@@ -17,4 +17,14 @@ describe("site config", () => {
     expect(layout).toContain("index,follow");
     expect(layout).toContain("noindex,nofollow");
   });
+
+  it("keeps article discovery and keyboard entry contracts", () => {
+    const sitemap = readFileSync("src/pages/sitemap.xml.ts", "utf8");
+    const layout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+    expect(sitemap).toContain("articleMetadata");
+    expect(sitemap).toContain("article.path");
+    expect(layout).toContain('href="#main-content"');
+    expect(layout).toContain('id="main-content"');
+    expect(layout).toContain("aria-current");
+  });
 });

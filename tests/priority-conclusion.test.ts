@@ -54,7 +54,10 @@ describe("priority conclusion", () => {
     );
     expect(html).toContain("条件に応じた比較結論");
     expect(html).toContain(pampersStandardConclusion.summary);
-    expect(html).toContain("判断材料不足");
+    expect(html).toContain(
+      '<script src="/scripts/priority-conclusion.js" defer></script>',
+    );
+    expect(html).not.toContain('<script type="module">');
     expect(html).toContain("comparison-details");
     expect(html).toContain("<noscript>");
   });
