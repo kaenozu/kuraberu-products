@@ -16,6 +16,7 @@ const productQueries: Record<ProductId, ProductQuery> = {
     requiredTerms: ['パンパース', '肌へのいちばん', '新生児'],
     selection: {
       excludedTerms: ['90枚', '2パック', 'セット', '旧モデル'],
+      exactIdentifiers: ['4987176203229'],
     },
   },
   'pampers-sarasara-newborn': {
@@ -23,6 +24,7 @@ const productQueries: Record<ProductId, ProductQuery> = {
     requiredTerms: ['パンパース', 'さらさらケア', '新生児'],
     selection: {
       excludedTerms: ['パンツ', '2パック', 'セット', '旧モデル'],
+      exactIdentifiers: ['1710000040'],
     },
   },
 } as const;
