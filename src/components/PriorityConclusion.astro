@@ -28,39 +28,4 @@ const serialized = JSON.stringify({ options, labels, standard }).replaceAll('<',
   <script is:inline type="application/json" data-priority-data set:html={serialized} />
 </section>
 
-<script>
-  import { parsePriorityId, resolvePriorityConclusion } from '../lib/priority-conclusion';
-  import type { PriorityOption, StandardPriorityConclusion } from '../lib/priority-conclusion';
-
-  document.querySelectorAll('[data-priority-conclusion]').forEach((root) => {
-    if (!(root instanceof HTMLElement) || root.dataset.priorityBound === 'true') return;
-    root.dataset.priorityBound = 'true';
-    const dataNode = root.querySelector('[data-priority-data]');
-    if (!(dataNode instanceof HTMLScriptElement)) return;
-    const payload = JSON.parse(dataNode.textContent || '{}') as { options: PriorityOption[]; labels: { left: string; right: string }; standard: StandardPriorityConclusion };
-    const heading = root.querySelector('[data-priority-heading]');
-    const summary = root.querySelector('[data-priority-summary]');
-    const reasons = root.querySelector('[data-priority-reasons]');
-    const caution = root.querySelector('[data-priority-caution]');
-    const evidence = root.querySelector('[data-priority-evidence]');
-    const radios = [...root.querySelectorAll('input[name="priority"]')].filter((node): node is HTMLInputElement => node instanceof HTMLInputElement);
-    const render = (selectedId?: string) => {
-      const result = resolvePriorityConclusion(selectedId, payload.options, payload.labels, payload.standard);
-      if (heading) heading.textContent = result.heading;
-      if (summary) summary.textContent = result.summary;
-      if (caution) caution.textContent = result.caution;
-      if (evidence instanceof HTMLAnchorElement) evidence.href = result.evidenceHref;
-      if (reasons instanceof HTMLUListElement) {
-        reasons.replaceChildren(...result.reasons.map((reason) => { const item = document.createElement('li'); item.textContent = reason; return item; }));
-        reasons.hidden = result.reasons.length === 0;
-      }
-      radios.forEach((radio) => { radio.checked = radio.value === (result.selectedId || ''); });
-      const params = new URLSearchParams(location.search);
-      if (result.selectedId) params.set('priority', result.selectedId); else params.delete('priority');
-      history.replaceState(null, '', location.pathname + (params.size ? '?' + params.toString() : '') + location.hash);
-    };
-    const initial = parsePriorityId(new URLSearchParams(location.search), payload.options);
-    radios.forEach((radio) => radio.addEventListener('change', () => render(radio.value || undefined)));
-    render(initial);
-  });
-</script>
+<script src="/scripts/priority-conclusion.js" defer is:inline></script>

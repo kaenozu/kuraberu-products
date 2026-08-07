@@ -27,7 +27,7 @@
 ## 実装済みのP1対応
 
 - 記事一覧の検索・絞り込みスクリプトを同一オリジンの外部ファイルとして配信し、`public/_headers` の `script-src 'self'` と矛盾しない構成にした。
-- `/memo/` をsitemapへ登録し、Production後検証の必須パスにも一致させた。
+- 記事URLを記事メタデータからsitemapへ生成し、端末依存の`/memo/`はnoindex/nofollow境界にした。
 - skip link、main landmark、ナビの `aria-current`、44px以上の主要操作領域を追加した。
 - 比較表に列見出し・項目名のsticky表示と長い日本語の折返しを追加した。
 - 比較メモのlocalStorage境界をプライバシーポリシーに、404から記事一覧への復帰導線を追加した。

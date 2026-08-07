@@ -178,12 +178,7 @@ if (deploymentEnv === "production") {
 
 const sitemap = fs.readFileSync(path.join("dist", "sitemap.xml"), "utf8");
 if (sitemap.includes("/404")) errors.push("sitemap.xml: must not include 404");
-for (const pathname of [
-  "/",
-  "/articles/",
-  "/articles/pampers-newborn/",
-  "/memo/",
-]) {
+for (const pathname of ["/", "/articles/", "/articles/pampers-newborn/"]) {
   const expected = new URL(pathname, `${expectedSiteUrl}/`).toString();
   if (!sitemap.includes(`<loc>${expected}</loc>`)) {
     errors.push(`sitemap.xml: missing ${expected}`);
