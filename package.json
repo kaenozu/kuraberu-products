@@ -27,7 +27,7 @@
     "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/check-external-links.mjs && vitest run"
   },
   "dependencies": {
-    "astro": "7.1.6",
+    "astro": "7.2.0",
     "typescript": "5.9.3"
   },
   "devDependencies": {
@@ -42,7 +42,9 @@
   },
   "pnpm": {
     "overrides": {
-      "cookie": "2.0.1"
+      "cookie": "2.0.1",
+      "js-yaml": "4.3.1",
+      "sharp": "0.35.3"
     }
   }
 }
