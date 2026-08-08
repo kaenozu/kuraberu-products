@@ -15,6 +15,11 @@
   --paper: #fff;
   --accent: #e87a67;
   --sage: #e1e8e2;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2.5rem;
 }
 * {
   box-sizing: border-box;
@@ -101,17 +106,24 @@ a {
 .text-link {
   color: var(--ink);
   font-weight: 800;
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
   text-decoration-color: #efb19b;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-thickness 160ms ease;
+}
+.secondary-link:hover,
+.text-link:hover {
+  text-decoration-thickness: 2px;
 }
 .article-index {
   max-width: 900px;
 }
 .article-index h1 {
   font-size: clamp(2.4rem, 6vw, 4.8rem);
-  line-height: 1.05;
-  letter-spacing: -0.07em;
+  line-height: 1.08;
+  letter-spacing: -0.05em;
   margin: 0 0 1.25rem;
+  text-wrap: balance;
 }
 .lead {
   max-width: 650px;
@@ -130,6 +142,9 @@ a {
 .article-list-card h2 {
   margin: 0.6rem 0;
   font-size: clamp(1.5rem, 3vw, 2.3rem);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 .article-list-card h3 {
   margin: 0.6rem 0;
@@ -161,6 +176,14 @@ a {
   letter-spacing: -0.05em;
   line-height: 1.1;
   margin: 0 0 1.5rem;
+  text-wrap: balance;
+}
+.section-intro h1 {
+  font-size: clamp(2.4rem, 6vw, 4.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+  margin: 0 0 1rem;
+  text-wrap: balance;
 }
 .card {
   background: var(--paper);
@@ -168,6 +191,22 @@ a {
   border-radius: 8px;
   padding: clamp(1.25rem, 3vw, 2rem);
   box-shadow: 0 4px 20px rgba(26, 47, 35, 0.06);
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+}
+.card:hover {
+  transform: translateY(-1px);
+  border-color: #d4cec2;
+}
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+  }
+  .card:hover {
+    transform: none;
+  }
 }
 .card h3 {
   font-size: 1.35rem;
@@ -176,8 +215,16 @@ a {
 }
 .card a {
   color: var(--ink);
-  text-decoration-thickness: 2px;
+  text-decoration-thickness: 1px;
   text-decoration-color: #efb19b;
+  text-underline-offset: 0.18em;
+  transition:
+    text-decoration-thickness 160ms ease,
+    text-decoration-color 160ms ease;
+}
+.card a:hover {
+  text-decoration-thickness: 2px;
+  text-decoration-color: #e8a58e;
 }
 .grid {
   display: grid;
@@ -270,6 +317,8 @@ a {
   min-height: 44px;
   font-weight: 800;
   text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-decoration-color: #efb19b;
   text-underline-offset: 0.3em;
 }
 
@@ -277,6 +326,7 @@ a {
   background: transparent;
   transform: none;
   text-decoration-thickness: 2px;
+  text-decoration-color: #e8a58e;
 }
 .footer {
   border-top: 1px solid var(--line);
@@ -550,11 +600,15 @@ a {
 }
 .article h1 {
   font-size: clamp(2rem, 5vw, 3.8rem);
-  line-height: 1.15;
-  letter-spacing: -0.06em;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
 }
 .article h2 {
   margin-top: 3rem;
+  line-height: 1.45;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
 }
 .article p,
 .article li {
