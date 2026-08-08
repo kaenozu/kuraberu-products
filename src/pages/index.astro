@@ -5,6 +5,7 @@ import {articleMetadata} from '../content/articles';
 const latest = [...articleMetadata]
   .sort((a, b) => (a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0))
   .slice(0, 6);
+const latest30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 ---
 
 <BaseLayout
@@ -20,16 +21,24 @@ const latest = [...articleMetadata]
   <section class="section wrap article-index">
     <div class="article-list">
       {latest.length > 0 ? latest.map((article) => (
-        <article class="card article-list-card">
-          <span class="tag">{article.category}</span>
-          <h2><a href={article.path}>{article.headline}</a></h2>
-          <p>{article.summary}</p>
-          <ul class="article-tags" aria-label="記事タグ">
-            {article.tags.map((tag) => <li>{tag}</li>)}
-          </ul>
-          <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          <div class="card-actions">
-            <a class="cta" href={article.path}>記事を読む →</a>
+        <article class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}>
+          {article.imagePath && (
+            <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
+          )}
+          <div class="card-body">
+            <span class="card-tag-row">
+              <span class="tag">{article.category}</span>
+              {article.modifiedAt >= latest30 && <span class="badge-new">New</span>}
+            </span>
+            <h2><a href={article.path}>{article.headline}</a></h2>
+            <p>{article.summary}</p>
+            <ul class="article-tags" aria-label="記事タグ">
+              {article.tags.map((tag) => <li>{tag}</li>)}
+            </ul>
+            <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
+            <div class="card-actions">
+              <a class="cta" href={article.path}>記事を読む →</a>
+            </div>
           </div>
         </article>
       )) : (

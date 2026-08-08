@@ -4,6 +4,7 @@ import {articleMetadata} from '../../content/articles';
 
 const categories = [...new Set(articleMetadata.map((article) => article.category))].sort();
 const tags = [...new Set(articleMetadata.flatMap((article) => article.tags))].sort();
+const latest30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 ---
 <BaseLayout title="比較記事一覧｜くらべる商品メモ" description="公式情報と確認できる口コミで商品を比べる記事一覧">
   <section class="section wrap article-index" data-article-discovery>
@@ -37,21 +38,29 @@ const tags = [...new Set(articleMetadata.flatMap((article) => article.tags))].so
     <div class="article-list" data-discovery-results>
       {articleMetadata.map((article) => (
         <article
-          class="card article-list-card"
+          class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}
           data-article-card
           data-search={[article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' ').normalize('NFKC').toLocaleLowerCase('ja-JP')}
           data-category={article.category}
           data-tags={JSON.stringify(article.tags)}
         >
-          <span class="tag">{article.category}</span>
-          <h2><a href={article.path}>{article.headline}</a></h2>
-          <p>{article.summary}</p>
-          <ul class="article-tags" aria-label="記事タグ">
-            {article.tags.map((tag) => <li>{tag}</li>)}
-          </ul>
-          <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          <div class="card-actions">
-            <a class="cta" href={article.path}>記事を読む →</a>
+          {article.imagePath && (
+            <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
+          )}
+          <div class="card-body">
+            <span class="card-tag-row">
+              <span class="tag">{article.category}</span>
+              {article.modifiedAt >= latest30 && <span class="badge-new">New</span>}
+            </span>
+            <h2><a href={article.path}>{article.headline}</a></h2>
+            <p>{article.summary}</p>
+            <ul class="article-tags" aria-label="記事タグ">
+              {article.tags.map((tag) => <li>{tag}</li>)}
+            </ul>
+            <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
+            <div class="card-actions">
+              <a class="cta" href={article.path}>記事を読む →</a>
+            </div>
           </div>
         </article>
       ))}

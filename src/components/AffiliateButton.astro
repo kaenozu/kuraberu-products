@@ -3,7 +3,11 @@ import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
 import {fetchRakutenProducts, selectRakutenProduct, type RakutenSelectionOptions} from '../lib/rakuten';
 const {href,label,merchant,productId,placement} = Astro.props;
 
-type ProductId = 'pampers-premium-newborn' | 'pampers-sarasara-newborn';
+type ProductId =
+  | 'pampers-premium-newborn'
+  | 'pampers-sarasara-newborn'
+  | 'merries-fp-newborn'
+  | 'merries-airsle-newborn';
 type ProductQuery = {
   keyword: string;
   requiredTerms: readonly string[];
@@ -25,6 +29,22 @@ const productQueries: Record<ProductId, ProductQuery> = {
     selection: {
       excludedTerms: ['パンツ', '2パック', 'セット', '旧モデル'],
       exactIdentifiers: ['1710000040'],
+    },
+  },
+  'merries-fp-newborn': {
+    keyword: 'メリーズ ファーストプレミアム 新生児 テープ',
+    requiredTerms: ['メリーズ', 'ファーストプレミアム', '新生児'],
+    selection: {
+      excludedTerms: ['パンツ', 'ケース', 'ふるさと', '4パック', '6個', '×'],
+      exactItemCodes: ['rakutensokuhaimart:10018752'],
+    },
+  },
+  'merries-airsle-newborn': {
+    keyword: '花王 メリーズ エアスルー テープ 新生児用',
+    requiredTerms: ['メリーズ', 'エアスルー', '新生児'],
+    selection: {
+      excludedTerms: ['パンツ', 'ケース', '2パック', '4個', 'Sサイズ', 'Mサイズ'],
+      exactItemCodes: ['matsukiyo:10547359'],
     },
   },
 } as const;

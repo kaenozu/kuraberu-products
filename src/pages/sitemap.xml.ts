@@ -24,10 +24,17 @@ export const GET: APIRoute = () => {
   const urls = publicPaths
     .map((pathname) => {
       const location = new URL(pathname, `${site.url}/`).toString();
+      const article = articleMetadata.find((entry) => entry.path === pathname);
+      const image = article?.imagePath
+        ? new URL(article.imagePath, `${site.url}/`).toString()
+        : undefined;
+      if (image) {
+        return `  <url><loc>${escapeXml(location)}</loc><image:image><image:loc>${escapeXml(image)}</image:loc></image:image></url>`;
+      }
       return `  <url><loc>${escapeXml(location)}</loc></url>`;
     })
     .join("\n");
-  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`;
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${urls}\n</urlset>\n`;
 
   return new Response(body, {
     headers: { "Content-Type": "application/xml; charset=utf-8" },

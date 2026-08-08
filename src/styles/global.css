@@ -131,6 +131,78 @@ a {
   font-family: Georgia, "Yu Mincho", serif;
   font-size: 1.08rem;
 }
+.toc {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 1rem 1.2rem 1.1rem;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+}
+.toc h2 {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin: 0 0 0.6rem;
+  text-transform: uppercase;
+}
+.toc ol {
+  margin: 0;
+  padding-left: 1.2rem;
+  display: grid;
+  gap: 0.35rem;
+}
+.toc a {
+  color: var(--ink);
+  text-decoration-thickness: 1px;
+  text-decoration-color: #efb19b;
+  text-underline-offset: 0.18em;
+}
+.faq-list {
+  display: grid;
+  gap: 1rem;
+  margin: 1rem 0 1.5rem;
+}
+.faq-item {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 0.9rem 1.1rem;
+}
+.faq-item summary {
+  cursor: pointer;
+  list-style: none;
+}
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+.faq-item summary::after {
+  content: "＋";
+  float: right;
+  color: var(--accent);
+  font-weight: 800;
+  margin-left: 0.6rem;
+}
+.faq-item[open] summary::after {
+  content: "−";
+}
+.faq-item summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.faq-item h3 {
+  font-size: 1.05rem;
+  margin: 0;
+  line-height: 1.4;
+  display: inline;
+}
+.faq-item p {
+  margin: 0.6rem 0 0;
+  color: #445049;
+  font-size: 0.95rem;
+}
 .article-list {
   display: grid;
   gap: 1rem;
@@ -138,6 +210,44 @@ a {
 }
 .article-list-card {
   max-width: 700px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.article-list-card.has-image {
+  grid-template-columns: 132px 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.article-list-card .card-thumb {
+  width: 132px;
+  height: 132px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #fff;
+  display: block;
+}
+.article-list-card .card-body {
+  min-width: 0;
+}
+.article-list-card .card-tag-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.article-list-card .badge-new {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: var(--accent);
+  border-radius: 999px;
+  padding: 0.16rem 0.55rem;
+  text-transform: uppercase;
 }
 .article-list-card h2 {
   margin: 0.6rem 0;
@@ -231,7 +341,7 @@ a {
   gap: 1rem;
 }
 .article {
-  max-width: 780px;
+  max-width: 920px;
 }
 .meta {
   color: var(--muted);
@@ -263,6 +373,20 @@ a {
   position: sticky;
   top: 0;
   z-index: 2;
+}
+.comparison thead th:nth-child(2) {
+  background: #e6efec;
+  color: #1d4a41;
+}
+.comparison thead th:nth-child(3) {
+  background: #f6e8de;
+  color: #7c4a2b;
+}
+.comparison tbody td:nth-child(2) {
+  background: #f3f8f6;
+}
+.comparison tbody td:nth-child(3) {
+  background: #fbf4ee;
 }
 .comparison thead th:first-child,
 .comparison tbody th {
@@ -348,6 +472,58 @@ a {
 .source-links {
   display: grid;
   gap: 0.75rem;
+}
+.product-compare {
+  display: grid;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+@media (min-width: 700px) {
+  .product-compare {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.product-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #fff;
+}
+.product-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1rem 1.1rem 1.2rem;
+}
+.product-card-line {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+.product-card-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 0;
+}
+.product-card-desc {
+  font-size: 0.92rem;
+  color: #445049;
+  margin: 0;
+}
+.product-card-link {
+  margin-top: auto;
+  padding-top: 0.6rem;
+  font-weight: 800;
 }
 .card-link {
   display: block;
@@ -748,6 +924,13 @@ a {
   .article-list-card {
     max-width: none;
   }
+  .article-list-card.has-image {
+    grid-template-columns: 96px 1fr;
+  }
+  .article-list-card .card-thumb {
+    width: 96px;
+    height: 96px;
+  }
 }
 
 .memo-control {
@@ -872,4 +1055,18 @@ a {
 }
 .section-intro .lead {
   margin-bottom: 0;
+}
+
+/* X の実際の声: 投稿ウィジェットを 2 列で大きく見せる */
+.voices-grid {
+  display: grid;
+  gap: 1.25rem;
+}
+@media (min-width: 760px) {
+  .voices-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .voices-grid .external-embed:first-child {
+    grid-column: 1 / -1;
+  }
 }

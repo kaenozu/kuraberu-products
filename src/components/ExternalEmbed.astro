@@ -10,9 +10,10 @@ interface Props {
   url: string;
   title: string;
   purpose?: string;
+  autoload?: boolean;
 }
 
-const { provider, url, title, purpose } = Astro.props;
+const { provider, url, title, purpose, autoload } = Astro.props;
 const config = createExternalEmbedConfig(provider, url);
 const providerLabel = externalEmbedProviderLabel(provider);
 ---
@@ -23,6 +24,7 @@ const providerLabel = externalEmbedProviderLabel(provider);
   data-config={JSON.stringify(config)}
   data-provider={provider}
   data-embed-state="idle"
+  data-autoload={autoload ? "true" : undefined}
   aria-label={`${providerLabel}の外部コンテンツ`}
 >
   <div class="external-embed__intro">
@@ -406,6 +408,12 @@ const providerLabel = externalEmbedProviderLabel(provider);
       });
     };
     button.addEventListener("click", onClick);
+
+    if (root.dataset.autoload === "true") {
+      // 初期表示から投稿を表示する: 権限を付与した後、自動で読み込む。
+      // ボタンは読み込み開始時に disabled になり、成功後に削除される。
+      onClick();
+    }
   }
 </script>
 

@@ -77,17 +77,21 @@ function readStructuredData(html, file, errors) {
       /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
     ),
   ];
-  if (matches.length !== 1) {
-    errors.push(`${file}: expected one JSON-LD block, found ${matches.length}`);
+  if (matches.length < 1) {
+    errors.push(`${file}: expected at least one JSON-LD block, found 0`);
     return undefined;
   }
 
-  try {
-    return JSON.parse(matches[0][1]);
-  } catch {
-    errors.push(`${file}: invalid JSON-LD`);
-    return undefined;
+  const blocks = [];
+  for (const match of matches) {
+    try {
+      blocks.push(JSON.parse(match[1]));
+    } catch {
+      errors.push(`${file}: invalid JSON-LD block`);
+      return undefined;
+    }
   }
+  return blocks;
 }
 
 walk("dist");
@@ -144,24 +148,44 @@ for (const file of htmlFiles) {
     errors.push(`${file}: missing Open Graph description`);
   }
 
-  const structuredData = readStructuredData(html, file, errors);
-  if (structuredData) {
+  const structuredBlocks = readStructuredData(html, file, errors);
+  if (structuredBlocks) {
     const expectedType = isArticle ? "Article" : "WebPage";
-    if (structuredData["@context"] !== "https://schema.org") {
-      errors.push(`${file}: unexpected JSON-LD context`);
-    }
-    if (structuredData["@type"] !== expectedType) {
+    const primary = structuredBlocks.find(
+      (block) => block["@type"] === expectedType,
+    );
+    if (!primary) {
       errors.push(
-        `${file}: expected JSON-LD type ${expectedType}, found ${structuredData["@type"]}`,
+        `${file}: expected JSON-LD type ${expectedType} block, found ${structuredBlocks.map((b) => b["@type"]).join(", ")}`,
       );
+    } else {
+      if (primary["@context"] !== "https://schema.org") {
+        errors.push(`${file}: unexpected JSON-LD context`);
+      }
+      if (primary.url !== expectedCanonical) {
+        errors.push(`${file}: JSON-LD URL does not match canonical`);
+      }
     }
-    if (structuredData.url !== expectedCanonical) {
-      errors.push(`${file}: JSON-LD URL does not match canonical`);
+    for (const block of structuredBlocks) {
+      const allowedTypes = ["Article", "WebPage", "FAQPage"];
+      if (!allowedTypes.includes(block["@type"])) {
+        errors.push(`${file}: unsupported JSON-LD type ${block["@type"]}`);
+      }
+      if (block["@context"] !== "https://schema.org") {
+        errors.push(`${file}: unexpected JSON-LD context`);
+      }
+      const serialized = JSON.stringify(block);
+      for (const unsupportedClaim of ["aggregateRating", "review", "offers"]) {
+        if (serialized.includes(`"${unsupportedClaim}"`)) {
+          errors.push(`${file}: unsupported JSON-LD claim ${unsupportedClaim}`);
+        }
+      }
     }
-    const serialized = JSON.stringify(structuredData);
-    for (const unsupportedClaim of ["aggregateRating", "review", "offers"]) {
-      if (serialized.includes(`"${unsupportedClaim}"`)) {
-        errors.push(`${file}: unsupported JSON-LD claim ${unsupportedClaim}`);
+    if (structuredBlocks.some((b) => b["@type"] === "FAQPage")) {
+      const faq = structuredBlocks.find((b) => b["@type"] === "FAQPage");
+      const entities = faq.mainEntity;
+      if (!Array.isArray(entities) || entities.length === 0) {
+        errors.push(`${file}: FAQPage JSON-LD requires mainEntity array`);
       }
     }
   }

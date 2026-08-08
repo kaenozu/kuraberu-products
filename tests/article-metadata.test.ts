@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   articleMetadata,
   defineArticleMetadata,
+  merriesNewbornArticle,
   pampersNewbornArticle,
 } from "../src/content/articles";
 
@@ -16,10 +17,17 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("keeps one typed canonical source for article listings and pages", () => {
-    expect(articleMetadata).toEqual([pampersNewbornArticle]);
+    expect(articleMetadata).toEqual([
+      pampersNewbornArticle,
+      merriesNewbornArticle,
+    ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
       pampersNewbornArticle.modifiedAt >= pampersNewbornArticle.publishedAt,
+    ).toBe(true);
+    expect(merriesNewbornArticle.path).toBe("/articles/merries-newborn/");
+    expect(
+      merriesNewbornArticle.modifiedAt >= merriesNewbornArticle.publishedAt,
     ).toBe(true);
   });
 
@@ -53,7 +61,12 @@ describe("article metadata", () => {
     expect(article?.datePublished).toBe(pampersNewbornArticle.publishedAt);
     expect(article?.dateModified).toBe(pampersNewbornArticle.modifiedAt);
     expect(article?.url).toBe(article?.mainEntityOfPage);
-    expect(article).not.toHaveProperty("image");
+    expect(article?.image).toBe(
+      new URL(
+        pampersNewbornArticle.imagePath!,
+        "https://kuraberu-products.pages.dev/",
+      ).toString(),
+    );
     expect(html).toContain(
       `<meta property="article:published_time" content="${pampersNewbornArticle.publishedAt}">`,
     );

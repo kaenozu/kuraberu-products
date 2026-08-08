@@ -86,6 +86,38 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
+    <div class="product-compare" aria-label="比較する2つの商品">
+      <article class="product-card">
+        <img
+          src="/products/pampers-premium-newborn.jpg"
+          alt="パンパース はじめての肌へのいちばん テープ 新生児サイズ パッケージ"
+          width="500"
+          height="500"
+          loading="eager"
+        />
+        <div class="product-card-body">
+          <p class="product-card-line">パンパース / テープ</p>
+          <h2 class="product-card-name">はじめての肌へのいちばん</h2>
+          <p class="product-card-desc">生まれたての肌にやさしい素材のテープ。新生児サイズは5kgまで。</p>
+          <a class="product-card-link" href={premium} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+      <article class="product-card">
+        <img
+          src="/products/pampers-sarasara-newborn.jpg"
+          alt="パンパース さらさらケア テープ 新生児サイズ パッケージ"
+          width="500"
+          height="500"
+          loading="eager"
+        />
+        <div class="product-card-body">
+          <span class="product-card-line">パンパース / テープ</span>
+          <h2 class="product-card-name">さらさらケア</h2>
+          <p class="product-card-desc">おしっこをしっかり吸収するテープ。新生児サイズは5kgまで。</p>
+          <a class="product-card-link" href={sarasara} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+    </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
       <p>購入リンク：{purchaseLinkLabel}</p>
