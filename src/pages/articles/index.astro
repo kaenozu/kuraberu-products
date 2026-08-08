@@ -50,7 +50,9 @@ const tags = [...new Set(articleMetadata.flatMap((article) => article.tags))].so
             {article.tags.map((tag) => <li>{tag}</li>)}
           </ul>
           <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          <a class="cta" href={article.path}>記事を読む →</a>
+          <div class="card-actions">
+            <a class="cta" href={article.path}>記事を読む →</a>
+          </div>
         </article>
       ))}
     </div>

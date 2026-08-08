@@ -15,8 +15,10 @@ import { articleMetadata } from '../content/articles';
           <h2><a href={article.path}>{article.headline}</a></h2>
           <p>{article.summary}</p>
           <p class="meta">商品情報確認日 {article.productInfoCheckedAt ?? '未記録'}</p>
-          <a class="cta" href={article.path}>記事を確認する →</a>
-          <button type="button" class="text-button" data-memo-remove>比較メモから外す</button>
+          <div class="card-actions">
+            <a class="cta" href={article.path}>記事を確認する →</a>
+            <button type="button" class="text-button" data-memo-remove>比較メモから外す</button>
+          </div>
         </article>
       ))}
     </div>

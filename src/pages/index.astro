@@ -28,7 +28,9 @@ const latest = [...articleMetadata]
             {article.tags.map((tag) => <li>{tag}</li>)}
           </ul>
           <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          <a class="cta" href={article.path}>記事を読む →</a>
+          <div class="card-actions">
+            <a class="cta" href={article.path}>記事を読む →</a>
+          </div>
         </article>
       )) : (
         <p>比較記事は準備中です。</p>
