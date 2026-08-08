@@ -11,11 +11,17 @@ interface Props {
   title: string;
   purpose?: string;
   autoload?: boolean;
+  tone?: "good" | "bad" | "mixed";
 }
 
-const { provider, url, title, purpose, autoload } = Astro.props;
+const { provider, url, title, purpose, autoload, tone } = Astro.props;
 const config = createExternalEmbedConfig(provider, url);
 const providerLabel = externalEmbedProviderLabel(provider);
+const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
+  good: "良かったという声",
+  bad: "気になったという声",
+  mixed: "良い・悪い両方の声",
+};
 ---
 
 <aside
@@ -23,12 +29,14 @@ const providerLabel = externalEmbedProviderLabel(provider);
   data-external-embed
   data-config={JSON.stringify(config)}
   data-provider={provider}
+  data-tone={tone}
   data-embed-state="idle"
   data-autoload={autoload ? "true" : undefined}
   aria-label={`${providerLabel}の外部コンテンツ`}
 >
   <div class="external-embed__intro">
     <p class="external-embed__label">外部コンテンツ</p>
+    {tone && <p class="external-embed__tone" data-external-embed-tone={tone}>{toneLabel[tone]}</p>}
     <h3>{title}</h3>
     {purpose && <p>{purpose}</p>}
     <p class="external-embed__privacy">
@@ -436,6 +444,30 @@ const providerLabel = externalEmbedProviderLabel(provider);
     font-size: 0.75rem;
     font-weight: 850;
     letter-spacing: 0.12em;
+  }
+
+  .external-embed__tone {
+    display: inline-block;
+    margin: 0 0 0.6rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .external-embed__tone[data-external-embed-tone="good"] {
+    background: color-mix(in srgb, #2e7d32 12%, transparent);
+    color: #2e7d32;
+  }
+
+  .external-embed__tone[data-external-embed-tone="bad"] {
+    background: color-mix(in srgb, #b26a00 12%, transparent);
+    color: #9a5b00;
+  }
+
+  .external-embed__tone[data-external-embed-tone="mixed"] {
+    background: color-mix(in srgb, var(--muted) 14%, transparent);
+    color: var(--ink);
   }
 
   .external-embed h3 {

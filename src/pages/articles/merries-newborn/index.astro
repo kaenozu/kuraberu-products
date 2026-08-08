@@ -19,6 +19,8 @@ import type {
 const firstPremium = 'https://www.kao.co.jp/merries/products/fp/';
 const airsle = 'https://www.kao.co.jp/merries/products/air/';
 const xSearch = 'https://x.com/search?q=%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA%20%E6%96%B0%E7%94%9F%E5%85%90&src=typed_query';
+const xGoodSearch = 'https://x.com/search?q=%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA%20%E6%96%B0%E7%94%9F%E5%85%90%20%E8%89%AF%E3%81%8B%E3%81%A3%E3%81%9F&f=live';
+const xBadSearch = 'https://x.com/search?q=%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA%20%E6%96%B0%E7%94%9F%E5%85%90%20%E6%BC%8F%E3%82%8C%E3%82%8B&f=live';
 const pinterestPin = 'https://www.pinterest.com/pin/1095922890543405483/';
 const firstPremiumSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA+%E3%83%95%E3%82%A1%E3%83%BC%E3%82%B9%E3%83%88%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0+%E6%96%B0%E7%94%9F%E5%85%90/';
 const airsleSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA+%E3%82%A8%E3%82%A2%E3%82%B9%E3%83%AB%E3%83%BC+%E6%96%B0%E7%94%9F%E5%85%90/';
@@ -203,34 +205,43 @@ const differenceRows: DifferenceRow[] = [
     </div>
 
     <section id="voices">
-    <h2>X での実際の声</h2>
-        <p>商品バリエーション（テープ・パンツ）やサイズ、購入時期が混在するため、今回の比較では個別投稿を根拠として採用していません。実際に使った人の声を確認する場合は、対象ライン、テープタイプ、サイズ、投稿日を確認してください。</p>
-        <h3>公開投稿を表示・自分で確認する</h3>
-            <div class="voices-grid">
-            <ExternalEmbed
-              provider="x"
-              url="https://x.com/nenechama555/status/1862767316557340715"
-              title="新生児用でエアスルー◎・ファーストプレミアムは体型で漏れたと語った投稿"
-              purpose="新生児期間に複数メーカーを使い比べた一般ユーザーの投稿です。エアスルーを高評価する一方、ファーストプレミアムは太もも回りが合わず漏れたとあり、体型による合う・合わないの参考例として紹介しています。比較の根拠ではなく、実際の使用感を知るための参考です。"
-              autoload
-            />
-            <ExternalEmbed
-              provider="x"
-              url="https://x.com/hoimipapamama/status/1895445915156259088"
-              title="ファーストプレミアムをエアスルーと比べて語った投稿"
-              purpose="ファーストプレミアムを新生児期から愛用し、エアスルーとの手触りの違いにも触れた一般ユーザーの投稿です。実際に両方を使った人の視点として紹介しています。"
-              autoload
-            />
-            <ExternalEmbed
-              provider="x"
-              url="https://x.com/rririri_svt116/status/2072573748075745771"
-              title="新生児サイズ卒業時に肌触りを振り返った投稿"
-              purpose="複数種類の紙おむつを使い比べたうえで、ファーストプレミアムの肌触りを評価した一般ユーザーの投稿です。実際に新生児サイズを使った人の声として紹介しています。"
-              autoload
-            />
-            </div>
-        <XPostEmbed url={xSearch} summary="ほかにも実際に使った人の投稿を見たい場合は、X の検索結果から対象商品・サイズ・利用経験を確認してください。" />
-    </section>
+        <h2>X での実際の声</h2>
+            <p>商品バリエーション（テープ・パンツ）やサイズ、購入時期が混在するため、今回の比較では個別投稿を根拠として採用していません。実際に使った人の声を確認する場合は、対象ライン、テープタイプ、サイズ、投稿日を確認してください。以下は X の検索（最新順）から拾った実際の投稿で、「良かったという声」「気になったという声」に分けて紹介しています。</p>
+
+            <h3>良かったという声</h3>
+                <div class="voices-grid">
+                <ExternalEmbed
+                  provider="x"
+                  url="https://x.com/hoimipapamama/status/1895445915156259088"
+                  title="ファーストプレミアムをエアスルーと比べて語った投稿"
+                  purpose="ファーストプレミアムを新生児期から愛用し、エアスルーとの手触りの違いにも触れた一般ユーザーの投稿です。実際に両方を使った人の視点として紹介しています。"
+                  tone="good"
+                  autoload
+                />
+                <ExternalEmbed
+                  provider="x"
+                  url="https://x.com/rririri_svt116/status/2072573748075745771"
+                  title="新生児サイズ卒業時に肌触りを振り返った投稿"
+                  purpose="複数種類の紙おむつを使い比べたうえで、ファーストプレミアムの肌触りを評価した一般ユーザーの投稿です。実際に新生児サイズを使った人の声として紹介しています。"
+                  tone="good"
+                  autoload
+                />
+                </div>
+            <XPostEmbed url={xGoodSearch} summary="ほかにも「良かった」という声を探す場合は、X の検索結果から対象商品・サイズ・利用経験を確認してください。" />
+
+            <h3>気になったという声</h3>
+                <div class="voices-grid">
+                <ExternalEmbed
+                  provider="x"
+                  url="https://x.com/nenechama555/status/1862767316557340715"
+                  title="新生児用でエアスルー◎・ファーストプレミアムは体型で漏れたと語った投稿"
+                  purpose="新生児期間に複数メーカーを使い比べた一般ユーザーの投稿です。エアスルーを高評価する一方、ファーストプレミアムは太もも回りが合わず漏れたとあり、体型による合う・合わないの参考例として紹介しています。比較の根拠ではなく、実際の使用感を知るための参考です。"
+                  tone="bad"
+                  autoload
+                />
+                </div>
+            <XPostEmbed url={xBadSearch} summary="ほかにも「気になった」という声を探す場合は、X の検索結果から対象商品・サイズ・利用経験を確認してください。" />
+        </section>
 
     <h2>どんな確認を優先するか</h2>
     <ul>
