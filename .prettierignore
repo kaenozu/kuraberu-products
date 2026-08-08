@@ -1,1 +1,4 @@
 sketches/
+.wrangler/
+.wrangler-state/
+.dev.vars
