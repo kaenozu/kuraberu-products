@@ -250,3 +250,38 @@ Phase 3のProduction（`b4477a4b`）は未コミットのローカル変更を�
 
 - 楽天API秘密変数3件（`RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID`）は未設定。別タスクとして保管場所確認→権限・利用状況確認→無ければ再発行→Cloudflareへの秘密登録→API補完動作確認を実施する。値はチャット・ログ・コミットに載せない。
 - このworktreeの`core.autocrlf`はシステム設定（`C:\Program Files\Git\etc\gitconfig`）が`true`のため、checkout時にCRLF化される。コミット内容はLFのまま（blobを確認済み）。
+
+## Phase 5: トップ最小構成化の本番反映（2026-08-08）
+
+| 項目                             | 値                                                                                                                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 新しいProduction Deployment ID   | `6527427b-3e77-4115-b372-263100427d5d`                                                                                                                 |
+| Deploymentに記録されたSource SHA | `9746cc3`（PR #76 マージコミット、トップ最小構成化）                                                                                                    |
+| デプロイ方式                     | Wrangler Direct Upload（`wrangler pages deploy dist --project-name kuraberu-products --branch main`）                                                   |
+| デプロイ前のProduction           | `9b4e146`（PR #74 時点）                                                                                                                               |
+
+内容: トップページを「比較記事一覧」中心の最小構成に整理（名乗り1行＋記事一覧＋サイト理念）。Google Stitch で作成したリッチ版（専門家・本音・VS モジュール等の装飾）は比較サイトの実体に合わないため採用せず、ヒーロー演出・カテゴリチップ・VS モジュールを撤去。既存トークン（フォレストグリーン/コーラル/セージ/紙色）はテーマ資産として維持。
+
+ローカル検証（`DEPLOYMENT_ENV=production`、`pnpm verify`）全PASS（150 tests）。
+
+公開受入結果（`Invoke-PostDeployVerification.ps1`、Result: PASS）:
+
+| 確認項目             | 結果                                                                          |
+| -------------------- | ----------------------------------------------------------------------------- |
+| 主要ページ 9 件      | HTTP 200（`/` `/articles/` `/articles/pampers-newborn/` `/memo/` `/about/` `/privacy/` `/disclaimer/` `/robots.txt` `/sitemap.xml`） |
+| canonical            | `https://kuraberu-products.pages.dev/` と一致（全ページ）                     |
+| robots               | `index,follow`（`/memo/` は意図的 noindex — 端末ローカル保存ページ）           |
+| 404                  | 生成404・noindex 付与                                                     |
+| 楽天CTA              | 記事ページに6件（許可ホストのみ・0件不正）                                     |
+| トップ h1            | 「暮らしの商品を、くらべる。」（新コピー反映確認）                             |
+
+### デプロイ経路の整理（Phase 5 時点の判明事項）
+
+- Cloudflare Pages プロジェクト `kuraberu-products` は **Git Provider: No**（GitHub連携なし）＝ Workers Builds の PRビルドとは別経路。
+- 実際の本番反映は **Wrangler Direct Upload** が唯一の経路（README の Workers Builds 経路は Issue #4 で整理予定の旧 Pages 直アップロードとは別物。※ Workers Builds は PRビルドのみで本番反映しない）。
+- 本番ビルドにはローカル `.env`（gitignored）の `PUBLIC_SITE_URL` と楽天直接URL 2件が必要。楽天API秘密変数3件は環境変数由来（未設定でもCTAは直接URLから生成される）。
+
+### Deployment保持方針（Phase 5 追記）
+
+- `6527427b`（Phase 5）: 現在の本番。履歴・ロールバック用途として保持。
+- ロールバック先として `9b4e146`（PR #74 時点）のデプロイも保持。
