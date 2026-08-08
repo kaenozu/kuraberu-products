@@ -360,6 +360,10 @@ a {
   overflow-x: auto;
   margin-inline: -0.25rem;
   padding-inline: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+.comparison {
+  min-width: 640px;
 }
 .comparison th,
 .comparison td {
