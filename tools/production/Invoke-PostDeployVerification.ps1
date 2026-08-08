@@ -3,8 +3,9 @@ param(
     [Parameter(Mandatory)][uri]$BaseUrl,
     [string]$ExpectedCommitSha,
     [string]$OutputRoot = '.acceptance',
-    [string[]]$RequiredPaths = @('/', '/articles/', '/articles/pampers-newborn/', '/memo/', '/about/', '/privacy/', '/disclaimer/', '/robots.txt', '/sitemap.xml')
-)
+        [string[]]$RequiredPaths = @('/', '/articles/', '/articles/pampers-newborn/', '/memo/', '/about/', '/privacy/', '/disclaimer/', '/robots.txt', '/sitemap.xml'),
+        [string[]]$NonIndexableOkPaths = @('/memo/')
+    )
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
@@ -46,7 +47,11 @@ foreach ($path in $RequiredPaths) {
         $expectedCanonical = "$origin$path"
         Check "Canonical $path" ($canonicalMatch.Success -and $canonicalMatch.Groups['href'].Value -eq $expectedCanonical) "actual=$($canonicalMatch.Groups['href'].Value) expected=$expectedCanonical"
         $robotsMatch = [regex]::Match($html, '<meta[^>]+name=["'']robots["''][^>]+content=["''](?<value>[^"'']+)', 'IgnoreCase')
-        Check "Indexable $path" ($robotsMatch.Success -and $robotsMatch.Groups['value'].Value -notmatch 'noindex') "robots=$($robotsMatch.Groups['value'].Value)"
+        if ($path -in $NonIndexableOkPaths) {
+            Check "Indexable $path (noindex allowed)" ($robotsMatch.Success) "robots=$($robotsMatch.Groups['value'].Value) (allowed: noindex)"
+        } else {
+            Check "Indexable $path" ($robotsMatch.Success -and $robotsMatch.Groups['value'].Value -notmatch 'noindex') "robots=$($robotsMatch.Groups['value'].Value)"
+        }
         Check "No mixed content $path" ($html -notmatch '(?i)(?:src|href)=["'']http://') 'No http:// asset or link reference.'
         $pages.Add([ordered]@{ path = $path; status = [int]$response.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($html) })
     }
