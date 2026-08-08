@@ -739,3 +739,9 @@ a {
     border-radius: 6px;
   }
 }
+.section-intro {
+  padding-bottom: 0;
+}
+.section-intro .lead {
+  margin-bottom: 0;
+}

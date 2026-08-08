@@ -6,10 +6,15 @@ const latest = [...articleMetadata]
   .sort((a, b) => (a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0))
   .slice(0, 6);
 ---
-<BaseLayout title="くらべる商品メモ｜商品比較" description="暮らしの商品を、公式情報と確認状況を分けて比べるサイトです。確認できない数値や体験談は掲載しません。">
-  <section class="wrap section">
-    <h1>比較記事</h1>
-    <p>公式情報と確認状況を分けて、商品の選択に役立つ情報を整理しています。</p>
+
+<BaseLayout
+  title="くらべる商品メモ｜商品比較"
+  description="暮らしの商品を、公式情報と確認状況を分けて比べるサイトです。確認できない数値や体験談は掲載しません。"
+>
+  <section class="wrap section section-intro">
+    <p class="eyebrow">くらべる商品メモ</p>
+    <h1>暮らしの商品を、くらべる。</h1>
+    <p class="lead">公式情報と確認状況を分けて、商品の選択に役立つ情報を整理しています。</p>
   </section>
 
   <section class="section wrap article-index">
