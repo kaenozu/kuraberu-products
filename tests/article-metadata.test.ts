@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   articleMetadata,
   defineArticleMetadata,
+  merriesNewbornArticle,
   pampersNewbornArticle,
 } from "../src/content/articles";
 
@@ -16,10 +17,17 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("keeps one typed canonical source for article listings and pages", () => {
-    expect(articleMetadata).toEqual([pampersNewbornArticle]);
+    expect(articleMetadata).toEqual([
+      pampersNewbornArticle,
+      merriesNewbornArticle,
+    ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
       pampersNewbornArticle.modifiedAt >= pampersNewbornArticle.publishedAt,
+    ).toBe(true);
+    expect(merriesNewbornArticle.path).toBe("/articles/merries-newborn/");
+    expect(
+      merriesNewbornArticle.modifiedAt >= merriesNewbornArticle.publishedAt,
     ).toBe(true);
   });
 
