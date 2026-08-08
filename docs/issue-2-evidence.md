@@ -253,12 +253,12 @@ Phase 3のProduction（`b4477a4b`）は未コミットのローカル変更を�
 
 ## Phase 5: トップ最小構成化の本番反映（2026-08-08）
 
-| 項目                             | 値                                                                                                                                                     |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 新しいProduction Deployment ID   | `6527427b-3e77-4115-b372-263100427d5d`                                                                                                                 |
-| Deploymentに記録されたSource SHA | `9746cc3`（PR #76 マージコミット、トップ最小構成化）                                                                                                    |
-| デプロイ方式                     | Wrangler Direct Upload（`wrangler pages deploy dist --project-name kuraberu-products --branch main`）                                                   |
-| デプロイ前のProduction           | `9b4e146`（PR #74 時点）                                                                                                                               |
+| 項目                             | 値                                                                                                    |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| 新しいProduction Deployment ID   | `6527427b-3e77-4115-b372-263100427d5d`                                                                |
+| Deploymentに記録されたSource SHA | `9746cc3`（PR #76 マージコミット、トップ最小構成化）                                                  |
+| デプロイ方式                     | Wrangler Direct Upload（`wrangler pages deploy dist --project-name kuraberu-products --branch main`） |
+| デプロイ前のProduction           | `9b4e146`（PR #74 時点）                                                                              |
 
 内容: トップページを「比較記事一覧」中心の最小構成に整理（名乗り1行＋記事一覧＋サイト理念）。Google Stitch で作成したリッチ版（専門家・本音・VS モジュール等の装飾）は比較サイトの実体に合わないため採用せず、ヒーロー演出・カテゴリチップ・VS モジュールを撤去。既存トークン（フォレストグリーン/コーラル/セージ/紙色）はテーマ資産として維持。
 
@@ -266,14 +266,14 @@ Phase 3のProduction（`b4477a4b`）は未コミットのローカル変更を�
 
 公開受入結果（`Invoke-PostDeployVerification.ps1`、Result: PASS）:
 
-| 確認項目             | 結果                                                                          |
-| -------------------- | ----------------------------------------------------------------------------- |
-| 主要ページ 9 件      | HTTP 200（`/` `/articles/` `/articles/pampers-newborn/` `/memo/` `/about/` `/privacy/` `/disclaimer/` `/robots.txt` `/sitemap.xml`） |
-| canonical            | `https://kuraberu-products.pages.dev/` と一致（全ページ）                     |
-| robots               | `index,follow`（`/memo/` は意図的 noindex — 端末ローカル保存ページ）           |
-| 404                  | 生成404・noindex 付与                                                     |
-| 楽天CTA              | 記事ページに6件（許可ホストのみ・0件不正）                                     |
-| トップ h1            | 「暮らしの商品を、くらべる。」（新コピー反映確認）                             |
+| 確認項目        | 結果                                                                                                                                 |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| 主要ページ 9 件 | HTTP 200（`/` `/articles/` `/articles/pampers-newborn/` `/memo/` `/about/` `/privacy/` `/disclaimer/` `/robots.txt` `/sitemap.xml`） |
+| canonical       | `https://kuraberu-products.pages.dev/` と一致（全ページ）                                                                            |
+| robots          | `index,follow`（`/memo/` は意図的 noindex — 端末ローカル保存ページ）                                                                 |
+| 404             | 生成404・noindex 付与                                                                                                                |
+| 楽天CTA         | 記事ページに6件（許可ホストのみ・0件不正）                                                                                           |
+| トップ h1       | 「暮らしの商品を、くらべる。」（新コピー反映確認）                                                                                   |
 
 ### デプロイ経路の整理（Phase 5 時点の判明事項）
 
