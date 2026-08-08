@@ -9,12 +9,11 @@ import {
 const read = (path: string) => readFileSync(path, "utf8");
 
 describe("Issue #2 editorial comparison UI", () => {
-  it("keeps both products identifiable on the homepage card", () => {
+  it("keeps articles discoverable from the homepage", () => {
     const homepage = read("src/pages/index.astro");
-    expect(homepage).toContain("肌へのいちばん");
-    expect(homepage).toContain("さらさらケア");
-    expect(homepage).toContain("product-pair");
-    expect(homepage).toContain("/articles/pampers-newborn/");
+    expect(homepage).toContain("articleMetadata");
+    expect(homepage).toContain("/articles/");
+    expect(homepage).toContain("比較記事");
   });
 
   it("uses the three issue-specific comparison components in the article", () => {

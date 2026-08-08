@@ -1,31 +1,40 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ProductIdentity from '../components/ProductIdentity.astro';
-import VerificationStatus from '../components/VerificationStatus.astro';
+import {articleMetadata} from '../content/articles';
+
+const latest = [...articleMetadata]
+  .sort((a, b) => (a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0))
+  .slice(0, 6);
 ---
-<BaseLayout title="くらべる商品メモ｜商品比較" description="公式情報と確認状況を分けて商品を比べます">
-  <section class="hero hero-editorial">
-    <div class="wrap hero-editorial-inner">
-      <p class="section-label">比較メモ / おむつ</p>
-      <h1>パンパースの新生児用、<br />どちらを確認する？</h1>
-      <p class="hero-intro">「肌へのいちばん」と「さらさらケア」。同じ新生児用でも、公式が案内する主な機能が違います。</p>
-      <div class="hero-actions"><a class="cta" href="/articles/">比較記事を見る →</a><a class="secondary-link" href="#featured">2商品の違いを見る</a></div>
-    </div>
+
+<BaseLayout
+  title="くらべる商品メモ｜商品比較"
+  description="暮らしの商品を、公式情報と確認状況を分けて比べるサイトです。確認できない数値や体験談は掲載しません。"
+>
+  <section class="wrap section section-intro">
+    <p class="eyebrow">くらべる商品メモ</p>
+    <h1>暮らしの商品を、くらべる。</h1>
+    <p class="lead">公式情報と確認状況を分けて、商品の選択に役立つ情報を整理しています。</p>
   </section>
 
-  <section class="section wrap" id="featured" aria-labelledby="featured-heading">
-    <article class="featured-editorial">
-      <div class="featured-editorial-head">
-        <div><p class="section-label">今回の比較</p><h2 id="featured-heading">パンパース 新生児用</h2></div>
-        <p class="meta">更新日 2026-07-31</p>
-      </div>
-      <p class="featured-lead">「肌へのいちばん」は肌へのやさしさに関する機能、「さらさらケア」はモレ・ムレ対策に関する機能を公式商品ページで確認できます。価格ではなく、必要な機能から確認先を分けます。</p>
-      <div class="product-pair">
-        <ProductIdentity product="パンパース 新生児用" line="肌へのいちばん" tone="premium" audience="肌へのやさしさに関する機能を確認したい人の候補" note="摩擦、ゆるうんち、肌ざわりの機能を公式ページで確認" status="official" />
-        <ProductIdentity product="パンパース 新生児用" line="さらさらケア" tone="standard" audience="モレ・ムレ対策の機能を確認したい人の候補" note="モレガード、フィット、吸収体を公式ページで確認" status="official" />
-      </div>
-      <div class="featured-editorial-foot"><div class="status-row"><VerificationStatus status="official" /><VerificationStatus status="insufficient" /></div><a class="cta" href="/articles/pampers-newborn/">比較記事を読む →</a></div>
-    </article>
+  <section class="section wrap article-index">
+    <div class="article-list">
+      {latest.length > 0 ? latest.map((article) => (
+        <article class="card article-list-card">
+          <span class="tag">{article.category}</span>
+          <h2><a href={article.path}>{article.headline}</a></h2>
+          <p>{article.summary}</p>
+          <ul class="article-tags" aria-label="記事タグ">
+            {article.tags.map((tag) => <li>{tag}</li>)}
+          </ul>
+          <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
+          <a class="cta" href={article.path}>記事を読む →</a>
+        </article>
+      )) : (
+        <p>比較記事は準備中です。</p>
+      )}
+    </div>
+    <p class="meta">ほかにも記事は <a href="/articles/">比較記事一覧</a> から探せます。</p>
   </section>
 
   <section class="section section-rule"><div class="wrap editor-note"><p class="section-label">このサイトの見方</p><h2>判断材料を、盛らない。</h2><p>公式仕様、販売ページ、口コミ原文を分け、確認できない数字や体験談は「未確認」として残します。</p><a class="text-link" href="/about/">運営方針を見る →</a></div></section>
