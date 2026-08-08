@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {site} from '../config/site';
 ---
 <BaseLayout title="運営者情報｜くらべる商品メモ">
   <div class="wrap section article">
@@ -12,12 +11,80 @@ import {site} from '../config/site';
       <dd>商品の選択に役立つ情報を、出典と確認状況を分けて整理すること</dd>
       <dt>編集方針</dt>
       <dd>公式情報を優先し、確認できない数値や使用体験は掲載しません。</dd>
-      <dt>連絡先</dt>
-      <dd>
-        {site.contactUrl
-          ? <a href={site.contactUrl} target="_blank" rel="noopener noreferrer">お問い合わせフォームを開く</a>
-          : <span>問い合わせ先は準備中です。公開時は環境設定から登録します。</span>}
-      </dd>
     </dl>
-  </div>
-</BaseLayout>
+
+    <h2>お問い合わせ</h2>
+    <p>サイトについてのご質問・ご指摘は、下のフォームからお送りください。</p>
+    <form
+      id="contact-form"
+      method="post"
+      action="/api/contact"
+      class="contact-form"
+    >
+      <label>
+        <span>お名前（任意）</span>
+        <input type="text" name="name" maxlength="80" autocomplete="name" />
+      </label>
+      <label>
+        <span>メールアドレス（任意）</span>
+        <input type="email" name="email" maxlength="120" autocomplete="email" />
+      </label>
+      <label>
+        <span>お問い合わせ内容（必須）</span>
+        <textarea name="message" rows="6" maxlength="4000" required></textarea>
+      </label>
+      <p class="form-note">※ 送信には数秒かかります。内容は確認後に返信いたします。</p>
+      <button type="submit" class="cta">送信する</button>
+    </form>
+    <p id="contact-result" class="contact-result" hidden></p>
+      </div>
+    <script is:inline src="/contact.js"></script>
+    </BaseLayout>
+  <style>
+    .contact-form {
+    display: grid;
+    gap: 1rem;
+    max-width: 560px;
+  }
+  .contact-form label {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .contact-form label span {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .contact-form input,
+  .contact-form textarea {
+    font: inherit;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.6rem 0.8rem;
+    width: 100%;
+  }
+  .contact-form input:focus,
+  .contact-form textarea:focus {
+    outline: 2px solid var(--ink);
+    outline-offset: 1px;
+  }
+  .form-note {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  .contact-result {
+    font-size: 0.95rem;
+    padding: 0.8rem 1rem;
+    border-radius: 4px;
+  }
+  .contact-result.success {
+    background: var(--sage);
+    color: var(--ink);
+  }
+  .contact-result.error {
+    background: #f7e6e1;
+    color: var(--ink);
+  }
+</style>
+

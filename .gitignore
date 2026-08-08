@@ -8,3 +8,8 @@ dist/
 # Local production and ruleset evidence; may contain deployment identifiers.
 .acceptance/
 acceptance-results/
+
+# Cloudflare Pages Functions local secrets
+.dev.vars
+.wrangler-state/
+.wrangler/
