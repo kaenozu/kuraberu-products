@@ -12,7 +12,15 @@ const nodeGlobals = {
 };
 
 export default [
-  { ignores: ["dist/**", ".astro/**", "node_modules/**"] },
+  {
+    ignores: [
+      "dist/**",
+      ".astro/**",
+      "node_modules/**",
+      ".wrangler/**",
+      "public/contact.js",
+    ],
+  },
   {
     files: ["*.{js,mjs}", "scripts/**/*.mjs"],
     languageOptions: {
