@@ -23,6 +23,25 @@ const pinterestPin = 'https://www.pinterest.com/pin/1095922890543405483/';
 const firstPremiumSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA+%E3%83%95%E3%82%A1%E3%83%BC%E3%82%B9%E3%83%88%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0+%E6%96%B0%E7%94%9F%E5%85%90/';
 const airsleSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA+%E3%82%A8%E3%82%A2%E3%82%B9%E3%83%AB%E3%83%BC+%E6%96%B0%E7%94%9F%E5%85%90/';
 
+const faqEntries = [
+  {
+    question: 'メリーズの新生児用テープはどっちがいい？',
+    answer: '肌ざわり・肌へのやさしさに関する機能（カシミヤタッチ・吸収部の抗菌・アルガンオイル）を重視するなら「ファーストプレミアム」、ムレ・おしっこ対策の機能（シートの穴50億個・おしっこロック）を重視するなら「ずっと肌さらエアスルー」が候補になります。新生児の小さめ（3,000g前後）ならファーストプレミアムに「3,000gまで」のサイズがあります。',
+  },
+  {
+    question: 'ファーストプレミアムとエアスルーは何が違う？',
+    answer: '公式情報では、ファーストプレミアムは肌ざわり（カシミヤタッチ）と肌へのやさしさをうたう機能が中心、エアスルーはおむつ内のムレやおしっこに着目した機能（通気穴50億個・瞬間吸収・おしっこロック）が中心です。新生児サイズはファーストプレミアムが3,000g・5,000gの2択、エアスルーが5,000gまでの1択です。',
+  },
+  {
+    question: '新生児用のサイズ選びの目安は？',
+    answer: '花王公式ではファーストプレミアムが新生児用に「3,000gまで」と「5,000gまで」の2展開、エアスルーが「お誕生から5,000gまで」の1展開です。新生児の体重は個人差が大きいため、体重だけでなく足まわりや腰まわりのフィット感も販売ページやパッケージで確認してください。',
+  },
+  {
+    question: '価格はどっちが安い？',
+    answer: 'この記事では価格を保証していません。楽天市場の販売ページで、1枚あたりの単価（内容枚数と価格）を比較して確認してください。記事下部の購入リンクから販売ページに移動できます。',
+  },
+] as const;
+
 const premiumCandidate: ComparisonCandidate = {
   product: 'メリーズ 新生児用',
   line: 'ファーストプレミアム',
@@ -81,11 +100,55 @@ const differenceRows: DifferenceRow[] = [
   },
 ];
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">メリーズの新生児用テープには「ファーストプレミアム」と「ずっと肌さらエアスルー」の2つがあります。この記事では、花王公式で確認できる機能・サイズ展開だけをもとに、どちらを先に確認すればよいかを整理します。あてずっぽうではなく「公式に書かれていること」と「まだ確認が必要なこと」を分けて書いています。</p>
+    <nav class="toc" aria-label="目次">
+      <h2>この記事の内容</h2>
+      <ol>
+        <li><a href="#comparison-details">2つの商品を比べる</a></li>
+        <li><a href="#conclusion">先に結論</a></li>
+        <li><a href="#checked">確認できる項目</a></li>
+        <li><a href="#official">公式情報</a></li>
+        <li><a href="#faq">よくある質問</a></li>
+        <li><a href="#purchase">購入前に確認するページ</a></li>
+      </ol>
+    </nav>
+    <div class="product-compare" aria-label="比較する2つの商品">
+      <article class="product-card">
+        <img
+          src="/products/merries-fp-newborn.jpg"
+          alt="メリーズ ファーストプレミアム テープ 新生児用 パッケージ"
+          width="500"
+          height="500"
+          loading="eager"
+        />
+        <div class="product-card-body">
+          <p class="product-card-line">メリーズ / テープ</p>
+          <h2 class="product-card-name">ファーストプレミアム</h2>
+          <p class="product-card-desc">カシミヤタッチの肌ざわり。新生児用は3,000g・5,000gの2択。</p>
+          <a class="product-card-link" href={firstPremium} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+      <article class="product-card">
+        <img
+          src="/products/merries-airsle-newborn.jpg"
+          alt="メリーズ ずっと肌さらエアスルー テープ 新生児用 パッケージ"
+          width="640"
+          height="640"
+          loading="eager"
+        />
+        <div class="product-card-body">
+          <span class="product-card-line">メリーズ / テープ</span>
+          <h2 class="product-card-name">ずっと肌さらエアスルー</h2>
+          <p class="product-card-desc">シート表面の穴50億個で通気。新生児用は5,000gまで。</p>
+          <a class="product-card-link" href={airsle} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+    </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
       <p>購入リンク：{purchaseLinkLabel}</p>
@@ -102,8 +165,6 @@ const differenceRows: DifferenceRow[] = [
       detailHref="#comparison-details"
     />
 
-    <p>メリーズの新生児用テープには「ファーストプレミアム」と「ずっと肌さらエアスルー」があります。この記事では、花王公式の商品ページで確認できる機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>
-
     <PriorityConclusion options={merriesPriorityOptions} labels={merriesCandidateLabels} standard={merriesStandardConclusion} />
 
     <h2 id="conclusion">先に結論</h2>
@@ -118,7 +179,7 @@ const differenceRows: DifferenceRow[] = [
       />
     </div>
 
-    <h2>確認できる項目</h2>
+    <h2 id="checked">確認できる項目</h2>
     <table class="comparison">
       <thead><tr><th scope="col">比較項目</th><th scope="col">ファーストプレミアム</th><th scope="col">ずっと肌さらエアスルー</th><th scope="col">根拠・確認先</th></tr></thead>
       <tbody>
@@ -131,29 +192,40 @@ const differenceRows: DifferenceRow[] = [
     </table>
     <p class="meta">商品仕様やサイズ展開は変更される可能性があります。購入時点の公式商品ページとパッケージを確認してください。</p>
 
-    <h2>公式情報</h2>
+    <h2 id="official">公式情報</h2>
     <p>ファーストプレミアムの公式ページでは、カシミヤタッチの肌ざわり、吸収部の抗菌（JIS L 1902:2015 試験結果をもとにした表示）、アルガンオイル配合（肌に触れるシート部分）が案内されています。エアスルーの公式ページでは、シート表面に目に見えない穴が50億個以上ありおむつの外側に湿気を出す構造、縦横の溝による瞬間吸収、ゆるうんちの吸収シートが案内されています。</p>
     <div class="source-links">
       <a class="card-link" href={firstPremium} target="_blank" rel="noopener noreferrer">ファーストプレミアム公式商品ページ →</a>
       <a class="card-link" href={airsle} target="_blank" rel="noopener noreferrer">ずっと肌さらエアスルー公式商品ページ →</a>
     </div>
 
-    <h2>口コミの確認状況</h2>
-    <p>商品バリエーション（テープ・パンツ）やサイズ、購入時期が混在するため、今回の比較では個別レビューを根拠として採用していません。レビューを読む場合は、対象ライン、テープタイプ、サイズ、投稿日を確認してください。</p>
-    <h3>公開投稿を自分で確認する</h3>
-    <XPostEmbed url={xSearch} summary="公開投稿は検索結果から、対象商品・サイズ・利用経験を確認してください。" />
-    <ExternalEmbed
-      provider="x"
-      url="https://x.com/threerabbits1/status/1975737215809691998"
-      title="新生児サイズのテープ選びに関する体験談"
-      purpose="新生児サイズの目安は5kgまでですが、実際の合いやすさは赤ちゃんの体型によって変わります。この投稿はサイズ選びの参考例として紹介しています。"
-    />
-    <ExternalEmbed
-      provider="pinterest"
-      url={pinterestPin}
-      title="おむつ替えの手順を確認する公開Pin"
-      purpose="おむつ替えの一般的な手順を確認するための参考リンクです。商品の機能や使用感を示すものではありません。"
-    />
+    <h2>X での実際の声</h2>
+        <p>商品バリエーション（テープ・パンツ）やサイズ、購入時期が混在するため、今回の比較では個別投稿を根拠として採用していません。実際に使った人の声を確認する場合は、対象ライン、テープタイプ、サイズ、投稿日を確認してください。</p>
+        <h3>公開投稿を表示・自分で確認する</h3>
+            <div class="voices-grid">
+            <ExternalEmbed
+              provider="x"
+              url="https://x.com/nenechama555/status/1862767316557340715"
+              title="新生児用でエアスルー◎・ファーストプレミアムは体型で漏れたと語った投稿"
+              purpose="新生児期間に複数メーカーを使い比べた一般ユーザーの投稿です。エアスルーを高評価する一方、ファーストプレミアムは太もも回りが合わず漏れたとあり、体型による合う・合わないの参考例として紹介しています。比較の根拠ではなく、実際の使用感を知るための参考です。"
+              autoload
+            />
+            <ExternalEmbed
+              provider="x"
+              url="https://x.com/hoimipapamama/status/1895445915156259088"
+              title="ファーストプレミアムをエアスルーと比べて語った投稿"
+              purpose="ファーストプレミアムを新生児期から愛用し、エアスルーとの手触りの違いにも触れた一般ユーザーの投稿です。実際に両方を使った人の視点として紹介しています。"
+              autoload
+            />
+            <ExternalEmbed
+              provider="x"
+              url="https://x.com/rririri_svt116/status/2072573748075745771"
+              title="新生児サイズ卒業時に肌触りを振り返った投稿"
+              purpose="複数種類の紙おむつを使い比べたうえで、ファーストプレミアムの肌触りを評価した一般ユーザーの投稿です。実際に新生児サイズを使った人の声として紹介しています。"
+              autoload
+            />
+            </div>
+        <XPostEmbed url={xSearch} summary="ほかにも実際に使った人の投稿を見たい場合は、X の検索結果から対象商品・サイズ・利用経験を確認してください。" />
 
     <h2>どんな確認を優先するか</h2>
     <ul>
@@ -162,7 +234,17 @@ const differenceRows: DifferenceRow[] = [
     </ul>
     <p>これは公式ページに掲載された機能の整理であり、どちらがすべての赤ちゃんに合うと断定するものではありません。</p>
 
-    <h2>購入前に確認するページ</h2>
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2 id="purchase">購入前に確認するページ</h2>
     <div class="source-links">
       <a class="card-link" href={firstPremiumSearch} target="_blank" rel="noopener noreferrer">ファーストプレミアムの販売ページを検索 →</a>
       <a class="card-link" href={airsleSearch} target="_blank" rel="noopener noreferrer">エアスルーの販売ページを検索 →</a>

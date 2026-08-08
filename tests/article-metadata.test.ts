@@ -61,7 +61,12 @@ describe("article metadata", () => {
     expect(article?.datePublished).toBe(pampersNewbornArticle.publishedAt);
     expect(article?.dateModified).toBe(pampersNewbornArticle.modifiedAt);
     expect(article?.url).toBe(article?.mainEntityOfPage);
-    expect(article).not.toHaveProperty("image");
+    expect(article?.image).toBe(
+      new URL(
+        pampersNewbornArticle.imagePath!,
+        "https://kuraberu-products.pages.dev/",
+      ).toString(),
+    );
     expect(html).toContain(
       `<meta property="article:published_time" content="${pampersNewbornArticle.publishedAt}">`,
     );

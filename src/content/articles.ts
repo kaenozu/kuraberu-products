@@ -122,6 +122,7 @@ export const pampersNewbornArticle = defineArticleMetadata({
   modifiedAt: "2026-07-31",
   productInfoCheckedAt: "2026-07-31",
   purchaseLinkStatus: "unverified",
+  imagePath: "/products/pampers-premium-newborn.jpg",
   changeLog: [
     {
       date: "2026-07-31",
@@ -148,6 +149,7 @@ export const merriesNewbornArticle = defineArticleMetadata({
   modifiedAt: "2026-08-08",
   productInfoCheckedAt: "2026-08-08",
   purchaseLinkStatus: "unverified",
+  imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
     {
       date: "2026-08-08",
