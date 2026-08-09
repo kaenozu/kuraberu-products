@@ -5,6 +5,7 @@ import {
   defineArticleMetadata,
   merriesNewbornArticle,
   pampersNewbornArticle,
+  pigeonBottle240Article,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -20,6 +21,7 @@ describe("article metadata", () => {
     expect(articleMetadata).toEqual([
       pampersNewbornArticle,
       merriesNewbornArticle,
+      pigeonBottle240Article,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
@@ -28,6 +30,10 @@ describe("article metadata", () => {
     expect(merriesNewbornArticle.path).toBe("/articles/merries-newborn/");
     expect(
       merriesNewbornArticle.modifiedAt >= merriesNewbornArticle.publishedAt,
+    ).toBe(true);
+    expect(pigeonBottle240Article.path).toBe("/articles/pigeon-bottle-240/");
+    expect(
+      pigeonBottle240Article.modifiedAt >= pigeonBottle240Article.publishedAt,
     ).toBe(true);
   });
 

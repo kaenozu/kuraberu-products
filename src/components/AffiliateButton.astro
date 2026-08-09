@@ -7,7 +7,9 @@ type ProductId =
   | 'pampers-premium-newborn'
   | 'pampers-sarasara-newborn'
   | 'merries-fp-newborn'
-  | 'merries-airsle-newborn';
+  | 'merries-airsle-newborn'
+  | 'pigeon-glass-240'
+  | 'pigeon-ppsu-240';
 type ProductQuery = {
   keyword: string;
   requiredTerms: readonly string[];
@@ -45,6 +47,22 @@ const productQueries: Record<ProductId, ProductQuery> = {
     selection: {
       excludedTerms: ['パンツ', 'ケース', '2パック', '4個', 'Sサイズ', 'Mサイズ'],
       exactItemCodes: ['matsukiyo:10547359'],
+    },
+  },
+  'pigeon-glass-240': {
+    keyword: 'ピジョン 母乳実感 哺乳びん 240ml 耐熱ガラス',
+    requiredTerms: ['ピジョン', '母乳実感', '240ml'],
+    selection: {
+      excludedTerms: ['プラスチック', 'PPSU', 'スリム', 'セット', '2本'],
+      exactIdentifiers: ['4902508024488'],
+    },
+  },
+  'pigeon-ppsu-240': {
+    keyword: 'ピジョン 母乳実感 哺乳びん 240ml プラスチック',
+    requiredTerms: ['ピジョン', '母乳実感', '240ml'],
+    selection: {
+      excludedTerms: ['ガラス', 'スリム', 'セット', '2本'],
+      exactIdentifiers: ['4902508024518'],
     },
   },
 } as const;
