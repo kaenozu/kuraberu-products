@@ -6,6 +6,7 @@ import {
   merriesNewbornArticle,
   pampersNewbornArticle,
   pigeonBottle240Article,
+  pigeonSlim240Article,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -22,6 +23,7 @@ describe("article metadata", () => {
       pampersNewbornArticle,
       merriesNewbornArticle,
       pigeonBottle240Article,
+      pigeonSlim240Article,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
@@ -34,6 +36,10 @@ describe("article metadata", () => {
     expect(pigeonBottle240Article.path).toBe("/articles/pigeon-bottle-240/");
     expect(
       pigeonBottle240Article.modifiedAt >= pigeonBottle240Article.publishedAt,
+    ).toBe(true);
+    expect(pigeonSlim240Article.path).toBe("/articles/pigeon-slim-240/");
+    expect(
+      pigeonSlim240Article.modifiedAt >= pigeonSlim240Article.publishedAt,
     ).toBe(true);
   });
 

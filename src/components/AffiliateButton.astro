@@ -9,7 +9,8 @@ type ProductId =
   | 'merries-fp-newborn'
   | 'merries-airsle-newborn'
   | 'pigeon-glass-240'
-  | 'pigeon-ppsu-240';
+  | 'pigeon-ppsu-240'
+  | 'pigeon-slim-240';
 type ProductQuery = {
   keyword: string;
   requiredTerms: readonly string[];
@@ -63,6 +64,14 @@ const productQueries: Record<ProductId, ProductQuery> = {
     selection: {
       excludedTerms: ['ガラス', 'スリム', 'セット', '2本'],
       exactIdentifiers: ['4902508024518'],
+    },
+  },
+  'pigeon-slim-240': {
+    keyword: 'ピジョン スリムタイプ 哺乳びん 240ml プラスチック',
+    requiredTerms: ['ピジョン', 'スリムタイプ', '240ml'],
+    selection: {
+      excludedTerms: ['ガラス', '母乳実感', 'セット', '2本', '200ml'],
+      exactIdentifiers: ['4902508003650'],
     },
   },
 } as const;
