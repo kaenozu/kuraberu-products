@@ -242,9 +242,36 @@ export const moonyMArticle = defineArticleMetadata({
   ],
 });
 
+export const merriesPantsArticle = defineArticleMetadata({
+  id: "merries-pants",
+  path: "/articles/merries-pants/",
+  title: "メリーズのパンツ、どっち？｜くらべる商品メモ",
+  headline:
+    "メリーズのパンツ、どっち？「ファーストプレミアム」と「ずっと肌さらエアスルー」を比較",
+  description:
+    "メリーズ・ファーストプレミアムとずっと肌さらエアスルーのパンツタイプを、公式の商品機能とサイズ展開で比較",
+  category: "育児用品",
+  tags: ["紙おむつ", "パンツタイプ", "メリーズ"],
+  audiences: ["パンツタイプへの切り替えを検討中の保護者"],
+  uses: ["毎日使う", "肌への配慮を比較"],
+  summary:
+    "「ファーストプレミアム」と「ずっと肌さらエアスルー」のパンツタイプを、公式情報・販売ページ・確認状況に分けて比較します。",
+  publishedAt: "2026-08-10",
+  modifiedAt: "2026-08-10",
+  productInfoCheckedAt: "2026-08-10",
+  purchaseLinkStatus: "unverified",
+  changeLog: [
+    {
+      date: "2026-08-10",
+      summary: "初回公開。花王公式の商品機能とパンツタイプのサイズ展開を確認。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
+  merriesPantsArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
   moonyMArticle,
