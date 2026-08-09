@@ -10,7 +10,9 @@ type ProductId =
   | 'merries-airsle-newborn'
   | 'pigeon-glass-240'
   | 'pigeon-ppsu-240'
-  | 'pigeon-slim-240';
+  | 'pigeon-slim-240'
+  | 'moony-teishigeki-m'
+  | 'moony-mashumaro-m';
 type ProductQuery = {
   keyword: string;
   requiredTerms: readonly string[];
@@ -72,6 +74,22 @@ const productQueries: Record<ProductId, ProductQuery> = {
     selection: {
       excludedTerms: ['ガラス', '母乳実感', 'セット', '2本', '200ml'],
       exactIdentifiers: ['4902508003650'],
+    },
+  },
+  'moony-teishigeki-m': {
+    keyword: 'ムーニー 低刺激であんしん M テープ 46枚',
+    requiredTerms: ['低刺激であんしん', 'Mサイズ', 'テープ'],
+    selection: {
+      excludedTerms: ['パンツ', 'ケース', '×4', '4袋', 'まとめ買い', 'Sサイズ', 'Lサイズ'],
+      exactItemCodes: ['unicharm:100619'],
+    },
+  },
+  'moony-mashumaro-m': {
+    keyword: 'ムーニー マシュマロ肌ごこちモレ安心 Mサイズ 54枚 テープ',
+    requiredTerms: ['マシュマロ肌ごこち', 'Mサイズ'],
+    selection: {
+      excludedTerms: ['パンツ', 'ケース', '×4', '4袋', 'まとめ買い', 'Sサイズ', 'Lサイズ'],
+      exactItemCodes: ['unicharm:101302'],
     },
   },
 } as const;

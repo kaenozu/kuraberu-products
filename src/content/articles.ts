@@ -214,9 +214,38 @@ export const pigeonSlim240Article = defineArticleMetadata({
   ],
 });
 
+export const moonyMArticle = defineArticleMetadata({
+  id: "moony-m",
+  path: "/articles/moony-m/",
+  title: "ムーニーのテープ、どっち？｜くらべる商品メモ",
+  headline:
+    "ムーニーのテープ、どっち？「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を比較",
+  description:
+    "ムーニーのテープタイプ2ライン、「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式の商品情報とサイズ別仕様で比較",
+  category: "育児用品",
+  tags: ["紙おむつ", "テープタイプ", "ムーニー"],
+  audiences: ["乳児の保護者", "どのおむつを買うか迷っている人"],
+  uses: ["毎日使う", "サイズで選ぶ", "機能で選ぶ"],
+  summary:
+    "「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式情報・サイズ別仕様・確認状況に分けて比較します。",
+  publishedAt: "2026-08-09",
+  modifiedAt: "2026-08-09",
+  productInfoCheckedAt: "2026-08-09",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/moony-teishigeki-m.jpg",
+  changeLog: [
+    {
+      date: "2026-08-09",
+      summary:
+        "初回公開。ユニ・チャーム公式の商品ページをもとにサイズ別仕様を整理。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
+  moonyMArticle,
 ]);

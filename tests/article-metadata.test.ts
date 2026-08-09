@@ -4,6 +4,7 @@ import {
   articleMetadata,
   defineArticleMetadata,
   merriesNewbornArticle,
+  moonyMArticle,
   pampersNewbornArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
@@ -24,6 +25,7 @@ describe("article metadata", () => {
       merriesNewbornArticle,
       pigeonBottle240Article,
       pigeonSlim240Article,
+      moonyMArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
