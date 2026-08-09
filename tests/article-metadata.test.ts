@@ -4,6 +4,7 @@ import {
   articleMetadata,
   defineArticleMetadata,
   merriesNewbornArticle,
+  merriesPantsArticle,
   moonyMArticle,
   pampersNewbornArticle,
   pigeonBottle240Article,
@@ -23,6 +24,7 @@ describe("article metadata", () => {
     expect(articleMetadata).toEqual([
       pampersNewbornArticle,
       merriesNewbornArticle,
+      merriesPantsArticle,
       pigeonBottle240Article,
       pigeonSlim240Article,
       moonyMArticle,
