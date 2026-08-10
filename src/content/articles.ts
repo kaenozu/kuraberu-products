@@ -420,6 +420,37 @@ export const cradleArticle = defineArticleMetadata({
   ],
 });
 
+export const pottyArticle = defineArticleMetadata({
+  id: "babybjorn-potty",
+  path: "/articles/babybjorn-potty/",
+  title: "トイレトレーニング、どっち？｜くらべる商品メモ",
+  headline:
+    "ベビービョルンのポッティ、どっち？「スマートポッティ」と「ポッティチェア」を比較",
+  description:
+    "ベビービョルン スマートポッティ（収納式・3,080円）と ポッティチェア（イス型・中桶付き・4,180円）を、公式の案内・形状・サイズ・価格で比較",
+  category: "育児用品",
+  tags: ["トイレトレーニング", "おまる", "ベビービョルン", "1歳", "2歳"],
+  audiences: [
+    "1〜2歳の保護者",
+    "トイレトレーニングを始める人",
+    "おまるの購入を検討中の人",
+  ],
+  uses: ["毎日使う", "場所を取らない", "長く使う"],
+  summary:
+    "「スマートポッティ」と「ポッティチェア」を、ベビービョルン公式の商品ページ・形状・サイズ・価格・確認状況に分けて比較します。",
+  publishedAt: "2026-08-10",
+  modifiedAt: "2026-08-10",
+  productInfoCheckedAt: "2026-08-10",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/babybjorn-smart-potty.jpg",
+  changeLog: [
+    {
+      date: "2026-08-10",
+      summary: "初回公開。ベビービョルン公式楽天市場店の商品ページを確認。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -432,4 +463,5 @@ export const articleMetadata = Object.freeze([
   babybjornOnekaiArticle,
   babybjornBouncerArticle,
   cradleArticle,
+  pottyArticle,
 ]);
