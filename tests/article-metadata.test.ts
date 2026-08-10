@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   articleMetadata,
+  babybjornArticle,
   defineArticleMetadata,
   merriesNewbornArticle,
   merriesPantsArticle,
@@ -30,6 +31,7 @@ describe("article metadata", () => {
       pigeonSlim240Article,
       moonyMArticle,
       shupotArticle,
+      babybjornArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
