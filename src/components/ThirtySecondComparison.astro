@@ -44,8 +44,8 @@ const statuses = Array.isArray(footerStatuses) ? footerStatuses : [];
   <div class="thirty-second-heading"><div><p class="section-label">{eyebrow}</p><h2 id={headingId}>{heading}</h2></div><a class="text-link" href={detailHref}>詳細比較へ ↓</a></div>
   <p class="summary-conclusion"><strong>結論：</strong>{conclusion}</p>
   <div class="summary-products">
-    <ProductIdentity {...left} status={normalizeVerificationStatus(left.status)} compact={true} />
-    <ProductIdentity {...right} status={normalizeVerificationStatus(right.status)} compact={true} />
+    <ProductIdentity {...left} candidate="A" status={normalizeVerificationStatus(left.status)} compact={true} />
+    <ProductIdentity {...right} candidate="B" status={normalizeVerificationStatus(right.status)} compact={true} />
   </div>
   {comparisonRows.length > 0 ? (
     <ul class="summary-differences">

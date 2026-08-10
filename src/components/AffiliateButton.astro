@@ -1,7 +1,7 @@
 ---
 import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
 import {fetchRakutenProducts, selectRakutenProduct, type RakutenSelectionOptions} from '../lib/rakuten';
-const {href,label,merchant,productId,placement} = Astro.props;
+const {href,label,merchant,productId,placement,imagePath} = Astro.props;
 
 type ProductId =
   | 'pampers-premium-newborn'
@@ -120,4 +120,21 @@ const generated = !directHref && query
 const resolvedHref = directHref ?? generated;
 const valid = isAllowedRakutenUrl(resolvedHref);
 ---
-{valid ? <a class="cta" href={resolvedHref} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>}
+{valid ? (
+  <a
+    class="cta cta-card"
+    href={resolvedHref}
+    target="_blank"
+    rel="sponsored nofollow noopener noreferrer"
+    data-product-id={productId}
+    data-placement={placement}
+  >
+    {imagePath && <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />}
+    <span class="cta-card-body">
+      <span class="cta-card-label">{label}</span>
+      <span class="cta-card-sub">楽天市場で確認 →<span class="ad-note">（広告）</span></span>
+    </span>
+  </a>
+) : (
+  <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>
+)}

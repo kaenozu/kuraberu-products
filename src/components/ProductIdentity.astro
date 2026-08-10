@@ -14,6 +14,7 @@ interface Props {
   note: string;
   status?: VerificationStatusValue | string;
   compact?: boolean;
+  candidate?: 'A' | 'B';
 }
 
 const {
@@ -24,9 +25,10 @@ const {
   note,
   status,
   compact = false,
+  candidate = 'B',
 } = Astro.props;
 const normalizedStatus = normalizeVerificationStatus(status);
-const candidateLabel = tone === 'premium' ? 'A' : 'B';
+const candidateLabel = candidate;
 ---
 <article class={`product-identity product-${tone} ${compact ? 'product-identity-compact' : ''}`}>
   <div class="product-swatch" aria-hidden="true"><span>{candidateLabel}</span></div>

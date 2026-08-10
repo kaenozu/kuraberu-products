@@ -4,9 +4,11 @@ import {articleMetadata} from '../../content/articles';
 
 const categories = [...new Set(articleMetadata.map((article) => article.category))].sort();
 const tags = [...new Set(articleMetadata.flatMap((article) => article.tags))].sort();
-const latest30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+const sorted = [...articleMetadata].sort((a, b) =>
+  a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0,
+);
 ---
-<BaseLayout title="比較記事一覧｜くらべる商品メモ" description="公式情報と確認できる口コミで商品を比べる記事一覧">
+<BaseLayout title="比較記事一覧｜くらべる商品メモ" description="メーカー公式の情報で商品を比べる記事一覧">
   <section class="section wrap article-index" data-article-discovery>
     <p class="eyebrow">Comparison articles</p>
     <h1>比較記事一覧</h1>
@@ -36,7 +38,7 @@ const latest30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().s
     <p class="meta" aria-live="polite" data-discovery-count>{articleMetadata.length}件の記事</p>
 
     <div class="article-list" data-discovery-results>
-      {articleMetadata.map((article) => (
+      {sorted.map((article) => (
         <article
           class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}
           data-article-card
@@ -50,17 +52,10 @@ const latest30 = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().s
           <div class="card-body">
             <span class="card-tag-row">
               <span class="tag">{article.category}</span>
-              {article.modifiedAt >= latest30 && <span class="badge-new">New</span>}
             </span>
             <h2><a href={article.path}>{article.headline}</a></h2>
-            <p>{article.summary}</p>
-            <ul class="article-tags" aria-label="記事タグ">
-              {article.tags.map((tag) => <li>{tag}</li>)}
-            </ul>
+            <p class="card-desc">{article.summary}</p>
             <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-            <div class="card-actions">
-              <a class="cta" href={article.path}>記事を読む →</a>
-            </div>
           </div>
         </article>
       ))}
