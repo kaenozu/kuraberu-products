@@ -10,10 +10,11 @@ import {
   merriesNewbornArticle,
   merriesPantsArticle,
   moonyMArticle,
-  shupotArticle,
   pampersNewbornArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
+  pottyArticle,
+  shupotArticle,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -38,6 +39,7 @@ describe("article metadata", () => {
       babybjornOnekaiArticle,
       babybjornBouncerArticle,
       cradleArticle,
+      pottyArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
