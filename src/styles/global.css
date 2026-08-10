@@ -231,23 +231,17 @@ a {
 .article-list-card .card-body {
   min-width: 0;
 }
+.article-list-card .card-desc {
+  margin: 0 0 0.8rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-soft, inherit);
+}
 .article-list-card .card-tag-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-}
-.article-list-card .badge-new {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #fff;
-  background: var(--accent);
-  border-radius: 999px;
-  padding: 0.16rem 0.55rem;
-  text-transform: uppercase;
 }
 .article-list-card h2 {
   margin: 0.6rem 0;
@@ -901,20 +895,6 @@ a {
   font-weight: 800;
   cursor: pointer;
 }
-.article-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  padding: 0;
-  list-style: none;
-}
-.article-tags li {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.2rem 0.55rem;
-  color: var(--muted);
-  font-size: 0.78rem;
-}
 .discovery-empty {
   margin-top: 1rem;
 }
@@ -1062,15 +1042,57 @@ a {
 }
 
 /* X の実際の声: 投稿ウィジェットを 2 列で大きく見せる */
-.voices-grid {
-  display: grid;
-  gap: 1.25rem;
-}
 @media (min-width: 760px) {
-  .voices-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .voices-grid .external-embed:first-child {
-    grid-column: 1 / -1;
+}
+
+.cta.cta-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 1.1rem 0.6rem 0.6rem;
+  text-decoration: none;
+  color: var(--ink, inherit);
+  background: var(--surface, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.cta.cta-card:hover {
+  border-color: rgba(0, 0, 0, 0.28);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.cta-card-image {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  flex: 0 0 auto;
+}
+.cta-card-body {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.cta-card-label {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.cta-card-sub {
+  font-size: 0.85rem;
+  color: var(--ink-soft, #666);
+}
+.ad-note {
+  font-size: 0.78rem;
+  color: rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 520px) {
+  .cta.cta-card {
+    width: 100%;
+    justify-content: flex-start;
   }
 }

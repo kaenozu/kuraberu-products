@@ -5,8 +5,6 @@ import ThirtySecondComparison from '../../../components/ThirtySecondComparison.a
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
-import XPostEmbed from '../../../components/XPostEmbed.astro';
-import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import {shupotArticle as articleMetadata} from '../../../content/articles';
 import {shupotCandidateLabels, shupotPriorityOptions, shupotStandardConclusion} from '../../../content/shupot-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
@@ -15,10 +13,10 @@ import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../l
 const dendoOfficial = 'https://shop.pigeon.co.jp/products/1032018';
 const shudoOfficial = 'https://shop.pigeon.co.jp/products/2000638s';
 const anshinNotice = 'https://support.pigeon.co.jp/anshin/item10.html';
+const dendoRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_SHUPOT_DENDO_URL;
+const shudoRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_SHUPOT_SHUDO_URL;
 const dendoSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%94%E3%82%B8%E3%83%A7%E3%83%B3%20%E9%9B%BB%E5%8B%95%E9%BC%BB%E5%90%B8%E3%81%84%E5%99%A8%20%E3%82%B7%E3%83%A5%E3%83%9D%E3%83%83%E3%83%88/';
 const shudoSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%94%E3%82%B8%E3%83%A7%E3%83%B3%20%E6%89%8B%E5%8B%95%E9%BC%BB%E5%90%B8%E3%81%84%E5%99%A8%20%E3%82%B7%E3%83%A5%E3%83%9D%E3%83%83%E3%83%88%E3%83%9D%E3%83%B3%E3%83%97/';
-const xGoodSearch = 'https://x.com/search?q=%E3%83%94%E3%82%B8%E3%83%A7%E3%83%B3%20%E3%82%B7%E3%83%A5%E3%83%9D%E3%83%83%E3%83%88%20%E8%89%AF%E3%81%8B%E3%81%A3%E3%81%9F&f=live';
-const xBadSearch = 'https://x.com/search?q=%E3%83%94%E3%82%B8%E3%83%A7%E3%83%B3%20%E3%82%B7%E3%83%A5%E3%83%9D%E3%83%83%E3%83%88%20%E6%BC%8F%E3%82%8C%E3%82%8B&f=live';
 
 const faqEntries = [
   {
@@ -123,9 +121,7 @@ const differenceRows: DifferenceRow[] = [
       <h2>この記事の内容</h2>
       <ol>
         <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#conclusion">先に結論</a></li>
         <li><a href="#official">公式情報</a></li>
-        <li><a href="#voices">X での実際の声</a></li>
         <li><a href="#faq">よくある質問</a></li>
         <li><a href="#purchase">購入前に確認するページ</a></li>
       </ol>
@@ -169,8 +165,6 @@ const differenceRows: DifferenceRow[] = [
 
     <PriorityConclusion options={shupotPriorityOptions} labels={shupotCandidateLabels} standard={shupotStandardConclusion} />
 
-    <h2 id="conclusion">先に結論</h2>
-    <p>どちらが一律に優れているとは、公式情報だけでは判断できません。電動鼻吸い器 シュポットは、ピジョン独自のオリジナルポンプを採用し、公式では「耳鼻科の機械に近いパワフル仕様」と案内されています。鼻水の状態に合わせてダイヤルで吸引力を調整でき、チューブに鼻水が通らない構造です。一方、手動鼻吸い器 シュポットポンプ＋フィット鼻ノズルは電源不要で片手で操作でき、公式に「まるごと洗浄OK」「消毒・除菌ができる」と案内されています。使う場所と価格、お手入れ方法を合わせて検討するのが整理しやすいです。</p>
 
     <div id="comparison-details">
       <DifferenceList
@@ -205,42 +199,7 @@ const differenceRows: DifferenceRow[] = [
       <li>洗い替え用を含め、フィット鼻ノズルが計2個付属。</li>
     </ul>
 
-    <section id="voices">
-      <h2>X での実際の声</h2>
-      <p>ここからは、公式スペックとは分けて、X上で実際にどのような点が注目されているかを見るためのセクションです。投稿内容は個人の体験であり、商品の性能を保証するものではありません。公式情報と混同せず、「どんな点を気にして選んでいる人がいるか」を知る参考情報として扱います。</p>
-      <h3>良かったという声</h3>
-      <div class="voices-grid">
-        <ExternalEmbed
-          provider="x"
-          url="https://x.com/sakuryusei/status/2070794823381196969"
-          title="ハンディ鼻水吸引器から電動シュポットへ買い替えたという投稿"
-          purpose="以前使っていたハンディ鼻水吸引器が壊れたためピジョンの電動鼻吸い器シュポットに買い替えたところ、「最初からこれ買っときゃよかった」と感じ、「子どもの鼻水がよく取れて気持ちいい」「お手入れもラク」と語る一般ユーザーの投稿です。電動シュポットを選ぶ際の参考意見として紹介します。"
-          tone="good"
-          autoload
-        />
-        <ExternalEmbed
-          provider="x"
-          url="https://x.com/Inarinooinori/status/1976840056892784723"
-          title="手動の鼻吸い機から電動シュポットに変えて取れやすくなったという投稿"
-          purpose="手動の鼻吸い機では鼻くそが取れず泣いてしまうことがあったが、ピジョンの電動鼻吸い器シュポットに買い替えて「めちゃくちゃ取れた」「泣かない」と語る一般ユーザーの投稿です。「高いけど買ってよかった」という評価で、価格と効果のバランスを考える参考例として紹介します。電動と手動の使い分けを検討する材料です。"
-          tone="good"
-          autoload
-        />
-      </div>
-      <XPostEmbed url={xGoodSearch} summary="ほかにも「良かった」という声を探す場合は、X の検索結果から対象商品・利用経験を確認してください。" />
-      <h3>気になったという声</h3>
-      <div class="voices-grid">
-        <ExternalEmbed
-          provider="x"
-          url="https://x.com/omisooo123/status/2084195329797447777"
-          title="手動シュポットポンプが吸えないと感じたという投稿"
-          purpose="ピジョンの手動鼻吸い器シュポットポンプを使っているが「全然吸えない」「コツがいる？」と感じ、電動の方がよいのか迷っているという一般ユーザーの投稿です。手動の使用感に関する参考意見で、電動との違い（電源・吸引力の調整方法）を検討する材料として紹介します。個人の体験であり、製品の性能を保証するものではありません。"
-          tone="bad"
-          autoload
-        />
-      </div>
-      <XPostEmbed url={xBadSearch} summary="ほかにも「気になった」という声を探す場合は、X の検索結果から対象商品・利用経験を確認してください。" />
-    </section>
+    
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
@@ -262,8 +221,8 @@ const differenceRows: DifferenceRow[] = [
     <p>この記事で記載した価格は、2026年8月10日時点で確認したピジョン公式ショップの表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、セット内容、付属品を販売ページで確認してください。特に電動鼻吸い器 シュポットは、付属するフィット鼻ノズルがSサイズで、Mサイズは別売です。</p>
 
     <div class="grid two">
-      <AffiliateButton productId="shupot-dendo" label="電動鼻吸い器 シュポットを楽天で見る" merchant="楽天" placement="article-end" />
-      <AffiliateButton productId="shupot-shudo" label="手動鼻吸い器 シュポットポンプを楽天で見る" merchant="楽天" placement="article-end" />
+      <AffiliateButton href={dendoRakutenUrl} productId="shupot-dendo" imagePath="/products/shupot-dendo.jpg" label="電動鼻吸い器 シュポットを楽天で見る" merchant="楽天" placement="article-end" />
+      <AffiliateButton href={shudoRakutenUrl} productId="shupot-shudo" imagePath="/products/shupot-shudo.jpg" label="手動鼻吸い器 シュポットポンプを楽天で見る" merchant="楽天" placement="article-end" />
     </div>
 
     <h2>更新履歴</h2>
@@ -282,6 +241,6 @@ const differenceRows: DifferenceRow[] = [
       <li><a href={shudoSearch} target="_blank" rel="noopener noreferrer">楽天市場：手動鼻吸い器 シュポットポンプ</a>（価格・在庫用）</li>
     </ul>
     <h2>調査方法・免責</h2>
-    <p>メーカー公式の商品ページを優先しています。レビューは対象商品・投稿日を確認できるものだけを採用します。口コミは個人の体験であり、性能や健康への効果を保証するものではありません。</p>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
   </article>
 </BaseLayout>

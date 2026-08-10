@@ -25,7 +25,7 @@ describe("Issue #2 editorial comparison UI", () => {
     const status = read("src/components/VerificationStatus.astro");
     expect(status).toContain("公式確認済み");
     expect(status).toContain("販売ページ確認");
-    expect(status).toContain("口コミ不足");
+    expect(status).toContain("確認情報が少ない");
     expect(status).toContain("未確認");
   });
 });

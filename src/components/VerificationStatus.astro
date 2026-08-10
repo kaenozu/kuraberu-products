@@ -12,7 +12,7 @@ const normalizedStatus = normalizeVerificationStatus(Astro.props.status);
 const states = {
   official: {icon: '✓', label: '公式確認済み'},
   retailer: {icon: '↗', label: '販売ページ確認'},
-  insufficient: {icon: '…', label: '口コミ不足'},
+  insufficient: {icon: '…', label: '確認情報が少ない'},
   unverified: {icon: '?', label: '未確認'},
 } as const;
 const state = states[normalizedStatus];
