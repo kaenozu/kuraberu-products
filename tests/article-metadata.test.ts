@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import {
   articleMetadata,
   babybjornArticle,
+  babybjornOnekaiArticle,
   defineArticleMetadata,
   merriesNewbornArticle,
   merriesPantsArticle,
@@ -32,6 +33,7 @@ describe("article metadata", () => {
       moonyMArticle,
       shupotArticle,
       babybjornArticle,
+      babybjornOnekaiArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
