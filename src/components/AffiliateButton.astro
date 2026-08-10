@@ -12,7 +12,9 @@ type ProductId =
   | 'pigeon-ppsu-240'
   | 'pigeon-slim-240'
   | 'moony-teishigeki-m'
-  | 'moony-mashumaro-m';
+  | 'moony-mashumaro-m'
+  | 'shupot-dendo'
+  | 'shupot-shudo';
 type ProductQuery = {
   keyword: string;
   requiredTerms: readonly string[];
@@ -90,6 +92,22 @@ const productQueries: Record<ProductId, ProductQuery> = {
     selection: {
       excludedTerms: ['パンツ', 'ケース', '×4', '4袋', 'まとめ買い', 'Sサイズ', 'Lサイズ'],
       exactItemCodes: ['unicharm:101302'],
+    },
+  },
+  'shupot-dendo': {
+    keyword: 'ピジョン 電動鼻吸い器 シュポット',
+    requiredTerms: ['シュポット', '電動'],
+    selection: {
+      excludedTerms: ['セット', 'まとめ買い', 'フィット鼻ノズル', '鼻水キャッチャー', 'パーフェクト'],
+      exactItemCodes: ['pigeon-shop:1032018'],
+    },
+  },
+  'shupot-shudo': {
+    keyword: 'ピジョン 手動鼻吸い器 シュポットポンプ フィット鼻ノズル',
+    requiredTerms: ['シュポットポンプ', '手動'],
+    selection: {
+      excludedTerms: ['電動', 'セット', 'まとめ買い'],
+      exactItemCodes: ['pigeon-shop:2000638s'],
     },
   },
 } as const;

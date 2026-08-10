@@ -6,6 +6,7 @@ import {
   merriesNewbornArticle,
   merriesPantsArticle,
   moonyMArticle,
+  shupotArticle,
   pampersNewbornArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
@@ -28,6 +29,7 @@ describe("article metadata", () => {
       pigeonBottle240Article,
       pigeonSlim240Article,
       moonyMArticle,
+      shupotArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
