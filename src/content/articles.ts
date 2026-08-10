@@ -388,6 +388,38 @@ export const babybjornBouncerArticle = defineArticleMetadata({
   ],
 });
 
+export const cradleArticle = defineArticleMetadata({
+  id: "babybjorn-cradle",
+  path: "/articles/babybjorn-cradle/",
+  title: "ゆりかご型ベビーベッド、どっち？｜くらべる商品メモ",
+  headline:
+    "「ベビービョルン クレードル」と「アップリカ ココネルエアー」を比較",
+  description:
+    "ベビービョルン クレードル（新生児〜6か月・手動ゆりかご・49,500円）と アップリカ ココネルエアー AB（新生児〜24カ月・折りたたみ・サークル兼用・29,700円）を、公式の案内・対象期間・サイズ・価格で比較",
+  category: "育児用品",
+  tags: ["ベビーベッド", "ゆりかご", "ベビービョルン", "アップリカ", "新生児"],
+  audiences: [
+    "新生児の保護者",
+    "出産準備中の人",
+    "ベビーベッドの購入を検討中の人",
+  ],
+  uses: ["毎日使う", "長く使う", "持ち運ぶ"],
+  summary:
+    "「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、各メーカー公式の案内・対象期間・サイズ・価格・確認状況に分けて比較します。",
+  publishedAt: "2026-08-10",
+  modifiedAt: "2026-08-10",
+  productInfoCheckedAt: "2026-08-10",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/babybjorn-cradle.jpg",
+  changeLog: [
+    {
+      date: "2026-08-10",
+      summary:
+        "初回公開。ベビービョルン公式楽天市場店・アップリカ公式楽天市場店の商品ページを確認。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -399,4 +431,5 @@ export const articleMetadata = Object.freeze([
   babybjornArticle,
   babybjornOnekaiArticle,
   babybjornBouncerArticle,
+  cradleArticle,
 ]);
