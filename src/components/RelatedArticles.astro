@@ -1,0 +1,68 @@
+---
+import { articleMetadata } from '../content/articles';
+
+interface Props {
+  currentPath: string;
+  currentCategory: string;
+}
+
+const { currentPath, currentCategory } = Astro.props;
+
+const related = articleMetadata.filter(
+  (article) => article.path !== currentPath && article.category === currentCategory,
+);
+const others = articleMetadata
+  .filter((article) => article.path !== currentPath && article.category !== currentCategory)
+  .slice(0, 3);
+---
+{
+  related.length > 0 && (
+    <section class="related-articles section wrap" aria-labelledby="related-heading">
+      <h2 id="related-heading">関連する比較記事</h2>
+      <div class="article-list">
+        {related.map((article) => (
+          <article class="card article-list-card">
+            <span class="tag">{article.category}</span>
+            <h3><a href={article.path}>{article.headline}</a></h3>
+            <p>{article.summary}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+{
+  others.length > 0 && (
+    <section class="related-articles section wrap" aria-labelledby="others-heading">
+      <h2 id="others-heading">ほかの比較記事</h2>
+      <ul class="related-links">
+        {others.map((article) => (
+          <li><a href={article.path}>{article.headline}</a></li>
+        ))}
+      </ul>
+    </section>
+  )
+}
+
+<style>
+  .related-articles {
+    margin-block: 3rem;
+  }
+  .related-articles h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+  }
+  .related-links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+  .related-links a {
+    color: var(--link, #1a5a7a);
+    text-decoration: none;
+  }
+  .related-links a:hover {
+    text-decoration: underline;
+  }
+</style>
