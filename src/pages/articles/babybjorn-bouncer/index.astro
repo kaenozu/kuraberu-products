@@ -1,0 +1,269 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import AffiliateButton from '../../../components/AffiliateButton.astro';
+import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import DifferenceList from '../../../components/DifferenceList.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import PriorityConclusion from '../../../components/PriorityConclusion.astro';
+import {babybjornBouncerArticle as articleMetadata} from '../../../content/articles';
+import {babybjornBouncerCandidateLabels, babybjornBouncerPriorityOptions, babybjornBouncerStandardConclusion} from '../../../content/babybjorn-bouncer-priorities';
+import {isContentStale} from '../../../lib/content-freshness';
+import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+
+const bouncerGuideUrl = 'https://www.rakuten.ne.jp/gold/babybjorn/topics/bouncer-guide/';
+const blissProductUrl = 'https://item.rakuten.co.jp/babybjorn/bouncer-bliss/';
+const balanceProductUrl = 'https://item.rakuten.co.jp/babybjorn/bouncer-balance-soft/';
+const blissRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_BOUNCER_BLISS_URL;
+const balanceRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_BOUNCER_BALANCE_URL;
+const blissSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3%20%E3%83%90%E3%82%A6%E3%83%B3%E3%82%B5%E3%83%BC%20Bliss/';
+const balanceSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3%20%E3%83%90%E3%82%A6%E3%83%B3%E3%82%B5%E3%83%BC%20%E3%83%90%E3%83%A9%E3%83%B3%E3%82%B9%E3%82%BD%E3%83%95%E3%83%88/';
+
+const faqEntries = [
+  {
+    "question": "バウンサー Blissとバランスソフト、どっちを選べばいい？",
+    "answer": "ベビービョルン公式の案内によると、Bliss とバランスソフトはどちらも「セルフバウンシング構造」を備えたバウンサーで、対象は生後約1ヶ月〜2才（バウンサーとしての使用は体重9kgまで）です。主な違いはシートの素材とデザインです。Bliss は最新モデルでシートカバーをより柔らかく仕上げたモデルとされ、20種類以上のバリエーションがあります。バランスソフトは2トーンの生地が特長です。実際の肌触りの好みは、公式情報だけでは判断できません。"
+  },
+  {
+    "question": "バウンサー Blissは新生児から使える？",
+    "answer": "公式の商品ページでは、Bliss の対象は「生後約1ヶ月〜2才くらい（最大体重13kg）」と案内されています。また「バウンサーとしてのご使用は体重9kgまで」と記載されています。対象月齢・体重は購入前に公式ページで確認してください。"
+  },
+  {
+    "question": "バランスソフトはどこまで使える？",
+    "answer": "公式の商品ページでは、バランスソフトの対象は「生後約1ヶ月〜2才くらい（最大体重13kg）」、バウンサーとしての使用は体重9kgまでと案内されています。公式は「1ヶ月から2歳まで使えるロングユースタイプ」と案内しています。"
+  },
+  {
+    "question": "Blissとバランスソフトの価格はいくら？",
+    "answer": "ベビービョルン公式楽天市場店では、カラー限定SALEとして Bliss・バランスソフトとも 17,600円〜19,800円（カラー・素材により変動・2026-08-10確認）で販売されていました。在庫やキャンペーンにより変動するため、購入時点の販売ページで確認してください。"
+  },
+  {
+    "question": "Blissとバランスソフトの違いで一番大きいのは？",
+    "answer": "公式の案内では、機能面（セルフバウンシング構造・3段階リクライニング・対象月齢）に大きな違いはなく、違いは主にシートの素材とデザインです。Bliss は最新モデルでシートカバーをより柔らかく仕上げたモデル、バランスソフトは2トーンの生地が特長です。"
+  },
+  {
+    "question": "Blissとバランスソフトの保証は？",
+    "answer": "ベビービョルン公式楽天市場店の商品ページでは、両モデルとも2年保証（SG認証）と案内されています。"
+  }
+];
+
+const blissCandidate: ComparisonCandidate = {
+  product: 'ベビービョルン バウンサー Bliss',
+  line: 'Bliss',
+  tone: 'premium',
+  audience: '最新モデルでデザインのバリエーションから選びたい人の候補',
+  note: '最新モデル・シートカバーをより柔らかく・20種類以上のバリエーション',
+  status: 'official',
+};
+
+const balanceCandidate: ComparisonCandidate = {
+  product: 'ベビービョルン バウンサー バランスソフト',
+  line: 'バランスソフト',
+  tone: 'standard',
+  audience: '2トーンの落ち着いたデザインを好む人の候補',
+  note: '2トーン生地が特長・直近カラーバリエーション増加中',
+  status: 'official',
+};
+
+const summaryRows: ComparisonRow[] = [
+  {
+    "label": "シートの素材とデザイン",
+    "left": "公式で「最新モデル。シートカバーをより柔らかく仕上げたモデル」と案内。3Dジャージー・コットン・Air（メッシュ）・ウーブンの素材展開で20種類以上のバリエーション。",
+    "right": "公式で「2トーンの生地が特長」と案内。コットン・Air（メッシュ）・ウーブン/ジャージーの素材展開。直近カラーバリエーションが増えています。"
+  },
+  {
+    "label": "対象と機能",
+    "left": "生後約1ヶ月〜2才くらい（最大体重13kg）。セルフバウンシング構造・3段階リクライニング。バウンサーとしての使用は体重9kgまで。",
+    "right": "生後約1ヶ月〜2才くらい（最大体重13kg）。セルフバウンシング構造・3段階リクライニング。バウンサーとしての使用は体重9kgまで。"
+  },
+  {
+    "label": "製品重量と公式ショップ価格（2026-08-10確認）",
+    "left": "約2.1kg。カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
+    "right": "約2.1kg。カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。"
+  }
+];
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
+const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
+  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
+  : '最終確認日は未記録';
+
+const differenceRows: DifferenceRow[] = [
+  {
+    "label": "シートの素材とデザイン",
+    "left": "最新モデル。シートカバーをより柔らかく仕上げたモデル。3Dジャージー（放熱効果）・コットン・Air（メッシュ）・ウーブンの素材展開で20種類以上のバリエーション。",
+    "right": "2トーンの生地が特長。コットン・Air（メッシュ）・ウーブン/ジャージーの素材展開。直近カラーバリエーションが増加中。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "対象月齢・対象体重",
+    "left": "生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしての使用は体重9kgまで。",
+    "right": "生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしての使用は体重9kgまで。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "リクライニング",
+    "left": "3段階リクライニング。",
+    "right": "3段階リクライニング。「快適に長く使える」と案内。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "独自機能",
+    "left": "セルフバウンシング構造（赤ちゃん自身の動きでゆらゆら揺れる構造）。",
+    "right": "セルフバウンシング構造。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "製品サイズ・重量",
+    "left": "幅約39×奥行約89×高さ46〜58cm。約2.1kg。",
+    "right": "幅約39×奥行約89×高さ46〜58cm。約2.1kg。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "安全基準・保証",
+    "left": "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
+    "right": "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "公式ショップ価格（2026-08-10確認）",
+    "left": "カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
+    "right": "カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  }
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 育児用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">バウンサー Bliss とバウンサー バランスソフトは、どちらもベビービョルンのバウンサーです。対象月齢や機能はほぼ同じで、違いは主にシートの素材とデザインにあります。この記事では、ベビービョルン公式のガイド・商品ページで2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の肌触りなど、公式情報だけでは判断できないことは推測しません。</p>
+    <nav class="toc" aria-label="目次">
+      <h2>この記事の内容</h2>
+      <ol>
+        <li><a href="#comparison-details">2つの商品を比べる</a></li>
+        <li><a href="#official">公式情報</a></li>
+        <li><a href="#faq">よくある質問</a></li>
+        <li><a href="#purchase">購入前に確認するページ</a></li>
+      </ol>
+    </nav>
+    <div class="product-compare" aria-label="比較する2つの商品">
+      <article class="product-card">
+        <img src="/products/babybjorn-bouncer-bliss.jpg" alt="ベビービョルン バウンサー Bliss" width="1080" height="1080" loading="eager" />
+        <div class="product-card-body">
+          <p class="product-card-line">ベビービョルン / Bliss</p>
+          <h2 class="product-card-name">バウンサー Bliss</h2>
+          <p class="product-card-desc">ベビービョルンのバウンサー最新モデル。シートカバーをより柔らかく仕上げたモデル。20種類以上のバリエーション。</p>
+          <a class="product-card-link" href={blissProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+      <article class="product-card">
+        <img src="/products/babybjorn-bouncer-balance.jpg" alt="ベビービョルン バウンサー バランスソフト" width="1080" height="1080" loading="eager" />
+        <div class="product-card-body">
+          <span class="product-card-line">ベビービョルン / バランスソフト</span>
+          <h2 class="product-card-name">バウンサー バランスソフト</h2>
+          <p class="product-card-desc">2トーンの生地が特長。直近カラーバリエーションが増えているモデル。</p>
+          <a class="product-card-link" href={balanceProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+    </div>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+      <p>購入リンク: {purchaseLinkLabel}</p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+
+    <ThirtySecondComparison
+      idPrefix="babybjorn-bouncer-summary"
+      heading="まず、違いはこの3つ"
+      conclusion="公式情報から整理すると、Bliss とバランスソフトは機能（セルフバウンシング構造・3段階リクライニング・対象期間）に大きな違いはなく、主な違いはシートの素材とデザインです。Bliss は最新モデルでシートカバーをより柔らかく仕上げたモデルとされ、3Dジャージー（放熱効果）を含む素材展開で20種類以上のバリエーションがあります。バランスソフトは2トーンの生地が特長です。2026-08-10時点の公式楽天市場店ではどちらもカラー限定SALEで17,600円〜19,800円（カラー・素材により変動）でした。なお、実際の肌触りやデザインの好みは、今回確認した公式情報だけでは比較できません。"
+      left={blissCandidate}
+      right={balanceCandidate}
+      rows={summaryRows}
+      detailHref="#comparison-details"
+    />
+
+    <PriorityConclusion options={babybjornBouncerPriorityOptions} labels={babybjornBouncerCandidateLabels} standard={babybjornBouncerStandardConclusion} />
+
+
+    <div id="comparison-details">
+      <DifferenceList
+        idPrefix="babybjorn-bouncer-differences"
+        leftLabel="Bliss"
+        rightLabel="バランスソフト"
+        items={differenceRows}
+      />
+    </div>
+
+    <h2 id="official">公式情報</h2>
+    <p>ここでは、ベビービョルン公式のガイド・商品ページで確認できた内容を整理します。使用感・実際の肌触り・赤ちゃんの反応など、公式情報だけでは確認できないことは書いていません。</p>
+    <h3>バウンサー Bliss で公式に確認できること</h3>
+    <ul class="official-list">
+      <li>ベビービョルンのバウンサー「最新モデル」と案内。シートカバーをより柔らかく仕上げたモデルで、赤ちゃんを優しく包み込みます。</li>
+      <li>対象は生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしてのご使用は体重9kgまで（公式商品ページ）。</li>
+      <li>20種類以上のバリエーションの中から選べます（公式バウンサーガイド）。</li>
+      <li>素材は3Dジャージー（内側は3Dメッシュで放熱効果）・コットン・Air（メッシュ）・ウーブンなど。</li>
+      <li>セルフバウンシング構造。独自開発の構造で、赤ちゃん自身の動きでゆらゆら揺れます。</li>
+      <li>3段階リクライニング。製品サイズは幅約39×奥行約89×高さ46〜58cm、重量は約2.1kg。</li>
+      <li>SG認証。ASTM（アメリカ）・EN（ヨーロッパ）に準拠。2年保証（公式楽天市場店の案内）。</li>
+    </ul>
+    <h3>バウンサー バランスソフト で公式に確認できること</h3>
+    <ul class="official-list">
+      <li>2トーンの生地が特長。直近カラーバリエーションが増えています（公式バウンサーガイド）。</li>
+      <li>対象は生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしてのご使用は体重9kgまで（公式商品ページ）。</li>
+      <li>1ヶ月から2歳まで使えるロングユースタイプ。3段階リクライニングで快適に長く使えます（公式商品ページ）。</li>
+      <li>素材はコットン（綿100%）・Air（メッシュ）・ウーブン/ジャージー（ポリエステル65%、コットン35%）。</li>
+      <li>セルフバウンシング構造。独自開発の構造で、赤ちゃん自身の動きでゆらゆら揺れます。</li>
+      <li>製品サイズは幅約39×奥行約89×高さ46〜58cm、重量は約2.1kg。</li>
+      <li>SG認証。ASTM（アメリカ）・EN（ヨーロッパ）に準拠。2年保証（公式楽天市場店の案内）。</li>
+    </ul>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2 id="purchase">購入前に確認するページ</h2>
+    <div class="source-links">
+      <a class="card-link" href={blissSearch} target="_blank" rel="noopener noreferrer">Bliss の販売ページを検索 →</a>
+      <a class="card-link" href={balanceSearch} target="_blank" rel="noopener noreferrer">バランスソフトの販売ページを検索 →</a>
+    </div>
+
+    <h2>購入時の注意</h2>
+    <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、バウンサーの安全性と正しい使用方法は必ず公式の使用説明書で確認してください。</p>
+
+    <div class="grid two">
+      <AffiliateButton href={blissRakutenUrl} productId="babybjorn-bouncer-bliss" imagePath="/products/babybjorn-bouncer-bliss.jpg" label="バウンサー Blissを楽天で見る" merchant="楽天" placement="article-end" />
+      <AffiliateButton href={balanceRakutenUrl} productId="babybjorn-bouncer-balance" imagePath="/products/babybjorn-bouncer-balance.jpg" label="バウンサー バランスソフトを楽天で見る" merchant="楽天" placement="article-end" />
+    </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog.slice().sort((a, b) => b.date.localeCompare(a.date)).map((entry) => (
+        <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+      ))}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={bouncerGuideUrl} target="_blank" rel="noopener noreferrer">バウンサーガイド（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
+      <li><a href={blissProductUrl} target="_blank" rel="noopener noreferrer">バウンサー Bliss（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
+      <li><a href={balanceProductUrl} target="_blank" rel="noopener noreferrer">バウンサー バランスソフト（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
+    </ul>
+    <h2>調査方法・免責</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式のガイドで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+</BaseLayout>
