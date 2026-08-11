@@ -11,6 +11,7 @@ type ProductId =
   | 'pigeon-glass-240'
   | 'pigeon-ppsu-240'
   | 'pigeon-slim-240'
+  | 'pigeon-160'
   | 'moony-teishigeki-m'
   | 'moony-mashumaro-m'
   | 'shupot-dendo'
@@ -76,6 +77,14 @@ const productQueries: Record<ProductId, ProductQuery> = {
     selection: {
       excludedTerms: ['ガラス', '母乳実感', 'セット', '2本', '200ml'],
       exactIdentifiers: ['4902508003650'],
+    },
+  },
+  'pigeon-160': {
+    keyword: 'ピジョン 母乳実感 哺乳びん 160ml プラスチック',
+    requiredTerms: ['ピジョン', '母乳実感', '160ml'],
+    selection: {
+      excludedTerms: ['プラスチック', '240ml', 'スリム', 'セット', '2本'],
+      exactItemCodes: ['pigeon-shop:1026735'],
     },
   },
   'moony-teishigeki-m': {

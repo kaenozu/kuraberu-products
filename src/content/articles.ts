@@ -451,6 +451,33 @@ export const pottyArticle = defineArticleMetadata({
   ],
 });
 
+export const pigeonBottleSizeArticle = defineArticleMetadata({
+  id: "pigeon-bottle-160-240",
+  path: "/articles/pigeon-bottle-160-240/",
+  title: "ピジョン母乳実感160ml vs 240ml、どっち？｜くらべる商品メモ",
+  headline: "ピジョンの哺乳びん、どっち？「母乳実感160ml」と「240ml」を比較",
+  description:
+    "ピジョン母乳実感160mlと240mlを、公式の商品情報・付属乳首・対象月齢目安・価格で比較",
+  category: "育児用品",
+  tags: ["哺乳びん", "160ml", "240ml", "ピジョン"],
+  audiences: ["出産準備中の人", "新生児の保護者"],
+  uses: ["授乳の準備", "容量で選ぶ"],
+  summary:
+    "「160ml」と「240ml」を、公式情報・付属乳首・対象月齢目安・確認状況に分けて比較します。",
+  publishedAt: "2026-08-11",
+  modifiedAt: "2026-08-11",
+  productInfoCheckedAt: "2026-08-11",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/pigeon-bottle-160-240-160ml.jpg",
+  changeLog: [
+    {
+      date: "2026-08-11",
+      summary:
+        "初回公開。ピジョン公式の商品ページをもとに容量・付属乳首・対象月齢目安の違いを整理。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -464,4 +491,5 @@ export const articleMetadata = Object.freeze([
   babybjornBouncerArticle,
   cradleArticle,
   pottyArticle,
+  pigeonBottleSizeArticle,
 ]);
