@@ -1,0 +1,263 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import AffiliateButton from '../../../components/AffiliateButton.astro';
+import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import DifferenceList from '../../../components/DifferenceList.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import PriorityConclusion from '../../../components/PriorityConclusion.astro';
+import {pigeonBottleSizeArticle as articleMetadata} from '../../../content/articles';
+import {pigeonBottleSizeCandidateLabels, pigeonBottleSizePriorityOptions, pigeonBottleSizeStandardConclusion} from '../../../content/pigeon-bottle-size-priorities';
+import {isContentStale} from '../../../lib/content-freshness';
+import type {
+  ComparisonCandidate,
+  ComparisonRow,
+  DifferenceRow,
+} from '../../../lib/comparison';
+
+const bottle160 = 'https://products.pigeon.co.jp/item/index-2377.html';
+const bottle240 = 'https://products.pigeon.co.jp/item/index-2378.html';
+const nippleInfo = 'https://products.pigeon.co.jp/category/index-21.html';
+const size160Search = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20160ml%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93';
+const size240Search = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20240ml%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93';
+
+const faqEntries = [
+  {
+    question: '母乳実感 160ml と 240ml はどっち？',
+    answer:
+      '新生児期から使う場合は、公式の対象月齢目安が0ヵ月からでSSサイズ乳首（丸穴）が付属する160mlが選択肢になります。240mlは対象月齢目安が3ヵ月頃からで、Mサイズ乳首（Y字形）が付属します。どちらが個々の赤ちゃんに適しているかについて、公式商品ページに一律の判断基準は明記されていません。容量だけでなく、対象月齢目安と付属乳首も確認して選ぶ必要があります。',
+  },
+  {
+    question: '160mlの付属乳首は何サイズ？',
+    answer:
+      '160mlには「母乳実感 乳首 SSサイズ」が付属します。対象月齢目安は0ヵ月からで、吸い穴は丸穴です。',
+  },
+  {
+    question: '240mlの付属乳首は何サイズ？',
+    answer:
+      '240mlには「母乳実感 乳首 Mサイズ」が付属します。対象月齢目安は3ヵ月頃からで、吸い穴はY字形です。',
+  },
+  {
+    question: '新生児に160mlは足りる？',
+    answer:
+      '160mlの商品ページには対象月齢目安として「0ヵ月から」と記載されています。ただし、「新生児なら160mlの容量で必ず足りる」といった哺乳量の基準は、今回確認した公式商品ページには明記されていません。必要な哺乳量は公式商品ページだけでは判断できないため、要確認です。',
+  },
+  {
+    question: '160mlと240mlで乳首は付け替えられる？',
+    answer:
+      '母乳実感の乳首には、SS・S・M・L・LL・3Lの6サイズが用意されています。ただし、今回確認した160ml・240mlの商品ページの記載だけでは、「160mlと240mlの間で乳首を自由に付け替えられる」とする互換性の詳細までは明記されていないため、必要な場合はピジョン公式の乳首適合情報を確認してください。',
+  },
+  {
+    question: '160mlと240mlの値段はいくら違う？',
+    answer:
+      '2026年8月11日時点の公式オンラインショップ表示価格では、160mlが2,750円（税込）、240mlが2,860円（税込）です。差額は110円で、240mlのほうが110円高くなっています。価格は変更される可能性があるため、購入時には公式ページで最新価格を確認してください。',
+  },
+] as const;
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(
+  articleMetadata.productInfoCheckedAt,
+  contentAsOf,
+);
+const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
+  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
+  : '最終確認日は未記録';
+
+const size160Candidate: ComparisonCandidate = {
+  product: '母乳実感',
+  line: '160ml',
+  tone: 'premium',
+  audience: '新生児期から使う人、まず小容量を用意したい人',
+  note: '公式商品ページで仕様を確認',
+  status: 'official',
+};
+
+const size240Candidate: ComparisonCandidate = {
+  product: '母乳実感',
+  line: '240ml',
+  tone: 'standard',
+  audience: '哺乳量が増えてきた人、大きめの容量を用意したい人',
+  note: '公式商品ページで仕様を確認',
+  status: 'official',
+};
+
+const summaryRows: ComparisonRow[] = [
+  {label: '容量', left: '160ml', right: '240ml'},
+  {
+    label: '付属の乳首',
+    left: 'SSサイズ（0ヵ月から）・丸穴',
+    right: 'Mサイズ（3ヵ月頃から）・Y字形',
+  },
+  {label: '対象月齢の目安', left: '0ヵ月から', right: '3ヵ月頃から'},
+];
+
+const differenceRows: DifferenceRow[] = [
+  {
+    label: '容量',
+    left: '160ml',
+    right: '240ml',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '付属の乳首',
+    left: '母乳実感 乳首 SSサイズ・吸い穴 丸穴',
+    right: '母乳実感 乳首 Mサイズ・吸い穴 Y字形',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '対象月齢の目安',
+    left: '0ヵ月から',
+    right: '3ヵ月頃から',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 授乳用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">母乳実感の160mlと240mlは、単にボトルの容量が違うだけではありません。付属する乳首のサイズや、商品ページに記載された対象月齢目安も異なります。この記事では、公式の商品ページで確認できる情報だけをもとに、「母乳実感 哺乳びん プラスチック製（PPSU）」160mlと240mlの違いを整理します。公式に書かれていることと、公式ページだけでは判断できず確認が必要なことを分けて紹介します。</p>
+    <nav class="toc" aria-label="目次">
+      <h2>この記事の内容</h2>
+      <ol>
+        <li><a href="#comparison-details">2つの商品を比べる</a></li>
+        <li><a href="#checked">確認できる項目</a></li>
+        <li><a href="#official">公式情報</a></li>
+        <li><a href="#faq">よくある質問</a></li>
+        <li><a href="#purchase">購入前に確認するページ</a></li>
+      </ol>
+    </nav>
+    <div class="product-compare" aria-label="比較する2つの商品">
+      <article class="product-card">
+        <img
+          src="/products/pigeon-bottle-160-240-160ml.jpg"
+          alt="母乳実感 哺乳びん（プラスチック製）160ml パッケージ"
+          width="1000"
+          height="1000"
+          loading="eager"
+        />
+        <div class="product-card-body">
+          <span class="product-card-line">ピジョン / 哺乳びん</span>
+          <h2 class="product-card-name">プラスチック製（PPSU）160ml</h2>
+          <p class="product-card-desc">対象月齢目安0ヵ月から。SSサイズ乳首（丸穴）付属。</p>
+          <a class="product-card-link" href={bottle160} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+      <article class="product-card">
+        <img
+          src="/products/pigeon-bottle-160-240-240ml.jpg"
+          alt="母乳実感 哺乳びん（プラスチック製）240ml パッケージ"
+          width="1000"
+          height="1000"
+          loading="eager"
+        />
+        <div class="product-card-body">
+          <span class="product-card-line">ピジョン / 哺乳びん</span>
+          <h2 class="product-card-name">プラスチック製（PPSU）240ml</h2>
+          <p class="product-card-desc">対象月齢目安3ヵ月頃から。Mサイズ乳首（Y字形）付属。</p>
+          <a class="product-card-link" href={bottle240} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
+        </div>
+      </article>
+    </div>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
+      <p>購入リンク：{purchaseLinkLabel}</p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <ThirtySecondComparison
+      idPrefix="pigeon-bottle-size-summary"
+      heading="まず、違いはこの3つ"
+      conclusion="新生児期から使うボトルを用意する場合や、まず小容量の哺乳びんを選びたい場合は、対象月齢目安が0ヵ月からでSSサイズ乳首（丸穴）が付属する「160ml」が目安です。哺乳量が増えてきた場合は、対象月齢目安が3ヵ月頃からでMサイズ乳首（Y字形）が付属する「240ml」が目安です。どちらもプラスチック（PPSU）製・広口ボトルで、消毒・除菌方法は共通しています。"
+      left={size160Candidate}
+      right={size240Candidate}
+      rows={summaryRows}
+      detailHref="#comparison-details"
+    />
+
+    <PriorityConclusion options={pigeonBottleSizePriorityOptions} labels={pigeonBottleSizeCandidateLabels} standard={pigeonBottleSizeStandardConclusion} />
+
+    <div id="comparison-details">
+      <DifferenceList
+        idPrefix="pigeon-bottle-size-differences"
+        leftLabel="160ml"
+        rightLabel="240ml"
+        items={differenceRows}
+      />
+    </div>
+
+    <h2 id="checked">確認できる項目</h2>
+    <div class="table-scroll">
+    <table class="comparison">
+      <thead><tr><th scope="col">比較項目</th><th scope="col">160ml</th><th scope="col">240ml</th><th scope="col">根拠・確認先</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">容量</th><td>160ml</td><td>240ml</td><td><a href={bottle160} target="_blank" rel="noopener noreferrer">160ml公式</a> / <a href={bottle240} target="_blank" rel="noopener noreferrer">240ml公式</a></td></tr>
+        <tr><th scope="row">材質</th><td>プラスチック（PPSU）</td><td>プラスチック（PPSU）</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">付属の乳首</th><td>SSサイズ・吸い穴 丸穴</td><td>Mサイズ・吸い穴 Y字形</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">対象月齢の目安</th><td>0ヵ月から</td><td>3ヵ月頃から</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">消毒・除菌</th><td>煮沸/スチーム/薬液で可・電子レンジ不可</td><td>煮沸/スチーム/薬液で可・電子レンジ不可</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">公式オンラインショップ表示価格（2026-08-11時点）</th><td>2,750円（税込）</td><td>2,860円（税込）</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">価格・在庫</th><td>販売ページで確認</td><td>販売ページで確認</td><td>楽天市場の検索結果</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
+
+    <h2 id="official">公式情報</h2>
+    <p>160mlと240mlのどちらも「母乳実感 哺乳びん（プラスチック製）」で、容量以外の基本仕様（PPSU素材・広口ボトル・煮沸/スチーム/薬液消毒対応・電子レンジ除菌不可）は共通しています。違いは、付属する乳首と対象月齢の目安です。160mlにはSSサイズ（0ヵ月から・丸穴）、240mlにはMサイズ（3ヵ月頃から・Y字形）の乳首が付属します。母乳実感の乳首はSS・S・M・L・LL・3Lの6サイズが案内されています。</p>
+    <div class="source-links">
+      <a class="card-link" href={bottle160} target="_blank" rel="noopener noreferrer">母乳実感 プラスチック製（PPSU）160ml 公式商品ページ →</a>
+      <a class="card-link" href={bottle240} target="_blank" rel="noopener noreferrer">母乳実感 プラスチック製（PPSU）240ml 公式商品ページ →</a>
+      <a class="card-link" href={nippleInfo} target="_blank" rel="noopener noreferrer">ピジョン 母乳実感 哺乳びん カテゴリページ →</a>
+    </div>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2 id="purchase">購入前に確認するページ</h2>
+    <div class="source-links">
+      <a class="card-link" href={size160Search} target="_blank" rel="noopener noreferrer">160mlの販売ページを検索 →</a>
+      <a class="card-link" href={size240Search} target="_blank" rel="noopener noreferrer">240mlの販売ページでも検索 →</a>
+    </div>
+
+    <h2>購入時の注意</h2>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
+    <div class="grid two" id="purchase">
+      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_160_URL} label="母乳実感 プラスチック製160mlを楽天市場で確認" merchant="楽天" productId="pigeon-160" imagePath="/products/pigeon-bottle-160-240-160ml.jpg" placement="article-end" />
+      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL} label="母乳実感 プラスチック製240mlを楽天市場で確認" merchant="楽天" productId="pigeon-ppsu-240" imagePath="/products/pigeon-bottle-160-240-240ml.jpg" placement="article-end" />
+    </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog
+        .slice()
+        .sort((left, right) => right.date.localeCompare(left.date))
+        .map((entry) => (
+          <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+        ))}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={bottle160} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 プラスチック製 160ml</a>（2026-08-11確認）</li>
+      <li><a href={bottle240} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 プラスチック製 240ml</a>（2026-08-11確認）</li>
+      <li><a href={nippleInfo} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 哺乳びん カテゴリページ</a>（2026-08-11確認）</li>
+      <li><a href={size160Search} target="_blank" rel="noopener noreferrer">楽天市場：母乳実感 160ml 検索</a>（価格・在庫確認用）</li>
+      <li><a href={size240Search} target="_blank" rel="noopener noreferrer">楽天市場：母乳実感 240ml 検索</a>（価格・在庫確認用）</li>
+    </ul>
+    <h2>調査方法・免責事項</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

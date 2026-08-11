@@ -13,6 +13,7 @@ import {
   pampersNewbornArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
+  pigeonBottleSizeArticle,
   pottyArticle,
   shupotArticle,
 } from "../src/content/articles";
@@ -40,6 +41,7 @@ describe("article metadata", () => {
       babybjornBouncerArticle,
       cradleArticle,
       pottyArticle,
+      pigeonBottleSizeArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
