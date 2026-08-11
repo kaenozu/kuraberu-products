@@ -126,6 +126,7 @@ const differenceRows: DifferenceRow[] = [
       <ol>
         <li><a href="#comparison-details">2つの商品を比べる</a></li>
         <li><a href="#checked">確認できる項目</a></li>
+        <li><a href="#priority-conclusion-heading">条件に応じた比較結論</a></li>
         <li><a href="#official">公式情報</a></li>
         <li><a href="#faq">よくある質問</a></li>
         <li><a href="#purchase">購入前に確認するページ</a></li>
@@ -179,8 +180,6 @@ const differenceRows: DifferenceRow[] = [
       detailHref="#comparison-details"
     />
 
-    <PriorityConclusion options={pigeonBottleSizePriorityOptions} labels={pigeonBottleSizeCandidateLabels} standard={pigeonBottleSizeStandardConclusion} />
-
     <div id="comparison-details">
       <DifferenceList
         idPrefix="pigeon-bottle-size-differences"
@@ -189,6 +188,8 @@ const differenceRows: DifferenceRow[] = [
         items={differenceRows}
       />
     </div>
+
+    <p class="summary-purchase">迷ったときの確認先：<a class="text-link" href={size160Search} target="_blank" rel="noopener noreferrer">160mlの販売ページを確認 →</a>／<a class="text-link" href={size240Search} target="_blank" rel="noopener noreferrer">240mlの販売ページを確認 →</a></p>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">
@@ -206,6 +207,8 @@ const differenceRows: DifferenceRow[] = [
     </table>
     </div>
     <p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
+
+    <PriorityConclusion options={pigeonBottleSizePriorityOptions} labels={pigeonBottleSizeCandidateLabels} standard={pigeonBottleSizeStandardConclusion} />
 
     <h2 id="official">公式情報</h2>
     <p>160mlと240mlのどちらも「母乳実感 哺乳びん（プラスチック製）」で、容量以外の基本仕様（PPSU素材・広口ボトル・煮沸/スチーム/薬液消毒対応・電子レンジ除菌不可）は共通しています。違いは、付属する乳首と対象月齢の目安です。160mlにはSSサイズ（0ヵ月から・丸穴）、240mlにはMサイズ（3ヵ月頃から・Y字形）の乳首が付属します。母乳実感の乳首はSS・S・M・L・LL・3Lの6サイズが案内されています。</p>
