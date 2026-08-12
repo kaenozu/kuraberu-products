@@ -542,4 +542,10 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
       width: 100%;
     }
   }
+
+  /* autoload: 投稿をそのまま表示する。ボタン・プライバシー注記は出さない */
+  .external-embed[data-autoload="true"] .external-embed__privacy,
+  .external-embed[data-autoload="true"] [data-external-embed-load] {
+    display: none;
+  }
 </style>
