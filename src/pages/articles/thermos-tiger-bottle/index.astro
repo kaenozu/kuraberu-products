@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
@@ -15,8 +14,6 @@ import {thermosJnlS500, tigerMtaJ050} from '../../../lib/products';
 
 const thermosOfficial = thermosJnlS500.officialUrl;
 const tigerOfficial = tigerMtaJ050.officialUrl;
-const thermosRakuten = thermosJnlS500.rakutenUrl;
-const tigerRakuten = tigerMtaJ050.rakutenUrl;
 const thermosSearch = thermosJnlS500.rakutenSearchUrl;
 const tigerSearch = tigerMtaJ050.rakutenSearchUrl;
 
@@ -318,8 +315,22 @@ const keyDiffRows: KeyDiffRow[] = [
     </div>
 
     <div class="grid two">
-      <AffiliateButton href={thermosRakuten} label="サーモス JNL-S500 を楽天市場で確認" subLabel="楽天市場で商品を見る" merchant="楽天" imagePath="/products/thermos-jnl-s500.jpg" placement="article-end" />
-      <AffiliateButton href={tigerRakuten} label="タイガー MTA-J050 を楽天市場で確認" subLabel="楽天市場で商品を見る" merchant="楽天" imagePath="/products/tiger-mta-j050.jpg" placement="article-end" />
+      <PurchaseCard
+        name={thermosJnlS500.brand + ' ' + thermosJnlS500.model}
+        audience="軽さ・コンパクト・食洗機対応を優先する人向け"
+        href={thermosJnlS500.rakutenUrl}
+        imagePath={thermosJnlS500.imagePath}
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name={tigerMtaJ050.brand + ' ' + tigerMtaJ050.model}
+        audience="保冷力・ハンドル・大きめの飲み口を優先する人向け"
+        href={tigerMtaJ050.rakutenUrl}
+        imagePath={tigerMtaJ050.imagePath}
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
     </div>
 
     <details class="fold-section">
