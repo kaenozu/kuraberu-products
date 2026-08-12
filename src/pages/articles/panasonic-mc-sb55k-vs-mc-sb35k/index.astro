@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import {panasonicVacuumArticle as articleMetadata} from '../../../content/articles';
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
+
+const plusOfficial = 'https://panasonic.jp/soji/products/MC-SB55K.html';
+const standardOfficial = 'https://panasonic.jp/soji/products/MC-SB35K.html';
+const plusSearch = 'https://search.rakuten.co.jp/search/mall/パナソニック+MC-SB55K/';
+const standardSearch = 'https://search.rakuten.co.jp/search/mall/パナソニック+MC-SB35K/';
+
+const plus = {brand: 'パナソニック', line: 'MC-SB55K', image: '/products/panasonic-mc-sb55k.png', imageAlt: 'パナソニック コードレススティック掃除機 MC-SB55K', audience: 'ゴミの量を検知するセンサーと充電スタンドを重視する人の候補', official: plusOfficial};
+const standard = {brand: 'パナソニック', line: 'MC-SB35K', image: '/products/panasonic-mc-sb35k.png', imageAlt: 'パナソニック コードレススティック掃除機 MC-SB35K', audience: '軽さと基本機能を優先して選びたい人の候補', official: standardOfficial};
+
+const faqEntries = [
+  {question: 'パナソニック MC-SB55K と MC-SB35K の違いは？', answer: '公式ページで確認できる主な違いは、MC-SB55Kにスゴ取れセンサーと置くだけ充電スタンドが搭載されていることです。MC-SB35Kは軽量モデルとして案内されています。'},
+  {question: '軽いのはどっち？', answer: '公式ページの表示では、MC-SB55Kは約1.2kg、MC-SB35Kは約1.1kgです。どちらも本体質量の注記があるため、測定条件は各公式ページで確認してください。'},
+  {question: '充電スタンドがあるのはどっち？', answer: 'MC-SB55Kには、戻すだけで充電できる置くだけ充電スタンドが公式ページで案内されています。MC-SB35Kの公式ページでは、同じ充電スタンドの案内を確認できませんでした。'},
+  {question: '価格は比較できる？', answer: '両モデルとも公式ページでは販売店に確認するオープン価格として扱われています。価格の優劣ではなく、センサー・充電スタンド・重量などの確認できる差で選ぶ記事です。'},
+];
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '本体質量の表示', left: '約1.2kg', right: '約1.1kg', highlight: 'right', highlightNote: '約100g軽い', bar: {left: 1.2, right: 1.1}},
+  {label: 'ゴミ検知センサー', left: 'スゴ取れセンサー', right: '公式ページで確認できず', highlight: 'left', highlightNote: '搭載',},
+  {label: '充電スタンド', left: '置くだけ充電スタンド', right: '公式ページで確認できず', highlight: 'left', highlightNote: '搭載'},
+  {label: 'ブラシ', left: 'からまないブラシPlus', right: 'からまないブラシPlus'},
+  {label: '価格', left: 'オープン価格', right: 'オープン価格'},
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">パナソニックのMC-SB55KとMC-SB35Kは、どちらもコードレススティック掃除機です。公式ページで確認できる質量、ゴミ検知センサー、充電スタンド、ブラシの違いを分けて比較します。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#sns">SNSの感想</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{brand: plus.brand, line: plus.line, tagline: 'センサー・充電スタンドなら', image: plus.image, imageAlt: plus.imageAlt, buyHref: plusSearch, officialHref: plus.official, guidePoints: [plus.audience]}}
+      right={{brand: standard.brand, line: standard.line, tagline: '軽さ・基本機能なら', image: standard.image, imageAlt: standard.imageAlt, buyHref: standardSearch, officialHref: standard.official, guidePoints: [standard.audience]}}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <p>MC-SB55Kは、スゴ取れセンサーと置くだけ充電スタンドを公式ページで確認できます。MC-SB35Kは約1.1kgの軽量モデルとして案内されています。価格は両方ともオープン価格なので、販売店で確認してください。</p>
+    <div class="purchase-cards"><PurchaseCard name="パナソニック MC-SB55K" audience={plus.audience} href={plusSearch} imagePath={plus.image} placement="after-decision" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="パナソニック MC-SB35K" audience={standard.audience} href={standardSearch} imagePath={standard.image} placement="after-decision" note="価格・在庫は販売先でご確認ください。" /></div>
+    <details class="fold-section" id="specs"><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">MC-SB55K</th><th scope="col">MC-SB35K</th><th scope="col">根拠</th></tr></thead><tbody>
+      <tr><th scope="row">本体質量の表示</th><td>約1.2kg</td><td>約1.1kg</td><td><a href={plusOfficial} target="_blank" rel="noopener noreferrer">SB55K公式</a> / <a href={standardOfficial} target="_blank" rel="noopener noreferrer">SB35K公式</a></td></tr>
+      <tr><th scope="row">ゴミ検知</th><td>スゴ取れセンサー</td><td>公式ページで確認できず</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">充電スタンド</th><td>置くだけ充電スタンド</td><td>公式ページで確認できず</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">ブラシ</th><td>からまないブラシPlus</td><td>からまないブラシPlus</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">価格</th><td>オープン価格</td><td>オープン価格</td><td>各公式商品ページ</td></tr>
+    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>パナソニック公式ページでは、MC-SB55Kにスゴ取れセンサー、からまないブラシPlus、置くだけ充電スタンドが案内されています。MC-SB35Kは、からまないブラシPlusを搭載した軽量モデルとして案内されています。</p>
+    <div class="source-links"><a class="card-link" href={plusOfficial} target="_blank" rel="noopener noreferrer">MC-SB55K 公式商品ページ →</a><a class="card-link" href={standardOfficial} target="_blank" rel="noopener noreferrer">MC-SB35K 公式商品ページ →</a></div>
+    <ArticleSocialProof query="パナソニック MC-SB55K MC-SB35K 掃除機" checkedAt="2026-08-13" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2 id="purchase">購入前に確認するページ</h2><div class="source-links"><a class="card-link" href={plusSearch} target="_blank" rel="noopener noreferrer">MC-SB55Kの販売ページを検索 →</a><a class="card-link" href={standardSearch} target="_blank" rel="noopener noreferrer">MC-SB35Kの販売ページを検索 →</a></div>
+    <h2>購入時の注意</h2><p>コードレス掃除機は、質量の測定条件、連続運転時間、充電時間、付属品、収納方法を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。</p>
+    <div class="grid two"><PurchaseCard name="パナソニック MC-SB55K" audience={plus.audience} href={plusSearch} imagePath={plus.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="パナソニック MC-SB35K" audience={standard.audience} href={standardSearch} imagePath={standard.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={plusOfficial} target="_blank" rel="noopener noreferrer">パナソニック MC-SB55K 公式商品ページ</a>（2026-08-13確認）</li><li><a href={standardOfficial} target="_blank" rel="noopener noreferrer">パナソニック MC-SB35K 公式商品ページ</a>（2026-08-13確認）</li></ul>
+    <h2>調査方法・免責事項</h2><p>この比較は、パナソニック公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

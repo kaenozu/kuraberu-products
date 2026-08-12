@@ -537,6 +537,32 @@ export const tigerRiceArticle = defineArticleMetadata({
   ],
 });
 
+export const panasonicVacuumArticle = defineArticleMetadata({
+  id: "panasonic-mc-sb55k-vs-mc-sb35k",
+  path: "/articles/panasonic-mc-sb55k-vs-mc-sb35k/",
+  title: "パナソニック MC-SB55K と MC-SB35K、どっち？｜くらべる商品メモ",
+  headline: "パナソニックの掃除機、どっち？「MC-SB55K」と「MC-SB35K」を比較",
+  description:
+    "パナソニック MC-SB55KとMC-SB35Kを、公式の質量・センサー・充電スタンド・ブラシで比較",
+  category: "生活家電",
+  tags: ["掃除機", "パナソニック", "コードレス"],
+  audiences: ["掃除機を買い替えたい人", "コードレス掃除機を選びたい人"],
+  uses: ["毎日掃除する", "軽さで選ぶ", "収納方法で選ぶ"],
+  summary:
+    "MC-SB55KとMC-SB35Kを、パナソニック公式の質量・センサー・充電スタンド・ブラシに分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/panasonic-mc-sb55k.png",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary: "初回公開。パナソニック公式の商品ページで仕様・機能を確認。",
+    },
+  ],
+});
+
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
   path: "/articles/thermos-tiger-bottle/",
@@ -580,5 +606,6 @@ export const articleMetadata = Object.freeze([
   pigeonBottleSizeArticle,
   combiTheSArticle,
   tigerRiceArticle,
+  panasonicVacuumArticle,
   thermosTigerBottleArticle,
 ]);
