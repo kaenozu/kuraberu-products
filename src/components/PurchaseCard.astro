@@ -1,7 +1,8 @@
 ---
 // PurchaseCard.astro
-// 商品ごとの購入カード。比較結論の直後と記事末尾に配置する。
-// 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 楽天市場 CTA / 広告表記
+// 全記事の標準購入カード（Article Layout v2: docs/article-layout-v2-2026-08.md）
+// 配置: 判断後（placement="after-decision"・デフォルト）+ 記事末尾（placement="article-end"）の 2 タイミング
+// 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 楽天市場 CTA（「楽天市場で商品を見る」）/ 価格・在庫の注意書き
 import AffiliateButton from './AffiliateButton.astro';
 
 interface Props {
@@ -20,7 +21,7 @@ const {
   href,
   productId,
   imagePath,
-  placement = 'purchase-card',
+  placement = 'after-decision',
   note,
 } = Astro.props;
 ---
