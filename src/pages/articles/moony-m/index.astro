@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
@@ -146,6 +146,26 @@ const differenceRows: DifferenceRow[] = [
         </div>
       </article>
     </div>
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="低刺激であんしん"
+        audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL}
+        productId="moony-teishigeki-m"
+        imagePath="/products/moony-teishigeki-m.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="マシュマロ肌ごこちモレ安心"
+        audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL}
+        productId="moony-mashumaro-m"
+        imagePath="/products/moony-mashumaro-m.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
       <p>購入リンク: {purchaseLinkLabel}</p>
@@ -202,8 +222,24 @@ const differenceRows: DifferenceRow[] = [
     
 
     <div class="grid two">
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL} productId="moony-teishigeki-m" imagePath="/products/moony-teishigeki-m.jpg" label="低刺激であんしんを楽天で見る" merchant="楽天" placement="article-end" />
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL} productId="moony-mashumaro-m" imagePath="/products/moony-mashumaro-m.jpg" label="マシュマロ肌ごこちモレ安心を楽天で見る" merchant="楽天" placement="article-end" />
+      <PurchaseCard
+        name="低刺激であんしん"
+        audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL}
+        productId="moony-teishigeki-m"
+        imagePath="/products/moony-teishigeki-m.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="マシュマロ肌ごこちモレ安心"
+        audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL}
+        productId="moony-mashumaro-m"
+        imagePath="/products/moony-mashumaro-m.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
     </div>
 
     <h2>更新履歴</h2>

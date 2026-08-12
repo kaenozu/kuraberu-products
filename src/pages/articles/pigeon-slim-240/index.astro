@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
@@ -222,6 +222,27 @@ const differenceRows: DifferenceRow[] = [
     </ul>
     <p>これは公式ページに書かれた特徴の整理であり、どちらがすべての家庭に合うと断定するものではありません。購入前に対象月齢に合う乳首があるかも確認してください。</p>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="広口タイプの調乳・洗浄のしやすさと、6サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="スリムタイプ 240ml"
+        audience="細身で転がりにくく持ちやすい形と、シンプルな4サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL}
+        productId="pigeon-slim-240"
+        imagePath="/products/pigeon-slim-pp240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => (
@@ -241,8 +262,24 @@ const differenceRows: DifferenceRow[] = [
     <h2>購入時の注意</h2>
     <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは {purchaseLinkLabel} です。</p>
     <div class="grid two">
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL} label="母乳実感 240ml を楽天市場で確認" merchant="楽天" productId="pigeon-ppsu-240" imagePath="/products/pigeon-bottle-ppsu240.jpg" placement="article-end" />
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL} label="スリムタイプ 240ml を楽天市場で確認" merchant="楽天" productId="pigeon-slim-240" imagePath="/products/pigeon-slim-pp240.jpg" placement="article-end" />
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="広口タイプの調乳・洗浄のしやすさと、6サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="スリムタイプ 240ml"
+        audience="細身で転がりにくく持ちやすい形と、シンプルな4サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL}
+        productId="pigeon-slim-240"
+        imagePath="/products/pigeon-slim-pp240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
     </div>
 
     <h2>更新履歴</h2>

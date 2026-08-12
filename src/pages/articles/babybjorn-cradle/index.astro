@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
@@ -174,6 +174,26 @@ const differenceRows: DifferenceRow[] = [
         </div>
       </article>
     </div>
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="クレードル"
+        audience="手動のゆりかご機能で揺らして寝かしつけたい、新生児期の使用を優先する人向け"
+        href={cradleRakutenUrl}
+        productId="babybjorn-cradle"
+        imagePath="/products/babybjorn-cradle.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ココネルエアー AB"
+        audience="新生児〜24カ月まで長く使えて、折りたたみ・ベビーサークル兼用を優先する人向け"
+        href={cocoNelRakutenUrl}
+        productId="aprica-coconel-air"
+        imagePath="/products/aprica-coconel-air.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
       <p>購入リンク: {purchaseLinkLabel}</p>
@@ -246,8 +266,24 @@ const differenceRows: DifferenceRow[] = [
     <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店・アップリカ公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、ベビーベッドの安全性と正しい使用方法は必ず各メーカーの公式ページ・使用説明書で確認してください。</p>
 
     <div class="grid two">
-      <AffiliateButton href={cradleRakutenUrl} productId="babybjorn-cradle" imagePath="/products/babybjorn-cradle.jpg" label="クレードルを楽天で見る" merchant="楽天" placement="article-end" />
-      <AffiliateButton href={cocoNelRakutenUrl} productId="aprica-coconel-air" imagePath="/products/aprica-coconel-air.jpg" label="ココネルエアー ABを楽天で見る" merchant="楽天" placement="article-end" />
+      <PurchaseCard
+        name="クレードル"
+        audience="手動のゆりかご機能で揺らして寝かしつけたい、新生児期の使用を優先する人向け"
+        href={cradleRakutenUrl}
+        productId="babybjorn-cradle"
+        imagePath="/products/babybjorn-cradle.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ココネルエアー AB"
+        audience="新生児〜24カ月まで長く使えて、折りたたみ・ベビーサークル兼用を優先する人向け"
+        href={cocoNelRakutenUrl}
+        productId="aprica-coconel-air"
+        imagePath="/products/aprica-coconel-air.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
     </div>
 
     <h2>更新履歴</h2>
