@@ -6,6 +6,7 @@ import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import HeroComparison from '../../../components/HeroComparison.astro';
+import ComparisonHero from '../../../components/ComparisonHero.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
 import DecisionGuide from '../../../components/DecisionGuide.astro';
 import {thermosTigerBottleArticle as articleMetadata} from '../../../content/articles';
@@ -119,6 +120,31 @@ const keyDiffRows: KeyDiffRow[] = [
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活雑貨 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
+    <ComparisonHero
+      lines={[
+        {
+          condition: '軽さ・食洗機を重視する',
+          brand: thermosJnlS500.brand,
+          model: thermosJnlS500.model,
+        },
+        {
+          condition: '保冷力・ハンドルを重視する',
+          brand: tigerMtaJ050.brand,
+          model: tigerMtaJ050.model,
+        },
+      ]}
+      differences={[
+        { label: '軽さ', note: '約60g差' },
+        { label: '大きさ', note: 'コンパクト vs ハンドル付き' },
+        { label: '保冷力', note: '10℃以下 vs 8℃以下' },
+        { label: '口径', note: '4.0cm vs 4.8cm' },
+        { label: 'お手入れ', note: '全パーツ食洗機 vs らくらくキャップ' },
+        { label: 'ハンドル', note: 'なし vs あり' },
+        { label: 'カラー', note: '12色 vs 4色' },
+      ]}
+      diffAnchor="#key-differences"
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">{thermosJnlS500.spec.capacity}のワンタッチ式水筒の定番2本。公式仕様から、あなたに合う方を30秒で選べます。</p>
 
@@ -150,8 +176,6 @@ const keyDiffRows: KeyDiffRow[] = [
         officialHref: tigerMtaJ050.officialUrl,
       }}
     />
-
-    <p class="official-note">✓ 以下の数値は{articleMetadata.productInfoCheckedAt ?? '確認日未記録'}にメーカー公式ページで確認しています。</p>
 
     <div class="sticky-compare-bar" id="sticky-compare-bar" hidden>
       <a class="sticky-side is-left" href={thermosJnlS500.rakutenUrl} target="_blank" rel="noopener noreferrer">
@@ -375,10 +399,60 @@ const keyDiffRows: KeyDiffRow[] = [
     border-color: var(--accent);
   }
 
-  /* 公式確認の1行注記（各項目への乱発をやめ、冒頭に集約） */
-  .official-note {
-    margin: 1rem 0 0;
-    font-size: 0.78rem;
+  /* 記事冒頭の3点構成（ComparisonHero） */
+  .comparison-hero {
+    margin: 0.25rem 0 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+  }
+  .hero-line {
+    margin: 0;
+    padding: 0.2rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .hero-condition {
+    color: var(--muted);
+  }
+  .hero-line b {
+    font-weight: 800;
+  }
+  .hero-diffs {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px dashed var(--line);
+  }
+  .hero-diffs-heading {
+    margin: 0 0 0.3rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--muted);
+  }
+  .hero-diffs ul {
+    margin: 0 0 0.5rem;
+    padding-left: 1.1rem;
+    font-size: 0.88rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.1rem 0.75rem;
+  }
+  .hero-diff-note {
+    color: var(--muted);
+  }
+  .hero-diff-link {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .hero-diff-link:hover {
+    text-decoration: underline;
+  }
+  .hero-trust {
+    margin: 0.6rem 0 0;
+    font-size: 0.75rem;
     color: var(--muted);
   }
 
