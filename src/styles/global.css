@@ -593,6 +593,25 @@ a {
   font-family: Georgia, serif;
   font-size: 1.2rem;
 }
+.product-identity-img {
+  width: 100%;
+  height: 108px;
+  object-fit: contain;
+  align-self: start;
+  background: #f4f2ec;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px;
+}
+/* 30秒比較（compact）では画像をカード上部に大きく表示 */
+.product-identity-compact .product-identity-img {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 6px;
+  margin-bottom: 0.35rem;
+}
 .product-kicker {
   margin: 0 0 0.25rem;
   color: var(--muted);
@@ -769,6 +788,37 @@ a {
 }
 .difference-status {
   font-size: 0.72rem;
+}
+/* 差分の決め手となる値を赤字+太字で強調 */
+.difference-value.is-highlighted {
+  background: #fdf2ef;
+  border-radius: 6px;
+}
+.difference-value.is-highlighted > span {
+  color: #c83e2c;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.difference-highlight-note {
+  display: inline-block;
+  width: fit-content;
+  background: #c83e2c;
+  color: #fff;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 700;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  margin-top: 0.15rem;
+}
+.summary-differences .is-highlighted {
+  color: #c83e2c;
+  font-weight: 800;
+}
+.summary-differences .is-highlighted .difference-highlight-note {
+  vertical-align: middle;
+  margin-left: 0.35rem;
 }
 #comparison-details {
   scroll-margin-top: 1rem;
@@ -1104,4 +1154,72 @@ a {
     width: 100%;
     justify-content: flex-start;
   }
+}
+
+/* 商品ごとの購入カード（比較結論の直後・記事末尾に配置） */
+.purchase-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+.purchase-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: var(--surface, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+}
+.purchase-card__main {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.purchase-card__image {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  flex: 0 0 auto;
+}
+.purchase-card__body {
+  min-width: 0;
+}
+.purchase-card__name {
+  margin: 0 0 0.3rem;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+.purchase-card__audience {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft, #555);
+  line-height: 1.5;
+}
+.purchase-card__note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted, rgba(0, 0, 0, 0.55));
+}
+.purchase-card .cta.cta-card {
+  margin-top: auto;
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.7rem 1rem;
+  background: var(--ink, #1a1a1a);
+  color: #fff;
+  border-color: transparent;
+}
+.purchase-card .cta.cta-card:hover {
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+.purchase-card .cta-card-sub {
+  color: rgba(255, 255, 255, 0.75);
+}
+.purchase-card .ad-note {
+  color: rgba(255, 255, 255, 0.6);
 }

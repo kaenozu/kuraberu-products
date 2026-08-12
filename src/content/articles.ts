@@ -483,6 +483,33 @@ export const pigeonBottleSizeArticle = defineArticleMetadata({
   ],
 });
 
+export const thermosTigerBottleArticle = defineArticleMetadata({
+  id: "thermos-tiger-bottle",
+  path: "/articles/thermos-tiger-bottle/",
+  title: "サーモスとタイガーの水筒、どっち？｜くらべる商品メモ",
+  headline:
+    "サーモスとタイガーの水筒、どっち？「JNL-S500」と「MTA-J050」を比較",
+  description:
+    "サーモスJNL-S500とタイガーMTA-J050の0.5L水筒を、公式の保温・保冷効力・サイズ・お手入れ方法で比較",
+  category: "生活雑貨",
+  tags: ["水筒", "ステンレスボトル", "サーモス", "タイガー"],
+  audiences: ["水筒を買い替えたい人", "夏の保冷を重視する人"],
+  uses: ["毎日使う", "保温・保冷を比較"],
+  summary:
+    "「JNL-S500」と「MTA-J050」を、公式の保温・保冷効力とサイズ・お手入れ方法に分けて比較します。",
+  publishedAt: "2026-08-12",
+  modifiedAt: "2026-08-12",
+  productInfoCheckedAt: "2026-08-12",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/thermos-jnl-s500.jpg",
+  changeLog: [
+    {
+      date: "2026-08-12",
+      summary: "初回公開。サーモス・タイガー公式の商品ページで仕様を確認。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -497,4 +524,5 @@ export const articleMetadata = Object.freeze([
   cradleArticle,
   pottyArticle,
   pigeonBottleSizeArticle,
+  thermosTigerBottleArticle,
 ]);

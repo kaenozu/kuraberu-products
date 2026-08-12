@@ -25,7 +25,7 @@ afterEach(() => {
 });
 
 describe("rendered external embed limit", () => {
-  it("allows zero and three rendered embeds", () => {
+  it("allows zero, three, and four rendered embeds", () => {
     expect(countRenderedExternalEmbeds(validPage(""))).toBe(0);
     expect(countRenderedExternalEmbeds(validPage(embed.repeat(3)))).toBe(3);
     expect(
@@ -33,37 +33,42 @@ describe("rendered external embed limit", () => {
         { filePath: "dist/three/index.html", html: validPage(embed.repeat(3)) },
       ]),
     ).toEqual([]);
+    expect(
+      validateRenderedExternalEmbedCounts([
+        { filePath: "dist/four/index.html", html: validPage(embed.repeat(4)) },
+      ]),
+    ).toEqual([]);
   });
 
   it.each([
-    ["direct ExternalEmbed output", embed.repeat(4)],
-    ["wrapper output", `<article>${embed.repeat(4)}</article>`],
+    ["direct ExternalEmbed output", embed.repeat(5)],
+    ["wrapper output", `<article>${embed.repeat(5)}</article>`],
     [
       "barrel re-export wrapper output",
-      `<section>${embed.repeat(4)}</section>`,
+      `<section>${embed.repeat(5)}</section>`,
     ],
     [
       "array or loop expansion output",
-      `<ul>${[1, 2, 3, 4].map(() => embed).join("")}</ul>`,
+      `<ul>${[1, 2, 3, 4, 5].map(() => embed).join("")}</ul>`,
     ],
-  ])("rejects four rendered embeds from %s", (_label, body) => {
+  ])(`rejects five rendered embeds from %s`, (_label, body) => {
     expect(
       validateRenderedExternalEmbedCounts([
-        { filePath: "dist/articles/four/index.html", html: validPage(body) },
+        { filePath: "dist/articles/five/index.html", html: validPage(body) },
       ]),
     ).toEqual([
-      "dist/articles/four/index.html: rendered external embed limit exceeded: found 4, maximum is 3",
+      "dist/articles/five/index.html: rendered external embed limit exceeded: found 5, maximum is 4",
     ]);
   });
 
   it("counts each generated HTML page independently", () => {
     expect(
       validateRenderedExternalEmbedCounts([
-        { filePath: "dist/ok/index.html", html: validPage(embed.repeat(3)) },
-        { filePath: "dist/bad/index.html", html: validPage(embed.repeat(4)) },
+        { filePath: "dist/ok/index.html", html: validPage(embed.repeat(4)) },
+        { filePath: "dist/bad/index.html", html: validPage(embed.repeat(5)) },
       ]),
     ).toEqual([
-      "dist/bad/index.html: rendered external embed limit exceeded: found 4, maximum is 3",
+      "dist/bad/index.html: rendered external embed limit exceeded: found 5, maximum is 4",
     ]);
   });
 
@@ -140,8 +145,8 @@ ${embed.repeat(4)}`;
     ]);
   });
 
-  it("counts four normal embeds so the limit check can reject them", () => {
-    expect(countRenderedExternalEmbeds(validPage(embed.repeat(4)))).toBe(4);
+  it("counts five normal embeds so the limit check can reject them", () => {
+    expect(countRenderedExternalEmbeds(validPage(embed.repeat(5)))).toBe(5);
   });
 
   it("counts one normal embed", () => {
@@ -151,11 +156,11 @@ ${embed.repeat(4)}`;
   it("checks all HTML files under dist and reports the generated path", () => {
     const directory = mkdtempSync(path.join(os.tmpdir(), "kuraberu-rendered-"));
     fixtureDirectories.push(directory);
-    writeFileSync(path.join(directory, "ok.html"), validPage(embed.repeat(3)));
-    writeFileSync(path.join(directory, "bad.html"), validPage(embed.repeat(4)));
+    writeFileSync(path.join(directory, "ok.html"), validPage(embed.repeat(4)));
+    writeFileSync(path.join(directory, "bad.html"), validPage(embed.repeat(5)));
 
     expect(validateRenderedHtml({ distDirectory: directory }).errors).toContain(
-      `${path.join(directory, "bad.html")}: rendered external embed limit exceeded: found 4, maximum is 3`,
+      `${path.join(directory, "bad.html")}: rendered external embed limit exceeded: found 5, maximum is 4`,
     );
   });
 });
