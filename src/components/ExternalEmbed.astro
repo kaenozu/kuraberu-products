@@ -12,9 +12,11 @@ interface Props {
   purpose?: string;
   autoload?: boolean;
   tone?: "good" | "bad" | "mixed";
+  /** compact: 埋め込みの会話（返信）を隠して高さを抑える */
+  compact?: boolean;
 }
 
-const { provider, url, title, purpose, autoload, tone } = Astro.props;
+const { provider, url, title, purpose, autoload, tone, compact } = Astro.props;
 const config = createExternalEmbedConfig(provider, url);
 const providerLabel = externalEmbedProviderLabel(provider);
 const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
@@ -32,6 +34,7 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
   data-tone={tone}
   data-embed-state="idle"
   data-autoload={autoload ? "true" : undefined}
+  data-compact={compact ? "true" : undefined}
   aria-label={`${providerLabel}の外部コンテンツ`}
 >
   <div class="external-embed__intro">
@@ -182,6 +185,10 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
       const quote = document.createElement("blockquote");
       quote.className = "twitter-tweet";
       quote.dataset.dnt = "true";
+      const hostEmbed = target.closest("[data-external-embed]") as HTMLElement | null;
+      if (hostEmbed?.dataset.compact === "true") {
+        quote.dataset.conversation = "none";
+      }
       appendSourceLink(quote, config);
       target.append(quote);
       if (!(window as XWindow).twttr?.widgets?.load) {
@@ -543,9 +550,13 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
     }
   }
 
-  /* autoload: 投稿をそのまま表示する。ボタン・プライバシー注記は出さない */
+  /* autoload: 投稿をそのまま表示する。ボタン・「直接見る」リンク・
+     プライバシー注記・ステータス・「外部コンテンツ」ラベルは出さない。
+     埋め込み投稿自体がリンクなので、誘導UIは不要。タイトルと説明のみ残す */
+  .external-embed[data-autoload="true"] .external-embed__label,
   .external-embed[data-autoload="true"] .external-embed__privacy,
-  .external-embed[data-autoload="true"] [data-external-embed-load] {
+  .external-embed[data-autoload="true"] .external-embed__actions,
+  .external-embed[data-autoload="true"] .external-embed__status {
     display: none;
   }
 </style>

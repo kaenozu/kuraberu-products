@@ -6,7 +6,7 @@ import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import SnsReactions from '../../../components/SnsReactions.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import {thermosTigerBottleArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
@@ -285,54 +285,45 @@ const differenceRows: DifferenceRow[] = [
     </div>
 
     <h2 id="sns">SNS での感想（参考情報）</h2>
-    <p>実際に使っている人の投稿を、参考情報として紹介します。比較の根拠はメーカー公式情報のみで、SNS の感想は個人の見解です。カードをタップすると元の投稿を開けます。</p>
-    <SnsReactions
-      siteName="X"
-      reactions={[
-        {
-          name: "ちんぴっぴ",
-          handle: "@pipichan_lovely",
-          text: "私も去年買って一番良かったもの、サーモスの水筒…！めちゃくちゃ気軽にいつでも冷たいあたたかい好きな飲み物飲めるの嬉しいすぎる…！",
-          url: "https://x.com/pipichan_lovely/status/2084896382750761442",
-          tone: "good",
-        },
-        {
-          name: "赤い野人DEATH",
-          handle: "@yajinrun800",
-          text: "今さらながらサーモスの水筒を買って氷を入れるんだけど、全然氷が溶けなくていつまでもキンキンで麦茶が飲めるの！！サーモス、優秀すぎてビックリ！",
-          url: "https://x.com/yajinrun800/status/2084277355510726712",
-          tone: "good",
-        },
-        {
-          name: "久。",
-          handle: "@hisashi_935",
-          text: "自分もサーモスの弁当箱や水筒使ってるので、サーモスには信用しかないです！凄く性能良いですよね。",
-          url: "https://x.com/hisashi_935/status/2086083404450418709",
-          tone: "good",
-        },
-        {
-          name: "nagisa",
-          handle: "@nagisa240605",
-          text: "娘の保冷水筒、タイガーかサーモスかで迷ってなかなか買えずにいる、、タイガーの方がコンパクトで今の飲む量なら十分そうなんだけど、コップ飲みと直飲みでパーツ付け替えが必要で…",
-          url: "https://x.com/nagisa240605/status/2087091920103415859",
-          tone: "mixed",
-        },
-        {
-          name: "小鉄",
-          handle: "@gudarakudara",
-          text: "10年使ったサーモス水筒の塗装が剥げてきたので、ペイントはがしで思い切って全部剥いだら、シルバーの小洒落た水筒が爆誕。交換パッキンも廃盤になって…",
-          url: "https://x.com/gudarakudara/status/2087050731782340707",
-          tone: "mixed",
-        },
-        {
-          name: "軟体動物",
-          handle: "@kuzumaimai",
-          text: "サーモスの水筒、保冷性能が良すぎて、普通のご家庭で作った小ぶりの氷が水筒の中で再凍結して大きい氷になるという、バグとしか思えない現象が起こる。",
-          url: "https://x.com/kuzumaimai/status/2084104501154488361",
-          tone: "good",
-        },
-      ]}
-    />
+    <p>実際に使っている人の投稿を、参考情報として紹介します。比較の根拠はメーカー公式情報のみで、SNS の感想は個人の見解です。投稿をタップすると元のページを開けます。</p>
+    <div class="sns-embeds">
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/pipichan_lovely/status/2084896382750761442"
+        title="「去年買って一番良かったもの」という声"
+        purpose="サーモスの水筒を買って良かったという投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/hisashi_935/status/2086083404450418709"
+        title="「サーモスには信用しかない」という声"
+        purpose="サーモスの水筒・弁当箱を長く使っているという投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/nagisa240605/status/2087091920103415859"
+        title="「タイガーかサーモスかで迷って」という声"
+        purpose="どちらを買うか検討中の投稿。コンパクトさとパーツ付け替えの手間を比べています。"
+        tone="mixed"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/gudarakudara/status/2087050731782340707"
+        title="「10年使ったサーモス水筒」という声"
+        purpose="10年使った後の塗装の状態と、交換パッキンの入手性に関する投稿。"
+        tone="mixed"
+        autoload
+        compact
+      />
+    </div>
 
     <h2 id="purchase">購入前に確認するページ</h2>
     <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
@@ -366,3 +357,27 @@ const differenceRows: DifferenceRow[] = [
   </article>
   <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>
+
+<style is:global>
+  /* SNS 感想セクション: 埋め込みを2列グリッドで小さめに表示 */
+  .sns-embeds {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-block: 1.25rem;
+  }
+
+  .sns-embeds .external-embed__intro h3 {
+    font-size: 0.95rem;
+  }
+
+  .sns-embeds .external-embed__target {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 720px) {
+    .sns-embeds {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
