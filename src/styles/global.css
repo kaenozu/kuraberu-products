@@ -761,6 +761,37 @@ a {
 .difference-status {
   font-size: 0.72rem;
 }
+/* 差分の決め手となる値を赤字+太字で強調 */
+.difference-value.is-highlighted {
+  background: #fdf2ef;
+  border-radius: 6px;
+}
+.difference-value.is-highlighted > span {
+  color: #c83e2c;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.difference-highlight-note {
+  display: inline-block;
+  width: fit-content;
+  background: #c83e2c;
+  color: #fff;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 700;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  margin-top: 0.15rem;
+}
+.summary-differences .is-highlighted {
+  color: #c83e2c;
+  font-weight: 800;
+}
+.summary-differences .is-highlighted .difference-highlight-note {
+  vertical-align: middle;
+  margin-left: 0.35rem;
+}
 #comparison-details {
   scroll-margin-top: 1rem;
 }

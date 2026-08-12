@@ -49,7 +49,11 @@ const statuses = Array.isArray(footerStatuses) ? footerStatuses : [];
   </div>
   {comparisonRows.length > 0 ? (
     <ul class="summary-differences">
-      {comparisonRows.map((row) => <li><b>{row.label}</b><span>{row.left}</span><span>{row.right}</span></li>)}
+      {comparisonRows.map((row) => <li>
+        <b>{row.label}</b>
+        <span class={row.highlight === 'left' ? 'is-highlighted' : ''}>{row.left}{row.highlight === 'left' && row.highlightNote && <em class="difference-highlight-note">{row.highlightNote}</em>}</span>
+        <span class={row.highlight === 'right' ? 'is-highlighted' : ''}>{row.right}{row.highlight === 'right' && row.highlightNote && <em class="difference-highlight-note">{row.highlightNote}</em>}</span>
+      </li>)}
     </ul>
   ) : (
     <p class="summary-empty">{emptyMessage}</p>
