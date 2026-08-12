@@ -9,6 +9,7 @@ import {
   combiTheSArticle,
   tigerRiceArticle,
   panasonicVacuumArticle,
+  panasonicHairDryerArticle,
   defineArticleMetadata,
   merriesNewbornArticle,
   merriesPantsArticle,
@@ -49,6 +50,7 @@ describe("article metadata", () => {
       combiTheSArticle,
       tigerRiceArticle,
       panasonicVacuumArticle,
+      panasonicHairDryerArticle,
       thermosTigerBottleArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
