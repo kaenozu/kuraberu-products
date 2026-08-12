@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
@@ -156,6 +156,26 @@ const differenceRows: DifferenceRow[] = [
         </div>
       </article>
     </div>
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="ベビービョルン スマートポッティ"
+        audience="コンパクトに収納でき、狭いバスルームでも場所を取らないおまるを優先する人向け"
+        href={smartPottyRakutenUrl}
+        productId="babybjorn-smart-potty"
+        imagePath="/products/babybjorn-smart-potty.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ベビービョルン ポッティチェア"
+        audience="長い時間座れるイス型で、中桶をそのまま流せる手軽さを優先する人向け"
+        href={pottyChairRakutenUrl}
+        productId="babybjorn-potty-chair"
+        imagePath="/products/babybjorn-potty-chair.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
       <p>購入リンク: {purchaseLinkLabel}</p>
@@ -223,8 +243,24 @@ const differenceRows: DifferenceRow[] = [
     <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、おまる・補助便座の正しい使用方法は必ず公式の使用説明書で確認してください。</p>
 
     <div class="grid two">
-      <AffiliateButton href={smartPottyRakutenUrl} productId="babybjorn-smart-potty" imagePath="/products/babybjorn-smart-potty.jpg" label="スマートポッティを楽天で見る" merchant="楽天" placement="article-end" />
-      <AffiliateButton href={pottyChairRakutenUrl} productId="babybjorn-potty-chair" imagePath="/products/babybjorn-potty-chair.jpg" label="ポッティチェアを楽天で見る" merchant="楽天" placement="article-end" />
+      <PurchaseCard
+        name="ベビービョルン スマートポッティ"
+        audience="コンパクトに収納でき、狭いバスルームでも場所を取らないおまるを優先する人向け"
+        href={smartPottyRakutenUrl}
+        productId="babybjorn-smart-potty"
+        imagePath="/products/babybjorn-smart-potty.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ベビービョルン ポッティチェア"
+        audience="長い時間座れるイス型で、中桶をそのまま流せる手軽さを優先する人向け"
+        href={pottyChairRakutenUrl}
+        productId="babybjorn-potty-chair"
+        imagePath="/products/babybjorn-potty-chair.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
     </div>
 
     <h2>更新履歴</h2>
