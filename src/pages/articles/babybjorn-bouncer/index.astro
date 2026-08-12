@@ -2,14 +2,14 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {babybjornBouncerArticle as articleMetadata} from '../../../content/articles';
 import {babybjornBouncerCandidateLabels, babybjornBouncerPriorityOptions, babybjornBouncerStandardConclusion} from '../../../content/babybjorn-bouncer-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const bouncerGuideUrl = 'https://www.rakuten.ne.jp/gold/babybjorn/topics/bouncer-guide/';
 const blissProductUrl = 'https://item.rakuten.co.jp/babybjorn/bouncer-bliss/';
@@ -64,23 +64,6 @@ const balanceCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "シートの素材とデザイン",
-    "left": "公式で「最新モデル。シートカバーをより柔らかく仕上げたモデル」と案内。3Dジャージー・コットン・Air（メッシュ）・ウーブンの素材展開で20種類以上のバリエーション。",
-    "right": "公式で「2トーンの生地が特長」と案内。コットン・Air（メッシュ）・ウーブン/ジャージーの素材展開。直近カラーバリエーションが増えています。"
-  },
-  {
-    "label": "対象と機能",
-    "left": "生後約1ヶ月〜2才くらい（最大体重13kg）。セルフバウンシング構造・3段階リクライニング。バウンサーとしての使用は体重9kgまで。",
-    "right": "生後約1ヶ月〜2才くらい（最大体重13kg）。セルフバウンシング構造・3段階リクライニング。バウンサーとしての使用は体重9kgまで。"
-  },
-  {
-    "label": "製品重量と公式ショップ価格（2026-08-10確認）",
-    "left": "約2.1kg。カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
-    "right": "約2.1kg。カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
@@ -202,14 +185,11 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="babybjorn-bouncer-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、Bliss とバランスソフトは機能（セルフバウンシング構造・3段階リクライニング・対象期間）に大きな違いはなく、主な違いはシートの素材とデザインです。Bliss は最新モデルでシートカバーをより柔らかく仕上げたモデルとされ、3Dジャージー（放熱効果）を含む素材展開で20種類以上のバリエーションがあります。バランスソフトは2トーンの生地が特長です。2026-08-10時点の公式楽天市場店ではどちらもカラー限定SALEで17,600円〜19,800円（カラー・素材により変動）でした。なお、実際の肌触りやデザインの好みは、今回確認した公式情報だけでは比較できません。"
-      left={blissCandidate}
-      right={balanceCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, buyHref: blissRakutenUrl, officialHref: blissProductUrl, guidePoints: [blissCandidate.audience] }}
+      right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, buyHref: balanceRakutenUrl, officialHref: balanceProductUrl, guidePoints: [balanceCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={babybjornBouncerPriorityOptions} labels={babybjornBouncerCandidateLabels} standard={babybjornBouncerStandardConclusion} />

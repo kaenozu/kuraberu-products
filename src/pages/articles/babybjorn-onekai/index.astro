@@ -2,14 +2,14 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {babybjornOnekaiArticle as articleMetadata} from '../../../content/articles';
 import {babybjornOnekaiCandidateLabels, babybjornOnekaiPriorityOptions, babybjornOnekaiStandardConclusion} from '../../../content/babybjorn-onekai-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const chartOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
 const onekaiProductUrl = 'https://item.rakuten.co.jp/babybjorn/babycarrier-one-kai-air/';
@@ -64,23 +64,6 @@ const moveCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "対象月齢・対象体重",
-    "left": "公式比較表で0カ月〜約36ヶ月、体重3.5〜15kg、ヒップ約〜160cm。",
-    "right": "公式比較表で0カ月〜約15ヶ月、体重3.2〜12kg、ヒップ約〜120cm。"
-  },
-  {
-    "label": "抱っこの種類とサポート",
-    "left": "4通り（対面ハイ・対面ロー・前向き・おんぶ）。赤ちゃんの身体に沿った3D構造。パッド入りショルダーベルト＋幅広ウエストベルト（おんぶ時にもスマート）。",
-    "right": "2通り。フルメッシュ素材で通気性抜群。ショルダーパッド・ウェストベルトの項目は公式比較表で「ー」。"
-  },
-  {
-    "label": "製品重量と公式ショップ価格（2026-08-10確認）",
-    "left": "約1000g。27,500円。",
-    "right": "約860g。22,000円。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
@@ -209,14 +192,11 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="babybjorn-onekai-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、新生児から約36ヶ月まで4通りの抱っこ（おんぶ含む）で長く使える機能性を重視するなら ONE KAI、新生児から約15ヶ月まで通気性を重視して使うなら MOVE という違いがあります。ONE KAI は赤ちゃんの身体に沿った3D構造でぴったり抱っこが可能で、幅広ウエストベルト付き（公式ショップ価格27,500円、2026-08-10確認）。MOVE はフルメッシュ素材で通気性抜群、MINI より長く使えるモデル（公式ショップ価格22,000円、同）。なお、どちらの着け心地が良いか、赤ちゃんが嫌がりにくいかといった使用感は、今回確認した公式情報だけでは比較できません。"
-      left={onekaiCandidate}
-      right={moveCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, buyHref: onekaiRakutenUrl, officialHref: onekaiProductUrl, guidePoints: [onekaiCandidate.audience] }}
+      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, buyHref: moveRakutenUrl, officialHref: moveProductUrl, guidePoints: [moveCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={babybjornOnekaiPriorityOptions} labels={babybjornOnekaiCandidateLabels} standard={babybjornOnekaiStandardConclusion} />

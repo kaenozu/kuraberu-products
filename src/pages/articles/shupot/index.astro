@@ -2,14 +2,14 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {shupotArticle as articleMetadata} from '../../../content/articles';
 import {shupotCandidateLabels, shupotPriorityOptions, shupotStandardConclusion} from '../../../content/shupot-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const dendoOfficial = 'https://shop.pigeon.co.jp/products/1032018';
 const shudoOfficial = 'https://shop.pigeon.co.jp/products/2000638s';
@@ -64,23 +64,6 @@ const shudoCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "電源と使える場所",
-    "left": "ACアダプター式で専用ACアダプター付属。コンセントのある水平で安定した場所で使用。",
-    "right": "電源不要。コンパクトサイズ・フード付き・チューブもなく、スッキリ収納・持ち運び便利。"
-  },
-  {
-    "label": "吸引力の調整とお手入れ",
-    "left": "鼻水の状態に合わせてダイヤルで吸引力を調整。鼻水キャッチャーを中心に洗い、電動部本体とACアダプターは水洗い・煮沸・レンジ消毒すべて不可。",
-    "right": "シリコーンポンプとフィット鼻ノズルで適した吸引力を再現。まるごと洗浄OK・消毒/除菌ができる。"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "13,585円。定格15分を超える連続運転は禁止、1回片方の鼻に5秒を超える吸引は禁止。安全に関する重要なお知らせあり。",
-    "right": "3,762円。電源不要で大きな音がでない。洗い替え用を含めフィット鼻ノズルが計2個付属。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
@@ -174,14 +157,11 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="shupot-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、コンセントのある場所でパワフルな吸引とダイヤル調整を重視するなら電動鼻吸い器 シュポット、電源不要・コンパクト・価格を抑えることを重視するなら手動鼻吸い器 シュポットポンプ＋フィット鼻ノズルという違いがあります。電動はピジョン公式ショップ価格13,585円（2026-08-10確認）、手動は3,762円（同）です。なお、どちらが実際に吸いやすいか、赤ちゃんが嫌がりにくいかといった使用感は、今回確認した公式情報だけでは比較できません。"
-      left={dendoCandidate}
-      right={shudoCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: dendoCandidate.product, line: dendoCandidate.line, tagline: dendoCandidate.audience, image: '/products/shupot-dendo.jpg', imageAlt: `${dendoCandidate.product} ${dendoCandidate.line}`, buyHref: dendoRakutenUrl, officialHref: dendoOfficial, guidePoints: [dendoCandidate.audience] }}
+      right={{ brand: shudoCandidate.product, line: shudoCandidate.line, tagline: shudoCandidate.audience, image: '/products/shupot-shudo.jpg', imageAlt: `${shudoCandidate.product} ${shudoCandidate.line}`, buyHref: shudoRakutenUrl, officialHref: shudoOfficial, guidePoints: [shudoCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={shupotPriorityOptions} labels={shupotCandidateLabels} standard={shupotStandardConclusion} />

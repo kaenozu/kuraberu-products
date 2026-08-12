@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
@@ -10,9 +10,7 @@ import {pigeonSlim240Article as articleMetadata} from '../../../content/articles
 import {pigeonSlimCandidateLabels, pigeonSlimPriorityOptions, pigeonSlimStandardConclusion} from '../../../content/pigeon-slim-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
-  ComparisonCandidate,
-  ComparisonRow,
-  DifferenceRow,
+  ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
 
 const breast = 'https://products.pigeon.co.jp/item/index-2378.html';
@@ -95,12 +93,6 @@ const slimCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {label: 'ボトルの形状', left: '広口タイプ（調乳しやすい）', right: 'スリムタイプ（転がりにくい）'},
-  {label: '付属乳首', left: 'M・Y字形（3ヵ月頃から）', right: 'M・丸穴（4ヵ月頃〜）'},
-  {label: '乳首ラインナップ', left: '6サイズ（SS・S・M・L・LL・3L）', right: '4サイズ（S・M・Y・L）'},
-  {label: '消毒・除菌', left: '煮沸○・スチーム○・薬液○（レンジ×）', right: '煮沸○・スチーム○・薬液○（レンジ×）'},
-];
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -174,14 +166,11 @@ const differenceRows: DifferenceRow[] = [
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison
-      idPrefix="pigeon-slim-240-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報では大きな違いは「ボトルの形」と「乳首の体系」です。母乳実感は広口タイプで乳首が6サイズ（付属はM・Y字形・3ヵ月頃から）、スリムタイプは細身の転がりにくい形で乳首が4サイズ（付属はM・丸穴・4ヵ月頃〜）。どちらも240mlで消毒方法は同じです。"
-      left={breastCandidate}
-      right={slimCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: breastCandidate.product, line: breastCandidate.line, tagline: breastCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${breastCandidate.product} ${breastCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL, officialHref: breast, guidePoints: [breastCandidate.audience] }}
+      right={{ brand: slimCandidate.product, line: slimCandidate.line, tagline: slimCandidate.audience, image: '/products/pigeon-slim-pp240.jpg', imageAlt: `${slimCandidate.product} ${slimCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL, officialHref: slim, guidePoints: [slimCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={pigeonSlimPriorityOptions} labels={pigeonSlimCandidateLabels} standard={pigeonSlimStandardConclusion} />

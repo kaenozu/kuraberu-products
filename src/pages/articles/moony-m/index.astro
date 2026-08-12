@@ -2,14 +2,14 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {moonyMArticle as articleMetadata} from '../../../content/articles';
 import {moonyCandidateLabels, moonyPriorityOptions, moonyStandardConclusion} from '../../../content/moony-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const teishigekiSeries = 'https://jp.moony.com/ja/products/nmn1.html';
 const mashumaroSeries = 'https://jp.moony.com/ja/products/mn.html';
@@ -63,23 +63,6 @@ const mashumaroCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "うんちへの対策",
-    "left": "うんち水分吸収シートで、ゆるうんちの水分を下層へ吸収し、肌への付着を抑える設計。おしりガイドも搭載。",
-    "right": "背中と足回りにゆるうんちストッパーを搭載。"
-  },
-  {
-    "label": "無添加の内容",
-    "left": "Mを含む新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加。",
-    "right": "全サイズで、石油由来油剤・香料・ラテックス・合成着色料の4成分無添加。"
-  },
-  {
-    "label": "Mサイズの内容量と主な機能",
-    "left": "Mは6〜11kg、46枚入り。うんち水分吸収シートとおしりガイドが特徴。",
-    "right": "Mは6〜11kg、54枚入り。無添加弱酸性素材、ゆるうんちストッパー、お知らせサイン、最大12時間吸収が案内されている。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
@@ -173,14 +156,11 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="moony-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="Mサイズ同士で比べると、「低刺激であんしん」は、うんち水分吸収シートによる肌への付着対策を重視したい場合に確認しやすい商品です。「マシュマロ肌ごこち モレ安心」は、背中と足回りのゆるうんち対策、4成分無添加、最大12時間吸収などをまとめて確認したい場合に候補になります。どちらも6〜11kg向けですが、公式に示されている機能の方向が異なります。なお、「低刺激であんしん」の新生児〜Mにはオーガニックコットンは含まれていません。"
-      left={teishigekiCandidate}
-      right={mashumaroCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience] }}
+      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={moonyPriorityOptions} labels={moonyCandidateLabels} standard={moonyStandardConclusion} />
