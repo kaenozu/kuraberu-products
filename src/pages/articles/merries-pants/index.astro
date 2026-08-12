@@ -3,6 +3,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
@@ -197,6 +199,15 @@ const differenceRows: DifferenceRow[] = [
         placement="after-decision"
         note="価格・在庫は販売先でご確認ください。"
       />
+    </div>
+
+    <ArticleSocialProof
+      query="メリーズ ファーストプレミアム エアスルー"
+      checkedAt="2026-08-12"
+      hasPosts={true}
+    />
+    <div class="sns-embeds">
+      <ExternalEmbed provider="x" url="https://x.com/i/status/1977892994713071846" title="メリーズ ファーストプレミアムとエアスルーについての感想" purpose="両シリーズの使用感に触れた投稿。個人の感想として参考情報に限定します。" tone="mixed" autoload compact />
     </div>
 
     <h2 id="faq">よくある質問</h2>

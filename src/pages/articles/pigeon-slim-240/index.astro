@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
@@ -231,6 +232,12 @@ const differenceRows: DifferenceRow[] = [
         note="価格・在庫は販売先でご確認ください。"
       />
     </div>
+
+    <ArticleSocialProof
+      query="ピジョン 母乳実感 スリムタイプ 240ml"
+      checkedAt="2026-08-12"
+      hasPosts={false}
+    />
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
