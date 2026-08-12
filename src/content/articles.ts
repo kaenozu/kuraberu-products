@@ -465,11 +465,16 @@ export const pigeonBottleSizeArticle = defineArticleMetadata({
   summary:
     "「160ml」と「240ml」を、公式情報・付属乳首・対象月齢目安・確認状況に分けて比較します。",
   publishedAt: "2026-08-11",
-  modifiedAt: "2026-08-11",
+  modifiedAt: "2026-08-12",
   productInfoCheckedAt: "2026-08-11",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/pigeon-bottle-160-240-160ml.jpg",
   changeLog: [
+    {
+      date: "2026-08-12",
+      summary:
+        "記事冒頭を圧縮。30秒比較の直後に差分だけを置き、条件に応じた比較結論を詳細表の後に移動。迷ったときの販売ページ確認リンクを冒頭に追加。",
+    },
     {
       date: "2026-08-11",
       summary:
