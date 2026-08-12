@@ -1,0 +1,47 @@
+---
+// PurchaseCard.astro
+// 商品ごとの購入カード。比較結論の直後と記事末尾に配置する。
+// 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 楽天市場 CTA / 広告表記
+import AffiliateButton from './AffiliateButton.astro';
+
+interface Props {
+  name: string;
+  audience: string;
+  href?: string;
+  productId?: string;
+  imagePath?: string;
+  placement?: string;
+  note?: string;
+}
+
+const {
+  name,
+  audience,
+  href,
+  productId,
+  imagePath,
+  placement = 'purchase-card',
+  note,
+} = Astro.props;
+---
+<article class="purchase-card">
+  <div class="purchase-card__main">
+    {imagePath && (
+      <img class="purchase-card__image" src={imagePath} alt="" width="96" height="96" loading="lazy" />
+    )}
+    <div class="purchase-card__body">
+      <h3 class="purchase-card__name">{name}</h3>
+      <p class="purchase-card__audience">{audience}</p>
+    </div>
+  </div>
+  <AffiliateButton
+    href={href}
+    productId={productId}
+    label="楽天市場で商品を見る"
+    subLabel="楽天市場で商品を見る"
+    merchant="楽天"
+    imagePath={undefined}
+    placement={placement}
+  />
+  {note && <p class="purchase-card__note">{note}</p>}
+</article>

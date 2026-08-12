@@ -13,6 +13,7 @@ import {
   pampersNewbornArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
+  thermosTigerBottleArticle,
   pigeonBottleSizeArticle,
   pottyArticle,
   shupotArticle,
@@ -42,6 +43,7 @@ describe("article metadata", () => {
       cradleArticle,
       pottyArticle,
       pigeonBottleSizeArticle,
+      thermosTigerBottleArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(

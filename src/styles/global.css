@@ -1096,3 +1096,71 @@ a {
     justify-content: flex-start;
   }
 }
+
+/* 商品ごとの購入カード（比較結論の直後・記事末尾に配置） */
+.purchase-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+.purchase-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: var(--surface, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+}
+.purchase-card__main {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.purchase-card__image {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  flex: 0 0 auto;
+}
+.purchase-card__body {
+  min-width: 0;
+}
+.purchase-card__name {
+  margin: 0 0 0.3rem;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+.purchase-card__audience {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft, #555);
+  line-height: 1.5;
+}
+.purchase-card__note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted, rgba(0, 0, 0, 0.55));
+}
+.purchase-card .cta.cta-card {
+  margin-top: auto;
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.7rem 1rem;
+  background: var(--ink, #1a1a1a);
+  color: #fff;
+  border-color: transparent;
+}
+.purchase-card .cta.cta-card:hover {
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+.purchase-card .cta-card-sub {
+  color: rgba(255, 255, 255, 0.75);
+}
+.purchase-card .ad-note {
+  color: rgba(255, 255, 255, 0.6);
+}
