@@ -153,6 +153,18 @@ const keyDiffRows: KeyDiffRow[] = [
 
     <p class="official-note">✓ 以下の数値は{articleMetadata.productInfoCheckedAt ?? '確認日未記録'}にメーカー公式ページで確認しています。</p>
 
+    <div class="sticky-compare-bar" id="sticky-compare-bar" hidden>
+      <a class="sticky-side is-left" href={thermosJnlS500.rakutenUrl} target="_blank" rel="noopener noreferrer">
+        <span class="sticky-side-name">{thermosJnlS500.brand} {thermosJnlS500.model}</span>
+        <span class="sticky-side-cta">楽天で見る</span>
+      </a>
+      <a class="sticky-guide" href="#decision-guide">どっち向き？</a>
+      <a class="sticky-side is-right" href={tigerMtaJ050.rakutenUrl} target="_blank" rel="noopener noreferrer">
+        <span class="sticky-side-name">{tigerMtaJ050.brand} {tigerMtaJ050.model}</span>
+        <span class="sticky-side-cta">楽天で見る</span>
+      </a>
+    </div>
+
     <VisualKeyDifferences
       leftLabel="サーモス JNL-S500"
       rightLabel="タイガー MTA-J050"
@@ -411,4 +423,84 @@ const keyDiffRows: KeyDiffRow[] = [
   .fold-section .source-list {
     font-size: 0.85rem;
   }
+
+  /* スクロール中も見失わない sticky 比較バー */
+  .sticky-compare-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  }
+  .sticky-compare-bar[hidden] {
+    display: none;
+  }
+  .sticky-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 0.55rem 0.75rem;
+    text-decoration: none;
+    line-height: 1.2;
+  }
+  .sticky-side.is-left {
+    background: #e6efec;
+    color: #1d4a41;
+  }
+  .sticky-side.is-right {
+    background: #f6e8de;
+    color: #7c4a2b;
+  }
+  .sticky-side-name {
+    font-weight: 800;
+    font-size: 0.8rem;
+  }
+  .sticky-side-cta {
+    font-size: 0.68rem;
+    opacity: 0.85;
+  }
+  .sticky-guide {
+    display: grid;
+    place-items: center;
+    padding: 0 1.1rem;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  @media (max-width: 420px) {
+    .sticky-side {
+      padding: 0.5rem 0.4rem;
+    }
+    .sticky-side-cta {
+      display: none;
+    }
+  }
 </style>
+
+<script>
+  const stickyBar = document.getElementById('sticky-compare-bar');
+  const keyDiffSection = document.getElementById('key-differences');
+  if (stickyBar && keyDiffSection) {
+    // 主要差分セクションが画面内にある間だけ固定バーを表示する。
+    // ヘッダー（72px）と下部の20%は判定範囲から外し、見え始め〜見え終わりを検知する。
+    const observer = new IntersectionObserver(
+      (entries) => {
+        stickyBar.hidden = !entries[0].isIntersecting;
+      },
+      { rootMargin: '-72px 0px -20% 0px', threshold: 0 },
+    );
+    observer.observe(keyDiffSection);
+  }
+</script>
