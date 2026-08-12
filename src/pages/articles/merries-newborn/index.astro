@@ -5,11 +5,8 @@ import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {merriesNewbornArticle as articleMetadata} from '../../../content/articles';
-import {merriesCandidateLabels, merriesPriorityOptions, merriesStandardConclusion} from '../../../content/merries-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
   ComparisonCandidate, DifferenceRow,
@@ -90,54 +87,19 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">メリーズの新生児用テープには「ファーストプレミアム」と「ずっと肌さらエアスルー」の2つがあります。この記事では、花王公式で確認できる機能・サイズ展開だけをもとに、どちらを先に確認すればよいかを整理します。あてずっぽうではなく「公式に書かれていること」と「まだ確認が必要なこと」を分けて書いています。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#checked">確認できる項目</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img
-          src="/products/merries-fp-newborn.jpg"
-          alt="メリーズ ファーストプレミアム テープ 新生児用 パッケージ"
-          width="500"
-          height="500"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <p class="product-card-line">メリーズ / テープ</p>
-          <h2 class="product-card-name">ファーストプレミアム</h2>
-          <p class="product-card-desc">カシミヤタッチの肌ざわり。新生児用は3,000g・5,000gの2択。</p>
-          <a class="product-card-link" href={firstPremium} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img
-          src="/products/merries-airsle-newborn.jpg"
-          alt="メリーズ ずっと肌さらエアスルー テープ 新生児用 パッケージ"
-          width="640"
-          height="640"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <span class="product-card-line">メリーズ / テープ</span>
-          <h2 class="product-card-name">ずっと肌さらエアスルー</h2>
-          <p class="product-card-desc">シート表面の穴50億個で通気。新生児用は5,000gまで。</p>
-          <a class="product-card-link" href={airsle} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
       <p>購入リンク：{purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MERRIES_FP_URL, officialHref: firstPremium, guidePoints: [premiumCandidate.audience] }}
       right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MERRIES_AIRSLE_URL, officialHref: airsle, guidePoints: [standardCandidate.audience] }}
@@ -145,17 +107,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={merriesPriorityOptions} labels={merriesCandidateLabels} standard={merriesStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="merries-newborn-differences"
-        leftLabel="ファーストプレミアム"
-        rightLabel="ずっと肌さらエアスルー"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">

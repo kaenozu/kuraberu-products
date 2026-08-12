@@ -4,11 +4,8 @@ import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {pigeonSlim240Article as articleMetadata} from '../../../content/articles';
-import {pigeonSlimCandidateLabels, pigeonSlimPriorityOptions, pigeonSlimStandardConclusion} from '../../../content/pigeon-slim-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
   ComparisonCandidate, DifferenceRow,
@@ -132,41 +129,19 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ピジョンには「母乳実感」と「スリムタイプ」の2つの哺乳びんシリーズがあります。この記事では、ピジョン公式で確認できる形状・乳首・消毒方法だけをもとに、2つの240mlの違いを整理します。「どちらもMの乳首が付く」と誤解しやすい点を、公式情報で確認できる範囲で解きほぐしていきます。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#checked">確認できる項目</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img src="/products/pigeon-bottle-ppsu240.jpg" alt="母乳実感 240ml パッケージ" width="500" height="500" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">母乳実感 240ml</h2>
-          <p class="product-card-desc">広口タイプで調乳しやすい。乳首ラインナップは6サイズ。</p>
-          <a class="product-card-link" href={breast} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img src="/products/pigeon-slim-pp240.jpg" alt="スリムタイプ 240ml のボトル" width="500" height="500" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">スリムタイプ 240ml</h2>
-          <p class="product-card-desc">転がりにくく、持ちやすい形。乳首ラインナップは4サイズ。</p>
-          <a class="product-card-link" href={slim} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
       <p>購入リンク：{purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: breastCandidate.product, line: breastCandidate.line, tagline: breastCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${breastCandidate.product} ${breastCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL, officialHref: breast, guidePoints: [breastCandidate.audience] }}
       right={{ brand: slimCandidate.product, line: slimCandidate.line, tagline: slimCandidate.audience, image: '/products/pigeon-slim-pp240.jpg', imageAlt: `${slimCandidate.product} ${slimCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL, officialHref: slim, guidePoints: [slimCandidate.audience] }}
@@ -174,17 +149,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={pigeonSlimPriorityOptions} labels={pigeonSlimCandidateLabels} standard={pigeonSlimStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="pigeon-slim-240-differences"
-        leftLabel="母乳実感 240ml"
-        rightLabel="スリムタイプ 240ml"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">
