@@ -69,16 +69,14 @@ GitHub ActionsはPreviewの `pnpm verify` に加え、秘密値を使わない�
 
 GitHub公式ActionはNode 24対応のv6系commit SHAへ固定しています。branch protectionの必須チェック設定はリポジトリ設定で別途有効化し、失敗中のマージを禁止してください。
 
-## Cloudflare Workers Builds
+## 本番運用
 
-正規のGit連携経路はCloudflare Workers Buildsです。
+このプロジェクトのCloudflare PagesはGit ProviderなしのDirect Upload運用です。GitHubでマージしても本番へ自動反映されるとは限りません。
 
-- Build command: `pnpm build`
-- Deploy command: `npx wrangler versions upload`
-- Static assets directory: `dist`
-- Wrangler config: `wrangler.jsonc`
-- Node.js: `.node-version` と同じメジャーバージョン
+- Build: `set -a && source .env && set +a && DEPLOYMENT_ENV=production pnpm build`
+- Deploy: `npx wrangler pages deploy dist --project-name kuraberu-products --branch main --commit-dirty=true`
+- 確認: `npx wrangler pages deployment list --project-name kuraberu-products`
+- 本番ブランチラベル: `main`
+- 本番URL: `https://kuraberu-products.pages.dev`
 
-PR buildはVersion uploadまで行い、Production trafficへは流しません。Production反映時はCloudflare Dashboardまたは `wrangler versions deploy` で対象Versionを明示的にデプロイし、Deployment IDと公開受入結果を記録します。
-
-旧Cloudflare Pagesの直接アップロード経路が残っている場合は、Issue #4で整理します。
+デプロイ後はDeployment一覧でEnvironmentがProduction、Branchがmain、Sourceが対象コミットであることを確認し、トップ・記事一覧・全記事詳細のHTTPステータスと生成HTMLを検証します。詳細な新規記事・既存記事・UI改善の管理基準は [`docs/site-management.md`](./docs/site-management.md) を参照してください。

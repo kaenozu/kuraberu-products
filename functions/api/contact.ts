@@ -38,8 +38,13 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       .slice(0, 4000),
   };
 
-  if (!body.message) {
-    return json({ ok: false, error: "message is required" }, 400);
+  if (!body.message || !body.email) {
+    return json({ ok: false, error: "message and email are required" }, 400);
+  }
+
+  // メールアドレスの簡易形式チェック（必須化に伴い形式も検証）
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+    return json({ ok: false, error: "invalid email" }, 400);
   }
 
   const token = env.TELEGRAM_BOT_TOKEN;
@@ -58,7 +63,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     "📩 お問い合わせ（くらべる商品メモ）",
     "",
     `名前: ${body.name || "（未記入）"}`,
-    `メール: ${body.email || "（未記入）"}`,
+    `返信先メール: ${body.email}`,
     "",
     "---",
     body.message,

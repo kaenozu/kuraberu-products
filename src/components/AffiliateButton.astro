@@ -1,13 +1,21 @@
 ---
 import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
 import {fetchRakutenProducts, selectRakutenProduct, type RakutenSelectionOptions} from '../lib/rakuten';
-const {href,label,merchant,productId,placement} = Astro.props;
+const {href,label,merchant,productId,placement,imagePath,subLabel} = Astro.props;
 
 type ProductId =
   | 'pampers-premium-newborn'
   | 'pampers-sarasara-newborn'
   | 'merries-fp-newborn'
-  | 'merries-airsle-newborn';
+  | 'merries-airsle-newborn'
+  | 'pigeon-glass-240'
+  | 'pigeon-ppsu-240'
+  | 'pigeon-slim-240'
+  | 'pigeon-160'
+  | 'moony-teishigeki-m'
+  | 'moony-mashumaro-m'
+  | 'shupot-dendo'
+  | 'shupot-shudo';
 type ProductQuery = {
   keyword: string;
   requiredTerms: readonly string[];
@@ -47,6 +55,70 @@ const productQueries: Record<ProductId, ProductQuery> = {
       exactItemCodes: ['matsukiyo:10547359'],
     },
   },
+  'pigeon-glass-240': {
+    keyword: 'ピジョン 母乳実感 哺乳びん 240ml 耐熱ガラス',
+    requiredTerms: ['ピジョン', '母乳実感', '240ml'],
+    selection: {
+      excludedTerms: ['プラスチック', 'PPSU', 'スリム', 'セット', '2本'],
+      exactIdentifiers: ['4902508024488'],
+    },
+  },
+  'pigeon-ppsu-240': {
+    keyword: 'ピジョン 母乳実感 哺乳びん 240ml プラスチック',
+    requiredTerms: ['ピジョン', '母乳実感', '240ml'],
+    selection: {
+      excludedTerms: ['ガラス', 'スリム', 'セット', '2本'],
+      exactIdentifiers: ['4902508024518'],
+    },
+  },
+  'pigeon-slim-240': {
+    keyword: 'ピジョン スリムタイプ 哺乳びん 240ml プラスチック',
+    requiredTerms: ['ピジョン', 'スリムタイプ', '240ml'],
+    selection: {
+      excludedTerms: ['ガラス', '母乳実感', 'セット', '2本', '200ml'],
+      exactIdentifiers: ['4902508003650'],
+    },
+  },
+  'pigeon-160': {
+    keyword: 'ピジョン 母乳実感 哺乳びん 160ml プラスチック',
+    requiredTerms: ['ピジョン', '母乳実感', '160ml'],
+    selection: {
+      excludedTerms: ['プラスチック', '240ml', 'スリム', 'セット', '2本'],
+      exactItemCodes: ['pigeon-shop:1026735'],
+    },
+  },
+  'moony-teishigeki-m': {
+    keyword: 'ムーニー 低刺激であんしん M テープ 46枚',
+    requiredTerms: ['低刺激であんしん', 'Mサイズ', 'テープ'],
+    selection: {
+      excludedTerms: ['パンツ', 'ケース', '×4', '4袋', 'まとめ買い', 'Sサイズ', 'Lサイズ'],
+      exactItemCodes: ['unicharm:100619'],
+    },
+  },
+  'moony-mashumaro-m': {
+    keyword: 'ムーニー マシュマロ肌ごこちモレ安心 Mサイズ 54枚 テープ',
+    requiredTerms: ['マシュマロ肌ごこち', 'Mサイズ'],
+    selection: {
+      excludedTerms: ['パンツ', 'ケース', '×4', '4袋', 'まとめ買い', 'Sサイズ', 'Lサイズ'],
+      exactItemCodes: ['unicharm:101302'],
+    },
+  },
+  'shupot-dendo': {
+    keyword: 'ピジョン 電動鼻吸い器 シュポット',
+    requiredTerms: ['シュポット', '電動'],
+    selection: {
+      excludedTerms: ['セット', 'まとめ買い', 'フィット鼻ノズル', '鼻水キャッチャー', 'パーフェクト'],
+      exactItemCodes: ['pigeon-shop:1032018'],
+    },
+  },
+  'shupot-shudo': {
+    keyword: 'ピジョン 手動鼻吸い器 シュポットポンプ フィット鼻ノズル',
+    requiredTerms: ['シュポットポンプ', '手動'],
+    selection: {
+      excludedTerms: ['電動', 'セット', 'まとめ買い'],
+      exactItemCodes: ['pigeon-shop:2000638s'],
+    },
+  },
 } as const;
 
 const directHref = typeof href === 'string' && isAllowedRakutenUrl(href) ? href : undefined;
@@ -57,4 +129,21 @@ const generated = !directHref && query
 const resolvedHref = directHref ?? generated;
 const valid = isAllowedRakutenUrl(resolvedHref);
 ---
-{valid ? <a class="cta" href={resolvedHref} target="_blank" rel="sponsored nofollow noopener noreferrer" data-product-id={productId} data-placement={placement}>{label}（広告）</a> : <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>}
+{valid ? (
+  <a
+    class="cta cta-card"
+    href={resolvedHref}
+    target="_blank"
+    rel="sponsored nofollow noopener noreferrer"
+    data-product-id={productId}
+    data-placement={placement}
+  >
+    {imagePath && <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />}
+    <span class="cta-card-body">
+      <span class="cta-card-label">{label}</span>
+      <span class="cta-card-sub">{subLabel ?? '楽天市場で確認'} →<span class="ad-note">（広告）</span></span>
+    </span>
+  </a>
+) : (
+  <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>
+)}

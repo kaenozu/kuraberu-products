@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import {pigeonSlim240Article as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+import type {
+  ComparisonCandidate, DifferenceRow,
+} from '../../../lib/comparison';
+
+const breast = 'https://products.pigeon.co.jp/item/index-2378.html';
+const slim = 'https://products.pigeon.co.jp/item/index-1774.html';
+const breastNipple = 'https://products.pigeon.co.jp/item/index-2406.html';
+const slimNippleS = 'https://products.pigeon.co.jp/item/index-1779.html';
+const slimNippleM = 'https://products.pigeon.co.jp/item/index-1780.html';
+const slimNippleY = 'https://products.pigeon.co.jp/item/index-1781.html';
+const slimNippleL = 'https://products.pigeon.co.jp/item/index-1782.html';
+const bottleMaterialGuide = 'https://kuraberu-products.pages.dev/articles/pigeon-bottle-240/';
+const breastSearch = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml';
+const slimSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%B9%E3%83%AA%E3%83%A0%E3%82%BF%E3%82%A4%E3%83%97%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml';
+
+const faqEntries = [
+  {
+    question: '母乳実感240mlとスリムタイプ240mlは同じ容量ですか？',
+    answer: 'はい。今回比較する2商品はいずれも240mlです。容量は同じですが、ボトルの形状が異なります（母乳実感は広口タイプ、スリムタイプは細身タイプ）。',
+  },
+  {
+    question: 'どちらもMサイズの乳首が付属しますが、同じ乳首ですか？',
+    answer:
+      'いいえ。母乳実感240mlの付属乳首は「Mサイズ・Y字形・3ヵ月頃から」、スリムタイプ240mlの付属乳首は「Mサイズ・丸穴・4ヵ月頃〜」です。サイズ名は同じでも、吸い穴の形と対象時期が異なります。',
+  },
+  {
+    question: '母乳実感の乳首をスリムタイプに付けられますか？',
+    answer:
+      'ピジョン公式は母乳実感の乳首ページで「スリムタイプ哺乳びんにはお使いいただけません」と明記しています。パーツを流用する場合は必ず公式ページの注意書きを確認してください。',
+  },
+  {
+    question: 'スリムタイプの乳首を母乳実感に付けられますか？',
+    answer:
+      '今回確認したスリムタイプの乳首ページには、母乳実感の哺乳びんへの使用可否を明記する文章は見つかりませんでした。公式の注意書きを確認のうえ、対応を判断してください。',
+  },
+  {
+    question: '240mlに付属する乳首は新生児から使えますか？',
+    answer:
+      '両シリーズとも240mlに付属する乳首は「M」です。新生児期（0ヵ月）から使える乳首は別にラインナップされています（母乳実感はSS・丸穴、スリムタイプはS・丸穴）。新生児期に240mlを使う場合は乳首を別途購入して選ぶ必要があります。',
+  },
+  {
+    question: '6ヵ月頃の乳首はどう違いますか？',
+    answer:
+      '母乳実感は「L・Y字形・6ヵ月頃〜」、スリムタイプは「Y・Y字形・6ヵ月頃〜」です。吸い穴の形はどちらもY字形ですが、サイズ名と対象時期が異なります。',
+  },
+  {
+    question: '消毒・除菌の方法は違いますか？',
+    answer:
+      'いいえ。今回の2商品はどちらも煮沸・スチーム・薬液に対応し、電子レンジ除菌は不可です。',
+  },
+  {
+    question: 'どちらの方が赤ちゃんが飲みやすいですか？',
+    answer:
+      '公式スペックだけでは判定できません。ピジョンも、同じ施策の時期でも飲み方には個人差があるとして、乳児の成長と飲み方に合わせて乳首を選ぶよう案内しています。',
+  },
+] as const;
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(
+  articleMetadata.productInfoCheckedAt,
+  contentAsOf,
+);
+const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
+  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
+  : '最終確認日は未記録';
+
+const breastCandidate: ComparisonCandidate = {
+  product: 'ピジョン',
+  line: '母乳実感 240ml',
+  tone: 'premium',
+  audience: '広口タイプで調乳しやすさを重視する人',
+  note: '公式商品ページで仕様を確認',
+  status: 'official',
+};
+
+const slimCandidate: ComparisonCandidate = {
+  product: 'ピジョン',
+  line: 'スリムタイプ 240ml',
+  tone: 'standard',
+  audience: '細身で持ちやすさ・転がりにくさを重視する人',
+  note: '公式商品ページで仕様を確認',
+  status: 'official',
+};
+
+
+const differenceRows: DifferenceRow[] = [
+  {
+    label: 'ボトルの形状',
+    left: '広口タイプ（公式「持ちやすい太さと使いやすい広口ボトル」）',
+    right: 'スリムタイプ（公式「転がりにくく、持ちやすい形」）',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '付属乳首（240ml）',
+    left: 'Mサイズ・Y字形（3ヵ月頃から）',
+    right: 'Mサイズ・丸穴（4ヵ月頃〜）',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '乳首のラインナップ',
+    left: '6サイズ（SS・S・M・L・LL・3L）',
+    right: '4サイズ（S・M・Y・L）',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '乳首の互換性（公式の明記）',
+    left: '母乳実感の乳首はスリムタイプ哺乳びんに使用不可と明記',
+    right: 'スリムタイプの乳首ページには母乳実感への使用可否の明記なし',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 授乳用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">ピジョンには「母乳実感」と「スリムタイプ」の2つの哺乳びんシリーズがあります。この記事では、ピジョン公式で確認できる形状・乳首・消毒方法だけをもとに、2つの240mlの違いを整理します。「どちらもMの乳首が付く」と誤解しやすい点を、公式情報で確認できる範囲で解きほぐしていきます。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
+      <p>購入リンク：{purchaseLinkLabel}</p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: breastCandidate.product, line: breastCandidate.line, tagline: breastCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${breastCandidate.product} ${breastCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL, officialHref: breast, guidePoints: [breastCandidate.audience] }}
+      right={{ brand: slimCandidate.product, line: slimCandidate.line, tagline: slimCandidate.audience, image: '/products/pigeon-slim-pp240.jpg', imageAlt: `${slimCandidate.product} ${slimCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL, officialHref: slim, guidePoints: [slimCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+
+
+
+    <h2 id="checked">確認できる項目</h2>
+    <div class="table-scroll">
+    <table class="comparison">
+      <thead><tr><th scope="col">比較項目</th><th scope="col">母乳実感 240ml</th><th scope="col">スリムタイプ 240ml</th><th scope="col">根拠・確認先</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">容量</th><td>240ml</td><td>240ml</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">ボトルの形状</th><td>広口タイプ（調乳・洗浄しやすい）</td><td>スリムタイプ（転がりにくく、持ちやすい）</td><td><a href={breast} target="_blank" rel="noopener noreferrer">母乳実感 公式</a> / <a href={slim} target="_blank" rel="noopener noreferrer">スリムタイプ 公式</a></td></tr>
+        <tr><th scope="row">付属の乳首（240ml）</th><td>Mサイズ・Y字形（3ヵ月頃から）</td><td>Mサイズ・丸穴（4ヵ月頃〜）</td><td><a href={breastNipple} target="_blank" rel="noopener noreferrer">母乳実感 乳首</a> / <a href={slimNippleM} target="_blank" rel="noopener noreferrer">スリムタイプ M乳首</a></td></tr>
+        <tr><th scope="row">乳首のラインナップ</th><td>6サイズ（SS・S・M・L・LL・3L）</td><td>4サイズ（S・M・Y・L）</td><td>各公式乳首ページ</td></tr>
+        <tr><th scope="row">新生児（0ヵ月）用の乳首</th><td>SS・丸穴（0ヵ月〜）</td><td>S・丸穴（0ヵ月〜）</td><td>各公式乳首ページ</td></tr>
+        <tr><th scope="row">消毒・除菌</th><td>煮沸/スチーム/薬液で可・電子レンジ除菌は不可</td><td>煮沸/スチーム/薬液で可・電子レンジ除菌は不可</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">互換性（公式の明記）</th><td>母乳実感乳首はスリム型哺乳びんには使用不可</td><td>スリムタイプの乳首の母乳実感への使用可否は明記なし</td><td>母乳実感乳首ページのみ明記</td></tr>
+        <tr><th scope="row">ボトルの材質（プラ製品）</th><td>PPSU</td><td>PP（ポリプロピレン）</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">価格・在庫</th><td>販売ページで確認</td><td>販売ページで確認</td><td>楽天市場の検索結果</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="meta">商品仕様や素材は変更される可能性があります。購入時点の公式商品ページとパッケージを確認してください。ボトル素材（PPSU/PP）の位置づけは<a href={bottleMaterialGuide} target="_blank" rel="noopener noreferrer">「母乳実感 240ml ガラス vs プラスチック」の記事</a>で整理しています。</p>
+
+    <h2>選び方の目安</h2>
+    <ul>
+      <li>母乳実感 240ml：広口のボトルで調乳・洗浄しやすく、乳首を成長に合わせて6サイズ（SS〜3L）から選びたい人。</li>
+      <li>スリムタイプ 240ml：細身で転がりにくいボトルを探している人、乳首をシンプルな4サイズ（S・M・Y・L）の中から選びたい人。</li>
+    </ul>
+    <p>これは公式ページに書かれた特徴の整理であり、どちらがすべての家庭に合うと断定するものではありません。購入前に対象月齢に合う乳首があるかも確認してください。</p>
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="広口タイプの調乳・洗浄のしやすさと、6サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="スリムタイプ 240ml"
+        audience="細身で転がりにくく持ちやすい形と、シンプルな4サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL}
+        productId="pigeon-slim-240"
+        imagePath="/products/pigeon-slim-pp240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <ArticleSocialProof
+      query="ピジョン 母乳実感 スリムタイプ 240ml"
+      checkedAt="2026-08-12"
+      hasPosts={false}
+    />
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2 id="purchase">購入前に確認するページ</h2>
+    <div class="source-links">
+      <a class="card-link" href={breastSearch} target="_blank" rel="noopener noreferrer">母乳実感 240ml の販売ページを検索 →</a>
+      <a class="card-link" href={slimSearch} target="_blank" rel="noopener noreferrer">スリムタイプ 240ml の販売ページを検索 →</a>
+    </div>
+
+    <h2>購入時の注意</h2>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは {purchaseLinkLabel} です。</p>
+    <div class="grid two">
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="広口タイプの調乳・洗浄のしやすさと、6サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="スリムタイプ 240ml"
+        audience="細身で転がりにくく持ちやすい形と、シンプルな4サイズの乳首ラインナップを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL}
+        productId="pigeon-slim-240"
+        imagePath="/products/pigeon-slim-pp240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog
+        .slice()
+        .sort((left, right) => right.date.localeCompare(left.date))
+        .map((entry) => (
+          <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+        ))}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={breast} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感（プラスチック製）240ml</a>（2026-08-09 確認）</li>
+      <li><a href={slim} target="_blank" rel="noopener noreferrer">ピジョン：スリムタイプ（プラスチック製）240ml</a>（2026-08-09 確認）</li>
+      <li><a href={breastNipple} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 乳首（M・Y字形）</a>（2026-08-09 確認）</li>
+      <li><a href={slimNippleS} target="_blank" rel="noopener noreferrer">ピジョン：スリムタイプ 乳首（S）</a>（2026-08-09 確認）</li>
+      <li><a href={slimNippleM} target="_blank" rel="noopener noreferrer">ピジョン：スリムタイプ 乳首（M）</a>（2026-08-09 確認）</li>
+      <li><a href={slimNippleY} target="_blank" rel="noopener noreferrer">ピジョン：スリムタイプ 乳首（Y）</a>（2026-08-09 確認）</li>
+      <li><a href={slimNippleL} target="_blank" rel="noopener noreferrer">ピジョン：スリムタイプ 乳首（L）</a>（2026-08-09 確認）</li>
+      <li><a href={breastSearch} target="_blank" rel="noopener noreferrer">楽天市場：母乳実感 240ml 検索</a>（価格・在庫確認用）</li>
+      <li><a href={slimSearch} target="_blank" rel="noopener noreferrer">楽天市場：スリムタイプ 240ml 検索</a>（価格・在庫確認用）</li>
+    </ul>
+    <h2>資料の扱いについて</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・乳首ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

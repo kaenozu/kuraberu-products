@@ -1,0 +1,249 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import {pigeonBottle240Article as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+import type {
+  ComparisonCandidate, DifferenceRow,
+} from '../../../lib/comparison';
+
+const glass = 'https://products.pigeon.co.jp/item/index-2382.html';
+const ppsu = 'https://products.pigeon.co.jp/item/index-2378.html';
+const materialFaq = 'https://support.pigeon.co.jp/faq/detail-1.html';
+const glassSearch = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml%20%E8%80%90%E7%86%B1%E3%82%AC%E3%83%A9%E3%82%B9';
+const ppsuSearch = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml%20PPSU';
+
+const faqEntries = [
+  {
+    question: '母乳実感の240mlはどっちがいい？',
+    answer: '自宅中心で「汚れが落ちやすい」ことを重視するなら耐熱ガラス製、持ち運びや「軽さ・割れにくさ」を重視するならプラスチック製（PPSU）が候補です。240ml同士なら、容量・付属乳首（Mサイズ）・消毒方法は共通です。',
+  },
+  {
+    question: 'ガラス製とプラスチック製で容量は違いますか？',
+    answer: 'いいえ。今回比較する2商品はどちらも240mlです。',
+  },
+  {
+    question: '付属する乳首に違いはありますか？',
+    answer: 'ありません。どちらも母乳実感のMサイズ（3ヵ月頃から）・吸い穴Y字形の乳首が付属します。',
+  },
+  {
+    question: '新生児から240mlを使えますか？',
+    answer: '今回の240ml商品ページはどちらも「3ヵ月頃から」と表示され、付属乳首もMサイズ（3ヵ月頃から）です。新生児期に使う場合は、乳首サイズの選び方などピジョン公式の案内を確認してください。',
+  },
+  {
+    question: '消毒・除菌の方法は違いますか？',
+    answer: '今回の2種類では違いません。煮沸・スチーム・薬液に対応し、電子レンジ除菌は不可です。',
+  },
+  {
+    question: '電子レンジで除菌できますか？',
+    answer: '現在のピジョン公式商品ページでは不可です。ピジョンは安全のため、すべての商品について順次「電子レンジ除菌」を不可とし、煮沸・薬液・スチームでの消毒・除菌を案内しています。',
+  },
+  {
+    question: 'プラスチック製の素材は何ですか？',
+    answer: '今回の「母乳実感 哺乳びん（プラスチック製）240ml」はPPSU（ポリフェニルサルホン）です。',
+  },
+  {
+    question: 'ガラス製は割れませんか？',
+    answer: '割れる可能性があります。ピジョンも「落としたり、ぶつけたりするなど使用状況によって割れることがある」と案内しています。割れた場合、やけど・けがにつながるため注意が必要です。',
+  },
+] as const;
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(
+  articleMetadata.productInfoCheckedAt,
+  contentAsOf,
+);
+const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
+  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
+  : '最終確認日は未記録';
+
+const glassCandidate: ComparisonCandidate = {
+  product: '母乳実感',
+  line: '耐熱ガラス製（240ml）',
+  tone: 'premium',
+  audience: '自宅中心で、汚れの落ちやすさを重視する人',
+  note: '公式商品ページで仕様を確認',
+  status: 'official',
+};
+
+const ppsuCandidate: ComparisonCandidate = {
+  product: '母乳実感',
+  line: 'プラスチック製（PPSU）（240ml）',
+  tone: 'standard',
+  audience: '外出時にも使い、軽さ・割れにくさを重視する人',
+  note: '公式商品ページで仕様を確認',
+  status: 'official',
+};
+
+
+const differenceRows: DifferenceRow[] = [
+  {
+    label: 'びんの素材',
+    left: 'ほうけい酸ガラス',
+    right: 'ポリフェニルサルホン（PPSU）',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '公式Q&Aで案内される長所',
+    left: '汚れが落ちやすいので清潔',
+    right: '軽い、落としても割れにくい',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '公式Q&Aで案内される注意点',
+    left: '重い／欠け・割れることがある',
+    right: 'ガラスに比べてキズがつきやすく、色やにおいなどが吸着しやすい',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 授乳用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">母乳実感240mlには「耐熱ガラス製」と「プラスチック製（PPSU）」があります。この記事では、ピジョン公式で確認できる素材・容量・付属品・消毒方法だけをもとに、どちらを先に確認すればよいかを整理します。あてずっぽうではなく「公式に書かれていること」と「まだ確認が必要なこと」を分けて書いています。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
+      <p>購入リンク：{purchaseLinkLabel}</p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: glassCandidate.product, line: glassCandidate.line, tagline: glassCandidate.audience, image: '/products/pigeon-bottle-glass240.jpg', imageAlt: `${glassCandidate.product} ${glassCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_GLASS_URL, officialHref: glass, guidePoints: [glassCandidate.audience] }}
+      right={{ brand: ppsuCandidate.product, line: ppsuCandidate.line, tagline: ppsuCandidate.audience, image: '/products/pigeon-bottle-psu240.jpg', imageAlt: `${ppsuCandidate.product} ${ppsuCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL, officialHref: ppsu, guidePoints: [ppsuCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+
+
+
+    <h2 id="checked">確認できる項目</h2>
+    <div class="table-scroll">
+    <table class="comparison">
+      <thead><tr><th scope="col">比較項目</th><th scope="col">耐熱ガラス製（240ml）</th><th scope="col">プラスチック製（PPSU）（240ml）</th><th scope="col">根拠・確認先</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">びんの素材</th><td>ほうけい酸ガラス</td><td>ポリフェニルサルホン（PPSU）</td><td><a href={glass} target="_blank" rel="noopener noreferrer">ガラス製公式</a> / <a href={ppsu} target="_blank" rel="noopener noreferrer">プラスチック製公式</a></td></tr>
+        <tr><th scope="row">容量</th><td>240ml</td><td>240ml</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">対象月齢の目安</th><td>3ヵ月頃から</td><td>3ヵ月頃から</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">付属の乳首</th><td>Mサイズ、Y字形</td><td>Mサイズ、Y字形</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">消毒・除菌</th><td>煮沸/スチーム/薬液で可・電子レンジ不可</td><td>煮沸/スチーム/薬液で可・電子レンジ不可</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">公式が挙げる長所</th><td>汚れが落ちやすいので清潔</td><td>軽い、落ちても割れにくい</td><td><a href={materialFaq} target="_blank" rel="noopener noreferrer">ピジョン公式Q&A</a></td></tr>
+        <tr><th scope="row">公式が挙げる注意点</th><td>重い／欠け・割れることがある</td><td>キズがつきやすく、色・においなどが吸着しやすい</td><td><a href={materialFaq} target="_blank" rel="noopener noreferrer">ピジョン公式Q&A</a></td></tr>
+        <tr><th scope="row">価格・在庫</th><td>販売ページで確認</td><td>販売ページで確認</td><td>楽天市場の検索結果</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="meta">商品仕様や素材は変更される可能性があります。購入時点の公式商品ページとパッケージを確認してください。</p>
+
+    <h2 id="official">公式情報</h2>
+    <p>ピジョン公式Q&Aでは、ガラス製の長所を「汚れが落ちやすいので清潔」、注意点を「重い／欠け・割れることがある」、プラスチック製の長所を「軽い、落としても割れにくい」、注意点を「ガラスに比べてキズがつきやすく、色やにおいなどが吸着しやすい」と案内しています。どちらの素材も煮沸消毒・スチーム除菌（専用除菌器）・薬液消毒・除菌が可能です。さらに「それぞれに特長がありますので、たとえばご家庭ではガラス製、おでかけの時はプラスチック製など、使い分けてみてください」とあります。</p>
+    <div class="source-links">
+      <a class="card-link" href={glass} target="_blank" rel="noopener noreferrer">母乳実感 耐熱ガラス製 240ml 公式商品ページ →</a>
+      <a class="card-link" href={ppsu} target="_blank" rel="noopener noreferrer">母乳実感 プラスチック製（PPSU）240ml 公式商品ページ →</a>
+      <a class="card-link" href={materialFaq} target="_blank" rel="noopener noreferrer">ピジョン公式Q&A：ガラス製とプラスチック製の選び方 →</a>
+    </div>
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="母乳実感 耐熱ガラス製 240ml"
+        audience="自宅中心で、汚れの落ちやすさ・清潔さを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_GLASS_URL}
+        productId="pigeon-glass-240"
+        imagePath="/products/pigeon-bottle-glass240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="持ち運びや軽さ・割れにくさを優先し、外出時にも使いたい人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <ArticleSocialProof
+      query="ピジョン 母乳実感 ガラス PPSU 240ml"
+      checkedAt="2026-08-12"
+      hasPosts={false}
+    />
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2 id="purchase">購入前に確認するページ</h2>
+    <div class="source-links">
+      <a class="card-link" href={glassSearch} target="_blank" rel="noopener noreferrer">耐熱ガラス製の販売ページを検索 →</a>
+      <a class="card-link" href={ppsuSearch} target="_blank" rel="noopener noreferrer">PPSUの販売ページでも検索（プラスチック製）→</a>
+    </div>
+
+    <h2>購入時の注意</h2>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
+    <div class="grid two" id="purchase">
+      <PurchaseCard
+        name="母乳実感 耐熱ガラス製 240ml"
+        audience="自宅中心で、汚れの落ちやすさ・清潔さを優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_GLASS_URL}
+        productId="pigeon-glass-240"
+        imagePath="/products/pigeon-bottle-glass240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="持ち運びや軽さ・割れにくさを優先し、外出時にも使いたい人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog
+        .slice()
+        .sort((left, right) => right.date.localeCompare(left.date))
+        .map((entry) => (
+          <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+        ))}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={glass} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 耐熱ガラス製 240ml</a>（2026-08-09確認）</li>
+      <li><a href={ppsu} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 プラスチック製 240ml</a>（2026-08-09確認）</li>
+      <li><a href={materialFaq} target="_blank" rel="noopener noreferrer">ピジョン公式Q&A：ガラス製とプラスチック製の選び方</a>（2026-08-09確認）</li>
+      <li><a href={glassSearch} target="_blank" rel="noopener noreferrer">楽天市場：哺乳びん検索</a>（価格・在庫確認用）</li>
+      <li><a href={ppsuSearch} target="_blank" rel="noopener noreferrer">楽天市場：PPSU検索</a>（価格・在庫確認用）</li>
+    </ul>
+    <h2>調査方法・免責事項</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

@@ -1,0 +1,219 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import {moonyMArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
+
+const teishigekiSeries = 'https://jp.moony.com/ja/products/nmn1.html';
+const mashumaroSeries = 'https://jp.moony.com/ja/products/mn.html';
+const teishigekiNbs = 'https://jp.moony.com/ja/products/nmn/nmn-nbs.html';
+const teishigekiM = 'https://jp.moony.com/ja/products/nmn/nmn-m.html';
+const teishigekiLp = 'https://jp.moony.com/ja/products/nmn/nmn-l.html';
+const mashumaroNbs = 'https://jp.moony.com/ja/products/mn/mn-nbs.html';
+const mashumaroM = 'https://jp.moony.com/ja/products/mn/mn-m.html';
+const mashumaroLp = 'https://jp.moony.com/ja/products/mn/mn-l.html';
+const teishigekiSearch = 'https://search.rakuten.co.jp/search/mall/';
+const mashumaroSearch = 'https://search.rakuten.co.jp/search/mall/';
+
+const faqEntries = [
+  {
+    "question": "「低刺激であんしん」Mにはオーガニックコットンが使われていますか？",
+    "answer": "いいえ。公式には、新生児〜Mについて「オーガニックコットンは含まれておりません」と明記されています。オーガニックコットン一部配合シートが案内されているのはLサイズです。"
+  },
+  {
+    "question": "無添加成分はどう違いますか？",
+    "answer": "「低刺激であんしん」の新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加です。「マシュマロ肌ごこち モレ安心」は全サイズで、石油由来油剤・香料・ラテックス・合成着色料の4成分無添加です。"
+  },
+  {
+    "question": "Mサイズはどのくらいの体重が目安ですか？",
+    "answer": "どちらもMサイズは6〜11kg向けです。共通のサイズ展開として、新生児用は〜3000gと〜5000g、Sは4〜8kg、Mは6〜11kg、Lがあります。実際に選ぶ際は、使用するサイズの公式表示を確認してください。"
+  },
+  {
+    "question": "「最大12時間吸収」なら12時間交換しなくてもよいですか？",
+    "answer": "その意味ではありません。「マシュマロ肌ごこち モレ安心」で案内されている最大12時間吸収は、吸収量の目安です。12時間の連続使用を推奨する表示として扱わないようにします。"
+  },
+  {
+    "question": "「低刺激であんしん」はいつリニューアルされましたか？",
+    "answer": "2025年秋にリニューアルされています。現在の新生児〜Mは、うんち水分吸収シートを搭載し、3成分無添加で、オーガニックコットンを含まない仕様として公式に案内されています。"
+  }
+];
+
+const teishigekiCandidate: ComparisonCandidate = {
+  product: 'ムーニー 低刺激であんしん（テープ・M）',
+  line: '低刺激であんしん',
+  tone: 'standard',
+  audience: 'うんち水分吸収シートの機能を確認したい人の候補',
+  note: '公式ページでサイズ別仕様を確認',
+  status: 'official',
+};
+
+const mashumaroCandidate: ComparisonCandidate = {
+  product: 'ムーニー マシュマロ肌ごこちモレ安心（テープ・M）',
+  line: 'マシュマロ肌ごこちモレ安心',
+  tone: 'standard',
+  audience: '無添加弱酸性素材とゆるうんちストッパーを確認したい人の候補',
+  note: '公式ページでサイズ別仕様を確認',
+  status: 'official',
+};
+
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
+const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
+  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
+  : '最終確認日は未記録';
+
+const differenceRows: DifferenceRow[] = [
+  {
+    "label": "うんちへの対策",
+    "left": "うんち水分吸収シートで、ゆるうんちの水分を下層へ吸収し、肌への付着を抑える設計。おしりガイドも搭載。",
+    "right": "背中と足回りにゆるうんちストッパーを搭載。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "無添加の内容",
+    "left": "Mを含む新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加。",
+    "right": "全サイズで、石油由来油剤・香料・ラテックス・合成着色料の4成分無添加。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  },
+  {
+    "label": "Mサイズの内容量と主な機能",
+    "left": "Mは6〜11kg、46枚入り。うんち水分吸収シートとおしりガイドが特徴。",
+    "right": "Mは6〜11kg、54枚入り。無添加弱酸性素材、ゆるうんちストッパー、お知らせサイン、最大12時間吸収が案内されている。",
+    "leftStatus": "official",
+    "rightStatus": "official"
+  }
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">ユニ・チャームのテープタイプMサイズには、「低刺激であんしん」と「マシュマロ肌ごこち モレ安心」があります。どちらも体重6〜11kg向けですが、公式に案内されている機能や無添加成分には違いがあります。「低刺激であんしん」Mは46枚入りで、うんち水分吸収シートとおしりガイドを搭載しています。一方、「マシュマロ肌ごこち モレ安心」Mは54枚入りで、背中と足回りのゆるうんちストッパーや最大12時間吸収などが案内されています。この記事では、2026年8月9日時点で確認できた公式情報だけを使って、Mサイズ同士の違いを整理します。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="低刺激であんしん"
+        audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL}
+        productId="moony-teishigeki-m"
+        imagePath="/products/moony-teishigeki-m.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="マシュマロ肌ごこちモレ安心"
+        audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL}
+        productId="moony-mashumaro-m"
+        imagePath="/products/moony-mashumaro-m.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+      <p>購入リンク: {purchaseLinkLabel}</p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience] }}
+      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+
+
+
+    <h2 id="official">公式情報</h2>
+    <p>「低刺激であんしん」Mは、体重6〜11kg向けのテープタイプで、楽天のユニ・チャーム公式店では46枚入りです。主な機能として、ゆるうんちの水分を下層へ吸収する「うんち水分吸収シート」と「おしりガイド」が案内されています。新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加です。また、公式には新生児〜Mについて「オーガニックコットンは含まれておりません」と明記されています。商品は2025年秋にリニューアルされています。</p>
+    <p>なお、「低刺激であんしん」でオーガニックコットン一部配合シートが案内されているのはLサイズです。Lでは、石油由来油・香料・ラテックス・合成着色料の4成分無添加となり、オリーブ・ホホバ・ライスの植物オイルも使われています。これらはLサイズの仕様であり、Mサイズの仕様として扱わないよう注意が必要です。</p>
+    <p>「マシュマロ肌ごこち モレ安心」Mも体重6〜11kg向けのテープタイプで、楽天のユニ・チャーム公式店では54枚入りです。無添加弱酸性素材、背中と足回りのゆるうんちストッパー、お知らせサイン、最大12時間吸収が公式に案内されています。全サイズで、石油由来油剤・香料・ラテックス・合成着色料の4成分無添加です。なお、新生児用にはおへそカット、Lサイズにはさらさら全面通気シートとのびーるフィットギャザーがありますが、これらはMサイズの機能としては扱いません。</p>
+
+    
+
+    <ArticleSocialProof
+      query="ムーニー 低刺激 マシュマロ"
+      checkedAt="2026-08-12"
+      hasPosts={false}
+    />
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2 id="purchase">購入前に確認するページ</h2>
+    <div class="source-links">
+      <a class="card-link" href={teishigekiSearch} target="_blank" rel="noopener noreferrer">低刺激であんしん（M）の販売ページを検索 →</a>
+      <a class="card-link" href={mashumaroSearch} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（M）の販売ページを検索 →</a>
+    </div>
+
+    <h2>購入時の注意</h2>
+    
+
+    <div class="grid two">
+      <PurchaseCard
+        name="低刺激であんしん"
+        audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL}
+        productId="moony-teishigeki-m"
+        imagePath="/products/moony-teishigeki-m.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="マシュマロ肌ごこちモレ安心"
+        audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
+        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL}
+        productId="moony-mashumaro-m"
+        imagePath="/products/moony-mashumaro-m.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog.slice().sort((a, b) => b.date.localeCompare(a.date)).map((entry) => (
+        <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+      ))}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={teishigekiNbs} target="_blank" rel="noopener noreferrer">低刺激であんしん（新生児用）公式</a>（2026-08-09確認）</li>
+      <li><a href={teishigekiM} target="_blank" rel="noopener noreferrer">低刺激であんしん（M）公式</a>（2026-08-09確認）</li>
+      <li><a href={teishigekiLp} target="_blank" rel="noopener noreferrer">低刺激であんしん（L）公式</a>（2026-08-09確認）</li>
+      <li><a href={mashumaroNbs} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（新生児用）公式</a>（2026-08-09確認）</li>
+      <li><a href={mashumaroM} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（M）公式</a>（2026-08-09確認）</li>
+      <li><a href={mashumaroLp} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（L）公式</a>（2026-08-09確認）</li>
+      <li><a href={teishigekiSearch} target="_blank" rel="noopener noreferrer">楽天市場：低刺激であんしん</a>（価格・在庫用）</li>
+      <li><a href={mashumaroSearch} target="_blank" rel="noopener noreferrer">楽天市場：マシュマロ肌ごこちモレ安心</a>（価格・在庫用）</li>
+    </ul>
+    <h2>調査方法・免責</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

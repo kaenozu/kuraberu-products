@@ -1,0 +1,48 @@
+---
+// PurchaseCard.astro
+// 全記事の標準購入カード（Article Layout v2: docs/article-layout-v2-2026-08.md）
+// 配置: 判断後（placement="after-decision"・デフォルト）+ 記事末尾（placement="article-end"）の 2 タイミング
+// 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 楽天市場 CTA（「楽天市場で商品を見る」）/ 価格・在庫の注意書き
+import AffiliateButton from './AffiliateButton.astro';
+
+interface Props {
+  name: string;
+  audience: string;
+  href?: string;
+  productId?: string;
+  imagePath?: string;
+  placement?: string;
+  note?: string;
+}
+
+const {
+  name,
+  audience,
+  href,
+  productId,
+  imagePath,
+  placement = 'after-decision',
+  note,
+} = Astro.props;
+---
+<article class="purchase-card">
+  <div class="purchase-card__main">
+    {imagePath && (
+      <img class="purchase-card__image" src={imagePath} alt="" width="96" height="96" loading="lazy" />
+    )}
+    <div class="purchase-card__body">
+      <h3 class="purchase-card__name">{name}</h3>
+      <p class="purchase-card__audience">{audience}</p>
+    </div>
+  </div>
+  <AffiliateButton
+    href={href}
+    productId={productId}
+    label="楽天市場で商品を見る"
+    subLabel="楽天市場で商品を見る"
+    merchant="楽天"
+    imagePath={undefined}
+    placement={placement}
+  />
+  {note && <p class="purchase-card__note">{note}</p>}
+</article>

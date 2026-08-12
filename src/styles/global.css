@@ -131,34 +131,7 @@ a {
   font-family: Georgia, "Yu Mincho", serif;
   font-size: 1.08rem;
 }
-.toc {
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: var(--paper);
-  padding: 1rem 1.2rem 1.1rem;
-  margin: 1.5rem 0;
-  font-size: 0.95rem;
-}
-.toc h2 {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: var(--accent);
-  margin: 0 0 0.6rem;
-  text-transform: uppercase;
-}
-.toc ol {
-  margin: 0;
-  padding-left: 1.2rem;
-  display: grid;
-  gap: 0.35rem;
-}
-.toc a {
-  color: var(--ink);
-  text-decoration-thickness: 1px;
-  text-decoration-color: #efb19b;
-  text-underline-offset: 0.18em;
-}
+
 .faq-list {
   display: grid;
   gap: 1rem;
@@ -298,23 +271,17 @@ a {
 .article-list-card .card-body {
   min-width: 0;
 }
+.article-list-card .card-desc {
+  margin: 0 0 0.8rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ink-soft, inherit);
+}
 .article-list-card .card-tag-row {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-}
-.article-list-card .badge-new {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.68rem;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  color: #fff;
-  background: var(--accent);
-  border-radius: 999px;
-  padding: 0.16rem 0.55rem;
-  text-transform: uppercase;
 }
 .article-list-card h2 {
   margin: 0.6rem 0;
@@ -414,6 +381,7 @@ a {
   color: var(--muted);
   font-size: 0.88rem;
 }
+
 .comparison {
   width: 100%;
   border-collapse: separate;
@@ -427,6 +395,10 @@ a {
   overflow-x: auto;
   margin-inline: -0.25rem;
   padding-inline: 0.25rem;
+  -webkit-overflow-scrolling: touch;
+}
+.comparison {
+  min-width: 640px;
 }
 .comparison th,
 .comparison td {
@@ -540,58 +512,7 @@ a {
   display: grid;
   gap: 0.75rem;
 }
-.product-compare {
-  display: grid;
-  gap: 1rem;
-  margin: 1.5rem 0;
-}
-@media (min-width: 700px) {
-  .product-compare {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-.product-card {
-  display: flex;
-  flex-direction: column;
-  background: var(--paper);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.product-card img {
-  width: 100%;
-  height: auto;
-  display: block;
-  background: #fff;
-}
-.product-card-body {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  padding: 1rem 1.1rem 1.2rem;
-}
-.product-card-line {
-  font-size: 0.78rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: var(--accent);
-}
-.product-card-name {
-  font-size: 1.15rem;
-  font-weight: 800;
-  line-height: 1.35;
-  margin: 0;
-}
-.product-card-desc {
-  font-size: 0.92rem;
-  color: #445049;
-  margin: 0;
-}
-.product-card-link {
-  margin-top: auto;
-  padding-top: 0.6rem;
-  font-weight: 800;
-}
+
 .card-link {
   display: block;
   border: 1px solid var(--line);
@@ -652,6 +573,25 @@ a {
   border-radius: 50%;
   font-family: Georgia, serif;
   font-size: 1.2rem;
+}
+.product-identity-img {
+  width: 100%;
+  height: 108px;
+  object-fit: contain;
+  align-self: start;
+  background: #f4f2ec;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px;
+}
+/* 30秒比較（compact）では画像をカード上部に大きく表示 */
+.product-identity-compact .product-identity-img {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 6px;
+  margin-bottom: 0.35rem;
 }
 .product-kicker {
   margin: 0 0 0.25rem;
@@ -830,6 +770,37 @@ a {
 .difference-status {
   font-size: 0.72rem;
 }
+/* 差分の決め手となる値を赤字+太字で強調 */
+.difference-value.is-highlighted {
+  background: #fdf2ef;
+  border-radius: 6px;
+}
+.difference-value.is-highlighted > span {
+  color: #c83e2c;
+  font-weight: 800;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.difference-highlight-note {
+  display: inline-block;
+  width: fit-content;
+  background: #c83e2c;
+  color: #fff;
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 700;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  margin-top: 0.15rem;
+}
+.summary-differences .is-highlighted {
+  color: #c83e2c;
+  font-weight: 800;
+}
+.summary-differences .is-highlighted .difference-highlight-note {
+  vertical-align: middle;
+  margin-left: 0.35rem;
+}
 #comparison-details {
   scroll-margin-top: 1rem;
 }
@@ -963,20 +934,6 @@ a {
   font: inherit;
   font-weight: 800;
   cursor: pointer;
-}
-.article-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  padding: 0;
-  list-style: none;
-}
-.article-tags li {
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.2rem 0.55rem;
-  color: var(--muted);
-  font-size: 0.78rem;
 }
 .discovery-empty {
   margin-top: 1rem;
@@ -1131,15 +1088,125 @@ a {
 }
 
 /* X の実際の声: 投稿ウィジェットを 2 列で大きく見せる */
-.voices-grid {
-  display: grid;
-  gap: 1.25rem;
-}
 @media (min-width: 760px) {
-  .voices-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cta.cta-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.6rem 1.1rem 0.6rem 0.6rem;
+  text-decoration: none;
+  color: var(--ink, inherit);
+  background: var(--surface, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.cta.cta-card:hover {
+  border-color: rgba(0, 0, 0, 0.28);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.cta-card-image {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  flex: 0 0 auto;
+}
+.cta-card-body {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+.cta-card-label {
+  font-weight: 600;
+  line-height: 1.35;
+}
+.cta-card-sub {
+  font-size: 0.85rem;
+  color: var(--ink-soft, #666);
+}
+.ad-note {
+  font-size: 0.78rem;
+  color: rgba(0, 0, 0, 0.45);
+}
+@media (max-width: 520px) {
+  .cta.cta-card {
+    width: 100%;
+    justify-content: flex-start;
   }
-  .voices-grid .external-embed:first-child {
-    grid-column: 1 / -1;
-  }
+}
+
+/* 商品ごとの購入カード（比較結論の直後・記事末尾に配置） */
+.purchase-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem;
+}
+.purchase-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: var(--surface, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 14px;
+}
+.purchase-card__main {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+.purchase-card__image {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 8px;
+  background: #fff;
+  flex: 0 0 auto;
+}
+.purchase-card__body {
+  min-width: 0;
+}
+.purchase-card__name {
+  margin: 0 0 0.3rem;
+  font-size: 1.05rem;
+  line-height: 1.35;
+}
+.purchase-card__audience {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ink-soft, #555);
+  line-height: 1.5;
+}
+.purchase-card__note {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--muted, rgba(0, 0, 0, 0.55));
+}
+.purchase-card .cta.cta-card {
+  margin-top: auto;
+  width: 100%;
+  justify-content: flex-start;
+  padding: 0.7rem 1rem;
+  background: var(--ink, #1a1a1a);
+  color: #fff;
+  border-color: transparent;
+}
+.purchase-card .cta.cta-card:hover {
+  border-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+.purchase-card .cta-card-sub {
+  color: rgba(255, 255, 255, 0.75);
+}
+.purchase-card .ad-note {
+  color: rgba(255, 255, 255, 0.6);
 }

@@ -1,0 +1,38 @@
+---
+import HeroComparison from './HeroComparison.astro';
+import VisualKeyDifferences, { type KeyDiffRow } from './VisualKeyDifferences.astro';
+import DecisionGuide from './DecisionGuide.astro';
+
+interface Side {
+  brand: string;
+  line: string;
+  tagline: string;
+  image: string;
+  imageAlt: string;
+  buyHref: string;
+  officialHref: string;
+  guidePoints: string[];
+}
+
+interface Props {
+  left: Side;
+  right: Side;
+  rows: KeyDiffRow[];
+  checkedAt?: string;
+}
+
+const { left, right, rows, checkedAt } = Astro.props;
+---
+<section class="article-comparison-v2" aria-label="商品の比較">
+  <HeroComparison eyebrow="30秒でわかる" left={left} right={right} />
+  <VisualKeyDifferences
+    leftLabel={`${left.brand} ${left.line}`}
+    rightLabel={`${right.brand} ${right.line}`}
+    items={rows}
+  />
+  <DecisionGuide
+    left={{ brand: left.brand, line: left.line, points: left.guidePoints }}
+    right={{ brand: right.brand, line: right.line, points: right.guidePoints }}
+  />
+  {checkedAt && <p class="article-comparison-v2-check">公式情報確認済み · {checkedAt}</p>}
+</section>

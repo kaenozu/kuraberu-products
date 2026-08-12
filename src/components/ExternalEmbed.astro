@@ -11,11 +11,19 @@ interface Props {
   title: string;
   purpose?: string;
   autoload?: boolean;
+  tone?: "good" | "bad" | "mixed";
+  /** compact: 埋め込みの会話（返信）を隠して高さを抑える */
+  compact?: boolean;
 }
 
-const { provider, url, title, purpose, autoload } = Astro.props;
+const { provider, url, title, purpose, autoload, tone, compact } = Astro.props;
 const config = createExternalEmbedConfig(provider, url);
 const providerLabel = externalEmbedProviderLabel(provider);
+const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
+  good: "良かったという声",
+  bad: "気になったという声",
+  mixed: "良い・悪い両方の声",
+};
 ---
 
 <aside
@@ -23,12 +31,15 @@ const providerLabel = externalEmbedProviderLabel(provider);
   data-external-embed
   data-config={JSON.stringify(config)}
   data-provider={provider}
+  data-tone={tone}
   data-embed-state="idle"
   data-autoload={autoload ? "true" : undefined}
+  data-compact={compact ? "true" : undefined}
   aria-label={`${providerLabel}の外部コンテンツ`}
 >
   <div class="external-embed__intro">
     <p class="external-embed__label">外部コンテンツ</p>
+    {tone && <p class="external-embed__tone" data-external-embed-tone={tone}>{toneLabel[tone]}</p>}
     <h3>{title}</h3>
     {purpose && <p>{purpose}</p>}
     <p class="external-embed__privacy">
@@ -174,6 +185,10 @@ const providerLabel = externalEmbedProviderLabel(provider);
       const quote = document.createElement("blockquote");
       quote.className = "twitter-tweet";
       quote.dataset.dnt = "true";
+      const hostEmbed = target.closest("[data-external-embed]") as HTMLElement | null;
+      if (hostEmbed?.dataset.compact === "true") {
+        quote.dataset.conversation = "none";
+      }
       appendSourceLink(quote, config);
       target.append(quote);
       if (!(window as XWindow).twttr?.widgets?.load) {
@@ -438,6 +453,30 @@ const providerLabel = externalEmbedProviderLabel(provider);
     letter-spacing: 0.12em;
   }
 
+  .external-embed__tone {
+    display: inline-block;
+    margin: 0 0 0.6rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  .external-embed__tone[data-external-embed-tone="good"] {
+    background: color-mix(in srgb, #2e7d32 12%, transparent);
+    color: #2e7d32;
+  }
+
+  .external-embed__tone[data-external-embed-tone="bad"] {
+    background: color-mix(in srgb, #b26a00 12%, transparent);
+    color: #9a5b00;
+  }
+
+  .external-embed__tone[data-external-embed-tone="mixed"] {
+    background: color-mix(in srgb, var(--muted) 14%, transparent);
+    color: var(--ink);
+  }
+
   .external-embed h3 {
     margin: 0 0 0.75rem;
   }
@@ -509,5 +548,15 @@ const providerLabel = externalEmbedProviderLabel(provider);
     .external-embed button {
       width: 100%;
     }
+  }
+
+  /* autoload: 投稿をそのまま表示する。ボタン・「直接見る」リンク・
+     プライバシー注記・ステータス・「外部コンテンツ」ラベルは出さない。
+     埋め込み投稿自体がリンクなので、誘導UIは不要。タイトルと説明のみ残す */
+  .external-embed[data-autoload="true"] .external-embed__label,
+  .external-embed[data-autoload="true"] .external-embed__privacy,
+  .external-embed[data-autoload="true"] .external-embed__actions,
+  .external-embed[data-autoload="true"] .external-embed__status {
+    display: none;
   }
 </style>

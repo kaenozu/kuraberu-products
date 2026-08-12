@@ -15,7 +15,7 @@
       submitBtn.textContent = "送信中…";
     }
     var failMessage =
-      "送信に失敗しました。しばらくしてからもう一度お試しいただくか、メールでご連絡ください。";
+      "送信に失敗しました。しばらくしてからもう一度お試しいただくか、X（@kuraberu_biyori）の DM でご連絡ください。";
     try {
       var res = await fetch(form.action, {
         method: "POST",
