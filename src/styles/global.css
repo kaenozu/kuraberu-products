@@ -203,6 +203,73 @@ a {
   color: #445049;
   font-size: 0.95rem;
 }
+.comparison-project-form {
+  margin-top: 2rem;
+}
+.comparison-project-form h2,
+.saved-articles h2 {
+  margin-top: 0;
+}
+.comparison-form-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 1.25rem;
+}
+.comparison-form-grid label,
+.project-decision {
+  display: grid;
+  gap: 0.35rem;
+  font-weight: 750;
+}
+.comparison-form-grid input,
+.comparison-form-grid textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  padding: 0.65rem 0.75rem;
+}
+.comparison-form-grid textarea {
+  resize: vertical;
+}
+.comparison-form-grid input:focus-visible,
+.comparison-form-grid textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.form-help {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 400;
+}
+.project-decision {
+  border: 0;
+  padding: 0;
+  margin: 1.25rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+}
+.project-decision legend {
+  width: 100%;
+  font-weight: 750;
+}
+.project-decision label,
+.candidate-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+}
+.saved-articles {
+  margin-top: 3rem;
+}
+.saved-articles > .meta {
+  margin-top: -0.75rem;
+}
 .article-list {
   display: grid;
   gap: 1rem;
@@ -994,6 +1061,12 @@ a {
 .card-actions .text-button:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
+}
+
+@media (max-width: 759px) {
+  .comparison-form-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {

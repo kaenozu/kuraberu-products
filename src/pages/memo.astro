@@ -1,66 +1,171 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import { articleMetadata } from '../content/articles';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { articleMetadata } from "../content/articles";
 ---
-<BaseLayout title="比較メモ｜くらべる商品メモ" description="端末内に保存した比較記事を確認するページ" robots="noindex,nofollow">
+<BaseLayout title="比較メモ｜くらべる商品メモ" description="目的と候補を保存する比較メモ" robots="noindex,nofollow">
   <section class="section wrap article-index" data-memo-page>
-    <p class="eyebrow">Local comparison memo</p>
+    <p class="eyebrow">Decision memo</p>
     <h1>比較メモ</h1>
-    <p class="lead">保存状態はこのブラウザの端末内だけに保存されます。価格・在庫など変化する情報は保存せず、記事の最新版へ移動します。</p>
-    <p class="meta" role="status" aria-live="polite" data-memo-page-status>保存状態を確認しています</p>
-    <div class="article-list" data-memo-list>
-      {articleMetadata.map((article) => (
-        <article class="card article-list-card" data-memo-item data-article-id={article.id}>
-          <span class="tag">{article.category}</span>
-          <h2><a href={article.path}>{article.headline}</a></h2>
-          <p>{article.summary}</p>
-          <p class="meta">商品情報確認日 {article.productInfoCheckedAt ?? '未記録'}</p>
-          <div class="card-actions">
-            <a class="cta" href={article.path}>記事を確認する →</a>
-            <button type="button" class="text-button" data-memo-remove>比較メモから外す</button>
-          </div>
-        </article>
-      ))}
-    </div>
-    <div class="card discovery-empty" hidden data-memo-empty>
-      <h2>保存した記事はありません</h2>
-      <p><a href="/articles/">比較記事一覧から記事を探す →</a></p>
-    </div>
+    <p class="lead">記事を保存するだけでなく、目的・条件・候補・決定理由をこのブラウザに記録できます。保存状態はこのブラウザの端末内だけに保存されます。</p>
+
+    <form class="card comparison-project-form" data-project-form>
+      <h2>比較の前提</h2>
+      <p class="meta">価格や仕様の自動取得は行いません。未確認の情報は未確認のまま残してください。</p>
+      <div class="comparison-form-grid">
+        <label>
+          比較の目的・利用シーン
+          <textarea name="purpose" rows="3" maxlength="300" placeholder="例：夜用。設置幅640mm以下で、毎日使う"></textarea>
+        </label>
+        <label>
+          予算
+          <input name="budget" type="text" maxlength="100" placeholder="例：20,000円以内">
+        </label>
+        <label>
+          Must-have（絶対条件）
+          <textarea name="mustHave" rows="3" maxlength="500" placeholder="1行に1条件"></textarea>
+          <span class="form-help">満たさない候補は除外候補として扱います。</span>
+        </label>
+        <label>
+          NG条件
+          <textarea name="avoid" rows="3" maxlength="500" placeholder="1行に1条件"></textarea>
+        </label>
+      </div>
+      <fieldset class="project-decision">
+        <legend>現在の判断</legend>
+        <label><input type="radio" name="decision" value="undecided" checked> 未決定</label>
+        <label><input type="radio" name="decision" value="adopted"> 採用</label>
+        <label><input type="radio" name="decision" value="next"> 次点</label>
+        <label><input type="radio" name="decision" value="hold"> 保留</label>
+        <label><input type="radio" name="decision" value="excluded"> 除外</label>
+      </fieldset>
+      <div class="comparison-form-grid">
+        <label>
+          決定理由
+          <textarea name="decisionReason" rows="3" maxlength="500" placeholder="なぜこの判断にしたか"></textarea>
+        </label>
+        <label>
+          未確認事項
+          <textarea name="unresolved" rows="3" maxlength="500" placeholder="1行に1項目"></textarea>
+        </label>
+      </div>
+      <div class="card-actions">
+        <button class="cta" type="submit">比較メモを保存</button>
+        <span class="meta" role="status" aria-live="polite" data-project-status></span>
+      </div>
+    </form>
+
+    <section class="saved-articles" aria-labelledby="saved-articles-heading">
+      <h2 id="saved-articles-heading">保存した候補記事</h2>
+      <p class="meta">候補にしたい記事を先に記事ページで保存し、ここで候補として選択してください。</p>
+      <div class="article-list" data-memo-list>
+        {articleMetadata.map((article) => (
+          <article class="card article-list-card" data-memo-item data-article-id={article.id}>
+            <span class="tag">{article.category}</span>
+            <h3><a href={article.path}>{article.headline}</a></h3>
+            <p>{article.summary}</p>
+            <p class="meta">商品情報確認日 {article.productInfoCheckedAt ?? "未記録"}</p>
+            <label class="candidate-choice">
+              <input type="checkbox" data-project-candidate value={article.id}>
+              この記事を比較候補にする
+            </label>
+            <div class="card-actions">
+              <a class="cta" href={article.path}>記事を確認する →</a>
+              <button type="button" class="text-button" data-memo-remove>比較メモから外す</button>
+            </div>
+          </article>
+        ))}
+      </div>
+      <div class="card discovery-empty" hidden data-memo-empty>
+        <h2>保存した記事はありません</h2>
+        <p><a href="/articles/">比較記事一覧から記事を探す →</a></p>
+      </div>
+    </section>
     <noscript><p class="notice">比較メモの保存状態を表示するにはJavaScriptが必要です。下の記事リンクから通常どおり閲覧できます。</p></noscript>
   </section>
 
   <script>
-    import { comparisonMemoStorageKey, encodeComparisonMemo, sanitizeComparisonMemo } from '../lib/comparison-memo';
-    import { articleMetadata } from '../content/articles';
+    import { articleMetadata } from "../content/articles";
+    import { comparisonMemoStorageKey, encodeComparisonMemo, sanitizeComparisonMemo } from "../lib/comparison-memo";
+    import { comparisonProjectStorageKey, encodeComparisonProject, sanitizeComparisonProject, type ComparisonDecision } from "../lib/comparison-project";
 
-    const root = document.querySelector('[data-memo-page]');
+    const root = document.querySelector("[data-memo-page]");
     if (root instanceof HTMLElement) {
       const knownIds = articleMetadata.map((article) => article.id);
-      const status = root.querySelector('[data-memo-page-status]');
-      const empty = root.querySelector('[data-memo-empty]');
-      const items = [...root.querySelectorAll('[data-memo-item]')];
+      const form = root.querySelector("[data-project-form]");
+      const status = root.querySelector("[data-project-status]");
+      const empty = root.querySelector("[data-memo-empty]");
+      const items = [...root.querySelectorAll("[data-memo-item]")];
+      const candidateInputs = [...root.querySelectorAll("[data-project-candidate]")];
       let ids: string[] = [];
       let storageAvailable = true;
-      try {
-        ids = [...sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds).ids];
-        localStorage.setItem(comparisonMemoStorageKey, encodeComparisonMemo(ids));
-      } catch {
-        storageAvailable = false;
-      }
+
+      const field = (name: string) => form?.querySelector(`[name="${name}"]`);
+      const fieldValue = (name: string) => {
+        const input = field(name);
+        return input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement ? input.value : "";
+      };
+      const setField = (name: string, value: string) => {
+        const input = field(name);
+        if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) input.value = value;
+      };
+      const listValue = (name: string) => fieldValue(name).split("\n").map((value) => value.trim()).filter(Boolean);
       const render = () => {
         let visible = 0;
         items.forEach((item) => {
           if (!(item instanceof HTMLElement)) return;
-          const saved = ids.includes(item.dataset.articleId || '');
+          const saved = ids.includes(item.dataset.articleId || "");
           item.hidden = storageAvailable && !saved;
-          item.querySelector('[data-memo-remove]')?.toggleAttribute('disabled', !storageAvailable);
           if (saved) visible += 1;
         });
         if (empty instanceof HTMLElement) empty.hidden = !storageAvailable || visible !== 0;
-        if (status) status.textContent = storageAvailable ? visible + '件保存されています' : 'このブラウザでは比較メモを利用できません。記事リンクは通常どおり利用できます';
       };
-      root.querySelectorAll('[data-memo-remove]').forEach((button) => button.addEventListener('click', () => {
-        const item = button.closest('[data-memo-item]');
+
+      try {
+        ids = [...sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds).ids];
+        localStorage.setItem(comparisonMemoStorageKey, encodeComparisonMemo(ids));
+        const project = sanitizeComparisonProject(localStorage.getItem(comparisonProjectStorageKey), knownIds);
+        setField("purpose", project.purpose);
+        setField("budget", project.budget);
+        setField("mustHave", project.mustHave.join("\n"));
+        setField("avoid", project.avoid.join("\n"));
+        setField("decisionReason", project.decisionReason);
+        setField("unresolved", project.unresolved.join("\n"));
+        const selectedDecision = form?.querySelector(`[name="decision"][value="${project.decision}"]`);
+        if (selectedDecision instanceof HTMLInputElement) selectedDecision.checked = true;
+        candidateInputs.forEach((input) => {
+          if (input instanceof HTMLInputElement) input.checked = project.candidateIds.includes(input.value);
+        });
+      } catch {
+        storageAvailable = false;
+        if (status) status.textContent = "このブラウザでは比較メモを利用できません。";
+      }
+
+      form?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!storageAvailable) return;
+        const decisionInput = form.querySelector("input[name=decision]:checked");
+        const project = sanitizeComparisonProject(JSON.stringify({
+          version: 1,
+          purpose: fieldValue("purpose"),
+          budget: fieldValue("budget"),
+          mustHave: listValue("mustHave"),
+          avoid: listValue("avoid"),
+          candidateIds: candidateInputs.filter((input): input is HTMLInputElement => input instanceof HTMLInputElement && input.checked).map((input) => input.value),
+          decision: decisionInput instanceof HTMLInputElement ? decisionInput.value as ComparisonDecision : "undecided",
+          decisionReason: fieldValue("decisionReason"),
+          unresolved: listValue("unresolved"),
+        }), knownIds);
+        try {
+          localStorage.setItem(comparisonProjectStorageKey, encodeComparisonProject(project));
+          if (status) status.textContent = "比較メモを保存しました";
+        } catch {
+          storageAvailable = false;
+          if (status) status.textContent = "保存できませんでした。ブラウザの保存設定を確認してください";
+        }
+      });
+
+      root.querySelectorAll("[data-memo-remove]").forEach((button) => button.addEventListener("click", () => {
+        const item = button.closest("[data-memo-item]");
         if (!(item instanceof HTMLElement)) return;
         ids = ids.filter((id) => id !== item.dataset.articleId);
         try {
