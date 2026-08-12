@@ -1,0 +1,416 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import AffiliateButton from '../../../components/AffiliateButton.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
+import HeroComparison from '../../../components/HeroComparison.astro';
+import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
+import DecisionGuide from '../../../components/DecisionGuide.astro';
+import {thermosTigerBottleArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+
+const thermosOfficial = 'https://www.thermos.jp/product/series/jnl-s00.html';
+const tigerOfficial = 'https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/';
+const thermosRakuten = 'https://item.rakuten.co.jp/rakuten24/405671/';
+const tigerRakuten = 'https://item.rakuten.co.jp/irodorich/22410151/';
+const thermosSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%B5%E3%83%BC%E3%83%A2%E3%82%B9%20JNL-S500';
+const tigerSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC%20MTA-J050';
+
+const faqEntries = [
+  {
+    question: 'サーモス JNL-S500 と タイガー MTA-J050 はどっち？',
+    answer:
+      '公式の仕様では、保冷効力（6時間）がタイガーMTA-J050は8℃以下、サーモスJNL-S500は10℃以下で、タイガーの方が冷たさを保ちます。本体重量はサーモスJNL-S500が約0.2kg、タイガーMTA-J050が約0.26kgで、サーモスの方が軽いです。飲み口はタイガーが口径4.8cm・ハンドル付き、サーモスは口径4.0cm・全パーツ食洗機対応です。どちらが合うかは、保冷を重視するか・軽さを重視するかで変わります。',
+  },
+  {
+    question: '保冷力が強いのはどっち？',
+    answer:
+      '公式の保冷効力（6時間）は、タイガーMTA-J050が8℃以下、サーモスJNL-S500が10℃以下です。夏場に氷を長持ちさせたい場合はタイガーMTA-J050の方が数値上は有利です。',
+  },
+  {
+    question: '軽いのはどっち？',
+    answer:
+      '公式の本体重量は、サーモスJNL-S500が約0.2kg、タイガーMTA-J050が約0.26kgです。本体寸法もサーモス（6.5×8.0×22.0cm）の方がタイガー（7.5×8.6×23.3cm）よりコンパクトです。持ち歩きの軽さを重視するならサーモスJNL-S500です。',
+  },
+  {
+    question: 'お手入れのしやすさはどっち？',
+    answer:
+      'サーモスJNL-S500は全パーツ食洗機対応です。タイガーMTA-J050は、せんとパッキンが一体になった「らくらくキャップ」でパッキン着脱の手間がなく、外せる飲み口で洗えます。どちらも公式に「お手入れしやすい」と案内されていますが、洗い方は異なります。',
+  },
+  {
+    question: 'タイガー MTA-J050 のハンドルは便利？',
+    answer:
+      '公式の案内では、MTA-J050はハンドル付きで、学校や職場、お出かけの際に指に自然にフィットするスラントハンドルとして紹介されています。片手でも開けやすいワンプッシュせんとあわせて、持ち運びの利便性を重視する人向けです。',
+  },
+  {
+    question: 'スポーツドリンクを入れてもいい？',
+    answer:
+      'タイガーMTA-J050の内面は「スーパークリーンPlus」で、公式案内では汚れ・においがつきにくくサビにも強いため、塩分を含むスポーツドリンクを入れてもOKとされています（使用後はすぐに水ですすぐなどお手入れが必要）。サーモスJNL-S500のスポーツドリンク対応については、今回確認した公式ページには明記されていません。',
+  },
+] as const;
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(
+  articleMetadata.productInfoCheckedAt,
+  contentAsOf,
+);
+const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
+  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
+  : '最終確認日は未記録';
+
+/** 主要差分（判断軸 → 数値の順で表示・bar は数値の大きさの相対比率） */
+const keyDiffRows: KeyDiffRow[] = [
+  {
+    label: '軽さ（持ち歩きやすさ）',
+    left: '約0.2kg',
+    right: '約0.26kg',
+    highlight: 'left',
+    highlightNote: '約60g軽い',
+    bar: {left: 0.2, right: 0.26},
+  },
+  {
+    label: '大きさ（本体寸法）',
+    left: '6.5×8.0×22.0cm',
+    right: '7.5×8.6×23.3cm',
+    highlight: 'left',
+    highlightNote: 'ひと回り小さい',
+  },
+  {
+    label: '保冷力（6時間後）',
+    left: '10℃以下',
+    right: '8℃以下',
+    highlight: 'right',
+    highlightNote: '保冷力が高い',
+    bar: {left: 10, right: 8},
+  },
+  {
+    label: '飲み口の大きさ（口径）',
+    left: '約4.0cm',
+    right: '約4.8cm',
+    highlight: 'right',
+    highlightNote: '大きめ',
+    bar: {left: 4.0, right: 4.8},
+  },
+  {
+    label: 'お手入れ',
+    left: '全パーツ食洗機対応',
+    right: 'らくらくキャップ（パッキン一体型）',
+    highlight: 'left',
+    highlightNote: '食洗機OK',
+  },
+  {
+    label: 'ハンドル',
+    left: 'なし',
+    right: 'あり（スラントハンドル）',
+    highlight: 'right',
+    highlightNote: 'ハンドル付き',
+  },
+  {
+    label: 'カラー',
+    left: '12色',
+    right: '4色',
+    highlight: 'left',
+    highlightNote: '豊富',
+    bar: {left: 12, right: 4},
+  },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活雑貨 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">0.5Lのワンタッチ式水筒の定番2本。公式仕様から、あなたに合う方を30秒で選べます。</p>
+
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <HeroComparison
+      eyebrow="30秒でわかる"
+      left={{
+        brand: 'サーモス',
+        line: 'JNL-S500',
+        tagline: '軽さ・食洗機なら',
+        image: '/products/thermos-jnl-s500.jpg',
+        imageAlt: 'サーモス 真空断熱ケータイマグ JNL-S500',
+        buyHref: thermosRakuten,
+        officialHref: thermosOfficial,
+      }}
+      right={{
+        brand: 'タイガー',
+        line: 'MTA-J050',
+        tagline: '保冷・ハンドルなら',
+        image: '/products/tiger-mta-j050.jpg',
+        imageAlt: 'タイガー 真空断熱ボトル MTA-J050',
+        buyHref: tigerRakuten,
+        officialHref: tigerOfficial,
+      }}
+    />
+
+    <p class="official-note">✓ 以下の数値は{articleMetadata.productInfoCheckedAt ?? '確認日未記録'}にメーカー公式ページで確認しています。</p>
+
+    <VisualKeyDifferences
+      leftLabel="サーモス JNL-S500"
+      rightLabel="タイガー MTA-J050"
+      items={keyDiffRows}
+    />
+
+    <div class="common-specs" aria-label="共通仕様">
+      <p>どちらも同じ：<b>容量0.5L</b>・<b>真空断熱ステンレス</b>・<b>保温効力（6時間）68℃以上</b>。差は上の一覧だけです。</p>
+    </div>
+
+    <DecisionGuide
+      left={{
+        brand: 'サーモス',
+        line: 'JNL-S500',
+        points: [
+          '軽さ・コンパクトを優先したい（約0.2kg）',
+          'カラーは豊富な方がいい（12色）',
+          '食洗機で丸洗いしたい（全パーツ対応）',
+        ],
+      }}
+      right={{
+        brand: 'タイガー',
+        line: 'MTA-J050',
+        points: [
+          '保冷力を最優先したい（6時間で8℃以下）',
+          'ハンドル付きがいい（スラントハンドル）',
+          '大きめの飲み口がいい（口径4.8cm）',
+          'スポーツドリンクを入れたい（スーパークリーンPlus）',
+        ],
+      }}
+    />
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="サーモス JNL-S500"
+        audience="軽さ・コンパクト・食洗機対応を優先する人向け"
+        href={thermosRakuten}
+        imagePath="/products/thermos-jnl-s500.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="タイガー MTA-J050"
+        audience="保冷力・ハンドル・大きめの飲み口を優先する人向け"
+        href={tigerRakuten}
+        imagePath="/products/tiger-mta-j050.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（全部の数値を見る）</summary>
+      <div class="table-scroll">
+      <table class="comparison">
+        <thead><tr><th scope="col">比較項目</th><th scope="col">サーモス JNL-S500</th><th scope="col">タイガー MTA-J050</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">容量</th><td>0.5L</td><td>0.5L</td></tr>
+          <tr><th scope="row">保温効力（6時間）</th><td>68℃以上</td><td>68℃以上</td></tr>
+          <tr><th scope="row">保冷効力（6時間）</th><td>10℃以下</td><td>8℃以下</td></tr>
+          <tr><th scope="row">本体重量</th><td>約0.2kg</td><td>約0.26kg</td></tr>
+          <tr><th scope="row">本体寸法（幅×奥行×高さ）</th><td>6.5×8.0×22.0cm</td><td>7.5×8.6×23.3cm</td></tr>
+          <tr><th scope="row">口径</th><td>約4.0cm</td><td>約4.8cm</td></tr>
+          <tr><th scope="row">カラー</th><td>12色</td><td>4色</td></tr>
+          <tr><th scope="row">飲み口</th><td>ワンタッチオープン</td><td>ワンプッシュ</td></tr>
+          <tr><th scope="row">お手入れ</th><td>全パーツ食洗機対応</td><td>らくらくキャップ（パッキン一体型）</td></tr>
+          <tr><th scope="row">ハンドル</th><td>なし</td><td>あり（スラントハンドル）</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
+      <p class="source-links">
+        <a class="card-link" href={thermosOfficial} target="_blank" rel="noopener noreferrer">サーモス 真空断熱ケータイマグ JNL-S500 公式ページ →</a>
+        <a class="card-link" href={tigerOfficial} target="_blank" rel="noopener noreferrer">タイガー 真空断熱ボトル MTA-J050 公式ページ →</a>
+      </p>
+    </details>
+
+    <h2 id="sns">SNS での感想（参考情報）</h2>
+    <p>実際に使っている人の投稿を参考情報として紹介します。比較の根拠はメーカー公式情報のみで、SNS の感想は個人の見解です。投稿をタップすると元のページを開けます。型番が一致する投稿が見つからなかったため、対象商品が分かる投稿（シリーズ・ブランド単位）には対象範囲を明示しています。</p>
+    <div class="sns-embeds">
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/pipichan_lovely/status/2084896382750761442"
+        title="サーモス製水筒について「去年買って一番良かったもの」という声"
+        purpose="サーモス製の水筒を買って良かったという投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/gudarakudara/status/2087050731782340707"
+        title="サーモス製水筒について「10年使っても保温力は落ちない」という声"
+        purpose="10年使った後の塗装の状態と、交換パッキンの入手性に関する投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/hisashi_935/status/2086083404450418709"
+        title="サーモス製の水筒・弁当箱について「サーモスには信用しかない」という声"
+        purpose="サーモスの水筒・弁当箱を長く使っているという投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/suzu0em0/status/2086750494303850788"
+        title="タイガー製水筒について「3ヶ月使ってみてとてもよい」という声"
+        purpose="タイガーの水筒を3ヶ月使った感想。コップ飲みの衛生面と、直飲みは全パーツ食洗機対応で便利という投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+    </div>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <div class="grid two">
+      <AffiliateButton href={thermosRakuten} label="サーモス JNL-S500 を楽天市場で確認" subLabel="楽天市場で商品を見る" merchant="楽天" imagePath="/products/thermos-jnl-s500.jpg" placement="article-end" />
+      <AffiliateButton href={tigerRakuten} label="タイガー MTA-J050 を楽天市場で確認" subLabel="楽天市場で商品を見る" merchant="楽天" imagePath="/products/tiger-mta-j050.jpg" placement="article-end" />
+    </div>
+
+    <details class="fold-section">
+      <summary>更新履歴・情報源・購入時の注意</summary>
+      <h3>更新履歴</h3>
+      <ol class="change-log">
+        {articleMetadata.changeLog
+          .slice()
+          .sort((left, right) => right.date.localeCompare(left.date))
+          .map((entry) => (
+            <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+          ))}
+      </ol>
+      <h3>情報源一覧</h3>
+      <ul class="source-list">
+        <li><a href={thermosOfficial} target="_blank" rel="noopener noreferrer">サーモス：真空断熱ケータイマグ JNL-S350･S500･S600･S750･S1000</a>（2026-08-12確認）</li>
+        <li><a href={tigerOfficial} target="_blank" rel="noopener noreferrer">タイガー：真空断熱ボトル MTA-J050/J080</a>（2026-08-12確認）</li>
+        <li><a href={thermosSearch} target="_blank" rel="noopener noreferrer">楽天市場：サーモス JNL-S500 検索</a>（価格・在庫確認用）</li>
+        <li><a href={tigerSearch} target="_blank" rel="noopener noreferrer">楽天市場：タイガー MTA-J050 検索</a>（価格・在庫確認用）</li>
+      </ul>
+      <h3>購入時の注意</h3>
+      <p>水筒は使用前に取扱説明書を確認してください。保温・保冷効力は室温20℃±2℃で測定した公式の目安で、実際の使用環境や入れ方で変わります。</p>
+      <h3>調査方法・免責事項</h3>
+      <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+    </details>
+
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'} · 購入リンク：{purchaseLinkLabel}</p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
+
+<style is:global>
+  /* SNS 感想セクション: 埋め込みを2列グリッドで小さめに表示 */
+  .sns-embeds {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-block: 1.25rem;
+  }
+
+  .sns-embeds .external-embed__intro h3 {
+    font-size: 0.95rem;
+  }
+
+  .sns-embeds .external-embed__target {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 720px) {
+    .sns-embeds {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ページ内ジャンプナビ（小型） */
+  .jump-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.75rem 0 0;
+  }
+  .jump-nav a {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.25rem 0.8rem;
+    background: var(--paper);
+  }
+  .jump-nav a:hover {
+    border-color: var(--accent);
+  }
+
+  /* 公式確認の1行注記（各項目への乱発をやめ、冒頭に集約） */
+  .official-note {
+    margin: 1rem 0 0;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+
+  /* 共通仕様帯 */
+  .common-specs {
+    margin: 1.25rem 0 0;
+    padding: 0.7rem 1rem;
+    background: #f0eee6;
+    border-radius: 10px;
+    font-size: 0.88rem;
+  }
+  .common-specs p {
+    margin: 0;
+  }
+  .common-specs b {
+    font-weight: 800;
+  }
+
+  /* 折りたたみセクション */
+  .fold-section {
+    margin-block: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    background: var(--paper);
+  }
+  .fold-section summary {
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 0.25rem 0;
+    color: var(--ink);
+  }
+  .fold-section summary:hover {
+    color: var(--accent);
+  }
+  .fold-section h3 {
+    font-size: 0.95rem;
+    margin: 1.1rem 0 0.4rem;
+  }
+  .fold-section .change-log,
+  .fold-section .source-list {
+    font-size: 0.85rem;
+  }
+</style>

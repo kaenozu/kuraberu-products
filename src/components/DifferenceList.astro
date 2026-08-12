@@ -33,8 +33,8 @@ const rows = Array.isArray(items) ? items : [];
     <div class="difference-table" role="list">
       {rows.map((item) => <div class="difference-row" role="listitem">
         <div class="difference-label">{item.label}</div>
-        <div class="difference-value"><strong>{leftLabel}</strong><span>{item.left}</span>{item.leftStatus && <span class="difference-status">{verificationStatusLabel(item.leftStatus)}</span>}</div>
-        <div class="difference-value"><strong>{rightLabel}</strong><span>{item.right}</span>{item.rightStatus && <span class="difference-status">{verificationStatusLabel(item.rightStatus)}</span>}</div>
+        <div class={`difference-value${item.highlight === 'left' ? ' is-highlighted' : ''}`}><strong>{leftLabel}</strong><span>{item.left}</span>{item.leftStatus && <span class="difference-status">{verificationStatusLabel(item.leftStatus)}</span>}{item.highlight === 'left' && item.highlightNote && <em class="difference-highlight-note">{item.highlightNote}</em>}</div>
+        <div class={`difference-value${item.highlight === 'right' ? ' is-highlighted' : ''}`}><strong>{rightLabel}</strong><span>{item.right}</span>{item.rightStatus && <span class="difference-status">{verificationStatusLabel(item.rightStatus)}</span>}{item.highlight === 'right' && item.highlightNote && <em class="difference-highlight-note">{item.highlightNote}</em>}</div>
       </div>)}
     </div>
   ) : (
