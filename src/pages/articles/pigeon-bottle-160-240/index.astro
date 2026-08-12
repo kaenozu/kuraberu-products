@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
@@ -10,9 +10,7 @@ import {pigeonBottleSizeArticle as articleMetadata} from '../../../content/artic
 import {pigeonBottleSizeCandidateLabels, pigeonBottleSizePriorityOptions, pigeonBottleSizeStandardConclusion} from '../../../content/pigeon-bottle-size-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
-  ComparisonCandidate,
-  ComparisonRow,
-  DifferenceRow,
+  ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
 
 const bottle160 = 'https://products.pigeon.co.jp/item/index-2377.html';
@@ -81,15 +79,6 @@ const size240Candidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {label: '容量', left: '160ml', right: '240ml'},
-  {
-    label: '付属の乳首',
-    left: 'SSサイズ（0ヵ月から）・丸穴',
-    right: 'Mサイズ（3ヵ月頃から）・Y字形',
-  },
-  {label: '対象月齢の目安', left: '0ヵ月から', right: '3ヵ月頃から'},
-];
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -170,14 +159,11 @@ const differenceRows: DifferenceRow[] = [
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison
-      idPrefix="pigeon-bottle-size-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="新生児期から使うボトルを用意する場合や、まず小容量の哺乳びんを選びたい場合は、対象月齢目安が0ヵ月からでSSサイズ乳首（丸穴）が付属する「160ml」が目安です。哺乳量が増えてきた場合は、対象月齢目安が3ヵ月頃からでMサイズ乳首（Y字形）が付属する「240ml」が目安です。どちらもプラスチック（PPSU）製・広口ボトルで、消毒・除菌方法は共通しています。"
-      left={size160Candidate}
-      right={size240Candidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: size160Candidate.product, line: size160Candidate.line, tagline: size160Candidate.audience, image: '/products/pigeon-bottle-160-240-160ml.jpg', imageAlt: `${size160Candidate.product} ${size160Candidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_160_URL, officialHref: bottle160, guidePoints: [size160Candidate.audience] }}
+      right={{ brand: size240Candidate.product, line: size240Candidate.line, tagline: size240Candidate.audience, image: '/products/pigeon-bottle-160-240-240ml.jpg', imageAlt: `${size240Candidate.product} ${size240Candidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL, officialHref: bottle240, guidePoints: [size240Candidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <div id="comparison-details">

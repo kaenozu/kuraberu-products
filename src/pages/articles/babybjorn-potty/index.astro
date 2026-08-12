@@ -2,14 +2,14 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {pottyArticle as articleMetadata} from '../../../content/articles';
 import {pottyCandidateLabels, pottyPriorityOptions, pottyStandardConclusion} from '../../../content/babybjorn-potty-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const smartPottyProductUrl = 'https://item.rakuten.co.jp/babybjorn/smart-potty/';
 const pottyChairProductUrl = 'https://item.rakuten.co.jp/babybjorn/potty-chair/';
@@ -59,23 +59,6 @@ const pottyChairCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "形状",
-    "left": "収納式。スペースの限られたバスルームに必要なデザインと機能をコンパクトにまとめたポッティ。",
-    "right": "イス型。お子さまが長い時間オマルに座る場合に最適とされる。柔らかいフォルムの人間工学デザイン。"
-  },
-  {
-    "label": "サイズ・重量",
-    "left": "幅約25.5×奥行き約32×高さ約17.5cm・約520g。小さめサイズで足裏がしっかり床につく。",
-    "right": "幅約32×奥行き約33×高さ約33cm・約870g。中桶付き。"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "3,080円。",
-    "right": "4,180円。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
@@ -183,14 +166,11 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="babybjorn-potty-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、スマートポッティとポッティチェアの最大の違いは「形状」と「収納方法」です。スマートポッティはスペースの限られたバスルームにも置けるコンパクトな収納式で、幅約25.5×奥行き約32×高さ約17.5cm・約520gです。ポッティチェアは長い時間座れるイス型で中桶付き、幅約32×奥行き約33×高さ約33cm・約870gです。2026-08-10時点の確認では、スマートポッティは3,080円、ポッティチェアは4,180円でした。実際の使いやすさやお子さまの反応は、今回確認した公式情報だけでは比較できません。"
-      left={smartPottyCandidate}
-      right={pottyChairCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, buyHref: smartPottyRakutenUrl, officialHref: smartPottyProductUrl, guidePoints: [smartPottyCandidate.audience] }}
+      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, buyHref: pottyChairRakutenUrl, officialHref: pottyChairProductUrl, guidePoints: [pottyChairCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={pottyPriorityOptions} labels={pottyCandidateLabels} standard={pottyStandardConclusion} />

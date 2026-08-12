@@ -18,7 +18,7 @@ describe("Issue #2 editorial comparison UI", () => {
 
   it("uses the three issue-specific comparison components in the article", () => {
     const article = read("src/pages/articles/pampers-newborn/index.astro");
-    expect(article).toContain("ThirtySecondComparison");
+    expect(article).toContain("ArticleComparisonV2");
     expect(article).toContain("DifferenceList");
     expect(article).toContain('id="comparison-details"');
 

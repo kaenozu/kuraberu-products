@@ -2,14 +2,14 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {babybjornArticle as articleMetadata} from '../../../content/articles';
 import {babybjornCandidateLabels, babybjornPriorityOptions, babybjornStandardConclusion} from '../../../content/babybjorn-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const harmonyOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
 const harmonyProductUrl = 'https://item.rakuten.co.jp/babybjorn/baby-carrier-harmony/';
@@ -64,23 +64,6 @@ const miniCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "対象月齢・対象体重",
-    "left": "公式比較表で0カ月〜約36ヶ月、体重3.2〜15kg、ヒップ約〜160cm。",
-    "right": "公式比較表で0カ月〜約12ヶ月、体重3.2〜11kg、ヒップ約〜120cm。"
-  },
-  {
-    "label": "抱っこの種類とサポート",
-    "left": "4通り（対面ハイ・対面ロー・前向き・おんぶ）。幅広パッド入りショルダーベルト＋エルゴノミックランバーサポート付き幅広ウエストベルトで肩と腰をサポート。",
-    "right": "2通り。ショルダーベルトと本体が別々のシンプル設計で、立ったままでも抱き入れられる。ウエストベルトなし（公式比較表で「ー」）。"
-  },
-  {
-    "label": "製品重量と公式ショップ価格（2026-08-10確認）",
-    "left": "約892g。27,280円〜。",
-    "right": "約500g。9,680円〜。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
@@ -202,14 +185,11 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="babybjorn-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、新生児から約36ヶ月まで4通りの抱っこ（おんぶ含む）で長く使える機能性を重視するなら HARMONY、新生児期〜乳児期の手軽さと価格を重視するなら MINI という違いがあります。HARMONY は幅広パッド入りショルダーベルトとランバーサポート付きウェストベルトで肩と腰をサポートし、公式ショップ価格27,280円〜（2026-08-10確認）。MINI はショルダーベルトと本体が別々で立ったまま抱き入れられ、ウエストベルトなしの軽量設計（約500g）、公式ショップ価格9,680円〜（同）。なお、どちらの着け心地が良いか、赤ちゃんが嫌がりにくいかといった使用感は、今回確認した公式情報だけでは比較できません。"
-      left={harmonyCandidate}
-      right={miniCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, buyHref: harmonyRakutenUrl, officialHref: harmonyProductUrl, guidePoints: [harmonyCandidate.audience] }}
+      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, buyHref: miniRakutenUrl, officialHref: miniProductUrl, guidePoints: [miniCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={babybjornPriorityOptions} labels={babybjornCandidateLabels} standard={babybjornStandardConclusion} />

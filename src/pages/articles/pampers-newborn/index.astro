@@ -2,7 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
@@ -10,9 +10,7 @@ import {pampersNewbornArticle as articleMetadata} from '../../../content/article
 import {pampersCandidateLabels, pampersPriorityOptions, pampersStandardConclusion} from '../../../content/pampers-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
-  ComparisonCandidate,
-  ComparisonRow,
-  DifferenceRow,
+  ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
 
 const premium = 'https://www.jp.pampers.com/products/pampers-premium-line-tape';
@@ -38,14 +36,6 @@ const standardCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    label: '主な機能',
-    left: '摩擦・ゆるうんち・肌ざわり',
-    right: 'モレガード・フィット・吸収体',
-  },
-  {label: '新生児', left: '5kgまで', right: '5kgまで'},
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(
@@ -144,14 +134,11 @@ const differenceRows: DifferenceRow[] = [
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison
-      idPrefix="pampers-newborn-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="肌へのやさしさに関する機能を詳しく確認するなら「肌へのいちばん」、モレ・ムレ対策の機能を確認するなら「さらさらケア」から見ます。どちらも新生児5kgまでのテープサイズが公式掲載されています。"
-      left={premiumCandidate}
-      right={standardCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/pampers-premium-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_PREMIUM_URL, officialHref: premium, guidePoints: [premiumCandidate.audience] }}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/pampers-sarasara-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_SARASARA_URL, officialHref: sarasara, guidePoints: [standardCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <p>パンパースの新生児用テープには「肌へのいちばん」と「さらさらケア」があります。この記事では、公式商品ページで確認できる機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>

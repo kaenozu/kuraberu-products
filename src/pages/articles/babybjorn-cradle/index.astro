@@ -2,14 +2,14 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {cradleArticle as articleMetadata} from '../../../content/articles';
 import {cradleCandidateLabels, cradlePriorityOptions, cradleStandardConclusion} from '../../../content/babybjorn-cradle-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const cradleProductUrl = 'https://item.rakuten.co.jp/babybjorn/baby-cradle/';
 const cocoNelProductUrl = 'https://item.rakuten.co.jp/aprica-shop/apr2594/';
@@ -63,23 +63,6 @@ const cocoNelCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "使用できる期間",
-    "left": "新生児〜生後6か月（体重8kgまで）。ゆりかご型の専用ベッド。",
-    "right": "新生児（2.5kg）〜24カ月（13kgまで）。上段（新生児〜つかまり立ち頃）・下段（つかまり立ち頃〜24カ月）の2段階。"
-  },
-  {
-    "label": "揺れ（ゆりかご機能）",
-    "left": "両親が手や足で簡単に優しく揺らせる。「制御された、やさしい、はずみのある動き」。",
-    "right": "公式案内に揺れ機能の記載なし（固定式のベビーベッド）。"
-  },
-  {
-    "label": "サイズ・重量と公式ショップ価格（2026-08-10確認）",
-    "left": "本体 幅約79×奥行約58×高さ約65cm・約8kg。49,500円（送料無料）。",
-    "right": "開いた状態 幅約1052×奥行約704×高さ約951mm・約14.5kg（収納袋を除く）。29,700円。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
@@ -201,14 +184,11 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="babybjorn-cradle-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、クレードルとココネルエアー AB の最大の違いは「使用できる期間」と「揺れ（ゆりかご機能）」です。クレードルは新生児〜生後6か月（8kgまで）の手動ゆりかご型で、両親が手や足で優しく揺らせます。ココネルエアー AB は新生児（2.5kg）〜24カ月（13kgまで）まで使える折りたたみ式で、カンタンに折りたためて収納袋付き、大きくなったらベビーサークルとしても使えます。2026-08-10時点の確認では、クレードルは49,500円、ココネルエアー AB は29,700円でした。実際の寝心地や揺れの好みは、今回確認した公式情報だけでは比較できません。"
-      left={cradleCandidate}
-      right={cocoNelCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <ArticleComparisonV2
+      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, buyHref: cradleRakutenUrl, officialHref: cradleProductUrl, guidePoints: [cradleCandidate.audience] }}
+      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, buyHref: cocoNelRakutenUrl, officialHref: cocoNelProductUrl, guidePoints: [cocoNelCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
     <PriorityConclusion options={cradlePriorityOptions} labels={cradleCandidateLabels} standard={cradleStandardConclusion} />
