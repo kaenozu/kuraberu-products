@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-export const MAX_EXTERNAL_EMBEDS_PER_PAGE = 3;
+export const MAX_EXTERNAL_EMBEDS_PER_PAGE = 4;
 
 function astroFiles(directory) {
   const files = [];

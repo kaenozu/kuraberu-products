@@ -15,6 +15,8 @@ interface Props {
   status?: VerificationStatusValue | string;
   compact?: boolean;
   candidate?: 'A' | 'B';
+  image?: string;
+  imageAlt?: string;
 }
 
 const {
@@ -26,12 +28,18 @@ const {
   status,
   compact = false,
   candidate = 'B',
+  image,
+  imageAlt,
 } = Astro.props;
 const normalizedStatus = normalizeVerificationStatus(status);
 const candidateLabel = candidate;
 ---
 <article class={`product-identity product-${tone} ${compact ? 'product-identity-compact' : ''}`}>
-  <div class="product-swatch" aria-hidden="true"><span>{candidateLabel}</span></div>
+  {image ? (
+    <img class="product-identity-img" src={image} alt={imageAlt ?? `${product} ${line}`} width="500" height="500" loading="lazy" />
+  ) : (
+    <div class="product-swatch" aria-hidden="true"><span>{candidateLabel}</span></div>
+  )}
   <div class="product-identity-body">
     <p class="product-kicker">候補 {candidateLabel} · {product}</p>
     <h3>{line}</h3>
