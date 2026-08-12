@@ -15,6 +15,9 @@ export interface ComparisonCandidate {
   audience: string;
   note: string;
   status?: VerificationStatus | string;
+  /** 商品画像パス（30秒比較カード等に表示） */
+  image?: string;
+  imageAlt?: string;
 }
 
 export interface ComparisonRow {

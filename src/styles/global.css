@@ -584,6 +584,25 @@ a {
   font-family: Georgia, serif;
   font-size: 1.2rem;
 }
+.product-identity-img {
+  width: 100%;
+  height: 108px;
+  object-fit: contain;
+  align-self: start;
+  background: #f4f2ec;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px;
+}
+/* 30秒比較（compact）では画像をカード上部に大きく表示 */
+.product-identity-compact .product-identity-img {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  padding: 6px;
+  margin-bottom: 0.35rem;
+}
 .product-kicker {
   margin: 0 0 0.25rem;
   color: var(--muted);
