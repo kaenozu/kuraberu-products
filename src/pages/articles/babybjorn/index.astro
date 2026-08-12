@@ -5,11 +5,8 @@ import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {babybjornArticle as articleMetadata} from '../../../content/articles';
-import {babybjornCandidateLabels, babybjornPriorityOptions, babybjornStandardConclusion} from '../../../content/babybjorn-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
@@ -131,35 +128,12 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ベビーキャリア HARMONY とベビーキャリア MINI は、どちらもベビービョルンの抱っこひもですが、使える期間、抱っこの種類、肩と腰のサポート、価格に大きな違いがあります。この記事では、ベビービョルン公式の比較表・製品ページで2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の着け心地など、公式情報だけでは判断できないことは推測しません。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img src="/products/babybjorn-harmony.jpg" alt="ベビービョルン ベビーキャリア HARMONY" width="700" height="700" loading="eager" />
-        <div class="product-card-body">
-          <p class="product-card-line">ベビービョルン / HARMONY</p>
-          <h2 class="product-card-name">ベビーキャリア HARMONY</h2>
-          <p class="product-card-desc">新生児〜約36ヶ月。4通りの抱っこができる最上級モデル。幅広クッションで肩と腰をサポート。</p>
-          <a class="product-card-link" href={harmonyProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img src="/products/babybjorn-mini.jpg" alt="ベビービョルン ベビーキャリア MINI" width="700" height="700" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ベビービョルン / MINI</span>
-          <h2 class="product-card-name">ベビーキャリア MINI</h2>
-          <p class="product-card-desc">新生児〜約12ヶ月。ショルダーベルトと本体が別々で、立ったままでも抱き入れられるシンプル設計。</p>
-          <a class="product-card-link" href={miniProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
     <div class="purchase-cards">
       <PurchaseCard
         name="ベビーキャリア HARMONY"
@@ -187,24 +161,13 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, buyHref: harmonyRakutenUrl, officialHref: harmonyProductUrl, guidePoints: [harmonyCandidate.audience] }}
       right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, buyHref: miniRakutenUrl, officialHref: miniProductUrl, guidePoints: [miniCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
-
-    <PriorityConclusion options={babybjornPriorityOptions} labels={babybjornCandidateLabels} standard={babybjornStandardConclusion} />
-
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="babybjorn-differences"
-        leftLabel="HARMONY"
-        rightLabel="MINI"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ベビービョルン公式の比較表・製品ページで確認できた内容を整理します。使用感・実際の着け心地・赤ちゃんの反応など、公式情報だけでは確認できないことは書いていません。</p>

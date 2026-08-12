@@ -4,11 +4,8 @@ import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {babybjornBouncerArticle as articleMetadata} from '../../../content/articles';
-import {babybjornBouncerCandidateLabels, babybjornBouncerPriorityOptions, babybjornBouncerStandardConclusion} from '../../../content/babybjorn-bouncer-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
@@ -130,35 +127,12 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">バウンサー Bliss とバウンサー バランスソフトは、どちらもベビービョルンのバウンサーです。対象月齢や機能はほぼ同じで、違いは主にシートの素材とデザインにあります。この記事では、ベビービョルン公式のガイド・商品ページで2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の肌触りなど、公式情報だけでは判断できないことは推測しません。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img src="/products/babybjorn-bouncer-bliss.jpg" alt="ベビービョルン バウンサー Bliss" width="1080" height="1080" loading="eager" />
-        <div class="product-card-body">
-          <p class="product-card-line">ベビービョルン / Bliss</p>
-          <h2 class="product-card-name">バウンサー Bliss</h2>
-          <p class="product-card-desc">ベビービョルンのバウンサー最新モデル。シートカバーをより柔らかく仕上げたモデル。20種類以上のバリエーション。</p>
-          <a class="product-card-link" href={blissProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img src="/products/babybjorn-bouncer-balance.jpg" alt="ベビービョルン バウンサー バランスソフト" width="1080" height="1080" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ベビービョルン / バランスソフト</span>
-          <h2 class="product-card-name">バウンサー バランスソフト</h2>
-          <p class="product-card-desc">2トーンの生地が特長。直近カラーバリエーションが増えているモデル。</p>
-          <a class="product-card-link" href={balanceProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
     <div class="purchase-cards">
       <PurchaseCard
         name="バウンサー Bliss"
@@ -186,6 +160,7 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, buyHref: blissRakutenUrl, officialHref: blissProductUrl, guidePoints: [blissCandidate.audience] }}
       right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, buyHref: balanceRakutenUrl, officialHref: balanceProductUrl, guidePoints: [balanceCandidate.audience] }}
@@ -193,17 +168,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={babybjornBouncerPriorityOptions} labels={babybjornBouncerCandidateLabels} standard={babybjornBouncerStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="babybjorn-bouncer-differences"
-        leftLabel="Bliss"
-        rightLabel="バランスソフト"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ベビービョルン公式のガイド・商品ページで確認できた内容を整理します。使用感・実際の肌触り・赤ちゃんの反応など、公式情報だけでは確認できないことは書いていません。</p>

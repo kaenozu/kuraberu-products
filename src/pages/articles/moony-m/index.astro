@@ -4,11 +4,8 @@ import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {moonyMArticle as articleMetadata} from '../../../content/articles';
-import {moonyCandidateLabels, moonyPriorityOptions, moonyStandardConclusion} from '../../../content/moony-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
@@ -101,35 +98,12 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ユニ・チャームのテープタイプMサイズには、「低刺激であんしん」と「マシュマロ肌ごこち モレ安心」があります。どちらも体重6〜11kg向けですが、公式に案内されている機能や無添加成分には違いがあります。「低刺激であんしん」Mは46枚入りで、うんち水分吸収シートとおしりガイドを搭載しています。一方、「マシュマロ肌ごこち モレ安心」Mは54枚入りで、背中と足回りのゆるうんちストッパーや最大12時間吸収などが案内されています。この記事では、2026年8月9日時点で確認できた公式情報だけを使って、Mサイズ同士の違いを整理します。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#sns">SNSの声</a>
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img src="/products/moony-teishigeki-m.jpg" alt="ムーニー 低刺激であんしん テープ Mサイズ パッケージ" width="500" height="500" loading="eager" />
-        <div class="product-card-body">
-          <p class="product-card-line">ムーニー / テープ</p>
-          <h2 class="product-card-name">低刺激であんしん</h2>
-          <p class="product-card-desc">うんち水分吸収シートとおしりガイド。新生児〜Mは3成分無添加。</p>
-          <a class="product-card-link" href={teishigekiSeries} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img src="/products/moony-mashumaro-m.jpg" alt="ムーニー マシュマロ肌ごこちモレ安心 テープ Mサイズ パッケージ" width="500" height="500" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ムーニー / テープ</span>
-          <h2 class="product-card-name">マシュマロ肌ごこちモレ安心</h2>
-          <p class="product-card-desc">無添加弱酸性素材とゆるうんちストッパー。全サイズ4成分無添加。</p>
-          <a class="product-card-link" href={mashumaroSeries} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
     <div class="purchase-cards">
       <PurchaseCard
         name="低刺激であんしん"
@@ -157,6 +131,7 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience] }}
       right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience] }}
@@ -164,17 +139,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={moonyPriorityOptions} labels={moonyCandidateLabels} standard={moonyStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="moony-differences"
-        leftLabel="低刺激であんしん"
-        rightLabel="マシュマロ肌ごこちモレ安心"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="official">公式情報</h2>
     <p>「低刺激であんしん」Mは、体重6〜11kg向けのテープタイプで、楽天のユニ・チャーム公式店では46枚入りです。主な機能として、ゆるうんちの水分を下層へ吸収する「うんち水分吸収シート」と「おしりガイド」が案内されています。新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加です。また、公式には新生児〜Mについて「オーガニックコットンは含まれておりません」と明記されています。商品は2025年秋にリニューアルされています。</p>
