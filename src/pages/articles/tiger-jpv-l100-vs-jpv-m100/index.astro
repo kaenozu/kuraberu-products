@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import {tigerRiceArticle as articleMetadata} from '../../../content/articles';
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
+
+const lOfficial = 'https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/';
+const mOfficial = 'https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-m/';
+const lSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC+JPV-L100+%E7%82%8A%E9%A3%AF%E5%99%A8/';
+const mSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC+JPV-M100+%E7%82%8A%E9%A3%AF%E5%99%A8/';
+
+const lModel = {brand: 'タイガー', line: 'JPV-L100', image: '/products/tiger-jpv-l100.jpg', imageAlt: 'タイガー 圧力IHジャー炊飯器 JPV-L100', audience: '上位モデルの機能を優先する人の候補', official: lOfficial};
+const mModel = {brand: 'タイガー', line: 'JPV-M100', image: '/products/tiger-jpv-m100.jpg', imageAlt: 'タイガー 圧力IHジャー炊飯器 JPV-M100', audience: '価格を抑えたエントリーモデルを選びたい人の候補', official: mOfficial};
+
+const faqEntries = [
+  {question: 'タイガー JPV-L100 と JPV-M100 の違いは？', answer: 'タイガー公式ページでは、どちらも5.5合の圧力IHジャー炊飯器です。JPV-L100は上位モデル、JPV-M100はエントリーモデルとして案内されています。公式オンライン価格はL100が57,800円から、M100が49,800円からです。'},
+  {question: '炊飯容量やサイズ、重さは違う？', answer: '今回確認した5.5合モデルでは、容量はどちらも0.5〜5.5合、サイズは幅25.7×奥行38×高さ21.4cm、質量は約5.4kgです。'},
+  {question: '価格が安いのはどっち？', answer: '公式オンラインページの表示価格では、JPV-M100が49,800円から、JPV-L100が57,800円からです。販売店の価格・在庫・ポイント・送料は購入時点で確認してください。'},
+  {question: 'どちらを選べばよい？', answer: '公式ページ上の位置づけと価格を優先するなら、価格を抑えたJPV-M100が候補です。上位モデルの機能を優先するならJPV-L100を確認してください。'},
+];
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: 'モデルの位置づけ', left: '上位モデル', right: 'エントリーモデル', highlight: 'left', highlightNote: '機能を優先'},
+  {label: '炊飯方式・容量', left: '圧力IH・0.5〜5.5合', right: '圧力IH・0.5〜5.5合'},
+  {label: '公式オンライン価格', left: '57,800円〜', right: '49,800円〜', highlight: 'right', highlightNote: '8,000円安い', bar: {left: 57800, right: 49800}},
+  {label: 'サイズ', left: '25.7×38×21.4cm', right: '25.7×38×21.4cm'},
+  {label: '質量', left: '約5.4kg', right: '約5.4kg'},
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">タイガーのJPV-L100とJPV-M100は、どちらも5.5合の圧力IHジャー炊飯器です。公式ページで確認できるモデルの位置づけ、価格、容量、サイズ、質量を分けて比較します。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#sns">SNSの感想</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{brand: lModel.brand, line: lModel.line, tagline: '上位モデルを選ぶなら', image: lModel.image, imageAlt: lModel.imageAlt, buyHref: lSearch, officialHref: lOfficial, guidePoints: [lModel.audience]}}
+      right={{brand: mModel.brand, line: mModel.line, tagline: '価格を抑えるなら', image: mModel.image, imageAlt: mModel.imageAlt, buyHref: mSearch, officialHref: mOfficial, guidePoints: [mModel.audience]}}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <p>JPV-L100は上位モデル、JPV-M100はエントリーモデルです。5.5合モデルの容量・サイズ・質量は同じで、公式オンライン価格はJPV-M100の方が低く表示されています。機能の詳細は各公式ページで確認してください。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name="タイガー JPV-L100" audience={lModel.audience} href={lSearch} imagePath={lModel.image} placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="タイガー JPV-M100" audience={mModel.audience} href={mSearch} imagePath={mModel.image} placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <details class="fold-section" id="specs"><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">JPV-L100</th><th scope="col">JPV-M100</th><th scope="col">根拠</th></tr></thead><tbody>
+      <tr><th scope="row">加熱方式</th><td>圧力IH</td><td>圧力IH</td><td><a href={lOfficial} target="_blank" rel="noopener noreferrer">L公式</a> / <a href={mOfficial} target="_blank" rel="noopener noreferrer">M公式</a></td></tr>
+      <tr><th scope="row">白米の炊飯・保温容量</th><td>0.5〜5.5合</td><td>0.5〜5.5合</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">公式オンライン価格</th><td>57,800円〜</td><td>49,800円〜</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">サイズ</th><td>25.7×38×21.4cm</td><td>25.7×38×21.4cm</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">質量</th><td>約5.4kg</td><td>約5.4kg</td><td>各公式商品ページ</td></tr>
+    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>タイガー公式ページでは、JPV-L100は圧力IHジャー炊飯器の上位モデル、JPV-M100はエントリーモデルとして案内されています。今回比較した100サイズは、どちらも5.5合炊きです。</p>
+    <div class="source-links"><a class="card-link" href={lOfficial} target="_blank" rel="noopener noreferrer">JPV-L100 公式商品ページ →</a><a class="card-link" href={mOfficial} target="_blank" rel="noopener noreferrer">JPV-M100 公式商品ページ →</a></div>
+    <ArticleSocialProof query="タイガー JPV-L100 JPV-M100 炊飯器" checkedAt="2026-08-13" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2 id="purchase">購入前に確認するページ</h2><div class="source-links"><a class="card-link" href={lSearch} target="_blank" rel="noopener noreferrer">JPV-L100の販売ページを検索 →</a><a class="card-link" href={mSearch} target="_blank" rel="noopener noreferrer">JPV-M100の販売ページを検索 →</a></div>
+    <h2>購入時の注意</h2><p>炊飯器は、炊飯容量、設置スペース、ふたを開けたときの高さ、炊飯メニュー、内なべの保証内容を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。</p>
+    <div class="grid two"><PurchaseCard name="タイガー JPV-L100" audience={lModel.audience} href={lSearch} imagePath={lModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="タイガー JPV-M100" audience={mModel.audience} href={mSearch} imagePath={mModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={lOfficial} target="_blank" rel="noopener noreferrer">タイガー JPV-L100 公式商品ページ</a>（2026-08-13確認）</li><li><a href={mOfficial} target="_blank" rel="noopener noreferrer">タイガー JPV-M100 公式商品ページ</a>（2026-08-13確認）</li></ul>
+    <h2>調査方法・免責事項</h2><p>この比較は、タイガー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
