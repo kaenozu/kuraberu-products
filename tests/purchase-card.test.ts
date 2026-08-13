@@ -45,6 +45,22 @@ describe("PurchaseCard", () => {
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
   });
 
+  it("marks a Rakuten short URL as sponsored advertising", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(PurchaseCard, {
+      props: {
+        name: "ベビービョルン バウンサー Bliss",
+        audience: "公式商品ページを確認したい人向け",
+        href: "https://a.r10.to/h5dAQI",
+        productId: "babybjorn-bouncer-bliss",
+      },
+    });
+
+    expect(html).toContain("楽天市場で型番を確認");
+    expect(html).toContain("（広告）");
+    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
+  });
+
   it("defaults to after-decision placement and renders image", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {

@@ -128,7 +128,7 @@ const generated = !directHref && query
   : undefined;
 const resolvedHref = directHref ?? generated;
 const valid = isAllowedRakutenUrl(resolvedHref);
-const isAffiliateHref = Boolean(resolvedHref && /^https:\/\/(?:[^./]+\.)?(?:hb\.afl\.rakuten\.co\.jp|r10\.to)(?:\/|$)/i.test(resolvedHref));
+const isAffiliateHref = Boolean(resolvedHref && /^https:\/\/(?:[^./]+\.)?(?:hb\.afl\.rakuten\.co\.jp|r10\.to|a\.r10\.to)(?:\/|$)/i.test(resolvedHref));
 const ctaRel = isAffiliateHref
   ? 'sponsored nofollow noopener noreferrer'
   : 'nofollow noopener noreferrer';
