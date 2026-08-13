@@ -25,6 +25,7 @@ import {
   shupotArticle,
   sharpKcS50VsFuS50Article,
   yamazakiTowerDeskPanelArticle,
+  yamazakiCondorWagonArticle,
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
 } from "../src/content/articles";
@@ -107,6 +108,7 @@ describe("article metadata", () => {
       sharpKcS50VsFuS50Article,
       thermosTigerBottleArticle,
       yamazakiTowerDeskPanelArticle,
+      yamazakiCondorWagonArticle,
       zojirushiElectricKettleArticle,
       tefalGarmentSteamerArticle,
     ]);
