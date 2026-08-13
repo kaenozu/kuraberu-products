@@ -15,8 +15,6 @@ const harmonyProductUrl = 'https://item.rakuten.co.jp/babybjorn/baby-carrier-har
 const miniProductUrl = 'https://item.rakuten.co.jp/babybjorn/baby-carrier-mini-3d/';
 const harmonyRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_HARMONY_URL;
 const miniRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_MINI_URL;
-const harmonySearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%20HARMONY%20%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3/';
-const miniSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%20MINI%20%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3/';
 
 const faqEntries = [
   {
@@ -66,9 +64,6 @@ const miniCandidate: ComparisonCandidate = {
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -131,7 +126,7 @@ const differenceRows: DifferenceRow[] = [
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
-      <a href="#sns">SNSの声</a>
+
       <a href="#faq">FAQ</a>
     </nav>
     <div class="purchase-cards">
@@ -156,15 +151,14 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      <p>購入リンク: {purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, buyHref: harmonyRakutenUrl, officialHref: harmonyProductUrl, guidePoints: [harmonyCandidate.audience] }}
-      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, buyHref: miniRakutenUrl, officialHref: miniProductUrl, guidePoints: [miniCandidate.audience] }}
+      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyProductUrl, guidePoints: [harmonyCandidate.audience] }}
+      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniProductUrl, guidePoints: [miniCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -211,35 +205,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={harmonySearch} target="_blank" rel="noopener noreferrer">HARMONY の販売ページを検索 →</a>
-      <a class="card-link" href={miniSearch} target="_blank" rel="noopener noreferrer">MINI の販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
     <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、抱っこひもの安全性と正しい使用方法は必ず公式の使用説明書で確認してください。</p>
-
-    <div class="grid two" id="purchase">
-      <PurchaseCard
-        name="ベビーキャリア HARMONY"
-        audience="新生児から約36ヶ月まで長く使えて、肩と腰のサポートを優先する人向け"
-        href={harmonyRakutenUrl}
-        productId="babybjorn-harmony"
-        imagePath="/products/babybjorn-harmony.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="ベビーキャリア MINI"
-        audience="新生児期の手軽さ・シンプルな装着方法と価格を優先する人向け"
-        href={miniRakutenUrl}
-        productId="babybjorn-mini"
-        imagePath="/products/babybjorn-mini.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

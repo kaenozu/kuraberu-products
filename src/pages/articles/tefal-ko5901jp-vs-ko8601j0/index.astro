@@ -38,10 +38,10 @@ const keyDiffRows: KeyDiffRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ティファールの電気ケトル2機種を、公式ページで確認できる容量・重量・温度調節・保温・安全機能に分けて比較します。価格は販売先でご確認ください。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#sns">SNSの感想</a><a href="#faq">FAQ</a></nav>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: 'ティファール', line: 'KO5901JP', tagline: '容量を優先するなら', image: leftImage, imageAlt: 'ティファール ジャスティン ロック ホワイト KO5901JP', buyHref: leftSearch, officialHref: leftOfficial, guidePoints: [leftAudience]}}
-      right={{brand: 'ティファール', line: 'KO8601J0', tagline: '温度調節を使うなら', image: rightImage, imageAlt: 'ティファール アプレシア ロック コントロール ホワイト KO8601J0', buyHref: rightSearch, officialHref: rightOfficial, guidePoints: [rightAudience]}}
+      left={{brand: 'ティファール', line: 'KO5901JP', tagline: '容量を優先するなら', image: leftImage, imageAlt: 'ティファール ジャスティン ロック ホワイト KO5901JP', officialHref: leftOfficial, guidePoints: [leftAudience]}}
+      right={{brand: 'ティファール', line: 'KO8601J0', tagline: '温度調節を使うなら', image: rightImage, imageAlt: 'ティファール アプレシア ロック コントロール ホワイト KO8601J0', officialHref: rightOfficial, guidePoints: [rightAudience]}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -62,9 +62,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">KO5901JP 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">KO8601J0 公式商品ページ →</a></div>
     <ArticleSocialProof query="ティファール KO5901JP KO8601J0" checkedAt="2026-08-13" hasPosts={false} />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2 id="purchase">購入前に確認するページ</h2><div class="source-links"><a class="card-link" href={leftSearch} target="_blank" rel="noopener noreferrer">KO5901JPを楽天市場で検索 →</a><a class="card-link" href={rightSearch} target="_blank" rel="noopener noreferrer">KO8601J0を楽天市場で検索 →</a></div>
     <h2>購入時の注意</h2><p>容量、温度調節、保温、給湯ロックなど、必要な機能を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
-    <div class="grid two"><PurchaseCard name="ティファール KO5901JP" audience={leftAudience} href={leftSearch} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="ティファール KO8601J0" audience={rightAudience} href={rightSearch} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">ティファール ジャスティン ロック KO5901JP 公式商品ページ</a>（2026-08-13確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">ティファール アプレシア ロック コントロール KO8601J0 公式商品ページ</a>（2026-08-13確認）</li></ul>
     <h2>調査方法・免責事項</h2><p>この比較は、ティファール公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>

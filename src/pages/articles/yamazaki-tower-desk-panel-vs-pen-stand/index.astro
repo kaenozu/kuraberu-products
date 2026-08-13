@@ -31,19 +31,16 @@ const penStand = {
 }
 
 const faqEntries = [
-  {question: 'デスク横トレー付きスチールパネルとマグネットペンスタンドの違いは？', answer: '公式仕様では、デスク横トレー付きスチールパネルは幅58×奥行4.8×高さ41.7〜45.5cm、重量2250g、耐荷重1.5kg（静止荷重）です。マグネットペンスタンドは幅6.2×奥行6.2×高さ20.8cm、重量495g、耐荷重500gです。パネルはデスク横の面を使った収納、ペンスタンドはペンを立てる収納という違いがあります。'},
-  {question: '軽いのはどっち？', answer: '公式確認値では、マグネットペンスタンドが495g、デスク横トレー付きスチールパネルが2250gです。重量を優先するならマグネットペンスタンドが候補です。'},
-  {question: '耐荷重が大きいのはどっち？', answer: '公式確認値では、デスク横トレー付きスチールパネルが1.5kg（静止荷重）、マグネットペンスタンドが500gです。設置面や使い方などの条件は公式商品ページで確認してください。'},
-  {question: 'どちらもマグネットで設置できる？', answer: '公式商品ページでは、デスク横トレー付きスチールパネルはデスクに差し込んで固定する設置方法、マグネットペンスタンドはマグネットで貼り付ける商品として確認できます。設置場所と固定方法が異なります。'},
+  {question: 'パネルはどのデスクにも取り付けられる？', answer: '公式ページでは、天板の厚さ1.2〜5cm、幅60cm以上、奥行4.6cm以上などの条件が案内されています。購入前に使うデスクの寸法を確認してください。'},
+  {question: 'ペンスタンドはどこに取り付けられる？', answer: 'マグネットがつく平らな面やスチール面に取り付ける商品です。パネルに組み合わせるほか、条件に合う別の場所でも使えます。'},
+  {question: '2商品は組み合わせて使える？', answer: '公式ページでは、パネルにマグネット小物を追加する使い方と、ペンスタンドをパネルに取り付ける使い方が案内されています。デスク横に収納面を作るか、単体で小物を立てるかで選ぶと整理しやすいです。'},
 ] as const
 
 const keyDiffRows: KeyDiffRow[] = [
-  {label: 'サイズ', left: 'W58×D4.8×H41.7〜45.5cm', right: 'W6.2×D6.2×H20.8cm', highlight: 'right', highlightNote: 'コンパクト'},
-  {label: '重量', left: '2250g', right: '495g', highlight: 'right', highlightNote: '軽い', bar: {left: 2250, right: 495}},
-  {label: '耐荷重', left: '1.5kg（静止荷重）', right: '500g', highlight: 'left', highlightNote: '大きい', bar: {left: 1.5, right: 0.5}},
-  {label: '収納の形', left: 'パネル＋トレー', right: 'ペンスタンド', highlight: null},
-  {label: '設置方法', left: 'デスクに差し込んで固定', right: 'マグネットで貼り付け', highlight: null},
-  {label: '材質', left: 'スチール（粉体塗装）など', right: 'スチール（粉体塗装）など', highlight: null},
+  {label: '向いている使い方', left: 'デスク横に収納面とトレーを作る', right: 'ペンや小物を立てて置く', highlight: null},
+  {label: '設置条件', left: '天板厚1.2〜5cm・幅60cm以上など', right: 'マグネットがつく平らな面・スチール面', highlight: null},
+  {label: '組み合わせ', left: 'マグネット小物を追加できる', right: 'パネルに取り付けて使える', highlight: null},
+  {label: 'サイズ', left: 'W58×D4.8×H41.7〜45.5cm', right: 'W6.2×D6.2×H20.8cm', highlight: null},
 ]
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
@@ -51,11 +48,11 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 収納用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">山崎実業 towerのデスク横トレー付きスチールパネルとマグネットペンスタンドを、公式商品ページで確認できたサイズ・重量・耐荷重・材質・設置方法で比較します。使用感や収納量は推測せず、確認できる仕様だけを整理します。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#sns">SNSの声</a><a href="#faq">FAQ</a></nav>
+    <p class="lead">山崎実業 towerのデスク横トレー付きスチールパネルとマグネットペンスタンドを、買って使えるかに直結する設置条件・用途・組み合わせ方を中心に比較します。重量や耐荷重などの数値は詳細仕様にまとめます。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: panel.brand, line: panel.line, tagline: 'デスク横の面を使ってまとめるなら', image: panel.image, imageAlt: panel.imageAlt, buyHref: panelSearch, officialHref: panelOfficial, guidePoints: [panel.audience]}}
-      right={{brand: penStand.brand, line: penStand.line, tagline: 'ペンを立てて省スペースに置くなら', image: penStand.image, imageAlt: penStand.imageAlt, buyHref: penStandSearch, officialHref: penStandOfficial, guidePoints: [penStand.audience]}}
+      left={{brand: panel.brand, line: panel.line, tagline: 'デスク横の面を使ってまとめるなら', image: panel.image, imageAlt: panel.imageAlt, officialHref: panelOfficial, guidePoints: [panel.audience]}}
+      right={{brand: penStand.brand, line: penStand.line, tagline: 'ペンを立てて省スペースに置くなら', image: penStand.image, imageAlt: penStand.imageAlt, officialHref: penStandOfficial, guidePoints: [penStand.audience]}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -69,9 +66,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <h2 id="official">公式確認済みの内容</h2><p>上の比較は、山崎実業公式の商品ページ（240034・240051）で2026年8月13日に確認した内容です。カラー別品番、仕様、設置条件は購入前に公式ページで再確認してください。</p>
     <ArticleSocialProof query="山崎実業 tower 10066 10067 10096 10097" checkedAt="2026-08-13" />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2>購入前に確認するページ</h2><div class="source-links"><a class="card-link" href={panelSearch} target="_blank" rel="noopener noreferrer">楽天市場で品番10066・10067を検索 →</a><a class="card-link" href={penStandSearch} target="_blank" rel="noopener noreferrer">楽天市場で品番10096・10097を検索 →</a></div>
-    <div class="grid two"><PurchaseCard name={panel.line} audience={panel.audience} href={panelSearch} productId="yamazaki-tower-desk-panel" imagePath={panel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name={penStand.line} audience={penStand.audience} href={penStandSearch} productId="yamazaki-tower-magnetic-pen-stand" imagePath={penStand.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={panelOfficial} target="_blank" rel="noopener noreferrer">山崎実業公式：デスク横トレー付きスチールパネル</a>（2026-08-13確認）</li><li><a href={penStandOfficial} target="_blank" rel="noopener noreferrer">山崎実業公式：マグネットペンスタンド</a>（2026-08-13確認）</li></ul>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p><div class="verification-summary" aria-label="記事情報の確認状況"><p>公式商品情報確認済み：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> · 購入リンク：未確認</p></div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p><div class="verification-summary" aria-label="記事情報の確認状況"><p>公式商品情報確認済み：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p></div>
   </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>

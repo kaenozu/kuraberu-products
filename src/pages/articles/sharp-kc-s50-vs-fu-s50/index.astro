@@ -38,10 +38,10 @@ const keyDiffRows: KeyDiffRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">シャープのKC-S50とFU-S50を、公式ページで確認できる加湿機能・最大加湿量・サイズ・重量・適用畳数・運転音・センサーで比較します。価格は販売先でご確認ください。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#sns">SNSの感想</a><a href="#faq">FAQ</a></nav>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: 'シャープ', line: 'KC-S50', tagline: '加湿も使うなら', image: leftImage, imageAlt: 'シャープ 加湿空気清浄機 KC-S50', buyHref: leftSearch, officialHref: leftOfficial, guidePoints: [leftAudience]}}
-      right={{brand: 'シャープ', line: 'FU-S50', tagline: '小型・軽量なら', image: rightImage, imageAlt: 'シャープ 空気清浄機 FU-S50', buyHref: rightSearch, officialHref: rightOfficial, guidePoints: [rightAudience]}}
+      left={{brand: 'シャープ', line: 'KC-S50', tagline: '加湿も使うなら', image: leftImage, imageAlt: 'シャープ 加湿空気清浄機 KC-S50', officialHref: leftOfficial, guidePoints: [leftAudience]}}
+      right={{brand: 'シャープ', line: 'FU-S50', tagline: '小型・軽量なら', image: rightImage, imageAlt: 'シャープ 空気清浄機 FU-S50', officialHref: rightOfficial, guidePoints: [rightAudience]}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -63,9 +63,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">KC-S50 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">FU-S50 公式商品ページ →</a></div>
     <ArticleSocialProof query="シャープ KC-S50 FU-S50" checkedAt="2026-08-13" hasPosts={false} />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2 id="purchase">購入前に確認するページ</h2><div class="source-links"><a class="card-link" href={leftSearch} target="_blank" rel="noopener noreferrer">KC-S50を楽天市場で型番検索 →</a><a class="card-link" href={rightSearch} target="_blank" rel="noopener noreferrer">FU-S50を楽天市場で型番検索 →</a></div>
     <h2>購入時の注意</h2><p>加湿の要否、本体サイズ・重量、運転音、センサーなど、設置場所と必要な機能を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
-    <div class="grid two"><PurchaseCard name="シャープ KC-S50" audience={leftAudience} href={leftSearch} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="シャープ FU-S50" audience={rightAudience} href={rightSearch} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">シャープ KC-S50 公式商品ページ</a> / <a href={leftSpec} target="_blank" rel="noopener noreferrer">仕様</a>（2026-08-13確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">シャープ FU-S50 公式商品ページ</a> / <a href={rightSpec} target="_blank" rel="noopener noreferrer">仕様</a>（2026-08-13確認）</li></ul>
     <h2>調査方法・免責事項</h2><p>この比較は、シャープ公式の商品ページと仕様ページで確認できる情報を根拠にしています。SNSの感想は比較の根拠にしていません。</p>

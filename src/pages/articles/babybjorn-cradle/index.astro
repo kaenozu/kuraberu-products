@@ -13,8 +13,6 @@ const cradleProductUrl = 'https://item.rakuten.co.jp/babybjorn/baby-cradle/';
 const cocoNelProductUrl = 'https://item.rakuten.co.jp/aprica-shop/apr2594/';
 const cradleRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_CRADLE_URL;
 const cocoNelRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_APRICA_COCONEL_AIR_URL;
-const cradleSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3%20%E3%82%AF%E3%83%AC%E3%83%BC%E3%83%89%E3%83%AB/';
-const cocoNelSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%B3%E3%82%B3%E3%83%8D%E3%83%AB%E3%82%A8%E3%82%A2%E3%83%BC/';
 
 const faqEntries = [
   {
@@ -64,9 +62,6 @@ const cocoNelCandidate: ComparisonCandidate = {
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -129,7 +124,7 @@ const differenceRows: DifferenceRow[] = [
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
-      <a href="#sns">SNSの声</a>
+
       <a href="#faq">FAQ</a>
     </nav>
     <div class="purchase-cards">
@@ -154,15 +149,14 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      <p>購入リンク: {purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, buyHref: cradleRakutenUrl, officialHref: cradleProductUrl, guidePoints: [cradleCandidate.audience] }}
-      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, buyHref: cocoNelRakutenUrl, officialHref: cocoNelProductUrl, guidePoints: [cocoNelCandidate.audience] }}
+      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleProductUrl, guidePoints: [cradleCandidate.audience] }}
+      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelProductUrl, guidePoints: [cocoNelCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -208,35 +202,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={cradleSearch} target="_blank" rel="noopener noreferrer">ベビービョルン クレードルの販売ページを検索 →</a>
-      <a class="card-link" href={cocoNelSearch} target="_blank" rel="noopener noreferrer">ココネルエアー AB の販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
     <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店・アップリカ公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、ベビーベッドの安全性と正しい使用方法は必ず各メーカーの公式ページ・使用説明書で確認してください。</p>
-
-    <div class="grid two">
-      <PurchaseCard
-        name="クレードル"
-        audience="手動のゆりかご機能で揺らして寝かしつけたい、新生児期の使用を優先する人向け"
-        href={cradleRakutenUrl}
-        productId="babybjorn-cradle"
-        imagePath="/products/babybjorn-cradle.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="ココネルエアー AB"
-        audience="新生児〜24カ月まで長く使えて、折りたたみ・ベビーサークル兼用を優先する人向け"
-        href={cocoNelRakutenUrl}
-        productId="aprica-coconel-air"
-        imagePath="/products/aprica-coconel-air.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">
