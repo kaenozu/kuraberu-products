@@ -28,7 +28,8 @@ describe("content freshness", () => {
     );
     expect(html).toContain("商品情報確認日：");
     expect(html).toContain('datetime="2026-07-31"');
-    expect(html).toContain("最終確認日は未記録");
+    expect(html).not.toContain("最終確認日は未記録");
+    expect(html).not.toContain("購入リンク：未確認");
     expect(html).toContain("更新履歴");
     expect(html).toContain("メーカー公式の商品機能とサイズ情報を確認");
     expect(html).toContain("価格や在庫を保証しません");

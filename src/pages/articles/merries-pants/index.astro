@@ -32,7 +32,7 @@ const faqEntries = [
   },
   {
     question: '価格はどっちが安い？',
-    answer: 'この記事では価格を保証していません。楽天市場の販売ページで、1枚あたりの単価（内容枚数と価格）を比較して確認してください。記事下部の購入リンクから販売ページに移動できます。',
+    answer: 'この記事では価格を保証していません。楽天市場の販売ページで、1枚あたりの単価（内容枚数と価格）を比較して確認してください。販売ページで価格・在庫・送料・セット内容を確認してください。',
   },
 ] as const;
 
@@ -60,9 +60,6 @@ const productInfoStale = isContentStale(
   articleMetadata.productInfoCheckedAt,
   contentAsOf,
 );
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -97,19 +94,18 @@ const differenceRows: DifferenceRow[] = [
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
-      <a href="#sns">SNSの声</a>
+
       <a href="#faq">FAQ</a>
     </nav>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
-      <p>購入リンク：{purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MERRIES_FP_URL, officialHref: firstPremium, guidePoints: [premiumCandidate.audience] }}
-      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MERRIES_AIRSLE_URL, officialHref: airsle, guidePoints: [standardCandidate.audience] }}
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience] }}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -137,7 +133,7 @@ const differenceRows: DifferenceRow[] = [
       <a class="card-link" href={airsle} target="_blank" rel="noopener noreferrer">ずっと肌さらエアスルー公式商品ページ →</a>
     </div>
 
-    
+
 
     <h2>どんな確認を優先するか</h2>
     <ul>
@@ -186,35 +182,9 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={firstPremiumSearch} target="_blank" rel="noopener noreferrer">ファーストプレミアム パンツの販売ページを検索 →</a>
-      <a class="card-link" href={airsleSearch} target="_blank" rel="noopener noreferrer">エアスルー パンツの販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
-    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
     <p>パンツタイプでも体型や動き方には個人差があります。漏れや肌トラブルが続く場合は使用を中止し、必要に応じて専門家へ相談してください。</p>
-    <div class="grid two" id="purchase">
-      <PurchaseCard
-        name="ファーストプレミアム"
-        audience="肌ざわり・肌への配慮の機能を優先する人向け"
-        href={import.meta.env.PUBLIC_RAKUTEN_MERRIES_FP_URL}
-        productId="merries-fp-pants"
-        imagePath="/products/merries-fp-newborn.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="ずっと肌さらエアスルー"
-        audience="ムレ対策・おしっこ吸収の機能を優先する人向け"
-        href={import.meta.env.PUBLIC_RAKUTEN_MERRIES_AIRSLE_URL}
-        productId="merries-airsle-pants"
-        imagePath="/products/merries-airsle-newborn.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

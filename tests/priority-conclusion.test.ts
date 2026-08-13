@@ -52,7 +52,7 @@ describe("priority conclusion", () => {
       "dist/articles/pampers-newborn/index.html",
       "utf8",
     );
-    expect(html).toContain("5つの違い");
+    expect(html).toContain("主な比較ポイント");
     expect(html).toContain("あなたはどちら向き？");
     expect(html).toContain("SNS での感想（参考情報）");
     expect(html).not.toContain("条件に応じた比較結論");

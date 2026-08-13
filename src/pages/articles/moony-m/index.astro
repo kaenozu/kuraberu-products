@@ -64,9 +64,6 @@ const mashumaroCandidate: ComparisonCandidate = {
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -101,7 +98,7 @@ const differenceRows: DifferenceRow[] = [
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
-      <a href="#sns">SNSの声</a>
+
       <a href="#faq">FAQ</a>
     </nav>
     <div class="purchase-cards">
@@ -126,15 +123,14 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      <p>購入リンク: {purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience] }}
-      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, buyHref: import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience] }}
+      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience] }}
+      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -146,7 +142,7 @@ const differenceRows: DifferenceRow[] = [
     <p>なお、「低刺激であんしん」でオーガニックコットン一部配合シートが案内されているのはLサイズです。Lでは、石油由来油・香料・ラテックス・合成着色料の4成分無添加となり、オリーブ・ホホバ・ライスの植物オイルも使われています。これらはLサイズの仕様であり、Mサイズの仕様として扱わないよう注意が必要です。</p>
     <p>「マシュマロ肌ごこち モレ安心」Mも体重6〜11kg向けのテープタイプで、楽天のユニ・チャーム公式店では54枚入りです。無添加弱酸性素材、背中と足回りのゆるうんちストッパー、お知らせサイン、最大12時間吸収が公式に案内されています。全サイズで、石油由来油剤・香料・ラテックス・合成着色料の4成分無添加です。なお、新生児用にはおへそカット、Lサイズにはさらさら全面通気シートとのびーるフィットギャザーがありますが、これらはMサイズの機能としては扱いません。</p>
 
-    
+
 
     <ArticleSocialProof
       query="ムーニー 低刺激 マシュマロ"
@@ -164,35 +160,7 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={teishigekiSearch} target="_blank" rel="noopener noreferrer">低刺激であんしん（M）の販売ページを検索 →</a>
-      <a class="card-link" href={mashumaroSearch} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（M）の販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
-    
-
-    <div class="grid two">
-      <PurchaseCard
-        name="低刺激であんしん"
-        audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
-        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_TEISHIGEKI_URL}
-        productId="moony-teishigeki-m"
-        imagePath="/products/moony-teishigeki-m.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="マシュマロ肌ごこちモレ安心"
-        audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
-        href={import.meta.env.PUBLIC_RAKUTEN_MOONY_MASHUMARO_URL}
-        productId="moony-mashumaro-m"
-        imagePath="/products/moony-mashumaro-m.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

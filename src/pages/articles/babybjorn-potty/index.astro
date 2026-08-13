@@ -13,8 +13,6 @@ const smartPottyProductUrl = 'https://item.rakuten.co.jp/babybjorn/smart-potty/'
 const pottyChairProductUrl = 'https://item.rakuten.co.jp/babybjorn/potty-chair/';
 const smartPottyRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_SMART_POTTY_URL;
 const pottyChairRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_POTTY_CHAIR_URL;
-const smartPottySearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3%20%E3%82%B9%E3%83%9E%E3%83%BC%E3%83%88%E3%83%9D%E3%83%83%E3%83%86%E3%82%A3/';
-const pottyChairSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3%20%E3%83%9D%E3%83%83%E3%83%86%E3%82%A3%E3%83%81%E3%82%A7%E3%82%A2/';
 
 const faqEntries = [
   {
@@ -60,9 +58,6 @@ const pottyChairCandidate: ComparisonCandidate = {
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -111,7 +106,7 @@ const differenceRows: DifferenceRow[] = [
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
-      <a href="#sns">SNSの声</a>
+
       <a href="#faq">FAQ</a>
     </nav>
     <div class="purchase-cards">
@@ -136,15 +131,14 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      <p>購入リンク: {purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, buyHref: smartPottyRakutenUrl, officialHref: smartPottyProductUrl, guidePoints: [smartPottyCandidate.audience] }}
-      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, buyHref: pottyChairRakutenUrl, officialHref: pottyChairProductUrl, guidePoints: [pottyChairCandidate.audience] }}
+      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyProductUrl, guidePoints: [smartPottyCandidate.audience] }}
+      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairProductUrl, guidePoints: [pottyChairCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -185,35 +179,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={smartPottySearch} target="_blank" rel="noopener noreferrer">スマートポッティの販売ページを検索 →</a>
-      <a class="card-link" href={pottyChairSearch} target="_blank" rel="noopener noreferrer">ポッティチェアの販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
     <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、おまる・補助便座の正しい使用方法は必ず公式の使用説明書で確認してください。</p>
-
-    <div class="grid two">
-      <PurchaseCard
-        name="ベビービョルン スマートポッティ"
-        audience="コンパクトに収納でき、狭いバスルームでも場所を取らないおまるを優先する人向け"
-        href={smartPottyRakutenUrl}
-        productId="babybjorn-smart-potty"
-        imagePath="/products/babybjorn-smart-potty.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="ベビービョルン ポッティチェア"
-        audience="長い時間座れるイス型で、中桶をそのまま流せる手軽さを優先する人向け"
-        href={pottyChairRakutenUrl}
-        productId="babybjorn-potty-chair"
-        imagePath="/products/babybjorn-potty-chair.jpg"
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

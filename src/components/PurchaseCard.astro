@@ -1,8 +1,8 @@
 ---
 // PurchaseCard.astro
 // 全記事の標準購入カード（Article Layout v2: docs/article-layout-v2-2026-08.md）
-// 配置: 判断後（placement="after-decision"・デフォルト）+ 記事末尾（placement="article-end"）の 2 タイミング
-// 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 楽天市場 CTA（「楽天市場で商品を見る」）/ 価格・在庫の注意書き
+// 配置: 判断後の1セットのみ。記事末尾への重複配置は行わない。
+// 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 販売先確認CTA / 価格・在庫の注意書き
 import AffiliateButton from './AffiliateButton.astro';
 
 interface Props {
@@ -38,8 +38,8 @@ const {
   <AffiliateButton
     href={href}
     productId={productId}
-    label="楽天市場で商品を見る"
-    subLabel="楽天市場で商品を見る"
+    label="楽天市場で型番を確認"
+    subLabel="商品ページを確認する"
     merchant="楽天"
     imagePath={undefined}
     placement={placement}

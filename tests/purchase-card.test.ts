@@ -21,7 +21,7 @@ describe("PurchaseCard", () => {
 
     expect(html).toContain("サーモス JNL-S500");
     expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
-    expect(html).toContain("楽天市場で商品を見る");
+    expect(html).toContain("楽天市場で型番を確認");
     expect(html).toContain("価格・在庫は販売先でご確認ください。");
     expect(html).toContain('data-placement="after-decision"');
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');

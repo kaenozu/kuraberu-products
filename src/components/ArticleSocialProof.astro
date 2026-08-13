@@ -7,6 +7,7 @@ interface Props {
 
 const { query, checkedAt, hasPosts = false } = Astro.props;
 ---
+{hasPosts && (
 <section class="article-social-proof" id="sns">
   <h2>SNS での感想（参考情報）</h2>
   <p>
@@ -20,6 +21,7 @@ const { query, checkedAt, hasPosts = false } = Astro.props;
     </aside>
   )}
 </section>
+)}
 
 <style>
   .article-social-proof {

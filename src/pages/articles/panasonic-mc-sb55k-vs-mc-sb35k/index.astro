@@ -37,10 +37,10 @@ const keyDiffRows: KeyDiffRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">パナソニックのMC-SB55KとMC-SB35Kは、どちらもコードレススティック掃除機です。公式ページで確認できる質量、ゴミ検知センサー、充電スタンド、ブラシの違いを分けて比較します。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#sns">SNSの感想</a><a href="#faq">FAQ</a></nav>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: plus.brand, line: plus.line, tagline: 'センサー・充電スタンドなら', image: plus.image, imageAlt: plus.imageAlt, buyHref: plusSearch, officialHref: plus.official, guidePoints: [plus.audience]}}
-      right={{brand: standard.brand, line: standard.line, tagline: '軽さ・基本機能なら', image: standard.image, imageAlt: standard.imageAlt, buyHref: standardSearch, officialHref: standard.official, guidePoints: [standard.audience]}}
+      left={{brand: plus.brand, line: plus.line, tagline: 'センサー・充電スタンドなら', image: plus.image, imageAlt: plus.imageAlt, officialHref: plus.official, guidePoints: [plus.audience]}}
+      right={{brand: standard.brand, line: standard.line, tagline: '軽さ・基本機能なら', image: standard.image, imageAlt: standard.imageAlt, officialHref: standard.official, guidePoints: [standard.audience]}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -57,9 +57,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <div class="source-links"><a class="card-link" href={plusOfficial} target="_blank" rel="noopener noreferrer">MC-SB55K 公式商品ページ →</a><a class="card-link" href={standardOfficial} target="_blank" rel="noopener noreferrer">MC-SB35K 公式商品ページ →</a></div>
     <ArticleSocialProof query="パナソニック MC-SB55K MC-SB35K 掃除機" checkedAt="2026-08-13" hasPosts={false} />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2 id="purchase">購入前に確認するページ</h2><div class="source-links"><a class="card-link" href={plusSearch} target="_blank" rel="noopener noreferrer">MC-SB55Kの販売ページを検索 →</a><a class="card-link" href={standardSearch} target="_blank" rel="noopener noreferrer">MC-SB35Kの販売ページを検索 →</a></div>
     <h2>購入時の注意</h2><p>コードレス掃除機は、質量の測定条件、連続運転時間、充電時間、付属品、収納方法を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。</p>
-    <div class="grid two"><PurchaseCard name="パナソニック MC-SB55K" audience={plus.audience} href={plusSearch} imagePath={plus.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="パナソニック MC-SB35K" audience={standard.audience} href={standardSearch} imagePath={standard.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={plusOfficial} target="_blank" rel="noopener noreferrer">パナソニック MC-SB55K 公式商品ページ</a>（2026-08-13確認）</li><li><a href={standardOfficial} target="_blank" rel="noopener noreferrer">パナソニック MC-SB35K 公式商品ページ</a>（2026-08-13確認）</li></ul>
     <h2>調査方法・免責事項</h2><p>この比較は、パナソニック公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>

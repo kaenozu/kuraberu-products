@@ -53,9 +53,6 @@ const productInfoStale = isContentStale(
   articleMetadata.productInfoCheckedAt,
   contentAsOf,
 );
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 /** 主要差分（判断軸 → 数値の順で表示・bar は数値の大きさの相対比率） */
 const keyDiffRows: KeyDiffRow[] = [
@@ -149,7 +146,6 @@ const keyDiffRows: KeyDiffRow[] = [
         tagline: '軽さ・食洗機なら',
         image: thermosJnlS500.imagePath,
         imageAlt: thermosJnlS500.fullName,
-        buyHref: thermosJnlS500.rakutenUrl,
         officialHref: thermosJnlS500.officialUrl,
       }}
       right={{
@@ -158,7 +154,6 @@ const keyDiffRows: KeyDiffRow[] = [
         tagline: '保冷・ハンドルなら',
         image: tigerMtaJ050.imagePath,
         imageAlt: tigerMtaJ050.fullName,
-        buyHref: tigerMtaJ050.rakutenUrl,
         officialHref: tigerMtaJ050.officialUrl,
       }}
     />
@@ -168,7 +163,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
-      <a href="#sns">SNSの声</a>
+
       <a href="#faq">FAQ</a>
     </nav>
 
@@ -315,25 +310,6 @@ const keyDiffRows: KeyDiffRow[] = [
       ))}
     </div>
 
-    <div class="grid two">
-      <PurchaseCard
-        name={thermosJnlS500.brand + ' ' + thermosJnlS500.model}
-        audience="軽さ・コンパクト・食洗機対応を優先する人向け"
-        href={thermosJnlS500.rakutenUrl}
-        imagePath={thermosJnlS500.imagePath}
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name={tigerMtaJ050.brand + ' ' + tigerMtaJ050.model}
-        audience="保冷力・ハンドル・大きめの飲み口を優先する人向け"
-        href={tigerMtaJ050.rakutenUrl}
-        imagePath={tigerMtaJ050.imagePath}
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
-
     <details class="fold-section">
       <summary>更新履歴・情報源・購入時の注意</summary>
       <h3>更新履歴</h3>
@@ -360,7 +336,6 @@ const keyDiffRows: KeyDiffRow[] = [
 
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <div class="verification-summary" aria-label="購入リンクの確認状況">
-      <p>購入リンク：{purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
   </article>

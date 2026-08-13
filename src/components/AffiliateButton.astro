@@ -1,7 +1,7 @@
 ---
 import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
 import {fetchRakutenProducts, selectRakutenProduct, type RakutenSelectionOptions} from '../lib/rakuten';
-const {href,label,merchant,productId,placement,imagePath,subLabel} = Astro.props;
+const {href,label,productId,placement,imagePath,subLabel} = Astro.props;
 
 type ProductId =
   | 'pampers-premium-newborn'
@@ -147,5 +147,5 @@ const valid = isAllowedRakutenUrl(resolvedHref);
     </span>
   </a>
 ) : (
-  <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>
+  <span class="notice">公式サイトまたは販売ページで商品を確認してください。</span>
 )}
