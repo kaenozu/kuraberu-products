@@ -17,6 +17,11 @@ interface Props {
   rightLabel: string;
   eyebrow?: string;
   heading?: string;
+  /**
+   * 「この一覧以外は両商品とも同じ」の注記。商品固有の文言は記事側から渡す。
+   * デフォルトは空で、何も表示しない。
+   */
+  commonNote?: string;
 }
 
 const {
@@ -25,6 +30,7 @@ const {
   rightLabel,
   eyebrow = '主な違い',
   heading = '5つの違い',
+  commonNote = '',
 } = Astro.props;
 ---
 
@@ -33,7 +39,7 @@ const {
     <p class="section-label">{eyebrow}</p>
     <h2 id="key-differences">{heading}</h2>
   </div>
-  <p class="key-diffs-common">※ 書いていない項目（容量0.5L・保温効力68℃以上など）は両商品とも同じです。</p>
+  {commonNote.trim() && <p class="key-diffs-common">{commonNote}</p>}
   <div class="key-diffs-list">
     {items.map((row) => {
       const leftRatio = row.bar ? (row.bar.left / (row.bar.left + row.bar.right)) * 100 : null;
@@ -99,16 +105,22 @@ const {
   }
   .key-diff-values {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: 0.75rem;
   }
   .key-diff-value {
     display: flex;
     flex-direction: column;
     gap: 0.15rem;
+    min-width: 0;
     padding: 0.5rem 0.65rem;
     border-radius: 8px;
     background: #f6f4ee;
+  }
+  .key-diff-value b,
+  .key-diff-brand {
+    overflow-wrap: anywhere;
+    word-break: break-word;
   }
   .key-diff-value b {
     font-size: 1.25rem;
