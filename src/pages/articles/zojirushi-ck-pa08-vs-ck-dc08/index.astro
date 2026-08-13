@@ -1,0 +1,146 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import HeroComparison from '../../../components/HeroComparison.astro';
+import ComparisonHero from '../../../components/ComparisonHero.astro';
+import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
+import DecisionGuide from '../../../components/DecisionGuide.astro';
+import {zojirushiElectricKettleArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+
+const paOfficial = 'https://www.zojirushi.co.jp/syohin/stan/product/electric_kettle/ck-pa.html';
+const dcOfficial = 'https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/';
+const paRakutenUrl = 'https://a.r10.to/hPwhA2';
+const dcRakutenUrl = 'https://a.r10.to/hPdpn7';
+const faqEntries = [
+  {
+    question: '象印 CK-PA08 と CK-DC08 はどっち？',
+    answer: 'どちらも0.8L・1300Wで、カップ1杯約60秒、満水約4分の電気ケトルです。CK-PA08は軽くはずせるふたや広口内容器、CK-DC08は注ぎ口ほこりブロックや転倒湯もれ防止構造など6つの安全設計が公式に案内されています。手入れのしやすさを中心に見るか、安全設計やほこり対策を重視するかで確認する候補が変わります。',
+  },
+  {
+    question: '容量と沸とう時間は違う？',
+    answer: '今回比較するCK-PA08とCK-DC08はいずれも0.8Lです。公式値では、どちらもカップ1杯約60秒、満水約4分です。測定条件は室温・水温23℃、定格消費電力です。',
+  },
+  {
+    question: '本体が軽いのはどっち？',
+    answer: 'CK-PA08は本体約0.9kg、CK-DC08は本体約0.8kgと、公式記載上はCK-DC08の方が約0.1kg軽いです。電源プレートを含む質量は、CK-PA08が約1.1kg、CK-DC08が約1.0kgです。',
+  },
+  {
+    question: 'ほこり対策を重視するならどっち？',
+    answer: 'CK-DC08には、公式に「注ぎ口ほこりブロック」が案内されています。CK-PA08にも広口内容器や軽くはずせるふたが案内されていますが、今回確認した公式ページでは同じ名称の注ぎ口ほこりブロックは確認できませんでした。',
+  },
+] as const;
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
+const keyDiffRows: KeyDiffRow[] = [
+  {
+    label: '本体の軽さ',
+    left: '約0.9kg',
+    right: '約0.8kg',
+    highlight: 'right',
+    highlightNote: '約0.1kg軽い',
+    bar: {left: 0.9, right: 0.8},
+  },
+  {
+    label: 'ほこり対策',
+    left: '今回確認した公式ページでは記載なし',
+    right: '注ぎ口ほこりブロック',
+    highlight: 'right',
+    highlightNote: '公式記載あり',
+  },
+  {
+    label: '安全設計',
+    left: '今回確認した公式ページでは詳細記載なし',
+    right: '6つの安全設計',
+    highlight: 'right',
+    highlightNote: '安全設計を明記',
+  },
+  {
+    label: 'ふた・手入れ',
+    left: '軽くはずせるふた・広口内容器',
+    right: '軽くはずせるふた',
+  },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonHero
+      lines={[
+        {condition: 'ふた・広口内容器を重視する', brand: '象印', model: 'CK-PA08'},
+        {condition: '安全設計・ほこり対策を重視する', brand: '象印', model: 'CK-DC08'},
+      ]}
+      differences={[
+        {label: '容量', note: 'どちらも0.8L'},
+        {label: '沸とう時間', note: 'どちらも満水約4分'},
+        {label: '安全設計', note: 'CK-DC08は6つの安全設計'},
+        {label: 'ほこり対策', note: 'CK-DC08は注ぎ口ほこりブロック'},
+      ]}
+      diffAnchor="#key-differences"
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <HeroComparison
+      eyebrow="30秒でわかる"
+      left={{brand: '象印', line: 'CK-PA08', tagline: 'ふた・手入れなら', image: '/products/zojirushi-ck-pa08.webp', imageAlt: '象印 CK-PA08 電気ケトル', officialHref: paOfficial}}
+      right={{brand: '象印', line: 'CK-DC08', tagline: '安全・ほこり対策なら', image: '/products/zojirushi-ck-dc08.png', imageAlt: '象印 CK-DC08 電気ケトル', officialHref: dcOfficial}}
+    />
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">象印の0.8L電気ケトル「CK-PA08」と「CK-DC08」を比較します。どちらも1300Wで同じ容量・沸とう時間ですが、公式に案内されている安全設計やほこり対策、ふたと手入れの情報に違いがあります。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">主な比較ポイント</a>
+      <a href="#decision-guide">どっち向き？</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <VisualKeyDifferences leftLabel="象印 CK-PA08" rightLabel="象印 CK-DC08" items={keyDiffRows} />
+    <div class="common-specs" aria-label="共通仕様">
+      <p>どちらも同じ：<b>容量0.8L</b>・<b>消費電力1300W</b>・<b>カップ1杯約60秒</b>・<b>満水約4分</b>です。</p>
+    </div>
+    <DecisionGuide
+      left={{brand: '象印', line: 'CK-PA08', points: ['軽くはずせるふたを重視したい', '広口内容器で手入れしたい', '0.8L・1300Wの基本仕様で選びたい']}}
+      right={{brand: '象印', line: 'CK-DC08', points: ['注ぎ口ほこりブロックを確認したい', '転倒湯もれ防止など安全設計を重視したい', '本体約0.8kgの軽さを優先したい']}}
+    />
+    <div class="purchase-cards">
+      <PurchaseCard name="象印 CK-PA08" audience="ふたの外しやすさ・広口内容器を重視する人向け" href={paRakutenUrl} imagePath={articleMetadata.imagePath} placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="象印 CK-DC08" audience="安全設計・ほこり対策を重視する人向け" href={dcRakutenUrl} imagePath="/products/zojirushi-ck-dc08.png" placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（全部の数値を見る）</summary>
+      <div class="table-scroll">
+        <table class="comparison">
+          <thead><tr><th scope="col">比較項目</th><th scope="col">CK-PA08</th><th scope="col">CK-DC08</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">容量</th><td>0.8L</td><td>0.8L</td></tr>
+            <tr><th scope="row">消費電力（湯沸かし時）</th><td>1300W</td><td>1300W</td></tr>
+            <tr><th scope="row">カップ1杯</th><td>約60秒</td><td>約60秒</td></tr>
+            <tr><th scope="row">満水</th><td>約4分</td><td>約4分</td></tr>
+            <tr><th scope="row">外形寸法（本体のみ）</th><td>約22.5×16×19cm</td><td>約22×16.5×18cm</td></tr>
+            <tr><th scope="row">本体質量</th><td>約0.9kg</td><td>約0.8kg</td></tr>
+            <tr><th scope="row">特徴</th><td>軽くはずせるふた・広口内容器</td><td>注ぎ口ほこりブロック・6つの安全設計</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
+      <p class="source-links"><a class="card-link" href={paOfficial} target="_blank" rel="noopener noreferrer">象印 CK-PA08 公式ページ →</a><a class="card-link" href={dcOfficial} target="_blank" rel="noopener noreferrer">象印 CK-DC08 公式ページ →</a></p>
+    </details>
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
+    </div>
+    <details class="fold-section">
+      <summary>更新履歴・情報源・購入時の注意</summary>
+      <h3>更新履歴</h3>
+      <ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+      <h3>情報源一覧</h3>
+      <ul class="source-list"><li><a href={paOfficial} target="_blank" rel="noopener noreferrer">象印 CK-PA08 公式ページ</a>（2026-08-13確認）</li><li><a href={dcOfficial} target="_blank" rel="noopener noreferrer">象印 CK-DC08 公式ページ</a>（2026-08-13確認）</li></ul>
+      <h3>調査方法・免責事項</h3>
+      <p>この比較は、メーカー公式の商品ページで確認できる仕様のみを根拠にしています。価格・在庫・個人の使用感は公式ページと販売先でご確認ください。</p>
+    </details>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <div class="verification-summary" aria-label="購入リンクの確認状況">{productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}</div>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

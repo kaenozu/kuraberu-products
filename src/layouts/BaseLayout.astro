@@ -22,7 +22,6 @@ const {
   faq,
 } = Astro.props;
 const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
-const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
 const canonical = new URL(Astro.url.pathname, `${site.url}/`).toString();
 const robotsContent = robots ?? (isProduction ? 'index,follow' : 'noindex,nofollow');
 const resolvedOgType = article ? 'article' : (ogType ?? 'website');
@@ -127,8 +126,6 @@ const breadcrumbStructuredData = article
     {article?.modifiedAt && <meta property="og:updated_time" content={article.modifiedAt} />}
     <meta name="twitter:card" content={articleImage ? 'summary_large_image' : 'summary'} />
     {articleImage && <meta name="twitter:image" content={articleImage} />}
-    {plausibleDomain && <script is:inline defer data-domain={plausibleDomain} src="https://plausible.io/js/script.js" />}
-    {plausibleDomain && <script is:inline defer src="/analytics-events.js" />}
     <script is:inline type="application/ld+json" set:html={structuredDataJson} />
     {faqStructuredData && <script is:inline type="application/ld+json" set:html={faqStructuredData} />}
     {breadcrumbStructuredData && <script is:inline type="application/ld+json" set:html={breadcrumbStructuredData} />}
