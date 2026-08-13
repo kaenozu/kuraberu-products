@@ -21,22 +21,23 @@
 
 ## 公開済み（14本）
 
-| 記事群                                | slug                    | 状態     |
-| ------------------------------------- | ----------------------- | -------- |
-| パンパース新生児用                    | `pampers-newborn`       | 公開済み |
-| メリーズ新生児用                      | `merries-newborn`       | 公開済み |
-| ピジョン母乳実感240ml（素材）         | `pigeon-bottle-240`     | 公開済み |
-| ピジョン母乳実感240ml vs スリムタイプ | `pigeon-slim-240`       | 公開済み |
-| ムーニーM                             | `moony-m`               | 公開済み |
-| メリーズパンツ                        | `merries-pants`         | 公開済み |
-| ピジョン母乳実感160ml vs 240ml        | `pigeon-bottle-160-240` | 公開済み |
-| ピジョン電動 vs 手動鼻吸い器          | `shupot`                | 公開済み |
-| ベビービョルン抱っこひも              | `babybjorn`             | 公開済み |
-| ベビービョルン ONE KAI vs MOVE        | `babybjorn-onekai`      | 公開済み |
-| ベビービョルン バウンサー             | `babybjorn-bouncer`     | 公開済み |
-| ベビービョルン クレードル系           | `babybjorn-cradle`      | 公開済み |
-| ベビービョルン おまる                 | `babybjorn-potty`       | 公開済み |
-| サーモス vs タイガー水筒              | `thermos-tiger-bottle`  | 公開済み |
+| 記事群                                | slug                                     | 状態     |
+| ------------------------------------- | ---------------------------------------- | -------- |
+| パンパース新生児用                    | `pampers-newborn`                        | 公開済み |
+| メリーズ新生児用                      | `merries-newborn`                        | 公開済み |
+| ピジョン母乳実感240ml（素材）         | `pigeon-bottle-240`                      | 公開済み |
+| ピジョン母乳実感240ml vs スリムタイプ | `pigeon-slim-240`                        | 公開済み |
+| ムーニーM                             | `moony-m`                                | 公開済み |
+| メリーズパンツ                        | `merries-pants`                          | 公開済み |
+| ピジョン母乳実感160ml vs 240ml        | `pigeon-bottle-160-240`                  | 公開済み |
+| ピジョン電動 vs 手動鼻吸い器          | `shupot`                                 | 公開済み |
+| ベビービョルン抱っこひも              | `babybjorn`                              | 公開済み |
+| ベビービョルン ONE KAI vs MOVE        | `babybjorn-onekai`                       | 公開済み |
+| ベビービョルン バウンサー             | `babybjorn-bouncer`                      | 公開済み |
+| ベビービョルン クレードル系           | `babybjorn-cradle`                       | 公開済み |
+| ベビービョルン おまる                 | `babybjorn-potty`                        | 公開済み |
+| サーモス vs タイガー水筒              | `thermos-tiger-bottle`                   | 公開済み |
+| 山崎実業 tower デスク収納             | `yamazaki-tower-desk-panel-vs-pen-stand` | 実装済み |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
