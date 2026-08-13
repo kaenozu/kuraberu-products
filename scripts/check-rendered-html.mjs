@@ -210,6 +210,31 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     }
   }
 
+  // Content leakage guard: article-specific copy must never leak into other pages.
+  const articleSpecificCopy = [
+    // 水筒（サーモス vs タイガー）固有の仕様文言
+    { phrase: "保温効力68", exclude: /articles\/thermos-tiger-bottle\// },
+    { phrase: "容量0.5L", exclude: /articles\/thermos-tiger-bottle\// },
+    // 紙おむつ（メリーズ）固有
+    {
+      phrase: "カシミヤタッチ",
+      exclude: /articles\/merries-(newborn|pants)\//,
+    },
+  ];
+  for (const file of htmlFiles) {
+    if (!file.endsWith(".html")) continue;
+    const relative = path.relative(distDirectory, file).replace(/\\/g, "/");
+    const html = fs.readFileSync(file, "utf8");
+    for (const { phrase, exclude } of articleSpecificCopy) {
+      if (exclude.test(relative)) continue;
+      if (html.includes(phrase)) {
+        errors.push(
+          `${file}: article-specific copy leaked into another page: ${phrase}`,
+        );
+      }
+    }
+  }
+
   errors.push(
     ...validateRenderedExternalEmbedCounts(
       htmlFiles.map((filePath) => ({
