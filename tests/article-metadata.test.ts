@@ -26,6 +26,7 @@ import {
   sharpKcS50VsFuS50Article,
   yamazakiTowerDeskPanelArticle,
   zojirushiElectricKettleArticle,
+  tefalGarmentSteamerArticle,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -107,6 +108,7 @@ describe("article metadata", () => {
       thermosTigerBottleArticle,
       yamazakiTowerDeskPanelArticle,
       zojirushiElectricKettleArticle,
+      tefalGarmentSteamerArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
