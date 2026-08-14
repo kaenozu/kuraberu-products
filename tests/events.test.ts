@@ -105,6 +105,32 @@ describe("click analytics endpoint", () => {
     expect(response.status).toBe(204);
   });
 
+  it("persists an article-end placement click to KV with the placement preserved", async () => {
+    const { kv, put } = makeKv();
+    const response = await onRequestPost(
+      context(
+        postRequest(validPayload({ placement: "article-end" })),
+        baseEnv(undefined, kv),
+      ),
+    );
+
+    expect(response.status).toBe(204);
+    expect(put).toHaveBeenCalledTimes(1);
+    const [key, value, options] = put.mock.calls[0] as [
+      string,
+      string,
+      { expirationTtl: number },
+    ];
+    expect(key).toMatch(/^v1:events:\d{4}-\d{2}-\d{2}:[0-9a-f-]{36}$/);
+    const parsed = JSON.parse(value);
+    expect(parsed.event).toBe("purchase");
+    expect(parsed.productId).toBe("moony-teishigeki-m");
+    expect(parsed.placement).toBe("article-end");
+    expect(parsed.path).toBe("/articles/moony-m/");
+    expect(parsed.at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
+    expect(options.expirationTtl).toBe(90 * 24 * 60 * 60);
+  });
+
   it("rejects an unknown event name", async () => {
     const { kv, put } = makeKv();
     const response = await onRequestPost(
