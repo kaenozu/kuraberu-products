@@ -4,6 +4,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   countRenderedExternalEmbeds,
+  validateArticleCtas,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
 } from "../scripts/check-rendered-html.mjs";
@@ -12,11 +13,34 @@ const fixtureDirectories: string[] = [];
 
 const embed = '<div data-external-embed="x"></div>';
 
+const validCta = (href: string) =>
+  `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-analytics-event="OutboundClick">商品を確認（広告）</a>`;
+
 function validPage(body: string) {
   return `<!doctype html>
 <html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.invalid/"></head>
 <body><main><h1>Fixture</h1>${body}</main></body></html>`;
 }
+
+describe("rendered article CTA audit", () => {
+  it("accepts exactly two complete Rakuten affiliate CTAs", () => {
+    const html = `${validCta("https://a.r10.to/example")}${validCta("https://hb.afl.rakuten.co.jp/ichiba/example")}`;
+    expect(validateArticleCtas("articles/example/index.html", html)).toEqual(
+      [],
+    );
+  });
+
+  it("rejects missing CTA count, attributes, host, or disclosure", () => {
+    const html =
+      '<a href="https://example.com" data-analytics-event="OutboundClick">購入</a>';
+    expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
+      "articles/example/index.html: expected exactly 2 tracked purchase CTAs, found 1",
+      "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
+      "articles/example/index.html: CTA 1 is missing sponsored/nofollow rel attributes",
+      "articles/example/index.html: CTA 1 is missing advertising disclosure",
+    ]);
+  });
+});
 
 afterEach(() => {
   while (fixtureDirectories.length) {
