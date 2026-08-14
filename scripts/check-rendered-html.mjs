@@ -173,6 +173,45 @@ function internalTarget(href, distDirectory) {
   return path.join(distDirectory, pathname, "index.html");
 }
 
+export function validateArticleCtas(relative, html) {
+  if (!/^articles\/[^/]+\/index\.html$/.test(relative)) return [];
+  const tags = [
+    ...html.matchAll(
+      /<a\b[^>]*data-analytics-event="OutboundClick"[^>]*>[\s\S]*?<\/a>/gi,
+    ),
+  ].map(([tag]) => tag);
+  const errors = [];
+  if (tags.length !== 2) {
+    errors.push(
+      `${relative}: expected exactly 2 tracked purchase CTAs, found ${tags.length}`,
+    );
+  }
+  for (const [index, tag] of tags.entries()) {
+    const href = tag.match(/\bhref="([^"]+)"/i)?.[1] ?? "";
+    const rel = tag.match(/\brel="([^"]+)"/i)?.[1] ?? "";
+    if (
+      !/https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i.test(
+        href,
+      )
+    ) {
+      errors.push(
+        `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
+      );
+    }
+    if (!/\bsponsored\b/i.test(rel) || !/\bnofollow\b/i.test(rel)) {
+      errors.push(
+        `${relative}: CTA ${index + 1} is missing sponsored/nofollow rel attributes`,
+      );
+    }
+    if (!/広告/.test(tag)) {
+      errors.push(
+        `${relative}: CTA ${index + 1} is missing advertising disclosure`,
+      );
+    }
+  }
+  return errors;
+}
+
 export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
   const htmlFiles = [];
   walk(distDirectory, htmlFiles);
@@ -233,6 +272,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
         );
       }
     }
+    errors.push(...validateArticleCtas(relative, html));
   }
 
   errors.push(
