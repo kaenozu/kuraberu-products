@@ -4,6 +4,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   countRenderedExternalEmbeds,
+  findEmptySections,
   validateArticleCtas,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
@@ -20,6 +21,13 @@ function validPage(body: string) {
   return `<!doctype html>
 <html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.invalid/"></head>
 <body><main><h1>Fixture</h1>${body}</main></body></html>`;
+}
+
+function sectionsOf(html: string) {
+  return findEmptySections(html).map(({ level, heading }) => ({
+    level,
+    heading,
+  }));
 }
 
 describe("rendered article CTA audit", () => {
@@ -185,6 +193,76 @@ ${embed.repeat(4)}`;
 
     expect(validateRenderedHtml({ distDirectory: directory }).errors).toContain(
       `${path.join(directory, "bad.html")}: rendered external embed limit exceeded: found 5, maximum is 4`,
+    );
+  });
+});
+
+describe("rendered empty sections", () => {
+  it("flags a heading directly followed by another heading", () => {
+    const html =
+      "<main><h1>見出し</h1><p>リード</p><h2>購入時の注意</h2>\n\n<h2>更新履歴</h2><p>内容</p></main>";
+    expect(sectionsOf(html)).toEqual([{ level: 2, heading: "購入時の注意" }]);
+  });
+
+  it("ignores whitespace and comments between the heading and the next heading", () => {
+    const html =
+      "<main><h1>見出し</h1><p>リード</p><h2>空セクション</h2><!-- コメント -->\n<h3>次の見出し</h3><p>内容</p></main>";
+    expect(sectionsOf(html)).toEqual([{ level: 2, heading: "空セクション" }]);
+  });
+
+  it("does not flag a heading followed by text content", () => {
+    const html =
+      "<main><h1>見出し</h1><p>リード</p><h2>本文あり</h2><p>ここに本文がある。</p></main>";
+    expect(sectionsOf(html)).toEqual([]);
+  });
+
+  it("does not flag a heading followed by a non-empty element", () => {
+    const html =
+      '<main><h1>見出し</h1><p>リード</p><h2>本文あり</h2><div class="content">本文</div></main>';
+    expect(sectionsOf(html)).toEqual([]);
+  });
+
+  it("does not flag a heading inside a summary (FAQ pattern)", () => {
+    const html =
+      '<main><h1>見出し</h1><p>リード</p><details class="faq-item"><summary><h3>質問</h3></summary><p>回答</p></details></main>';
+    expect(sectionsOf(html)).toEqual([]);
+  });
+
+  it("flags a heading followed by a structural closing tag", () => {
+    const html =
+      "<main><h1>見出し</h1><p>リード</p><h2>空セクション</h2></main>";
+    expect(sectionsOf(html)).toEqual([{ level: 2, heading: "空セクション" }]);
+  });
+
+  it("does not flag a heading that ends a non-structural wrapper", () => {
+    const html =
+      '<main><h1>見出し</h1><p>リード</p><div class="subsection-heading"><h2>題目</h2></div><p>内容</p></main>';
+    expect(sectionsOf(html)).toEqual([]);
+  });
+
+  it("flags a heading followed by an empty element", () => {
+    const html =
+      "<main><h1>見出し</h1><p>リード</p><h2>空セクション</h2><p></p></main>";
+    expect(sectionsOf(html)).toEqual([{ level: 2, heading: "空セクション" }]);
+  });
+
+  it("flags a heading at the end of the document", () => {
+    const html = "<main><h1>見出し</h1><p>リード</p><h2>空セクション</h2>";
+    expect(sectionsOf(html)).toEqual([{ level: 2, heading: "空セクション" }]);
+  });
+
+  it("reports empty sections through validateRenderedHtml with the generated path", () => {
+    const directory = mkdtempSync(path.join(os.tmpdir(), "kuraberu-empty-"));
+    fixtureDirectories.push(directory);
+    writeFileSync(
+      path.join(directory, "index.html"),
+      validPage(
+        "<p>リード</p><h2>購入時の注意</h2><h2>更新履歴</h2><p>内容</p>",
+      ),
+    );
+
+    expect(validateRenderedHtml({ distDirectory: directory }).errors).toContain(
+      `${path.join(directory, "index.html")}: empty section: <h2>購入時の注意</h2>`,
     );
   });
 });

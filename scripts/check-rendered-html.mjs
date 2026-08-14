@@ -212,6 +212,94 @@ export function validateArticleCtas(relative, html) {
   return errors;
 }
 
+// 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
+// 次のいずれかに該当する見出しを空セクションとみなす。
+// - 見出しの直後に別の見出し（h1〜h6）が続く
+// - 見出しの直後に構造的な閉じタグ（main / article / section / details / body / html）が続く
+// - 見出しの直後に空要素（例: <p></p>）が続く
+// - 見出しが文書末尾にある
+// FAQ の <summary><h3>…</h3></summary> は見出しの直後に閉じタグが来るが、
+// summary 自体が本文を持つため検出対象から除外する。
+const STRUCTURAL_CLOSING_TAGS = new Set([
+  "main",
+  "article",
+  "section",
+  "details",
+  "body",
+  "html",
+]);
+
+function summaryRanges(html) {
+  const ranges = [];
+  for (const match of html.matchAll(
+    /<summary\b[^>]*>[\s\S]*?<\/summary\s*>/gi,
+  )) {
+    ranges.push([match.index, match.index + match[0].length]);
+  }
+  return ranges;
+}
+
+function skipWhitespaceAndComments(html, index) {
+  let current = index;
+  while (current < html.length) {
+    const whitespace = /^\s*/.exec(html.slice(current));
+    current += whitespace[0].length;
+    if (!html.startsWith("<!--", current)) break;
+    const commentEnd = html.indexOf("-->", current + 4);
+    if (commentEnd === -1) return html.length;
+    current = commentEnd + 3;
+  }
+  return current;
+}
+
+function nextMeaningfulToken(html, index) {
+  const current = skipWhitespaceAndComments(html, index);
+  if (current >= html.length) return { type: "end" };
+  if (html[current] !== "<") return { type: "text" };
+
+  const tagMatch = html.slice(current).match(/^<(\/?)\s*([A-Za-z][\w:-]*)/);
+  if (!tagMatch) return { type: "text" };
+
+  const closing = tagMatch[1] === "/";
+  const tagName = tagMatch[2].toLowerCase();
+  if (closing) return { type: "closingTag", name: tagName };
+  if (/^h[1-6]$/.test(tagName)) return { type: "heading", name: tagName };
+
+  const tagEnd = findTagEnd(html, current + tagMatch[0].length);
+  if (typeof tagEnd === "number") {
+    const afterOpen = skipWhitespaceAndComments(html, tagEnd);
+    if (new RegExp(`^</${tagName}\\s*>`).test(html.slice(afterOpen))) {
+      return { type: "emptyElement", name: tagName };
+    }
+  }
+  return { type: "openingTag", name: tagName };
+}
+
+export function findEmptySections(html) {
+  const summaries = summaryRanges(html);
+  const sections = [];
+  const headingPattern = /<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1\s*>/gi;
+  for (const match of html.matchAll(headingPattern)) {
+    const start = match.index;
+    if (summaries.some(([from, to]) => start >= from && start < to)) continue;
+    const token = nextMeaningfulToken(html, start + match[0].length);
+    const isEmpty =
+      token.type === "end" ||
+      token.type === "heading" ||
+      (token.type === "closingTag" &&
+        STRUCTURAL_CLOSING_TAGS.has(token.name)) ||
+      token.type === "emptyElement";
+    if (isEmpty) {
+      sections.push({
+        level: Number(match[1]),
+        heading: match[2].trim(),
+        start,
+      });
+    }
+  }
+  return sections;
+}
+
 export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
   const htmlFiles = [];
   walk(distDirectory, htmlFiles);
@@ -246,6 +334,12 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       if (target && !fs.existsSync(target)) {
         errors.push(`${file}: broken internal link ${match[1]}`);
       }
+    }
+
+    for (const section of findEmptySections(html)) {
+      errors.push(
+        `${file}: empty section: <h${section.level}>${section.heading}</h${section.level}>`,
+      );
     }
   }
 
