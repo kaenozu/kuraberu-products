@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { pampersNewbornArticle } from "../src/content/articles";
 import { daysSinceCheck, isContentStale } from "../src/lib/content-freshness";
@@ -33,5 +34,21 @@ describe("content freshness", () => {
     expect(html).toContain("更新履歴");
     expect(html).toContain("メーカー公式の商品機能とサイズ情報を確認");
     expect(html).toContain("価格や在庫を保証しません");
+  });
+
+  it("does not leak bottle-only specs into other article pages", () => {
+    const articlesDir = "dist/articles";
+    const articleDirs = readdirSync(articlesDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name);
+    const bottleOnlyTerms = ["容量0.5L", "保温効力68℃以上"];
+
+    for (const slug of articleDirs) {
+      const html = readFileSync(join(articlesDir, slug, "index.html"), "utf8");
+      if (slug === "thermos-tiger-bottle") continue;
+      for (const term of bottleOnlyTerms) {
+        expect(html, `${slug} contains ${term}`).not.toContain(term);
+      }
+    }
   });
 });

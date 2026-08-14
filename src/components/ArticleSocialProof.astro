@@ -1,27 +1,27 @@
 ---
 interface Props {
   query: string;
-  checkedAt: string;
+  checkedAt?: string;
   hasPosts?: boolean;
 }
 
 const { query, checkedAt, hasPosts = false } = Astro.props;
 ---
-{hasPosts && (
 <section class="article-social-proof" id="sns">
   <h2>SNS での感想（参考情報）</h2>
   <p>
-    Xで商品名・シリーズ名を検索し、対象商品が本文で確認できる投稿だけを参考情報として掲載しています。比較の根拠はメーカー公式情報のみで、SNSの感想は個人の見解です。
+    SNS投稿は実際の利用者の感想を知るための参考情報です。商品の仕様や比較結論の根拠には使用していません。比較の根拠はメーカー公式情報のみです。
   </p>
-  {!hasPosts && (
+  {hasPosts ? (
+    <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
+  ) : (
     <aside class="sns-check-status">
-      <strong>今回の検索では、対象商品が明確に分かる投稿を確認できませんでした。</strong>
+      <strong>対象型番を明確に確認できるSNS投稿は見つかりませんでした。</strong>
       <p>検索条件：{query}</p>
-      <p>確認日：{checkedAt}。投稿が存在しないことを示すものではなく、検索時点で確認できた範囲の記録です。</p>
+      {checkedAt && <p>確認日：{checkedAt}</p>}
     </aside>
   )}
 </section>
-)}
 
 <style>
   .article-social-proof {
@@ -37,6 +37,12 @@ const { query, checkedAt, hasPosts = false } = Astro.props;
 
   .sns-check-status p {
     margin-block: 0.5rem 0;
+    color: var(--text-muted, #666);
+    font-size: 0.9rem;
+  }
+
+  .sns-posts-note {
+    margin: 0;
     color: var(--text-muted, #666);
     font-size: 0.9rem;
   }
