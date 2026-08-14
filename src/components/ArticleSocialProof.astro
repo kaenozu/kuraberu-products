@@ -21,6 +21,7 @@ const { query, checkedAt, hasPosts = false } = Astro.props;
       {checkedAt && <p>確認日：{checkedAt}</p>}
     </aside>
   )}
+  <slot />
 </section>
 
 <style>
