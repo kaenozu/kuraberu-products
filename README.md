@@ -67,6 +67,8 @@ Production では次が必須です。
 
 お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定・エラー時は制限なしで続行します（可用性優先）。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
 
+クリック計測（`/api/events`）はプライバシー配慮型で、購入CTAクリックを同一オリジンの Function で受け取ります。Cookie・IP・フィンガープリントは保存しません。永続化は任意の Workers KV（`ANALYTICS_KV`）で、未設定時はイベントを破棄して動作を続けます。詳細は [`docs/click-analytics.md`](./docs/click-analytics.md)。
+
 `.env.example` を基準にしてください。`.env` と `.env.*` は `.env.example` を除いて Git 管理対象外です。秘密値をログ、Issue、PRへ記録しないでください。
 
 ## SEO / 生成物の基本契約

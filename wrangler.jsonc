@@ -20,5 +20,24 @@
         "period": 60,
       },
     },
+    {
+      // クリック計測（/api/events）の同一IPレート制限。
+      // 通常ユーザーの閲覧ペースを妨げず、KV への書き込み過多だけを防ぐ。
+      "name": "ANALYTICS_RATE_LIMITER",
+      "namespace_id": "1002",
+      "simple": {
+        "limit": 60,
+        "period": 60,
+      },
+    },
   ],
+  // クリック計測の永続化（任意・デフォルトでは無効）。
+  // 有効化手順:
+  //   1. pnpm exec wrangler kv namespace create kuraberu-events で namespace を作成し id を控える
+  //   2. 下のコメントアウトを外して id を設定する
+  // 未設定の間も /api/events は検証とレート制限を行い、イベントを破棄して 204 を返す
+  // （計測欠損は許容し、サイト体験は損なわない）。詳細: docs/click-analytics.md
+  // "kv_namespaces": [
+  //   { "binding": "ANALYTICS_KV", "id": "REPLACE_WITH_KV_NAMESPACE_ID" }
+  // ],
 }
