@@ -28,6 +28,7 @@ import {
   yamazakiCondorWagonArticle,
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
+  kingjimTepraArticle,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -111,6 +112,7 @@ describe("article metadata", () => {
       yamazakiCondorWagonArticle,
       zojirushiElectricKettleArticle,
       tefalGarmentSteamerArticle,
+      kingjimTepraArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
