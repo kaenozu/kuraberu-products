@@ -54,8 +54,10 @@ Production では次が必須です。
 
 - `PUBLIC_SITE_URL`: query / fragment / credentials / subpath を含まない HTTPS のサイトルート
 - 購入リンクは次のどちらか
-  - 商品別の `PUBLIC_RAKUTEN_*_URL`
+  - `PUBLIC_RAKUTEN_PREMIUM_URL` と `PUBLIC_RAKUTEN_SARASARA_URL` の両方
   - `RAKUTEN_APPLICATION_ID` / `RAKUTEN_ACCESS_KEY` / `RAKUTEN_AFFILIATE_ID`
+
+商品別の補完リンクを使う場合は、`PUBLIC_RAKUTEN_BABYBJORN_CRADLE_URL`、`PUBLIC_RAKUTEN_APRICA_COCONEL_AIR_URL`、`PUBLIC_RAKUTEN_PIGEON_160_URL` を設定します。
 
 購入URLは HTTPS の許可済み楽天ホストだけを受け付けます。API取得に失敗した場合は、未確認値を補完せず「準備中」として静的ビルドを継続します。
 
