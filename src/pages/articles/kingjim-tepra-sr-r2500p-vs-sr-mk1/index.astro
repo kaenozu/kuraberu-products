@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import RelatedArticles from '../../../components/RelatedArticles.astro'
+import PurchaseCard from '../../../components/PurchaseCard.astro'
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import {kingjimTepraArticle as articleMetadata} from '../../../content/articles'
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+
+const leftOfficial = 'https://www.kingjim.co.jp/products/tepra/sr-r2500p.html'
+const rightOfficial = 'https://www.kingjim.co.jp/products/tepra/sr-mk1.html'
+const leftSearch = 'https://a.r10.to/h9jN67'
+const rightSearch = 'https://a.r10.to/hPnFPC'
+const leftImage = '/products/kingjim-sr-r2500p.jpg'
+const rightImage = '/products/kingjim-sr-mk1.jpg'
+const leftAudience = 'コンパクトさと軽さ、18mmまでのテープ幅で使いたい人向け'
+const rightAudience = '24mmまでの幅広いテープとACアダプター対応を使いたい人向け'
+
+const faqEntries = [
+  {question: 'SR-R2500PとSR-MK1の違いは？', answer: '公式仕様で確認できる主な違いは、対応テープ幅がSR-R2500Pは4〜18mm、SR-MK1は4〜24mmであること、質量がSR-R2500P約420g、SR-MK1約470gであることです。SR-MK1は別売ACアダプターにも対応します。'},
+  {question: '軽いのはどちら？', answer: '電池とテープを除く質量は、SR-R2500Pが約420g、SR-MK1が約470gです。公式記載ではSR-R2500Pが約50g軽くなっています。'},
+  {question: 'どちらもスマホから印刷できる？', answer: 'キングジム公式ページでは、両機種ともBluetooth接続に対応し、テプラPRO用アプリからラベルを作れると案内されています。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '対応テープ幅', left: '4〜18mm', right: '4〜24mm', highlight: 'right', highlightNote: '24mmまで'},
+  {label: '質量（電池・テープ除く）', left: '約420g', right: '約470g', highlight: 'left', highlightNote: '約50g軽い'},
+  {label: '電源', left: '単3形電池×6本', right: 'ACアダプター／単3形電池×6本', highlight: 'right'},
+  {label: '本体寸法', left: '約54×134×145mm', right: '約55×133×146mm', highlight: null},
+  {label: 'カッター', left: 'オートカッター', right: 'オートカッター', highlight: null},
+]
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / デスク用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">キングジムの「テプラ」PRO 2機種を、公式ページで確認できる対応テープ幅・電源・寸法・質量・印刷幅に分けて比較します。価格は販売先でご確認ください。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{brand: 'キングジム テプラ PRO', line: 'SR-R2500P', tagline: '軽さとコンパクトさなら', image: leftImage, imageAlt: 'キングジム テプラ PRO SR-R2500P', officialHref: leftOfficial, guidePoints: [leftAudience]}}
+      right={{brand: 'キングジム テプラ PRO', line: 'SR-MK1', tagline: '24mm幅とAC電源なら', image: rightImage, imageAlt: 'キングジム テプラ PRO SR-MK1', officialHref: rightOfficial, guidePoints: [rightAudience]}}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <p>軽さと持ち運びやすさを優先するならSR-R2500P、24mm幅のラベルやACアダプターも使いたいならSR-MK1が候補です。両機種ともBluetooth接続とオートカッターに対応しています。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name="キングジム テプラ PRO SR-R2500P" audience={leftAudience} href={leftSearch} imagePath={leftImage} note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="キングジム テプラ PRO SR-MK1" audience={rightAudience} href={rightSearch} imagePath={rightImage} note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">SR-R2500P</th><th scope="col">SR-MK1</th><th scope="col">根拠</th></tr></thead><tbody>
+      <tr><th scope="row">対応テープ幅</th><td>4〜18mm</td><td>4〜24mm</td><td><a href={leftOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a> / <a href={rightOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a></td></tr>
+      <tr><th scope="row">質量（電池・テープ除く）</th><td>約420g</td><td>約470g</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">電源</th><td>単3形アルカリ乾電池・ニッケル水素電池×6本</td><td>別売ACアダプター・単3形アルカリ乾電池・ニッケル水素電池×6本</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">本体寸法</th><td>約54（W）×134（D）×145（H）mm</td><td>約55（W）×133（D）×146（H）mm</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">最大印刷可能幅</th><td>13.5mm</td><td>18.1mm</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">接続・カッター</th><td>Bluetooth接続・オートカッター</td><td>Bluetooth接続・オートカッター</td><td>各公式商品ページ</td></tr>
+    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>比較の根拠は、キングジム公式の商品ページで2026年8月14日に確認した仕様です。両機種ともBluetooth接続に対応し、テプラPRO用アプリからラベルを作成できます。</p>
+    <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">SR-R2500P 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">SR-MK1 公式商品ページ →</a></div>
+    <ArticleSocialProof query="キングジム テプラ SR-R2500P SR-MK1" checkedAt="2026-08-14" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2>購入時の注意</h2><p>使いたいラベル幅、電源方式、持ち運びやすさを購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">キングジム テプラ PRO SR-R2500P 公式商品ページ</a>（2026-08-14確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">キングジム テプラ PRO SR-MK1 公式商品ページ</a>（2026-08-14確認）</li></ul>
+    <h2>調査方法・免責事項</h2><p>この比較は、キングジム公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
