@@ -4,6 +4,7 @@ import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 import {zojirushiElectricKettleArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
@@ -99,7 +100,9 @@ const keyDiffRows: KeyDiffRow[] = [
       <p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
       <p class="source-links"><a class="card-link" href={paOfficial} target="_blank" rel="noopener noreferrer">象印 CK-PA08 公式ページ →</a><a class="card-link" href={dcOfficial} target="_blank" rel="noopener noreferrer">象印 CK-DC08 公式ページ →</a></p>
     </details>
-    <h2 id="faq">よくある質問</h2>
+        <ArticleSocialProof query="象印 CK-PA08 CK-DC08 電気ケトル" checkedAt="2026-08-14" hasPosts={false} />
+
+<h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
     </div>
