@@ -1,0 +1,121 @@
+---
+interface GuideSide {
+  brand: string;
+  line: string;
+  /** チェック条件（例: 軽さ・コンパクトを優先したい） */
+  points: string[];
+}
+
+interface Props {
+  left: GuideSide;
+  right: GuideSide;
+  eyebrow?: string;
+  heading?: string;
+}
+
+const { left, right, eyebrow = 'どっち向き？', heading = 'あなたはどちら向き？' } = Astro.props;
+---
+
+<section class="decision-guide" aria-label={eyebrow}>
+  <div class="subsection-heading">
+    <p class="section-label">{eyebrow}</p>
+    <h2 id="decision-guide">{heading}</h2>
+  </div>
+  <div class="decision-guide-grid">
+    <div class="decision-side">
+      <p class="decision-side-brand">{left.brand} <span>{left.line}</span></p>
+      <p class="decision-side-head">こんな人におすすめ</p>
+      <ul class="decision-side-list">
+        {left.points.map((point) => <li>{point}</li>)}
+      </ul>
+    </div>
+    <div class="decision-side">
+      <p class="decision-side-brand">{right.brand} <span>{right.line}</span></p>
+      <p class="decision-side-head">こんな人におすすめ</p>
+      <ul class="decision-side-list">
+        {right.points.map((point) => <li>{point}</li>)}
+      </ul>
+    </div>
+  </div>
+  <p class="decision-guide-note">※ 判断の根拠はメーカー公式の仕様情報のみです。用途や好みによって選ぶ側は変わります。</p>
+</section>
+
+<style>
+  .decision-guide {
+    margin-block: 1.5rem 2.5rem;
+  }
+  .decision-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 0.75rem;
+  }
+  .decision-side {
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--product-color, var(--ink));
+    border-radius: 12px;
+    background: var(--paper);
+    padding: 1rem 1.1rem;
+  }
+  .decision-side:first-child {
+    --product-color: #8aaea4;
+  }
+  .decision-side:last-child {
+    --product-color: #d59b77;
+  }
+  .decision-side-brand {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800;
+  }
+  .decision-side-brand span {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-left: 0.2rem;
+  }
+  .decision-side-head {
+    margin: 0.4rem 0 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .decision-side-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.45rem;
+  }
+  .decision-side-list li {
+    position: relative;
+    padding-left: 1.7rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+  }
+  .decision-side-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.15rem;
+    height: 1.15rem;
+    border-radius: 50%;
+    background: var(--product-color);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+  }
+  .decision-guide-note {
+    margin: 0.75rem 0 0;
+    font-size: 0.78rem;
+    color: var(--muted);
+  }
+  @media (max-width: 720px) {
+    .decision-guide-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

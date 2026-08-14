@@ -1,0 +1,173 @@
+---
+export interface KeyDiffRow {
+  label: string;
+  left: string;
+  right: string;
+  /** 決め手となる値を持つ側（left | right） */
+  highlight?: "left" | "right" | null;
+  /** 強調セルに添える一言（例: 約60g軽い） */
+  highlightNote?: string;
+  /** 数値項目のみ: 左右の相対比率バーを表示する */
+  bar?: { left: number; right: number };
+}
+
+interface Props {
+  items: KeyDiffRow[];
+  leftLabel: string;
+  rightLabel: string;
+  eyebrow?: string;
+  heading?: string;
+  /**
+   * 「この一覧以外は両商品とも同じ」の注記。商品固有の文言は記事側から渡す。
+   * デフォルトは空で、何も表示しない。
+   */
+  commonNote?: string;
+}
+
+const {
+  items,
+  leftLabel,
+  rightLabel,
+  eyebrow = '主な違い',
+  heading = '主な比較ポイント',
+  commonNote = '',
+} = Astro.props;
+---
+
+<section class="key-diffs" aria-label={eyebrow}>
+  <div class="subsection-heading">
+    <p class="section-label">{eyebrow}</p>
+    <h2 id="key-differences">{heading}</h2>
+  </div>
+  {commonNote.trim() && <p class="key-diffs-common">{commonNote}</p>}
+  <div class="key-diffs-list">
+    {items.map((row) => {
+      const leftRatio = row.bar ? (row.bar.left / (row.bar.left + row.bar.right)) * 100 : null;
+      const rightRatio = row.bar ? 100 - (leftRatio as number) : null;
+      return (
+        <div class="key-diff-row">
+          <p class="key-diff-label">{row.label}</p>
+          <div class="key-diff-values">
+            <div class={`key-diff-value${row.highlight === 'left' ? ' is-highlighted' : ''}`}>
+              <span class="key-diff-brand">{leftLabel}</span>
+              <b>{row.left}</b>
+              {row.highlight === 'left' && row.highlightNote && <em class="difference-highlight-note">{row.highlightNote}</em>}
+            </div>
+            <div class={`key-diff-value${row.highlight === 'right' ? ' is-highlighted' : ''}`}>
+              <span class="key-diff-brand">{rightLabel}</span>
+              <b>{row.right}</b>
+              {row.highlight === 'right' && row.highlightNote && <em class="difference-highlight-note">{row.highlightNote}</em>}
+            </div>
+          </div>
+          {row.bar && leftRatio !== null && (
+            <div class="key-diff-bar" role="img" aria-label={`${leftLabel}: ${row.left} / ${rightLabel}: ${row.right}`}>
+              <div class="key-diff-bar-track">
+                <div class="key-diff-bar-fill is-left" style={`width:${leftRatio}%`}></div>
+                <div class="key-diff-bar-fill is-right" style={`width:${rightRatio}%`}></div>
+              </div>
+              <div class="key-diff-bar-scale">
+                <span>{row.left}</span>
+                <span>{row.right}</span>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    })}
+  </div>
+</section>
+
+<style>
+  .key-diffs {
+    margin-block: 1.5rem 2.5rem;
+  }
+  .key-diffs-common {
+    margin: 0.75rem 0 0.25rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+  }
+  .key-diffs-list {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  .key-diff-row {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+    padding: 0.85rem 1rem;
+  }
+  .key-diff-label {
+    margin: 0 0 0.4rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--muted);
+  }
+  .key-diff-values {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.75rem;
+  }
+  .key-diff-value {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    padding: 0.5rem 0.65rem;
+    border-radius: 8px;
+    background: #f6f4ee;
+  }
+  .key-diff-value b,
+  .key-diff-brand {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .key-diff-value b {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  .key-diff-value.is-highlighted {
+    background: #fdf2ef;
+    outline: 2px solid #e8b4a8;
+  }
+  .key-diff-value.is-highlighted b {
+    color: #c83e2c;
+    font-size: 1.45rem;
+  }
+  .key-diff-brand {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .key-diff-bar {
+    margin-top: 0.6rem;
+  }
+  .key-diff-bar-track {
+    display: flex;
+    height: 10px;
+    border-radius: 999px;
+    overflow: hidden;
+    background: #e8e4da;
+  }
+  .key-diff-bar-fill.is-left {
+    background: #8aaea4;
+  }
+  .key-diff-bar-fill.is-right {
+    background: #d59b77;
+  }
+  .key-diff-bar-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.2rem;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  @media (max-width: 720px) {
+    .key-diff-value b {
+      font-size: 1.1rem;
+    }
+    .key-diff-value.is-highlighted b {
+      font-size: 1.25rem;
+    }
+  }
+</style>

@@ -1,0 +1,569 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import HeroComparison from '../../../components/HeroComparison.astro';
+import ComparisonHero from '../../../components/ComparisonHero.astro';
+import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
+import DecisionGuide from '../../../components/DecisionGuide.astro';
+import {thermosTigerBottleArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+import {thermosJnlS500, tigerMtaJ050} from '../../../lib/products';
+
+const thermosOfficial = thermosJnlS500.officialUrl;
+const tigerOfficial = tigerMtaJ050.officialUrl;
+const thermosSearch = thermosJnlS500.rakutenSearchUrl;
+const tigerSearch = tigerMtaJ050.rakutenSearchUrl;
+
+const faqEntries = [
+  {
+    question: 'サーモス JNL-S500 と タイガー MTA-J050 はどっち？',
+    answer: `公式の仕様では、保冷効力（6時間）がタイガーMTA-J050は${tigerMtaJ050.spec.coldEfficiency}、サーモスJNL-S500は${thermosJnlS500.spec.coldEfficiency}で、タイガーの方が冷たさを保ちます。本体重量はサーモスJNL-S500が${thermosJnlS500.spec.weight}、タイガーMTA-J050が${tigerMtaJ050.spec.weight}で、サーモスの方が軽いです。飲み口はタイガーが口径${tigerMtaJ050.spec.mouthDiameter}・ハンドル付き、サーモスは口径${thermosJnlS500.spec.mouthDiameter}・全パーツ食洗機対応です。どちらが合うかは、保冷を重視するか・軽さを重視するかで変わります。`,
+  },
+  {
+    question: '保冷力が強いのはどっち？',
+    answer: `公式の保冷効力（6時間）は、タイガーMTA-J050が${tigerMtaJ050.spec.coldEfficiency}、サーモスJNL-S500が${thermosJnlS500.spec.coldEfficiency}です。夏場に氷を長持ちさせたい場合はタイガーMTA-J050の方が数値上は有利です。`,
+  },
+  {
+    question: '軽いのはどっち？',
+    answer: `公式の本体重量は、サーモスJNL-S500が${thermosJnlS500.spec.weight}、タイガーMTA-J050が${tigerMtaJ050.spec.weight}です。本体寸法もサーモス（${thermosJnlS500.spec.dimensions}）の方がタイガー（${tigerMtaJ050.spec.dimensions}）よりコンパクトです。持ち歩きの軽さを重視するならサーモスJNL-S500です。`,
+  },
+  {
+    question: 'お手入れのしやすさはどっち？',
+    answer:
+      'サーモスJNL-S500は全パーツ食洗機対応です。タイガーMTA-J050は、せんとパッキンが一体になった「らくらくキャップ」でパッキン着脱の手間がなく、外せる飲み口で洗えます。どちらも公式に「お手入れしやすい」と案内されていますが、洗い方は異なります。',
+  },
+  {
+    question: 'タイガー MTA-J050 のハンドルは便利？',
+    answer:
+      '公式の案内では、MTA-J050はハンドル付きで、学校や職場、お出かけの際に指に自然にフィットするスラントハンドルとして紹介されています。片手でも開けやすいワンプッシュせんとあわせて、持ち運びの利便性を重視する人向けです。',
+  },
+  {
+    question: 'スポーツドリンクを入れてもいい？',
+    answer:
+      'タイガーMTA-J050の内面は「スーパークリーンPlus」で、公式案内では汚れ・においがつきにくくサビにも強いため、塩分を含むスポーツドリンクを入れてもOKとされています（使用後はすぐに水ですすぐなどお手入れが必要）。サーモスJNL-S500のスポーツドリンク対応については、今回確認した公式ページには明記されていません。',
+  },
+] as const;
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(
+  articleMetadata.productInfoCheckedAt,
+  contentAsOf,
+);
+
+/** 主要差分（判断軸 → 数値の順で表示・bar は数値の大きさの相対比率） */
+const keyDiffRows: KeyDiffRow[] = [
+  {
+    label: '軽さ（持ち歩きやすさ）',
+    left: thermosJnlS500.spec.weight,
+    right: tigerMtaJ050.spec.weight,
+    highlight: 'left',
+    highlightNote: '約60g軽い',
+    bar: {left: 0.2, right: 0.26},
+  },
+  {
+    label: '大きさ（本体寸法）',
+    left: thermosJnlS500.spec.dimensions,
+    right: tigerMtaJ050.spec.dimensions,
+    highlight: 'left',
+    highlightNote: 'ひと回り小さい',
+  },
+  {
+    label: '保冷力（6時間後）',
+    left: thermosJnlS500.spec.coldEfficiency,
+    right: tigerMtaJ050.spec.coldEfficiency,
+    highlight: 'right',
+    highlightNote: '保冷力が高い',
+    bar: {left: 10, right: 8},
+  },
+  {
+    label: '飲み口の大きさ（口径）',
+    left: thermosJnlS500.spec.mouthDiameter,
+    right: tigerMtaJ050.spec.mouthDiameter,
+    highlight: 'right',
+    highlightNote: '大きめ',
+    bar: {left: 4.0, right: 4.8},
+  },
+  {
+    label: 'お手入れ',
+    left: thermosJnlS500.spec.care,
+    right: tigerMtaJ050.spec.care,
+    highlight: 'left',
+    highlightNote: '食洗機OK',
+  },
+  {
+    label: 'ハンドル',
+    left: thermosJnlS500.spec.handle,
+    right: tigerMtaJ050.spec.handle,
+    highlight: 'right',
+    highlightNote: 'ハンドル付き',
+  },
+  {
+    label: 'カラー',
+    left: thermosJnlS500.spec.colors,
+    right: tigerMtaJ050.spec.colors,
+    highlight: 'left',
+    highlightNote: '豊富',
+    bar: {left: 12, right: 4},
+  },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活雑貨 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonHero
+      lines={[
+        {
+          condition: '軽さ・食洗機を重視する',
+          brand: thermosJnlS500.brand,
+          model: thermosJnlS500.model,
+        },
+        {
+          condition: '保冷力・ハンドルを重視する',
+          brand: tigerMtaJ050.brand,
+          model: tigerMtaJ050.model,
+        },
+      ]}
+      differences={[
+        { label: '軽さ', note: '約60g差' },
+        { label: '保冷力', note: '10℃以下 vs 8℃以下' },
+        { label: 'お手入れ', note: '全パーツ食洗機 vs らくらくキャップ' },
+        { label: 'ハンドル', note: 'なし vs あり' },
+        { label: 'カラー', note: '12色 vs 4色' },
+      ]}
+      diffAnchor="#key-differences"
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <HeroComparison
+      eyebrow="30秒でわかる"
+      left={{
+        brand: thermosJnlS500.brand,
+        line: thermosJnlS500.model,
+        tagline: '軽さ・食洗機なら',
+        image: thermosJnlS500.imagePath,
+        imageAlt: thermosJnlS500.fullName,
+        officialHref: thermosJnlS500.officialUrl,
+      }}
+      right={{
+        brand: tigerMtaJ050.brand,
+        line: tigerMtaJ050.model,
+        tagline: '保冷・ハンドルなら',
+        image: tigerMtaJ050.imagePath,
+        imageAlt: tigerMtaJ050.fullName,
+        officialHref: tigerMtaJ050.officialUrl,
+      }}
+    />
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">{thermosJnlS500.spec.capacity}のワンタッチ式水筒として、JNL-S500とMTA-J050を比較します。公式仕様から、確認できる違いを整理します。</p>
+
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="sticky-compare-bar" id="sticky-compare-bar" hidden>
+      <a class="sticky-side is-left" href={thermosJnlS500.rakutenUrl} target="_blank" rel="noopener noreferrer">
+        <span class="sticky-side-name">{thermosJnlS500.brand} {thermosJnlS500.model}</span>
+        <span class="sticky-side-cta">楽天で見る</span>
+      </a>
+      <a class="sticky-guide" href="#decision-guide">どっち向き？</a>
+      <a class="sticky-side is-right" href={tigerMtaJ050.rakutenUrl} target="_blank" rel="noopener noreferrer">
+        <span class="sticky-side-name">{tigerMtaJ050.brand} {tigerMtaJ050.model}</span>
+        <span class="sticky-side-cta">楽天で見る</span>
+      </a>
+    </div>
+
+    <VisualKeyDifferences
+      leftLabel="サーモス JNL-S500"
+      rightLabel="タイガー MTA-J050"
+      items={keyDiffRows}
+    />
+
+    <div class="common-specs" aria-label="共通仕様">
+      <p>どちらも同じ：<b>容量{thermosJnlS500.spec.capacity}</b>・<b>真空断熱ステンレス</b>・<b>保温効力（6時間）{thermosJnlS500.spec.warmEfficiency}</b>。差は上の一覧だけです。</p>
+    </div>
+
+    <DecisionGuide
+      left={{
+        brand: thermosJnlS500.brand,
+        line: thermosJnlS500.model,
+        points: [
+          `軽さ・コンパクトを優先したい（${thermosJnlS500.spec.weight}）`,
+          `カラーは豊富な方がいい（${thermosJnlS500.spec.colors}）`,
+          '食洗機で丸洗いしたい（全パーツ対応）',
+        ],
+      }}
+      right={{
+        brand: tigerMtaJ050.brand,
+        line: tigerMtaJ050.model,
+        points: [
+          `保冷力を最優先したい（6時間で${tigerMtaJ050.spec.coldEfficiency}）`,
+          'ハンドル付きがいい（スラントハンドル）',
+          `大きめの飲み口がいい（口径${tigerMtaJ050.spec.mouthDiameter}）`,
+          'スポーツドリンクを入れたい（スーパークリーンPlus）',
+        ],
+      }}
+    />
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="サーモス JNL-S500"
+        audience="軽さ・コンパクト・食洗機対応を優先する人向け"
+        href={thermosJnlS500.rakutenUrl}
+        imagePath={thermosJnlS500.imagePath}
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="タイガー MTA-J050"
+        audience="保冷力・ハンドル・大きめの飲み口を優先する人向け"
+        href={tigerMtaJ050.rakutenUrl}
+        imagePath={tigerMtaJ050.imagePath}
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（全部の数値を見る）</summary>
+      <div class="table-scroll">
+      <table class="comparison">
+        <thead><tr><th scope="col">比較項目</th><th scope="col">サーモス JNL-S500</th><th scope="col">タイガー MTA-J050</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">容量</th><td>{thermosJnlS500.spec.capacity}</td><td>{tigerMtaJ050.spec.capacity}</td></tr>
+          <tr><th scope="row">保温効力（6時間）</th><td>{thermosJnlS500.spec.warmEfficiency}</td><td>{tigerMtaJ050.spec.warmEfficiency}</td></tr>
+          <tr><th scope="row">保冷効力（6時間）</th><td>{thermosJnlS500.spec.coldEfficiency}</td><td>{tigerMtaJ050.spec.coldEfficiency}</td></tr>
+          <tr><th scope="row">本体重量</th><td>{thermosJnlS500.spec.weight}</td><td>{tigerMtaJ050.spec.weight}</td></tr>
+          <tr><th scope="row">本体寸法（幅×奥行×高さ）</th><td>{thermosJnlS500.spec.dimensions}</td><td>{tigerMtaJ050.spec.dimensions}</td></tr>
+          <tr><th scope="row">口径</th><td>{thermosJnlS500.spec.mouthDiameter}</td><td>{tigerMtaJ050.spec.mouthDiameter}</td></tr>
+          <tr><th scope="row">カラー</th><td>{thermosJnlS500.spec.colors}</td><td>{tigerMtaJ050.spec.colors}</td></tr>
+          <tr><th scope="row">飲み口</th><td>{thermosJnlS500.spec.mouthType}</td><td>{tigerMtaJ050.spec.mouthType}</td></tr>
+          <tr><th scope="row">お手入れ</th><td>{thermosJnlS500.spec.care}</td><td>{tigerMtaJ050.spec.care}</td></tr>
+          <tr><th scope="row">ハンドル</th><td>{thermosJnlS500.spec.handle}</td><td>{tigerMtaJ050.spec.handle}</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
+      <p class="source-links">
+        <a class="card-link" href={thermosOfficial} target="_blank" rel="noopener noreferrer">サーモス 真空断熱ケータイマグ JNL-S500 公式ページ →</a>
+        <a class="card-link" href={tigerOfficial} target="_blank" rel="noopener noreferrer">タイガー 真空断熱ボトル MTA-J050 公式ページ →</a>
+      </p>
+    </details>
+
+    <ArticleSocialProof
+      query="サーモス JNL-S500 タイガー MTA-J050 水筒"
+      checkedAt={articleMetadata.productInfoCheckedAt ?? '2026-08-12'}
+      hasPosts={true}
+    >
+      <div class="sns-embeds">
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/pipichan_lovely/status/2084896382750761442"
+        title="サーモス製水筒について「去年買って一番良かったもの」という声"
+        purpose="サーモス製の水筒を買って良かったという投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/gudarakudara/status/2087050731782340707"
+        title="サーモス製水筒について「10年使っても保温力は落ちない」という声"
+        purpose="10年使った後の塗装の状態と、交換パッキンの入手性に関する投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/hisashi_935/status/2086083404450418709"
+        title="サーモス製の水筒・弁当箱について「サーモスには信用しかない」という声"
+        purpose="サーモスの水筒・弁当箱を長く使っているという投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+      <ExternalEmbed
+        provider="x"
+        url="https://x.com/suzu0em0/status/2086750494303850788"
+        title="タイガー製水筒について「3ヶ月使ってみてとてもよい」という声"
+        purpose="タイガーの水筒を3ヶ月使った感想。コップ飲みの衛生面と、直飲みは全パーツ食洗機対応で便利という投稿。"
+        tone="good"
+        autoload
+        compact
+      />
+    </div>
+    </ArticleSocialProof>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <details class="fold-section">
+      <summary>更新履歴・情報源・購入時の注意</summary>
+      <h3>更新履歴</h3>
+      <ol class="change-log">
+        {articleMetadata.changeLog
+          .slice()
+          .sort((left, right) => right.date.localeCompare(left.date))
+          .map((entry) => (
+            <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+          ))}
+      </ol>
+      <h3>情報源一覧</h3>
+      <ul class="source-list">
+        <li><a href={thermosOfficial} target="_blank" rel="noopener noreferrer">サーモス：{thermosJnlS500.seriesName}</a>（2026-08-12確認）</li>
+        <li><a href={tigerOfficial} target="_blank" rel="noopener noreferrer">タイガー：{tigerMtaJ050.seriesName}</a>（2026-08-12確認）</li>
+        <li><a href={thermosSearch} target="_blank" rel="noopener noreferrer">楽天市場：サーモス JNL-S500 検索</a>（価格・在庫確認用）</li>
+        <li><a href={tigerSearch} target="_blank" rel="noopener noreferrer">楽天市場：タイガー MTA-J050 検索</a>（価格・在庫確認用）</li>
+      </ul>
+      <h3>購入時の注意</h3>
+      <p>水筒は使用前に取扱説明書を確認してください。保温・保冷効力は室温20℃±2℃で測定した公式の目安で、実際の使用環境や入れ方で変わります。</p>
+      <h3>調査方法・免責事項</h3>
+      <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+    </details>
+
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <div class="verification-summary" aria-label="購入リンクの確認状況">
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
+
+<style is:global>
+  /* SNS 感想セクション: 埋め込みを2列グリッドで小さめに表示 */
+  .sns-embeds {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-block: 1.25rem;
+  }
+
+  .sns-embeds .external-embed__intro h3 {
+    font-size: 0.95rem;
+  }
+
+  .sns-embeds .external-embed__target {
+    font-size: 0.9rem;
+  }
+
+  @media (max-width: 720px) {
+    .sns-embeds {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ページ内ジャンプナビ（小型） */
+  .jump-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.75rem 0 0;
+  }
+  .jump-nav a {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.25rem 0.8rem;
+    background: var(--paper);
+  }
+  .jump-nav a:hover {
+    border-color: var(--accent);
+  }
+
+  /* 記事冒頭の3点構成（ComparisonHero） */
+  .comparison-hero {
+    margin: 0.25rem 0 0;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--paper);
+  }
+  .hero-line {
+    margin: 0;
+    padding: 0.2rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  .hero-condition {
+    color: var(--muted);
+  }
+  .hero-line b {
+    font-weight: 800;
+  }
+  .hero-diffs {
+    margin-top: 0.6rem;
+    padding-top: 0.6rem;
+    border-top: 1px dashed var(--line);
+  }
+  .hero-diffs-heading {
+    margin: 0 0 0.3rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: var(--muted);
+  }
+  .hero-diffs ul {
+    margin: 0 0 0.5rem;
+    padding-left: 1.1rem;
+    font-size: 0.88rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: 0.1rem 0.75rem;
+  }
+  @media (max-width: 420px) {
+    .hero-diffs ul {
+      grid-template-columns: 1fr;
+      gap: 0.05rem;
+    }
+    .hero-diffs li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .hero-diff-note {
+      flex-shrink: 0;
+      font-size: 0.78rem;
+    }
+  }
+  .hero-diff-note {
+    color: var(--muted);
+  }
+  .hero-diff-link {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .hero-diff-link:hover {
+    text-decoration: underline;
+  }
+  .hero-trust {
+    margin: 0.6rem 0 0;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* 共通仕様帯 */
+  .common-specs {
+    margin: 1.25rem 0 0;
+    padding: 0.7rem 1rem;
+    background: #f0eee6;
+    border-radius: 10px;
+    font-size: 0.88rem;
+  }
+  .common-specs p {
+    margin: 0;
+  }
+  .common-specs b {
+    font-weight: 800;
+  }
+
+  /* 折りたたみセクション */
+  .fold-section {
+    margin-block: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    background: var(--paper);
+  }
+  .fold-section summary {
+    cursor: pointer;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 0.25rem 0;
+    color: var(--ink);
+  }
+  .fold-section summary:hover {
+    color: var(--accent);
+  }
+  .fold-section h3 {
+    font-size: 0.95rem;
+    margin: 1.1rem 0 0.4rem;
+  }
+  .fold-section .change-log,
+  .fold-section .source-list {
+    font-size: 0.85rem;
+  }
+
+  /* スクロール中も見失わない sticky 比較バー */
+  .sticky-compare-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: stretch;
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+  }
+  .sticky-compare-bar[hidden] {
+    display: none;
+  }
+  .sticky-side {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 0.55rem 0.75rem;
+    text-decoration: none;
+    line-height: 1.2;
+  }
+  .sticky-side.is-left {
+    background: #e6efec;
+    color: #1d4a41;
+  }
+  .sticky-side.is-right {
+    background: #f6e8de;
+    color: #7c4a2b;
+  }
+  .sticky-side-name {
+    font-weight: 800;
+    font-size: 0.8rem;
+  }
+  .sticky-side-cta {
+    font-size: 0.68rem;
+    opacity: 0.85;
+  }
+  .sticky-guide {
+    display: grid;
+    place-items: center;
+    padding: 0 1.1rem;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 800;
+    font-size: 0.8rem;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  @media (max-width: 420px) {
+    .sticky-side {
+      padding: 0.5rem 0.4rem;
+    }
+    .sticky-side-cta {
+      display: none;
+    }
+  }
+</style>
+
+<script src="/sticky-compare-bar.js" is:inline></script>

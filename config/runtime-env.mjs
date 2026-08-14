@@ -79,7 +79,8 @@ export function isAllowedRakutenUrl(value) {
   return (
     hostname === "rakuten.co.jp" ||
     hostname.endsWith(".rakuten.co.jp") ||
-    hostname === "r10.to"
+    hostname === "r10.to" ||
+    hostname.endsWith(".r10.to")
   );
 }
 

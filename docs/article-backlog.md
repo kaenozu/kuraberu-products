@@ -1,0 +1,84 @@
+# 記事バックログ
+
+「くらべて、選ぶ。」の比較記事を、公式情報で裏取りできる比較軸と記事の重複を見ながら管理する。
+
+## 選定基準
+
+1. 公式商品ページ・公式Q&Aで比較軸を裏取りできる
+2. 2つの対象を同じ観点で比較できる
+3. 読者の選択に影響する差分がある
+4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
+5. 既存記事と検索意図・対象商品が過度に重複しない
+
+## 現在の公開済み（24本）
+
+| slug                                     | 状態     |
+| ---------------------------------------- | -------- |
+| `babybjorn`                              | 公開済み |
+| `babybjorn-bouncer`                      | 公開済み |
+| `babybjorn-cradle`                       | 公開済み |
+| `babybjorn-onekai`                       | 公開済み |
+| `babybjorn-potty`                        | 公開済み |
+| `combi-the-s-plus-vs-premium`            | 公開済み |
+| `merries-newborn`                        | 公開済み |
+| `merries-pants`                          | 公開済み |
+| `moony-m`                                | 公開済み |
+| `pampers-newborn`                        | 公開済み |
+| `panasonic-eh-ne7m-vs-eh-ne5m`           | 公開済み |
+| `panasonic-mc-sb55k-vs-mc-sb35k`         | 公開済み |
+| `pigeon-bottle-160-240`                  | 公開済み |
+| `pigeon-bottle-240`                      | 公開済み |
+| `pigeon-slim-240`                        | 公開済み |
+| `sharp-kc-s50-vs-fu-s50`                 | 公開済み |
+| `shupot`                                 | 公開済み |
+| `tefal-dv4030j0-vs-dv8070j0`             | 公開済み |
+| `tefal-ko5901jp-vs-ko8601j0`             | 公開済み |
+| `thermos-tiger-bottle`                   | 公開済み |
+| `tiger-jpv-l100-vs-jpv-m100`             | 公開済み |
+| `yamazaki-condor-wagon-vs-self-wagon`    | 公開済み |
+| `yamazaki-tower-desk-panel-vs-pen-stand` | 公開済み |
+| `zojirushi-ck-pa08-vs-ck-dc08`           | 公開済み |
+
+記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
+
+## 次の候補（非育児カテゴリ優先）
+
+### 1. ティファール ジャスティン ロック vs アプレシア ロック コントロール
+
+- slug: `tefal-ko5901jp-vs-ko8601j0`
+- 比較軸: 容量、本体重量、温度調節、保温、タッチパネル、給湯ロック、自動電源オフ、空焚き防止、定格消費電力
+- 状態: 公式商品ページ確認済み。現行記事のCTA・SNS・モバイルQAを再監査する。
+
+### 2. シャープ KC-S50 vs FU-S50
+
+- slug: `sharp-kc-s50-vs-fu-s50`
+- 比較軸: 加湿機能・最大加湿量、外形寸法、重量、適用畳数、運転音、ニオイセンサー
+- 状態: 公式仕様確認済み。既存記事の公開状態を正本と突合する。
+
+### 3. コンビ THE S plus vs THE S premium
+
+- slug: `combi-the-s-plus-vs-premium`
+- 比較軸: 使用期間、身長基準、回転・乗せ降ろし機構、付属品、価格帯
+- 状態: 公式商品ページ確認済み。次の育児記事追加はカテゴリ分散後に再検討する。
+
+## 保留
+
+### アップリカ ラクーナ クッションフリー AF vs プラス AE
+
+- 保留理由: 公式サイトで対象商品ページを安定して確認できない場合は記事化しない。
+- 再開条件: 現行公式ページと両モデルの仕様・画像を個別にHTTP確認できること。
+
+## 調査メモ
+
+- チャイルドシート: `C:\Users\neoen\kuraberu-notes\childseat-research-2026-08.md`
+- サーモス・タイガー水筒: `C:\Users\neoen\kuraberu-notes\thermos-tiger-research-2026-08.md`
+- 記事テンプレート相談: `C:\Users\neoen\kuraberu-notes\chatgpt-consult-2026-08.md`
+- SNS参考情報の選定: `C:\Users\neoen\kuraberu-notes\chatgpt-sns-selection-2026-08.md`
+
+## 運用
+
+- 新記事は必ずブランチ → PR → 必須 `pnpm verify` → マージの順で反映する
+- 記事化前に公式URLを再取得し、対象商品・型番・比較軸を確認する
+- 記事化後は `src/content/articles.ts` とこのバックログの状態を同じ変更で更新する
+- 本番デプロイはGitマージとは別工程。Direct Uploadの実体と公開URLを確認してから完了扱いにする
+- 価格・在庫・体験談は、確認できないものを推測して掲載しない

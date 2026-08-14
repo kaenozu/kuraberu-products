@@ -7,7 +7,7 @@ import {
 const embed = '<ExternalEmbed provider="x" url="https://x.com/a/status/1" />';
 
 describe("external embed per-page limit", () => {
-  it("allows zero and three embeds", () => {
+  it("allows zero, three, and four embeds", () => {
     expect(countExternalEmbedTags("<article />")).toBe(0);
     expect(countExternalEmbedTags(`${embed}${embed}${embed}`)).toBe(3);
     expect(
@@ -18,26 +18,34 @@ describe("external embed per-page limit", () => {
         },
       ]),
     ).toEqual([]);
-  });
-
-  it("rejects four embeds with the article path and count", () => {
     expect(
       validateExternalEmbedSources([
-        { filePath: "src/pages/four.astro", source: embed.repeat(4) },
+        {
+          filePath: "src/pages/four.astro",
+          source: embed.repeat(4),
+        },
+      ]),
+    ).toEqual([]);
+  });
+
+  it("rejects five embeds with the article path and count", () => {
+    expect(
+      validateExternalEmbedSources([
+        { filePath: "src/pages/five.astro", source: embed.repeat(5) },
       ]),
     ).toEqual([
-      "src/pages/four.astro: external embed limit exceeded: found 4, maximum is 3",
+      "src/pages/five.astro: external embed limit exceeded: found 5, maximum is 4",
     ]);
   });
 
   it("counts each source independently", () => {
     expect(
       validateExternalEmbedSources([
-        { filePath: "src/pages/ok.astro", source: embed.repeat(3) },
-        { filePath: "src/pages/bad.astro", source: embed.repeat(4) },
+        { filePath: "src/pages/ok.astro", source: embed.repeat(4) },
+        { filePath: "src/pages/bad.astro", source: embed.repeat(5) },
       ]),
     ).toEqual([
-      "src/pages/bad.astro: external embed limit exceeded: found 4, maximum is 3",
+      "src/pages/bad.astro: external embed limit exceeded: found 5, maximum is 4",
     ]);
   });
 

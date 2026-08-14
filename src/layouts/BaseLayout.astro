@@ -77,6 +77,33 @@ const faqStructuredData = faq && faq.length > 0
       })),
     }).replaceAll('<', '\\u003c')
   : undefined;
+
+const breadcrumbStructuredData = article
+  ? JSON.stringify({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'ホーム',
+          item: site.url,
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: '比較記事一覧',
+          item: `${site.url}/articles/`,
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: article?.headline ?? title,
+          item: canonical,
+        },
+      ],
+    }).replaceAll('<', '\\u003c')
+  : undefined;
 ---
 <html lang="ja">
   <head>
@@ -101,6 +128,7 @@ const faqStructuredData = faq && faq.length > 0
     {articleImage && <meta name="twitter:image" content={articleImage} />}
     <script is:inline type="application/ld+json" set:html={structuredDataJson} />
     {faqStructuredData && <script is:inline type="application/ld+json" set:html={faqStructuredData} />}
+    {breadcrumbStructuredData && <script is:inline type="application/ld+json" set:html={breadcrumbStructuredData} />}
   </head>
   <body>
     <a class="skip-link" href="#main-content">本文へ移動</a>

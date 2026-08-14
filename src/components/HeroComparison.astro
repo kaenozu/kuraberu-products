@@ -1,0 +1,164 @@
+---
+interface HeroProduct {
+  /** ブランド名（例: サーモス） */
+  brand: string;
+  /** 型番など（例: JNL-S500） */
+  line: string;
+  /** 短いキャッチコピー（例: 軽さ・食洗機なら） */
+  tagline: string;
+  /** 商品画像パス */
+  image: string;
+  imageAlt: string;
+  /** 公式ページ */
+  officialHref: string;
+}
+
+interface Props {
+  left: HeroProduct;
+  right: HeroProduct;
+  eyebrow?: string;
+}
+
+const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
+---
+
+<section class="hero-compare" aria-label={eyebrow}>
+  <p class="section-label">{eyebrow}</p>
+  <div class="hero-compare-grid">
+    <article class="hero-product">
+      <a class="hero-product-img" href={left.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${left.brand} ${left.line} の公式商品ページを見る`}>
+        <img src={left.image} alt={left.imageAlt} width="500" height="500" loading="eager" />
+      </a>
+      <h2 class="hero-product-name"><span>{left.brand}</span> {left.line}</h2>
+      <p class="hero-product-tagline">{left.tagline}<b>こちら</b></p>
+      <div class="hero-product-actions">
+        <a class="hero-official" href={left.officialHref} target="_blank" rel="noopener noreferrer">公式</a>
+      </div>
+    </article>
+    <article class="hero-product">
+      <a class="hero-product-img" href={right.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${right.brand} ${right.line} の公式商品ページを見る`}>
+        <img src={right.image} alt={right.imageAlt} width="500" height="500" loading="eager" />
+      </a>
+      <h2 class="hero-product-name"><span>{right.brand}</span> {right.line}</h2>
+      <p class="hero-product-tagline">{right.tagline}<b>こちら</b></p>
+      <div class="hero-product-actions">
+        <a class="hero-official" href={right.officialHref} target="_blank" rel="noopener noreferrer">公式</a>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style>
+  .hero-compare {
+    margin-block: 0.75rem 2rem;
+  }
+  .hero-compare-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  .hero-product {
+    border: 1px solid var(--line);
+    border-top: 5px solid var(--product-color, var(--ink));
+    border-radius: 12px;
+    background: var(--paper);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .hero-product:first-child {
+    --product-color: #8aaea4;
+  }
+  .hero-product:last-child {
+    --product-color: #d59b77;
+  }
+  .hero-product-img {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f4f2ec;
+  }
+  .hero-product-img img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+    object-fit: contain;
+    transition: transform 0.15s ease;
+  }
+  .hero-product-img:hover img {
+    transform: scale(1.03);
+  }
+  .hero-product-name {
+    margin: 0.25rem 0 0;
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+  .hero-product-name span {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-right: 0.15rem;
+  }
+  .hero-product-tagline {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #c83e2c;
+    line-height: 1.5;
+  }
+  .hero-product-tagline b {
+    background: #c83e2c;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.78rem;
+    padding: 0.08rem 0.5rem;
+    border-radius: 999px;
+    margin-left: 0.3rem;
+    white-space: nowrap;
+  }
+  .hero-product-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: auto;
+    padding-top: 0.4rem;
+  }
+  .hero-buy {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.9rem;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .hero-buy:hover {
+    filter: brightness(1.05);
+  }
+  .hero-official {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-underline-offset: 3px;
+  }
+  @media (max-width: 720px) {
+    .hero-compare-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
+    }
+    .hero-product {
+      padding: 0.7rem;
+    }
+    .hero-product-tagline {
+      font-size: 0.85rem;
+    }
+    .hero-buy {
+      font-size: 0.78rem;
+      padding: 0.4rem 0.6rem;
+    }
+  }
+</style>

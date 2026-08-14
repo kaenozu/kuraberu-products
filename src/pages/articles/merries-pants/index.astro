@@ -1,0 +1,213 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import {merriesPantsArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+import type {
+  ComparisonCandidate, DifferenceRow,
+} from '../../../lib/comparison';
+
+const firstPremium = 'https://www.kao.co.jp/merries/products/fp/';
+const airsle = 'https://www.kao.co.jp/merries/products/air/';
+const firstPremiumSearch = 'https://a.r10.to/hPx3cE';
+const airsleSearch = 'https://a.r10.to/h5LbWy';
+
+const faqEntries = [
+  {
+    question: 'メリーズのパンツタイプはどっちがいい？',
+    answer: '肌ざわり・肌へのやさしさに関する機能（カシミヤタッチ・吸収部の抗菌・アルガンオイル）を重視するなら「ファーストプレミアム」、おむつ内のムレ・おしっこ対策の機能（シートの穴・瞬間吸収・おしっこロック）を重視するなら「ずっと肌さらエアスルー」が候補になります。パンツタイプのサイズは両方ともS・M・L・ビッグの4展開です。',
+  },
+  {
+    question: 'ファーストプレミアムとエアスルーのパンツは何が違う？',
+    answer: '公式情報では、ファーストプレミアムは肌ざわり（カシミヤタッチ）と肌へのやさしさをうたう機能が中心、エアスルーはおむつ内のムレやおしっこに着目した機能（通気穴・瞬間吸収・おしっこロック）が中心です。エアスルーの通気穴・瞬間吸収の説明はパンツタイプのS・Mサイズの注記が付いています。',
+  },
+  {
+    question: 'パンツタイプのサイズ展開の目安は？',
+    answer: '花王公式では、ファーストプレミアム・エアスルーともにパンツタイプはSサイズ（4〜8kg）・Mサイズ（6〜12kg）・Lサイズ（9〜14kg）・ビッグサイズ（12〜22kg）の4展開です。体重だけでなく足まわりや腰まわりのフィット感もパッケージや販売ページで確認してください。',
+  },
+  {
+    question: '価格はどっちが安い？',
+    answer: 'この記事では価格を保証していません。楽天市場の販売ページで、1枚あたりの単価（内容枚数と価格）を比較して確認してください。販売ページで価格・在庫・送料・セット内容を確認してください。',
+  },
+] as const;
+
+const premiumCandidate: ComparisonCandidate = {
+  product: 'メリーズ パンツタイプ',
+  line: 'ファーストプレミアム',
+  tone: 'premium',
+  audience: '肌へのやさしさに関する機能を確認したい人の候補',
+  note: '公式ページでサイズ・仕様を確認',
+  status: 'official',
+};
+
+const standardCandidate: ComparisonCandidate = {
+  product: 'メリーズ パンツタイプ',
+  line: 'ずっと肌さらエアスルー',
+  tone: 'standard',
+  audience: 'ムレ・おしっこ対策の機能を確認したい人の候補',
+  note: '公式ページでサイズ・仕様を確認',
+  status: 'official',
+};
+
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(
+  articleMetadata.productInfoCheckedAt,
+  contentAsOf,
+);
+
+const differenceRows: DifferenceRow[] = [
+  {
+    label: '公式が案内する主な機能',
+    left: 'カシミヤタッチの肌ざわり、吸収面を抗菌、アルガンオイル配合（肌に触れるシート）、100%通気素材',
+    right: 'シート表面に目に見えない穴が50億個以上（通気）、おしっこロック、縦横の溝で瞬間吸収',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: 'パンツタイプのサイズ展開',
+    left: 'S（4〜8kg）・M（6〜12kg）・L（9〜14kg）・ビッグ（12〜22kg）',
+    right: 'S（4〜8kg）・M（6〜12kg）・L（9〜14kg）・ビッグ（12〜22kg）',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+  {
+    label: '機能のサイズ別注記',
+    left: '背中モレ安心のフィットギャザーはS・Mサイズで案内（足まわりガイド付き）',
+    right: '通気穴・瞬間吸収の説明は「テープタイプ全サイズ、パンツタイプS/Mサイズ」の注記',
+    leftStatus: 'official',
+    rightStatus: 'official',
+  },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">メリーズのパンツタイプには「ファーストプレミアム」と「ずっと肌さらエアスルー」の2つがあります。この記事では、花王公式で確認できる機能・サイズ展開だけをもとに、どちらを先に確認すればよいかを整理します。あてずっぽうではなく「公式に書かれていること」と「まだ確認が必要なこと」を分けて書いています。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
+    </nav>
+    {articleMetadata.productInfoCheckedAt && (
+      <div class="verification-summary" aria-label="記事情報の確認状況">
+        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+      </div>
+    )}
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience] }}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+
+
+
+    <h2 id="checked">確認できる項目</h2>
+    <div class="table-scroll">
+    <table class="comparison">
+      <thead><tr><th scope="col">比較項目</th><th scope="col">ファーストプレミアム</th><th scope="col">ずっと肌さらエアスルー</th><th scope="col">根拠・確認先</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">公式上の位置づけ</th><td>肌にやさしい肌ざわりのパンツ</td><td>おむつ内の環境（ムレ・おしっこ）のパンツ</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">パンツタイプのサイズ展開</th><td>S・M・L・ビッグの4展開</td><td>S・M・L・ビッグの4展開</td><td><a href={firstPremium} target="_blank" rel="noopener noreferrer">ファーストプレミアム公式</a> / <a href={airsle} target="_blank" rel="noopener noreferrer">エアスルー公式</a></td></tr>
+        <tr><th scope="row">主な機能</th><td>カシミヤタッチ・吸収部の抗菌・アルガンオイル配合・100%通気素材</td><td>シートに穴・おしっこロック・瞬間吸収（S/Mサイズの注記あり）</td><td>各公式商品ページ</td></tr>
+        <tr><th scope="row">価格・在庫</th><td>販売ページで確認</td><td>販売ページで確認</td><td>楽天市場の検索結果</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="meta">商品仕様やサイズ展開は変更される可能性があります。購入時点の公式商品ページとパッケージを確認してください。</p>
+
+    <h2 id="official">公式情報</h2>
+    <p>ファーストプレミアムの公式ページでは、カシミヤタッチの肌ざわり、吸収部の抗菌（JIS L 1902:2015 試験結果をもとにした表示）、アルガンオイル配合（肌に触れるシート部分）、100%通気素材が案内されています。エアスルーの公式ページでは、シート表面に目に見えない穴が50億個以上ありおむつの外側に湿気を出す構造、縦横の溝による瞬間吸収、吸収して戻さないおしっこロックが案内されています。エアスルーの通気穴・瞬間吸収の説明は「テープタイプ全サイズ、パンツタイプS/Mサイズ」の注記が付いています。</p>
+    <div class="source-links">
+      <a class="card-link" href={firstPremium} target="_blank" rel="noopener noreferrer">ファーストプレミアム公式商品ページ →</a>
+      <a class="card-link" href={airsle} target="_blank" rel="noopener noreferrer">ずっと肌さらエアスルー公式商品ページ →</a>
+    </div>
+
+
+
+    <h2>どんな確認を優先するか</h2>
+    <ul>
+      <li>ファーストプレミアム：肌ざわり・肌への配慮の公式機能を確認したい場合。</li>
+      <li>ずっと肌さらエアスルー：ムレ対策・おしっこ吸収の公式機能を確認したい場合。</li>
+    </ul>
+    <p>これは公式ページに掲載された機能の整理であり、どちらがすべての赤ちゃんに合うと断定するものではありません。</p>
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="ファーストプレミアム"
+        audience="肌ざわり・肌への配慮の機能を優先する人向け"
+        href={firstPremiumSearch}
+        productId="merries-fp-pants"
+        imagePath="/products/merries-fp-newborn.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ずっと肌さらエアスルー"
+        audience="ムレ対策・おしっこ吸収の機能を優先する人向け"
+        href={airsleSearch}
+        productId="merries-airsle-pants"
+        imagePath="/products/merries-airsle-newborn.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <ArticleSocialProof
+      query="メリーズ ファーストプレミアム エアスルー"
+      checkedAt="2026-08-12"
+      hasPosts={true}
+    >
+      <div class="sns-embeds">
+      <ExternalEmbed provider="x" url="https://x.com/i/status/1977892994713071846" title="メリーズ ファーストプレミアムとエアスルーについての感想" purpose="両シリーズの使用感に触れた投稿。個人の感想として参考情報に限定します。" tone="mixed" autoload compact />
+    </div>
+    </ArticleSocialProof>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2>購入時の注意</h2>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
+    <p>パンツタイプでも体型や動き方には個人差があります。漏れや肌トラブルが続く場合は使用を中止し、必要に応じて専門家へ相談してください。</p>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog
+        .slice()
+        .sort((left, right) => right.date.localeCompare(left.date))
+        .map((entry) => (
+          <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+        ))}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={firstPremium} target="_blank" rel="noopener noreferrer">花王：ファーストプレミアム パンツ</a>（2026-08-10確認）</li>
+      <li><a href={airsle} target="_blank" rel="noopener noreferrer">花王：ずっと肌さらエアスルー パンツ</a>（2026-08-10確認）</li>
+      <li><a href={firstPremiumSearch} target="_blank" rel="noopener noreferrer">楽天市場：ファーストプレミアム パンツ検索</a>（価格・在庫確認用）</li>
+      <li><a href={airsleSearch} target="_blank" rel="noopener noreferrer">楽天市場：エアスルー パンツ検索</a>（価格・在庫確認用）</li>
+    </ul>
+    <h2>調査方法・免責事項</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

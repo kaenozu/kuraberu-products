@@ -16,16 +16,18 @@ describe("Issue #2 editorial comparison UI", () => {
     expect(homepage).toContain("比較記事");
   });
 
-  it("uses the three issue-specific comparison components in the article", () => {
+  it("uses the canonical comparison shell in the article", () => {
     const article = read("src/pages/articles/pampers-newborn/index.astro");
-    expect(article).toContain("ThirtySecondComparison");
-    expect(article).toContain("DifferenceList");
-    expect(article).toContain('id="comparison-details"');
+    expect(article).toContain("ArticleComparisonV2");
+    expect(article).toContain("ArticleSocialProof");
+    expect(article).not.toContain("DifferenceList");
+    expect(article).toContain('href="#key-differences"');
+    expect(article).toContain('href="#decision-guide"');
 
     const status = read("src/components/VerificationStatus.astro");
     expect(status).toContain("公式確認済み");
     expect(status).toContain("販売ページ確認");
-    expect(status).toContain("口コミ不足");
+    expect(status).toContain("確認情報が少ない");
     expect(status).toContain("未確認");
   });
 });
