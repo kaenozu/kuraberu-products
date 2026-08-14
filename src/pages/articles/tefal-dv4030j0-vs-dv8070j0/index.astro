@@ -3,10 +3,8 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import HeroComparison from '../../../components/HeroComparison.astro';
-import ComparisonHero from '../../../components/ComparisonHero.astro';
-import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
-import DecisionGuide from '../../../components/DecisionGuide.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 import {tefalGarmentSteamerArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 
@@ -47,34 +45,15 @@ const keyDiffRows: KeyDiffRow[] = [
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 衣類ケア · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
-    <ComparisonHero
-      lines={[
-        {condition: 'ジェットスチーム・コンパクトさを重視する', brand: 'ティファール', model: 'DV4030J0'},
-        {condition: 'スチーム量・準備時間・連続使用を重視する', brand: 'ティファール', model: 'DV8070J0'},
-      ]}
-      differences={[
-        {label: 'スチーム量', note: '平均13g/分 vs 平均17g/分'},
-        {label: '立ち上がり', note: '約40秒 vs 約19秒'},
-        {label: '連続運転', note: '約9分 vs 約14分'},
-        {label: '水タンク', note: '120mL vs 140mL'},
-      ]}
-      diffAnchor="#key-differences"
+    <ArticleComparisonV2
+      left={{brand: 'ティファール', line: 'DV4030J0', tagline: 'ジェットスチーム・コンパクトさなら', image: '/products/tefal-dv4030j0.jpg', imageAlt: 'ティファール スチーム シュプレ DV4030J0', officialHref: supreOfficial, guidePoints: ['ジェットスチーム最大16g/分を確認したい', 'コンパクトな2WAYモデルを選びたい', 'ワンプッシュおまかせスチームを使いたい']}}
+      right={{brand: 'ティファール', line: 'DV8070J0', tagline: '量・速さ・連続使用なら', image: '/products/tefal-dv8070j0.png', imageAlt: 'ティファール スチーム ラフレ DV8070J0', officialHref: rafreOfficial, guidePoints: ['平均17g/分のスチーム量を重視したい', '立ち上がり約19秒を優先したい', '連続運転約14分・140mLタンクを確認したい']}}
+      rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
-    />
-    <HeroComparison
-      eyebrow="30秒でわかる"
-      left={{brand: 'ティファール', line: 'DV4030J0', tagline: 'ジェットスチームなら', image: '/products/tefal-dv4030j0.jpg', imageAlt: 'ティファール スチーム シュプレ DV4030J0', officialHref: supreOfficial}}
-      right={{brand: 'ティファール', line: 'DV8070J0', tagline: '量・速さ・連続使用なら', image: '/products/tefal-dv8070j0.png', imageAlt: 'ティファール スチーム ラフレ DV8070J0', officialHref: rafreOfficial}}
     />
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ティファールの衣類スチーマー「スチーム シュプレ DV4030J0」と「スチーム ラフレ DV8070J0」を比較します。公式仕様から、スチーム量・立ち上がり・連続使用時間・水タンク容量の違いを整理します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">主な比較ポイント</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
-    <VisualKeyDifferences leftLabel="ティファール DV4030J0" rightLabel="ティファール DV8070J0" items={keyDiffRows} />
-    <div class="common-specs" aria-label="共通仕様"><p>どちらも同じ：<b>衣類スチーマーとアイロンの2WAY</b>・<b>温度設定3段階</b>・<b>スタンドと計量カップ付属</b>です。</p></div>
-    <DecisionGuide
-      left={{brand: 'ティファール', line: 'DV4030J0', points: ['ジェットスチーム最大16g/分を確認したい', 'コンパクトな2WAYモデルを選びたい', 'ワンプッシュおまかせスチームを使いたい']}}
-      right={{brand: 'ティファール', line: 'DV8070J0', points: ['平均17g/分のスチーム量を重視したい', '立ち上がり約19秒を優先したい', '連続運転約14分・140mLタンクを確認したい']}}
-    />
     <div class="purchase-cards">
       <PurchaseCard name="ティファール DV4030J0" audience="ジェットスチーム・コンパクトさを重視する人向け" href={supreRakutenUrl} imagePath="/products/tefal-dv4030j0.jpg" placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
       <PurchaseCard name="ティファール DV8070J0" audience="スチーム量・速さ・連続使用を重視する人向け" href={rafreRakutenUrl} imagePath="/products/tefal-dv8070j0.png" placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
