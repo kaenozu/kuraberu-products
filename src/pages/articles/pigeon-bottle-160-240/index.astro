@@ -1,25 +1,22 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {pigeonBottleSizeArticle as articleMetadata} from '../../../content/articles';
-import {pigeonBottleSizeCandidateLabels, pigeonBottleSizePriorityOptions, pigeonBottleSizeStandardConclusion} from '../../../content/pigeon-bottle-size-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
-  ComparisonCandidate,
-  ComparisonRow,
-  DifferenceRow,
+  ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
 
 const bottle160 = 'https://products.pigeon.co.jp/item/index-2377.html';
 const bottle240 = 'https://products.pigeon.co.jp/item/index-2378.html';
 const nippleInfo = 'https://products.pigeon.co.jp/category/index-21.html';
-const size160Search = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20160ml%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93';
-const size240Search = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20240ml%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93';
+const size160Search = 'https://a.r10.to/h4SQzW';
+const size240Search = 'https://a.r10.to/hk5u4n';
 
 const faqEntries = [
   {
@@ -59,9 +56,6 @@ const productInfoStale = isContentStale(
   articleMetadata.productInfoCheckedAt,
   contentAsOf,
 );
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const size160Candidate: ComparisonCandidate = {
   product: '母乳実感',
@@ -81,15 +75,6 @@ const size240Candidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {label: '容量', left: '160ml', right: '240ml'},
-  {
-    label: '付属の乳首',
-    left: 'SSサイズ（0ヵ月から）・丸穴',
-    right: 'Mサイズ（3ヵ月頃から）・Y字形',
-  },
-  {label: '対象月齢の目安', left: '0ヵ月から', right: '3ヵ月頃から'},
-];
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -121,75 +106,26 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">母乳実感の160mlと240mlは、単にボトルの容量が違うだけではありません。付属する乳首のサイズや、商品ページに記載された対象月齢目安も異なります。この記事では、公式の商品ページで確認できる情報だけをもとに、「母乳実感 哺乳びん プラスチック製（PPSU）」160mlと240mlの違いを整理します。公式に書かれていることと、公式ページだけでは判断できず確認が必要なことを分けて紹介します。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#checked">確認できる項目</a></li>
-        <li><a href="#priority-conclusion-heading">条件に応じた比較結論</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img
-          src="/products/pigeon-bottle-160-240-160ml.jpg"
-          alt="母乳実感 哺乳びん（プラスチック製）160ml パッケージ"
-          width="1000"
-          height="1000"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">プラスチック製（PPSU）160ml</h2>
-          <p class="product-card-desc">対象月齢目安0ヵ月から。SSサイズ乳首（丸穴）付属。</p>
-          <a class="product-card-link" href={bottle160} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img
-          src="/products/pigeon-bottle-160-240-240ml.jpg"
-          alt="母乳実感 哺乳びん（プラスチック製）240ml パッケージ"
-          width="1000"
-          height="1000"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">プラスチック製（PPSU）240ml</h2>
-          <p class="product-card-desc">対象月齢目安3ヵ月頃から。Mサイズ乳首（Y字形）付属。</p>
-          <a class="product-card-link" href={bottle240} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
-      <p>購入リンク：{purchaseLinkLabel}</p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
+    {articleMetadata.productInfoCheckedAt && (
+      <div class="verification-summary" aria-label="記事情報の確認状況">
+        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+      </div>
+    )}
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison
-      idPrefix="pigeon-bottle-size-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="新生児期から使うボトルを用意する場合や、まず小容量の哺乳びんを選びたい場合は、対象月齢目安が0ヵ月からでSSサイズ乳首（丸穴）が付属する「160ml」が目安です。哺乳量が増えてきた場合は、対象月齢目安が3ヵ月頃からでMサイズ乳首（Y字形）が付属する「240ml」が目安です。どちらもプラスチック（PPSU）製・広口ボトルで、消毒・除菌方法は共通しています。"
-      left={size160Candidate}
-      right={size240Candidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: size160Candidate.product, line: size160Candidate.line, tagline: size160Candidate.audience, image: '/products/pigeon-bottle-160-240-160ml.jpg', imageAlt: `${size160Candidate.product} ${size160Candidate.line}`, officialHref: bottle160, guidePoints: [size160Candidate.audience] }}
+      right={{ brand: size240Candidate.product, line: size240Candidate.line, tagline: size240Candidate.audience, image: '/products/pigeon-bottle-160-240-240ml.jpg', imageAlt: `${size240Candidate.product} ${size240Candidate.line}`, officialHref: bottle240, guidePoints: [size240Candidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="pigeon-bottle-size-differences"
-        leftLabel="160ml"
-        rightLabel="240ml"
-        items={differenceRows}
-      />
-    </div>
-
-    <p class="summary-purchase">迷ったときの確認先：<a class="text-link" href={size160Search} target="_blank" rel="noopener noreferrer">160mlの販売ページを確認 →</a>／<a class="text-link" href={size240Search} target="_blank" rel="noopener noreferrer">240mlの販売ページを確認 →</a></p>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">
@@ -208,7 +144,6 @@ const differenceRows: DifferenceRow[] = [
     </div>
     <p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
 
-    <PriorityConclusion options={pigeonBottleSizePriorityOptions} labels={pigeonBottleSizeCandidateLabels} standard={pigeonBottleSizeStandardConclusion} />
 
     <h2 id="official">公式情報</h2>
     <p>160mlと240mlのどちらも「母乳実感 哺乳びん（プラスチック製）」で、容量以外の基本仕様（PPSU素材・広口ボトル・煮沸/スチーム/薬液消毒対応・電子レンジ除菌不可）は共通しています。違いは、付属する乳首と対象月齢の目安です。160mlにはSSサイズ（0ヵ月から・丸穴）、240mlにはMサイズ（3ヵ月頃から・Y字形）の乳首が付属します。母乳実感の乳首はSS・S・M・L・LL・3Lの6サイズが案内されています。</p>
@@ -217,6 +152,38 @@ const differenceRows: DifferenceRow[] = [
       <a class="card-link" href={bottle240} target="_blank" rel="noopener noreferrer">母乳実感 プラスチック製（PPSU）240ml 公式商品ページ →</a>
       <a class="card-link" href={nippleInfo} target="_blank" rel="noopener noreferrer">ピジョン 母乳実感 哺乳びん カテゴリページ →</a>
     </div>
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="母乳実感 プラスチック製 160ml"
+        audience="新生児期から使う人や、まず小容量の哺乳びんを用意したい人向け"
+        href={size160Search}
+        productId="pigeon-160"
+        imagePath="/products/pigeon-bottle-160-240-160ml.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="哺乳量が増えてきた人や、大きめの容量の哺乳びんを用意したい人向け"
+        href={size240Search}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-160-240-240ml.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <ArticleSocialProof
+      query="ピジョン 母乳実感 160ml 240ml"
+      checkedAt="2026-08-12"
+      hasPosts={true}
+    >
+      <div class="sns-embeds">
+      <ExternalEmbed provider="x" url="https://x.com/i/status/2084920021046940113" title="ピジョン 母乳実感 160ml と 240ml の使用本数に触れた投稿" purpose="160mlと240mlの使用例が分かる投稿。素材や乳首の仕様は公式情報で確認してください。" tone="good" autoload compact />
+      <ExternalEmbed provider="x" url="https://x.com/i/status/1993645756205686933" title="ピジョンの哺乳びん 160ml と 240ml の買い足しに関する投稿" purpose="容量違いの買い足しに触れた投稿。" tone="good" autoload compact />
+    </div>
+    </ArticleSocialProof>
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
@@ -228,18 +195,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={size160Search} target="_blank" rel="noopener noreferrer">160mlの販売ページを検索 →</a>
-      <a class="card-link" href={size240Search} target="_blank" rel="noopener noreferrer">240mlの販売ページでも検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
-    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
-    <div class="grid two" id="purchase">
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_160_URL} label="母乳実感 プラスチック製160mlを楽天市場で確認" merchant="楽天" productId="pigeon-160" imagePath="/products/pigeon-bottle-160-240-160ml.jpg" placement="article-end" />
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL} label="母乳実感 プラスチック製240mlを楽天市場で確認" merchant="楽天" productId="pigeon-ppsu-240" imagePath="/products/pigeon-bottle-160-240-240ml.jpg" placement="article-end" />
-    </div>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

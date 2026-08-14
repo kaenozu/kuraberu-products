@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   CONFIGURED_ENVIRONMENT_VARIABLES,
+  isAllowedRakutenUrl,
   normalizeSiteUrl,
   validateBuildEnvironment,
 } from "../config/runtime-env.mjs";
@@ -40,6 +41,10 @@ describe("environment variable configuration", () => {
 
     expect(result.deploymentEnv).toBe("production");
     expect(result.rakutenApiReady).toBe(false);
+  });
+
+  it("accepts Rakuten short affiliate subdomains", () => {
+    expect(isAllowedRakutenUrl("https://a.r10.to/h5dAQI")).toBe(true);
   });
 
   it("accepts production with a complete Rakuten API credential set", () => {

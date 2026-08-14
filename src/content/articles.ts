@@ -25,6 +25,9 @@ export interface ArticleMetadata {
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
+// Build-time reference date to prevent future dates
+const buildReferenceDate = new Date().toISOString().slice(0, 10);
+
 export function defineArticleMetadata(
   metadata: ArticleMetadata,
 ): ArticleMetadata {
@@ -70,6 +73,26 @@ export function defineArticleMetadata(
     !metadata.purchaseLinksCheckedAt
   ) {
     throw new TypeError("verified purchase links require a checked date");
+  }
+  // Prevent future dates relative to build time
+  for (const [label, value] of [
+    ["publishedAt", metadata.publishedAt],
+    ["modifiedAt", metadata.modifiedAt],
+    ...(metadata.productInfoCheckedAt
+      ? [["productInfoCheckedAt", metadata.productInfoCheckedAt] as const]
+      : []),
+    ...(metadata.purchaseLinksCheckedAt
+      ? [["purchaseLinksCheckedAt", metadata.purchaseLinksCheckedAt] as const]
+      : []),
+    ...metadata.changeLog.map(
+      (entry) => ["changeLog.date", entry.date] as const,
+    ),
+  ] as const) {
+    if (value > buildReferenceDate) {
+      throw new TypeError(
+        `${label} (${value}) must not be a future date relative to build (${buildReferenceDate})`,
+      );
+    }
   }
   for (const [label, values] of [
     ["tags", metadata.tags],
@@ -483,6 +506,167 @@ export const pigeonBottleSizeArticle = defineArticleMetadata({
   ],
 });
 
+export const combiTheSArticle = defineArticleMetadata({
+  id: "combi-the-s-plus-vs-premium",
+  path: "/articles/combi-the-s-plus-vs-premium/",
+  title: "コンビ THE S plus と THE S premium、どっち？｜くらべる商品メモ",
+  headline:
+    "コンビのチャイルドシート、どっち？「THE S plus」と「THE S premium」を比較",
+  description:
+    "コンビ THE S plus と THE S premiumを、公式の対象身長・使用期間・回転・固定方法・重量・価格で比較",
+  category: "チャイルドシート",
+  tags: ["チャイルドシート", "コンビ", "新生児", "ISOFIX"],
+  audiences: ["出産準備中の人", "チャイルドシートを買い替えたい人"],
+  uses: ["新生児から使う", "長く使う", "車への乗せ降ろし"],
+  summary:
+    "THE S plusとTHE S premiumを、公式の対象身長・使用期間・回転・固定方法・重量・価格に分けて比較します。",
+  publishedAt: "2026-08-12",
+  modifiedAt: "2026-08-12",
+  productInfoCheckedAt: "2026-08-12",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/the-s-plus.jpg",
+  changeLog: [
+    {
+      date: "2026-08-12",
+      summary:
+        "初回公開。コンビ公式の商品ページで対象身長・使用期間・固定方法・重量・価格を確認。",
+    },
+  ],
+});
+
+export const tigerRiceArticle = defineArticleMetadata({
+  id: "tiger-jpv-l100-vs-jpv-m100",
+  path: "/articles/tiger-jpv-l100-vs-jpv-m100/",
+  title: "タイガー JPV-L100 と JPV-M100、どっち？｜くらべる商品メモ",
+  headline: "タイガーの炊飯器、どっち？「JPV-L100」と「JPV-M100」を比較",
+  description:
+    "タイガー JPV-L100とJPV-M100を、公式の加熱方式・容量・サイズ・質量・価格で比較",
+  category: "キッチン家電",
+  tags: ["炊飯器", "タイガー", "圧力IH"],
+  audiences: ["炊飯器を買い替えたい人", "毎日の炊飯を見直したい人"],
+  uses: ["毎日炊飯する", "価格と機能で選ぶ", "お手入れの負担を比べる"],
+  summary:
+    "JPV-L100とJPV-M100を、タイガー公式の加熱方式・容量・サイズ・質量・価格に分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/tiger-jpv-l100.jpg",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary: "初回公開。タイガー公式の商品ページで仕様と価格を確認。",
+    },
+  ],
+});
+
+export const panasonicVacuumArticle = defineArticleMetadata({
+  id: "panasonic-mc-sb55k-vs-mc-sb35k",
+  path: "/articles/panasonic-mc-sb55k-vs-mc-sb35k/",
+  title: "パナソニック MC-SB55K と MC-SB35K、どっち？｜くらべる商品メモ",
+  headline: "パナソニックの掃除機、どっち？「MC-SB55K」と「MC-SB35K」を比較",
+  description:
+    "パナソニック MC-SB55KとMC-SB35Kを、公式の質量・センサー・充電スタンド・ブラシで比較",
+  category: "生活家電",
+  tags: ["掃除機", "パナソニック", "コードレス"],
+  audiences: ["掃除機を買い替えたい人", "コードレス掃除機を選びたい人"],
+  uses: ["毎日掃除する", "軽さで選ぶ", "収納方法で選ぶ"],
+  summary:
+    "MC-SB55KとMC-SB35Kを、パナソニック公式の質量・センサー・充電スタンド・ブラシに分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/panasonic-mc-sb55k.png",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary: "初回公開。パナソニック公式の商品ページで仕様・機能を確認。",
+    },
+  ],
+});
+
+export const panasonicHairDryerArticle = defineArticleMetadata({
+  id: "panasonic-eh-ne7m-vs-eh-ne5m",
+  path: "/articles/panasonic-eh-ne7m-vs-eh-ne5m/",
+  title: "パナソニック EH-NE7M と EH-NE5M、どっち？｜くらべる商品メモ",
+  headline: "パナソニックのドライヤー、どっち？「EH-NE7M」と「EH-NE5M」を比較",
+  description:
+    "パナソニック イオニティ EH-NE7MとEH-NE5Mを、公式のミネラル機能・イオン・低温ケア・速乾で比較",
+  category: "美容家電",
+  tags: ["ドライヤー", "パナソニック", "ヘアケア"],
+  audiences: ["ドライヤーを買い替えたい人", "公式情報で機能差を確認したい人"],
+  uses: ["毎日のヘアドライ", "低温ケアを使う", "大風量で乾かす"],
+  summary:
+    "EH-NE7MとEH-NE5Mを、パナソニック公式のミネラル機能・マイナスイオン・低温ケアモード・大風量の案内で比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/panasonic-eh-ne7m.png",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary: "初回公開。パナソニック公式の商品ページで機能差を確認。",
+    },
+  ],
+});
+
+export const tefalKettleArticle = defineArticleMetadata({
+  id: "tefal-ko5901jp-vs-ko8601j0",
+  path: "/articles/tefal-ko5901jp-vs-ko8601j0/",
+  title:
+    "ティファール ジャスティン ロックとアプレシア ロック コントロール、どっち？｜くらべる商品メモ",
+  headline:
+    "ティファールの電気ケトル、どっち？「KO5901JP」と「KO8601J0」を比較",
+  description:
+    "ティファール ジャスティン ロック KO5901JPとアプレシア ロック コントロール KO8601J0を、公式の容量・重量・温度調節・保温機能で比較",
+  category: "キッチン家電",
+  tags: ["電気ケトル", "ティファール", "温度調節"],
+  audiences: ["電気ケトルを買い替えたい人", "容量と温度調節機能で選びたい人"],
+  uses: ["毎日使う", "大容量で沸かす", "温度を使い分ける"],
+  summary:
+    "KO5901JPとKO8601J0を、ティファール公式の容量・重量・温度調節・保温などの仕様に分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/tefal-ko5901jp.jpg",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary:
+        "初回公開。ティファール公式の商品ページで容量・重量・機能を確認。",
+    },
+  ],
+});
+
+export const sharpKcS50VsFuS50Article = defineArticleMetadata({
+  id: "sharp-kc-s50-vs-fu-s50",
+  path: "/articles/sharp-kc-s50-vs-fu-s50/",
+  title: "シャープ KC-S50とFU-S50、どっち？｜くらべる商品メモ",
+  headline: "シャープの空気清浄機、どっち？「KC-S50」と「FU-S50」を比較",
+  description:
+    "シャープ KC-S50とFU-S50を、公式の加湿・サイズ・重量・適用畳数・運転音・センサーで比較",
+  category: "生活家電",
+  tags: ["空気清浄機", "加湿空気清浄機", "シャープ"],
+  audiences: ["空気清浄機を選びたい人", "加湿機能の有無で比較したい人"],
+  uses: ["リビングで使う", "空気清浄と加湿を比較"],
+  summary:
+    "KC-S50とFU-S50を、シャープ公式の加湿機能・サイズ・重量・適用畳数・運転音・センサーに分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/sharp-kc-s50.jpg",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary: "初回公開。シャープ公式の商品ページと仕様ページで仕様を確認。",
+    },
+  ],
+});
+
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
   path: "/articles/thermos-tiger-bottle/",
@@ -510,6 +694,121 @@ export const thermosTigerBottleArticle = defineArticleMetadata({
   ],
 });
 
+export const yamazakiTowerDeskPanelArticle = defineArticleMetadata({
+  id: "yamazaki-tower-desk-panel-vs-pen-stand",
+  path: "/articles/yamazaki-tower-desk-panel-vs-pen-stand/",
+  title:
+    "山崎実業 tower デスク横パネルとペンスタンド、どっち？｜くらべる商品メモ",
+  headline:
+    "山崎実業 towerの収納、どっち？「デスク横トレー付きスチールパネル」と「マグネットペンスタンド」を比較",
+  description:
+    "山崎実業 towerのデスク横トレー付きスチールパネルとマグネットペンスタンドを、公式のサイズ・重量・耐荷重・設置方法で比較",
+  category: "収納用品",
+  tags: ["山崎実業", "tower", "デスク収納"],
+  audiences: ["デスク周りを整理したい人", "towerの収納用品を比較したい人"],
+  uses: ["デスク横に収納", "ペンを立てて収納"],
+  summary:
+    "デスク横トレー付きスチールパネルとマグネットペンスタンドを、公式情報・確認状況・型番検索に分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/yamazaki-tower-desk-panel.jpg",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary: "初回公開。山崎実業公式の商品ページで仕様と画像を確認。",
+    },
+  ],
+});
+
+export const yamazakiCondorWagonArticle = defineArticleMetadata({
+  id: "yamazaki-condor-wagon-vs-self-wagon",
+  path: "/articles/yamazaki-condor-wagon-vs-self-wagon/",
+  title: "山崎産業 コンドル ワゴン、どっち？｜くらべる商品メモ",
+  headline:
+    "山崎産業 コンドルのワゴン、どっち？「サイドメッシュワゴンII」と「セルフワゴンII」を比較",
+  description:
+    "山崎産業 コンドル FU943-000X-MBとFU944-000X-MBを、公式のサイズ・重量・材質・商品説明で比較",
+  category: "収納用品",
+  tags: ["山崎産業", "コンドル", "ワゴン"],
+  audiences: [
+    "荷物置きワゴンを選びたい人",
+    "店舗や施設の収納用品を比較したい人",
+  ],
+  uses: ["荷物を置く", "ワゴンを比較する"],
+  summary:
+    "コンドル サイドメッシュワゴンIIとセルフワゴンIIを、山崎産業公式の仕様と確認状況に分けて比較します。",
+  publishedAt: "2026-08-14",
+  modifiedAt: "2026-08-14",
+  productInfoCheckedAt: "2026-08-14",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/yamazaki-condor-fu943-000x-mb.jpg",
+  changeLog: [
+    {
+      date: "2026-08-14",
+      summary:
+        "初回公開。山崎産業公式の商品ページでFU943-000X-MBとFU944-000X-MBの仕様を確認。",
+    },
+  ],
+});
+
+export const zojirushiElectricKettleArticle = defineArticleMetadata({
+  id: "zojirushi-ck-pa08-vs-ck-dc08",
+  path: "/articles/zojirushi-ck-pa08-vs-ck-dc08/",
+  title: "象印 CK-PA08 と CK-DC08、どっち？｜くらべる商品メモ",
+  headline: "象印の電気ケトル、どっち？「CK-PA08」と「CK-DC08」を比較",
+  description:
+    "象印 CK-PA08とCK-DC08を、公式の容量・沸とう時間・安全設計・ほこり対策・手入れ方法で比較",
+  category: "キッチン家電",
+  tags: ["電気ケトル", "象印", "キッチン家電"],
+  audiences: ["電気ケトルを選びたい人", "安全設計や手入れ方法を比べたい人"],
+  uses: ["毎日のお湯沸かし", "キッチンで使う", "安全設計を確認する"],
+  summary:
+    "CK-PA08とCK-DC08を、象印公式の商品ページで確認できる仕様・安全設計・手入れ方法に分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinksCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/zojirushi-ck-pa08.webp",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary: "初回公開。象印公式の商品ページでCK-PA08とCK-DC08の仕様を確認。",
+    },
+  ],
+});
+
+export const tefalGarmentSteamerArticle = defineArticleMetadata({
+  id: "tefal-dv4030j0-vs-dv8070j0",
+  path: "/articles/tefal-dv4030j0-vs-dv8070j0/",
+  title: "ティファール DV4030J0 と DV8070J0、どっち？｜くらべる商品メモ",
+  headline:
+    "ティファールの衣類スチーマー、どっち？「DV4030J0」と「DV8070J0」を比較",
+  description:
+    "ティファール DV4030J0とDV8070J0を、公式のスチーム量・立ち上がり・連続運転・水タンク容量・かけ面で比較",
+  category: "衣類ケア",
+  tags: ["衣類スチーマー", "ティファール", "衣類ケア"],
+  audiences: ["衣類スチーマーを選びたい人", "スチーム量や準備時間を比べたい人"],
+  uses: ["衣類のシワ伸ばし", "出かける前の衣類ケア", "アイロンとして使う"],
+  summary:
+    "DV4030J0とDV8070J0を、ティファール公式の商品ページで確認できるスチーム量・立ち上がり・連続運転・かけ面に分けて比較します。",
+  publishedAt: "2026-08-13",
+  modifiedAt: "2026-08-13",
+  productInfoCheckedAt: "2026-08-13",
+  purchaseLinksCheckedAt: "2026-08-13",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/tefal-dv4030j0.jpg",
+  changeLog: [
+    {
+      date: "2026-08-13",
+      summary:
+        "初回公開。ティファール公式の商品ページでDV4030J0とDV8070J0の仕様を確認。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -524,5 +823,15 @@ export const articleMetadata = Object.freeze([
   cradleArticle,
   pottyArticle,
   pigeonBottleSizeArticle,
+  combiTheSArticle,
+  tigerRiceArticle,
+  panasonicVacuumArticle,
+  panasonicHairDryerArticle,
+  tefalKettleArticle,
+  sharpKcS50VsFuS50Article,
   thermosTigerBottleArticle,
+  yamazakiTowerDeskPanelArticle,
+  yamazakiCondorWagonArticle,
+  zojirushiElectricKettleArticle,
+  tefalGarmentSteamerArticle,
 ]);

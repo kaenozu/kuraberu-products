@@ -1,24 +1,21 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {merriesNewbornArticle as articleMetadata} from '../../../content/articles';
-import {merriesCandidateLabels, merriesPriorityOptions, merriesStandardConclusion} from '../../../content/merries-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
-  ComparisonCandidate,
-  ComparisonRow,
-  DifferenceRow,
+  ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
 
 const firstPremium = 'https://www.kao.co.jp/merries/products/fp/';
 const airsle = 'https://www.kao.co.jp/merries/products/air/';
-const firstPremiumSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA+%E3%83%95%E3%82%A1%E3%83%BC%E3%82%B9%E3%83%88%E3%83%97%E3%83%AC%E3%83%9F%E3%82%A2%E3%83%A0+%E6%96%B0%E7%94%9F%E5%85%90/';
-const airsleSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA+%E3%82%A8%E3%82%A2%E3%82%B9%E3%83%AB%E3%83%BC+%E6%96%B0%E7%94%9F%E5%85%90/';
+const firstPremiumSearch = 'https://a.r10.to/h5xcuC';
+const airsleSearch = 'https://a.r10.to/h8gCjo';
 
 const faqEntries = [
   {
@@ -35,7 +32,7 @@ const faqEntries = [
   },
   {
     question: '価格はどっちが安い？',
-    answer: 'この記事では価格を保証していません。楽天市場の販売ページで、1枚あたりの単価（内容枚数と価格）を比較して確認してください。記事下部の購入リンクから販売ページに移動できます。',
+    answer: 'この記事では価格を保証していません。楽天市場の販売ページで、1枚あたりの単価（内容枚数と価格）を比較して確認してください。販売ページで価格・在庫・送料・セット内容を確認してください。',
   },
 ] as const;
 
@@ -57,23 +54,12 @@ const standardCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    label: '主な機能',
-    left: 'カシミヤタッチ・抗菌・アルガンオイル',
-    right: '50億個以上の穴・おしっこロック',
-  },
-  {label: '新生児', left: '3,000g・5,000g', right: '5,000gまで'},
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(
   articleMetadata.productInfoCheckedAt,
   contentAsOf,
 );
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -98,75 +84,28 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">メリーズの新生児用テープには「ファーストプレミアム」と「ずっと肌さらエアスルー」の2つがあります。この記事では、花王公式で確認できる機能・サイズ展開だけをもとに、どちらを先に確認すればよいかを整理します。あてずっぽうではなく「公式に書かれていること」と「まだ確認が必要なこと」を分けて書いています。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#checked">確認できる項目</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img
-          src="/products/merries-fp-newborn.jpg"
-          alt="メリーズ ファーストプレミアム テープ 新生児用 パッケージ"
-          width="500"
-          height="500"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <p class="product-card-line">メリーズ / テープ</p>
-          <h2 class="product-card-name">ファーストプレミアム</h2>
-          <p class="product-card-desc">カシミヤタッチの肌ざわり。新生児用は3,000g・5,000gの2択。</p>
-          <a class="product-card-link" href={firstPremium} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img
-          src="/products/merries-airsle-newborn.jpg"
-          alt="メリーズ ずっと肌さらエアスルー テープ 新生児用 パッケージ"
-          width="640"
-          height="640"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <span class="product-card-line">メリーズ / テープ</span>
-          <h2 class="product-card-name">ずっと肌さらエアスルー</h2>
-          <p class="product-card-desc">シート表面の穴50億個で通気。新生児用は5,000gまで。</p>
-          <a class="product-card-link" href={airsle} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
-      <p>購入リンク：{purchaseLinkLabel}</p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
+    {articleMetadata.productInfoCheckedAt && (
+      <div class="verification-summary" aria-label="記事情報の確認状況">
+        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+      </div>
+    )}
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison
-      idPrefix="merries-newborn-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="肌へのやさしさに関する機能を詳しく確認するなら「ファーストプレミアム」、ムレ・おしっこ対策の機能を確認するなら「ずっと肌さらエアスルー」から見ます。新生児サイズは、ファーストプレミアムが3,000g・5,000gの2択、エアスルーが5,000gまでの1択で、公式に掲載されています。"
-      left={premiumCandidate}
-      right={standardCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience] }}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={merriesPriorityOptions} labels={merriesCandidateLabels} standard={merriesStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="merries-newborn-differences"
-        leftLabel="ファーストプレミアム"
-        rightLabel="ずっと肌さらエアスルー"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">
@@ -189,7 +128,7 @@ const differenceRows: DifferenceRow[] = [
       <a class="card-link" href={airsle} target="_blank" rel="noopener noreferrer">ずっと肌さらエアスルー公式商品ページ →</a>
     </div>
 
-    
+
 
     <h2>どんな確認を優先するか</h2>
     <ul>
@@ -197,6 +136,37 @@ const differenceRows: DifferenceRow[] = [
       <li>ずっと肌さらエアスルー：ムレ対策・おしっこ吸収の公式機能を確認したい場合。</li>
     </ul>
     <p>これは公式ページに掲載された機能の整理であり、どちらがすべての赤ちゃんに合うと断定するものではありません。</p>
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="ファーストプレミアム"
+        audience="肌ざわり・肌への配慮と、小さめ新生児へのフィットを優先する人向け"
+        href={firstPremiumSearch}
+        productId="merries-fp-newborn"
+        imagePath="/products/merries-fp-newborn.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ずっと肌さらエアスルー"
+        audience="ムレ対策・おしっこ吸収を優先する人向け"
+        href={airsleSearch}
+        productId="merries-airsle-newborn"
+        imagePath="/products/merries-airsle-newborn.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <ArticleSocialProof
+      query="メリーズ ファーストプレミアム エアスルー"
+      checkedAt="2026-08-12"
+      hasPosts={true}
+    >
+      <div class="sns-embeds">
+      <ExternalEmbed provider="x" url="https://x.com/i/status/2029052962384052374" title="メリーズ ファーストプレミアムとエアスルーの使用経験に触れた投稿" purpose="両シリーズの使用数に触れた投稿。サイズや使用条件は記事対象と一致するか別途確認が必要です。" tone="mixed" autoload compact />
+    </div>
+    </ArticleSocialProof>
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
@@ -208,19 +178,9 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={firstPremiumSearch} target="_blank" rel="noopener noreferrer">ファーストプレミアムの販売ページを検索 →</a>
-      <a class="card-link" href={airsleSearch} target="_blank" rel="noopener noreferrer">エアスルーの販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
-    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
     <p>新生児用でも体重や体型には個人差があります。漏れや肌トラブルが続く場合は使用を中止し、必要に応じて専門家へ相談してください。</p>
-    <div class="grid two" id="purchase">
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_MERRIES_FP_URL} label="ファーストプレミアムを楽天市場で確認" merchant="楽天" productId="merries-fp-newborn" imagePath="/products/merries-fp-newborn.jpg" placement="article-end" />
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_MERRIES_AIRSLE_URL} label="ずっと肌さらエアスルーを楽天市場で確認" merchant="楽天" productId="merries-airsle-newborn" imagePath="/products/merries-airsle-newborn.jpg" placement="article-end" />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

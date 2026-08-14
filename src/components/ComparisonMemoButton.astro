@@ -5,7 +5,7 @@ interface Props {
 const { articleId } = Astro.props;
 ---
 <div class="memo-control" data-memo-control data-article-id={articleId}>
-  <button type="button" class="secondary-button memo-toggle" aria-pressed="false" data-memo-toggle>比較メモに保存</button>
+  <button type="button" class="secondary-button memo-toggle" aria-pressed="false" data-memo-toggle data-analytics-event="ComparisonMemoSave">比較メモに保存</button>
   <span class="meta" role="status" aria-live="polite" data-memo-status></span>
 </div>
 

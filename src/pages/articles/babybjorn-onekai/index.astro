@@ -1,23 +1,19 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {babybjornOnekaiArticle as articleMetadata} from '../../../content/articles';
-import {babybjornOnekaiCandidateLabels, babybjornOnekaiPriorityOptions, babybjornOnekaiStandardConclusion} from '../../../content/babybjorn-onekai-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const chartOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
-const onekaiProductUrl = 'https://item.rakuten.co.jp/babybjorn/babycarrier-one-kai-air/';
-const moveProductUrl = 'https://item.rakuten.co.jp/babybjorn/babycarrier-move/';
-const onekaiRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_ONEKAI_URL;
-const moveRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_BABYBJORN_MOVE_URL;
-const onekaiSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%20ONE%20KAI%20%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3/';
-const moveSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%99%E3%83%93%E3%83%BC%E3%82%AD%E3%83%A3%E3%83%AA%E3%82%A2%20MOVE%20%E3%83%99%E3%83%93%E3%83%BC%E3%83%93%E3%83%A7%E3%83%AB%E3%83%B3/';
+const onekaiProductUrl = 'https://a.r10.to/hYhUfN';
+const moveProductUrl = 'https://a.r10.to/h41WNP';
+const onekaiRakutenUrl = onekaiProductUrl;;
+const moveRakutenUrl = moveProductUrl;;
 
 const faqEntries = [
   {
@@ -64,29 +60,9 @@ const moveCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "対象月齢・対象体重",
-    "left": "公式比較表で0カ月〜約36ヶ月、体重3.5〜15kg、ヒップ約〜160cm。",
-    "right": "公式比較表で0カ月〜約15ヶ月、体重3.2〜12kg、ヒップ約〜120cm。"
-  },
-  {
-    "label": "抱っこの種類とサポート",
-    "left": "4通り（対面ハイ・対面ロー・前向き・おんぶ）。赤ちゃんの身体に沿った3D構造。パッド入りショルダーベルト＋幅広ウエストベルト（おんぶ時にもスマート）。",
-    "right": "2通り。フルメッシュ素材で通気性抜群。ショルダーパッド・ウェストベルトの項目は公式比較表で「ー」。"
-  },
-  {
-    "label": "製品重量と公式ショップ価格（2026-08-10確認）",
-    "left": "約1000g。27,500円。",
-    "right": "約860g。22,000円。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -153,63 +129,47 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ベビーキャリア ONE KAI とベビーキャリア MOVE は、どちらもベビービョルンの抱っこひもですが、使える期間、抱っこの種類、サポート、素材に違いがあります。この記事では、ベビービョルン公式の比較表・製品ページで2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の着け心地など、公式情報だけでは判断できないことは推測しません。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img src="/products/babybjorn-onekai.jpg" alt="ベビービョルン ベビーキャリア ONE KAI" width="700" height="700" loading="eager" />
-        <div class="product-card-body">
-          <p class="product-card-line">ベビービョルン / ONE KAI</p>
-          <h2 class="product-card-name">ベビーキャリア ONE KAI</h2>
-          <p class="product-card-desc">新生児〜約36ヶ月。3D構造でぴったり抱っこ。4通りの抱っこができる最上位モデル。</p>
-          <a class="product-card-link" href={onekaiProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img src="/products/babybjorn-move.jpg" alt="ベビービョルン ベビーキャリア MOVE" width="700" height="700" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ベビービョルン / MOVE</span>
-          <h2 class="product-card-name">ベビーキャリア MOVE</h2>
-          <p class="product-card-desc">新生児〜約15ヶ月。フルメッシュ素材で通気性抜群。2通りの抱っこができるモデル。</p>
-          <a class="product-card-link" href={moveProductUrl} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="ベビーキャリア ONE KAI"
+        audience="新生児から約36ヶ月まで長く使えて、4通りの抱っこ（おんぶ含む）と幅広ウエストベルトを優先する人向け"
+        href={onekaiRakutenUrl}
+        productId="babybjorn-onekai"
+        imagePath="/products/babybjorn-onekai.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ベビーキャリア MOVE"
+        audience="フルメッシュ素材の通気性と軽量設計（約860g）を優先する人向け"
+        href={moveRakutenUrl}
+        productId="babybjorn-move"
+        imagePath="/products/babybjorn-move.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
     </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      <p>購入リンク: {purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="babybjorn-onekai-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、新生児から約36ヶ月まで4通りの抱っこ（おんぶ含む）で長く使える機能性を重視するなら ONE KAI、新生児から約15ヶ月まで通気性を重視して使うなら MOVE という違いがあります。ONE KAI は赤ちゃんの身体に沿った3D構造でぴったり抱っこが可能で、幅広ウエストベルト付き（公式ショップ価格27,500円、2026-08-10確認）。MOVE はフルメッシュ素材で通気性抜群、MINI より長く使えるモデル（公式ショップ価格22,000円、同）。なお、どちらの着け心地が良いか、赤ちゃんが嫌がりにくいかといった使用感は、今回確認した公式情報だけでは比較できません。"
-      left={onekaiCandidate}
-      right={moveCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiProductUrl, guidePoints: [onekaiCandidate.audience] }}
+      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveProductUrl, guidePoints: [moveCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={babybjornOnekaiPriorityOptions} labels={babybjornOnekaiCandidateLabels} standard={babybjornOnekaiStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="babybjorn-onekai-differences"
-        leftLabel="ONE KAI"
-        rightLabel="MOVE"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ベビービョルン公式の比較表・製品ページで確認できた内容を整理します。使用感・実際の着け心地・赤ちゃんの反応など、公式情報だけでは確認できないことは書いていません。</p>
@@ -233,6 +193,12 @@ const differenceRows: DifferenceRow[] = [
       <li>保証期間は2年（正規保証1年＋ユーザー登録1年）。</li>
     </ul>
 
+    <ArticleSocialProof
+      query="ベビービョルン ONE KAI MOVE"
+      checkedAt="2026-08-12"
+      hasPosts={false}
+    />
+
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => (
@@ -243,19 +209,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={onekaiSearch} target="_blank" rel="noopener noreferrer">ONE KAI の販売ページを検索 →</a>
-      <a class="card-link" href={moveSearch} target="_blank" rel="noopener noreferrer">MOVE の販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
     <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、抱っこひもの安全性と正しい使用方法は必ず公式の使用説明書で確認してください。</p>
-
-    <div class="grid two">
-      <AffiliateButton href={onekaiRakutenUrl} productId="babybjorn-onekai" imagePath="/products/babybjorn-onekai.jpg" label="ベビーキャリア ONE KAIを楽天で見る" merchant="楽天" placement="article-end" />
-      <AffiliateButton href={moveRakutenUrl} productId="babybjorn-move" imagePath="/products/babybjorn-move.jpg" label="ベビーキャリア MOVEを楽天で見る" merchant="楽天" placement="article-end" />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

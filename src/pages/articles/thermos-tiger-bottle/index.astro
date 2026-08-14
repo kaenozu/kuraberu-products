@@ -4,6 +4,7 @@ import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import HeroComparison from '../../../components/HeroComparison.astro';
 import ComparisonHero from '../../../components/ComparisonHero.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
@@ -52,9 +53,6 @@ const productInfoStale = isContentStale(
   articleMetadata.productInfoCheckedAt,
   contentAsOf,
 );
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 /** 主要差分（判断軸 → 数値の順で表示・bar は数値の大きさの相対比率） */
 const keyDiffRows: KeyDiffRow[] = [
@@ -132,9 +130,7 @@ const keyDiffRows: KeyDiffRow[] = [
       ]}
       differences={[
         { label: '軽さ', note: '約60g差' },
-        { label: '大きさ', note: 'コンパクト vs ハンドル付き' },
         { label: '保冷力', note: '10℃以下 vs 8℃以下' },
-        { label: '口径', note: '4.0cm vs 4.8cm' },
         { label: 'お手入れ', note: '全パーツ食洗機 vs らくらくキャップ' },
         { label: 'ハンドル', note: 'なし vs あり' },
         { label: 'カラー', note: '12色 vs 4色' },
@@ -142,16 +138,6 @@ const keyDiffRows: KeyDiffRow[] = [
       diffAnchor="#key-differences"
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">{thermosJnlS500.spec.capacity}のワンタッチ式水筒の定番2本。公式仕様から、あなたに合う方を30秒で選べます。</p>
-
-    <nav class="jump-nav" aria-label="ページ内ジャンプ">
-      <a href="#key-differences">違い</a>
-      <a href="#decision-guide">どっち向き？</a>
-      <a href="#sns">SNSの声</a>
-      <a href="#faq">FAQ</a>
-    </nav>
-
     <HeroComparison
       eyebrow="30秒でわかる"
       left={{
@@ -160,7 +146,6 @@ const keyDiffRows: KeyDiffRow[] = [
         tagline: '軽さ・食洗機なら',
         image: thermosJnlS500.imagePath,
         imageAlt: thermosJnlS500.fullName,
-        buyHref: thermosJnlS500.rakutenUrl,
         officialHref: thermosJnlS500.officialUrl,
       }}
       right={{
@@ -169,10 +154,18 @@ const keyDiffRows: KeyDiffRow[] = [
         tagline: '保冷・ハンドルなら',
         image: tigerMtaJ050.imagePath,
         imageAlt: tigerMtaJ050.fullName,
-        buyHref: tigerMtaJ050.rakutenUrl,
         officialHref: tigerMtaJ050.officialUrl,
       }}
     />
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">{thermosJnlS500.spec.capacity}のワンタッチ式水筒として、JNL-S500とMTA-J050を比較します。公式仕様から、確認できる違いを整理します。</p>
+
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
+    </nav>
 
     <div class="sticky-compare-bar" id="sticky-compare-bar" hidden>
       <a class="sticky-side is-left" href={thermosJnlS500.rakutenUrl} target="_blank" rel="noopener noreferrer">
@@ -263,9 +256,12 @@ const keyDiffRows: KeyDiffRow[] = [
       </p>
     </details>
 
-    <h2 id="sns">SNS での感想（参考情報）</h2>
-    <p>実際に使っている人の投稿を参考情報として紹介します。比較の根拠はメーカー公式情報のみで、SNS の感想は個人の見解です。投稿をタップすると元のページを開けます。型番が一致する投稿が見つからなかったため、対象商品が分かる投稿（シリーズ・ブランド単位）には対象範囲を明示しています。</p>
-    <div class="sns-embeds">
+    <ArticleSocialProof
+      query="サーモス JNL-S500 タイガー MTA-J050 水筒"
+      checkedAt={articleMetadata.productInfoCheckedAt ?? '2026-08-12'}
+      hasPosts={true}
+    >
+      <div class="sns-embeds">
       <ExternalEmbed
         provider="x"
         url="https://x.com/pipichan_lovely/status/2084896382750761442"
@@ -303,6 +299,7 @@ const keyDiffRows: KeyDiffRow[] = [
         compact
       />
     </div>
+    </ArticleSocialProof>
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
@@ -312,25 +309,6 @@ const keyDiffRows: KeyDiffRow[] = [
           <p>{entry.answer}</p>
         </details>
       ))}
-    </div>
-
-    <div class="grid two">
-      <PurchaseCard
-        name={thermosJnlS500.brand + ' ' + thermosJnlS500.model}
-        audience="軽さ・コンパクト・食洗機対応を優先する人向け"
-        href={thermosJnlS500.rakutenUrl}
-        imagePath={thermosJnlS500.imagePath}
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name={tigerMtaJ050.brand + ' ' + tigerMtaJ050.model}
-        audience="保冷力・ハンドル・大きめの飲み口を優先する人向け"
-        href={tigerMtaJ050.rakutenUrl}
-        imagePath={tigerMtaJ050.imagePath}
-        placement="article-end"
-        note="価格・在庫は販売先でご確認ください。"
-      />
     </div>
 
     <details class="fold-section">
@@ -358,8 +336,7 @@ const keyDiffRows: KeyDiffRow[] = [
     </details>
 
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'} · 購入リンク：{purchaseLinkLabel}</p>
+    <div class="verification-summary" aria-label="購入リンクの確認状況">
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
   </article>
@@ -446,8 +423,23 @@ const keyDiffRows: KeyDiffRow[] = [
     padding-left: 1.1rem;
     font-size: 0.88rem;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
     gap: 0.1rem 0.75rem;
+  }
+  @media (max-width: 420px) {
+    .hero-diffs ul {
+      grid-template-columns: 1fr;
+      gap: 0.05rem;
+    }
+    .hero-diffs li {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .hero-diff-note {
+      flex-shrink: 0;
+      font-size: 0.78rem;
+    }
   }
   .hero-diff-note {
     color: var(--muted);

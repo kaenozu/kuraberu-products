@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import RelatedArticles from '../../../components/RelatedArticles.astro'
+import PurchaseCard from '../../../components/PurchaseCard.astro'
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import {tefalKettleArticle as articleMetadata} from '../../../content/articles'
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+
+const leftOfficial = 'https://www.t-fal.co.jp/kettle/products/justine-lock-7211419308/'
+const rightOfficial = 'https://www.t-fal.co.jp/kettle/products/aprecia-lock-control-7211419696/'
+const leftSearch = 'https://a.r10.to/hk5Hnn'
+const rightSearch = 'https://a.r10.to/h5Qe2o'
+const leftImage = '/products/tefal-ko5901jp.jpg'
+const rightImage = '/products/tefal-ko8601j0.jpg'
+const leftAudience = '容量1.2Lで、温度調節や保温より一度に沸かせる量を優先する人向け'
+const rightAudience = '温度調節・保温・タッチパネル・給湯ロックを使いたい人向け'
+
+const faqEntries = [
+  {question: 'KO5901JPとKO8601J0の大きな違いは？', answer: '公式ページで確認できる主な違いは、容量がKO5901JPの1,200mL、KO8601J0の800mLであること、そしてKO8601J0には温度調節・保温・タッチパネル・給湯ロックボタンがあることです。'},
+  {question: '本体重量はどちらが軽い？', answer: 'KO5901JPは約900g、KO8601J0は約790gです。公式記載の本体重量ではKO8601J0の方が軽いです。'},
+  {question: '消費電力や安全機能は違う？', answer: '定格消費電力はどちらも1,250Wです。自動電源オフと空焚き防止も、公式ページで両方に搭載されていることを確認しています。'},
+  {question: '楽天市場の価格は比較できる？', answer: '価格・在庫・ポイント・送料は変動するため、型番検索ページで購入時点の表示を確認してください。この記事では特定価格を掲載していません。'},
+]
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '容量', left: '1,200mL', right: '800mL', highlight: 'left', highlightNote: '400mL多い'},
+  {label: '本体重量', left: '約900g', right: '約790g', highlight: 'right', highlightNote: '約110g軽い'},
+  {label: '温度調節', left: 'なし', right: 'あり', highlight: 'right'},
+  {label: '保温', left: 'なし', right: 'あり', highlight: 'right'},
+  {label: 'タッチパネル・給湯ロック', left: 'なし', right: 'あり', highlight: 'right'},
+]
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">ティファールの電気ケトル2機種を、公式ページで確認できる容量・重量・温度調節・保温・安全機能に分けて比較します。価格は販売先でご確認ください。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{brand: 'ティファール', line: 'KO5901JP', tagline: '容量を優先するなら', image: leftImage, imageAlt: 'ティファール ジャスティン ロック ホワイト KO5901JP', officialHref: leftOfficial, guidePoints: [leftAudience]}}
+      right={{brand: 'ティファール', line: 'KO8601J0', tagline: '温度調節を使うなら', image: rightImage, imageAlt: 'ティファール アプレシア ロック コントロール ホワイト KO8601J0', officialHref: rightOfficial, guidePoints: [rightAudience]}}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <p>一度に多めに沸かしたいなら1,200mLのKO5901JP、温度を使い分けたり保温したりしたいなら800mLのKO8601J0が候補です。これは公式ページで確認した仕様差にもとづく選び分けです。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name="ティファール KO5901JP" audience={leftAudience} href={leftSearch} imagePath={leftImage} note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="ティファール KO8601J0" audience={rightAudience} href={rightSearch} imagePath={rightImage} note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">KO5901JP</th><th scope="col">KO8601J0</th><th scope="col">根拠</th></tr></thead><tbody>
+      <tr><th scope="row">容量</th><td>1,200mL</td><td>800mL</td><td><a href={leftOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a> / <a href={rightOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a></td></tr>
+      <tr><th scope="row">本体重量</th><td>約900g</td><td>約790g</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">温度調節・保温</th><td>なし・なし</td><td>あり・あり</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">タッチパネル・給湯ロックボタン</th><td>なし・なし</td><td>あり・あり</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">定格消費電力</th><td>1,250W</td><td>1,250W</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">自動電源オフ・空焚き防止</th><td>あり・あり</td><td>あり・あり</td><td>各公式商品ページ</td></tr>
+    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>比較の根拠は、ティファール公式商品ページで確認した仕様です。KO5901JPはジャスティン ロック ホワイト、KO8601J0はアプレシア ロック コントロール ホワイトとして掲載されています。</p>
+    <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">KO5901JP 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">KO8601J0 公式商品ページ →</a></div>
+    <ArticleSocialProof query="ティファール KO5901JP KO8601J0" checkedAt="2026-08-13" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2>購入時の注意</h2><p>容量、温度調節、保温、給湯ロックなど、必要な機能を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">ティファール ジャスティン ロック KO5901JP 公式商品ページ</a>（2026-08-13確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">ティファール アプレシア ロック コントロール KO8601J0 公式商品ページ</a>（2026-08-13確認）</li></ul>
+    <h2>調査方法・免責事項</h2><p>この比較は、ティファール公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

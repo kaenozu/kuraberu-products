@@ -1,25 +1,21 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {pigeonBottle240Article as articleMetadata} from '../../../content/articles';
-import {pigeonBottleCandidateLabels, pigeonBottlePriorityOptions, pigeonBottleStandardConclusion} from '../../../content/pigeon-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
-  ComparisonCandidate,
-  ComparisonRow,
-  DifferenceRow,
+  ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
 
 const glass = 'https://products.pigeon.co.jp/item/index-2382.html';
 const ppsu = 'https://products.pigeon.co.jp/item/index-2378.html';
 const materialFaq = 'https://support.pigeon.co.jp/faq/detail-1.html';
-const glassSearch = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml%20%E8%80%90%E7%86%B1%E3%82%AC%E3%83%A9%E3%82%B9';
-const ppsuSearch = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml%20PPSU';
+const glassSearch = 'https://a.r10.to/hR4mwU';
+const ppsuSearch = 'https://a.r10.to/hk5urF';
 
 const faqEntries = [
   {
@@ -61,9 +57,6 @@ const productInfoStale = isContentStale(
   articleMetadata.productInfoCheckedAt,
   contentAsOf,
 );
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const glassCandidate: ComparisonCandidate = {
   product: '母乳実感',
@@ -83,15 +76,6 @@ const ppsuCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {label: '素材', left: 'ほうけい酸ガラス', right: 'PPSU'},
-  {
-    label: '長所（公式）',
-    left: '汚れが落ちやすいので清潔',
-    right: '軽い、落としても割れにくい',
-  },
-  {label: '消毒・除菌', left: '煮沸○・スチーム○・薬液○', right: '煮沸○・スチーム○・薬液○'},
-];
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -123,75 +107,28 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">母乳実感240mlには「耐熱ガラス製」と「プラスチック製（PPSU）」があります。この記事では、ピジョン公式で確認できる素材・容量・付属品・消毒方法だけをもとに、どちらを先に確認すればよいかを整理します。あてずっぽうではなく「公式に書かれていること」と「まだ確認が必要なこと」を分けて書いています。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#checked">確認できる項目</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img
-          src="/products/pigeon-bottle-glass240.jpg"
-          alt="母乳実感 哺乳びん（耐熱ガラス製）240ml"
-          width="500"
-          height="500"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">耐熱ガラス製 240ml</h2>
-          <p class="product-card-desc">汚れが落ちやすいので清潔。自宅中心の使用に向く。</p>
-          <a class="product-card-link" href={glass} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img
-          src="/products/pigeon-bottle-psu240.jpg"
-          alt="母乳実感 哺乳びん（プラスチック製）240ml パッケージ"
-          width="500"
-          height="500"
-          loading="eager"
-        />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">プラスチック製（PPSU）240ml</h2>
-          <p class="product-card-desc">軽い・落としても割れにくい。外出時にも持ち歩ける。</p>
-          <a class="product-card-link" href={ppsu} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
-      <p>購入リンク：{purchaseLinkLabel}</p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
+    {articleMetadata.productInfoCheckedAt && (
+      <div class="verification-summary" aria-label="記事情報の確認状況">
+        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式仕様を確認してください。</p>}
+      </div>
+    )}
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison
-      idPrefix="pigeon-bottle-240-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="自宅中心で「汚れが落ちやすい」ことを重視するなら「耐熱ガラス製」、持ち運びや「軽さ・割れにくさ」を重視するなら「プラスチック製（PPSU）」を選ぶのが目安です。240ml同士では、容量・付属乳首（Mサイズ）・消毒方法（煮沸・スチーム・薬液）はほぼ共通で、実質の選びどころはびんの素材です。"
-      left={glassCandidate}
-      right={ppsuCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: glassCandidate.product, line: glassCandidate.line, tagline: glassCandidate.audience, image: '/products/pigeon-bottle-glass240.jpg', imageAlt: `${glassCandidate.product} ${glassCandidate.line}`, officialHref: glass, guidePoints: [glassCandidate.audience] }}
+      right={{ brand: ppsuCandidate.product, line: ppsuCandidate.line, tagline: ppsuCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${ppsuCandidate.product} ${ppsuCandidate.line}`, officialHref: ppsu, guidePoints: [ppsuCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={pigeonBottlePriorityOptions} labels={pigeonBottleCandidateLabels} standard={pigeonBottleStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="pigeon-bottle-240-differences"
-        leftLabel="耐熱ガラス製"
-        rightLabel="プラスチック製（PPSU）"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">
@@ -219,6 +156,33 @@ const differenceRows: DifferenceRow[] = [
       <a class="card-link" href={materialFaq} target="_blank" rel="noopener noreferrer">ピジョン公式Q&A：ガラス製とプラスチック製の選び方 →</a>
     </div>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="母乳実感 耐熱ガラス製 240ml"
+        audience="自宅中心で、汚れの落ちやすさ・清潔さを優先する人向け"
+        href={glassSearch}
+        productId="pigeon-glass-240"
+        imagePath="/products/pigeon-bottle-glass240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="持ち運びや軽さ・割れにくさを優先し、外出時にも使いたい人向け"
+        href={ppsuSearch}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <ArticleSocialProof
+      query="ピジョン 母乳実感 ガラス PPSU 240ml"
+      checkedAt="2026-08-12"
+      hasPosts={false}
+    />
+
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => (
@@ -229,18 +193,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={glassSearch} target="_blank" rel="noopener noreferrer">耐熱ガラス製の販売ページを検索 →</a>
-      <a class="card-link" href={ppsuSearch} target="_blank" rel="noopener noreferrer">PPSUの販売ページでも検索（プラスチック製）→</a>
-    </div>
-
     <h2>購入時の注意</h2>
-    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは{purchaseLinkLabel}です。</p>
-    <div class="grid two" id="purchase">
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_GLASS_URL} label="母乳実感 耐熱ガラス製240mlを楽天市場で確認" merchant="楽天" productId="pigeon-glass-240" imagePath="/products/pigeon-bottle-glass240.jpg" placement="article-end" />
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL} label="母乳実感 プラスチック製240mlを楽天市場で確認" merchant="楽天" productId="pigeon-ppsu-240" imagePath="/products/pigeon-bottle-ppsu240.jpg" placement="article-end" />
-    </div>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

@@ -1,7 +1,7 @@
 ---
 import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
 import {fetchRakutenProducts, selectRakutenProduct, type RakutenSelectionOptions} from '../lib/rakuten';
-const {href,label,merchant,productId,placement,imagePath,subLabel} = Astro.props;
+const {href,label,productId,placement,imagePath,subLabel} = Astro.props;
 
 type ProductId =
   | 'pampers-premium-newborn'
@@ -128,22 +128,32 @@ const generated = !directHref && query
   : undefined;
 const resolvedHref = directHref ?? generated;
 const valid = isAllowedRakutenUrl(resolvedHref);
+const isAffiliateHref = Boolean(resolvedHref && /^https:\/\/(?:[^./]+\.)?(?:hb\.afl\.rakuten\.co\.jp|r10\.to|a\.r10\.to)(?:\/|$)/i.test(resolvedHref));
+const ctaRel = isAffiliateHref
+  ? 'sponsored nofollow noopener noreferrer'
+  : 'nofollow noopener noreferrer';
+const ctaLabel = isAffiliateHref ? label : '楽天市場で検索';
+const ctaSubLabel = isAffiliateHref
+  ? (subLabel ?? '商品ページを確認する')
+  : '検索結果を確認する';
 ---
 {valid ? (
   <a
     class="cta cta-card"
     href={resolvedHref}
     target="_blank"
-    rel="sponsored nofollow noopener noreferrer"
+    rel={ctaRel}
     data-product-id={productId}
     data-placement={placement}
+    data-analytics-event="OutboundClick"
+    data-analytics-product={productId}
   >
     {imagePath && <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />}
     <span class="cta-card-body">
-      <span class="cta-card-label">{label}</span>
-      <span class="cta-card-sub">{subLabel ?? '楽天市場で確認'} →<span class="ad-note">（広告）</span></span>
+      <span class="cta-card-label">{ctaLabel}</span>
+      <span class="cta-card-sub">{ctaSubLabel} →{isAffiliateHref && <span class="ad-note">（広告）</span>}</span>
     </span>
   </a>
 ) : (
-  <span class="notice">{merchant}の購入リンクは準備中です。公式サイトまたは販売ページで商品を確認してください。</span>
+  <span class="notice">公式サイトまたは販売ページで商品を確認してください。</span>
 )}

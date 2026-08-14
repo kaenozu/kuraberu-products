@@ -56,6 +56,9 @@ describe("comparison memo", () => {
     const memoHtml = readFileSync("dist/memo/index.html", "utf8");
     expect(articleHtml).toContain("比較メモに保存");
     expect(memoHtml).toContain("このブラウザの端末内だけ");
+    expect(memoHtml).toContain("比較の目的・利用シーン");
+    expect(memoHtml).toContain("Must-have（絶対条件）");
+    expect(memoHtml).toContain("決定理由");
     expect(memoHtml).toContain(articleMetadata[0].path);
     expect(memoHtml).toContain("<noscript>");
   });

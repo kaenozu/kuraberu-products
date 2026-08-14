@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   articleMetadata,
@@ -6,6 +7,10 @@ import {
   babybjornBouncerArticle,
   babybjornOnekaiArticle,
   cradleArticle,
+  combiTheSArticle,
+  tigerRiceArticle,
+  panasonicVacuumArticle,
+  panasonicHairDryerArticle,
   defineArticleMetadata,
   merriesNewbornArticle,
   merriesPantsArticle,
@@ -14,9 +19,15 @@ import {
   pigeonBottle240Article,
   pigeonSlim240Article,
   thermosTigerBottleArticle,
+  tefalKettleArticle,
   pigeonBottleSizeArticle,
   pottyArticle,
   shupotArticle,
+  sharpKcS50VsFuS50Article,
+  yamazakiTowerDeskPanelArticle,
+  yamazakiCondorWagonArticle,
+  zojirushiElectricKettleArticle,
+  tefalGarmentSteamerArticle,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -28,6 +39,52 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 }
 
 describe("article metadata", () => {
+  it("keeps the article page directories synchronized with the canonical master", () => {
+    const articlesDir = join(process.cwd(), "src/pages/articles");
+    const pagePaths = readdirSync(articlesDir, { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .filter((entry) =>
+        readdirSync(join(articlesDir, entry.name)).includes("index.astro"),
+      )
+      .map((entry) => `/articles/${entry.name}/`)
+      .sort();
+    const metadataPaths = articleMetadata.map((article) => article.path).sort();
+
+    expect(pagePaths).toEqual(metadataPaths);
+  });
+
+  it("uses the canonical master for the article index, memo page, and sitemap", () => {
+    const articleIndex = readFileSync("src/pages/articles/index.astro", "utf8");
+    const memoPage = readFileSync("src/pages/memo.astro", "utf8");
+    const sitemap = readFileSync("src/pages/sitemap.xml.ts", "utf8");
+
+    expect(articleIndex).toContain("import {articleMetadata}");
+    expect(memoPage).toContain("import { articleMetadata }");
+    expect(sitemap).toContain(
+      "...articleMetadata.map((article) => article.path)",
+    );
+    expect(articleIndex).not.toContain("thermos-tiger-bottle");
+    expect(memoPage).not.toContain("thermos-tiger-bottle");
+    expect(sitemap).not.toContain("thermos-tiger-bottle");
+  });
+
+  it("keeps the saved water-bottle article renderable in the memo page", () => {
+    const memoPage = readFileSync("src/pages/memo.astro", "utf8");
+    const waterBottle = articleMetadata.find(
+      (article) => article.id === "thermos-tiger-bottle",
+    );
+
+    expect(waterBottle).toBeDefined();
+    expect(memoPage).toContain("{articleMetadata.map((article) => (");
+    expect(memoPage).toContain("data-memo-item data-article-id={article.id}");
+    expect(memoPage).toContain(
+      "sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds)",
+    );
+    expect(articleMetadata.map((article) => article.path)).toContain(
+      waterBottle!.path,
+    );
+  });
+
   it("keeps one typed canonical source for article listings and pages", () => {
     expect(articleMetadata).toEqual([
       pampersNewbornArticle,
@@ -43,7 +100,17 @@ describe("article metadata", () => {
       cradleArticle,
       pottyArticle,
       pigeonBottleSizeArticle,
+      combiTheSArticle,
+      tigerRiceArticle,
+      panasonicVacuumArticle,
+      panasonicHairDryerArticle,
+      tefalKettleArticle,
+      sharpKcS50VsFuS50Article,
       thermosTigerBottleArticle,
+      yamazakiTowerDeskPanelArticle,
+      yamazakiCondorWagonArticle,
+      zojirushiElectricKettleArticle,
+      tefalGarmentSteamerArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(

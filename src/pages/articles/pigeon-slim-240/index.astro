@@ -1,18 +1,14 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {pigeonSlim240Article as articleMetadata} from '../../../content/articles';
-import {pigeonSlimCandidateLabels, pigeonSlimPriorityOptions, pigeonSlimStandardConclusion} from '../../../content/pigeon-slim-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
-  ComparisonCandidate,
-  ComparisonRow,
-  DifferenceRow,
+  ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
 
 const breast = 'https://products.pigeon.co.jp/item/index-2378.html';
@@ -23,8 +19,8 @@ const slimNippleM = 'https://products.pigeon.co.jp/item/index-1780.html';
 const slimNippleY = 'https://products.pigeon.co.jp/item/index-1781.html';
 const slimNippleL = 'https://products.pigeon.co.jp/item/index-1782.html';
 const bottleMaterialGuide = 'https://kuraberu-products.pages.dev/articles/pigeon-bottle-240/';
-const breastSearch = 'https://search.rakuten.co.jp/search/mall/%E6%AF%8D%E4%B9%B3%E5%AE%9F%E6%84%9F%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml';
-const slimSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%B9%E3%83%AA%E3%83%A0%E3%82%BF%E3%82%A4%E3%83%97%20%E5%93%BA%E4%B9%B3%E3%81%B3%E3%82%93%20240ml';
+const breastSearch = 'https://a.r10.to/hgLggX';
+const slimSearch = 'https://a.r10.to/h586fn';
 
 const faqEntries = [
   {
@@ -73,9 +69,6 @@ const productInfoStale = isContentStale(
   articleMetadata.productInfoCheckedAt,
   contentAsOf,
 );
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const breastCandidate: ComparisonCandidate = {
   product: 'ピジョン',
@@ -95,12 +88,6 @@ const slimCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {label: 'ボトルの形状', left: '広口タイプ（調乳しやすい）', right: 'スリムタイプ（転がりにくい）'},
-  {label: '付属乳首', left: 'M・Y字形（3ヵ月頃から）', right: 'M・丸穴（4ヵ月頃〜）'},
-  {label: '乳首ラインナップ', left: '6サイズ（SS・S・M・L・LL・3L）', right: '4サイズ（S・M・Y・L）'},
-  {label: '消毒・除菌', left: '煮沸○・スチーム○・薬液○（レンジ×）', right: '煮沸○・スチーム○・薬液○（レンジ×）'},
-];
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -139,62 +126,28 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ピジョンには「母乳実感」と「スリムタイプ」の2つの哺乳びんシリーズがあります。この記事では、ピジョン公式で確認できる形状・乳首・消毒方法だけをもとに、2つの240mlの違いを整理します。「どちらもMの乳首が付く」と誤解しやすい点を、公式情報で確認できる範囲で解きほぐしていきます。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#checked">確認できる項目</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img src="/products/pigeon-bottle-ppsu240.jpg" alt="母乳実感 240ml パッケージ" width="500" height="500" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">母乳実感 240ml</h2>
-          <p class="product-card-desc">広口タイプで調乳しやすい。乳首ラインナップは6サイズ。</p>
-          <a class="product-card-link" href={breast} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img src="/products/pigeon-slim-pp240.jpg" alt="スリムタイプ 240ml のボトル" width="500" height="500" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 哺乳びん</span>
-          <h2 class="product-card-name">スリムタイプ 240ml</h2>
-          <p class="product-card-desc">転がりにくく、持ちやすい形。乳首ラインナップは4サイズ。</p>
-          <a class="product-card-link" href={slim} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日：{articleMetadata.productInfoCheckedAt ? <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time> : '未記録'}</p>
-      <p>購入リンク：{purchaseLinkLabel}</p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
+    {articleMetadata.productInfoCheckedAt && (
+      <div class="verification-summary" aria-label="記事情報の確認状況">
+        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+      </div>
+    )}
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <ThirtySecondComparison
-      idPrefix="pigeon-slim-240-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報では大きな違いは「ボトルの形」と「乳首の体系」です。母乳実感は広口タイプで乳首が6サイズ（付属はM・Y字形・3ヵ月頃から）、スリムタイプは細身の転がりにくい形で乳首が4サイズ（付属はM・丸穴・4ヵ月頃〜）。どちらも240mlで消毒方法は同じです。"
-      left={breastCandidate}
-      right={slimCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: breastCandidate.product, line: breastCandidate.line, tagline: breastCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${breastCandidate.product} ${breastCandidate.line}`, officialHref: breast, guidePoints: [breastCandidate.audience] }}
+      right={{ brand: slimCandidate.product, line: slimCandidate.line, tagline: slimCandidate.audience, image: '/products/pigeon-slim-pp240.jpg', imageAlt: `${slimCandidate.product} ${slimCandidate.line}`, officialHref: slim, guidePoints: [slimCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={pigeonSlimPriorityOptions} labels={pigeonSlimCandidateLabels} standard={pigeonSlimStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="pigeon-slim-240-differences"
-        leftLabel="母乳実感 240ml"
-        rightLabel="スリムタイプ 240ml"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">
@@ -222,6 +175,33 @@ const differenceRows: DifferenceRow[] = [
     </ul>
     <p>これは公式ページに書かれた特徴の整理であり、どちらがすべての家庭に合うと断定するものではありません。購入前に対象月齢に合う乳首があるかも確認してください。</p>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="広口タイプの調乳・洗浄のしやすさと、6サイズの乳首ラインナップを優先する人向け"
+        href={breastSearch}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="スリムタイプ 240ml"
+        audience="細身で転がりにくく持ちやすい形と、シンプルな4サイズの乳首ラインナップを優先する人向け"
+        href={slimSearch}
+        productId="pigeon-slim-240"
+        imagePath="/products/pigeon-slim-pp240.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+
+    <ArticleSocialProof
+      query="ピジョン 母乳実感 スリムタイプ 240ml"
+      checkedAt="2026-08-12"
+      hasPosts={false}
+    />
+
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => (
@@ -232,18 +212,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={breastSearch} target="_blank" rel="noopener noreferrer">母乳実感 240ml の販売ページを検索 →</a>
-      <a class="card-link" href={slimSearch} target="_blank" rel="noopener noreferrer">スリムタイプ 240ml の販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
-    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。購入リンクは {purchaseLinkLabel} です。</p>
-    <div class="grid two">
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_PPSU_URL} label="母乳実感 240ml を楽天市場で確認" merchant="楽天" productId="pigeon-ppsu-240" imagePath="/products/pigeon-bottle-ppsu240.jpg" placement="article-end" />
-      <AffiliateButton href={import.meta.env.PUBLIC_RAKUTEN_PIGEON_SLIM_240_URL} label="スリムタイプ 240ml を楽天市場で確認" merchant="楽天" productId="pigeon-slim-240" imagePath="/products/pigeon-slim-pp240.jpg" placement="article-end" />
-    </div>
+    <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
 
     <h2>更新履歴</h2>
     <ol class="change-log">

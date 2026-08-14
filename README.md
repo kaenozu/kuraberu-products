@@ -100,3 +100,15 @@ PRはVersion uploadまでに留め、Production反映は対象Versionを明示�
 ## 現在の作業管理
 
 README には変動しやすい記事数、PR番号、dependency更新状態を固定しません。最新の実装優先度、UI/UX改善、公開ゲートは GitHub Issues / Pull Requests を正としてください。
+
+## 本番運用
+
+このプロジェクトのCloudflare PagesはGit ProviderなしのDirect Upload運用です。GitHubでマージしても本番へ自動反映されるとは限りません。
+
+- Build: `set -a && source .env && set +a && DEPLOYMENT_ENV=production pnpm build`
+- Deploy: `npx wrangler pages deploy dist --project-name kuraberu-products --branch main --commit-dirty=true`
+- 確認: `npx wrangler pages deployment list --project-name kuraberu-products`
+- 本番ブランチラベル: `main`
+- 本番URL: `https://kuraberu-products.pages.dev`
+
+デプロイ後はDeployment一覧でEnvironmentがProduction、Branchがmain、Sourceが対象コミットであることを確認し、トップ・記事一覧・全記事詳細のHTTPステータスと生成HTMLを検証します。詳細な新規記事・既存記事・UI改善の管理基準は [`docs/site-management.md`](./docs/site-management.md) を参照してください。

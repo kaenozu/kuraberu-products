@@ -47,18 +47,19 @@ describe("priority conclusion", () => {
     );
     expect(polluted).toEqual(baseline);
   });
-  it("renders standard conclusion and full evidence without JavaScript", () => {
+  it("renders the canonical comparison shell without JavaScript", () => {
     const html = readFileSync(
       "dist/articles/pampers-newborn/index.html",
       "utf8",
     );
-    expect(html).toContain("条件に応じた比較結論");
-    expect(html).toContain(pampersStandardConclusion.summary);
-    expect(html).toContain(
-      '<script src="/scripts/priority-conclusion.js" defer></script>',
-    );
+    expect(html).toContain("主な比較ポイント");
+    expect(html).toContain("あなたはどちら向き？");
+    expect(html).toContain("SNS での感想（参考情報）");
+    expect(html).not.toContain("条件に応じた比較結論");
+    expect(html).not.toContain("priority-conclusion.js");
     expect(html).not.toContain('<script type="module">');
-    expect(html).toContain("comparison-details");
+    expect(html).toContain("key-differences");
+    expect(html).toContain("decision-guide");
     expect(html).toContain("<noscript>");
   });
 });

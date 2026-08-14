@@ -1,23 +1,22 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
-import AffiliateButton from '../../../components/AffiliateButton.astro';
-import ThirtySecondComparison from '../../../components/ThirtySecondComparison.astro';
-import DifferenceList from '../../../components/DifferenceList.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import PriorityConclusion from '../../../components/PriorityConclusion.astro';
 import {shupotArticle as articleMetadata} from '../../../content/articles';
-import {shupotCandidateLabels, shupotPriorityOptions, shupotStandardConclusion} from '../../../content/shupot-priorities';
 import {isContentStale} from '../../../lib/content-freshness';
-import type {ComparisonCandidate, ComparisonRow, DifferenceRow} from '../../../lib/comparison';
+import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const dendoOfficial = 'https://shop.pigeon.co.jp/products/1032018';
 const shudoOfficial = 'https://shop.pigeon.co.jp/products/2000638s';
 const anshinNotice = 'https://support.pigeon.co.jp/anshin/item10.html';
-const dendoRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_SHUPOT_DENDO_URL;
-const shudoRakutenUrl = import.meta.env.PUBLIC_RAKUTEN_SHUPOT_SHUDO_URL;
-const dendoSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%94%E3%82%B8%E3%83%A7%E3%83%B3%20%E9%9B%BB%E5%8B%95%E9%BC%BB%E5%90%B8%E3%81%84%E5%99%A8%20%E3%82%B7%E3%83%A5%E3%83%9D%E3%83%83%E3%83%88/';
-const shudoSearch = 'https://search.rakuten.co.jp/search/mall/%E3%83%94%E3%82%B8%E3%83%A7%E3%83%B3%20%E6%89%8B%E5%8B%95%E9%BC%BB%E5%90%B8%E3%81%84%E5%99%A8%20%E3%82%B7%E3%83%A5%E3%83%9D%E3%83%83%E3%83%88%E3%83%9D%E3%83%B3%E3%83%97/';
+const dendoSearch = 'https://a.r10.to/hglrVW';
+const shudoSearch = 'https://a.r10.to/hP1cll';
+const dendoRakutenUrl = dendoSearch;
+const shudoRakutenUrl = shudoSearch;
 
 const faqEntries = [
   {
@@ -64,29 +63,9 @@ const shudoCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-const summaryRows: ComparisonRow[] = [
-  {
-    "label": "電源と使える場所",
-    "left": "ACアダプター式で専用ACアダプター付属。コンセントのある水平で安定した場所で使用。",
-    "right": "電源不要。コンパクトサイズ・フード付き・チューブもなく、スッキリ収納・持ち運び便利。"
-  },
-  {
-    "label": "吸引力の調整とお手入れ",
-    "left": "鼻水の状態に合わせてダイヤルで吸引力を調整。鼻水キャッチャーを中心に洗い、電動部本体とACアダプターは水洗い・煮沸・レンジ消毒すべて不可。",
-    "right": "シリコーンポンプとフィット鼻ノズルで適した吸引力を再現。まるごと洗浄OK・消毒/除菌ができる。"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "13,585円。定格15分を超える連続運転は禁止、1回片方の鼻に5秒を超える吸引は禁止。安全に関する重要なお知らせあり。",
-    "right": "3,762円。電源不要で大きな音がでない。洗い替え用を含めフィット鼻ノズルが計2個付属。"
-  }
-];
 
 const contentAsOf = new Date().toISOString().slice(0, 10);
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-const purchaseLinkLabel = articleMetadata.purchaseLinksCheckedAt
-  ? `最終確認 ${articleMetadata.purchaseLinksCheckedAt}`
-  : '最終確認日は未記録';
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -118,63 +97,47 @@ const differenceRows: DifferenceRow[] = [
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">電動鼻吸い器 シュポットと、手動鼻吸い器 シュポットポンプ＋フィット鼻ノズルは、どちらもピジョンの鼻吸い器ですが、電源の有無、吸引方法、お手入れ、価格に大きな違いがあります。この記事では、ピジョン公式ショップで2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の吸いやすさなど、公式情報だけでは判断できないことは推測しません。</p>
-    <nav class="toc" aria-label="目次">
-      <h2>この記事の内容</h2>
-      <ol>
-        <li><a href="#comparison-details">2つの商品を比べる</a></li>
-        <li><a href="#official">公式情報</a></li>
-        <li><a href="#faq">よくある質問</a></li>
-        <li><a href="#purchase">購入前に確認するページ</a></li>
-      </ol>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">どっち向き？</a>
+
+      <a href="#faq">FAQ</a>
     </nav>
-    <div class="product-compare" aria-label="比較する2つの商品">
-      <article class="product-card">
-        <img src="/products/shupot-dendo.jpg" alt="ピジョン 電動鼻吸い器 シュポット" width="700" height="700" loading="eager" />
-        <div class="product-card-body">
-          <p class="product-card-line">ピジョン / 電動</p>
-          <h2 class="product-card-name">電動鼻吸い器 シュポット</h2>
-          <p class="product-card-desc">ACアダプター式。ピジョン独自のポンプでパワフル吸引、吸引力をダイヤル調整。</p>
-          <a class="product-card-link" href={dendoOfficial} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
-      <article class="product-card">
-        <img src="/products/shupot-shudo.jpg" alt="ピジョン 手動鼻吸い器 シュポットポンプ＋フィット鼻ノズル" width="1000" height="1000" loading="eager" />
-        <div class="product-card-body">
-          <span class="product-card-line">ピジョン / 手動</span>
-          <h2 class="product-card-name">手動鼻吸い器 シュポットポンプ＋フィット鼻ノズル</h2>
-          <p class="product-card-desc">電源不要・片手で操作。コンパクトでまるごと洗浄OK。</p>
-          <a class="product-card-link" href={shudoOfficial} target="_blank" rel="noopener noreferrer">公式ページで確認 →</a>
-        </div>
-      </article>
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="電動鼻吸い器 シュポット"
+        audience="コンセントのある場所でパワフルな吸引と吸引力のダイヤル調整を優先する人向け"
+        href={dendoRakutenUrl}
+        productId="shupot-dendo"
+        imagePath="/products/shupot-dendo.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="手動鼻吸い器 シュポットポンプ"
+        audience="電源不要の手軽さ・コンパクトさと価格を優先する人向け"
+        href={shudoRakutenUrl}
+        productId="shupot-shudo"
+        imagePath="/products/shupot-shudo.jpg"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
     </div>
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      <p>購入リンク: {purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
-    <ThirtySecondComparison
-      idPrefix="shupot-summary"
-      heading="まず、違いはこの3つ"
-      conclusion="公式情報から整理すると、コンセントのある場所でパワフルな吸引とダイヤル調整を重視するなら電動鼻吸い器 シュポット、電源不要・コンパクト・価格を抑えることを重視するなら手動鼻吸い器 シュポットポンプ＋フィット鼻ノズルという違いがあります。電動はピジョン公式ショップ価格13,585円（2026-08-10確認）、手動は3,762円（同）です。なお、どちらが実際に吸いやすいか、赤ちゃんが嫌がりにくいかといった使用感は、今回確認した公式情報だけでは比較できません。"
-      left={dendoCandidate}
-      right={shudoCandidate}
-      rows={summaryRows}
-      detailHref="#comparison-details"
+    <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
+    <ArticleComparisonV2
+      left={{ brand: dendoCandidate.product, line: dendoCandidate.line, tagline: dendoCandidate.audience, image: '/products/shupot-dendo.jpg', imageAlt: `${dendoCandidate.product} ${dendoCandidate.line}`, officialHref: dendoOfficial, guidePoints: [dendoCandidate.audience] }}
+      right={{ brand: shudoCandidate.product, line: shudoCandidate.line, tagline: shudoCandidate.audience, image: '/products/shupot-shudo.jpg', imageAlt: `${shudoCandidate.product} ${shudoCandidate.line}`, officialHref: shudoOfficial, guidePoints: [shudoCandidate.audience] }}
+      rows={differenceRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <PriorityConclusion options={shupotPriorityOptions} labels={shupotCandidateLabels} standard={shupotStandardConclusion} />
 
-
-    <div id="comparison-details">
-      <DifferenceList
-        idPrefix="shupot-differences"
-        leftLabel="電動 シュポット"
-        rightLabel="手動 シュポットポンプ"
-        items={differenceRows}
-      />
-    </div>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ピジョン公式ショップで確認できた内容を整理します。使用感・実際の吸いやすさ・子どもの反応など、公式情報だけでは確認できないことは書いていません。</p>
@@ -200,7 +163,18 @@ const differenceRows: DifferenceRow[] = [
       <li>洗い替え用を含め、フィット鼻ノズルが計2個付属。</li>
     </ul>
 
-    
+
+
+    <ArticleSocialProof
+      query="ピジョン シュポット 電動 手動"
+      checkedAt="2026-08-12"
+      hasPosts={true}
+    >
+      <div class="sns-embeds">
+      <ExternalEmbed provider="x" url="https://x.com/i/status/2084195329797447777" title="ピジョン シュポット手動タイプの使用感に関する投稿" purpose="手動タイプの使用感に触れた投稿。" tone="bad" autoload compact />
+      <ExternalEmbed provider="x" url="https://x.com/i/status/1891454570821239022" title="ピジョン シュポット電動タイプを使った感想" purpose="電動タイプの使用感に触れた投稿。" tone="good" autoload compact />
+    </div>
+    </ArticleSocialProof>
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
@@ -212,19 +186,8 @@ const differenceRows: DifferenceRow[] = [
       ))}
     </div>
 
-    <h2 id="purchase">購入前に確認するページ</h2>
-    <div class="source-links">
-      <a class="card-link" href={dendoSearch} target="_blank" rel="noopener noreferrer">電動鼻吸い器 シュポットの販売ページを検索 →</a>
-      <a class="card-link" href={shudoSearch} target="_blank" rel="noopener noreferrer">手動鼻吸い器 シュポットポンプの販売ページを検索 →</a>
-    </div>
-
     <h2>購入時の注意</h2>
     <p>この記事で記載した価格は、2026年8月10日時点で確認したピジョン公式ショップの表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、セット内容、付属品を販売ページで確認してください。特に電動鼻吸い器 シュポットは、付属するフィット鼻ノズルがSサイズで、Mサイズは別売です。</p>
-
-    <div class="grid two">
-      <AffiliateButton href={dendoRakutenUrl} productId="shupot-dendo" imagePath="/products/shupot-dendo.jpg" label="電動鼻吸い器 シュポットを楽天で見る" merchant="楽天" placement="article-end" />
-      <AffiliateButton href={shudoRakutenUrl} productId="shupot-shudo" imagePath="/products/shupot-shudo.jpg" label="手動鼻吸い器 シュポットポンプを楽天で見る" merchant="楽天" placement="article-end" />
-    </div>
 
     <h2>更新履歴</h2>
     <ol class="change-log">
