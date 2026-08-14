@@ -84,7 +84,9 @@ export function defineArticleMetadata(
     ...(metadata.purchaseLinksCheckedAt
       ? [["purchaseLinksCheckedAt", metadata.purchaseLinksCheckedAt] as const]
       : []),
-    ...metadata.changeLog.map((entry) => ["changeLog.date", entry.date] as const),
+    ...metadata.changeLog.map(
+      (entry) => ["changeLog.date", entry.date] as const,
+    ),
   ] as const) {
     if (value > buildReferenceDate) {
       throw new TypeError(
