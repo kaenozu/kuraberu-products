@@ -5,6 +5,7 @@ export interface ArticleChangeLogEntry {
 
 export interface ArticleMetadata {
   id: string;
+  productCount: number;
   path: `/articles/${string}/`;
   title: string;
   headline: string;
@@ -31,6 +32,9 @@ const buildReferenceDate = new Date().toISOString().slice(0, 10);
 export function defineArticleMetadata(
   metadata: ArticleMetadata,
 ): ArticleMetadata {
+  if (!Number.isInteger(metadata.productCount) || metadata.productCount < 1) {
+    throw new TypeError("productCount must be a positive integer");
+  }
   for (const [label, value] of [
     ["publishedAt", metadata.publishedAt],
     ["modifiedAt", metadata.modifiedAt],
@@ -129,6 +133,7 @@ export function defineArticleMetadata(
 
 export const pampersNewbornArticle = defineArticleMetadata({
   id: "pampers-newborn",
+  productCount: 2,
   path: "/articles/pampers-newborn/",
   title: "パンパースの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -161,6 +166,7 @@ export const pampersNewbornArticle = defineArticleMetadata({
 
 export const merriesNewbornArticle = defineArticleMetadata({
   id: "merries-newborn",
+  productCount: 2,
   path: "/articles/merries-newborn/",
   title: "メリーズの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -193,6 +199,7 @@ export const merriesNewbornArticle = defineArticleMetadata({
 
 export const pigeonBottle240Article = defineArticleMetadata({
   id: "pigeon-bottle-240",
+  productCount: 2,
   path: "/articles/pigeon-bottle-240/",
   title: "ピジョン母乳実感240ml、どっち？｜くらべる商品メモ",
   headline:
@@ -226,6 +233,7 @@ export const pigeonBottle240Article = defineArticleMetadata({
 
 export const pigeonSlim240Article = defineArticleMetadata({
   id: "pigeon-slim-240",
+  productCount: 2,
   path: "/articles/pigeon-slim-240/",
   title: "ピジョン母乳実感 vs スリムタイプ、どっち？｜くらべる商品メモ",
   headline:
@@ -259,6 +267,7 @@ export const pigeonSlim240Article = defineArticleMetadata({
 
 export const moonyMArticle = defineArticleMetadata({
   id: "moony-m",
+  productCount: 2,
   path: "/articles/moony-m/",
   title: "ムーニーのテープ、どっち？｜くらべる商品メモ",
   headline:
@@ -297,6 +306,7 @@ export const moonyMArticle = defineArticleMetadata({
 
 export const merriesPantsArticle = defineArticleMetadata({
   id: "merries-pants",
+  productCount: 2,
   path: "/articles/merries-pants/",
   title: "メリーズのパンツ、どっち？｜くらべる商品メモ",
   headline:
@@ -328,6 +338,7 @@ export const merriesPantsArticle = defineArticleMetadata({
 
 export const shupotArticle = defineArticleMetadata({
   id: "shupot",
+  productCount: 2,
   path: "/articles/shupot/",
   title: "ピジョンの鼻吸い器、どっち？｜くらべる商品メモ",
   headline:
@@ -361,6 +372,7 @@ export const shupotArticle = defineArticleMetadata({
 
 export const babybjornArticle = defineArticleMetadata({
   id: "babybjorn",
+  productCount: 2,
   path: "/articles/babybjorn/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「HARMONY」と「MINI」を比較",
@@ -396,6 +408,7 @@ export const babybjornArticle = defineArticleMetadata({
 
 export const babybjornOnekaiArticle = defineArticleMetadata({
   id: "babybjorn-onekai",
+  productCount: 2,
   path: "/articles/babybjorn-onekai/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「ONE KAI」と「MOVE」を比較",
@@ -431,6 +444,7 @@ export const babybjornOnekaiArticle = defineArticleMetadata({
 
 export const babybjornBouncerArticle = defineArticleMetadata({
   id: "babybjorn-bouncer",
+  productCount: 2,
   path: "/articles/babybjorn-bouncer/",
   title: "ベビービョルンのバウンサー、どっち？｜くらべる商品メモ",
   headline:
@@ -468,6 +482,7 @@ export const babybjornBouncerArticle = defineArticleMetadata({
 
 export const cradleArticle = defineArticleMetadata({
   id: "babybjorn-cradle",
+  productCount: 2,
   path: "/articles/babybjorn-cradle/",
   title: "ゆりかご型ベビーベッド、どっち？｜くらべる商品メモ",
   headline:
@@ -505,6 +520,7 @@ export const cradleArticle = defineArticleMetadata({
 
 export const pottyArticle = defineArticleMetadata({
   id: "babybjorn-potty",
+  productCount: 2,
   path: "/articles/babybjorn-potty/",
   title: "トイレトレーニング、どっち？｜くらべる商品メモ",
   headline:
@@ -541,6 +557,7 @@ export const pottyArticle = defineArticleMetadata({
 
 export const pigeonBottleSizeArticle = defineArticleMetadata({
   id: "pigeon-bottle-160-240",
+  productCount: 2,
   path: "/articles/pigeon-bottle-160-240/",
   title: "ピジョン母乳実感160ml vs 240ml、どっち？｜くらべる商品メモ",
   headline: "ピジョンの哺乳びん、どっち？「母乳実感160ml」と「240ml」を比較",
@@ -578,6 +595,7 @@ export const pigeonBottleSizeArticle = defineArticleMetadata({
 
 export const combiTheSArticle = defineArticleMetadata({
   id: "combi-the-s-plus-vs-premium",
+  productCount: 2,
   path: "/articles/combi-the-s-plus-vs-premium/",
   title: "コンビ THE S plus と THE S premium、どっち？｜くらべる商品メモ",
   headline:
@@ -611,6 +629,7 @@ export const combiTheSArticle = defineArticleMetadata({
 
 export const tigerRiceArticle = defineArticleMetadata({
   id: "tiger-jpv-l100-vs-jpv-m100",
+  productCount: 2,
   path: "/articles/tiger-jpv-l100-vs-jpv-m100/",
   title: "タイガー JPV-L100 と JPV-M100、どっち？｜くらべる商品メモ",
   headline: "タイガーの炊飯器、どっち？「JPV-L100」と「JPV-M100」を比較",
@@ -642,6 +661,7 @@ export const tigerRiceArticle = defineArticleMetadata({
 
 export const panasonicVacuumArticle = defineArticleMetadata({
   id: "panasonic-mc-sb55k-vs-mc-sb35k",
+  productCount: 2,
   path: "/articles/panasonic-mc-sb55k-vs-mc-sb35k/",
   title: "パナソニック MC-SB55K と MC-SB35K、どっち？｜くらべる商品メモ",
   headline: "パナソニックの掃除機、どっち？「MC-SB55K」と「MC-SB35K」を比較",
@@ -673,6 +693,7 @@ export const panasonicVacuumArticle = defineArticleMetadata({
 
 export const panasonicHairDryerArticle = defineArticleMetadata({
   id: "panasonic-eh-ne7m-vs-eh-ne5m",
+  productCount: 2,
   path: "/articles/panasonic-eh-ne7m-vs-eh-ne5m/",
   title: "パナソニック EH-NE7M と EH-NE5M、どっち？｜くらべる商品メモ",
   headline: "パナソニックのドライヤー、どっち？「EH-NE7M」と「EH-NE5M」を比較",
@@ -704,6 +725,7 @@ export const panasonicHairDryerArticle = defineArticleMetadata({
 
 export const tefalKettleArticle = defineArticleMetadata({
   id: "tefal-ko5901jp-vs-ko8601j0",
+  productCount: 2,
   path: "/articles/tefal-ko5901jp-vs-ko8601j0/",
   title:
     "ティファール ジャスティン ロックとアプレシア ロック コントロール、どっち？｜くらべる商品メモ",
@@ -738,6 +760,7 @@ export const tefalKettleArticle = defineArticleMetadata({
 
 export const sharpKcS50VsFuS50Article = defineArticleMetadata({
   id: "sharp-kc-s50-vs-fu-s50",
+  productCount: 2,
   path: "/articles/sharp-kc-s50-vs-fu-s50/",
   title: "シャープ KC-S50とFU-S50、どっち？｜くらべる商品メモ",
   headline: "シャープの空気清浄機、どっち？「KC-S50」と「FU-S50」を比較",
@@ -769,6 +792,7 @@ export const sharpKcS50VsFuS50Article = defineArticleMetadata({
 
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
+  productCount: 2,
   path: "/articles/thermos-tiger-bottle/",
   title: "サーモスとタイガーの水筒、どっち？｜くらべる商品メモ",
   headline:
@@ -801,6 +825,7 @@ export const thermosTigerBottleArticle = defineArticleMetadata({
 
 export const yamazakiTowerDeskPanelArticle = defineArticleMetadata({
   id: "yamazaki-tower-desk-panel-vs-pen-stand",
+  productCount: 2,
   path: "/articles/yamazaki-tower-desk-panel-vs-pen-stand/",
   title:
     "山崎実業 tower デスク横パネルとペンスタンド、どっち？｜くらべる商品メモ",
@@ -834,6 +859,7 @@ export const yamazakiTowerDeskPanelArticle = defineArticleMetadata({
 
 export const yamazakiCondorWagonArticle = defineArticleMetadata({
   id: "yamazaki-condor-wagon-vs-self-wagon",
+  productCount: 2,
   path: "/articles/yamazaki-condor-wagon-vs-self-wagon/",
   title: "山崎産業 コンドル ワゴン、どっち？｜くらべる商品メモ",
   headline:
@@ -870,6 +896,7 @@ export const yamazakiCondorWagonArticle = defineArticleMetadata({
 
 export const zojirushiElectricKettleArticle = defineArticleMetadata({
   id: "zojirushi-ck-pa08-vs-ck-dc08",
+  productCount: 2,
   path: "/articles/zojirushi-ck-pa08-vs-ck-dc08/",
   title: "象印 CK-PA08 と CK-DC08、どっち？｜くらべる商品メモ",
   headline: "象印の電気ケトル、どっち？「CK-PA08」と「CK-DC08」を比較",
@@ -902,6 +929,7 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
 
 export const tefalGarmentSteamerArticle = defineArticleMetadata({
   id: "tefal-dv4030j0-vs-dv8070j0",
+  productCount: 2,
   path: "/articles/tefal-dv4030j0-vs-dv8070j0/",
   title: "ティファール DV4030J0 と DV8070J0、どっち？｜くらべる商品メモ",
   headline:
@@ -936,6 +964,7 @@ export const tefalGarmentSteamerArticle = defineArticleMetadata({
 
 export const kingjimTepraArticle = defineArticleMetadata({
   id: "kingjim-tepra-sr-r2500p-vs-sr-mk1",
+  productCount: 2,
   path: "/articles/kingjim-tepra-sr-r2500p-vs-sr-mk1/",
   title:
     "キングジム テプラ PRO SR-R2500P と SR-MK1、どっち？｜くらべる商品メモ",

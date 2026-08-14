@@ -132,6 +132,33 @@ describe("article metadata", () => {
     ).toBe(true);
   });
 
+  it("requires every article to declare a positive product count", () => {
+    for (const article of articleMetadata) {
+      expect(
+        Number.isInteger(article.productCount) && article.productCount >= 1,
+      ).toBe(true);
+    }
+    // 現行の全記事は2商品比較。単一商品記事を追加するときは productCount: 1 を宣言する。
+    expect(articleMetadata.every((article) => article.productCount === 2)).toBe(
+      true,
+    );
+  });
+
+  it("rejects invalid product counts", () => {
+    expect(() =>
+      defineArticleMetadata({
+        ...pampersNewbornArticle,
+        productCount: 0,
+      }),
+    ).toThrow("productCount must be a positive integer");
+    expect(() =>
+      defineArticleMetadata({
+        ...pampersNewbornArticle,
+        productCount: 1.5,
+      }),
+    ).toThrow("productCount must be a positive integer");
+  });
+
   it("rejects invalid and contradictory dates", () => {
     expect(() =>
       defineArticleMetadata({
@@ -178,10 +205,21 @@ describe("article metadata", () => {
     expect(html).toContain(`datetime="${pampersNewbornArticle.modifiedAt}"`);
   });
 
+  it("renders the product count meta for article pages", () => {
+    const html = readFileSync(
+      "dist/articles/pampers-newborn/index.html",
+      "utf8",
+    );
+    expect(html).toContain(
+      `<meta name="article:product-count" content="${pampersNewbornArticle.productCount}">`,
+    );
+  });
+
   it("keeps ordinary pages as WebPage without article dates", () => {
     const html = readFileSync("dist/about/index.html", "utf8");
     const data = extractJsonLd(html);
     expect(data.some((item) => item["@type"] === "WebPage")).toBe(true);
     expect(html).not.toContain("article:published_time");
+    expect(html).not.toContain("article:product-count");
   });
 });

@@ -177,14 +177,38 @@ function internalTarget(href, distDirectory) {
   return path.join(distDirectory, pathname, "index.html");
 }
 
-// 期待 CTA 枚数は config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から導出する。
+const ARTICLE_PAGE_PATTERN = /^articles\/[^/]+\/index\.html$/;
+
+// 記事ページの商品数を、BaseLayout が出力する
+// <meta name="article:product-count" content="N"> から読み取る。
+// 商品数の唯一の情報源は記事メタデータ（src/content/articles.ts の productCount）。
+// 記事ページなのに meta が無い・値が不正な場合は null を返し、エラーを errors に積む。
+export function readArticleProductCount(relative, html, errors) {
+  const match = html.match(
+    /<meta name="article:product-count" content="(\d+)">/i,
+  );
+  if (!match) {
+    errors.push(
+      `${relative}: missing article:product-count meta (productCount in src/content/articles.ts is not rendered)`,
+    );
+    return null;
+  }
+  const productCount = Number(match[1]);
+  if (!Number.isInteger(productCount) || productCount < 1) {
+    errors.push(
+      `${relative}: invalid article:product-count "${match[1]}" (must be a positive integer)`,
+    );
+    return null;
+  }
+  return productCount;
+}
+
+// 期待 CTA 枚数は、記事メタデータの商品数（productCount）と
+// config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から記事ごとに導出する。
+// 比較記事（productCount=2）→ 4枚、単一商品記事（productCount=1）→ 2枚。
 // レイアウト変更時は config だけを直し、ここに枚数をハードコードしない。
-export function validateArticleCtas(
-  relative,
-  html,
-  expectedCount = expectedPurchaseCtasPerArticle(),
-) {
-  if (!/^articles\/[^/]+\/index\.html$/.test(relative)) return [];
+export function validateArticleCtas(relative, html, expectedCount) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
   const ctaPattern = new RegExp(
     `<a\\b[^>]*data-cta-event="${ARTICLE_LAYOUT.ctaEvent}"[^>]*>[\\s\\S]*?<\\/a>`,
     "gi",
@@ -193,7 +217,7 @@ export function validateArticleCtas(
   const errors = [];
   if (tags.length !== expectedCount) {
     errors.push(
-      `${relative}: expected exactly ${expectedCount} purchase CTAs (per config/article-layout.mjs), found ${tags.length}`,
+      `${relative}: expected exactly ${expectedCount} purchase CTAs (per config/article-layout.mjs and article productCount), found ${tags.length}`,
     );
   }
   for (const [index, tag] of tags.entries()) {
@@ -384,7 +408,18 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
         );
       }
     }
-    errors.push(...validateArticleCtas(relative, html));
+    if (!ARTICLE_PAGE_PATTERN.test(relative)) continue;
+    // 記事ごとの期待 CTA 枚数は、記事メタデータの productCount（meta タグ経由）と
+    // config の ctaSets から導出する。
+    const productCount = readArticleProductCount(relative, html, errors);
+    if (productCount === null) continue;
+    errors.push(
+      ...validateArticleCtas(
+        relative,
+        html,
+        expectedPurchaseCtasPerArticle(productCount),
+      ),
+    );
   }
 
   errors.push(

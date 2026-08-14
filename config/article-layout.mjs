@@ -11,16 +11,30 @@ export const ARTICLE_LAYOUT = {
   placements: ["after-decision", "article-end"],
   // PurchaseCard の placement 省略時の既定値
   defaultPlacement: "after-decision",
-  // 標準比較記事の購入 CTA 構成（配置ごとの枚数）。
-  // 全記事に「判断後」1セット（2商品比較）+「記事末尾」1セットを配置する。
+  // 標準記事の購入 CTA 構成（配置ごとの「商品1つにつき何枚」）。
+  // 各配置に、記事で紹介する商品1つにつき1枚の購入カードを置く。
+  // 商品数（productCount）は記事メタデータ（src/content/articles.ts）が持つため、
+  // ここには枚数の絶対値ではなく商品あたり枚数を書く。
+  // 比較記事（productCount=2）→ 各配置2枚、単一商品記事（productCount=1）→ 各配置1枚。
   ctaSets: [
-    { placement: "after-decision", cards: 2 },
-    { placement: "article-end", cards: 2 },
+    { placement: "after-decision", cardsPerProduct: 1 },
+    { placement: "article-end", cardsPerProduct: 1 },
   ],
 };
 
-// 標準記事に期待する購入 CTA 総数を ctaSets から機械的に導出する。
-// 例: [{placement: "after-decision", cards: 2}, {placement: "article-end", cards: 2}] → 4
-export function expectedPurchaseCtasPerArticle(layout = ARTICLE_LAYOUT) {
-  return layout.ctaSets.reduce((total, set) => total + set.cards, 0);
+// 記事ごとに期待する購入 CTA 総数を、記事メタデータの商品数（productCount）と
+// レイアウト定義（ctaSets）から機械的に導出する。
+// 例: 比較記事（productCount=2）→ 1×2 + 1×2 = 4
+//     単一商品記事（productCount=1）→ 1×1 + 1×1 = 2
+export function expectedPurchaseCtasPerArticle(
+  productCount,
+  layout = ARTICLE_LAYOUT,
+) {
+  if (!Number.isInteger(productCount) || productCount < 1) {
+    throw new TypeError("productCount must be a positive integer");
+  }
+  return layout.ctaSets.reduce(
+    (total, set) => total + set.cardsPerProduct * productCount,
+    0,
+  );
 }

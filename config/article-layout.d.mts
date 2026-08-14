@@ -1,6 +1,6 @@
 export interface ArticleCtaSet {
   placement: string;
-  cards: number;
+  cardsPerProduct: number;
 }
 
 export interface ArticleLayout {
@@ -12,4 +12,7 @@ export interface ArticleLayout {
 
 export const ARTICLE_LAYOUT: ArticleLayout;
 
-export function expectedPurchaseCtasPerArticle(layout?: ArticleLayout): number;
+export function expectedPurchaseCtasPerArticle(
+  productCount: number,
+  layout?: ArticleLayout,
+): number;

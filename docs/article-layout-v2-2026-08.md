@@ -40,10 +40,15 @@ Issue #52（比較/CTA UX改善）の受入判断（2026-08-12・chatgpt.com 相
 | `note`      | -    | 価格・在庫の注意書き                              |
 
 - CTA ラベルは「楽天市場で商品を見る」固定
-- 記事内の CTA 数は原則 4 枚（after-decision × 2 + article-end × 2）を上限とする
-- 単一商品記事（例: ベビー用品の単品紹介）では 1〜2 枚に減らしてよい
-- **CTA の枚数・配置の機械的契約は `config/article-layout.mjs` が唯一の定義**。品質ゲート（`scripts/check-rendered-html.mjs`）はここから期待枚数と許可 placement を導出するため、レイアウト変更時は config だけを直す
-- 現行の公開記事は「判断後 × 2 + 記事末尾 × 2」を全記事で実装済み（config の `ctaSets` が唯一の情報源）
+- 各配置には**紹介する商品 1 つにつき 1 枚**のカードを置く（比較記事 = 各配置 2 枚、単一商品記事 = 各配置 1 枚）
+- **期待 CTA 総数は記事ごとに機械的に導出される**:
+  - 記事メタデータ（`src/content/articles.ts`）の `productCount` が商品数（比較記事 = 2、単一商品記事 = 1）
+  - 記事ページは `<meta name="article:product-count" content="N">` を出力し、品質ゲートがこれを読む
+  - 期待総数 = `config/article-layout.mjs` の `ctaSets`（各配置の `cardsPerProduct`）× `productCount`
+  - 比較記事 = 4 枚、単一商品記事 = 2 枚
+- **CTA の枚数・配置の機械的契約は `config/article-layout.mjs` が唯一の定義**。品質ゲート（`scripts/check-rendered-html.mjs`）は config と記事の `productCount` から期待枚数を記事ごとに導出するため、レイアウト変更時は config だけを直す
+- 単一商品記事を新規作成するときは `productCount: 1` を宣言し、各配置にカードを 1 枚だけ置く（2 枚置くとゲートが検出する）
+- 現行の公開記事はすべて 2 商品比較（`productCount: 2`）で「判断後 × 2 + 記事末尾 × 2」を実装済み
 
 ## 水筒記事スコープのままの UI（評価後に統合）
 

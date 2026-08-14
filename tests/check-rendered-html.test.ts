@@ -1,14 +1,16 @@
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   countRenderedExternalEmbeds,
   findEmptySections,
+  readArticleProductCount,
   validateArticleCtas,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
 } from "../scripts/check-rendered-html.mjs";
+import { expectedPurchaseCtasPerArticle } from "../config/article-layout.mjs";
 
 const fixtureDirectories: string[] = [];
 
@@ -16,6 +18,17 @@ const embed = '<div data-external-embed="x"></div>';
 
 const validCta = (href: string, placement = "after-decision") =>
   `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="${placement}">商品を確認（広告）</a>`;
+
+const twoCtas = `${validCta("https://a.r10.to/one")}${validCta(
+  "https://a.r10.to/two",
+)}`;
+
+const fourCtas =
+  `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}` +
+  `${validCta("https://a.r10.to/three", "article-end")}${validCta(
+    "https://a.r10.to/four",
+    "article-end",
+  )}`;
 
 function validPage(body: string) {
   return `<!doctype html>
@@ -31,20 +44,49 @@ function sectionsOf(html: string) {
 }
 
 describe("rendered article CTA audit", () => {
-  it("accepts exactly four complete Rakuten affiliate CTAs (after-decision + article-end)", () => {
-    const html =
-      `${validCta("https://a.r10.to/example")}${validCta("https://hb.afl.rakuten.co.jp/ichiba/example")}` +
-      `${validCta("https://a.r10.to/example", "article-end")}${validCta("https://hb.afl.rakuten.co.jp/ichiba/example", "article-end")}`;
-    expect(validateArticleCtas("articles/example/index.html", html)).toEqual(
-      [],
-    );
+  it("accepts exactly four complete Rakuten affiliate CTAs for a two-product article", () => {
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        fourCtas,
+        expectedPurchaseCtasPerArticle(2),
+      ),
+    ).toEqual([]);
+  });
+
+  it("accepts two CTAs for a single-product article", () => {
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        twoCtas,
+        expectedPurchaseCtasPerArticle(1),
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a single-product article with too many CTAs", () => {
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        fourCtas,
+        expectedPurchaseCtasPerArticle(1),
+      ),
+    ).toEqual([
+      "articles/example/index.html: expected exactly 2 purchase CTAs (per config/article-layout.mjs and article productCount), found 4",
+    ]);
   });
 
   it("rejects missing CTA count, attributes, host, or disclosure", () => {
     const html =
       '<a href="https://example.com" data-cta-event="purchase" data-placement="after-decision">購入</a>';
-    expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
-      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs), found 1",
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        html,
+        expectedPurchaseCtasPerArticle(2),
+      ),
+    ).toEqual([
+      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs and article productCount), found 1",
       "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
       "articles/example/index.html: CTA 1 is missing sponsored/nofollow rel attributes",
       "articles/example/index.html: CTA 1 is missing advertising disclosure",
@@ -56,32 +98,76 @@ describe("rendered article CTA audit", () => {
       `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two", "article-end")}` +
       `<a href="https://a.r10.to/three" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>` +
       `${validCta("https://a.r10.to/four", "article-end")}`;
-    expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        html,
+        expectedPurchaseCtasPerArticle(2),
+      ),
+    ).toEqual([
       "articles/example/index.html: CTA 3 has unrecognized placement: bogus (allowed: after-decision, article-end)",
     ]);
   });
 
-  it("derives the expected CTA count from the layout config by default", () => {
-    const html =
-      `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}` +
-      `${validCta("https://a.r10.to/three", "article-end")}${validCta("https://a.r10.to/four", "article-end")}`;
-    expect(validateArticleCtas("articles/example/index.html", html)).toEqual(
-      [],
-    );
+  it("ignores non-article pages regardless of expected count", () => {
+    expect(
+      validateArticleCtas(
+        "about/index.html",
+        fourCtas,
+        expectedPurchaseCtasPerArticle(2),
+      ),
+    ).toEqual([]);
+  });
+});
+
+describe("article product count meta", () => {
+  it("reads the product count from the rendered meta tag", () => {
+    const errors: string[] = [];
+    const html = '<meta name="article:product-count" content="2">';
+    expect(
+      readArticleProductCount("articles/example/index.html", html, errors),
+    ).toBe(2);
+    expect(errors).toEqual([]);
   });
 
-  it("enforces a config-derived expected count instead of a hardcoded one", () => {
-    const twoCtas = `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}`;
-    const fourCtas = `${twoCtas}${validCta("https://a.r10.to/three")}${validCta("https://a.r10.to/four")}`;
-
+  it("reports a missing meta tag on an article page", () => {
+    const errors: string[] = [];
     expect(
-      validateArticleCtas("articles/example/index.html", twoCtas, 4),
-    ).toEqual([
-      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs), found 2",
+      readArticleProductCount(
+        "articles/example/index.html",
+        "<html></html>",
+        errors,
+      ),
+    ).toBeNull();
+    expect(errors).toEqual([
+      "articles/example/index.html: missing article:product-count meta (productCount in src/content/articles.ts is not rendered)",
     ]);
+  });
+
+  it("rejects an invalid meta value", () => {
+    const errors: string[] = [];
+    const html = '<meta name="article:product-count" content="0">';
     expect(
-      validateArticleCtas("articles/example/index.html", fourCtas, 4),
-    ).toEqual([]);
+      readArticleProductCount("articles/example/index.html", html, errors),
+    ).toBeNull();
+    expect(errors).toEqual([
+      'articles/example/index.html: invalid article:product-count "0" (must be a positive integer)',
+    ]);
+  });
+
+  it("derives the per-article expected count from the meta tag through validateRenderedHtml", () => {
+    const directory = mkdtempSync(path.join(os.tmpdir(), "kuraberu-ctas-"));
+    fixtureDirectories.push(directory);
+    const articlesDir = path.join(directory, "articles", "example");
+    mkdirSync(articlesDir, { recursive: true });
+    writeFileSync(
+      path.join(articlesDir, "index.html"),
+      validPage(`<meta name="article:product-count" content="1">${twoCtas}`),
+    );
+
+    expect(validateRenderedHtml({ distDirectory: directory }).errors).toEqual(
+      [],
+    );
   });
 });
 
