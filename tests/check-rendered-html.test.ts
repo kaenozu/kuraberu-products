@@ -15,7 +15,7 @@ const fixtureDirectories: string[] = [];
 const embed = '<div data-external-embed="x"></div>';
 
 const validCta = (href: string) =>
-  `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-analytics-event="OutboundClick">商品を確認（広告）</a>`;
+  `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase">商品を確認（広告）</a>`;
 
 function validPage(body: string) {
   return `<!doctype html>
@@ -40,9 +40,9 @@ describe("rendered article CTA audit", () => {
 
   it("rejects missing CTA count, attributes, host, or disclosure", () => {
     const html =
-      '<a href="https://example.com" data-analytics-event="OutboundClick">購入</a>';
+      '<a href="https://example.com" data-cta-event="purchase">購入</a>';
     expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
-      "articles/example/index.html: expected exactly 2 tracked purchase CTAs, found 1",
+      "articles/example/index.html: expected exactly 2 purchase CTAs, found 1",
       "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
       "articles/example/index.html: CTA 1 is missing sponsored/nofollow rel attributes",
       "articles/example/index.html: CTA 1 is missing advertising disclosure",

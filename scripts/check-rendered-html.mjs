@@ -176,14 +176,12 @@ function internalTarget(href, distDirectory) {
 export function validateArticleCtas(relative, html) {
   if (!/^articles\/[^/]+\/index\.html$/.test(relative)) return [];
   const tags = [
-    ...html.matchAll(
-      /<a\b[^>]*data-analytics-event="OutboundClick"[^>]*>[\s\S]*?<\/a>/gi,
-    ),
+    ...html.matchAll(/<a\b[^>]*data-cta-event="purchase"[^>]*>[\s\S]*?<\/a>/gi),
   ].map(([tag]) => tag);
   const errors = [];
   if (tags.length !== 2) {
     errors.push(
-      `${relative}: expected exactly 2 tracked purchase CTAs, found ${tags.length}`,
+      `${relative}: expected exactly 2 purchase CTAs, found ${tags.length}`,
     );
   }
   for (const [index, tag] of tags.entries()) {
