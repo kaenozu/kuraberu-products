@@ -1,0 +1,142 @@
+---
+// 単一商品記事のサンプル（productCount: 1）。
+// 購入カードは各配置1枚（after-decision / article-end）で、ゲートは
+// config/article-layout.mjs とメタデータの productCount から期待2枚を導出する。
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import {panasonicBabyMonitorArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+
+// 楽天市場の購入CTA。実運用では楽天アフィリエイトで生成した a.r10.to の
+// 短縮リンクに差し替えること（単一商品記事のサンプルのため未差し替え）。
+const rakutenSearch = 'https://a.r10.to/placeholder-kx-hc705';
+const officialPage = 'https://panasonic.jp/hns/products/KX-HC705.html';
+
+const faqEntries = [
+  {
+    "question": "無線LANの設定は必要？",
+    "answer": "必要ありません。カメラとモニター機は、デジタルコードレス電話機などでも使われるDECT方式（1.9GHz帯）で接続します。無線LANなどの他機器との電波干渉による通信障害が少なく、接続設定も不要で、それぞれの電源を入れるだけですぐに使用できます。"
+  },
+  {
+    "question": "暗い部屋でも見守れる？",
+    "answer": "はい。部屋が暗くなると自動的に赤外線LEDを点灯させるナイトモードを搭載しています。暗いお部屋では映像は白黒表示になり、赤ちゃんとカメラの距離のめやすは約50cm〜約100cmと公式に案内されています。"
+  },
+  {
+    "question": "赤ちゃんが泣いたらお知らせしてくれる？",
+    "answer": "カメラには音・動作・温度の3種類のセンサーがあり、反応するとモニター機のLEDの点灯やお知らせ音で知らせます。また、設定により音声を検知したときに、胎内音・心音・ホワイトノイズ・波の音・雨音の5種類のおやすみ音と子守歌をカメラから自動再生することもできます（設定が必要です。本機能は赤ちゃんの睡眠を保証するものではありません）。"
+  },
+  {
+    "question": "室温の変化もわかる？",
+    "answer": "はい。カメラを置いている部屋の室温が、設定した温度範囲を超えた場合もモニター機でお知らせします。お部屋の室温を調整する目安にできます。"
+  },
+  {
+    "question": "スマートフォンで映像を見られる？",
+    "answer": "KX-HC705は付属のモニター機で映像を見る製品です。公式ページを確認した範囲では、スマートフォンアプリでの視聴についての記載は確認できませんでした。スマホ連携については、確認できる情報が無いためこの記事では推測しません。"
+  }
+];
+
+const contentAsOf = new Date().toISOString().slice(0, 10);
+const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 育児用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <p class="lead">パナソニック ベビーモニター KX-HC705は、カメラとモニター機のセットで、別室にいる赤ちゃんの様子をモニター機で見守れる単品のベビーモニターです。無線LANの設定や接続設定が不要で、音・動作・温度の3つのセンサーが変化をお知らせします。この記事では、パナソニック公式ページで2026年8月14日時点に確認できた情報だけを使って、この製品の特徴と向いている人を整理します。公式ページに記載されていることは「確認できること」として扱い、使用感など公式情報だけでは判断できないことは推測しません。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#conclusion">向いている人</a>
+      <a href="#official">公式情報</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <section id="conclusion">
+      <h2>どんな人に向いている？</h2>
+      <p>公式ページで確認できる機能から整理すると、KX-HC705は次のような人に向いています。</p>
+      <ul class="official-list">
+        <li>リビングやキッチンで家事をしながら、寝室などにいる赤ちゃんの様子の変化に気付きたい人（音・動作・温度センサーのお知らせ）</li>
+        <li>無線LANの設定や接続設定をせずに、電源を入れるだけで使い始めたい人（DECT方式・設定不要）</li>
+        <li>暗い部屋で眠る赤ちゃんを白黒のナイトモードで見守りたい人（赤外線LED）</li>
+        <li>泣き声を検知したときに、おやすみ音や子守歌をカメラから自動で流したい人</li>
+        <li>モニター機を持ち歩きながら、電源が近くにない部屋でも見守りたい人（充電式・持ち運び可）</li>
+      </ul>
+      <p>一方で、スマートフォンでの視聴や録画機能を求める場合は、公式ページで確認できる情報からは KX-HC705 がその用途に合うか判断できません。製品選びの前に、公式ページや販売ページで最新の情報を確認してください。</p>
+    </section>
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="パナソニック ベビーモニター KX-HC705"
+        audience="無線LAN設定なしですぐ見守りを始めたい人、音・動作・温度のお知らせを優先する人向け"
+        href={rakutenSearch}
+        productId="panasonic-kx-hc705"
+        placement="after-decision"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
+    </div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+
+    <h2 id="official">公式情報</h2>
+    <p>ここでは、パナソニック公式ページ（KX-HC705 概要）で確認できた内容を整理します。使用感や実際の見え方など、公式情報だけでは確認できないことは書いていません。</p>
+    <h3>KX-HC705で公式に確認できること</h3>
+    <ul class="official-list">
+      <li>カメラに映る赤ちゃんの様子を、モニター機で見守ることができる（モニター機は充電式で持ち運び可能）。</li>
+      <li>カメラとモニター機はDECT方式（1.9GHz帯・ARIB STD-T101準拠）で接続。無線LANなどの他機器との電波干渉による通信障害が少なく、接続設定が不要で、それぞれの電源を入れるだけですぐに使用開始できる。</li>
+      <li>部屋が暗くなると自動的に赤外線LEDを点灯させるナイトモードを搭載（暗い部屋では白黒表示、赤ちゃんとカメラの距離めやす約50cm〜約100cm）。</li>
+      <li>音・動作・温度の3種類のセンサーをカメラに搭載。反応するとモニター機のLEDの点灯やお知らせ音で知らせる。カメラを置いている部屋の室温が設定した温度範囲を超えた場合もお知らせする。</li>
+      <li>胎内音・心音・ホワイトノイズ・波の音・雨音の5種類のおやすみ音と子守歌を搭載。モニター機から手動で再生・停止できるほか、設定により音声を検知したときにカメラから自動再生できる。</li>
+      <li>カメラに内蔵されているスピーカーやマイクを通じて、声を聞くことや話しかけることができる（プレストーク方式）。</li>
+      <li>モニター機でカメラの映像を2倍にズームできる。</li>
+      <li>付属の壁掛けアダプターでカメラを壁に設置でき、モニター機はスタンドで立てて使用できる。</li>
+      <li>2025マザーズセレクション大賞を受賞（公式ページの記載）。</li>
+    </ul>
+    <h3>公式の注意書きとして確認できること</h3>
+    <ul class="official-list">
+      <li>オープン価格商品のため、価格は販売店にお問い合わせください。</li>
+      <li>本システムは、育児・介護・医療等や侵入・盗難の防止等をサポートするものであり、セキュリティを保証するものではありません。</li>
+      <li>おやすみ音の自動再生は設定が必要で、本機能は赤ちゃんの睡眠を保証するものではありません。</li>
+    </ul>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2>購入時の注意</h2>
+    <p>KX-HC705はオープン価格商品です。楽天市場など販売先によって、販売価格、ポイント還元、送料、セット内容（カメラ・モニター機の同梱物）が変わる場合があります。購入時は、商品名、セット内容、付属品（壁掛けアダプターなど）を販売ページで確認してください。</p>
+
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="パナソニック ベビーモニター KX-HC705"
+        audience="無線LAN設定なしですぐ見守りを始めたい人、音・動作・温度のお知らせを優先する人向け"
+        href={rakutenSearch}
+        productId="panasonic-kx-hc705"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog.slice().sort((a, b) => b.date.localeCompare(a.date)).map((entry) => (
+        <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+      ))}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={officialPage} target="_blank" rel="noopener noreferrer">ベビーモニター KX-HC705 概要（パナソニック公式）</a>（2026-08-14確認）</li>
+      <li><a href={rakutenSearch} target="_blank" rel="noopener noreferrer">楽天市場：パナソニック ベビーモニター KX-HC705</a>（価格・在庫用）</li>
+    </ul>
+    <h2>調査方法・免責</h2>
+    <p>このサイトの記事は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
