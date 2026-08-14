@@ -106,6 +106,11 @@ const keyDiffRows: KeyDiffRow[] = [
     <div class="faq-list">
       {faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
     </div>
+
+    <div class="purchase-cards">
+      <PurchaseCard name="象印 CK-PA08" audience="ふたの外しやすさ・広口内容器を重視する人向け" href={paRakutenUrl} imagePath={articleMetadata.imagePath} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="象印 CK-DC08" audience="安全設計・ほこり対策を重視する人向け" href={dcRakutenUrl} imagePath="/products/zojirushi-ck-dc08.png" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
     <details class="fold-section">
       <summary>更新履歴・情報源・購入時の注意</summary>
       <h3>更新履歴</h3>

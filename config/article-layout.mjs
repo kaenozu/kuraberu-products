@@ -12,9 +12,11 @@ export const ARTICLE_LAYOUT = {
   // PurchaseCard の placement 省略時の既定値
   defaultPlacement: "after-decision",
   // 標準比較記事の購入 CTA 構成（配置ごとの枚数）。
-  // 現行実装は「判断後」1セット（2商品比較）のみ。
-  // article-end（記事末尾）の追加は docs/article-layout-v2 の将来拡張で、現行記事には未適用。
-  ctaSets: [{ placement: "after-decision", cards: 2 }],
+  // 全記事に「判断後」1セット（2商品比較）+「記事末尾」1セットを配置する。
+  ctaSets: [
+    { placement: "after-decision", cards: 2 },
+    { placement: "article-end", cards: 2 },
+  ],
 };
 
 // 標準記事に期待する購入 CTA 総数を ctaSets から機械的に導出する。

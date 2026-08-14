@@ -43,7 +43,7 @@ Issue #52（比較/CTA UX改善）の受入判断（2026-08-12・chatgpt.com 相
 - 記事内の CTA 数は原則 4 枚（after-decision × 2 + article-end × 2）を上限とする
 - 単一商品記事（例: ベビー用品の単品紹介）では 1〜2 枚に減らしてよい
 - **CTA の枚数・配置の機械的契約は `config/article-layout.mjs` が唯一の定義**。品質ゲート（`scripts/check-rendered-html.mjs`）はここから期待枚数と許可 placement を導出するため、レイアウト変更時は config だけを直す
-- 現行の公開記事は「判断後 × 2」のみを実装（article-end の適用は将来拡張）
+- 現行の公開記事は「判断後 × 2 + 記事末尾 × 2」を全記事で実装済み（config の `ctaSets` が唯一の情報源）
 
 ## 水筒記事スコープのままの UI（評価後に統合）
 

@@ -61,6 +61,11 @@ const keyDiffRows: KeyDiffRow[] = [
     <ArticleSocialProof query="タイガー JPV-L100 JPV-M100 炊飯器" checkedAt="2026-08-13" hasPosts={false} />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <h2>購入時の注意</h2><p>炊飯器は、炊飯容量、設置スペース、ふたを開けたときの高さ、炊飯メニュー、内なべの保証内容を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。</p>
+
+    <div class="purchase-cards">
+      <PurchaseCard name="タイガー JPV-L100" audience={lModel.audience} href={lSearch} imagePath={lModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="タイガー JPV-M100" audience={mModel.audience} href={mSearch} imagePath={mModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={lOfficial} target="_blank" rel="noopener noreferrer">タイガー JPV-L100 公式商品ページ</a>（2026-08-13確認）</li><li><a href={mOfficial} target="_blank" rel="noopener noreferrer">タイガー JPV-M100 公式商品ページ</a>（2026-08-13確認）</li></ul>
     <h2>調査方法・免責事項</h2><p>この比較は、タイガー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>

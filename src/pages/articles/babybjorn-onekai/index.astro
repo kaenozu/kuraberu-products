@@ -212,6 +212,26 @@ const differenceRows: DifferenceRow[] = [
     <h2>購入時の注意</h2>
     <p>この記事で記載した価格は、2026年8月10日時点で確認したベビービョルン公式楽天市場店の表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、カラー、付属品を販売ページで確認してください。また、抱っこひもの安全性と正しい使用方法は必ず公式の使用説明書で確認してください。</p>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="ベビーキャリア ONE KAI"
+        audience="新生児から約36ヶ月まで長く使えて、4通りの抱っこ（おんぶ含む）と幅広ウエストベルトを優先する人向け"
+        href={onekaiRakutenUrl}
+        productId="babybjorn-onekai"
+        imagePath="/products/babybjorn-onekai.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="ベビーキャリア MOVE"
+        audience="フルメッシュ素材の通気性と軽量設計（約860g）を優先する人向け"
+        href={moveRakutenUrl}
+        productId="babybjorn-move"
+        imagePath="/products/babybjorn-move.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <h2>更新履歴</h2>
     <ol class="change-log">
       {articleMetadata.changeLog.slice().sort((a, b) => b.date.localeCompare(a.date)).map((entry) => (

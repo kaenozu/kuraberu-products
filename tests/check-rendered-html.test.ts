@@ -14,8 +14,8 @@ const fixtureDirectories: string[] = [];
 
 const embed = '<div data-external-embed="x"></div>';
 
-const validCta = (href: string) =>
-  `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="after-decision">商品を確認（広告）</a>`;
+const validCta = (href: string, placement = "after-decision") =>
+  `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="${placement}">商品を確認（広告）</a>`;
 
 function validPage(body: string) {
   return `<!doctype html>
@@ -31,8 +31,10 @@ function sectionsOf(html: string) {
 }
 
 describe("rendered article CTA audit", () => {
-  it("accepts exactly two complete Rakuten affiliate CTAs", () => {
-    const html = `${validCta("https://a.r10.to/example")}${validCta("https://hb.afl.rakuten.co.jp/ichiba/example")}`;
+  it("accepts exactly four complete Rakuten affiliate CTAs (after-decision + article-end)", () => {
+    const html =
+      `${validCta("https://a.r10.to/example")}${validCta("https://hb.afl.rakuten.co.jp/ichiba/example")}` +
+      `${validCta("https://a.r10.to/example", "article-end")}${validCta("https://hb.afl.rakuten.co.jp/ichiba/example", "article-end")}`;
     expect(validateArticleCtas("articles/example/index.html", html)).toEqual(
       [],
     );
@@ -42,7 +44,7 @@ describe("rendered article CTA audit", () => {
     const html =
       '<a href="https://example.com" data-cta-event="purchase" data-placement="after-decision">購入</a>';
     expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
-      "articles/example/index.html: expected exactly 2 purchase CTAs (per config/article-layout.mjs), found 1",
+      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs), found 1",
       "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
       "articles/example/index.html: CTA 1 is missing sponsored/nofollow rel attributes",
       "articles/example/index.html: CTA 1 is missing advertising disclosure",
@@ -50,14 +52,19 @@ describe("rendered article CTA audit", () => {
   });
 
   it("rejects a CTA whose placement is not allowed by the layout config", () => {
-    const html = `${validCta("https://a.r10.to/one")}<a href="https://a.r10.to/two" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>`;
+    const html =
+      `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two", "article-end")}` +
+      `<a href="https://a.r10.to/three" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>` +
+      `${validCta("https://a.r10.to/four", "article-end")}`;
     expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
-      "articles/example/index.html: CTA 2 has unrecognized placement: bogus (allowed: after-decision, article-end)",
+      "articles/example/index.html: CTA 3 has unrecognized placement: bogus (allowed: after-decision, article-end)",
     ]);
   });
 
   it("derives the expected CTA count from the layout config by default", () => {
-    const html = `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}`;
+    const html =
+      `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}` +
+      `${validCta("https://a.r10.to/three", "article-end")}${validCta("https://a.r10.to/four", "article-end")}`;
     expect(validateArticleCtas("articles/example/index.html", html)).toEqual(
       [],
     );
@@ -179,7 +186,7 @@ ${embed.repeat(4)}`;
     "<div foo='unterminated",
     "<script>unterminated",
     "<!--",
-  ])("rejects malformed HTML in finite time: %s", (html) => {
+  ])(`rejects malformed HTML in finite time: %s`, (html) => {
     const startedAt = performance.now();
     expect(countRenderedExternalEmbeds(html)).toBeLessThanOrEqual(1);
     expect(performance.now() - startedAt).toBeLessThan(100);
