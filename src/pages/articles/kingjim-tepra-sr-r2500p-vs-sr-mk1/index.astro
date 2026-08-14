@@ -5,6 +5,7 @@ import PurchaseCard from '../../../components/PurchaseCard.astro'
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import ExternalEmbed from '../../../components/ExternalEmbed.astro'
 import {kingjimTepraArticle as articleMetadata} from '../../../content/articles'
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
 
@@ -60,7 +61,9 @@ const keyDiffRows: KeyDiffRow[] = [
     </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
     <h2 id="official">公式情報</h2><p>比較の根拠は、キングジム公式の商品ページで2026年8月14日に確認した仕様です。両機種ともBluetooth接続に対応し、テプラPRO用アプリからラベルを作成できます。</p>
     <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">SR-R2500P 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">SR-MK1 公式商品ページ →</a></div>
-    <ArticleSocialProof query="キングジム テプラ SR-R2500P SR-MK1" checkedAt="2026-08-14" hasPosts={false} />
+    <ArticleSocialProof query="キングジム テプラ SR-R2500P SR-MK1" checkedAt="2026-08-14" hasPosts={true}>
+      <ExternalEmbed provider="youtube" url="https://www.youtube.com/watch?v=BVY2RKXn7uc" title="キングジム公式：テプラ PRO MARK（SR-MK1）とSR-R2500Pの違い" purpose="キングジム公式YouTubeチャンネルによる、MARK（SR-MK1）とSR-R2500Pの比較動画です。" autoload />
+    </ArticleSocialProof>
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <h2>購入時の注意</h2><p>使いたいラベル幅、電源方式、持ち運びやすさを購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
