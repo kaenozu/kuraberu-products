@@ -1,12 +1,24 @@
 # くらべる商品メモ
 
-Astro + TypeScript の静的な楽天アフィリエイト商品紹介・比較サイトです。最初の記事は育児用品ですが、サイト全体はカテゴリを限定しません。確認できない数値や体験談は掲載しません。
+Astro + TypeScript で構築した、日本向けの2商品比較サイトです。カテゴリは限定せず、比較の根拠は確認できる公式情報を優先します。
+
+## 編集方針
+
+- 確認できない数値、価格、在庫、体験談を事実として書かない
+- 比較結論と購入導線を分離し、アフィリエイト条件を比較結果へ影響させない
+- メーカー公式情報を比較の一次根拠とする
+- SNS等の感想を扱う場合も、比較根拠とは分離して参考情報として示す
+- 記事ごとに検証日・出典・変更履歴を管理する
 
 開発・レビュー規約は [CONTRIBUTING.md](./CONTRIBUTING.md)、AIエージェントと並行作業の安全規約は [AGENTS.md](./AGENTS.md) を参照してください。
 
-## ローカル
+## 開発
 
-Node.jsは `^20.19.1` または `>=22.12.0` が必要です。標準の開発・CI環境は `.node-version` に記載したNode 24、パッケージマネージャーはpnpm 10.34.5です。
+### 必要環境
+
+- Node.js: `^20.19.1` または `>=22.12.0`
+- 標準環境: `.node-version` に記載した Node 24
+- pnpm: 10.34.5
 
 ```bash
 corepack enable
@@ -14,60 +26,80 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-検証は `pnpm verify` です。format、lint、typecheck、環境・コンテンツ検証、build、生成HTML・デプロイ契約・外部URL構文検査、Vitestを実行します。
+### 品質ゲート
 
-`check:external-link-syntax` はURLの構文、HTTPS、危険なスキーム、placeholderを検査します。通常PRでは外部ネットワークへ依存しません。
+```bash
+pnpm verify
+```
 
-外部リンクの到達性は `pnpm check:external-link-reachability` で確認します。GitHub Actionsの `external link reachability` workflowが毎週月曜日と手動実行で動作します。
+`pnpm verify` は format、lint、typecheck、環境・コンテンツ検証、build、生成HTML、デプロイ契約、外部URL構文、Vitest をまとめて検証します。
+
+外部リンクの実到達性は別ゲートです。
+
+```bash
+pnpm check:external-link-reachability
+```
 
 - 200〜399: 到達可能
-- 404 / 410: 確定リンク切れとして失敗
-- 403 / 429 / 5xx / タイムアウト: bot制限や一時障害の可能性があるため判定不能として警告
-- HEAD非対応時だけ、1byte Range付きGETへフォールバック
-- 1URLあたり10秒でタイムアウトし、順次実行する
+- 404 / 410: リンク切れとして失敗
+- 403 / 429 / 5xx / timeout: bot制限や一時障害の可能性があるため警告
+
+通常PRの主要品質ゲートは外部ネットワークへ依存しません。
 
 ## 環境変数
 
 `DEPLOYMENT_ENV` は `development` / `preview` / `production` のいずれかです。未設定時は `preview` です。
 
-Productionでは次が必須です。
+Production では次が必須です。
 
-- `PUBLIC_SITE_URL`: query、fragment、資格情報、サブパスを含まないHTTPSのサイトルート
+- `PUBLIC_SITE_URL`: query / fragment / credentials / subpath を含まない HTTPS のサイトルート
 - 購入リンクは次のどちらか
   - `PUBLIC_RAKUTEN_PREMIUM_URL` と `PUBLIC_RAKUTEN_SARASARA_URL` の両方
-  - `RAKUTEN_APPLICATION_ID`、`RAKUTEN_ACCESS_KEY`、`RAKUTEN_AFFILIATE_ID` の3件すべて
+  - `RAKUTEN_APPLICATION_ID` / `RAKUTEN_ACCESS_KEY` / `RAKUTEN_AFFILIATE_ID`
 
-直接購入URLとAPIレスポンス由来URLは、HTTPSの楽天公式ホストだけを許可します。直接URLが設定されている商品では直接URLを優先し、未設定の商品だけAPI補完を試みます。APIは5秒でタイムアウトし、失敗時は購入リンクを「準備中」として静的ビルドを続行します。
+商品別の補完リンクを使う場合は、`PUBLIC_RAKUTEN_BABYBJORN_CRADLE_URL`、`PUBLIC_RAKUTEN_APRICA_COCONEL_AIR_URL`、`PUBLIC_RAKUTEN_PIGEON_160_URL` を設定します。
 
-次は任意です。
+購入URLは HTTPS の許可済み楽天ホストだけを受け付けます。API取得に失敗した場合は、未確認値を補完せず「準備中」として静的ビルドを継続します。
 
-- `PUBLIC_CONTACT_URL`: aboutページの問い合わせ先HTTPS URL。未設定時は「準備中」表示
+任意:
 
-`.env.example` をコピーして使用してください。`.env` と `.env.*` は `.env.example` を除いてGit管理対象外です。秘密値をログ、Issue、PR、証跡へ記載しないでください。
+- `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
 
-## 検索・共有メタデータ
+`.env.example` を基準にしてください。`.env` と `.env.*` は `.env.example` を除いて Git 管理対象外です。秘密値をログ、Issue、PRへ記録しないでください。
 
-- Productionの通常ページ: `index,follow`
-- Previewと404ページ: `noindex,nofollow`
-- `robots.txt` はProductionのみクロールを許可
-- `sitemap.xml` は公開ページのみを列挙し、404を含めない
-- canonicalとOpen Graph URLは `PUBLIC_SITE_URL` から生成
-- JSON-LDは通常ページを`WebPage`、記事詳細を`Article`として出力
-- 未確認の価格、評価、レビュー数、在庫をJSON-LDへ含めない
+## SEO / 生成物の基本契約
 
-## 依存関係の管理
+- Production の通常ページ: `index,follow`
+- Preview と 404: `noindex,nofollow`
+- `robots.txt` は Production のみクロール許可
+- `sitemap.xml` は公開ページのみ列挙
+- canonical / Open Graph URL は `PUBLIC_SITE_URL` から生成
+- JSON-LD に未確認の価格、評価、レビュー数、在庫を含めない
 
-通常のinstallは、commit済みの`pnpm-lock.yaml`と`pnpm install --frozen-lockfile`により解決済みバージョンを固定します。devDependenciesの`latest`は、lockfileを明示的に更新する依存更新PRでだけ新しい候補を取得するために維持しています。Dependabotは週次でnpmとGitHub Actionsの更新PRを作成しますが、自動マージは行いません。
+## 依存関係
 
-pnpm 10では依存パッケージのinstall scriptを既定で実行しません。`pnpm-workspace.yaml` の `onlyBuiltDependencies` で、現行ビルドに必要な `esbuild` と `sharp` だけを明示的に許可します。許可対象を追加する場合は、用途とサプライチェーン上の影響をレビューしてください。
+`pnpm-lock.yaml` と `pnpm install --frozen-lockfile` を正規の再現可能インストール経路とします。依存更新は専用PRで検証し、自動マージしません。
 
-`cookie`はCVE-2024-47764の修正版へ推移依存を固定しています。overrideなしでも全依存経路が`cookie >=1.0.2`へ解決すると確認できたら削除します。
+pnpm の install script は原則無効で、`pnpm-workspace.yaml` の `onlyBuiltDependencies` に明示した依存だけを許可します。許可対象追加時は用途とサプライチェーン影響をレビューしてください。
 
-## CI
+## CI / デプロイ
 
-GitHub ActionsはPreviewの `pnpm verify` に加え、秘密値を使わないテスト用HTTPS URLでProduction設定と生成HTMLを検証します。CIはデプロイやProduction traffic変更を行いません。
+GitHub Actions は Preview 向け `pnpm verify` に加え、秘密値を使わないテスト用 HTTPS URL で Production 設定と生成HTMLを検証します。CIだけで Production traffic は変更しません。
 
-GitHub公式ActionはNode 24対応のv6系commit SHAへ固定しています。branch protectionの必須チェック設定はリポジトリ設定で別途有効化し、失敗中のマージを禁止してください。
+Cloudflare の正規ビルド経路:
+
+```text
+Build:  pnpm build
+Deploy: npx wrangler versions upload
+Assets: dist
+Config: wrangler.jsonc
+```
+
+PRはVersion uploadまでに留め、Production反映は対象Versionを明示して別途行います。
+
+## 現在の作業管理
+
+README には変動しやすい記事数、PR番号、dependency更新状態を固定しません。最新の実装優先度、UI/UX改善、公開ゲートは GitHub Issues / Pull Requests を正としてください。
 
 ## 本番運用
 

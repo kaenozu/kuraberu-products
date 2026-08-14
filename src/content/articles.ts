@@ -25,6 +25,9 @@ export interface ArticleMetadata {
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
+// Build-time reference date to prevent future dates
+const buildReferenceDate = new Date().toISOString().slice(0, 10);
+
 export function defineArticleMetadata(
   metadata: ArticleMetadata,
 ): ArticleMetadata {
@@ -70,6 +73,26 @@ export function defineArticleMetadata(
     !metadata.purchaseLinksCheckedAt
   ) {
     throw new TypeError("verified purchase links require a checked date");
+  }
+  // Prevent future dates relative to build time
+  for (const [label, value] of [
+    ["publishedAt", metadata.publishedAt],
+    ["modifiedAt", metadata.modifiedAt],
+    ...(metadata.productInfoCheckedAt
+      ? [["productInfoCheckedAt", metadata.productInfoCheckedAt] as const]
+      : []),
+    ...(metadata.purchaseLinksCheckedAt
+      ? [["purchaseLinksCheckedAt", metadata.purchaseLinksCheckedAt] as const]
+      : []),
+    ...metadata.changeLog.map(
+      (entry) => ["changeLog.date", entry.date] as const,
+    ),
+  ] as const) {
+    if (value > buildReferenceDate) {
+      throw new TypeError(
+        `${label} (${value}) must not be a future date relative to build (${buildReferenceDate})`,
+      );
+    }
   }
   for (const [label, values] of [
     ["tags", metadata.tags],
