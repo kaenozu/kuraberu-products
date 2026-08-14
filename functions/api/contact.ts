@@ -2,18 +2,105 @@
 // POST /api/contact で name / email / message を受け取り、
 // 管理用 Telegram bot に転送する。
 
+// 同一IPからの連続送信を制限する（Workers Rate Limiting API）。
+// バインディング未設定・エラー時は制限なしで続行する（可用性を優先。
+// 楽天APIのフォールバック方針と同じく、外部依存の障害でエンドポイントを止めない）。
+const RATE_LIMIT_FALLBACK_RETRY_SECONDS = 60;
+
 interface ContactBody {
   name?: string;
   email?: string;
   message?: string;
 }
 
+/**
+ * Origin ヘッダーが許可されたサイトのオリジンと完全一致するかを判定する。
+ * 前方一致ではなく origin（scheme + host + port）の完全比較を行うため、
+ * `https://kuraberu-products.pages.dev.evil.com` のような偽装オリジンは
+ * 許可しない。Origin が無いリクエスト（curl・サーバー間呼び出しなど）は
+ * 従来どおり許可する。
+ */
+export function isSameSiteOrigin(
+  originHeader: string | null,
+  siteUrl: string,
+): boolean {
+  if (!originHeader) return true;
+  let origin: URL;
+  let expected: URL;
+  try {
+    origin = new URL(originHeader);
+    expected = new URL(siteUrl);
+  } catch {
+    return false;
+  }
+  return origin.origin === expected.origin;
+}
+
+/**
+ * クライアントIPを取り出す。Cloudflare 経由の CF-Connecting-IP を優先し、
+ * フォールバックは X-Forwarded-For の先頭を使う。
+ */
+export function clientIp(request: Request): string {
+  const direct = request.headers.get("CF-Connecting-IP");
+  if (direct) return direct;
+  const forwarded = request.headers.get("X-Forwarded-For");
+  const first = forwarded?.split(",")[0]?.trim();
+  return first || "unknown";
+}
+
+export type ContactRateLimitResult =
+  { allowed: true } | { allowed: false; retryAfterSeconds: number };
+
+/**
+ * 同一IPからの連続送信を制限する。
+ * レート制限カウンタは Cloudflare ロケーション単位・結果整合性（permissive）のため、
+ * 厳密な会計ではなくスパム抑止として使う。バインディングが無い・失敗する場合は
+ * 制限なしで続行する。
+ */
+export async function enforceContactRateLimit(
+  limiter: ContactRateLimiter | undefined,
+  ip: string,
+): Promise<ContactRateLimitResult> {
+  if (!limiter) {
+    console.warn(
+      "お問い合わせレート制限: CONTACT_RATE_LIMITER バインディング未設定のため制限なしで続行します",
+    );
+    return { allowed: true };
+  }
+  try {
+    const result = await limiter.limit({ key: `kuraberu-contact:${ip}` });
+    if (result.success) return { allowed: true };
+    const retryAfterSeconds =
+      typeof result.reset_after === "number" && result.reset_after > 0
+        ? result.reset_after
+        : RATE_LIMIT_FALLBACK_RETRY_SECONDS;
+    return { allowed: false, retryAfterSeconds };
+  } catch (error) {
+    console.warn(
+      "お問い合わせレート制限: エラーのため制限なしで続行します",
+      error,
+    );
+    return { allowed: true };
+  }
+}
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  // 送信元チェック（同一オリジンからのみ）
+  // 送信元チェック（同一オリジンからのみ。Origin 完全一致）
   const origin = request.headers.get("Origin") ?? "";
   const siteUrl = env.PUBLIC_SITE_URL ?? "https://kuraberu-products.pages.dev";
-  if (origin && !origin.startsWith(siteUrl.replace(/\/$/, ""))) {
+  if (!isSameSiteOrigin(origin, siteUrl)) {
     return json({ ok: false, error: "invalid origin" }, 403);
+  }
+
+  // 同一IPからの連続送信を制限する（例: 1分あたり5件）。
+  const rate = await enforceContactRateLimit(
+    env.CONTACT_RATE_LIMITER,
+    clientIp(request),
+  );
+  if (!rate.allowed) {
+    return json({ ok: false, error: "too many requests" }, 429, {
+      "Retry-After": String(rate.retryAfterSeconds),
+    });
   }
 
   // Content-Type チェック
@@ -91,9 +178,13 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   return json({ ok: true }, 200);
 };
 
-function json(data: unknown, status: number): Response {
+function json(
+  data: unknown,
+  status: number,
+  headers: Record<string, string> = {},
+): Response {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { "Content-Type": "application/json; charset=utf-8" },
+    headers: { "Content-Type": "application/json; charset=utf-8", ...headers },
   });
 }

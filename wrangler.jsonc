@@ -6,4 +6,19 @@
     "directory": "./dist",
     "not_found_handling": "404-page",
   },
+  // お問い合わせAPIの同一IPレート制限（Workers Rate Limiting API、wrangler >= 4.36）。
+  // namespace_id はこのアカウント内で一意な正の整数の文字列であれば任意の値でよい。
+  // 別のバインディングや別Workerと namespace_id を共有するとカウンタも共有されるため、
+  // 他で使っていない値を使うこと（詳細: https://developers.cloudflare.com/workers/runtime-apis/bindings/rate-limit/）。
+  // カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止として使う。
+  "ratelimits": [
+    {
+      "name": "CONTACT_RATE_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 5,
+        "period": 60,
+      },
+    },
+  ],
 }

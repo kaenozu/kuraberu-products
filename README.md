@@ -65,6 +65,8 @@ Production では次が必須です。
 
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
 
+お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定・エラー時は制限なしで続行します（可用性優先）。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
+
 `.env.example` を基準にしてください。`.env` と `.env.*` は `.env.example` を除いて Git 管理対象外です。秘密値をログ、Issue、PRへ記録しないでください。
 
 ## SEO / 生成物の基本契約
@@ -81,6 +83,8 @@ Production では次が必須です。
 `pnpm-lock.yaml` と `pnpm install --frozen-lockfile` を正規の再現可能インストール経路とします。依存更新は専用PRで検証し、自動マージしません。
 
 pnpm の install script は原則無効で、`pnpm-workspace.yaml` の `onlyBuiltDependencies` に明示した依存だけを許可します。許可対象追加時は用途とサプライチェーン影響をレビューしてください。
+
+Cloudflare Pages へのデプロイ（`tools/production/Invoke-ProductionBuildAndDeploy.ps1`、`.github/workflows/deploy-production.yml`）は `pnpm exec wrangler` を使うため、wrangler を devDependencies に固定しています。グローバルインストールは不要です。workerd（wrangler のローカル実行ランタイム）は `onlyBuiltDependencies` で install script を許可しています。
 
 ## CI / デプロイ
 
