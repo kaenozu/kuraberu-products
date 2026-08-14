@@ -1,0 +1,40 @@
+// プライバシー配慮型クリック計測: 購入CTA（[data-cta-event]）のクリックを
+// 同一オリジンの /api/events へ送信する。
+// Cookie・フィンガープリント・第三者ドメインへの送信は行わない。
+// 計測失敗はユーザー体験に影響させない（失敗は黙って無視する）。
+// 受信側の検証・保存仕様は docs/click-analytics.md と functions/api/events.ts を参照。
+(function () {
+  var EVENTS_ENDPOINT = "/api/events";
+
+  function sendEvent(payload) {
+    var body = JSON.stringify(payload);
+    var blob = new Blob([body], { type: "application/json" });
+    if (
+      typeof navigator.sendBeacon === "function" &&
+      navigator.sendBeacon(EVENTS_ENDPOINT, blob)
+    ) {
+      return;
+    }
+    fetch(EVENTS_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: body,
+      keepalive: true,
+    }).catch(function () {});
+  }
+
+  document.addEventListener("click", function (event) {
+    var target = event.target;
+    if (!(target instanceof Element)) return;
+    var cta = target.closest("[data-cta-event]");
+    if (!(cta instanceof HTMLElement)) return;
+    var eventName = cta.dataset.ctaEvent;
+    if (!eventName) return;
+    sendEvent({
+      event: eventName,
+      productId: cta.dataset.productId || "",
+      placement: cta.dataset.placement || "",
+      path: location.pathname,
+    });
+  });
+})();

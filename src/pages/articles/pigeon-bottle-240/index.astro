@@ -196,6 +196,26 @@ const differenceRows: DifferenceRow[] = [
     <h2>購入時の注意</h2>
     <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="母乳実感 耐熱ガラス製 240ml"
+        audience="自宅中心で、汚れの落ちやすさ・清潔さを優先する人向け"
+        href={glassSearch}
+        productId="pigeon-glass-240"
+        imagePath="/products/pigeon-bottle-glass240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="母乳実感 プラスチック製 240ml"
+        audience="持ち運びや軽さ・割れにくさを優先し、外出時にも使いたい人向け"
+        href={ppsuSearch}
+        productId="pigeon-ppsu-240"
+        imagePath="/products/pigeon-bottle-ppsu240.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <h2>更新履歴</h2>
     <ol class="change-log">
       {articleMetadata.changeLog

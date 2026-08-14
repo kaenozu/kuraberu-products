@@ -189,6 +189,26 @@ const differenceRows: DifferenceRow[] = [
     <h2>購入時の注意</h2>
     <p>この記事で記載した価格は、2026年8月10日時点で確認したピジョン公式ショップの表示価格です。楽天市場など他のショップでは、販売価格、ポイント還元、送料、セット内容などが変わる場合があります。購入時は、商品名、セット内容、付属品を販売ページで確認してください。特に電動鼻吸い器 シュポットは、付属するフィット鼻ノズルがSサイズで、Mサイズは別売です。</p>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="電動鼻吸い器 シュポット"
+        audience="コンセントのある場所でパワフルな吸引と吸引力のダイヤル調整を優先する人向け"
+        href={dendoRakutenUrl}
+        productId="shupot-dendo"
+        imagePath="/products/shupot-dendo.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="手動鼻吸い器 シュポットポンプ"
+        audience="電源不要の手軽さ・コンパクトさと価格を優先する人向け"
+        href={shudoRakutenUrl}
+        productId="shupot-shudo"
+        imagePath="/products/shupot-shudo.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <h2>更新履歴</h2>
     <ol class="change-log">
       {articleMetadata.changeLog.slice().sort((a, b) => b.date.localeCompare(a.date)).map((entry) => (

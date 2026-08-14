@@ -16,6 +16,7 @@ import {
   merriesPantsArticle,
   moonyMArticle,
   pampersNewbornArticle,
+  panasonicBabyMonitorArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
   thermosTigerBottleArticle,
@@ -113,6 +114,7 @@ describe("article metadata", () => {
       zojirushiElectricKettleArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
+      panasonicBabyMonitorArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
@@ -130,6 +132,36 @@ describe("article metadata", () => {
     expect(
       pigeonSlim240Article.modifiedAt >= pigeonSlim240Article.publishedAt,
     ).toBe(true);
+  });
+
+  it("requires every article to declare a positive product count", () => {
+    for (const article of articleMetadata) {
+      expect(
+        Number.isInteger(article.productCount) && article.productCount >= 1,
+      ).toBe(true);
+    }
+    // 比較記事は productCount: 2、単一商品記事（サンプル）は productCount: 1。
+    expect(
+      articleMetadata.filter((article) => article.productCount === 2),
+    ).toHaveLength(25);
+    expect(
+      articleMetadata.filter((article) => article.productCount === 1),
+    ).toEqual([panasonicBabyMonitorArticle]);
+  });
+
+  it("rejects invalid product counts", () => {
+    expect(() =>
+      defineArticleMetadata({
+        ...pampersNewbornArticle,
+        productCount: 0,
+      }),
+    ).toThrow("productCount must be a positive integer");
+    expect(() =>
+      defineArticleMetadata({
+        ...pampersNewbornArticle,
+        productCount: 1.5,
+      }),
+    ).toThrow("productCount must be a positive integer");
   });
 
   it("rejects invalid and contradictory dates", () => {
@@ -178,10 +210,30 @@ describe("article metadata", () => {
     expect(html).toContain(`datetime="${pampersNewbornArticle.modifiedAt}"`);
   });
 
+  it("renders the product count meta for article pages", () => {
+    const html = readFileSync(
+      "dist/articles/pampers-newborn/index.html",
+      "utf8",
+    );
+    expect(html).toContain(
+      `<meta name="article:product-count" content="${pampersNewbornArticle.productCount}">`,
+    );
+  });
+
+  it("renders the single-product count for the single-product sample article", () => {
+    const html = readFileSync(
+      "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
+      "utf8",
+    );
+    expect(html).toContain(`<meta name="article:product-count" content="1">`);
+    expect(panasonicBabyMonitorArticle.productCount).toBe(1);
+  });
+
   it("keeps ordinary pages as WebPage without article dates", () => {
     const html = readFileSync("dist/about/index.html", "utf8");
     const data = extractJsonLd(html);
     expect(data.some((item) => item["@type"] === "WebPage")).toBe(true);
     expect(html).not.toContain("article:published_time");
+    expect(html).not.toContain("article:product-count");
   });
 });

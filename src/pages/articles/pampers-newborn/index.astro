@@ -181,6 +181,26 @@ const differenceRows: DifferenceRow[] = [
     <p>価格・在庫・販売条件は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
     <p>新生児用でも体重や体型には個人差があります。漏れや肌トラブルが続く場合は使用を中止し、必要に応じて専門家へ相談してください。</p>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="肌へのいちばん"
+        audience="肌ざわりと肌へのやさしさ（ワセリン配合・ふかふか素材）、小さめ新生児向けのサイズを優先する人向け"
+        href={premiumSearch}
+        productId="pampers-premium-newborn"
+        imagePath="/products/pampers-premium-newborn.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="さらさらケア"
+        audience="モレ・ムレ対策（ゆるうんちモレガード・フィットテープ・吸収体）を優先する人向け"
+        href={sarasaraSearch}
+        productId="pampers-sarasara-newborn"
+        imagePath="/products/pampers-sarasara-newborn.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <h2>更新履歴</h2>
     <ol class="change-log">
       {articleMetadata.changeLog

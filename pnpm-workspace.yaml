@@ -5,7 +5,14 @@ packages:
 onlyBuiltDependencies:
   - esbuild
   - sharp
-# cookie <0.7.0のCVE-2024-47764を回避するため、推移依存を修正版へ固定する。
-# overrideなしでも全依存経路がcookie >=1.0.2へ解決すると確認できたら削除する。
+  # workerd: Cloudflare公式のローカル実行ランタイム。wrangler dev / pages dev で必要。
+  # 本番デプロイ（wrangler deploy）自体はworkerdを必要としない。
+  - workerd
+# 推移依存を修正版へ固定する（package.json の pnpm.overrides からこの場所へ一本化した）。
+# cookie: <0.7.0のCVE-2024-47764を回避（youch→miniflare→wrangler経由で引き込まれる）。
+# js-yaml / sharp: 推移依存の解決を固定。
+# それぞれ override なしでも全依存経路が修正版以上へ解決すると確認できたら削除する。
 overrides:
-  cookie: 1.0.2
+  cookie: 2.0.1
+  js-yaml: 4.3.1
+  sharp: 0.35.3
