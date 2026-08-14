@@ -15,7 +15,7 @@ const fixtureDirectories: string[] = [];
 const embed = '<div data-external-embed="x"></div>';
 
 const validCta = (href: string) =>
-  `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase">商品を確認（広告）</a>`;
+  `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="after-decision">商品を確認（広告）</a>`;
 
 function validPage(body: string) {
   return `<!doctype html>
@@ -40,13 +40,41 @@ describe("rendered article CTA audit", () => {
 
   it("rejects missing CTA count, attributes, host, or disclosure", () => {
     const html =
-      '<a href="https://example.com" data-cta-event="purchase">購入</a>';
+      '<a href="https://example.com" data-cta-event="purchase" data-placement="after-decision">購入</a>';
     expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
-      "articles/example/index.html: expected exactly 2 purchase CTAs, found 1",
+      "articles/example/index.html: expected exactly 2 purchase CTAs (per config/article-layout.mjs), found 1",
       "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
       "articles/example/index.html: CTA 1 is missing sponsored/nofollow rel attributes",
       "articles/example/index.html: CTA 1 is missing advertising disclosure",
     ]);
+  });
+
+  it("rejects a CTA whose placement is not allowed by the layout config", () => {
+    const html = `${validCta("https://a.r10.to/one")}<a href="https://a.r10.to/two" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>`;
+    expect(validateArticleCtas("articles/example/index.html", html)).toEqual([
+      "articles/example/index.html: CTA 2 has unrecognized placement: bogus (allowed: after-decision, article-end)",
+    ]);
+  });
+
+  it("derives the expected CTA count from the layout config by default", () => {
+    const html = `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}`;
+    expect(validateArticleCtas("articles/example/index.html", html)).toEqual(
+      [],
+    );
+  });
+
+  it("enforces a config-derived expected count instead of a hardcoded one", () => {
+    const twoCtas = `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}`;
+    const fourCtas = `${twoCtas}${validCta("https://a.r10.to/three")}${validCta("https://a.r10.to/four")}`;
+
+    expect(
+      validateArticleCtas("articles/example/index.html", twoCtas, 4),
+    ).toEqual([
+      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs), found 2",
+    ]);
+    expect(
+      validateArticleCtas("articles/example/index.html", fourCtas, 4),
+    ).toEqual([]);
   });
 });
 

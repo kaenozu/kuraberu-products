@@ -2,6 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
+import {
+  ARTICLE_LAYOUT,
+  expectedPurchaseCtasPerArticle,
+} from "../config/article-layout.mjs";
 
 function walk(directory, htmlFiles) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -173,20 +177,36 @@ function internalTarget(href, distDirectory) {
   return path.join(distDirectory, pathname, "index.html");
 }
 
-export function validateArticleCtas(relative, html) {
+// 期待 CTA 枚数は config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から導出する。
+// レイアウト変更時は config だけを直し、ここに枚数をハードコードしない。
+export function validateArticleCtas(
+  relative,
+  html,
+  expectedCount = expectedPurchaseCtasPerArticle(),
+) {
   if (!/^articles\/[^/]+\/index\.html$/.test(relative)) return [];
-  const tags = [
-    ...html.matchAll(/<a\b[^>]*data-cta-event="purchase"[^>]*>[\s\S]*?<\/a>/gi),
-  ].map(([tag]) => tag);
+  const ctaPattern = new RegExp(
+    `<a\\b[^>]*data-cta-event="${ARTICLE_LAYOUT.ctaEvent}"[^>]*>[\\s\\S]*?<\\/a>`,
+    "gi",
+  );
+  const tags = [...html.matchAll(ctaPattern)].map(([tag]) => tag);
   const errors = [];
-  if (tags.length !== 2) {
+  if (tags.length !== expectedCount) {
     errors.push(
-      `${relative}: expected exactly 2 purchase CTAs, found ${tags.length}`,
+      `${relative}: expected exactly ${expectedCount} purchase CTAs (per config/article-layout.mjs), found ${tags.length}`,
     );
   }
   for (const [index, tag] of tags.entries()) {
     const href = tag.match(/\bhref="([^"]+)"/i)?.[1] ?? "";
     const rel = tag.match(/\brel="([^"]+)"/i)?.[1] ?? "";
+    const placement = tag.match(/\bdata-placement="([^"]+)"/i)?.[1] ?? "";
+    if (!ARTICLE_LAYOUT.placements.includes(placement)) {
+      errors.push(
+        `${relative}: CTA ${index + 1} has unrecognized placement${
+          placement ? `: ${placement}` : ""
+        } (allowed: ${ARTICLE_LAYOUT.placements.join(", ")})`,
+      );
+    }
     if (
       !/https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i.test(
         href,
