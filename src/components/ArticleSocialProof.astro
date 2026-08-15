@@ -15,30 +15,22 @@ const { query, checkedAt, hasPosts = false } = Astro.props;
   {hasPosts ? (
     <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
   ) : (
-    <aside class="sns-check-status">
-      <strong>対象型番を明確に確認できるSNS投稿は見つかりませんでした。</strong>
-      <p>検索条件：{query}</p>
-      {checkedAt && <p>確認日：{checkedAt}</p>}
-    </aside>
+    <p class="sns-check-status">
+      該当型番を確認できる投稿は今回見つかりませんでした。{checkedAt && <>（{checkedAt}確認）</>}
+      <span class="sr-only">検索条件：{query}</span>
+    </p>
   )}
   <slot />
 </section>
 
 <style>
   .article-social-proof {
-    margin-block: 3rem;
+    margin-block: 2rem;
   }
 
   .sns-check-status {
-    padding: 1.25rem;
-    border: 1px solid var(--line, #d8d8d8);
-    border-radius: 0.75rem;
-    background: var(--surface-muted, #f7f7f7);
-  }
-
-  .sns-check-status p {
-    margin-block: 0.5rem 0;
-    color: var(--text-muted, #666);
+    margin: 0;
+    color: var(--muted);
     font-size: 0.9rem;
   }
 

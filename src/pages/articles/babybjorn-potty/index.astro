@@ -9,10 +9,10 @@ import {pottyArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
-const smartPottyProductUrl = 'https://a.r10.to/hP1wdW';
-const pottyChairProductUrl = 'https://a.r10.to/h5kpDa';
-const smartPottyRakutenUrl = smartPottyProductUrl;;
-const pottyChairRakutenUrl = pottyChairProductUrl;;
+const smartPottyOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/smart-potty/';
+const pottyChairOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/potty-chair/';
+const smartPottyRakutenUrl = 'https://a.r10.to/hP1wdW';
+const pottyChairRakutenUrl = 'https://a.r10.to/h5kpDa';
 
 const faqEntries = [
   {
@@ -137,8 +137,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyProductUrl, guidePoints: [smartPottyCandidate.audience] }}
-      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairProductUrl, guidePoints: [pottyChairCandidate.audience] }}
+      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyOfficialProductUrl, guidePoints: [smartPottyCandidate.audience] }}
+      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairOfficialProductUrl, guidePoints: [pottyChairCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -211,8 +211,8 @@ const differenceRows: DifferenceRow[] = [
 
     <h2>情報源一覧</h2>
     <ul class="source-list">
-      <li><a href={smartPottyProductUrl} target="_blank" rel="noopener noreferrer">スマートポッティ（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={pottyChairProductUrl} target="_blank" rel="noopener noreferrer">ポッティチェア（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
+      <li><a href={smartPottyOfficialProductUrl} target="_blank" rel="noopener noreferrer">スマートポッティ（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={pottyChairOfficialProductUrl} target="_blank" rel="noopener noreferrer">ポッティチェア（ベビービョルン公式）</a>（2026-08-10確認）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>本記事は、2026-08-10時点でベビービョルン公式楽天市場店の商品ページに記載されていた情報をもとに作成しています。商品情報は確認日時点のものであり、その後の仕様変更・価格変動・販売終了の可能性があります。ご購入の際は必ずご自身で公式情報・販売ページをご確認ください。</p>
