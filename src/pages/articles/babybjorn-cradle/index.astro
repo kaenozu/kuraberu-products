@@ -9,10 +9,10 @@ import {cradleArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
-const cradleProductUrl = 'https://a.r10.to/hgUiG0';
-const cocoNelProductUrl = 'https://a.r10.to/h8tr4u';
-const cradleRakutenUrl = cradleProductUrl;;
-const cocoNelRakutenUrl = cocoNelProductUrl;;
+const cradleOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/';
+const cocoNelOfficialProductUrl = 'https://www.aprica.jp/products/home/bed/coconel_air/';
+const cradleRakutenUrl = 'https://a.r10.to/hgUiG0';
+const cocoNelRakutenUrl = 'https://a.r10.to/h8tr4u';
 
 const faqEntries = [
   {
@@ -155,8 +155,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleProductUrl, guidePoints: [cradleCandidate.audience] }}
-      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelProductUrl, guidePoints: [cocoNelCandidate.audience] }}
+      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleOfficialProductUrl, guidePoints: [cradleCandidate.audience] }}
+      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelOfficialProductUrl, guidePoints: [cocoNelCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -234,8 +234,8 @@ const differenceRows: DifferenceRow[] = [
 
     <h2>情報源一覧</h2>
     <ul class="source-list">
-      <li><a href={cradleProductUrl} target="_blank" rel="noopener noreferrer">ベビービョルン クレードル（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={cocoNelProductUrl} target="_blank" rel="noopener noreferrer">ココネルエアー AB（アップリカ公式楽天市場店）</a>（2026-08-10確認）</li>
+      <li><a href={cradleOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビービョルン クレードル（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={cocoNelOfficialProductUrl} target="_blank" rel="noopener noreferrer">ココネルエアー AB（アップリカ公式）</a>（2026-08-10確認）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>本記事は、2026-08-10時点で各メーカー公式楽天市場店の商品ページに記載されていた情報をもとに作成しています。商品情報は確認日時点のものであり、その後の仕様変更・価格変動・販売終了の可能性があります。ご購入の際は必ずご自身で公式情報・販売ページをご確認ください。</p>
