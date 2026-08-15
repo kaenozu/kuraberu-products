@@ -11,10 +11,10 @@ import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const harmonyOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
-const harmonyProductUrl = 'https://a.r10.to/hgxfw5';
-const miniProductUrl = 'https://a.r10.to/hY6U8Q';
-const harmonyRakutenUrl = harmonyProductUrl;;
-const miniRakutenUrl = miniProductUrl;;
+const harmonyOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/';
+const miniOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/';
+const harmonyRakutenUrl = 'https://a.r10.to/hgxfw5';
+const miniRakutenUrl = 'https://a.r10.to/hY6U8Q';
 
 const faqEntries = [
   {
@@ -157,8 +157,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyProductUrl, guidePoints: [harmonyCandidate.audience] }}
-      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniProductUrl, guidePoints: [miniCandidate.audience] }}
+      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyOfficialProductUrl, guidePoints: [harmonyCandidate.audience] }}
+      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniOfficialProductUrl, guidePoints: [miniCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -239,8 +239,8 @@ const differenceRows: DifferenceRow[] = [
     <h2>情報源一覧</h2>
     <ul class="source-list">
       <li><a href={harmonyOfficial} target="_blank" rel="noopener noreferrer">ベビーキャリア比較表（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={harmonyProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア HARMONY（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={miniProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア MINI（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
+      <li><a href={harmonyOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア HARMONY（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={miniOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア MINI（ベビービョルン公式）</a>（2026-08-10確認）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式の比較表で確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

@@ -10,10 +10,10 @@ import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const chartOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
-const onekaiProductUrl = 'https://a.r10.to/hYhUfN';
-const moveProductUrl = 'https://a.r10.to/h41WNP';
-const onekaiRakutenUrl = onekaiProductUrl;;
-const moveRakutenUrl = moveProductUrl;;
+const onekaiOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/';
+const moveOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/';
+const onekaiRakutenUrl = 'https://a.r10.to/hYhUfN';
+const moveRakutenUrl = 'https://a.r10.to/h41WNP';
 
 const faqEntries = [
   {
@@ -163,8 +163,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiProductUrl, guidePoints: [onekaiCandidate.audience] }}
-      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveProductUrl, guidePoints: [moveCandidate.audience] }}
+      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiOfficialProductUrl, guidePoints: [onekaiCandidate.audience] }}
+      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveOfficialProductUrl, guidePoints: [moveCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -242,8 +242,8 @@ const differenceRows: DifferenceRow[] = [
     <h2>情報源一覧</h2>
     <ul class="source-list">
       <li><a href={chartOfficial} target="_blank" rel="noopener noreferrer">ベビーキャリア比較表（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={onekaiProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア ONE KAI（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={moveProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア MOVE（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
+      <li><a href={onekaiOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア ONE KAI（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={moveOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア MOVE（ベビービョルン公式）</a>（2026-08-10確認）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式の比較表で確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
