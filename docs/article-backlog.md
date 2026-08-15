@@ -10,37 +10,38 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（27本）
+## 現在の公開済み（28本）
 
-| slug                                     | 状態     |
-| ---------------------------------------- | -------- |
-| `babybjorn`                              | 公開済み |
-| `babybjorn-bouncer`                      | 公開済み |
-| `babybjorn-cradle`                       | 公開済み |
-| `babybjorn-onekai`                       | 公開済み |
-| `babybjorn-potty`                        | 公開済み |
-| `combi-the-s-plus-vs-premium`            | 公開済み |
-| `kingjim-tepra-sr-r2500p-vs-sr-mk1`      | 公開済み |
-| `merries-newborn`                        | 公開済み |
-| `merries-pants`                          | 公開済み |
-| `moony-m`                                | 公開済み |
-| `pampers-newborn`                        | 公開済み |
-| `panasonic-baby-monitor-kx-hc705`        | 公開済み |
-| `panasonic-eh-ne7m-vs-eh-ne5m`           | 公開済み |
-| `panasonic-f-yhvx120-vs-f-yhvx90`        | 公開済み |
-| `panasonic-mc-sb55k-vs-mc-sb35k`         | 公開済み |
-| `pigeon-bottle-160-240`                  | 公開済み |
-| `pigeon-bottle-240`                      | 公開済み |
-| `pigeon-slim-240`                        | 公開済み |
-| `sharp-kc-s50-vs-fu-s50`                 | 公開済み |
-| `shupot`                                 | 公開済み |
-| `tefal-dv4030j0-vs-dv8070j0`             | 公開済み |
-| `tefal-ko5901jp-vs-ko8601j0`             | 公開済み |
-| `thermos-tiger-bottle`                   | 公開済み |
-| `tiger-jpv-l100-vs-jpv-m100`             | 公開済み |
-| `yamazaki-condor-wagon-vs-self-wagon`    | 公開済み |
-| `yamazaki-tower-desk-panel-vs-pen-stand` | 公開済み |
-| `zojirushi-ck-pa08-vs-ck-dc08`           | 公開済み |
+| slug                                             | 状態     |
+| ------------------------------------------------ | -------- |
+| `babybjorn`                                      | 公開済み |
+| `babybjorn-bouncer`                              | 公開済み |
+| `babybjorn-cradle`                               | 公開済み |
+| `babybjorn-onekai`                               | 公開済み |
+| `babybjorn-potty`                                | 公開済み |
+| `combi-the-s-plus-vs-premium`                    | 公開済み |
+| `kingjim-tepra-sr-r2500p-vs-sr-mk1`              | 公開済み |
+| `merries-newborn`                                | 公開済み |
+| `merries-pants`                                  | 公開済み |
+| `moony-m`                                        | 公開済み |
+| `pampers-newborn`                                | 公開済み |
+| `panasonic-baby-monitor-kx-hc705`                | 公開済み |
+| `panasonic-eh-ne7m-vs-eh-ne5m`                   | 公開済み |
+| `panasonic-f-yhvx120-vs-f-yhvx90`                | 公開済み |
+| `panasonic-mc-sb55k-vs-mc-sb35k`                 | 公開済み |
+| `pigeon-bottle-160-240`                          | 公開済み |
+| `pigeon-bottle-240`                              | 公開済み |
+| `pigeon-slim-240`                                | 公開済み |
+| `sharp-kc-s50-vs-fu-s50`                         | 公開済み |
+| `shupot`                                         | 公開済み |
+| `tefal-dv4030j0-vs-dv8070j0`                     | 公開済み |
+| `tefal-ko5901jp-vs-ko8601j0`                     | 公開済み |
+| `thermos-tiger-bottle`                           | 公開済み |
+| `tiger-jpv-l100-vs-jpv-m100`                     | 公開済み |
+| `yamazaki-condor-wagon-vs-self-wagon`            | 公開済み |
+| `yamazaki-dust-wagon-45l-2division-vs-3division` | 実装中   |
+| `yamazaki-tower-desk-panel-vs-pen-stand`         | 公開済み |
+| `zojirushi-ck-pa08-vs-ck-dc08`                   | 公開済み |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
