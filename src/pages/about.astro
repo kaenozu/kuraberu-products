@@ -33,58 +33,60 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <span>お問い合わせ内容（必須）</span>
         <textarea name="message" rows="6" maxlength="4000" required></textarea>
       </label>
-      <p class="form-note">※ お問い合わせ内容は確認したうえで、返信先メールアドレス宛にお返事いたします（数営業日以内）。送信には数秒かかります。フォームが使えない場合は X（<a href="https://x.com/kuraberu_biyori" target="_blank" rel="noopener noreferrer">@kuraberu_biyori</a>）の DM でも受け付けています。</p>
+      <p class="form-note">
+        ※ お問い合わせ内容は確認したうえで、返信先メールアドレス宛にお返事いたします（数営業日以内）。送信には数秒かかります。フォームが使えない場合は
+        X（<a href="https://x.com/kuraberu_biyori" target="_blank" rel="noopener noreferrer">@kuraberu_biyori</a>）の DM でも受け付けています。
+      </p>
       <button type="submit" class="cta">送信する</button>
     </form>
     <p id="contact-result" class="contact-result" hidden></p>
-      </div>
-    <script is:inline src="/contact.js"></script>
-    </BaseLayout>
+  </div>
+  <script is:inline src="/contact.js"></script>
   <style>
     .contact-form {
-    display: grid;
-    gap: 1rem;
-    max-width: 560px;
-  }
-  .contact-form label {
-    display: grid;
-    gap: 0.35rem;
-  }
-  .contact-form label span {
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-  .contact-form input,
-  .contact-form textarea {
-    font: inherit;
-    color: var(--ink);
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: 4px;
-    padding: 0.6rem 0.8rem;
-    width: 100%;
-  }
-  .contact-form input:focus,
-  .contact-form textarea:focus {
-    outline: 2px solid var(--ink);
-    outline-offset: 1px;
-  }
-  .form-note {
-    font-size: 0.85rem;
-    color: var(--muted);
-  }
-  .contact-result {
-    font-size: 0.95rem;
-    padding: 0.8rem 1rem;
-    border-radius: 4px;
-  }
-  .contact-result.success {
-    background: var(--sage);
-    color: var(--ink);
-  }
-  .contact-result.error {
-    background: #f7e6e1;
-    color: var(--ink);
-  }
-</style>
-
+      display: grid;
+      gap: 1rem;
+      max-width: 560px;
+    }
+    .contact-form label {
+      display: grid;
+      gap: 0.35rem;
+    }
+    .contact-form label span {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .contact-form input,
+    .contact-form textarea {
+      font: inherit;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0.6rem 0.8rem;
+      width: 100%;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      outline: 2px solid var(--ink);
+      outline-offset: 1px;
+    }
+    .form-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .contact-result {
+      font-size: 0.95rem;
+      padding: 0.8rem 1rem;
+      border-radius: 4px;
+    }
+    .contact-result.success {
+      background: var(--sage);
+      color: var(--ink);
+    }
+    .contact-result.error {
+      background: #f7e6e1;
+      color: var(--ink);
+    }
+  </style>
+</BaseLayout>

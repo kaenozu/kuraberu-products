@@ -10,7 +10,7 @@ on:
       - ".github/workflows/operations-scripts.yml"
   push:
     branches:
-      - feat/affiliate-site-foundation
+      - main
     paths:
       - "tools/production/**"
       - "tools/github/**"

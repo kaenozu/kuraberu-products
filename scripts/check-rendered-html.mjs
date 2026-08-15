@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
+import { isAllowedRakutenUrl } from "../config/runtime-env.mjs";
 import {
   ARTICLE_LAYOUT,
   expectedPurchaseCtasPerArticle,
@@ -207,6 +208,9 @@ export function readArticleProductCount(relative, html, errors) {
 // config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から記事ごとに導出する。
 // 比較記事（productCount=2）→ 4枚、単一商品記事（productCount=1）→ 2枚。
 // レイアウト変更時は config だけを直し、ここに枚数をハードコードしない。
+const AFFILIATE_URL_PATTERN =
+  /https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i;
+
 export function validateArticleCtas(relative, html, expectedCount) {
   if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
   const ctaPattern = new RegExp(
@@ -231,24 +235,36 @@ export function validateArticleCtas(relative, html, expectedCount) {
         } (allowed: ${ARTICLE_LAYOUT.placements.join(", ")})`,
       );
     }
-    if (
-      !/https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i.test(
-        href,
-      )
-    ) {
+    if (/placeholder/i.test(href)) {
       errors.push(
-        `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
+        `${relative}: CTA ${index + 1} must not contain a placeholder URL`,
       );
     }
-    if (!/\bsponsored\b/i.test(rel) || !/\bnofollow\b/i.test(rel)) {
-      errors.push(
-        `${relative}: CTA ${index + 1} is missing sponsored/nofollow rel attributes`,
-      );
-    }
-    if (!/広告/.test(tag)) {
-      errors.push(
-        `${relative}: CTA ${index + 1} is missing advertising disclosure`,
-      );
+    if (AFFILIATE_URL_PATTERN.test(href)) {
+      // アフィリエイトCTA: スポンサー表記・nofollow・広告表示を必須にする。
+      if (!/\bsponsored\b/i.test(rel) || !/\bnofollow\b/i.test(rel)) {
+        errors.push(
+          `${relative}: CTA ${index + 1} is missing sponsored/nofollow rel attributes`,
+        );
+      }
+      if (!/広告/.test(tag)) {
+        errors.push(
+          `${relative}: CTA ${index + 1} is missing advertising disclosure`,
+        );
+      }
+    } else {
+      // アフィリエイトでないCTA（未差し替え時の楽天検索フォールバック等）は
+      // 許可済みの楽天ホストだけを許し、nofollow を必須にする。
+      if (!isAllowedRakutenUrl(href)) {
+        errors.push(
+          `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
+        );
+      }
+      if (!/\bnofollow\b/i.test(rel)) {
+        errors.push(
+          `${relative}: CTA ${index + 1} is missing nofollow rel attribute`,
+        );
+      }
     }
   }
   return errors;
