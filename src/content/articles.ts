@@ -1028,6 +1028,11 @@ export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
     {
       date: "2026-08-15",
       summary:
+        "比較表とFAQの本体寸法の表記を修正。幅・高さの取り違えを解消し、選び分けの結論を公式仕様に合わせて更新。",
+    },
+    {
+      date: "2026-08-15",
+      summary:
         "初回公開。パナソニック公式のF-YHVX120・F-YHVX90仕様ページで数値を確認。",
     },
   ],

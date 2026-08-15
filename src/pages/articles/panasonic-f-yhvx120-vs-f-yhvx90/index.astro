@@ -14,20 +14,20 @@ const leftSearch = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.
 const rightSearch = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX90&link_type=text'
 const leftImage = '/products/f-yhvx120.jpg'
 const rightImage = '/products/f-yhvx90.jpg'
-const leftAudience = '大容量タンクと広い木造対応畳数を重視する人向け'
-const rightAudience = '本体の軽さや横幅を抑えた設置性を重視する人向け'
+const leftAudience = '大容量タンク・広い木造対応畳数・本体幅を重視する人向け'
+const rightAudience = '本体の軽さや低い高さを重視する人向け'
 const faqEntries = [
   {question: 'F-YHVX120とF-YHVX90の大きな違いは？', answer: '公式仕様では、タンク容量がF-YHVX120は約3.2L、F-YHVX90は約2.4Lです。木造の適用畳数はF-YHVX120が11/13畳、F-YHVX90が8/8畳で、重量と本体寸法も異なります。'},
   {question: 'タンク容量が大きいのはどちら？', answer: 'F-YHVX120が約3.2L、F-YHVX90が約2.4Lです。タンク容量を優先するならF-YHVX120です。'},
-  {question: '軽くて幅が小さいのはどちら？', answer: '本体重量はF-YHVX90が10.5kgで、F-YHVX120の13.9kgより軽量です。寸法の幅はF-YHVX90が335mm、F-YHVX120が583mmです。設置場所の寸法は、奥行き・高さも含めて確認してください。'},
+  {question: '軽くて幅が小さいのはどちら？', answer: '本体重量はF-YHVX90が10.5kgで、F-YHVX120の13.9kgより軽量です。本体寸法（高さ×幅×奥行）はF-YHVX120が583×370×225mm、F-YHVX90が335×470×250mmで、幅はF-YHVX120のほうが100mm小さく、高さはF-YHVX90のほうが低いです。設置場所の寸法は、奥行き・高さも含めて確認してください。'},
   {question: '運転音はどちらが静か？', answer: '強運転時の音は、木造戸建て相当・集合住宅相当の順に、F-YHVX120が48/49dB、F-YHVX90が49/49dBです。確認した強運転の数値では、F-YHVX120が木造戸建て相当で1dB小さく、集合住宅相当では同じです。'},
-  {question: '楽天市場の価格や在庫は比較できる？', answer: 'この記事では楽天市場の成果リンクを確認していません。価格・在庫・ポイント・送料は、購入時点の販売先表示を確認してください。'},
+  {question: '楽天市場の価格や在庫は比較できる？', answer: '購入リンクは2026-08-15に確認した楽天市場の検索導線です。価格・在庫・ポイント・送料は、購入時点の販売先表示を確認してください。'},
 ]
 const keyDiffRows: KeyDiffRow[] = [
   {label: 'タンク容量', left: '約3.2L', right: '約2.4L', highlight: 'left'},
   {label: '木造（50Hz/60Hz）', left: '11/13畳', right: '8/8畳', highlight: 'left'},
   {label: '本体重量', left: '13.9kg', right: '10.5kg', highlight: 'right', highlightNote: '3.4kg軽い'},
-  {label: '本体寸法', left: '583×370×225mm', right: '335×470×250mm', highlight: 'right', highlightNote: '幅が小さい'},
+  {label: '本体寸法（高さ×幅×奥行）', left: '583×370×225mm', right: '335×470×250mm', highlight: 'left', highlightNote: '幅が100mm小さい'},
   {label: '強運転音（木造/集合）', left: '48/49dB', right: '49/49dB', highlight: 'left'},
 ]
 ---
