@@ -23,8 +23,8 @@ function Require-Command([string]$Name) {
     if (-not $command) { throw "Required command not found: $Name" }
     $command.Source
 }
-function Run([string]$File, [string[]]$Args, [string]$LogPath) {
-    $lines = @(& $File @Args 2>&1 | ForEach-Object { "$_" })
+function Run([string]$File, [string[]]$ArgumentList, [string]$LogPath) {
+    $lines = @(& $File @ArgumentList 2>&1 | ForEach-Object { "$_" })
     $exitCode = $LASTEXITCODE
     if ($LogPath) { $lines | Set-Content -LiteralPath $LogPath -Encoding utf8 }
     if ($exitCode -ne 0) { throw "$File exited with code $exitCode. See $LogPath" }
