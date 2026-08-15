@@ -1000,6 +1000,39 @@ export const kingjimTepraArticle = defineArticleMetadata({
   ],
 });
 
+export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
+  id: "panasonic-f-yhvx120-vs-f-yhvx90",
+  productCount: 2,
+  path: "/articles/panasonic-f-yhvx120-vs-f-yhvx90/",
+  title: "パナソニック F-YHVX120とF-YHVX90、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックの衣類乾燥除湿機、どっち？「F-YHVX120」と「F-YHVX90」を比較",
+  description:
+    "パナソニック F-YHVX120とF-YHVX90を、公式のタンク容量・木造対応畳数・重量・寸法・強運転音で比較",
+  category: "生活家電",
+  tags: ["衣類乾燥除湿機", "除湿機", "パナソニック"],
+  audiences: [
+    "衣類乾燥除湿機を選びたい人",
+    "タンク容量や設置サイズで比較したい人",
+  ],
+  uses: ["部屋干し", "衣類を乾燥する", "除湿機を比較する"],
+  summary:
+    "F-YHVX120とF-YHVX90を、パナソニック公式のタンク容量・木造対応畳数・重量・寸法・強運転音に分けて比較します。",
+  publishedAt: "2026-08-15",
+  modifiedAt: "2026-08-15",
+  productInfoCheckedAt: "2026-08-15",
+  purchaseLinksCheckedAt: "2026-08-15",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/f-yhvx120.jpg",
+  changeLog: [
+    {
+      date: "2026-08-15",
+      summary:
+        "初回公開。パナソニック公式のF-YHVX120・F-YHVX90仕様ページで数値を確認。",
+    },
+  ],
+});
+
 export const panasonicBabyMonitorArticle = defineArticleMetadata({
   id: "panasonic-baby-monitor-kx-hc705",
   productCount: 1,
@@ -1053,5 +1086,6 @@ export const articleMetadata = Object.freeze([
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
+  panasonicFyhvx120VsFyhvx90Article,
   panasonicBabyMonitorArticle,
 ]);
