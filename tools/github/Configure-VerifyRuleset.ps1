@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param(
     [string]$Repository = 'kaenozu/kuraberu-products',
-    [string]$Branch = 'main',
+    [string]$Branch = 'feat/affiliate-site-foundation',
     [string]$RequiredCheck = 'verify',
     [ValidateSet('None', 'PullRequest', 'Always')][string]$AdminBypass = 'None',
     [switch]$Apply,
