@@ -29,6 +29,7 @@ import {
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
+  panasonicFyhvx120VsFyhvx90Article,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -113,6 +114,7 @@ describe("article metadata", () => {
       zojirushiElectricKettleArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
+      panasonicFyhvx120VsFyhvx90Article,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(

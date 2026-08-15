@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import RelatedArticles from '../../../components/RelatedArticles.astro'
+import PurchaseCard from '../../../components/PurchaseCard.astro'
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+import {panasonicFyhvx120VsFyhvx90Article as articleMetadata} from '../../../content/articles'
+
+const leftOfficial = 'https://panasonic.jp/joshitsu/products/F-YHVX120/spec.html'
+const rightOfficial = 'https://panasonic.jp/joshitsu/products/F-YHVX90/spec.html'
+const leftSearch = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX120&link_type=text'
+const rightSearch = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX90&link_type=text'
+const leftImage = '/products/f-yhvx120.jpg'
+const rightImage = '/products/f-yhvx90.jpg'
+const leftAudience = '大容量タンクと広い木造対応畳数を重視する人向け'
+const rightAudience = '本体の軽さや横幅を抑えた設置性を重視する人向け'
+const faqEntries = [
+  {question: 'F-YHVX120とF-YHVX90の大きな違いは？', answer: '公式仕様では、タンク容量がF-YHVX120は約3.2L、F-YHVX90は約2.4Lです。木造の適用畳数はF-YHVX120が11/13畳、F-YHVX90が8/8畳で、重量と本体寸法も異なります。'},
+  {question: 'タンク容量が大きいのはどちら？', answer: 'F-YHVX120が約3.2L、F-YHVX90が約2.4Lです。タンク容量を優先するならF-YHVX120です。'},
+  {question: '軽くて幅が小さいのはどちら？', answer: '本体重量はF-YHVX90が10.5kgで、F-YHVX120の13.9kgより軽量です。寸法の幅はF-YHVX90が335mm、F-YHVX120が583mmです。設置場所の寸法は、奥行き・高さも含めて確認してください。'},
+  {question: '運転音はどちらが静か？', answer: '強運転時の音は、木造戸建て相当・集合住宅相当の順に、F-YHVX120が48/49dB、F-YHVX90が49/49dBです。確認した強運転の数値では、F-YHVX120が木造戸建て相当で1dB小さく、集合住宅相当では同じです。'},
+  {question: '楽天市場の価格や在庫は比較できる？', answer: 'この記事では楽天市場の成果リンクを確認していません。価格・在庫・ポイント・送料は、購入時点の販売先表示を確認してください。'},
+]
+const keyDiffRows: KeyDiffRow[] = [
+  {label: 'タンク容量', left: '約3.2L', right: '約2.4L', highlight: 'left'},
+  {label: '木造（50Hz/60Hz）', left: '11/13畳', right: '8/8畳', highlight: 'left'},
+  {label: '本体重量', left: '13.9kg', right: '10.5kg', highlight: 'right', highlightNote: '3.4kg軽い'},
+  {label: '本体寸法', left: '583×370×225mm', right: '335×470×250mm', highlight: 'right', highlightNote: '幅が小さい'},
+  {label: '強運転音（木造/集合）', left: '48/49dB', right: '49/49dB', highlight: 'left'},
+]
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">パナソニックの衣類乾燥除湿機 F-YHVX120とF-YHVX90を、公式仕様のタンク容量・木造対応畳数・重量・寸法・強運転音で比較します。価格・在庫は販売先でご確認ください。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{brand: 'パナソニック', line: 'F-YHVX120', tagline: '容量・対応畳数なら', image: leftImage, imageAlt: 'パナソニック 衣類乾燥除湿機 F-YHVX120', officialHref: leftOfficial, guidePoints: [leftAudience]}}
+      right={{brand: 'パナソニック', line: 'F-YHVX90', tagline: '軽さ・幅なら', image: rightImage, imageAlt: 'パナソニック 衣類乾燥除湿機 F-YHVX90', officialHref: rightOfficial, guidePoints: [rightAudience]}}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <p>タンク容量と木造対応畳数を優先するならF-YHVX120、本体重量や幅を抑えたいならF-YHVX90が候補です。どちらを選ぶ場合も、設置場所の寸法と使う部屋の条件を公式仕様で確認してください。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name="パナソニック F-YHVX120" audience={leftAudience} href={leftSearch} imagePath={leftImage} note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="パナソニック F-YHVX90" audience={rightAudience} href={rightSearch} imagePath={rightImage} note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <details class="fold-section" id="specs" open>
+      <summary>詳細仕様（公式仕様ページで確認した項目）</summary>
+      <div class="table-scroll">
+        <table class="comparison">
+          <thead><tr><th scope="col">比較項目</th><th scope="col">F-YHVX120</th><th scope="col">F-YHVX90</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">タンク容量</th><td>約3.2L</td><td>約2.4L</td></tr>
+            <tr><th scope="row">木造（50Hz/60Hz）</th><td>11/13畳</td><td>8/8畳</td></tr>
+            <tr><th scope="row">本体重量</th><td>13.9kg</td><td>10.5kg</td></tr>
+            <tr><th scope="row">本体寸法（高さ×幅×奥行）</th><td>583×370×225mm</td><td>335×470×250mm</td></tr>
+            <tr><th scope="row">強運転音（木造/集合）</th><td>48/49dB</td><td>49/49dB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="meta">仕様は変更される可能性があります。購入時点の公式ページで最新情報を確認してください。</p>
+    </details>
+    <h2 id="official">公式情報</h2>
+    <p>比較の根拠は、パナソニック公式の各仕様ページで確認した情報です。公式情報確認日：{articleMetadata.productInfoCheckedAt}。</p>
+    <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">F-YHVX120 公式仕様ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">F-YHVX90 公式仕様ページ →</a></div>
+    <ArticleSocialProof query="パナソニック F-YHVX120 F-YHVX90" checkedAt={articleMetadata.productInfoCheckedAt} hasPosts={false} />
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2>購入時の注意</h2>
+    <p>除湿機は設置場所の幅・奥行き・高さ、タンク容量、使用する部屋の条件を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
+    <h2>更新履歴</h2>
+    <ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2>
+    <ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">パナソニック F-YHVX120 公式仕様ページ</a>（{articleMetadata.productInfoCheckedAt}確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">パナソニック F-YHVX90 公式仕様ページ</a>（{articleMetadata.productInfoCheckedAt}確認）</li></ul>
+    <h2>調査方法・免責事項</h2>
+    <p>この比較は、パナソニック公式の仕様ページで確認できる情報を根拠にしています。SNSの感想や未確認の販売情報は比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
