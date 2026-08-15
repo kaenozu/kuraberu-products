@@ -1002,6 +1002,7 @@ export const kingjimTepraArticle = defineArticleMetadata({
 
 export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
   id: "panasonic-f-yhvx120-vs-f-yhvx90",
+  productCount: 2,
   path: "/articles/panasonic-f-yhvx120-vs-f-yhvx90/",
   title: "パナソニック F-YHVX120とF-YHVX90、どっち？｜くらべる商品メモ",
   headline:
