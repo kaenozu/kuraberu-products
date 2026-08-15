@@ -92,7 +92,10 @@ try {
         if ($Apply) {
             if (-not $env:CLOUDFLARE_API_TOKEN) { throw 'CLOUDFLARE_API_TOKEN is required for -Apply.' }
             if (-not $env:CLOUDFLARE_ACCOUNT_ID) { throw 'CLOUDFLARE_ACCOUNT_ID is required for -Apply.' }
-            Run $pnpm @('exec', 'wrangler', 'deploy', '--config', 'wrangler.jsonc') (Join-Path $runDirectory 'wrangler-deploy.log') | Out-Null
+            # 本番は Cloudflare Pages プロジェクト(kuraberu-products.pages.dev)への Direct Upload。
+            # functions/ は実行ディレクトリに存在すれば自動でバンドルされる。
+            # --branch=main は production_branch(本番ブランチ)への本番デプロイを明示する。
+            Run $pnpm @('exec', 'wrangler', 'pages', 'deploy', 'dist', '--project-name', 'kuraberu-products', '--branch=main') (Join-Path $runDirectory 'wrangler-deploy.log') | Out-Null
         }
     } finally { Pop-Location }
 
