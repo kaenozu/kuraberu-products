@@ -1,6 +1,12 @@
 // Cloudflare Pages Function: お問い合わせフォーム → Telegram 転送
 // POST /api/contact で name / email / message を受け取り、
 // 管理用 Telegram bot に転送する。
+//
+// 共通ヘルパー（clientIp / json / enforceRateLimit）は ./shared を使う。
+import { clientIp, enforceRateLimit, json } from "./shared";
+import type { RateLimitResult } from "./shared";
+
+export { clientIp } from "./shared";
 
 interface ContactBody {
   name?: string;
@@ -8,12 +14,61 @@ interface ContactBody {
   message?: string;
 }
 
+/**
+ * Origin ヘッダーが許可されたサイトのオリジンと完全一致するかを判定する。
+ * 前方一致ではなく origin（scheme + host + port）の完全比較を行うため、
+ * `https://kuraberu-products.pages.dev.evil.com` のような偽装オリジンは
+ * 許可しない。Origin が無いリクエスト（curl・サーバー間呼び出しなど）は
+ * 従来どおり許可する。
+ */
+export function isSameSiteOrigin(
+  originHeader: string | null,
+  siteUrl: string,
+): boolean {
+  if (!originHeader) return true;
+  let origin: URL;
+  let expected: URL;
+  try {
+    origin = new URL(originHeader);
+    expected = new URL(siteUrl);
+  } catch {
+    return false;
+  }
+  return origin.origin === expected.origin;
+}
+
+/**
+ * 同一IPからの連続送信を制限する（例: 1分あたり5件）。
+ * バインディング未設定・エラー時は制限なしで続行する。
+ */
+export async function enforceContactRateLimit(
+  limiter: ContactRateLimiter | undefined,
+  ip: string,
+): Promise<RateLimitResult> {
+  return enforceRateLimit(
+    limiter,
+    `kuraberu-contact:${ip}`,
+    "お問い合わせレート制限",
+  );
+}
+
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  // 送信元チェック（同一オリジンからのみ）
+  // 送信元チェック（同一オリジンからのみ。Origin 完全一致）
   const origin = request.headers.get("Origin") ?? "";
   const siteUrl = env.PUBLIC_SITE_URL ?? "https://kuraberu-products.pages.dev";
-  if (origin && !origin.startsWith(siteUrl.replace(/\/$/, ""))) {
+  if (!isSameSiteOrigin(origin, siteUrl)) {
     return json({ ok: false, error: "invalid origin" }, 403);
+  }
+
+  // 同一IPからの連続送信を制限する（例: 1分あたり5件）。
+  const rate = await enforceContactRateLimit(
+    env.CONTACT_RATE_LIMITER,
+    clientIp(request),
+  );
+  if (!rate.allowed) {
+    return json({ ok: false, error: "too many requests" }, 429, {
+      "Retry-After": String(rate.retryAfterSeconds),
+    });
   }
 
   // Content-Type チェック
@@ -90,10 +145,3 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
 
   return json({ ok: true }, 200);
 };
-
-function json(data: unknown, status: number): Response {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { "Content-Type": "application/json; charset=utf-8" },
-  });
-}

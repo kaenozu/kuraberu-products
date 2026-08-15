@@ -161,7 +161,29 @@ const differenceRows: DifferenceRow[] = [
     </div>
 
     <h2>購入時の注意</h2>
+    <p>価格・在庫・セット内容は販売先で変わります。このサイトでは価格や在庫を保証しません。</p>
+    <p>Mサイズは体重6〜11kgが目安ですが、体型や成長には個人差があります。漏れが続く場合はテープの付け方やサイズを見直し、肌トラブルが続く場合は使用を中止して必要に応じて専門家へ相談してください。</p>
 
+    <div class="purchase-cards">
+      <PurchaseCard
+        name="低刺激であんしん"
+        audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
+        href={teishigekiSearch}
+        productId="moony-teishigeki-m"
+        imagePath="/products/moony-teishigeki-m.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+      <PurchaseCard
+        name="マシュマロ肌ごこちモレ安心"
+        audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
+        href={mashumaroSearch}
+        productId="moony-mashumaro-m"
+        imagePath="/products/moony-mashumaro-m.jpg"
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+      />
+    </div>
     <h2>更新履歴</h2>
     <ol class="change-log">
       {articleMetadata.changeLog.slice().sort((a, b) => b.date.localeCompare(a.date)).map((entry) => (

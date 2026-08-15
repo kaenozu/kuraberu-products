@@ -2,6 +2,10 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
+import {
+  ARTICLE_LAYOUT,
+  expectedPurchaseCtasPerArticle,
+} from "../config/article-layout.mjs";
 
 function walk(directory, htmlFiles) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
@@ -173,22 +177,60 @@ function internalTarget(href, distDirectory) {
   return path.join(distDirectory, pathname, "index.html");
 }
 
-export function validateArticleCtas(relative, html) {
-  if (!/^articles\/[^/]+\/index\.html$/.test(relative)) return [];
-  const tags = [
-    ...html.matchAll(
-      /<a\b[^>]*data-analytics-event="OutboundClick"[^>]*>[\s\S]*?<\/a>/gi,
-    ),
-  ].map(([tag]) => tag);
-  const errors = [];
-  if (tags.length !== 2) {
+const ARTICLE_PAGE_PATTERN = /^articles\/[^/]+\/index\.html$/;
+
+// 記事ページの商品数を、BaseLayout が出力する
+// <meta name="article:product-count" content="N"> から読み取る。
+// 商品数の唯一の情報源は記事メタデータ（src/content/articles.ts の productCount）。
+// 記事ページなのに meta が無い・値が不正な場合は null を返し、エラーを errors に積む。
+export function readArticleProductCount(relative, html, errors) {
+  const match = html.match(
+    /<meta name="article:product-count" content="(\d+)">/i,
+  );
+  if (!match) {
     errors.push(
-      `${relative}: expected exactly 2 tracked purchase CTAs, found ${tags.length}`,
+      `${relative}: missing article:product-count meta (productCount in src/content/articles.ts is not rendered)`,
+    );
+    return null;
+  }
+  const productCount = Number(match[1]);
+  if (!Number.isInteger(productCount) || productCount < 1) {
+    errors.push(
+      `${relative}: invalid article:product-count "${match[1]}" (must be a positive integer)`,
+    );
+    return null;
+  }
+  return productCount;
+}
+
+// 期待 CTA 枚数は、記事メタデータの商品数（productCount）と
+// config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から記事ごとに導出する。
+// 比較記事（productCount=2）→ 4枚、単一商品記事（productCount=1）→ 2枚。
+// レイアウト変更時は config だけを直し、ここに枚数をハードコードしない。
+export function validateArticleCtas(relative, html, expectedCount) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const ctaPattern = new RegExp(
+    `<a\\b[^>]*data-cta-event="${ARTICLE_LAYOUT.ctaEvent}"[^>]*>[\\s\\S]*?<\\/a>`,
+    "gi",
+  );
+  const tags = [...html.matchAll(ctaPattern)].map(([tag]) => tag);
+  const errors = [];
+  if (tags.length !== expectedCount) {
+    errors.push(
+      `${relative}: expected exactly ${expectedCount} purchase CTAs (per config/article-layout.mjs and article productCount), found ${tags.length}`,
     );
   }
   for (const [index, tag] of tags.entries()) {
     const href = tag.match(/\bhref="([^"]+)"/i)?.[1] ?? "";
     const rel = tag.match(/\brel="([^"]+)"/i)?.[1] ?? "";
+    const placement = tag.match(/\bdata-placement="([^"]+)"/i)?.[1] ?? "";
+    if (!ARTICLE_LAYOUT.placements.includes(placement)) {
+      errors.push(
+        `${relative}: CTA ${index + 1} has unrecognized placement${
+          placement ? `: ${placement}` : ""
+        } (allowed: ${ARTICLE_LAYOUT.placements.join(", ")})`,
+      );
+    }
     if (
       !/https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i.test(
         href,
@@ -210,6 +252,94 @@ export function validateArticleCtas(relative, html) {
     }
   }
   return errors;
+}
+
+// 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
+// 次のいずれかに該当する見出しを空セクションとみなす。
+// - 見出しの直後に別の見出し（h1〜h6）が続く
+// - 見出しの直後に構造的な閉じタグ（main / article / section / details / body / html）が続く
+// - 見出しの直後に空要素（例: <p></p>）が続く
+// - 見出しが文書末尾にある
+// FAQ の <summary><h3>…</h3></summary> は見出しの直後に閉じタグが来るが、
+// summary 自体が本文を持つため検出対象から除外する。
+const STRUCTURAL_CLOSING_TAGS = new Set([
+  "main",
+  "article",
+  "section",
+  "details",
+  "body",
+  "html",
+]);
+
+function summaryRanges(html) {
+  const ranges = [];
+  for (const match of html.matchAll(
+    /<summary\b[^>]*>[\s\S]*?<\/summary\s*>/gi,
+  )) {
+    ranges.push([match.index, match.index + match[0].length]);
+  }
+  return ranges;
+}
+
+function skipWhitespaceAndComments(html, index) {
+  let current = index;
+  while (current < html.length) {
+    const whitespace = /^\s*/.exec(html.slice(current));
+    current += whitespace[0].length;
+    if (!html.startsWith("<!--", current)) break;
+    const commentEnd = html.indexOf("-->", current + 4);
+    if (commentEnd === -1) return html.length;
+    current = commentEnd + 3;
+  }
+  return current;
+}
+
+function nextMeaningfulToken(html, index) {
+  const current = skipWhitespaceAndComments(html, index);
+  if (current >= html.length) return { type: "end" };
+  if (html[current] !== "<") return { type: "text" };
+
+  const tagMatch = html.slice(current).match(/^<(\/?)\s*([A-Za-z][\w:-]*)/);
+  if (!tagMatch) return { type: "text" };
+
+  const closing = tagMatch[1] === "/";
+  const tagName = tagMatch[2].toLowerCase();
+  if (closing) return { type: "closingTag", name: tagName };
+  if (/^h[1-6]$/.test(tagName)) return { type: "heading", name: tagName };
+
+  const tagEnd = findTagEnd(html, current + tagMatch[0].length);
+  if (typeof tagEnd === "number") {
+    const afterOpen = skipWhitespaceAndComments(html, tagEnd);
+    if (new RegExp(`^</${tagName}\\s*>`).test(html.slice(afterOpen))) {
+      return { type: "emptyElement", name: tagName };
+    }
+  }
+  return { type: "openingTag", name: tagName };
+}
+
+export function findEmptySections(html) {
+  const summaries = summaryRanges(html);
+  const sections = [];
+  const headingPattern = /<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1\s*>/gi;
+  for (const match of html.matchAll(headingPattern)) {
+    const start = match.index;
+    if (summaries.some(([from, to]) => start >= from && start < to)) continue;
+    const token = nextMeaningfulToken(html, start + match[0].length);
+    const isEmpty =
+      token.type === "end" ||
+      token.type === "heading" ||
+      (token.type === "closingTag" &&
+        STRUCTURAL_CLOSING_TAGS.has(token.name)) ||
+      token.type === "emptyElement";
+    if (isEmpty) {
+      sections.push({
+        level: Number(match[1]),
+        heading: match[2].trim(),
+        start,
+      });
+    }
+  }
+  return sections;
 }
 
 export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
@@ -247,6 +377,12 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
         errors.push(`${file}: broken internal link ${match[1]}`);
       }
     }
+
+    for (const section of findEmptySections(html)) {
+      errors.push(
+        `${file}: empty section: <h${section.level}>${section.heading}</h${section.level}>`,
+      );
+    }
   }
 
   // Content leakage guard: article-specific copy must never leak into other pages.
@@ -272,7 +408,18 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
         );
       }
     }
-    errors.push(...validateArticleCtas(relative, html));
+    if (!ARTICLE_PAGE_PATTERN.test(relative)) continue;
+    // 記事ごとの期待 CTA 枚数は、記事メタデータの productCount（meta タグ経由）と
+    // config の ctaSets から導出する。
+    const productCount = readArticleProductCount(relative, html, errors);
+    if (productCount === null) continue;
+    errors.push(
+      ...validateArticleCtas(
+        relative,
+        html,
+        expectedPurchaseCtasPerArticle(productCount),
+      ),
+    );
   }
 
   errors.push(
