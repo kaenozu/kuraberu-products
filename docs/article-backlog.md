@@ -48,6 +48,15 @@
 
 これまで「次の候補」に挙げていたパナソニック衣類乾燥除湿機・ティファール電気ケトル・シャープ空気清浄機・コンビチャイルドシートはすべて公開済みです。次は非育児カテゴリ（生活雑貨・デスク用品・キッチン家電など）から、公式ページで比較軸を裏取りできる2商品ペアを選定する。
 
+### パナソニック NE-FL1A vs NE-FL1C（PR準備中）
+
+- 記事slug: `panasonic-ne-fl1a-vs-ne-fl1c`
+- 状態: 専用worktreeで実装・preview verify PASS。PR作成前。
+- 公式ページ: [NE-FL1A](https://panasonic.jp/range/products/NE-FL1A.html) / [NE-FL1C](https://panasonic.jp/range/products/NE-FL1C.html)
+- 比較軸: 総庫内容量、庫内寸法、本体質量、自動メニュー数。
+- 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
+- 完了条件: PRのCI PASS、merge、Production反映、本番HTML/CTA QA。
+
 ## 保留
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE
