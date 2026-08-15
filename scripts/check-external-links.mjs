@@ -25,6 +25,10 @@ for (const file of htmlFiles) {
       errors.push(`${file}: non-HTTPS external URL: ${value}`);
       continue;
     }
+    if (/placeholder/i.test(value)) {
+      errors.push(`${file}: placeholder external URL: ${value}`);
+      continue;
+    }
     if (/^https:\/\//i.test(value)) externalUrls.add(value);
   }
 }
@@ -40,6 +44,9 @@ for (const value of externalUrls) {
       url.hostname === "example.com" ||
       url.hostname.endsWith(".example.com")
     ) {
+      errors.push(`placeholder external URL: ${value}`);
+    }
+    if (/placeholder/i.test(url.pathname + url.search)) {
       errors.push(`placeholder external URL: ${value}`);
     }
   } catch {

@@ -23,12 +23,9 @@ describe("Issue #2 editorial comparison UI", () => {
     expect(article).not.toContain("DifferenceList");
     expect(article).toContain('href="#key-differences"');
     expect(article).toContain('href="#decision-guide"');
-
-    const status = read("src/components/VerificationStatus.astro");
-    expect(status).toContain("公式確認済み");
-    expect(status).toContain("販売ページ確認");
-    expect(status).toContain("確認情報が少ない");
-    expect(status).toContain("未確認");
+    // 確認状態の表示は v2 シェル（ArticleComparisonV2）の「公式情報確認済み」信頼行に統一されている。
+    const shell = read("src/components/ArticleComparisonV2.astro");
+    expect(shell).toContain("公式情報確認済み");
   });
 });
 

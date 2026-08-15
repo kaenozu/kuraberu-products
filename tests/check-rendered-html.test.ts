@@ -76,7 +76,7 @@ describe("rendered article CTA audit", () => {
     ]);
   });
 
-  it("rejects missing CTA count, attributes, host, or disclosure", () => {
+  it("rejects missing CTA count, disallowed host, and missing nofollow", () => {
     const html =
       '<a href="https://example.com" data-cta-event="purchase" data-placement="after-decision">購入</a>';
     expect(
@@ -88,8 +88,34 @@ describe("rendered article CTA audit", () => {
     ).toEqual([
       "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs and article productCount), found 1",
       "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
-      "articles/example/index.html: CTA 1 is missing sponsored/nofollow rel attributes",
-      "articles/example/index.html: CTA 1 is missing advertising disclosure",
+      "articles/example/index.html: CTA 1 is missing nofollow rel attribute",
+    ]);
+  });
+
+  it("accepts an honest Rakuten search fallback CTA without ad claim", () => {
+    const searchCta =
+      '<a href="https://search.rakuten.co.jp/search/mall/KX-HC705" rel="nofollow noopener noreferrer" data-cta-event="purchase" data-placement="after-decision">楽天市場で検索</a>';
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        `${searchCta}${searchCta}`,
+        expectedPurchaseCtasPerArticle(1),
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a placeholder affiliate URL", () => {
+    const placeholderCta =
+      '<a href="https://a.r10.to/placeholder-kx-hc705" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="after-decision">商品を確認（広告）</a>';
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        `${placeholderCta}${placeholderCta}`,
+        expectedPurchaseCtasPerArticle(1),
+      ),
+    ).toEqual([
+      "articles/example/index.html: CTA 1 must not contain a placeholder URL",
+      "articles/example/index.html: CTA 2 must not contain a placeholder URL",
     ]);
   });
 
