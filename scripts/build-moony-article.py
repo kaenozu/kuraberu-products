@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 """chatgpt の正確な日本語原稿（moony-body.txt）から moony-m/index.astro を組み立てる。
 私の日本語タイプを最小化するため、日本語文字列はすべて chatgpt 原稿から機械的に抽出する。"""
-import io, re, json
+import io, os, re, sys, json
+from pathlib import Path
 
-SRC = r'C:\Users\neoen\ashita-cdp\moony-body.txt'
-OUT = r'C:\Users\neoen\kuraberu-products\src\pages\articles\moony-m\index.astro'
+# 入力は外部原稿のため環境変数 MOONY_SRC で指定する（未指定時はコマンドライン引数、
+# いずれも無ければ従来の開発者ローカルパスへフォールバックする）。
+SRC = os.environ.get('MOONY_SRC') or (sys.argv[1] if len(sys.argv) > 1 else r'C:\Users\neoen\ashita-cdp\moony-body.txt')
+# 出力はこのスクリプトが属するリポジトリ内へ解決する（別プロジェクトを上書きしない）。
+OUT = str(Path(__file__).resolve().parents[1] / 'src' / 'pages' / 'articles' / 'moony-m' / 'index.astro')
 
 body = io.open(SRC, encoding='utf-8').read()
 # 原稿末尾に混入したプロンプト除去

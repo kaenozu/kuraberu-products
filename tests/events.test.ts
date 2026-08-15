@@ -179,6 +179,37 @@ describe("click analytics endpoint", () => {
     expect(put).not.toHaveBeenCalled();
   });
 
+  it("rejects a cross-origin request before any rate limit or persistence", async () => {
+    const { kv, put } = makeKv();
+    const response = await onRequestPost(
+      context(
+        postRequest(validPayload(), { Origin: "https://evil.com" }),
+        baseEnv(undefined, kv),
+      ),
+    );
+    expect(response.status).toBe(403);
+    expect(put).not.toHaveBeenCalled();
+  });
+
+  it("rejects a spoofed lookalike origin", async () => {
+    const response = await onRequestPost(
+      context(
+        postRequest(validPayload(), {
+          Origin: "https://kuraberu-products.pages.dev.evil.com",
+        }),
+        baseEnv(),
+      ),
+    );
+    expect(response.status).toBe(403);
+  });
+
+  it("accepts the exact site origin", async () => {
+    const response = await onRequestPost(
+      context(postRequest(validPayload(), { Origin: SITE_URL }), baseEnv()),
+    );
+    expect(response.status).toBe(204);
+  });
+
   it("rejects malformed JSON", async () => {
     const response = await onRequestPost(
       context(postRequest("{not json"), baseEnv()),
