@@ -60,6 +60,104 @@ jobs:
       - name: Build and deploy exact HEAD
         shell: pwsh
         run: |
+          $parameters = @{
+            SiteUrl = '${{ vars.PUBLIC_SITE_URL }}'
+            ExpectedHead = '${{ inputs.expected_sha }}'
+            ContactUrl = '${{ vars.PUBLIC_CONTACT_URL }}'
+            Apply = $true
+          }
+          if ('${{ vars.PURCHASE_LINK_MODE }}' -eq 'api') {
+            $parameters.UseRakutenApi = $true
+          } else {
+            $parameters.PremiumUrl = '${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}'
+            $parameters.SarasaraUrl = '${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}'
+          }
+          & ./tools/production/Invoke-ProductionBuildAndDeploy.ps1 @parameters
+
+      - name: Wait for asset propagation
+        run: sleep 10
+
+      - name: Verify public deployment
+        shell: pwsh
+        run: |
+          & ./tools/production/Invoke-PostDeployVerification.ps1 `
+            -BaseUrl '${{ vars.PUBLIC_SITE_URL }}' `
+            -ExpectedCommitSha '${{ inputs.expected_sha }}'
+
+      - name: Publish privacy-safe summary
+        if: always()
+        shell: bash
+        run: |
+          {
+            echo '## Production deployment'
+            echo
+            echo '- Expected SHA: `${{ inputs.expected_sha }}`'
+            echo '- Site: `${{ vars.PUBLIC_SITE_URL }}`'
+            echo '- Secret values are not printed.'
+            find .acceptance -name report.md -type f -print -exec cat {} \; 2>/dev/null || true
+          } >> "$GITHUB_STEP_SUMMARY"
+name: Deploy production
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: Exact default-branch commit SHA to deploy
+        required: true
+        type: string
+      confirm:
+        description: Type DEPLOY
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: inputs.confirm == 'DEPLOY'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment: production
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
+      RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+      RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
+    steps:
+      - name: Validate dispatch contract
+        shell: bash
+        run: |
+          [[ "${{ inputs.expected_sha }}" =~ ^[0-9a-fA-F]{40}$ ]]
+          test -n "${{ vars.PUBLIC_SITE_URL }}"
+          test "${{ vars.DEPLOYMENT_ENV }}" = "production"
+          test "${{ vars.PURCHASE_LINK_MODE }}" = "api" -o "${{ vars.PURCHASE_LINK_MODE }}" = "direct"
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          ref: ${{ inputs.expected_sha }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Verify exact checkout
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ inputs.expected_sha }}"
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Build and deploy exact HEAD
+        shell: pwsh
+        run: |
           $arguments = @(
             '-SiteUrl', '${{ vars.PUBLIC_SITE_URL }}',
             '-ExpectedHead', '${{ inputs.expected_sha }}',
