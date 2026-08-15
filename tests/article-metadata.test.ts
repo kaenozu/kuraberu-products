@@ -27,6 +27,7 @@ import {
   sharpKcS50VsFuS50Article,
   yamazakiTowerDeskPanelArticle,
   yamazakiCondorWagonArticle,
+  yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
@@ -112,6 +113,7 @@ describe("article metadata", () => {
       thermosTigerBottleArticle,
       yamazakiTowerDeskPanelArticle,
       yamazakiCondorWagonArticle,
+      yamazakiDustWagonArticle,
       zojirushiElectricKettleArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
@@ -145,7 +147,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（サンプル）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(26);
+    ).toHaveLength(27);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle]);
