@@ -60,21 +60,19 @@ jobs:
       - name: Build and deploy exact HEAD
         shell: pwsh
         run: |
-          $arguments = @(
-            '-SiteUrl', '${{ vars.PUBLIC_SITE_URL }}',
-            '-ExpectedHead', '${{ inputs.expected_sha }}',
-            '-ContactUrl', '${{ vars.PUBLIC_CONTACT_URL }}',
-            '-Apply'
-          )
-          if ('${{ vars.PURCHASE_LINK_MODE }}' -eq 'api') {
-            $arguments += '-UseRakutenApi'
-          } else {
-            $arguments += @(
-              '-PremiumUrl', '${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}',
-              '-SarasaraUrl', '${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}'
-            )
+          $parameters = @{
+            SiteUrl = '${{ vars.PUBLIC_SITE_URL }}'
+            ExpectedHead = '${{ inputs.expected_sha }}'
+            ContactUrl = '${{ vars.PUBLIC_CONTACT_URL }}'
+            Apply = $true
           }
-          & ./tools/production/Invoke-ProductionBuildAndDeploy.ps1 @arguments
+          if ('${{ vars.PURCHASE_LINK_MODE }}' -eq 'api') {
+            $parameters.UseRakutenApi = $true
+          } else {
+            $parameters.PremiumUrl = '${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}'
+            $parameters.SarasaraUrl = '${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}'
+          }
+          & ./tools/production/Invoke-ProductionBuildAndDeploy.ps1 @parameters
 
       - name: Wait for asset propagation
         run: sleep 10
