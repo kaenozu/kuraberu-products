@@ -109,7 +109,7 @@ Re-verify flow after editing a spec-bearing article:
 2. `node scripts/spec-claims.mjs update --article-id <id> --checked-at <today>`;
 3. commit both the article change and the updated manifest.
 
-The weekly `spec claims freshness` workflow flags entries older than 180 days and opens an issue titled `仕様表記の再照合が必要（spec-claims）` with the official URLs to re-check. Close the issue after updating the affected `checkedAt` values.
+The weekly `spec claims freshness` workflow flags entries older than 180 days and opens (or updates) an issue titled `仕様表記の再照合が必要（spec-claims）` with the official URLs to re-check. Once every affected entry has its `checkedAt` updated, the next run finds nothing stale and **automatically closes the issue** with a comment. Manual dispatch (`workflow_dispatch`) also runs the same open/update/close cycle, so you can close the issue immediately after finishing a re-verification pass.
 
 Initial entries were generated from the 2026-08-16 full-site audits (dimensions/weight audit and the extended power/capacity/noise/tatami audit), which surfaced and fixed the BabyBjörn cradle weight (`#172`) and smart-potty weight discrepancies.
 
