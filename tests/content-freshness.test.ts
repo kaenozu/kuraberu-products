@@ -45,7 +45,8 @@ describe("content freshness", () => {
 
     for (const slug of articleDirs) {
       const html = readFileSync(join(articlesDir, slug, "index.html"), "utf8");
-      if (slug === "thermos-tiger-bottle") continue;
+      if (["thermos-tiger-bottle", "tiger-mta-j050-guide"].includes(slug))
+        continue;
       for (const term of bottleOnlyTerms) {
         expect(html, `${slug} contains ${term}`).not.toContain(term);
       }
