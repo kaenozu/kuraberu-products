@@ -69,10 +69,10 @@ const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
     gap: 0.5rem;
   }
   .hero-product:first-child {
-    --product-color: #8aaea4;
+    --product-color: var(--product-left);
   }
   .hero-product:last-child {
-    --product-color: #d59b77;
+    --product-color: var(--product-right);
   }
   .hero-product-img {
     display: block;
@@ -106,11 +106,11 @@ const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
     margin: 0;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #c83e2c;
+    color: var(--product-highlight);
     line-height: 1.5;
   }
   .hero-product-tagline b {
-    background: #c83e2c;
+    background: var(--product-highlight);
     color: #fff;
     font-weight: 700;
     font-size: 0.78rem;

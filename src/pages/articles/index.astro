@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import {articleMetadata} from '../../content/articles';
+import {normalizeDiscoveryText} from '../../lib/article-discovery';
 
 const categories = [...new Set(articleMetadata.map((article) => article.category))].sort();
 const tags = [...new Set(articleMetadata.flatMap((article) => article.tags))].sort();
@@ -42,7 +43,7 @@ const sorted = [...articleMetadata].sort((a, b) =>
         <article
           class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}
           data-article-card
-          data-search={[article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' ').normalize('NFKC').toLocaleLowerCase('ja-JP')}
+          data-search={normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' '))}
           data-category={article.category}
           data-tags={JSON.stringify(article.tags)}
         >
