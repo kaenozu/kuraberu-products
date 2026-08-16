@@ -147,9 +147,10 @@ export const pampersNewbornArticle = defineArticleMetadata({
   summary:
     "「肌へのいちばん」と「さらさらケア」を、公式情報・販売ページ・口コミの確認状況に分けて比較します。",
   publishedAt: "2026-07-31",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-07-31",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/pampers-premium-newborn.jpg",
   changeLog: [
     {
