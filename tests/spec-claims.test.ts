@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { format } from "prettier";
 import {
   DEFAULT_THRESHOLD_DAYS,
   addMissingEntries,
@@ -12,6 +13,7 @@ import {
   extractSpecClaims,
   findStaleEntries,
   loadManifest,
+  serializeManifest,
   updateEntry,
 } from "../scripts/spec-claims.mjs";
 import { parseArticles } from "../scripts/generate-x-announcements.mjs";
@@ -285,6 +287,21 @@ describe("addMissingEntries / updateEntry", () => {
     );
     expect(updated?.checkedAt).toBe("2026-08-16");
     expect(updated?.claimsFingerprint).toBe(target.claimsFingerprint);
+  });
+});
+
+describe("manifest serialization", () => {
+  it("keeps the committed manifest prettier-formatted", async () => {
+    const raw = readFileSync("data/spec-claims.json", "utf8");
+    const formatted = await format(raw, { parser: "json" });
+    expect(raw).toBe(formatted);
+  });
+
+  it("serializes update/init output in a prettier-stable format", async () => {
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    const serialized = await serializeManifest(manifest);
+    const reformatted = await format(serialized, { parser: "json" });
+    expect(serialized).toBe(reformatted);
   });
 });
 
