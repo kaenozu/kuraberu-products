@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ComparisonHero from '../../../components/ComparisonHero.astro';
+import HeroComparison from '../../../components/HeroComparison.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import {tigerMtaJ050GuideArticle as articleMetadata} from '../../../content/articles';
 import {tigerMtaJ050} from '../../../lib/products';
@@ -36,17 +37,9 @@ const faqEntries = [
       diffAnchor="#features"
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
-    <section class="single-product-hero" aria-label="商品概要">
-      <a href={officialPage} target="_blank" rel="noopener noreferrer" class="single-product-image">
-        <img src={tigerMtaJ050.imagePath} alt={tigerMtaJ050.fullName} width="500" height="500" loading="eager" />
-      </a>
-      <div class="single-product-copy">
-        <p class="section-label">30秒でわかる</p>
-        <h2>{tigerMtaJ050.brand} <span>{tigerMtaJ050.model}</span></h2>
-        <p>日常の持ち歩きで確認したい、開けやすさ・握りやすさ・お手入れのポイントを公式情報から整理しています。</p>
-        <a class="hero-official" href={officialPage} target="_blank" rel="noopener noreferrer">公式商品ページを見る →</a>
-      </div>
-    </section>
+    <HeroComparison
+      left={{brand: tigerMtaJ050.brand, line: tigerMtaJ050.model, tagline: 'ハンドル・お手入れを確認するなら', image: tigerMtaJ050.imagePath, imageAlt: tigerMtaJ050.fullName, officialHref: officialPage}}
+    />
     <p class="lead">タイガー MTA-J050は、持ち歩きやすさと日常のお手入れを確認しながら選びたい真空断熱ボトルです。この記事では、タイガー公式ページで確認できる機能だけをもとに、向いている人と購入前の確認ポイントを整理します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#features">主な特徴</a><a href="#decision-guide">向いている人</a><a href="#faq">FAQ</a></nav>
 
@@ -85,13 +78,6 @@ const faqEntries = [
 </BaseLayout>
 
 <style>
-  .single-product-hero { display: grid; grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.15fr); gap: 1.25rem; align-items: center; margin-block: 1rem 2rem; padding: 1rem; border: 1px solid var(--line); border-top: 5px solid var(--product-left); border-radius: 12px; background: var(--paper); }
-  .single-product-image { display: block; border-radius: 8px; overflow: hidden; background: #f4f2ec; }
-  .single-product-image img { display: block; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; }
-  .single-product-copy h2 { margin: 0.25rem 0 0.75rem; font-size: 1.5rem; }
-  .single-product-copy h2 span { font-weight: 400; color: var(--muted); }
-  .single-product-copy p:not(.section-label) { line-height: 1.8; }
-  .single-product-copy .hero-official { color: var(--muted); text-underline-offset: 3px; }
   .single-guide-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 720px) { .single-product-hero { grid-template-columns: 1fr; } .single-product-image { max-width: 280px; margin-inline: auto; width: 100%; } .single-guide-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 720px) { .single-guide-grid { grid-template-columns: 1fr; } }
 </style>
