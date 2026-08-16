@@ -33,6 +33,7 @@ import {
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
+  panasonicNeFl1aVsNeFl1cArticle,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -110,6 +111,7 @@ describe("article metadata", () => {
       panasonicVacuumArticle,
       panasonicHairDryerArticle,
       tefalKettleArticle,
+      panasonicNeFl1aVsNeFl1cArticle,
       sharpKcS50VsFuS50Article,
       thermosTigerBottleArticle,
       yamazakiTowerDeskPanelArticle,
@@ -149,7 +151,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（サンプル）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(28);
+    ).toHaveLength(29);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle]);

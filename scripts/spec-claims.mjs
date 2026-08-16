@@ -108,9 +108,13 @@ const SPEC_PATTERNS = [
   },
 ];
 
-/** 公式ソースURL（official 系の識別子に代入された URL リテラル）。 */
+/**
+ * 公式ソースURL。official 系の識別子に代入された URL リテラルを検出する。
+ * 変数代入（`const shortOfficial = 'url'`）とオブジェクトプロパティ
+ * （`officialUrl: 'url'`）の両形式に対応する。
+ */
 const OFFICIAL_URL_RE =
-  /\b([A-Za-z_][A-Za-z0-9_]*[Oo]fficial[A-Za-z0-9_]*)\s*=\s*['"](https?:\/\/[^'"]+)['"]/g;
+  /\b\w*official\w*\s*[:=]\s*['"](https?:\/\/[^'"]+)['"]/gi;
 
 /** 商品マスタ（src/lib/products.ts）の仕様値。 */
 const PRODUCTS_SPEC_LINE_RE =
@@ -149,7 +153,7 @@ export function extractSpecClaims(sourceText) {
 export function extractOfficialUrls(sourceText) {
   const urls = [];
   for (const match of sourceText.matchAll(OFFICIAL_URL_RE)) {
-    urls.push(match[2]);
+    urls.push(match[1]);
   }
   return [...new Set(urls)].sort();
 }
