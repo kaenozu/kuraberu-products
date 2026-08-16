@@ -13,8 +13,16 @@
   --muted: #424843;
   --line: #e5e1d8;
   --paper: #fff;
-  --accent: #e87a67;
+  /* アクセントはWCAG AAのコントラストを確保できる値（#b04c3b）で統一する。
+     以前は accessibility.css の :root で上書きしていたが、二重定義をやめて
+     このトークンに一本化した（実効値は同じ）。 */
+  --accent: #b04c3b;
   --sage: #e1e8e2;
+  /* 比較UIの商品カラー（左右の商品・強調表示）。
+     コンポーネント間で同じ値を重複させないためのトークン。 */
+  --product-left: #8aaea4;
+  --product-right: #d59b77;
+  --product-highlight: #c83e2c;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
@@ -550,7 +558,7 @@ a {
 .difference-highlight-note {
   display: inline-block;
   width: fit-content;
-  background: #c83e2c;
+  background: var(--product-highlight);
   color: #fff;
   font-size: 0.7rem;
   font-style: normal;
@@ -753,10 +761,6 @@ a {
 }
 .section-intro .lead {
   margin-bottom: 0;
-}
-
-/* X の実際の声: 投稿ウィジェットを 2 列で大きく見せる */
-@media (min-width: 760px) {
 }
 
 .cta.cta-card {

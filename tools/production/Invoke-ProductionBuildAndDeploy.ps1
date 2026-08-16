@@ -59,13 +59,15 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $repo "$OutputRoot/production-build-$stamp"))
 New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
 $oldEnv = @{}
-$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID')
+$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID','PUBLIC_BUILD_SHA')
 foreach ($name in $names) { $oldEnv[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
 
 try {
     $env:DEPLOYMENT_ENV = 'production'
     $env:PUBLIC_SITE_URL = $SiteUrl.GetLeftPart([System.UriPartial]::Authority)
     $env:PUBLIC_CONTACT_URL = $ContactUrl
+    # 配信物の追跡・照合用。PostDeploy検証が配信HTMLの meta[name=build-sha] と突合する。
+    $env:PUBLIC_BUILD_SHA = $head
     if ($UseRakutenApi) {
         $env:PUBLIC_RAKUTEN_PREMIUM_URL = $null
         $env:PUBLIC_RAKUTEN_SARASARA_URL = $null
