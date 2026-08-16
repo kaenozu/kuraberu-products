@@ -1,37 +1,30 @@
 ---
+// SNS セクション（参考情報）。hasPosts=true のときだけ描画する。
+// 投稿が見つからなかった記事では「0件」の空セクションを出さず、
+// セクションごと非表示にする（記事末尾に確認記録を残す必要がある場合は
+// 別途小さな表記を置く方針とし、ここでは出さない）。
 interface Props {
   query: string;
   checkedAt?: string;
   hasPosts?: boolean;
 }
 
-const { query, checkedAt, hasPosts = false } = Astro.props;
+const { hasPosts = false } = Astro.props;
 ---
-<section class="article-social-proof" id="sns">
-  <h2>SNS での感想（参考情報）</h2>
-  <p>
-    SNS投稿は実際の利用者の感想を知るための参考情報です。商品の仕様や比較結論の根拠には使用していません。比較の根拠はメーカー公式情報のみです。
-  </p>
-  {hasPosts ? (
-    <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
-  ) : (
-    <p class="sns-check-status">
-      該当型番を確認できる投稿は今回見つかりませんでした。{checkedAt && <>（{checkedAt}確認）</>}
-      <span class="sr-only">検索条件：{query}</span>
+{hasPosts ? (
+  <section class="article-social-proof" id="sns">
+    <h2>SNS での感想（参考情報）</h2>
+    <p>
+      SNS投稿は実際の利用者の感想を知るための参考情報です。商品の仕様や比較結論の根拠には使用していません。比較の根拠はメーカー公式情報のみです。
     </p>
-  )}
-  <slot />
-</section>
+    <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
+    <slot />
+  </section>
+) : null}
 
 <style>
   .article-social-proof {
     margin-block: 2rem;
-  }
-
-  .sns-check-status {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.9rem;
   }
 
   .sns-posts-note {
