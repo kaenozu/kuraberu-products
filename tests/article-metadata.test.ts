@@ -232,7 +232,7 @@ describe("article metadata", () => {
     );
   });
 
-  it("renders the single-product count for the single-product sample article", () => {
+  it("renders the single-product count for the single-product check article", () => {
     const html = readFileSync(
       "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
       "utf8",
