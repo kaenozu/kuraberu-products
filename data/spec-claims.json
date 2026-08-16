@@ -3,26 +3,36 @@
   "description": "記事の仕様クレームと公式ソースの突合記録。checkedAt は公式ページで確認した日。",
   "entries": [
     {
+      "articleId": "shupot",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:5d37ee5634698c2a84c236bbecfef370db8ab54952321eb69004b9662adf3deb",
+      "officialUrls": [
+        "https://shop.pigeon.co.jp/products/1032018",
+        "https://shop.pigeon.co.jp/products/2000638s"
+      ],
+      "note": "価格クレーム（電動 13,585円 / 手動 3,762円、2026-08-10時点）をピジョン公式ショップで確認（2026-08-16再確認）"
+    },
+    {
       "articleId": "babybjorn",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:e6ba2a067a960d88509f0267b8969d64e43c1131b4c4977453425fa79969d143",
+      "claimsFingerprint": "sha256:5f3296e2ca25173c12289e6cadea085d1e864faa092fd79631d7b2100e3cefbf",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/",
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/",
         "https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers"
       ],
-      "note": "キャリアの対象体重・サイズ目安を公式比較表で確認"
+      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
     },
     {
       "articleId": "babybjorn-onekai",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:97d19b30e7f7aab0d3476a52fd5639fa4d5268dfb6d805e2d001519dea578c88",
+      "claimsFingerprint": "sha256:cabf2b528a1cfac111ed4e3b2ce816be77f74945eceeba8a8e180193ff7faba9",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/",
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/",
         "https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers"
       ],
-      "note": "キャリアの対象体重・サイズ目安を公式比較表で確認"
+      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
     },
     {
       "articleId": "babybjorn-bouncer",
@@ -37,42 +47,49 @@
     {
       "articleId": "babybjorn-cradle",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:845ec5a6e12842f39d67b328b8b6d5e2247b35dfb676987bb2ced54dbcc60894",
+      "claimsFingerprint": "sha256:86859afe6956a7b9481ea4d33bf72ec7cd291a78795b38a899c9ecd8c922304d",
       "officialUrls": [
         "https://www.aprica.jp/products/home/bed/coconel_air/",
         "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/"
       ],
-      "note": "本体重量を約6kg に修正（PR #172、2026-08-16 本番反映）"
+      "note": "本体重量を約6kg に修正（PR #172）。表示価格 49,500円（2026-08-10時点）"
     },
     {
       "articleId": "babybjorn-potty",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:e136468b916599696bbbb8f0d49752e78dd367f9d35191056d56a3981b0d8439",
+      "claimsFingerprint": "sha256:9709ca96f9b4201691057c812ad73863eff44927afbde934cf72631977b2b900",
       "officialUrls": [
         "https://www.babybjorn.jp/products/bathroom/potty-chair/",
         "https://www.babybjorn.jp/products/bathroom/smart-potty/"
       ],
-      "note": "スマートポッティ重量を約540g に修正（公式商品ページ、2026-08-16）。ポッティチェア 約870g・寸法は一致"
+      "note": "スマートポッティ重量を約540g に修正（PR #173、公式商品ページ）。表示価格 3,080円（2026-08-10時点）を2026-08-16再確認"
+    },
+    {
+      "articleId": "pigeon-bottle-160-240",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:ec9158d31a46b0f45196ca72025b4fe7f87b03e9798ff88e46090285210383a0",
+      "officialUrls": ["https://shop.pigeon.co.jp/products/1026735"],
+      "note": "価格クレーム（160ml 2,750円 / 240ml 2,860円、2026-08-11時点）をピジョン公式オンラインショップで確認（2026-08-16再確認）。対象月齢目安は公式商品ページに基づく"
     },
     {
       "articleId": "combi-the-s-plus-vs-premium",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:6053c709c60fc924351d5a8c7e08fbd3e42207f62d4308908d82ad4e68abcb85",
+      "claimsFingerprint": "sha256:60480b57d1994797ea28f4696c5d4cd09b09ff08804c1f638b8f8b0617750b15",
       "officialUrls": [
         "https://www.combi.co.jp/store/carseat/thesplus/g/g120066/",
         "https://www.combi.co.jp/store/carseat/thespremium/g/g118991/"
       ],
-      "note": "重量 13.8/14.1kg・対象身長を公式ページで確認"
+      "note": "重量 13.8/14.1kg・対象身長 40-105/40-125cm・表示価格を公式ページで確認"
     },
     {
       "articleId": "tiger-jpv-l100-vs-jpv-m100",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:146e912a17d6986004109400c07b71149c7bb07d4bfd61a89e1329b56001a44a",
+      "claimsFingerprint": "sha256:a3d4924774237acd1e76b3e333535538192cae716bc81aa938104964917ec671",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/",
         "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-m/"
       ],
-      "note": "寸法 25.7×38×21.4cm・5.4kg・容量を公式ページで確認"
+      "note": "寸法 25.7×38×21.4cm・5.4kg・容量・表示価格を公式ページで確認"
     },
     {
       "articleId": "panasonic-mc-sb55k-vs-mc-sb35k",
@@ -107,17 +124,17 @@
     {
       "articleId": "thermos-tiger-bottle",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:d15e78e78b05518c75906875209531e1a016154eae6cffc61b623199c5314d26",
+      "claimsFingerprint": "sha256:d989d3a2a9d75ea284981d256f92447a34ecd518814ced3217b1d3866d5cd954",
       "officialUrls": [
         "https://www.thermos.jp/product/series/jnl-s00.html",
         "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
       ],
-      "note": "重量 0.2/0.26kg・寸法・保温/保冷効力・口径を公式ページで確認"
+      "note": "重量 0.2/0.26kg・寸法・口径・カラー数・保温/保冷効力・容量を公式ページで確認"
     },
     {
       "articleId": "yamazaki-tower-desk-panel-vs-pen-stand",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:b01b44a1606f56e5898d4c18e5bfe47db2948acdea2123ceb0fa82cf590307a9",
+      "claimsFingerprint": "sha256:6db8081e1f9912215b9a4d7a9a9181e55a0dbde183a02df3e7506daaf9d37e88",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/240034",
         "https://www.yamajitsu.co.jp/products/240051"
@@ -137,32 +154,32 @@
     {
       "articleId": "yamazaki-dust-wagon-45l-2division-vs-3division",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:cb09f3ea30086e7420da773e1c3e217b18959328a31faa850d5f6e96071715e4",
+      "claimsFingerprint": "sha256:9a7dde38ccfc60e4d5bda7b3ef89d673e3888c862b78cbe6aa48747618e1c870",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/240712",
         "https://www.yamajitsu.co.jp/products/240713"
       ],
-      "note": "寸法 52×44×60 / 76×44×60cm・重量 7.7/10.35kg・耐荷重を公式ページで確認"
+      "note": "寸法 52×44×60 / 76×44×60cm・重量 7.7/10.35kg・耐荷重 5kg を公式ページで確認"
     },
     {
       "articleId": "zojirushi-ck-pa08-vs-ck-dc08",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:84737f9536159de3bf1a6150eaac993f93a4a3d593d4d00da43af5a30ab15a27",
+      "claimsFingerprint": "sha256:77401998a67144b325bc23f94b9aa4e3f28d2d19ad3111337e83d3214c2702cd",
       "officialUrls": [
         "https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/",
         "https://www.zojirushi.co.jp/syohin/stan/product/electric_kettle/ck-pa.html"
       ],
-      "note": "質量 0.9/0.8kg（プレート含む 1.1/1.0kg）・1300W・沸とう時間を公式ページで確認"
+      "note": "質量 0.9/0.8kg（プレート含む 1.1/1.0kg）・1300W・沸とう時間（カップ1杯約60秒・満水約4分）を公式ページで確認"
     },
     {
       "articleId": "tefal-dv4030j0-vs-dv8070j0",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:f7c6a5dc07b243f6e0cc2fc7bf150398e3ab4f72d80ec502f5bf54268d0c9c7e",
+      "claimsFingerprint": "sha256:19e5b54c39e9f1bb97b500d80cf3ae0afde4eab23f112bacb81dc4aa13881b71",
       "officialUrls": [
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steam-rafrai-1830009402/",
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steamsupre-1830009138/"
       ],
-      "note": "重量 690/680g・タンク 120/140mL・800/950W・連続運転 約9/約14分を公式比較表で確認"
+      "note": "重量 690/680g・タンク 120/140mL・800/950W・スチーム量・連続運転 約9/約14分を公式比較表で確認"
     },
     {
       "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",

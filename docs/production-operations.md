@@ -93,7 +93,7 @@ node scripts/generate-x-announcements.mjs \
 
 ## 6. Spec-claim verification
 
-Articles that state product specs (dimensions, weight, capacity, power, noise, applicable tatami count, and efficiency) are tracked in `data/spec-claims.json`. Each entry records the official source URL(s), a fingerprint of the spec-claim text, and the date the claims were last verified against the official page (`checkedAt`).
+Articles that state product specs (dimensions, weight, capacity, power, noise, applicable tatami count, efficiency, price, mouth diameter, color count, steam amount, boiling time, usage height/age, and load capacity) are tracked in `data/spec-claims.json`. Each entry records the official source URL(s), a fingerprint of the spec-claim text, and the date the claims were last verified against the official page (`checkedAt`). Prices are typically dated quotes from official shops (e.g. `2026-08-11時点の公式オンラインショップ表示価格`); the fingerprint catches edits to those figures, and the 180-day freshness gate prompts a price re-check.
 
 The `verify` pipeline runs `node scripts/spec-claims.mjs check`, which fails when:
 
