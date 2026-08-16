@@ -10,7 +10,9 @@ import {isContentStale} from '../../../lib/content-freshness';
 
 // 楽天市場の購入CTA。実運用では楽天アフィリエイトで生成した a.r10.to の
 // 短縮リンクに差し替えること（単一商品記事のサンプルのため未差し替え）。
-const rakutenSearch = 'https://a.r10.to/placeholder-kx-hc705';
+// 未差し替えの間は、壊れたプレースホルダーではなく実際に動く楽天検索結果へ導く。
+const rakutenSearch =
+  'https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%8A%E3%82%BD%E3%83%8B%E3%83%83%E3%82%AF%20%E3%83%99%E3%83%93%E3%83%BC%E3%83%A2%E3%83%8B%E3%82%BF%E3%83%BC%20KX-HC705';
 const officialPage = 'https://panasonic.jp/hns/products/KX-HC705.html';
 
 const faqEntries = [

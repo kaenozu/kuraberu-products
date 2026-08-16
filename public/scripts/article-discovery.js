@@ -1,3 +1,7 @@
+// 記事検索のクライアント側絞り込み。
+// normalize の仕様（NFKC → toLocaleLowerCase('ja-JP') → trim → 空白正規化）は
+// src/lib/article-discovery.ts と同一に保つこと（仕様の単一情報源はTS側）。
+// 変更時は両方と tests/article-discovery.test.ts を同期させる。
 (() => {
   const root = document.querySelector("[data-article-discovery]");
   if (!(root instanceof HTMLElement)) return;

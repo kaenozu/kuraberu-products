@@ -7,6 +7,7 @@
 // - 第三者ドメインへの送信は一切行わない（すべて同一オリジン）
 // - KV 未設定・障害時はイベントを破棄して 204 を返し続ける（計測はサイト体験の可用性より劣後）
 import { clientIp, enforceRateLimit, json } from "./shared";
+import { isSameSiteOrigin } from "./contact";
 import { ARTICLE_LAYOUT } from "../../config/article-layout.mjs";
 
 const MAX_BODY_BYTES = 4096;
@@ -30,6 +31,13 @@ function isValidPath(value: string): boolean {
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  // 送信元チェック（同一オリジンからのみ。Origin 完全一致）
+  const origin = request.headers.get("Origin") ?? "";
+  const siteUrl = env.PUBLIC_SITE_URL ?? "https://kuraberu-products.pages.dev";
+  if (!isSameSiteOrigin(origin, siteUrl)) {
+    return json({ ok: false, error: "invalid origin" }, 403);
+  }
+
   // 同一IPからの連続送信を制限する（例: 1分あたり60件）。
   const rate = await enforceRateLimit(
     env.ANALYTICS_RATE_LIMITER,

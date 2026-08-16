@@ -18,8 +18,13 @@ interface ContactBody {
  * Origin ヘッダーが許可されたサイトのオリジンと完全一致するかを判定する。
  * 前方一致ではなく origin（scheme + host + port）の完全比較を行うため、
  * `https://kuraberu-products.pages.dev.evil.com` のような偽装オリジンは
- * 許可しない。Origin が無いリクエスト（curl・サーバー間呼び出しなど）は
- * 従来どおり許可する。
+ * 許可しない。
+ *
+ * 注意: これはCSRF対策の完全な代替ではない。Origin が無いリクエスト
+ * （curl・サーバー間呼び出し・一部の旧クライアント）は意図的に許可する
+ * ため、非ブラウザクライアントからの偽装は防げない。ブラウザ由来の
+ * クロスサイト送信は Origin を必ず付けるため、実質的にはブラウザ経由の
+ * 不正送信を拒否する役割を担う。
  */
 export function isSameSiteOrigin(
   originHeader: string | null,

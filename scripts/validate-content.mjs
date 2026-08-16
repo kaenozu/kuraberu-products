@@ -16,6 +16,7 @@ const includedExtensions = new Set([
 const banned = ["大人気", "話題", "絶対におすすめ", "これ一択"];
 const placeholderUrl =
   /https?:\/\/(?:[^\s"'<>/]+\.)?example\.com(?:[\s"'<>/]|$)/gi;
+const placeholderTokenUrl = /https?:\/\/[^\s"'<>]*placeholder[^\s"'<>]*/gi;
 const files = [];
 
 function walk(directory) {
@@ -44,6 +45,11 @@ for (const file of files) {
     }
   }
   for (const match of text.matchAll(placeholderUrl)) {
+    errors.push(
+      `${file}:${lineNumber(text, match.index ?? 0)}: placeholder URL`,
+    );
+  }
+  for (const match of text.matchAll(placeholderTokenUrl)) {
     errors.push(
       `${file}:${lineNumber(text, match.index ?? 0)}: placeholder URL`,
     );

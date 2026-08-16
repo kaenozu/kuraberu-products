@@ -77,12 +77,22 @@ Check 'Article JSON-LD' ($null -ne $articleJson) 'Article structured data found 
 if ($articleJson) {
     Check 'Article JSON-LD URL' ($articleJson.url -eq "$origin/articles/pampers-newborn/") "url=$($articleJson.url)"
     Check 'Article dates' (-not [string]::IsNullOrWhiteSpace($articleJson.datePublished) -and -not [string]::IsNullOrWhiteSpace($articleJson.dateModified)) 'datePublished and dateModified are present.'
+  }
+
+# ExpectedCommitSha が指定された場合は、配信HTMLに埋め込まれたビルド元SHAと突合する
+# （Invoke-ProductionBuildAndDeploy.ps1 が PUBLIC_BUILD_SHA としてビルド時に注入する）。
+if ($ExpectedCommitSha) {
+    $buildShaMatch = [regex]::Match($articleHtml, '<meta[^>]+name=["'']build-sha["''][^>]+content=["''](?<value>[^"'']+)', 'IgnoreCase')
+    Check 'Deployed build-sha meta' $buildShaMatch.Success 'build-sha meta must be present when a commit is expected.'
+    if ($buildShaMatch.Success) {
+        Check 'Deployed commit matches expected SHA' ($buildShaMatch.Groups['value'].Value -eq $ExpectedCommitSha) "actual=$($buildShaMatch.Groups['value'].Value) expected=$ExpectedCommitSha"
+    }
 }
 
 $allLinks = [regex]::Matches($articleHtml, '(?i)href=["''](?<href>https://[^"'']+)["'']') | ForEach-Object { $_.Groups['href'].Value }
-$rakutenLinks = @($allLinks | Where-Object { ([uri]$_).Host -match '(^|\.)rakuten\.co\.jp$|^r10\.to$' })
+$rakutenLinks = @($allLinks | Where-Object { ([uri]$_).Host -match '(^|\.)rakuten\.co\.jp$|(^|\.)r10\.to$' })
 Check 'Rakuten CTA present' ($rakutenLinks.Count -ge 1) "allowed Rakuten links=$($rakutenLinks.Count)"
-$disallowedRakuten = @($allLinks | Where-Object { $_ -match '(?i)rakuten' -and ([uri]$_).Host -notmatch '(^|\.)rakuten\.co\.jp$|^r10\.to$' })
+$disallowedRakuten = @($allLinks | Where-Object { $_ -match '(?i)rakuten' -and ([uri]$_).Host -notmatch '(^|\.)rakuten\.co\.jp$|(^|\.)r10\.to$' })
 Check 'Rakuten CTA host allowlist' ($disallowedRakuten.Count -eq 0) "disallowed count=$($disallowedRakuten.Count)"
 
 $report = [ordered]@{

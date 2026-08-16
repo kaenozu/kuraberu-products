@@ -1,5 +1,16 @@
 import type { ArticleMetadata } from "../content/articles";
 
+/**
+ * 記事検索（比較記事一覧）の仕様の単一情報源。
+ *
+ * - 本番では src/pages/articles/index.astro が normalizeDiscoveryText を
+ *   サーバーサイドで使い、記事カードの data-search 属性を正規化する。
+ * - クライアント側の絞り込みは public/scripts/article-discovery.js が行う。
+ *   public/ 配下の素のJSは Astro バンドルを通らないため、このTS実装を import
+ *   できない。そのため、クライアントJSの normalize はこのモジュールと同一の
+ *   仕様（NFKC → toLocaleLowerCase('ja-JP') → trim → 空白正規化）に保つこと。
+ *   変更時は必ず両方と tests/article-discovery.test.ts を同期させる。
+ */
 export interface ArticleDiscoveryState {
   query: string;
   category?: string;

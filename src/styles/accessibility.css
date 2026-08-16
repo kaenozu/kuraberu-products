@@ -1,6 +1,5 @@
-:root {
-  --accent: #b04c3b;
-}
+/* アクセント色は global.css の --accent（#b04c3b、WCAG AA対応）をそのまま使う。
+   ここでの上書きは廃止し、トークン定義は global.css に一本化した。 */
 
 :focus-visible {
   outline: 3px solid var(--accent);

@@ -42,8 +42,11 @@ const {
   {commonNote.trim() && <p class="key-diffs-common">{commonNote}</p>}
   <div class="key-diffs-list">
     {items.map((row) => {
-      const leftRatio = row.bar ? (row.bar.left / (row.bar.left + row.bar.right)) * 100 : null;
-      const rightRatio = row.bar ? 100 - (leftRatio as number) : null;
+      // 比率バーの0除算を防ぐ: 両方が0のときはバーを描画しない。
+      const barTotal = row.bar ? row.bar.left + row.bar.right : 0;
+      const leftRatio =
+        row.bar && barTotal > 0 ? (row.bar.left / barTotal) * 100 : null;
+      const rightRatio = leftRatio !== null ? 100 - leftRatio : null;
       return (
         <div class="key-diff-row">
           <p class="key-diff-label">{row.label}</p>
@@ -131,7 +134,7 @@ const {
     outline: 2px solid #e8b4a8;
   }
   .key-diff-value.is-highlighted b {
-    color: #c83e2c;
+    color: var(--product-highlight);
     font-size: 1.45rem;
   }
   .key-diff-brand {
@@ -150,10 +153,10 @@ const {
     background: #e8e4da;
   }
   .key-diff-bar-fill.is-left {
-    background: #8aaea4;
+    background: var(--product-left);
   }
   .key-diff-bar-fill.is-right {
-    background: #d59b77;
+    background: var(--product-right);
   }
   .key-diff-bar-scale {
     display: flex;

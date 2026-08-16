@@ -23,8 +23,8 @@ function Require-Command([string]$Name) {
     if (-not $command) { throw "Required command not found: $Name" }
     $command.Source
 }
-function Run([string]$File, [string[]]$Args, [string]$LogPath) {
-    $lines = @(& $File @Args 2>&1 | ForEach-Object { "$_" })
+function Run([string]$File, [string[]]$ArgumentList, [string]$LogPath) {
+    $lines = @(& $File @ArgumentList 2>&1 | ForEach-Object { "$_" })
     $exitCode = $LASTEXITCODE
     if ($LogPath) { $lines | Set-Content -LiteralPath $LogPath -Encoding utf8 }
     if ($exitCode -ne 0) { throw "$File exited with code $exitCode. See $LogPath" }
@@ -59,13 +59,15 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $repo "$OutputRoot/production-build-$stamp"))
 New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
 $oldEnv = @{}
-$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID')
+$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID','PUBLIC_BUILD_SHA')
 foreach ($name in $names) { $oldEnv[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
 
 try {
     $env:DEPLOYMENT_ENV = 'production'
     $env:PUBLIC_SITE_URL = $SiteUrl.GetLeftPart([System.UriPartial]::Authority)
     $env:PUBLIC_CONTACT_URL = $ContactUrl
+    # 配信物の追跡・照合用。PostDeploy検証が配信HTMLの meta[name=build-sha] と突合する。
+    $env:PUBLIC_BUILD_SHA = $head
     if ($UseRakutenApi) {
         $env:PUBLIC_RAKUTEN_PREMIUM_URL = $null
         $env:PUBLIC_RAKUTEN_SARASARA_URL = $null
@@ -92,7 +94,10 @@ try {
         if ($Apply) {
             if (-not $env:CLOUDFLARE_API_TOKEN) { throw 'CLOUDFLARE_API_TOKEN is required for -Apply.' }
             if (-not $env:CLOUDFLARE_ACCOUNT_ID) { throw 'CLOUDFLARE_ACCOUNT_ID is required for -Apply.' }
-            Run $pnpm @('exec', 'wrangler', 'deploy', '--config', 'wrangler.jsonc') (Join-Path $runDirectory 'wrangler-deploy.log') | Out-Null
+            # 本番は Cloudflare Pages プロジェクト(kuraberu-products.pages.dev)への Direct Upload。
+            # functions/ は実行ディレクトリに存在すれば自動でバンドルされる。
+            # --branch=main は production_branch(本番ブランチ)への本番デプロイを明示する。
+            Run $pnpm @('exec', 'wrangler', 'pages', 'deploy', 'dist', '--project-name', 'kuraberu-products', '--branch=main') (Join-Path $runDirectory 'wrangler-deploy.log') | Out-Null
         }
     } finally { Pop-Location }
 

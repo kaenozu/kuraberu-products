@@ -22,6 +22,8 @@ const {
   faq,
 } = Astro.props;
 const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
+// 本番デプロイ時のみ tools/production が注入するビルド元コミットSHA（PostDeploy検証で照合）。未設定時は出力しない。
+const buildSha = import.meta.env.PUBLIC_BUILD_SHA;
 const canonical = new URL(Astro.url.pathname, `${site.url}/`).toString();
 const robotsContent = robots ?? (isProduction ? 'index,follow' : 'noindex,nofollow');
 const resolvedOgType = article ? 'article' : (ogType ?? 'website');
@@ -113,6 +115,7 @@ const breadcrumbStructuredData = article
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={robotsContent} />
+    {buildSha && <meta name="build-sha" content={buildSha} />}
     <link rel="canonical" href={canonical} />
     <meta property="og:locale" content="ja_JP" />
     <meta property="og:site_name" content={site.name} />

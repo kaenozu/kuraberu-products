@@ -13,8 +13,16 @@
   --muted: #424843;
   --line: #e5e1d8;
   --paper: #fff;
-  --accent: #e87a67;
+  /* アクセントはWCAG AAのコントラストを確保できる値（#b04c3b）で統一する。
+     以前は accessibility.css の :root で上書きしていたが、二重定義をやめて
+     このトークンに一本化した（実効値は同じ）。 */
+  --accent: #b04c3b;
   --sage: #e1e8e2;
+  /* 比較UIの商品カラー（左右の商品・強調表示）。
+     コンポーネント間で同じ値を重複させないためのトークン。 */
+  --product-left: #8aaea4;
+  --product-right: #d59b77;
+  --product-highlight: #c83e2c;
   --space-1: 0.25rem;
   --space-2: 0.5rem;
   --space-3: 1rem;
@@ -501,13 +509,6 @@ a {
 .source-list {
   padding-left: 1.2rem;
 }
-.post {
-  min-height: 120px;
-  border: 1px solid var(--line);
-  padding: 1rem;
-  background: #fff;
-  border-radius: 14px;
-}
 .source-links {
   display: grid;
   gap: 0.75rem;
@@ -534,125 +535,6 @@ a {
   font-weight: 850;
   letter-spacing: 0.12em;
 }
-.summary-products {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1rem;
-}
-.product-identity {
-  display: grid;
-  grid-template-columns: 84px 1fr;
-  gap: 1rem;
-  min-width: 0;
-  border-top: 5px solid var(--product-color, var(--ink));
-  border-bottom: 1px solid var(--line);
-  padding: 1.25rem 0 1.4rem;
-}
-.product-premium {
-  --product-color: #8aaea4;
-}
-.product-standard {
-  --product-color: #d59b77;
-}
-.product-swatch {
-  display: grid;
-  place-items: center;
-  align-self: start;
-  width: 84px;
-  height: 108px;
-  background: var(--product-color);
-  color: #fff;
-  border: 1px solid rgba(26, 47, 35, 0.15);
-}
-.product-swatch span {
-  display: grid;
-  place-items: center;
-  width: 38px;
-  height: 38px;
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  border-radius: 50%;
-  font-family: Georgia, serif;
-  font-size: 1.2rem;
-}
-.product-identity-img {
-  width: 100%;
-  height: 108px;
-  object-fit: contain;
-  align-self: start;
-  background: #f4f2ec;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  padding: 4px;
-}
-/* 30秒比較（compact）では画像をカード上部に大きく表示 */
-.product-identity-compact .product-identity-img {
-  grid-column: 1 / -1;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  padding: 6px;
-  margin-bottom: 0.35rem;
-}
-.product-kicker {
-  margin: 0 0 0.25rem;
-  color: var(--muted);
-  font-size: 0.78rem;
-  font-weight: 800;
-}
-.product-identity h3 {
-  margin: 0 0 0.55rem;
-  font-size: clamp(1.25rem, 2vw, 1.7rem);
-  line-height: 1.2;
-}
-.product-audience,
-.product-note {
-  margin: 0.35rem 0;
-  color: var(--muted);
-  font-size: 0.9rem;
-}
-.product-note {
-  font-size: 0.82rem;
-}
-.summary-footer {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-.status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  width: fit-content;
-  border: 1px solid currentColor;
-  padding: 0.2rem 0.5rem;
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 800;
-  line-height: 1.2;
-}
-.status b {
-  display: inline-grid;
-  place-items: center;
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  background: currentColor;
-  color: #fff;
-  font-size: 0.65rem;
-}
-.status-official {
-  color: #26705b;
-}
-.status-retailer {
-  color: #8e5c37;
-}
-.status-insufficient {
-  color: #73705d;
-}
-.status-unverified {
-  color: #a24d46;
-}
 .editor-note {
   max-width: 760px;
   border-top: 1px solid var(--line);
@@ -667,124 +549,16 @@ a {
 .editor-note p:not(.section-label) {
   color: var(--muted);
 }
-.thirty-second {
-  margin: 2rem 0 2.5rem;
-  border-block: 2px solid var(--ink);
-  background: #f6f7f3;
-  padding: clamp(1rem, 3vw, 1.5rem);
-  scroll-margin-top: 1rem;
-}
-.thirty-second-heading,
 .subsection-heading {
   display: flex;
   align-items: end;
   justify-content: space-between;
   gap: 1rem;
 }
-.thirty-second h2,
-.difference-list h2 {
-  margin: 0;
-  font-size: clamp(1.35rem, 3vw, 2rem);
-}
-.summary-conclusion {
-  margin: 1rem 0;
-  color: var(--ink);
-}
-.summary-products .product-identity {
-  grid-template-columns: 52px 1fr;
-  gap: 0.75rem;
-  padding: 0.8rem 0 0.9rem;
-  border-top-width: 3px;
-}
-.product-identity-compact .product-swatch {
-  width: 52px;
-  height: 68px;
-}
-.product-identity-compact .product-swatch span {
-  width: 28px;
-  height: 28px;
-  font-size: 0.9rem;
-}
-.product-identity-compact .product-kicker {
-  font-size: 0.68rem;
-}
-.product-identity-compact h3 {
-  font-size: 1.15rem;
-}
-.product-identity-compact .product-audience {
-  font-size: 0.8rem;
-}
-.summary-differences {
-  display: grid;
-  gap: 0.45rem;
-  margin: 1rem 0;
-  padding: 0;
-  list-style: none;
-}
-.summary-differences li {
-  display: grid;
-  grid-template-columns: 5rem 1fr 1fr;
-  gap: 0.5rem;
-  border-top: 1px solid var(--line);
-  padding-top: 0.5rem;
-  font-size: 0.82rem;
-}
-.summary-differences b {
-  color: var(--muted);
-}
-.summary-footer {
-  justify-content: space-between;
-}
-.difference-list {
-  margin: 2rem 0 2.5rem;
-  border-top: 1px solid var(--line);
-  padding-top: 1.25rem;
-}
-.difference-table {
-  margin-top: 1rem;
-}
-.difference-row {
-  display: grid;
-  grid-template-columns: 8rem 1fr 1fr;
-  border-top: 1px solid var(--line);
-}
-.difference-label,
-.difference-value {
-  padding: 0.8rem 0.65rem;
-  font-size: 0.85rem;
-}
-.difference-label {
-  color: var(--muted);
-  font-weight: 800;
-}
-.difference-value {
-  display: grid;
-  gap: 0.25rem;
-}
-.difference-value strong {
-  font-size: 0.8rem;
-}
-.difference-value span {
-  color: var(--muted);
-}
-.difference-status {
-  font-size: 0.72rem;
-}
-/* 差分の決め手となる値を赤字+太字で強調 */
-.difference-value.is-highlighted {
-  background: #fdf2ef;
-  border-radius: 6px;
-}
-.difference-value.is-highlighted > span {
-  color: #c83e2c;
-  font-weight: 800;
-  font-size: 1rem;
-  line-height: 1.5;
-}
 .difference-highlight-note {
   display: inline-block;
   width: fit-content;
-  background: #c83e2c;
+  background: var(--product-highlight);
   color: #fff;
   font-size: 0.7rem;
   font-style: normal;
@@ -792,17 +566,6 @@ a {
   padding: 0.05rem 0.5rem;
   border-radius: 999px;
   margin-top: 0.15rem;
-}
-.summary-differences .is-highlighted {
-  color: #c83e2c;
-  font-weight: 800;
-}
-.summary-differences .is-highlighted .difference-highlight-note {
-  vertical-align: middle;
-  margin-left: 0.35rem;
-}
-#comparison-details {
-  scroll-margin-top: 1rem;
 }
 .tag {
   display: inline-block;
@@ -851,47 +614,6 @@ a {
   .hero-actions {
     align-items: flex-start;
     flex-direction: column;
-  }
-  .thirty-second-heading {
-    display: block;
-  }
-  .summary-products {
-    grid-template-columns: 1fr;
-  }
-  .summary-products {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.5rem;
-  }
-  .summary-products .product-identity {
-    display: block;
-  }
-  .summary-products .product-identity-compact .product-swatch {
-    width: 44px;
-    height: 50px;
-    margin-bottom: 0.4rem;
-  }
-  .product-identity {
-    grid-template-columns: 64px 1fr;
-    gap: 0.75rem;
-  }
-  .product-swatch {
-    width: 64px;
-    height: 88px;
-  }
-  .summary-differences li {
-    grid-template-columns: 4.2rem 1fr 1fr;
-    font-size: 0.75rem;
-  }
-  .difference-row {
-    grid-template-columns: 5.4rem 1fr 1fr;
-  }
-  .difference-label,
-  .difference-value {
-    padding-inline: 0.35rem;
-    font-size: 0.76rem;
-  }
-  .difference-value strong {
-    font-size: 0.7rem;
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1034,61 +756,11 @@ a {
   }
 }
 
-.priority-conclusion {
-  margin: 2rem 0;
-}
-.priority-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-  border: 0;
-  padding: 0;
-  margin: 0 0 1rem;
-}
-.priority-options legend {
-  width: 100%;
-  margin-bottom: 0.35rem;
-  font-weight: 850;
-}
-.priority-options label {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 44px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 0.45rem 0.75rem;
-  cursor: pointer;
-}
-.priority-options label:has(input:checked) {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-}
-.priority-result {
-  padding: 1.25rem;
-}
-.priority-result h3 {
-  margin-top: 0;
-}
-@media (max-width: 390px) {
-  .priority-options {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-  .priority-options label {
-    border-radius: 6px;
-  }
-}
 .section-intro {
   padding-bottom: 0;
 }
 .section-intro .lead {
   margin-bottom: 0;
-}
-
-/* X の実際の声: 投稿ウィジェットを 2 列で大きく見せる */
-@media (min-width: 760px) {
 }
 
 .cta.cta-card {

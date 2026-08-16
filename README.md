@@ -64,6 +64,7 @@ Production では次が必須です。
 任意:
 
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
+- `PUBLIC_BUILD_SHA`: デプロイ検証用のビルド元コミットSHA。`tools/production/Invoke-ProductionBuildAndDeploy.ps1` が本番ビルド時に自動注入し、`Invoke-PostDeployVerification.ps1` が配信HTMLの `meta[name=build-sha]` と突合する。通常は手動設定不要。
 
 お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定・エラー時は制限なしで続行します（可用性優先）。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
 
@@ -95,13 +96,13 @@ GitHub Actions は Preview 向け `pnpm verify` に加え、秘密値を使わ�
 Cloudflare の正規ビルド経路:
 
 ```text
-Build:  pnpm build
-Deploy: npx wrangler versions upload
+Build:  pnpm build（DEPLOYMENT_ENV=production）
+Deploy: pnpm exec wrangler deploy --config wrangler.jsonc
 Assets: dist
 Config: wrangler.jsonc
 ```
 
-PRはVersion uploadまでに留め、Production反映は対象Versionを明示して別途行います。
+Production反映は PR マージとは別工程で、`.github/workflows/deploy-production.yml` の workflow_dispatch（対象コミットSHAを明示）か、`tools/production/Invoke-ProductionBuildAndDeploy.ps1` で行います。
 
 ## 現在の作業管理
 
@@ -109,11 +110,11 @@ README には変動しやすい記事数、PR番号、dependency更新状態を�
 
 ## 本番運用
 
-このプロジェクトのCloudflare PagesはGit ProviderなしのDirect Upload運用です。GitHubでマージしても本番へ自動反映されるとは限りません。
+このプロジェクトはGit ProviderなしのDirect Upload運用です。GitHubでマージしても本番へ自動反映されるとは限りません。本番反映は `.github/workflows/deploy-production.yml` の workflow_dispatch（`expected_sha` と `confirm: DEPLOY` を入力）か、次の手動コマンドで行います。
 
 - Build: `set -a && source .env && set +a && DEPLOYMENT_ENV=production pnpm build`
-- Deploy: `npx wrangler pages deploy dist --project-name kuraberu-products --branch main --commit-dirty=true`
-- 確認: `npx wrangler pages deployment list --project-name kuraberu-products`
+- Deploy: `pnpm exec wrangler deploy --config wrangler.jsonc`
+- 確認: `npx wrangler deployments list --config wrangler.jsonc`
 - 本番ブランチラベル: `main`
 - 本番URL: `https://kuraberu-products.pages.dev`
 

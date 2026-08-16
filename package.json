@@ -31,14 +31,14 @@
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@astrojs/check": "latest",
+    "@astrojs/check": "0.9.10",
     "@typescript-eslint/parser": "8.65.0",
     "cookie": "2.0.1",
-    "eslint": "latest",
+    "eslint": "10.8.0",
     "eslint-plugin-astro": "3.0.1",
-    "prettier": "latest",
+    "prettier": "3.9.6",
     "typescript-eslint": "8.65.0",
-    "vitest": "latest",
+    "vitest": "4.1.10",
     "wrangler": "^4.123.0"
   }
 }
