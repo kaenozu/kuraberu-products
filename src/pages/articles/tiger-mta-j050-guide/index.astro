@@ -12,7 +12,8 @@ import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 
 const officialPage = tigerMtaJ050.officialUrl;
 const mtaJ080Image = 'https://www.tiger-corporation.com/wp-content/uploads/2025/07/MTA-J080_750x750-d1adb21a6e79c156ac1d5d974c9b75dd.jpg';
-const mtaJ080Rakuten = 'https://search.rakuten.co.jp/search/mall/%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC%20MTA-J080';
+// 既存サイトで検証済みの楽天アフィリエイト導線に、MTA-J080の検索先を設定。
+const mtaJ080Rakuten = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2582%25BF%25E3%2582%25A4%25E3%2582%25AC%25E3%2583%25BC%2520MTA-J080&link_type=text';
 const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, new Date().toISOString().slice(0, 10));
 const faqEntries = [
   {question: 'MTA-J050とMTA-J080の違いは？', answer: '容量がMTA-J050は0.5L、MTA-J080は0.8Lです。公式仕様では、MTA-J050が約0.26kg、MTA-J080が約0.36kgで、MTA-J080の方が容量と重量が大きくなっています。'},
