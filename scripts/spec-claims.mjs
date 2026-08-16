@@ -34,6 +34,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
+import { format } from "prettier";
 import { parseArticles } from "./generate-x-announcements.mjs";
 
 export const MANIFEST_PATH = "data/spec-claims.json";
@@ -218,6 +219,22 @@ export function emptyManifest() {
 }
 
 /**
+ * マニフェストを prettier 整形済みの JSON 文字列へ直列化する。
+ * verify が `prettier --check .` を実行するため、init/update の書き出しも
+ * 同じ整形ルール（短い配列の1行化など）に揃える必要がある。
+ */
+export async function serializeManifest(manifest) {
+  return format(`${JSON.stringify(manifest, null, 2)}\n`, { parser: "json" });
+}
+
+/** マニフェストを prettier 整形済みで書き出す（init/update 用）。 */
+async function writeManifest(manifest) {
+  const text = await serializeManifest(manifest);
+  mkdirSync(path.dirname(MANIFEST_PATH), { recursive: true });
+  writeFileSync(MANIFEST_PATH, text, "utf8");
+}
+
+/**
  * 記事↔マニフェストの乖離を検査する。問題の説明を文字列配列で返す。
  * - 仕様クレームがあるのにマニフェスト項目が無い記事
  * - 指紋が一致しない（確認後に内容が変わった）記事
@@ -385,7 +402,7 @@ function parseArgs(argv) {
   return options;
 }
 
-function main() {
+async function main() {
   const options = parseArgs(process.argv.slice(2));
   const articles = parseArticles(
     readFileSync("src/content/articles.ts", "utf8"),
@@ -441,8 +458,7 @@ function main() {
       manifest,
       options.checkedAt,
     );
-    mkdirSync(path.dirname(MANIFEST_PATH), { recursive: true });
-    writeFileSync(MANIFEST_PATH, `${JSON.stringify(next, null, 2)}\n`, "utf8");
+    await writeManifest(next);
     console.log(
       `init: ${added} 件の項目を追加しました（data/spec-claims.json）`,
     );
@@ -472,8 +488,7 @@ function main() {
       options.articleId,
       options.checkedAt,
     );
-    mkdirSync(path.dirname(MANIFEST_PATH), { recursive: true });
-    writeFileSync(MANIFEST_PATH, `${JSON.stringify(next, null, 2)}\n`, "utf8");
+    await writeManifest(next);
     console.log(
       `update: ${options.articleId} の指紋を再計算し checkedAt=${options.checkedAt} に更新しました`,
     );
@@ -485,5 +500,5 @@ function main() {
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === import.meta.filename) {
-  main();
+  await main();
 }
