@@ -543,11 +543,16 @@ export const pottyArticle = defineArticleMetadata({
   summary:
     "「スマートポッティ」と「ポッティチェア」を、ベビービョルン公式の商品ページ・形状・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
-  productInfoCheckedAt: "2026-08-10",
+  modifiedAt: "2026-08-16",
+  productInfoCheckedAt: "2026-08-16",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-smart-potty.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "スマートポッティの本体重量を修正。公式商品ページの仕様（約540g）に合わせ、公式楽天市場店リストの約520g表記を正しました。",
+    },
     {
       date: "2026-08-14",
       summary:
