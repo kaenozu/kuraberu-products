@@ -155,10 +155,10 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(30);
+    ).toHaveLength(31);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
-    ).toEqual([panasonicBabyMonitorArticle, tigerMtaJ050GuideArticle]);
+    ).toEqual([panasonicBabyMonitorArticle]);
   });
 
   it("rejects invalid product counts", () => {

@@ -404,8 +404,14 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
   // Content leakage guard: article-specific copy must never leak into other pages.
   const articleSpecificCopy = [
     // 水筒（サーモス vs タイガー）固有の仕様文言
-    { phrase: "保温効力68", exclude: /articles\/thermos-tiger-bottle\// },
-    { phrase: "容量0.5L", exclude: /articles\/thermos-tiger-bottle\// },
+    {
+      phrase: "保温効力68",
+      exclude: /articles\/(thermos-tiger-bottle|tiger-mta-j050-guide)\//,
+    },
+    {
+      phrase: "容量0.5L",
+      exclude: /articles\/(thermos-tiger-bottle|tiger-mta-j050-guide)\//,
+    },
     // 紙おむつ（メリーズ）固有
     {
       phrase: "カシミヤタッチ",
