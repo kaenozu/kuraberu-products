@@ -240,6 +240,16 @@
         "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
       ],
       "note": ""
+    },
+    {
+      "articleId": "panasonic-eh-na9m-vs-eh-na7m",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:d29f4a787f2be7aaf66cc206349f41cb444110b4c2643a6d159fd9203f63dad5",
+      "officialUrls": [
+        "https://panasonic.jp/hair/products/EH-NA7M.html",
+        "https://panasonic.jp/hair/products/EH-NA9M.html"
+      ],
+      "note": ""
     }
   ]
 }
