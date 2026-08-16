@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import PurchaseCard from '../../../components/PurchaseCard.astro';
+import {tigerMtaJ050GuideArticle as articleMetadata} from '../../../content/articles';
+import {isContentStale} from '../../../lib/content-freshness';
+
+const officialPage = 'https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/';
+const rakutenSearch = 'https://search.rakuten.co.jp/search/mall/%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC%20MTA-J050';
+const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, new Date().toISOString().slice(0, 10));
+const faqEntries = [
+  {
+    question: 'MTA-J050の特徴は？',
+    answer: '公式ページでは、ワンプッシュせん、せんとパッキンが一体になった「らくらくキャップ」、持ち運び時に指にフィットするスラントハンドルなどが案内されています。',
+  },
+  {
+    question: 'お手入れで確認することは？',
+    answer: '公式ページでは、パッキン着脱の手間を減らせる構造や、飲み口を外して洗えることが案内されています。購入前に、販売ページでセット内容と最新の取扱表示を確認してください。',
+  },
+  {
+    question: 'スポーツドリンクは入れられる？',
+    answer: 'タイガー公式ページでは、スーパークリーンPlusの説明としてスポーツドリンク対応が案内されています。使用後のお手入れ方法など、具体的な注意事項は公式の取扱説明を確認してください。',
+  },
+] as const;
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活雑貨 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <p class="lead">タイガー MTA-J050は、持ち歩きやすさと日常のお手入れを確認しながら選びたい真空断熱ボトルです。この記事では、タイガー公式ページで確認できる機能だけをもとに、向いている人と購入前の確認ポイントを整理します。使用感や耐久性など、公式情報だけでは判断できないことは推測しません。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#conclusion">向いている人</a>
+      <a href="#official">公式情報</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <section id="conclusion">
+      <h2>どんな人に向いている？</h2>
+      <ul class="official-list">
+        <li>片手で開けられるワンプッシュ式を選びたい人</li>
+        <li>パッキンを別々に外す手間を減らしたい人</li>
+        <li>持ち運ぶときに握りやすいハンドル付きがよい人</li>
+        <li>スポーツドリンク対応を公式に確認できる水筒を探している人</li>
+      </ul>
+      <p>一方、容量・色・販売価格・在庫などは販売時期や販売先で変わる可能性があります。購入時は、公式ページと販売ページの両方で確認してください。</p>
+    </section>
+
+    <div class="purchase-cards">
+      <PurchaseCard name="タイガー MTA-J050" audience="ハンドル・お手入れ・スポーツドリンク対応を確認して選びたい人向け" href={rakutenSearch} productId="tiger-mta-j050" placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+
+    <h2 id="official">公式ページで確認できる特徴</h2>
+    <ul class="official-list">
+      <li>ワンプッシュで開けられるせんを採用。</li>
+      <li>せんとパッキンが一体になった「らくらくキャップ」で、パッキン着脱の手間を減らせる。</li>
+      <li>飲み口を外して洗える構造。</li>
+      <li>スラントハンドル付きで、持ち運び時に指にフィットする設計。</li>
+      <li>内面のスーパークリーンPlusについて、汚れ・においがつきにくく、スポーツドリンクにも対応すると案内されている。</li>
+    </ul>
+    <p class="notice">上記はタイガー公式ページで確認できる案内の要約です。実際の使用時は、付属の取扱説明書と最新の公式情報に従ってください。</p>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
+    </div>
+
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新情報を確認してください。</p>}
+    </div>
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+
+    <div class="purchase-cards">
+      <PurchaseCard name="タイガー MTA-J050" audience="公式情報を確認して購入候補を探す人向け" href={rakutenSearch} productId="tiger-mta-j050" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      <li><a href={officialPage} target="_blank" rel="noopener noreferrer">タイガー MTA-Jシリーズ（公式）</a>（2026-08-16確認）</li>
+      <li><a href={rakutenSearch} target="_blank" rel="noopener noreferrer">楽天市場：タイガー MTA-J050</a>（価格・在庫用）</li>
+    </ul>
+    <h2>更新履歴</h2>
+    <ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <p>この記事はメーカー公式の商品ページを根拠に整理しています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

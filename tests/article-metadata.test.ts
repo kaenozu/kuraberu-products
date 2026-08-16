@@ -35,6 +35,7 @@ import {
   panasonicFyhvx120VsFyhvx90Article,
   panasonicNeFl1aVsNeFl1cArticle,
   thermosKfm020VsKfi020Article,
+  tigerMtaJ050GuideArticle,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -125,6 +126,7 @@ describe("article metadata", () => {
       panasonicFyhvx120VsFyhvx90Article,
       panasonicBabyMonitorArticle,
       thermosKfm020VsKfi020Article,
+      tigerMtaJ050GuideArticle,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
@@ -150,13 +152,13 @@ describe("article metadata", () => {
         Number.isInteger(article.productCount) && article.productCount >= 1,
       ).toBe(true);
     }
-    // 比較記事は productCount: 2、単一商品記事（サンプル）は productCount: 1。
+    // 比較記事は productCount: 2、単一商品記事は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
     ).toHaveLength(30);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
-    ).toEqual([panasonicBabyMonitorArticle]);
+    ).toEqual([panasonicBabyMonitorArticle, tigerMtaJ050GuideArticle]);
   });
 
   it("rejects invalid product counts", () => {
