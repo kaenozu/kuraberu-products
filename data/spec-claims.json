@@ -220,6 +220,16 @@
         "https://panasonic.jp/range/products/NE-FL1C.html"
       ],
       "note": "庫内容量・外形寸法・質量・自動メニュー数をパナソニック公式仕様ページで確認（2026-08-15）"
+    },
+    {
+      "articleId": "thermos-kfm-020-vs-kfi-020",
+      "checkedAt": "2026-08-15",
+      "claimsFingerprint": "sha256:bce6722bdf3bc6e09c2fe7e847f3fb6f9e5cd79a6d3ef6c2fbcf5764abb99555",
+      "officialUrls": [
+        "https://www.thermos.jp/product/series/kfi.html",
+        "https://www.thermos.jp/product/series/kfm.html"
+      ],
+      "note": "対応熱源・重量 約0.4kg・寸法・価格をサーモス公式シリーズページで確認（2026-08-15）"
     }
   ]
 }
