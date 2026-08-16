@@ -1,0 +1,53 @@
+name: Deploy preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      PREVIEW_BRANCH: pr-${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build preview
+        env:
+          DEPLOYMENT_ENV: preview
+        run: pnpm build
+
+      - name: Deploy preview to Cloudflare Pages
+        run: pnpm exec wrangler pages deploy dist --project-name kuraberu-products --branch "$PREVIEW_BRANCH"
+
+      - name: Publish preview URL
+        run: |
+          {
+            echo '## Preview deployment'
+            echo
+            echo "https://${PREVIEW_BRANCH}.kuraberu-products.pages.dev/"
+            echo
+            echo 'This preview is isolated from the production deployment.'
+          } >> "$GITHUB_STEP_SUMMARY"
