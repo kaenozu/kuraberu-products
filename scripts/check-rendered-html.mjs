@@ -447,14 +447,12 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     ),
   );
 
-  const embedPage = path.join(
-    distDirectory,
-    "articles",
-    "pampers-newborn",
-    "index.html",
-  );
-  if (fs.existsSync(embedPage)) {
-    const html = fs.readFileSync(embedPage, "utf8");
+  // 外部埋め込み（X / YouTube / TikTok / Pinterest）はユーザーが同意した後に
+  // JSで挿入する設計（docs/external-embed-policy.md）。
+  // 初期HTMLにサードパーティの script / iframe / preconnect が混入すると
+  // 埋め込みコンテンツが自動ロードされてしまうため、全ページで検証する。
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(file, "utf8");
     const thirdPartyScript = [
       ...html.matchAll(/<script[^>]+\bsrc=["']([^"']+)/gi),
     ].some(([, src]) => /^(?:https?:)?\/\//i.test(src));
@@ -462,10 +460,9 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     const preconnect = /<link[^>]+rel=["']?preconnect/i.test(html);
 
     if (thirdPartyScript)
-      errors.push(`${embedPage}: third-party script tag in initial HTML`);
-    if (thirdPartyIframe)
-      errors.push(`${embedPage}: iframe tag in initial HTML`);
-    if (preconnect) errors.push(`${embedPage}: preconnect in initial HTML`);
+      errors.push(`${file}: third-party script tag in initial HTML`);
+    if (thirdPartyIframe) errors.push(`${file}: iframe tag in initial HTML`);
+    if (preconnect) errors.push(`${file}: preconnect in initial HTML`);
   }
 
   return { errors, pageCount: htmlFiles.length };

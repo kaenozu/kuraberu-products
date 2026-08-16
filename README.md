@@ -64,6 +64,7 @@ Production では次が必須です。
 任意:
 
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
+- `PUBLIC_BUILD_SHA`: デプロイ検証用のビルド元コミットSHA。`tools/production/Invoke-ProductionBuildAndDeploy.ps1` が本番ビルド時に自動注入し、`Invoke-PostDeployVerification.ps1` が配信HTMLの `meta[name=build-sha]` と突合する。通常は手動設定不要。
 
 お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定・エラー時は制限なしで続行します（可用性優先）。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
 

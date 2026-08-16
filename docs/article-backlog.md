@@ -40,6 +40,7 @@
 | `tiger-jpv-l100-vs-jpv-m100`                     | 公開済み |
 | `yamazaki-condor-wagon-vs-self-wagon`            | 公開済み |
 | `yamazaki-dust-wagon-45l-2division-vs-3division` | 実装中   |
+| `yamazaki-free-broom-32-vs-45`                   | PR準備中 |
 | `yamazaki-tower-desk-panel-vs-pen-stand`         | 公開済み |
 | `zojirushi-ck-pa08-vs-ck-dc08`                   | 公開済み |
 

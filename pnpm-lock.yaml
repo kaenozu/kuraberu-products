@@ -20,7 +20,7 @@ importers:
         version: 5.9.3
     devDependencies:
       "@astrojs/check":
-        specifier: latest
+        specifier: 0.9.10
         version: 0.9.10(prettier@3.9.6)(typescript@5.9.3)
       "@typescript-eslint/parser":
         specifier: 8.65.0
@@ -29,19 +29,19 @@ importers:
         specifier: 2.0.1
         version: 2.0.1
       eslint:
-        specifier: latest
+        specifier: 10.8.0
         version: 10.8.0
       eslint-plugin-astro:
         specifier: 3.0.1
         version: 3.0.1(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.2)(@typescript-eslint/parser@8.65.0(eslint@10.8.0)(typescript@5.9.3))(eslint@10.8.0)
       prettier:
-        specifier: latest
+        specifier: 3.9.6
         version: 3.9.6
       typescript-eslint:
         specifier: 8.65.0
         version: 8.65.0(eslint@10.8.0)(typescript@5.9.3)
       vitest:
-        specifier: latest
+        specifier: 4.1.10
         version: 4.1.10(@types/node@24.13.3)(vite@8.1.5(@types/node@24.13.3)(esbuild@0.28.1)(yaml@2.9.0))
       wrangler:
         specifier: ^4.123.0
