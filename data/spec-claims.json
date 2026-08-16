@@ -200,6 +200,16 @@
         "https://panasonic.jp/joshitsu/products/F-YHVX90/spec.html"
       ],
       "note": "寸法修正（PR #160）・タンク 約3.2/2.4L・適用畳数・運転音を公式仕様ページで確認"
+    },
+    {
+      "articleId": "yamazaki-free-broom-32-vs-45",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:842994063d20cdeed6cc14424b6393deb4d026c38d70e452e16c2673f20fb9b9",
+      "officialUrls": [
+        "https://product.yamazaki-sangyo.co.jp/product/209613",
+        "https://product.yamazaki-sangyo.co.jp/product/209620"
+      ],
+      "note": "使用サイズ 330/460mm・重量 約320/370g・材質を山崎産業公式ページで確認（2026-08-16）"
     }
   ]
 }
