@@ -30,6 +30,9 @@ const articleFixture = `
   <p>本体寸法は幅約25.5×奥行き約32×高さ約17.5cm、製品重量は約540gです。</p>
   <p>タンク容量は約3.2L、定格消費電力は1,300W、運転音は約48dBです。</p>
   <p>木造11畳まで対応します。保温効力は68℃以上です。</p>
+  <p>表示価格は3,080円（税込）です。口径は約4.0cm、カラー数は12色です。</p>
+  <p>スチーム量は通常平均13g/分です。カップ1杯約60秒、満水約4分で沸とうします。</p>
+  <p>対象身長は40〜105cmです。耐荷重は5kgです。</p>
 </article>
 `;
 
@@ -53,6 +56,29 @@ describe("extractSpecClaims", () => {
         expect.stringMatching(/68℃/),
       ]),
     );
+  });
+
+  it("finds price, mouth diameter, colors, steam, boiling time, usage height and load capacity claims", () => {
+    const claims = extractSpecClaims(articleFixture);
+    expect(claims).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/3,080円/),
+        expect.stringMatching(/口径は約4\.0cm/),
+        expect.stringMatching(/カラー数は12色/),
+        expect.stringMatching(/13g/),
+        expect.stringMatching(/カップ1杯約60秒/),
+        expect.stringMatching(/満水約4分/),
+        expect.stringMatching(/40〜105cm/),
+        expect.stringMatching(/耐荷重は5kg/),
+      ]),
+    );
+  });
+
+  it("does not treat bare price digits without a price label as a claim", () => {
+    const claims = extractSpecClaims(
+      "<p>お届け予定は3日後、3,080円の商品です。</p>",
+    );
+    expect(claims.some((claim) => claim.includes("円"))).toBe(false);
   });
 
   it("returns an empty list when no spec claim exists", () => {

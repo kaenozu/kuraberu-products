@@ -73,6 +73,38 @@ const SPEC_PATTERNS = [
     key: "efficiency",
     re: /(?:保温効力|保冷効力)[^。\n]{0,20}?(\d[\d,]*(?:\.\d+)?)℃/gi,
   },
+  {
+    key: "price",
+    re: /(?:価格|表示価格|税込価格|税込)[^。\n]{0,30}?(\d[\d,]*)\s*円/gi,
+  },
+  {
+    key: "mouthDiameter",
+    re: /口径[^。\n]{0,20}?約?(\d+(?:\.\d+)?)\s*cm/gi,
+  },
+  {
+    key: "colors",
+    re: /(?:カラー数|色展開|カラーラインアップ)[^。\n]{0,20}?(\d+)\s*色/gi,
+  },
+  {
+    key: "steamAmount",
+    re: /スチーム量[^。\n]{0,30}?約?(\d+(?:\.\d+)?)\s*(?:mL|g|ml)/gi,
+  },
+  {
+    key: "boilingTime",
+    re: /(?:沸とう時間|沸騰時間|カップ1杯|満水)[^。\n]{0,20}?約?(\d+)\s*(?:分|秒)/gi,
+  },
+  {
+    key: "usageHeight",
+    re: /対象身長[^。\n]{0,30}?(\d+)\s*[-〜~]\s*(\d+)\s*cm/gi,
+  },
+  {
+    key: "usageAge",
+    re: /対象月齢[^。\n]{0,30}?(\d+)\s*[-〜~]\s*(\d+)\s*ヶ?月/gi,
+  },
+  {
+    key: "loadCapacity",
+    re: /(?:耐荷重|最大積載重量)[^。\n]{0,30}?(\d+(?:\.\d+)?)\s*(?:kg|g)/gi,
+  },
 ];
 
 /** 公式ソースURL（official 系の識別子に代入された URL リテラル）。 */
@@ -81,7 +113,7 @@ const OFFICIAL_URL_RE =
 
 /** 商品マスタ（src/lib/products.ts）の仕様値。 */
 const PRODUCTS_SPEC_LINE_RE =
-  /\b(weight|dimensions|capacity|officialUrl):\s*["']([^"']+)["']/g;
+  /\b(weight|dimensions|capacity|officialUrl|mouthDiameter|colors|warmEfficiency|coldEfficiency):\s*["']([^"']+)["']/g;
 
 function parseIsoDate(value) {
   if (!ISO_DATE_RE.test(value)) {
@@ -143,6 +175,11 @@ export function readProductsSpecData() {
     urls: [...new Set(urls)].sort(),
   };
 }
+
+/**
+ * 仕様クレームの検出パターンのキー一覧（テスト・ドキュメント用）。
+ */
+export const SPEC_PATTERN_KEYS = SPEC_PATTERNS.map((pattern) => pattern.key);
 
 /** 1記事分の仕様クレームと公式URLを収集する（products.ts 参照時はマスタ値も含む）。 */
 export function collectArticleClaims(articleId) {
