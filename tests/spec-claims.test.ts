@@ -1,0 +1,297 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import {
+  DEFAULT_THRESHOLD_DAYS,
+  addMissingEntries,
+  checkCoverage,
+  collectArticleClaims,
+  computeFingerprint,
+  daysSince,
+  emptyManifest,
+  extractOfficialUrls,
+  extractSpecClaims,
+  findStaleEntries,
+  loadManifest,
+  updateEntry,
+} from "../scripts/spec-claims.mjs";
+import { parseArticles } from "../scripts/generate-x-announcements.mjs";
+
+interface ManifestEntry {
+  articleId: string;
+  checkedAt: string;
+  claimsFingerprint: string;
+  officialUrls?: string[];
+  note?: string;
+}
+
+const articleFixture = `
+<article>
+  <h1>テスト記事</h1>
+  <p>本体寸法は幅約25.5×奥行き約32×高さ約17.5cm、製品重量は約540gです。</p>
+  <p>タンク容量は約3.2L、定格消費電力は1,300W、運転音は約48dBです。</p>
+  <p>木造11畳まで対応します。保温効力は68℃以上です。</p>
+</article>
+`;
+
+const officialUrlFixture = `
+const smartPottyOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/smart-potty/';
+const pottyChairOfficialProductUrl = "https://www.babybjorn.jp/products/bathroom/potty-chair/";
+const storeUrl = 'https://item.rakuten.co.jp/example/123/';
+`;
+
+describe("extractSpecClaims", () => {
+  it("finds dimensions, weight, capacity, power, noise, tatami and efficiency claims", () => {
+    const claims = extractSpecClaims(articleFixture);
+    expect(claims).toEqual(
+      expect.arrayContaining([
+        expect.stringMatching(/25\.5×奥行き約32×高さ約17\.5cm/),
+        expect.stringMatching(/約540g/),
+        expect.stringMatching(/約3\.2L/),
+        expect.stringMatching(/1,300W/),
+        expect.stringMatching(/48dB/),
+        expect.stringMatching(/11畳/),
+        expect.stringMatching(/68℃/),
+      ]),
+    );
+  });
+
+  it("returns an empty list when no spec claim exists", () => {
+    expect(extractSpecClaims("<p>使い心地についての感想です。</p>")).toEqual(
+      [],
+    );
+  });
+
+  it("deduplicates repeated claims", () => {
+    const source = `<p>重量は約540g。</p><p>もう一度、重量は約540g。</p>`;
+    const claims = extractSpecClaims(source);
+    expect(claims.filter((claim) => claim.includes("540g"))).toHaveLength(1);
+  });
+});
+
+describe("extractOfficialUrls", () => {
+  it("finds URLs assigned to official-flavored identifiers", () => {
+    const urls = extractOfficialUrls(officialUrlFixture);
+    expect(urls).toEqual([
+      "https://www.babybjorn.jp/products/bathroom/potty-chair/",
+      "https://www.babybjorn.jp/products/bathroom/smart-potty/",
+    ]);
+  });
+
+  it("ignores non-official URL constants", () => {
+    const urls = extractOfficialUrls(officialUrlFixture);
+    expect(urls.some((url) => url.includes("item.rakuten.co.jp"))).toBe(false);
+  });
+});
+
+describe("computeFingerprint", () => {
+  it("is deterministic for the same input", () => {
+    const claims = ["約540g", "25.5×32×17.5cm"];
+    const urls = ["https://example.com/a"];
+    expect(computeFingerprint(claims, urls)).toBe(
+      computeFingerprint(claims, urls),
+    );
+  });
+
+  it("changes when a claim changes", () => {
+    const urls = ["https://example.com/a"];
+    const before = computeFingerprint(["約540g"], urls);
+    const after = computeFingerprint(["約520g"], urls);
+    expect(after).not.toBe(before);
+  });
+
+  it("changes when the official source changes", () => {
+    const claims = ["約540g"];
+    const before = computeFingerprint(claims, ["https://example.com/a"]);
+    const after = computeFingerprint(claims, ["https://example.com/b"]);
+    expect(after).not.toBe(before);
+  });
+});
+
+describe("daysSince / findStaleEntries", () => {
+  it("computes the days between two ISO dates", () => {
+    expect(daysSince("2026-08-01", "2026-08-16")).toBe(15);
+    expect(daysSince("2026-08-16", "2026-08-16")).toBe(0);
+  });
+
+  it("flags entries older than the threshold", () => {
+    const entries: ManifestEntry[] = [
+      { articleId: "a", checkedAt: "2026-01-01", claimsFingerprint: "x" },
+      { articleId: "b", checkedAt: "2026-08-10", claimsFingerprint: "x" },
+    ];
+    const stale = findStaleEntries(entries, "2026-08-16", 180);
+    expect(stale.map((entry: ManifestEntry) => entry.articleId)).toEqual(["a"]);
+  });
+
+  it("uses the default 180-day threshold", () => {
+    expect(DEFAULT_THRESHOLD_DAYS).toBe(180);
+  });
+
+  it("rejects a non-positive threshold", () => {
+    expect(() => findStaleEntries([], "2026-08-16", 0)).toThrow();
+  });
+});
+
+describe("collectArticleClaims", () => {
+  it("includes product-master specs when the article imports products.ts", () => {
+    const { claims, officialUrls } = collectArticleClaims(
+      "thermos-tiger-bottle",
+    );
+    expect(claims).toEqual(
+      expect.arrayContaining(["約0.2kg", "約0.26kg", "6.5×8.0×22.0cm"]),
+    );
+    expect(officialUrls).toEqual(
+      expect.arrayContaining([
+        "https://www.thermos.jp/product/series/jnl-s00.html",
+      ]),
+    );
+  });
+});
+
+describe("checkCoverage", () => {
+  it("passes for the real repository with the current manifest", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    expect(checkCoverage(articles, manifest)).toEqual([]);
+  });
+
+  it("reports spec-bearing articles without a manifest entry", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    const missing = manifest.entries[0].articleId;
+    const withoutEntry = {
+      ...manifest,
+      entries: manifest.entries.filter(
+        (entry: ManifestEntry) => entry.articleId !== missing,
+      ),
+    };
+    const issues = checkCoverage(articles, withoutEntry);
+    expect(issues.some((issue) => issue.includes(missing))).toBe(true);
+  });
+
+  it("reports an entry referencing an unknown article", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const manifest = {
+      ...emptyManifest(),
+      entries: [
+        {
+          articleId: "does-not-exist",
+          checkedAt: "2026-08-16",
+          claimsFingerprint: "x",
+        },
+      ],
+    };
+    const issues = checkCoverage(articles, manifest);
+    expect(issues.some((issue) => issue.includes("does-not-exist"))).toBe(true);
+  });
+
+  it("reports a fingerprint drift for a known article", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    const target = manifest.entries[0].articleId;
+    const { claims } = collectArticleClaims(target);
+    const manifestWithDrift = {
+      ...manifest,
+      entries: manifest.entries.map((entry: ManifestEntry) =>
+        entry.articleId === target
+          ? {
+              ...entry,
+              claimsFingerprint: computeFingerprint(claims, [
+                "https://example.com/other",
+              ]),
+            }
+          : entry,
+      ),
+    };
+    const issues = checkCoverage(articles, manifestWithDrift);
+    expect(issues.some((issue) => issue.includes(target))).toBe(true);
+  });
+});
+
+describe("addMissingEntries / updateEntry", () => {
+  it("adds entries only for spec-bearing articles without an entry", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const { manifest, added } = addMissingEntries(
+      articles,
+      emptyManifest(),
+      "2026-08-16",
+    );
+    expect(added).toBeGreaterThan(0);
+    expect(manifest.entries.length).toBe(added);
+    for (const entry of manifest.entries) {
+      expect(entry.claimsFingerprint).toMatch(/^sha256:[0-9a-f]{64}$/);
+      expect(entry.officialUrls.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("does not duplicate existing entries", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const first = addMissingEntries(articles, emptyManifest(), "2026-08-16");
+    const second = addMissingEntries(articles, first.manifest, "2026-08-16");
+    expect(second.added).toBe(0);
+    expect(second.manifest.entries.length).toBe(first.manifest.entries.length);
+  });
+
+  it("updates the fingerprint and checkedAt of a target entry", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const seeded = addMissingEntries(articles, emptyManifest(), "2026-08-01");
+    const target = seeded.manifest.entries[0];
+    const { manifest } = updateEntry(
+      seeded.manifest,
+      target.articleId,
+      "2026-08-16",
+    );
+    const updated = (manifest.entries as ManifestEntry[]).find(
+      (entry: ManifestEntry) => entry.articleId === target.articleId,
+    );
+    expect(updated?.checkedAt).toBe("2026-08-16");
+    expect(updated?.claimsFingerprint).toBe(target.claimsFingerprint);
+  });
+});
+
+describe("real manifest hygiene", () => {
+  it("has a valid checkedAt for every entry", () => {
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    for (const entry of manifest.entries) {
+      expect(entry.checkedAt, `${entry.articleId}: invalid checkedAt`).toMatch(
+        /^\d{4}-\d{2}-\d{2}$/,
+      );
+      expect(
+        entry.claimsFingerprint,
+        `${entry.articleId}: missing fingerprint`,
+      ).toMatch(/^sha256:[0-9a-f]{64}$/);
+    }
+  });
+
+  it("covers every real spec-bearing article", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    const covered = new Set(
+      manifest.entries.map((entry: ManifestEntry) => entry.articleId),
+    );
+    for (const article of articles) {
+      const { claims } = collectArticleClaims(article.id);
+      if (claims.length > 0) {
+        expect(
+          covered.has(article.id),
+          `${article.id}: spec claims without manifest entry`,
+        ).toBe(true);
+      }
+    }
+  });
+});

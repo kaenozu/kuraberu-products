@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "description": "記事の仕様クレームと公式ソースの突合記録。checkedAt は公式ページで確認した日。",
+  "entries": [
+    {
+      "articleId": "babybjorn",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:e6ba2a067a960d88509f0267b8969d64e43c1131b4c4977453425fa79969d143",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/",
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/",
+        "https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers"
+      ],
+      "note": "キャリアの対象体重・サイズ目安を公式比較表で確認"
+    },
+    {
+      "articleId": "babybjorn-onekai",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:97d19b30e7f7aab0d3476a52fd5639fa4d5268dfb6d805e2d001519dea578c88",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/",
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/",
+        "https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers"
+      ],
+      "note": "キャリアの対象体重・サイズ目安を公式比較表で確認"
+    },
+    {
+      "articleId": "babybjorn-bouncer",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:71b564f8e960246774d936201267d4e96df05da60312f90c6578e0d5727cf2f6",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/baby-bouncers/bouncer-balance-soft/sky-blue-white-mesh-light-grey/",
+        "https://www.babybjorn.jp/products/baby-bouncers/bouncer-bliss/"
+      ],
+      "note": "寸法 幅約39×奥行約89×高さ46-58cm・重量 約2.1kg を公式製品ページで確認"
+    },
+    {
+      "articleId": "babybjorn-cradle",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:845ec5a6e12842f39d67b328b8b6d5e2247b35dfb676987bb2ced54dbcc60894",
+      "officialUrls": [
+        "https://www.aprica.jp/products/home/bed/coconel_air/",
+        "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/"
+      ],
+      "note": "本体重量を約6kg に修正（PR #172、2026-08-16 本番反映）"
+    },
+    {
+      "articleId": "babybjorn-potty",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:e136468b916599696bbbb8f0d49752e78dd367f9d35191056d56a3981b0d8439",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/bathroom/potty-chair/",
+        "https://www.babybjorn.jp/products/bathroom/smart-potty/"
+      ],
+      "note": "スマートポッティ重量を約540g に修正（公式商品ページ、2026-08-16）。ポッティチェア 約870g・寸法は一致"
+    },
+    {
+      "articleId": "combi-the-s-plus-vs-premium",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:6053c709c60fc924351d5a8c7e08fbd3e42207f62d4308908d82ad4e68abcb85",
+      "officialUrls": [
+        "https://www.combi.co.jp/store/carseat/thesplus/g/g120066/",
+        "https://www.combi.co.jp/store/carseat/thespremium/g/g118991/"
+      ],
+      "note": "重量 13.8/14.1kg・対象身長を公式ページで確認"
+    },
+    {
+      "articleId": "tiger-jpv-l100-vs-jpv-m100",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:146e912a17d6986004109400c07b71149c7bb07d4bfd61a89e1329b56001a44a",
+      "officialUrls": [
+        "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/",
+        "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-m/"
+      ],
+      "note": "寸法 25.7×38×21.4cm・5.4kg・容量を公式ページで確認"
+    },
+    {
+      "articleId": "panasonic-mc-sb55k-vs-mc-sb35k",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:fef8ce6d519f22d3a00b80dba51878d9beee1c2f4b0a53f666d448ff596c46dc",
+      "officialUrls": [
+        "https://panasonic.jp/soji/products/MC-SB35K.html",
+        "https://panasonic.jp/soji/products/MC-SB55K.html"
+      ],
+      "note": "本体質量 1.2/1.1kg を公式ページで確認"
+    },
+    {
+      "articleId": "tefal-ko5901jp-vs-ko8601j0",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:dc7541fb75c738c9ab6256bec775cb18addb463a665b6da26bf60d91b858f3cf",
+      "officialUrls": [
+        "https://www.t-fal.co.jp/kettle/products/aprecia-lock-control-7211419696/",
+        "https://www.t-fal.co.jp/kettle/products/justine-lock-7211419308/"
+      ],
+      "note": "本体重量 900/790g・容量 1.2L/0.8L・定格消費電力 1,250W を公式ページで確認"
+    },
+    {
+      "articleId": "sharp-kc-s50-vs-fu-s50",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:ea4d9b7bf5e4e5c9c6554fe441f261828b4a40b1686bc2d6b1e35516ffc1c907",
+      "officialUrls": [
+        "https://jp.sharp/kuusei/products/fus50/",
+        "https://jp.sharp/kuusei/products/kcs50/"
+      ],
+      "note": "外形寸法・重量 7.5/4.9kg・適用畳数・運転音を公式仕様ページで確認"
+    },
+    {
+      "articleId": "thermos-tiger-bottle",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:d15e78e78b05518c75906875209531e1a016154eae6cffc61b623199c5314d26",
+      "officialUrls": [
+        "https://www.thermos.jp/product/series/jnl-s00.html",
+        "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
+      ],
+      "note": "重量 0.2/0.26kg・寸法・保温/保冷効力・口径を公式ページで確認"
+    },
+    {
+      "articleId": "yamazaki-tower-desk-panel-vs-pen-stand",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:b01b44a1606f56e5898d4c18e5bfe47db2948acdea2123ceb0fa82cf590307a9",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/240034",
+        "https://www.yamajitsu.co.jp/products/240051"
+      ],
+      "note": "重量 2250/495g・耐荷重 1.5kg/500g を公式ページで確認"
+    },
+    {
+      "articleId": "yamazaki-condor-wagon-vs-self-wagon",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:0fceff5374f572fc96a798c410c4c1303504a20a2fdde9e7b56d7243f7d50e9d",
+      "officialUrls": [
+        "https://product.yamazaki-sangyo.co.jp/product/209460",
+        "https://product.yamazaki-sangyo.co.jp/product/209477"
+      ],
+      "note": "寸法・重量 1.4/1.1kg を公式ページで確認"
+    },
+    {
+      "articleId": "yamazaki-dust-wagon-45l-2division-vs-3division",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:cb09f3ea30086e7420da773e1c3e217b18959328a31faa850d5f6e96071715e4",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/240712",
+        "https://www.yamajitsu.co.jp/products/240713"
+      ],
+      "note": "寸法 52×44×60 / 76×44×60cm・重量 7.7/10.35kg・耐荷重を公式ページで確認"
+    },
+    {
+      "articleId": "zojirushi-ck-pa08-vs-ck-dc08",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:84737f9536159de3bf1a6150eaac993f93a4a3d593d4d00da43af5a30ab15a27",
+      "officialUrls": [
+        "https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/",
+        "https://www.zojirushi.co.jp/syohin/stan/product/electric_kettle/ck-pa.html"
+      ],
+      "note": "質量 0.9/0.8kg（プレート含む 1.1/1.0kg）・1300W・沸とう時間を公式ページで確認"
+    },
+    {
+      "articleId": "tefal-dv4030j0-vs-dv8070j0",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:f7c6a5dc07b243f6e0cc2fc7bf150398e3ab4f72d80ec502f5bf54268d0c9c7e",
+      "officialUrls": [
+        "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steam-rafrai-1830009402/",
+        "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steamsupre-1830009138/"
+      ],
+      "note": "重量 690/680g・タンク 120/140mL・800/950W・連続運転 約9/約14分を公式比較表で確認"
+    },
+    {
+      "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:3cf5e2fa5531405410e0644a405065ce582687c559facd94028dc2bab55afc2d",
+      "officialUrls": [
+        "https://www.kingjim.co.jp/products/tepra/sr-mk1.html",
+        "https://www.kingjim.co.jp/products/tepra/sr-r2500p.html"
+      ],
+      "note": "寸法・質量 420/470g・テープ幅を公式ページで確認"
+    },
+    {
+      "articleId": "panasonic-f-yhvx120-vs-f-yhvx90",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:4aaf0c07362d768ce319b29d56e640fa5acdd5a61cbf8c508b0546ab6785cab8",
+      "officialUrls": [
+        "https://panasonic.jp/joshitsu/products/F-YHVX120/spec.html",
+        "https://panasonic.jp/joshitsu/products/F-YHVX90/spec.html"
+      ],
+      "note": "寸法修正（PR #160）・タンク 約3.2/2.4L・適用畳数・運転音を公式仕様ページで確認"
+    }
+  ]
+}

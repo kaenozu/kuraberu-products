@@ -1,0 +1,47 @@
+name: spec claims freshness
+
+# 記事の仕様クレーム（寸法・重量など）が公式ページで最後に確認されてから
+# 180 日を超えた記事を検出し、再照合を促す issue を開く。
+# 値の自動比較は行わない（data/spec-claims.json の checkedAt と指紋の管理）。
+# 日々の乖離チェックは verify 内の `node scripts/spec-claims.mjs check` が担う。
+
+on:
+  schedule:
+    - cron: "37 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
+        with:
+          node-version-file: .node-version
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check spec-claim freshness
+        id: check
+        run: node scripts/spec-claims.mjs freshness
+        continue-on-error: true
+      - name: Open re-verification issue
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh issue list --state open --search "in:title 仕様表記の再照合" --json number --jq 'length' | grep -q '^0$'; then
+            gh issue create \
+              --title "仕様表記の再照合が必要（spec-claims）" \
+              --body "$(cat .acceptance/spec-claims-freshness/report.md)"
+          else
+            echo "再照合の issue は既に開いています（重複作成をスキップ）"
+          fi
