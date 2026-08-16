@@ -1189,6 +1189,34 @@ export const thermosKfm020VsKfi020Article = defineArticleMetadata({
     },
   ],
 });
+
+export const tigerMtaJ050GuideArticle = defineArticleMetadata({
+  id: "tiger-mta-j050-guide",
+  productCount: 1,
+  path: "/articles/tiger-mta-j050-guide/",
+  title: "タイガー MTA-J050はどんな人向け？｜くらべる商品メモ",
+  headline: "タイガー MTA-J050はどんな人向け？公式情報から選び方を整理",
+  description:
+    "タイガー MTA-J050について、公式ページで確認できる飲み口・お手入れ・ハンドルなどの特徴から向いている人を整理",
+  category: "生活雑貨",
+  tags: ["水筒", "タイガー", "保冷ボトル"],
+  audiences: ["持ち歩き用の水筒を探している人", "お手入れやすさを重視する人"],
+  uses: ["通勤・通学", "外出時の水分補給"],
+  summary:
+    "タイガー MTA-J050は、らくらくキャップやスラントハンドルなどを備えた真空断熱ボトル。公式情報から特徴と確認ポイントを整理します。",
+  publishedAt: "2026-08-16",
+  modifiedAt: "2026-08-16",
+  productInfoCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "unverified",
+  imagePath: "/products/tiger-mta-j050.jpg",
+  changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "初回公開。タイガー公式の商品ページで確認できる機能と注意点を整理。",
+    },
+  ],
+});
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -1221,4 +1249,5 @@ export const articleMetadata = Object.freeze([
   panasonicFyhvx120VsFyhvx90Article,
   panasonicBabyMonitorArticle,
   thermosKfm020VsKfi020Article,
+  tigerMtaJ050GuideArticle,
 ]);

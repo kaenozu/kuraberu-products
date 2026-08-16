@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（28本）
+## 現在の公開済み（32本）
 
 | slug                                             | 状態     |
 | ------------------------------------------------ | -------- |
@@ -29,6 +29,7 @@
 | `panasonic-eh-ne7m-vs-eh-ne5m`                   | 公開済み |
 | `panasonic-f-yhvx120-vs-f-yhvx90`                | 公開済み |
 | `panasonic-mc-sb55k-vs-mc-sb35k`                 | 公開済み |
+| `panasonic-ne-fl1a-vs-ne-fl1c`                   | 公開済み |
 | `pigeon-bottle-160-240`                          | 公開済み |
 | `pigeon-bottle-240`                              | 公開済み |
 | `pigeon-slim-240`                                | 公開済み |
@@ -36,11 +37,13 @@
 | `shupot`                                         | 公開済み |
 | `tefal-dv4030j0-vs-dv8070j0`                     | 公開済み |
 | `tefal-ko5901jp-vs-ko8601j0`                     | 公開済み |
+| `thermos-kfm-020-vs-kfi-020`                     | 公開済み |
 | `thermos-tiger-bottle`                           | 公開済み |
+| `tiger-mta-j050-guide`                           | 公開済み |
 | `tiger-jpv-l100-vs-jpv-m100`                     | 公開済み |
 | `yamazaki-condor-wagon-vs-self-wagon`            | 公開済み |
-| `yamazaki-dust-wagon-45l-2division-vs-3division` | 実装中   |
-| `yamazaki-free-broom-32-vs-45`                   | PR準備中 |
+| `yamazaki-dust-wagon-45l-2division-vs-3division` | 公開済み |
+| `yamazaki-free-broom-32-vs-45`                   | 公開済み |
 | `yamazaki-tower-desk-panel-vs-pen-stand`         | 公開済み |
 | `zojirushi-ck-pa08-vs-ck-dc08`                   | 公開済み |
 
@@ -50,21 +53,21 @@
 
 これまで「次の候補」に挙げていたパナソニック衣類乾燥除湿機・ティファール電気ケトル・シャープ空気清浄機・コンビチャイルドシートはすべて公開済みです。次は非育児カテゴリ（生活雑貨・デスク用品・キッチン家電など）から、公式ページで比較軸を裏取りできる2商品ペアを選定する。
 
-### パナソニック NE-FL1A vs NE-FL1C（PR準備中）
+### パナソニック NE-FL1A vs NE-FL1C（公開済み）
 
 - 記事slug: `panasonic-ne-fl1a-vs-ne-fl1c`
-- 状態: 専用worktreeで実装・preview verify PASS。PR作成前。
+- 状態: 公開済み。公開後の公式情報・購入リンク更新時に再確認する。
 - 公式ページ: [NE-FL1A](https://panasonic.jp/range/products/NE-FL1A.html) / [NE-FL1C](https://panasonic.jp/range/products/NE-FL1C.html)
 - 比較軸: 総庫内容量、庫内寸法、本体質量、自動メニュー数。
 - 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
-- 完了条件: PRのCI PASS、merge、Production反映、本番HTML/CTA QA。
+- 公開確認: 記事URL・生成HTML・CTAは定期巡回で確認する。
 
 ## 保留
 
-### サーモス KFM-020 vs KFI-020
+### サーモス KFM-020 vs KFI-020（公開済み）
 
 - slug: `thermos-kfm-020-vs-kfi-020`
-- 状態: 実装・検証中。公式ページと楽天公式短縮URLを確認済み。
+- 状態: 公開済み。公式ページと楽天公式短縮URLを確認済み。
 - 比較軸: 対応熱源、内径、本体寸法、本体重量、メーカー希望小売価格
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE
