@@ -1,7 +1,8 @@
 name: spec claims freshness
 
 # 記事の仕様クレーム（寸法・重量など）が公式ページで最後に確認されてから
-# 180 日を超えた記事を検出し、再照合を促す issue を開く。
+# 180 日を超えた記事を検出し、再照合を促す issue を開く/更新する。
+# 全項目が再照合済み（checkedAt 更新）になれば、その issue を自動クローズする。
 # 値の自動比較は行わない（data/spec-claims.json の checkedAt と指紋の管理）。
 # 日々の乖離チェックは verify 内の `node scripts/spec-claims.mjs check` が担う。
 
@@ -33,15 +34,31 @@ jobs:
         id: check
         run: node scripts/spec-claims.mjs freshness
         continue-on-error: true
-      - name: Open re-verification issue
+      - name: Open or update re-verification issue
         if: steps.check.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh issue list --state open --search "in:title 仕様表記の再照合" --json number --jq 'length' | grep -q '^0$'; then
+          NUM=$(gh issue list --state open --search "in:title 仕様表記の再照合" --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue edit "$NUM" --body-file .acceptance/spec-claims-freshness/report.md
+            echo "既存の再照合 issue #$NUM を最新の状態に更新しました"
+          else
             gh issue create \
               --title "仕様表記の再照合が必要（spec-claims）" \
-              --body "$(cat .acceptance/spec-claims-freshness/report.md)"
+              --body-file .acceptance/spec-claims-freshness/report.md
+            echo "再照合 issue を新規作成しました"
+          fi
+      - name: Close re-verification issue when fresh
+        if: steps.check.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NUM=$(gh issue list --state open --search "in:title 仕様表記の再照合" --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body "全記事の仕様表記が再照合され、checkedAt が更新されたため、この issue をクローズします。"
+            gh issue close "$NUM"
+            echo "再照合 issue #$NUM をクローズしました"
           else
-            echo "再照合の issue は既に開いています（重複作成をスキップ）"
+            echo "開いている再照合 issue はありません（クローズ不要）"
           fi
