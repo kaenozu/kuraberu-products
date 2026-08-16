@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
-import { isAllowedRakutenUrl } from "../config/runtime-env.mjs";
 import {
   ARTICLE_LAYOUT,
   expectedPurchaseCtasPerArticle,
@@ -255,16 +254,9 @@ export function validateArticleCtas(relative, html, expectedCount) {
     } else {
       // アフィリエイトでないCTA（未差し替え時の楽天検索フォールバック等）は
       // 許可済みの楽天ホストだけを許し、nofollow を必須にする。
-      if (!isAllowedRakutenUrl(href)) {
-        errors.push(
-          `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
-        );
-      }
-      if (!/\bnofollow\b/i.test(rel)) {
-        errors.push(
-          `${relative}: CTA ${index + 1} is missing nofollow rel attribute`,
-        );
-      }
+      errors.push(
+        `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
+      );
     }
   }
   return errors;

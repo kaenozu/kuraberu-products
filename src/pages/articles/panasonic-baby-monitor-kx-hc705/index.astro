@@ -1,18 +1,18 @@
 ---
-// 単品チェック記事（productCount: 1）。比較記事ではなく、1商品の機能と向いている人を
-// 公式情報だけで整理する。購入カードは各配置1枚（after-decision / article-end）で、
-// 期待枚数は config/article-layout.mjs とメタデータの productCount から機械的に導出される。
+// 単一商品記事のサンプル（productCount: 1）。
+// 購入カードは各配置1枚（after-decision / article-end）で、ゲートは
+// config/article-layout.mjs とメタデータの productCount から期待2枚を導出する。
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import {panasonicBabyMonitorArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 
-// 楽天市場の購入CTA。他記事と同じく楽天アフィリエイトのゲートウェイ
-// （hb.afl.rakuten.co.jp の hgc にサイト共通のアフィリエイトIDを指定）経由の検索リンクで、
-// 最終的に楽天市場の KX-HC705 検索結果へ到達する（2026-08-16 に到達確認済み）。
+// 楽天市場の購入CTA。実運用では楽天アフィリエイトで生成した a.r10.to の
+// 短縮リンクに差し替えること（単一商品記事のサンプルのため未差し替え）。
+// 未差し替えの間は、壊れたプレースホルダーではなく実際に動く楽天検索結果へ導く。
 const rakutenSearch =
-  'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%E3%83%91%E3%83%8A%E3%82%BD%E3%83%8B%E3%83%83%E3%82%AF%20%E3%83%99%E3%83%93%E3%83%BC%E3%83%A2%E3%83%8B%E3%82%BF%E3%83%BC%20KX-HC705&link_type=text';
+  'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2583%2591%25E3%2583%258A%25E3%2582%25BD%25E3%2583%258B%25E3%2583%2583%25E3%2582%25AF%2520%25E3%2583%2599%25E3%2583%2593%25E3%2583%25BC%25E3%2583%25A2%25E3%2583%258B%25E3%2582%25BF%25E3%2583%25BC%2520KX-HC705&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9';
 const officialPage = 'https://panasonic.jp/hns/products/KX-HC705.html';
 
 const faqEntries = [
