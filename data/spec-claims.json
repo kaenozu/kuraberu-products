@@ -210,6 +210,16 @@
         "https://product.yamazaki-sangyo.co.jp/product/209620"
       ],
       "note": "使用サイズ 330/460mm・重量 約320/370g・材質を山崎産業公式ページで確認（2026-08-16）"
+    },
+    {
+      "articleId": "panasonic-ne-fl1a-vs-ne-fl1c",
+      "checkedAt": "2026-08-15",
+      "claimsFingerprint": "sha256:de47ad9610eb1528f9280cfb193e2691d36936dce4087eef8abc8ea0259a95b0",
+      "officialUrls": [
+        "https://panasonic.jp/range/products/NE-FL1A.html",
+        "https://panasonic.jp/range/products/NE-FL1C.html"
+      ],
+      "note": "庫内容量・外形寸法・質量・自動メニュー数をパナソニック公式仕様ページで確認（2026-08-15）"
     }
   ]
 }
