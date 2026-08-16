@@ -500,11 +500,16 @@ export const cradleArticle = defineArticleMetadata({
   summary:
     "「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、各メーカー公式の案内・対象期間・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-cradle.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "クレードルの本体重量を修正。公式商品ページの仕様（約6kg）に合わせ、楽天市場店リストの約8kg表記を正しました。",
+    },
     {
       date: "2026-08-14",
       summary:

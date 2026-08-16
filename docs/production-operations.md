@@ -77,7 +77,21 @@ Checks include:
 - article JSON-LD parses and contains article URL and dates;
 - Rakuten CTAs exist only on the approved host allowlist.
 
-## 5. Required `verify` ruleset
+## 5. X announcement drafts
+
+The production deploy workflow generates X (Twitter) announcement drafts for newly published articles after public verification succeeds. It never posts: drafts are written to `.acceptance/x-announcements-*/report.md` and included in the workflow summary for human review, then posted manually from `@kuraberu_biyori` (or via the X API with credentials that are not stored in CI).
+
+Detection is diff-based: articles present at the deployed SHA (`HEAD`) but absent at `HEAD^` (the previous default-branch HEAD) are considered new. For the first deploy with no parent commit, all articles are treated as new. A draft is at most 280 characters and is built from the article headline, canonical article URL, and up to three tags.
+
+Run locally to preview:
+
+```bash
+node scripts/generate-x-announcements.mjs \
+  --site-url https://kuraberu-products.pages.dev \
+  --previous-sha <previous-deployed-sha>
+```
+
+## 6. Required `verify` ruleset
 
 Dry run and inspect the generated payload:
 

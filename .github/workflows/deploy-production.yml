@@ -84,6 +84,13 @@ jobs:
             -BaseUrl '${{ vars.PUBLIC_SITE_URL }}' `
             -ExpectedCommitSha '${{ inputs.expected_sha }}'
 
+      - name: Generate X announcement drafts
+        shell: bash
+        run: |
+          node scripts/generate-x-announcements.mjs \
+            --site-url '${{ vars.PUBLIC_SITE_URL }}' \
+            --previous-sha 'HEAD^'
+
       - name: Publish privacy-safe summary
         if: always()
         shell: bash
