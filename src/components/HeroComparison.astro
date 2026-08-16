@@ -9,6 +9,8 @@ interface HeroProduct {
   /** 商品画像パス */
   image: string;
   imageAlt: string;
+  imageWidth?: number;
+  imageHeight?: number;
   /** 公式ページ */
   officialHref: string;
 }
@@ -27,7 +29,7 @@ const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
   <div class="hero-compare-grid">
     <article class="hero-product">
       <a class="hero-product-img" href={left.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${left.brand} ${left.line} の公式商品ページを見る`}>
-        <img src={left.image} alt={left.imageAlt} width="500" height="500" loading="eager" />
+        <img src={left.image} alt={left.imageAlt} width={left.imageWidth ?? 500} height={left.imageHeight ?? 500} loading="eager" />
       </a>
       <h2 class="hero-product-name"><span>{left.brand}</span> {left.line}</h2>
       <p class="hero-product-tagline">{left.tagline}<b>こちら</b></p>
@@ -37,7 +39,7 @@ const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
     </article>
     <article class="hero-product">
       <a class="hero-product-img" href={right.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${right.brand} ${right.line} の公式商品ページを見る`}>
-        <img src={right.image} alt={right.imageAlt} width="500" height="500" loading="eager" />
+        <img src={right.image} alt={right.imageAlt} width={right.imageWidth ?? 500} height={right.imageHeight ?? 500} loading="eager" />
       </a>
       <h2 class="hero-product-name"><span>{right.brand}</span> {right.line}</h2>
       <p class="hero-product-tagline">{right.tagline}<b>こちら</b></p>
@@ -69,10 +71,10 @@ const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
     gap: 0.5rem;
   }
   .hero-product:first-child {
-    --product-color: #8aaea4;
+    --product-color: var(--product-left);
   }
   .hero-product:last-child {
-    --product-color: #d59b77;
+    --product-color: var(--product-right);
   }
   .hero-product-img {
     display: block;
@@ -106,11 +108,11 @@ const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
     margin: 0;
     font-size: 0.95rem;
     font-weight: 600;
-    color: #c83e2c;
+    color: var(--product-highlight);
     line-height: 1.5;
   }
   .hero-product-tagline b {
-    background: #c83e2c;
+    background: var(--product-highlight);
     color: #fff;
     font-weight: 700;
     font-size: 0.78rem;

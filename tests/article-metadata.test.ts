@@ -27,10 +27,13 @@ import {
   sharpKcS50VsFuS50Article,
   yamazakiTowerDeskPanelArticle,
   yamazakiCondorWagonArticle,
+  yamazakiFreeBroomArticle,
+  yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
+  panasonicNeFl1aVsNeFl1cArticle,
   thermosKfm020VsKfi020Article,
 } from "../src/content/articles";
 
@@ -109,10 +112,13 @@ describe("article metadata", () => {
       panasonicVacuumArticle,
       panasonicHairDryerArticle,
       tefalKettleArticle,
+      panasonicNeFl1aVsNeFl1cArticle,
       sharpKcS50VsFuS50Article,
       thermosTigerBottleArticle,
       yamazakiTowerDeskPanelArticle,
       yamazakiCondorWagonArticle,
+      yamazakiFreeBroomArticle,
+      yamazakiDustWagonArticle,
       zojirushiElectricKettleArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
@@ -147,7 +153,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（サンプル）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(27);
+    ).toHaveLength(30);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle]);

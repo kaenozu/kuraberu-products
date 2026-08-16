@@ -500,11 +500,16 @@ export const cradleArticle = defineArticleMetadata({
   summary:
     "「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、各メーカー公式の案内・対象期間・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-cradle.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "クレードルの本体重量を修正。公式商品ページの仕様（約6kg）に合わせ、楽天市場店リストの約8kg表記を正しました。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -538,11 +543,16 @@ export const pottyArticle = defineArticleMetadata({
   summary:
     "「スマートポッティ」と「ポッティチェア」を、ベビービョルン公式の商品ページ・形状・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
-  productInfoCheckedAt: "2026-08-10",
+  modifiedAt: "2026-08-16",
+  productInfoCheckedAt: "2026-08-16",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-smart-potty.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "スマートポッティの本体重量を修正。公式商品ページの仕様（約540g）に合わせ、公式楽天市場店リストの約520g表記を正しました。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -790,6 +800,36 @@ export const sharpKcS50VsFuS50Article = defineArticleMetadata({
   ],
 });
 
+export const panasonicNeFl1aVsNeFl1cArticle = defineArticleMetadata({
+  id: "panasonic-ne-fl1a-vs-ne-fl1c",
+  productCount: 2,
+  path: "/articles/panasonic-ne-fl1a-vs-ne-fl1c/",
+  title: "パナソニック NE-FL1A と NE-FL1C、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックの単機能レンジ、どっち？「NE-FL1A」と「NE-FL1C」を比較",
+  description:
+    "パナソニック NE-FL1AとNE-FL1Cを、公式の容量・庫内寸法・質量・自動メニュー数で比較",
+  category: "キッチン家電",
+  tags: ["電子レンジ", "単機能レンジ", "パナソニック"],
+  audiences: ["単機能レンジを選びたい人", "公式仕様で機種を比較したい人"],
+  uses: ["毎日使う", "軽さで選ぶ", "庫内幅で選ぶ"],
+  summary:
+    "NE-FL1AとNE-FL1Cを、パナソニック公式の容量・庫内寸法・質量・自動メニュー数・確認状況に分けて比較します。",
+  publishedAt: "2026-08-15",
+  modifiedAt: "2026-08-15",
+  productInfoCheckedAt: "2026-08-15",
+  purchaseLinksCheckedAt: "2026-08-15",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-ne-fl1a.jpg",
+  changeLog: [
+    {
+      date: "2026-08-15",
+      summary:
+        "初回公開。パナソニック公式の商品ページ・仕様ページと楽天公式生成リンクを確認。",
+    },
+  ],
+});
+
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
   productCount: 2,
@@ -857,6 +897,33 @@ export const yamazakiTowerDeskPanelArticle = defineArticleMetadata({
   ],
 });
 
+export const yamazakiFreeBroomArticle = defineArticleMetadata({
+  id: "yamazaki-free-broom-32-vs-45",
+  productCount: 2,
+  path: "/articles/yamazaki-free-broom-32-vs-45/",
+  title: "山崎産業 JS自由箒32 と 45、どっち？｜くらべる商品メモ",
+  headline: "山崎産業のJS自由箒、32と45を比較",
+  description:
+    "山崎産業 JS自由箒32と45を、公式の使用サイズ・重量・材質・個装ケースサイズで比較",
+  category: "生活雑貨",
+  tags: ["山崎産業", "ほうき", "清掃用品"],
+  audiences: ["ほうきを選びたい人", "掃く幅と重量を比べたい人"],
+  uses: ["床を掃く", "清掃用品を比較する"],
+  summary: "JS自由箒32と45を、山崎産業公式の仕様と確認状況に分けて比較します。",
+  publishedAt: "2026-08-16",
+  modifiedAt: "2026-08-16",
+  productInfoCheckedAt: "2026-08-16",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamazaki-free-broom-32.jpg",
+  changeLog: [
+    {
+      date: "2026-08-16",
+      summary: "初回公開。山崎産業公式の商品ページと楽天公式生成リンクを確認。",
+    },
+  ],
+});
+
 export const yamazakiCondorWagonArticle = defineArticleMetadata({
   id: "yamazaki-condor-wagon-vs-self-wagon",
   productCount: 2,
@@ -890,6 +957,34 @@ export const yamazakiCondorWagonArticle = defineArticleMetadata({
       date: "2026-08-14",
       summary:
         "初回公開。山崎産業公式の商品ページでFU943-000X-MBとFU944-000X-MBの仕様を確認。",
+    },
+  ],
+});
+
+export const yamazakiDustWagonArticle = defineArticleMetadata({
+  id: "yamazaki-dust-wagon-45l-2division-vs-3division",
+  productCount: 2,
+  path: "/articles/yamazaki-dust-wagon-45l-2division-vs-3division/",
+  title: "山崎実業 45L分別ダストワゴン、どっち？｜くらべる商品メモ",
+  headline: "山崎実業の45L分別ダストワゴン、2分別と3分別を比較",
+  description:
+    "山崎実業の蓋付き目隠し分別ダストワゴン45Lを、公式の分別数・設置幅・重量・耐荷重で比較",
+  category: "キッチン・ごみ箱収納",
+  tags: ["山崎実業", "ダストワゴン", "ごみ箱"],
+  audiences: ["ごみ箱の設置幅を抑えたい人", "45L袋を複数に分別したい人"],
+  uses: ["ごみを分別する", "キッチン周りに置く", "設置幅を確認する"],
+  summary:
+    "山崎実業の45L分別ダストワゴン2分別・3分別を、公式の仕様と確認状況に分けて比較します。",
+  publishedAt: "2026-08-15",
+  modifiedAt: "2026-08-15",
+  productInfoCheckedAt: "2026-08-15",
+  purchaseLinksCheckedAt: "2026-08-15",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamazaki-dust-wagon-45l-2division.jpg",
+  changeLog: [
+    {
+      date: "2026-08-15",
+      summary: "初回公開。山崎実業公式の商品ページと楽天公式生成リンクを確認。",
     },
   ],
 });
@@ -1028,6 +1123,11 @@ export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
     {
       date: "2026-08-15",
       summary:
+        "比較表とFAQの本体寸法の表記を修正。幅・高さの取り違えを解消し、選び分けの結論を公式仕様に合わせて更新。",
+    },
+    {
+      date: "2026-08-15",
+      summary:
         "初回公開。パナソニック公式のF-YHVX120・F-YHVX90仕様ページで数値を確認。",
     },
   ],
@@ -1108,10 +1208,13 @@ export const articleMetadata = Object.freeze([
   panasonicVacuumArticle,
   panasonicHairDryerArticle,
   tefalKettleArticle,
+  panasonicNeFl1aVsNeFl1cArticle,
   sharpKcS50VsFuS50Article,
   thermosTigerBottleArticle,
   yamazakiTowerDeskPanelArticle,
   yamazakiCondorWagonArticle,
+  yamazakiFreeBroomArticle,
+  yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,

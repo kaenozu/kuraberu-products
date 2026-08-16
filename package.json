@@ -19,26 +19,28 @@
     "validate:env": "node scripts/validate-build-env.mjs",
     "validate:content": "node scripts/validate-content.mjs",
     "check:css-usage": "node scripts/report-css-usage.mjs --fail-on-unused",
+    "check:spec-claims": "node scripts/spec-claims.mjs check",
     "check:rendered": "node scripts/check-rendered-html.mjs",
     "check:deployment": "node scripts/check-deployment-html.mjs",
     "check:external-link-syntax": "node scripts/check-external-links.mjs",
     "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
     "check:external-links": "node scripts/check-external-links.mjs",
-    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/check-external-links.mjs && vitest run"
+    "announce:draft": "node scripts/generate-x-announcements.mjs",
+    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/check-external-links.mjs && node scripts/spec-claims.mjs check && vitest run"
   },
   "dependencies": {
     "astro": "7.2.0",
     "typescript": "5.9.3"
   },
   "devDependencies": {
-    "@astrojs/check": "latest",
+    "@astrojs/check": "0.9.10",
     "@typescript-eslint/parser": "8.65.0",
     "cookie": "2.0.1",
-    "eslint": "latest",
+    "eslint": "10.8.0",
     "eslint-plugin-astro": "3.0.1",
-    "prettier": "latest",
+    "prettier": "3.9.6",
     "typescript-eslint": "8.65.0",
-    "vitest": "latest",
+    "vitest": "4.1.10",
     "wrangler": "^4.123.0"
   }
 }
