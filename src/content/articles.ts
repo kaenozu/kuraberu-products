@@ -147,11 +147,17 @@ export const pampersNewbornArticle = defineArticleMetadata({
   summary:
     "「肌へのいちばん」と「さらさらケア」を、公式情報・販売ページ・口コミの確認状況に分けて比較します。",
   publishedAt: "2026-07-31",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-07-31",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/pampers-premium-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -180,11 +186,17 @@ export const merriesNewbornArticle = defineArticleMetadata({
   summary:
     "「ファーストプレミアム」と「ずっと肌さらエアスルー」を、公式情報・販売ページ・確認状況に分けて比較します。",
   publishedAt: "2026-08-08",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-08",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -213,11 +225,17 @@ export const pigeonBottle240Article = defineArticleMetadata({
   summary:
     "「耐熱ガラス製」と「プラスチック製（PPSU）」を、公式情報・素材の特長・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-09",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -247,11 +265,17 @@ export const pigeonSlim240Article = defineArticleMetadata({
   summary:
     "「母乳実感」と「スリムタイプ」の240mlを、公式情報・乳首体系・形状・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-09",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -281,11 +305,17 @@ export const moonyMArticle = defineArticleMetadata({
   summary:
     "「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式情報・サイズ別仕様・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-09",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/moony-teishigeki-m.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -320,10 +350,16 @@ export const merriesPantsArticle = defineArticleMetadata({
   summary:
     "「ファーストプレミアム」と「ずっと肌さらエアスルー」のパンツタイプを、公式情報・販売ページ・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -352,11 +388,17 @@ export const shupotArticle = defineArticleMetadata({
   summary:
     "「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を、公式情報・お手入れ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/shupot-dendo.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -389,11 +431,17 @@ export const babybjornArticle = defineArticleMetadata({
   summary:
     "「HARMONY」と「MINI」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-harmony.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -425,11 +473,17 @@ export const babybjornOnekaiArticle = defineArticleMetadata({
   summary:
     "「ONE KAI」と「MOVE」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-onekai.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -462,11 +516,17 @@ export const babybjornBouncerArticle = defineArticleMetadata({
   summary:
     "「Bliss」と「バランスソフト」を、ベビービョルン公式のガイド・対象月齢・シート素材・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-bouncer-bliss.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -502,9 +562,15 @@ export const cradleArticle = defineArticleMetadata({
   publishedAt: "2026-08-10",
   modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-cradle.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-16",
       summary:
@@ -545,9 +611,15 @@ export const pottyArticle = defineArticleMetadata({
   publishedAt: "2026-08-10",
   modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-smart-potty.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-16",
       summary:
@@ -580,11 +652,17 @@ export const pigeonBottleSizeArticle = defineArticleMetadata({
   summary:
     "「160ml」と「240ml」を、公式情報・付属乳首・対象月齢目安・確認状況に分けて比較します。",
   publishedAt: "2026-08-11",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-11",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/pigeon-bottle-160-240-160ml.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -619,11 +697,17 @@ export const combiTheSArticle = defineArticleMetadata({
   summary:
     "THE S plusとTHE S premiumを、公式の対象身長・使用期間・回転・固定方法・重量・価格に分けて比較します。",
   publishedAt: "2026-08-12",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-12",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/the-s-plus.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -652,11 +736,17 @@ export const tigerRiceArticle = defineArticleMetadata({
   summary:
     "JPV-L100とJPV-M100を、タイガー公式の加熱方式・容量・サイズ・質量・価格に分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/tiger-jpv-l100.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -684,11 +774,17 @@ export const panasonicVacuumArticle = defineArticleMetadata({
   summary:
     "MC-SB55KとMC-SB35Kを、パナソニック公式の質量・センサー・充電スタンド・ブラシに分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/panasonic-mc-sb55k.png",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -716,11 +812,17 @@ export const panasonicHairDryerArticle = defineArticleMetadata({
   summary:
     "EH-NE7MとEH-NE5Mを、パナソニック公式のミネラル機能・マイナスイオン・低温ケアモード・大風量の案内で比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/panasonic-eh-ne7m.png",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -750,11 +852,17 @@ export const tefalKettleArticle = defineArticleMetadata({
   summary:
     "KO5901JPとKO8601J0を、ティファール公式の容量・重量・温度調節・保温などの仕様に分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/tefal-ko5901jp.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -783,11 +891,17 @@ export const sharpKcS50VsFuS50Article = defineArticleMetadata({
   summary:
     "KC-S50とFU-S50を、シャープ公式の加湿機能・サイズ・重量・適用畳数・運転音・センサーに分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/sharp-kc-s50.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -846,11 +960,17 @@ export const thermosTigerBottleArticle = defineArticleMetadata({
   summary:
     "「JNL-S500」と「MTA-J050」を、公式の保温・保冷効力とサイズ・お手入れ方法に分けて比較します。",
   publishedAt: "2026-08-12",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-12",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/thermos-jnl-s500.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -880,11 +1000,17 @@ export const yamazakiTowerDeskPanelArticle = defineArticleMetadata({
   summary:
     "デスク横トレー付きスチールパネルとマグネットペンスタンドを、公式情報・確認状況・型番検索に分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/yamazaki-tower-desk-panel.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -943,11 +1069,17 @@ export const yamazakiCondorWagonArticle = defineArticleMetadata({
   summary:
     "コンドル サイドメッシュワゴンIIとセルフワゴンIIを、山崎産業公式の仕様と確認状況に分けて比較します。",
   publishedAt: "2026-08-14",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-14",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/yamazaki-condor-fu943-000x-mb.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -1215,9 +1347,15 @@ export const tigerMtaJ050GuideArticle = defineArticleMetadata({
   publishedAt: "2026-08-16",
   modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/tiger-mta-j050.jpg",
   changeLog: [
+    {
+      date: "2026-08-16",
+      summary:
+        "購入リンクの動作確認を実施し、全CTA（楽天アフィリエイト経由）の到達を確認。確認日を更新。",
+    },
     {
       date: "2026-08-16",
       summary:
