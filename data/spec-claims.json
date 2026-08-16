@@ -230,6 +230,16 @@
         "https://www.thermos.jp/product/series/kfm.html"
       ],
       "note": "対応熱源・重量 約0.4kg・寸法・価格をサーモス公式シリーズページで確認（2026-08-15）"
+    },
+    {
+      "articleId": "tiger-mta-j050-guide",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:34f25d38bd141243fe59c827302eb27c2b1ede63719ae2323246d4c259c95c02",
+      "officialUrls": [
+        "https://www.thermos.jp/product/series/jnl-s00.html",
+        "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
+      ],
+      "note": ""
     }
   ]
 }
