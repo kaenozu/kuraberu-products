@@ -1841,7 +1841,9 @@ const createCommercialArticle = (
     publishedAt: "2026-08-17",
     modifiedAt: "2026-08-17",
     purchaseLinkStatus: "unverified",
-    imagePath: commercialArticleImages[seed.id]?.left,
+    imagePath:
+      commercialArticleImages[seed.id]?.left ??
+      commercialArticleImages[seed.id]?.right,
     changeLog: [
       {
         date: "2026-08-17",
