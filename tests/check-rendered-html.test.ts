@@ -3,6 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  countOtherArticleLinks,
   countRelatedArticleCards,
   countRenderedExternalEmbeds,
   findEmptySections,
@@ -235,28 +236,41 @@ describe("article mid-cta meta", () => {
 describe("related comparison article limit", () => {
   const card = (path: string) =>
     `<article class="card article-list-card"><h3><a href="${path}">見出し</a></h3><p>概要</p></article>`;
+  const link = (path: string) => `<li><a href="${path}">見出し</a></li>`;
   const relatedSection = (cards: string) =>
     `<section class="related-articles section wrap" aria-labelledby="related-heading"><h2 id="related-heading">関連する比較記事</h2><div class="article-list">${cards}</div></section>`;
+  const othersSection = (links: string) =>
+    `<section class="related-articles section wrap" aria-labelledby="others-heading"><h2 id="others-heading">ほかの比較記事</h2><ul class="related-links">${links}</ul></section>`;
 
   it("uses the layout config as the source of truth", () => {
-    expect(ARTICLE_LAYOUT.relatedArticlesLimit).toBeGreaterThanOrEqual(3);
-    expect(ARTICLE_LAYOUT.relatedArticlesLimit).toBeLessThanOrEqual(4);
+    expect(ARTICLE_LAYOUT.relatedSelection.limit).toBeGreaterThanOrEqual(3);
+    expect(ARTICLE_LAYOUT.relatedSelection.limit).toBeLessThanOrEqual(4);
+    expect(ARTICLE_LAYOUT.relatedSelection.othersLimit).toBeGreaterThanOrEqual(
+      2,
+    );
+    expect(ARTICLE_LAYOUT.relatedSelection.othersLimit).toBeLessThanOrEqual(4);
   });
 
   it("counts only cards inside the related section", () => {
     const html =
-      `<section class="related-articles section wrap" aria-labelledby="others-heading">${card("/a/")}</section>` +
-      relatedSection(card("/b/") + card("/c/"));
+      othersSection(link("/a/")) + relatedSection(card("/b/") + card("/c/"));
     expect(countRelatedArticleCards(html)).toBe(2);
+    expect(countOtherArticleLinks(html)).toBe(1);
   });
 
-  it("returns zero when no related section is rendered", () => {
+  it("returns zero when no section is rendered", () => {
     expect(countRelatedArticleCards(validPage(""))).toBe(0);
+    expect(countOtherArticleLinks(validPage(""))).toBe(0);
   });
 
-  it("accepts up to the configured limit on an article page", () => {
+  it("accepts up to the configured limits on an article page", () => {
     const html = validPage(
-      relatedSection(card("/a/").repeat(ARTICLE_LAYOUT.relatedArticlesLimit)),
+      relatedSection(
+        card("/a/").repeat(ARTICLE_LAYOUT.relatedSelection.limit),
+      ) +
+        othersSection(
+          link("/b/").repeat(ARTICLE_LAYOUT.relatedSelection.othersLimit),
+        ),
     );
     expect(
       validateRelatedArticleSection("articles/example/index.html", html),
@@ -266,15 +280,30 @@ describe("related comparison article limit", () => {
   it("rejects more than the configured limit on an article page", () => {
     const html = validPage(
       relatedSection(
-        card("/a/").repeat(ARTICLE_LAYOUT.relatedArticlesLimit + 1),
+        card("/a/").repeat(ARTICLE_LAYOUT.relatedSelection.limit + 1),
       ),
     );
     expect(
       validateRelatedArticleSection("articles/example/index.html", html),
     ).toEqual([
       `articles/example/index.html: related comparison articles exceed the limit: found ${
-        ARTICLE_LAYOUT.relatedArticlesLimit + 1
-      }, maximum is ${ARTICLE_LAYOUT.relatedArticlesLimit} (per config/article-layout.mjs)`,
+        ARTICLE_LAYOUT.relatedSelection.limit + 1
+      }, maximum is ${ARTICLE_LAYOUT.relatedSelection.limit} (per config/article-layout.mjs)`,
+    ]);
+  });
+
+  it("rejects more than the others limit on an article page", () => {
+    const html = validPage(
+      othersSection(
+        link("/b/").repeat(ARTICLE_LAYOUT.relatedSelection.othersLimit + 1),
+      ),
+    );
+    expect(
+      validateRelatedArticleSection("articles/example/index.html", html),
+    ).toEqual([
+      `articles/example/index.html: other comparison articles exceed the limit: found ${
+        ARTICLE_LAYOUT.relatedSelection.othersLimit + 1
+      }, maximum is ${ARTICLE_LAYOUT.relatedSelection.othersLimit} (per config/article-layout.mjs)`,
     ]);
   });
 

@@ -3,6 +3,25 @@ export interface ArticleCtaSet {
   cardsPerProduct: number;
 }
 
+export interface RelatedSelectionConfig {
+  /** 「関連する比較記事」の最大件数 */
+  limit: number;
+  /** 「ほかの比較記事」の最大件数 */
+  othersLimit: number;
+  /** 関連セクションに載せる最低スコア */
+  minScore: number;
+  weights: {
+    tag: number;
+    use: number;
+    audience: number;
+    category: number;
+  };
+  /** ブランド名タグの一致スコア（弱信号） */
+  brandTagWeight: number;
+  /** 弱信号として扱うブランド名タグ */
+  brandTags: readonly string[];
+}
+
 export interface ArticleLayout {
   ctaEvent: string;
   placements: readonly string[];
@@ -12,8 +31,8 @@ export interface ArticleLayout {
   ctaSets: readonly ArticleCtaSet[];
   /** 長文記事のみ許容する途中 CTA セット（midArticleCta が付いた記事に適用） */
   midArticleSet: ArticleCtaSet;
-  /** 記事末尾の「関連する比較記事」（同カテゴリ）の最大件数 */
-  relatedArticlesLimit: number;
+  /** 記事末尾の関連記事の選定ルール（関連性スコアベース） */
+  relatedSelection: RelatedSelectionConfig;
 }
 
 export const ARTICLE_LAYOUT: ArticleLayout;
