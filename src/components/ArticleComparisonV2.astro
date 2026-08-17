@@ -2,6 +2,7 @@
 import HeroComparison from './HeroComparison.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from './VisualKeyDifferences.astro';
 import DecisionGuide from './DecisionGuide.astro';
+import TrustLine from './TrustLine.astro';
 
 interface Side {
   brand: string;
@@ -35,5 +36,5 @@ const { left, right, rows, checkedAt } = Astro.props;
     left={{ brand: left.brand, line: left.line, points: left.guidePoints }}
     right={{ brand: right.brand, line: right.line, points: right.guidePoints }}
   />
-  {checkedAt && <p class="article-comparison-v2-check">公式情報確認済み · {checkedAt}</p>}
+  <TrustLine checkedAt={checkedAt} />
 </section>

@@ -160,7 +160,7 @@ const differenceRows: DifferenceRow[] = __DIFF__;
       <p>購入リンク: {purchaseLinkLabel}</p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
     </div>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <p class="trust-line">✓ 公式確認済み（2026-08-16）・広告を含みます</p>
 
     <ThirtySecondComparison
       idPrefix="moony-summary"

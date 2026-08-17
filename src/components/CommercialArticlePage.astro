@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ComparisonMemoButton from './ComparisonMemoButton.astro';
 import PurchaseCard from './PurchaseCard.astro';
+import TrustLine from './TrustLine.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
 import { fetchRakutenProducts, selectRakutenProduct } from '../lib/rakuten';
@@ -60,7 +61,7 @@ const faq = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
     <h1>{article.headline}</h1>
     <ComparisonMemoButton articleId={article.id} />
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+    <TrustLine checkedAt={article.productInfoCheckedAt} />
 
     <p>{article.summary} ここでは、メーカー公式ページで確認できる仕様と、販売ページで購入時に確認する項目を分けて整理します。</p>
     <h2 id="key-differences">違いを確認する</h2>

@@ -68,10 +68,10 @@ describe("ComparisonHero", () => {
     expect(html).toContain("約60g差");
     expect(html).toContain('href="#key-differences"');
     expect(html).toContain("違いを詳しく見る");
-    expect(html).toContain("公式情報確認済み · 2026-08-12");
+    expect(html).toContain("✓ 公式確認済み（2026-08-12）・広告を含みます");
   });
 
-  it("omits trust line when checkedAt is not provided", async () => {
+  it("renders the trust line without a date when checkedAt is not provided", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(ComparisonHero, {
       props: {
@@ -81,7 +81,9 @@ describe("ComparisonHero", () => {
       },
     });
 
-    expect(html).not.toContain("公式情報確認済み");
+    // 確認日なし（公開待ちの初稿）は確認済みを主張せず、広告のみ表示する
+    expect(html).toContain("広告を含みます");
+    expect(html).not.toContain("✓ 公式確認済み");
     expect(html).toContain("大きな違いは1つ");
   });
 });

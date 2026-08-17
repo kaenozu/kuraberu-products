@@ -5,6 +5,8 @@
  * 仕様（docs/ui-ux-spec-2026-08.md 4.1.1）: タイトル直下に「5秒で違いが分かる」要約を置く。
  * 判断 UI の入口であり、詳細は HeroComparison（30秒比較）・VisualKeyDifferences（差分）に委ねる。
  */
+import TrustLine from './TrustLine.astro';
+
 export interface ComparisonHeroLine {
   /** 「軽さ・食洗機を重視する」のような条件句 */
   condition: string;
@@ -56,5 +58,5 @@ const diffCount = differences.length;
     </ul>
     <a class="hero-diff-link" href={diffAnchor}>違いを詳しく見る →</a>
   </div>
-  {checkedAt && <p class="hero-trust">公式情報確認済み · {checkedAt}</p>}
+  <TrustLine checkedAt={checkedAt} />
 </div>

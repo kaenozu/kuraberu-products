@@ -52,6 +52,24 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
   - 長文記事: 比較 4 / 単一 2（article-end + after-decision）
 - レイアウト変更時は `config/article-layout.mjs` だけを直す（ゲートは自動追随する）。
 
+## 記事冒頭の信頼表示（TrustLine）
+
+記事冒頭の「商品情報確認日・購入リンク最終確認日・広告表示」は、**1 行**に圧縮する:
+
+```
+✓ 公式確認済み（2026-07-31）・広告を含みます
+```
+
+- 実装は共通コンポーネント `src/components/TrustLine.astro`。
+  `checkedAt`（= `productInfoCheckedAt`）を受け取り、未宣言なら日付を省略する。
+- 呼び出し元は 3 系統（ハンドライトのヒーロー `ArticleComparisonV2` / `ComparisonHero`、
+  商用記事 `CommercialArticlePage`）。旧形式（「公式情報確認済み · 日付」のヒーロー行・
+  「広告表示：…」の notice）は廃止。
+- 商用記事（`createCommercialArticle`）は確認日未宣言の場合 `2026-08-17`（初稿公開日）を
+  既定値とする。
+- 品質ゲート（`validateArticleTrustLine`）が、全記事で信頼行がちょうど 1 つ・
+  `YYYY-MM-DD` 付きであることと、旧形式の残存を fail-closed で検出する。
+
 ## 記事ごとの判断ルール
 
 - **本文が長く、判断直後の誘導が有効な記事** → `midArticleCta: true` を付けて
@@ -169,7 +187,7 @@ BaseLayout が `<meta name="article:content-type" content="guide|comparison">` �
 - **スマホ（≤640px）**: 4 列目を非表示にし、テーブルを 3 列で表示（`min-width` 解除）。
   「根拠・確認先を表示」をタップすると 4 列目が展開される。
 - トグルの開閉はネイティブ `<details>`（`＋` / `−` マーカー）。
-- 折りたたみ中も「公式情報確認済み」ヒーローと情報源一覧が根拠の所在を示す。
+- 折りたたみ中も冒頭の TrustLine（✓ 公式確認済み（日付）・広告を含みます）と情報源一覧が根拠の所在を示す。
 
 品質ゲート（`scripts/check-rendered-html.mjs` の `validateSourceToggle`）が fail-closed で検証する:
 
