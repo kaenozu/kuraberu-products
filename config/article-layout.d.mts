@@ -6,6 +6,8 @@ export interface ArticleCtaSet {
 export interface ArticleLayout {
   ctaEvent: string;
   placements: readonly string[];
+  /** 診断結果カードのクリック計測用 placement（/tools/product-finder/ 配下） */
+  diagnosisPlacement: string;
   defaultPlacement: string;
   ctaSets: readonly ArticleCtaSet[];
 }

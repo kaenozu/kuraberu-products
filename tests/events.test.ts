@@ -284,4 +284,49 @@ describe("click analytics endpoint", () => {
     );
     expect(response.status).toBe(204);
   });
+
+  it("accepts a diagnosis-result placement click with rank and persists it", async () => {
+    const { kv, put } = makeKv();
+    const response = await onRequestPost(
+      context(
+        postRequest(
+          validPayload({
+            productId: "bo160-ppsu",
+            placement: "diagnosis-result",
+            path: "/tools/product-finder/baby-bottle/",
+            rank: "1",
+          }),
+        ),
+        baseEnv(undefined, kv),
+      ),
+    );
+    expect(response.status).toBe(204);
+    expect(put).toHaveBeenCalledTimes(1);
+    const value = JSON.parse(put.mock.calls[0][1] as string);
+    expect(value.placement).toBe("diagnosis-result");
+    expect(value.productId).toBe("bo160-ppsu");
+    expect(value.rank).toBe("1");
+    expect(value.path).toBe("/tools/product-finder/baby-bottle/");
+  });
+
+  it("persists a diagnosis-result placement without rank when rank is invalid", async () => {
+    const { kv, put } = makeKv();
+    const response = await onRequestPost(
+      context(
+        postRequest(
+          validPayload({
+            placement: "diagnosis-result",
+            rank: "abc",
+          }),
+        ),
+        baseEnv(undefined, kv),
+      ),
+    );
+    // rank は任意属性のため、不正な場合は rank だけ除外して保存し 204 で続行する
+    expect(response.status).toBe(204);
+    expect(put).toHaveBeenCalledTimes(1);
+    const value = JSON.parse(put.mock.calls[0][1] as string);
+    expect(value.placement).toBe("diagnosis-result");
+    expect(value.rank).toBeUndefined();
+  });
 });
