@@ -145,6 +145,21 @@ BaseLayout が `<meta name="article:content-type" content="guide|comparison">` �
   `articleMetadata` を突き合わせ、カテゴリ集合・件数ラベル・並び順・featured の
   完全一致を検証する。
 
+## 記事カードのサムネイル（画像 or テキストタイル）
+
+記事カード（`src/components/ArticleCard.astro`、トップ・一覧・ページ送りで共通）は
+**常に 132px（スマホ 96px）のサムネイル枠**を持つ。
+
+- **画像あり**（`imagePath` が宣言されている記事）: `<img class="card-thumb">`
+  （`object-fit: cover` で枠に統一）。
+- **画像なし**記事: カテゴリ名を中央表示するテキストタイル
+  `<div class="card-tile">`（`data-thumb="tile"`）。
+  これにより画像の有無にかかわらず全カードのレイアウトが揃う。
+- カード要素は `data-thumb="image|tile"` を持ち、品質ゲート
+  （`validateArticleCardThumbnails`）が「画像とタイルはちょうど一方だけ」を
+  fail-closed で検証する。実ビルドテスト（`tests/top-page.test.ts`）も
+  `articleMetadata.imagePath` と `data-thumb` の一致を突き合わせる。
+
 ## 比較表の「根拠・確認先」列（スマホ折りたたみ）
 
 4 列テーブル（比較項目・A・B・根拠・確認先）を描画する比較記事では、

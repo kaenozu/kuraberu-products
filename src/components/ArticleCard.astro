@@ -16,12 +16,17 @@ const {article, data} = Astro.props;
 ---
 
 <article
-  class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}
+  class="card article-list-card"
   data-content-type={contentTypeFor(article.productCount)}
+  data-thumb={article.imagePath ? 'image' : 'tile'}
   {...data}
 >
-  {article.imagePath && (
+  {article.imagePath ? (
     <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
+  ) : (
+    <div class="card-tile" role="img" aria-label={`商品比較：${article.category}`}>
+      <span class="card-tile-label">{article.category}</span>
+    </div>
   )}
   <div class="card-body">
     <span class="card-tag-row">

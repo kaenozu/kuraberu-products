@@ -148,3 +148,72 @@ describe("article card content types (rendered dist)", () => {
     }
   });
 });
+
+describe("article card thumbnails (rendered dist)", () => {
+  const cards = (html: string) =>
+    [
+      ...html.matchAll(
+        /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*>[\s\S]*?<\/article>/g,
+      ),
+    ].map((match) => match[0]);
+
+  const cardPages: ReadonlyArray<readonly [string, string]> = [
+    ["dist/index.html", topHtml],
+    ["dist/articles/index.html", articlesIndexHtml],
+    ...readdirSync("dist/articles/page", { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => {
+        const html = readFileSync(
+          `dist/articles/page/${entry.name}/index.html`,
+          "utf8",
+        );
+        return [`dist/articles/page/${entry.name}/index.html`, html] as const;
+      }),
+  ];
+
+  const isArticleCard = (card: string) => !card.includes('href="/tools/');
+
+  it("renders exactly one thumbnail (image or text tile) on every article card", () => {
+    let total = 0;
+    let image = 0;
+    let tile = 0;
+    for (const [page, html] of cardPages) {
+      for (const card of cards(html)) {
+        if (!isArticleCard(card)) continue;
+        total += 1;
+        const thumb = card.match(/\bdata-thumb="(image|tile)"/)?.[1];
+        expect(thumb, `${page} card missing data-thumb`).toBeDefined();
+        const hasImg = /<img\b[^>]*class="[^"]*\bcard-thumb\b[^"]*"/.test(card);
+        const hasTile =
+          /<div\b[^>]*class="[^"]*\bcard-tile\b[^"]*"[^>]*>[\s\S]*?card-tile-label/.test(
+            card,
+          );
+        // 画像とテキストタイルはちょうど一方だけ
+        expect(hasImg, `${page}: ${card.slice(0, 80)}`).not.toBe(hasTile);
+        if (thumb === "image") {
+          expect(hasImg, `${page}: data-thumb=image but no img`).toBe(true);
+          image += 1;
+        } else {
+          expect(hasTile, `${page}: data-thumb=tile but no tile`).toBe(true);
+          tile += 1;
+        }
+      }
+    }
+    expect(total).toBeGreaterThan(0);
+    expect(image + tile).toBe(total);
+  });
+
+  it("keeps data-thumb consistent with articleMetadata.imagePath", () => {
+    for (const [, html] of cardPages) {
+      for (const card of cards(html)) {
+        if (!isArticleCard(card)) continue;
+        const href = card.match(/<h2><a href="([^"]+)"/)?.[1];
+        expect(href).toBeDefined();
+        const article = articleMetadata.find((entry) => entry.path === href);
+        expect(article, `unknown article path ${href}`).toBeDefined();
+        const expected = article!.imagePath ? "image" : "tile";
+        expect(card).toContain(`data-thumb="${expected}"`);
+      }
+    }
+  });
+});

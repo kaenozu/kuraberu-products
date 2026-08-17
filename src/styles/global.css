@@ -256,13 +256,11 @@ a {
   gap: 1rem;
   margin-top: 2.5rem;
 }
+/* 記事カードは常に 132px のサムネイル枠を持つ（画像 or テキストタイル）。
+   画像なし記事は .card-tile でカテゴリ名を表示し、全カードの見た目を統一する。 */
 .article-list-card {
   max-width: 700px;
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 0;
-}
-.article-list-card.has-image {
   grid-template-columns: 132px 1fr;
   gap: 1rem;
   align-items: start;
@@ -275,6 +273,26 @@ a {
   border: 1px solid var(--line);
   background: #fff;
   display: block;
+}
+.article-list-card .card-tile {
+  width: 132px;
+  height: 132px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--sage);
+  color: var(--ink);
+  text-align: center;
+}
+.article-list-card .card-tile-label {
+  font-size: 0.95rem;
+  font-weight: 800;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
 }
 .article-list-card .card-body {
   min-width: 0;
@@ -794,11 +812,10 @@ a {
   }
   .article-list-card {
     max-width: none;
-  }
-  .article-list-card.has-image {
     grid-template-columns: 96px 1fr;
   }
-  .article-list-card .card-thumb {
+  .article-list-card .card-thumb,
+  .article-list-card .card-tile {
     width: 96px;
     height: 96px;
   }
