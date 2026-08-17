@@ -17,6 +17,7 @@ import {
   moonyMArticle,
   pampersNewbornArticle,
   panasonicBabyMonitorArticle,
+  panasonicEhNa9mGuideArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
   thermosTigerBottleArticle,
@@ -127,6 +128,7 @@ describe("article metadata", () => {
       kingjimTepraArticle,
       panasonicFyhvx120VsFyhvx90Article,
       panasonicBabyMonitorArticle,
+      panasonicEhNa9mGuideArticle,
       thermosKfm020VsKfi020Article,
       tigerMtaJ050GuideArticle,
       panasonicEhNa9mVsEhNa7mArticle,
@@ -156,13 +158,13 @@ describe("article metadata", () => {
         Number.isInteger(article.productCount) && article.productCount >= 1,
       ).toBe(true);
     }
-    // 比較記事は productCount: 2、単一商品記事は productCount: 1。
+    // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
     ).toHaveLength(56);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
-    ).toEqual([panasonicBabyMonitorArticle]);
+    ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
   });
 
   it("rejects invalid product counts", () => {

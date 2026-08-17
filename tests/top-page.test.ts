@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { articleMetadata } from "../src/content/articles";
 import { ARTICLE_LAYOUT, contentTypeFor } from "../config/article-layout.mjs";
@@ -107,12 +107,30 @@ describe("article card content types (rendered dist)", () => {
     }
   });
 
-  it("renders the guide label on the article card of the single-product article", () => {
-    // KX-HC705（唯一の商品ガイド）は記事一覧の 2 ページ目に載る
-    const guideLabel = ARTICLE_LAYOUT.contentTypes.guide.label;
-    const page2 = readFileSync("dist/articles/page/2/index.html", "utf8");
-    expect(page2).toContain("panasonic-baby-monitor-kx-hc705");
-    expect(page2).toContain(`>${guideLabel}</span>`);
+  it("renders every guide article card in the articles list with the guide label", () => {
+    // 全ページ送りを含む記事一覧を結合し、ガイド記事が全て
+    // data-content-type="guide" のカードとして表示されることを検証する。
+    const listHtml = [
+      articlesIndexHtml,
+      ...readdirSync("dist/articles/page", { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) =>
+          readFileSync(`dist/articles/page/${entry.name}/index.html`, "utf8"),
+        ),
+    ].join("");
+    const guideArticles = articleMetadata.filter(
+      (article) => contentTypeFor(article.productCount) === "guide",
+    );
+    expect(guideArticles.length).toBeGreaterThanOrEqual(2);
+    const guideTagCount =
+      listHtml.match(/data-content-type="guide"/g)?.length ?? 0;
+    expect(guideTagCount).toBe(guideArticles.length);
+    for (const article of guideArticles) {
+      expect(listHtml).toContain(article.path.slice(1, -1));
+      expect(listHtml).toContain(
+        `>${ARTICLE_LAYOUT.contentTypes.guide.label}</span>`,
+      );
+    }
   });
 
   it("keeps the card tag labels consistent with the article metadata", () => {

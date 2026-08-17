@@ -67,10 +67,39 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 （定義: `config/article-layout.mjs` の `contentTypes`、導出: `contentTypeFor()`）。
 
 - **商品ガイド（guide）** = `productCount` 1 の単一商品記事。
-  例: `panasonic-baby-monitor-kx-hc705`（KX-HC705）。比較セクション
+  例: `panasonic-baby-monitor-kx-hc705`（KX-HC705）、
+  `panasonic-eh-na9m-guide`（EH-NA9M）。比較セクション
   （`article-comparison-v2`）を持たず、1 商品の特徴・向いている人・公式情報を
   単品で整理する。記事の meta 行に「商品ガイド」と表示する。
 - **比較記事（comparison）** = `productCount` 2 以上の複数商品比較。
+
+### 商品ガイドの作成手順
+
+比較記事から 1 商品を「単品チェック」として切り出す場合は、次の手順で作る。
+基準例: `src/pages/articles/panasonic-baby-monitor-kx-hc705/index.astro`（KX-HC705）。
+
+1. **切り出す商品を選ぶ** — 既存の比較記事の中で、公式情報の多い商品や
+   検索需要の高い商品を選ぶ（例: EH-NA9M は 2 本の比較記事に登場する上位モデル）。
+2. **メタデータを追加する**（`src/content/articles.ts`）—
+   `productCount: 1` を宣言する（コンテンツタイプはここから自動導出）。
+   `path` は `panasonic-eh-na9m-guide` のように商品名 + `-guide` にする。
+   確認日（`productInfoCheckedAt` / `purchaseLinksCheckedAt`）は、公式ページと
+   購入リンクを実際に確認した日付を書く。既存記事の検証済みデータを再利用する場合は
+   元記事の確認日を引き継ぐ。
+3. **記事ファイルを作る** — 切り出し元の比較記事で公式に確認できた項目だけを
+   「公式情報」に列挙する（比較記事の仕様表・FAQ から該当商品の行を抜き出す）。
+   構成は KX-HC705 ガイドと同じ:
+   1 行結論 lead → ジャンプナビ → 向いている人（`#conclusion`）→ 公式情報
+   （`#official`）→ FAQ（`#faq`）→ 購入時の注意 → 購入カード 1 枚
+   （`placement="article-end"`）→ 更新履歴 → 情報源一覧 → 調査方法・免責。
+4. **比較記事へ相互リンクを張る** — FAQ や注意書きで、切り出し元の比較記事への
+   リンクを置く（例: EH-NA9M ガイドの FAQ「EH-NA7Mと何が違う？」→ 比較記事）。
+5. **購入カードは 1 枚だけ置く** — 比較記事から引き継いだ購入リンク
+   （a.r10.to または楽天検索）を `PurchaseCard` 1 枚にまとめる。
+6. **検証を通す** — ゲートが `productCount=1 → guide` と比較セクション無しを
+   自動検証する。`tests/top-page.test.ts` がガイド記事を一覧のどこかのページで
+   確認するため、ビルド後の `data-content-type="guide"` の件数が
+   ガイド記事数と一致することを確認する。
 
 BaseLayout が `<meta name="article:content-type" content="guide|comparison">` を
 出力し、品質ゲート（`scripts/check-rendered-html.mjs`）が productCount と照合する。
