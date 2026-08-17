@@ -882,3 +882,131 @@ a {
 .purchase-card .ad-note {
   color: rgba(255, 255, 255, 0.6);
 }
+
+/* 商品選択診断（/tools/product-finder/） */
+.primary-button {
+  min-height: 48px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.65rem 1.1rem;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.primary-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.diagnosis-widget {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+}
+.diagnosis-widget .notice {
+  margin: 0 0 1rem;
+  font-size: 0.85rem;
+}
+.diagnosis-start,
+.diagnosis-question,
+.diagnosis-result,
+.diagnosis-empty {
+  display: grid;
+  gap: 0.75rem;
+}
+.diagnosis-start h2,
+.diagnosis-question h2,
+.diagnosis-result h2,
+.diagnosis-empty h2 {
+  margin: 0;
+}
+.diagnosis-start p,
+.diagnosis-question p,
+.diagnosis-result p,
+.diagnosis-empty p {
+  margin: 0;
+}
+.diagnosis-options {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.diagnosis-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.diagnosis-option:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--sage);
+}
+.diagnosis-option input {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: var(--accent);
+}
+.diagnosis-nav,
+.diagnosis-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 0.5rem;
+}
+.diagnosis-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.diagnosis-card--top {
+  border-color: var(--accent);
+  background: var(--sage);
+}
+.diagnosis-card__rank {
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0;
+}
+.diagnosis-card h3 {
+  margin: 0;
+}
+.diagnosis-card ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.diagnosis-card__links {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+.diagnosis-card__links a {
+  font-weight: 700;
+}
+.diagnosis-disclaimer {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.diagnosis-index-note {
+  margin: 0 0 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--sage);
+  padding: 0.75rem 1rem;
+}
+.diagnosis-index-note p {
+  margin: 0;
+}

@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { diagnosisCategories } from '../../../data/diagnoses';
+
+const title = '商品選択診断｜あなたに合う商品を30秒で診断｜くらべる商品メモ';
+const description =
+  '商品スペックを全部比べなくても大丈夫。数問の質問に答えるだけで、あなたの使い方に合う商品を診断します。判定はメーカー公式情報に基づくスコアリング方式です。';
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 商品選択診断</p>
+
+    <h1>商品選択診断</h1>
+    <p class="lead">「どちらも良さそうで決められない」とき、全部のスペックを比べなくても、あなたの使い方ならどちらが合うかを診断します。質問に答えるだけ、判定はメーカー公式情報に基づくルールとスコアリングで行います。</p>
+
+    <p class="notice">広告・PRを含みます。判定はメーカー公式情報に基づき、広告の有無で順位は変わりません。</p>
+
+    <h2>診断できるカテゴリ</h2>
+    <div class="article-list">
+      {diagnosisCategories.map((category) => (
+        <article class="card article-list-card">
+          <div class="card-body">
+            <span class="card-tag-row"><span class="tag">{category.config.categoryLabel}</span></span>
+            <h2><a href={`/tools/product-finder/${category.slug}/`}>{category.config.title}</a></h2>
+            <p class="card-desc">{category.config.description}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <h2>診断のしくみ</h2>
+    <p>この診断はAIの自由回答ではなく、次のルール＋スコアリング方式で判定します。</p>
+    <ul>
+      <li>各質問の回答は、商品のスコアを加点・減点します</li>
+      <li>必須条件（例：ガラスを避けたい）を満たさない商品は候補から除外します</li>
+      <li>判定根拠はメーカー公式情報のみで、口コミや推測値は使いません</li>
+      <li>同じ回答なら同じ結果になる、再現可能な判定です</li>
+    </ul>
+
+    <h2>よくある質問</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary><h3>回答はどこに保存されますか？</h3></summary>
+        <p>診断の回答はブラウザ内だけで処理され、サーバーへ送信・保存されません。個人情報も収集しません。</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3>診断結果は商品のランキングと同じですか？</h3></summary>
+        <p>違います。診断は「あなたの回答」に対する相対的な合いやすさをスコアリングします。人気ランキングや広告の有無で順位は変わりません。</p>
+      </details>
+      <details class="faq-item">
+        <summary><h3>診断はどのカテゴリにありますか？</h3></summary>
+        <p>現在は授乳用品（哺乳瓶）の1カテゴリです。順次、おむつ・抱っこ紐・鼻吸い器などへ拡大予定です。</p>
+      </details>
+    </div>
+
+    <h2>調査方法・免責事項</h2>
+    <p>診断の判定は、メーカー公式の商品ページで確認できる情報のみを根拠としています。商品仕様や価格は変更される可能性があるため、購入時点の公式商品ページと販売ページを確認してください。</p>
+  </article>
+</BaseLayout>

@@ -30,11 +30,16 @@
     if (!(cta instanceof HTMLElement)) return;
     var eventName = cta.dataset.ctaEvent;
     if (!eventName) return;
-    sendEvent({
+    var payload = {
       event: eventName,
       productId: cta.dataset.productId || "",
       placement: cta.dataset.placement || "",
       path: location.pathname,
-    });
+    };
+    // 診断結果カードの順位（rank）は任意属性として送信する（無ければ送らない）
+    if (cta.dataset.rank) {
+      payload.rank = cta.dataset.rank;
+    }
+    sendEvent(payload);
   });
 })();
