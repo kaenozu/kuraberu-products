@@ -105,6 +105,20 @@ BaseLayout が `<meta name="article:content-type" content="guide|comparison">` �
 出力し、品質ゲート（`scripts/check-rendered-html.mjs`）が productCount と照合する。
 商品ガイドが比較セクションを描画するとゲートが fail する。
 
+### JSON-LD の分化
+
+`article:content-type` と同一の `contentTypeFor()` から、記事の JSON-LD（schema.org
+`Article`）に `about`（`Product`）を出力する。商品名はメタデータの
+`aboutProductNames` で宣言する（件数は `productCount` と一致させる）。
+
+- **商品ガイド** → `about` に単一の `Product`（宣言は必須。`defineArticleMetadata`
+  が productCount=1 の記事に aboutProductNames を強制し、JSON-LD の商品セマンティクスを保証）。
+- **比較記事** → 商品名を宣言した場合のみ `about` に 2 つの `Product`
+  （商用シード記事は `leftProduct` / `rightProduct` から自動設定）。
+  未宣言の比較記事（手書き比較記事など）は `about` を出力しない。
+
+検証は `tests/article-metadata.test.ts`（宣言の検証 + 実ビルド JSON-LD の分岐）。
+
 トップページと比較記事一覧の記事カードには、カテゴリタグの隣にコンテンツタイプの
 ラベルタグ（`tag--type`）を表示する。ラベル文言は `src/lib/content-types.ts` の
 `contentTypeLabel()` が config から導出し、カード要素に `data-content-type` 属性を

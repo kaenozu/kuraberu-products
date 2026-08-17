@@ -167,6 +167,46 @@ describe("article metadata", () => {
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
   });
 
+  it("declares aboutProductNames matching productCount for JSON-LD", () => {
+    // 商品ガイドは単一商品名を必須で宣言する
+    expect(panasonicBabyMonitorArticle.aboutProductNames).toEqual([
+      "パナソニック ベビーモニター KX-HC705",
+    ]);
+    expect(panasonicEhNa9mGuideArticle.aboutProductNames).toEqual([
+      "パナソニック ナノケア EH-NA9M",
+    ]);
+    // 全記事で宣言がある場合は productCount と一致する
+    for (const article of articleMetadata) {
+      if (!article.aboutProductNames) continue;
+      expect(article.aboutProductNames.length).toBe(article.productCount);
+    }
+    // 比較記事（商用シード）は leftProduct / rightProduct から導出される
+    const commercial = articleMetadata.find(
+      (article) => article.id === "roborock-qrevo-curv-vs-dreame-x50",
+    );
+    expect(commercial?.aboutProductNames).toEqual([
+      "Roborock Qrevo Curv",
+      "Dreame X50 Ultra",
+    ]);
+  });
+
+  it("rejects aboutProductNames that do not match productCount", () => {
+    expect(() =>
+      defineArticleMetadata({
+        ...panasonicBabyMonitorArticle,
+        aboutProductNames: ["商品A", "商品B"],
+      }),
+    ).toThrow("aboutProductNames must have exactly 1 non-empty entries");
+    expect(() =>
+      defineArticleMetadata({
+        ...panasonicBabyMonitorArticle,
+        aboutProductNames: undefined,
+      }),
+    ).toThrow(
+      "aboutProductNames must be declared for single-product (guide) articles",
+    );
+  });
+
   it("rejects invalid product counts", () => {
     expect(() =>
       defineArticleMetadata({
@@ -296,5 +336,50 @@ describe("article metadata", () => {
     expect(data.some((item) => item["@type"] === "WebPage")).toBe(true);
     expect(html).not.toContain("article:published_time");
     expect(html).not.toContain("article:product-count");
+  });
+});
+
+describe("article JSON-LD by content type (rendered dist)", () => {
+  const articleOf = (html: string) =>
+    extractJsonLd(html).find((item) => item["@type"] === "Article") as Record<
+      string,
+      unknown
+    >;
+
+  it("marks a product guide with a single Product in about", () => {
+    const expectedNames: Record<string, string> = {
+      "panasonic-baby-monitor-kx-hc705":
+        panasonicBabyMonitorArticle.aboutProductNames![0],
+      "panasonic-eh-na9m-guide":
+        panasonicEhNa9mGuideArticle.aboutProductNames![0],
+    };
+    for (const [slug, expectedName] of Object.entries(expectedNames)) {
+      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+      const article = articleOf(html);
+      expect(article.about).toEqual([
+        { "@type": "Product", name: expectedName },
+      ]);
+    }
+  });
+
+  it("marks a comparison article with two Products in about when names are declared", () => {
+    const html = readFileSync(
+      "dist/articles/roborock-qrevo-curv-vs-dreame-x50/index.html",
+      "utf8",
+    );
+    const article = articleOf(html);
+    expect(article.about).toEqual([
+      { "@type": "Product", name: "Roborock Qrevo Curv" },
+      { "@type": "Product", name: "Dreame X50 Ultra" },
+    ]);
+  });
+
+  it("omits about on a comparison article without declared product names", () => {
+    const html = readFileSync(
+      "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
+      "utf8",
+    );
+    const article = articleOf(html);
+    expect(article.about).toBeUndefined();
   });
 });

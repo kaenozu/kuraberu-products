@@ -32,6 +32,13 @@ const currentPath = Astro.url.pathname;
 const articleImage = article?.imagePath
   ? new URL(article.imagePath, `${site.url}/`).toString()
   : undefined;
+// 記事の JSON-LD 分化（article:content-type と同一の contentTypeFor から導出）。
+// 商品名を宣言した記事だけ about（schema.org Product）を出力する:
+// 商品ガイド = 1 商品、比較記事 = 2 商品。未宣言の比較記事は about を出さない。
+const aboutProducts = article?.aboutProductNames?.map((name) => ({
+  '@type': 'Product',
+  name,
+}));
 const organization = {
   '@type': 'Organization',
   name: site.name,
@@ -48,6 +55,7 @@ const structuredData = resolvedOgType === 'article'
       datePublished: article?.publishedAt,
       dateModified: article?.modifiedAt,
       ...(articleImage ? {image: articleImage} : {}),
+      ...(aboutProducts ? {about: aboutProducts} : {}),
       author: organization,
       publisher: organization,
       isAccessibleForFree: true,
