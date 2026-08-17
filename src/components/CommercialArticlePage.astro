@@ -1,0 +1,93 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ComparisonMemoButton from './ComparisonMemoButton.astro';
+import PurchaseCard from './PurchaseCard.astro';
+import { articleMetadata, additionalCommercialArticleSeeds } from '../content/articles';
+import type { DifferenceRow } from '../lib/comparison';
+
+interface Props {
+  articleId: string;
+}
+
+const { articleId } = Astro.props;
+const article = articleMetadata.find((item) => item.id === articleId);
+const seed = additionalCommercialArticleSeeds.find((item) => item.id === articleId);
+
+if (!article || !seed) {
+  throw new Error(`Unknown commercial article: ${articleId}`);
+}
+
+const leftSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
+const rightSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
+const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
+const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
+const rows: DifferenceRow[] = [
+  { label: '主な比較軸', left: seed.leftPoint, right: seed.rightPoint },
+  { label: '公式情報で確認する項目', left: '仕様・サイズ・対応機能', right: '仕様・サイズ・対応機能' },
+  { label: '価格・在庫', left: '販売ページで確認', right: '販売ページで確認' },
+];
+const faq = [
+  {
+    question: 'この記事で「売れ筋」として何を比べていますか？',
+    answer: '検索需要が見込まれる定番カテゴリから、比較検討されやすい2商品を候補として整理しています。ランキング順位や価格を保証するものではありません。',
+  },
+  {
+    question: '価格や在庫は確認できますか？',
+    answer: '価格・在庫・ポイント・送料は変動するため、記事内の販売ページで購入時点の情報をご確認ください。',
+  },
+  {
+    question: 'どちらを選べばよいですか？',
+    answer: '用途、置き場所、対応機器、サイズ、手入れのしやすさを優先順位にして、公式仕様と販売ページを照らし合わせてください。',
+  },
+];
+---
+<BaseLayout title={article.title} description={article.description} article={article} faq={faq}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
+    <h1>{article.headline}</h1>
+    <ComparisonMemoButton articleId={article.id} />
+    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
+
+    <p>{article.summary} ここでは、メーカー公式ページで確認できる仕様と、販売ページで購入時に確認する項目を分けて整理します。</p>
+    <h2 id="key-differences">違いを確認する</h2>
+    <div class="table-scroll">
+      <table class="comparison">
+        <thead><tr><th scope="col">比較項目</th><th scope="col">{seed.leftProduct}</th><th scope="col">{seed.rightProduct}</th></tr></thead>
+        <tbody>
+          {rows.map((row) => <tr><th scope="row">{row.label}</th><td>{row.left}</td><td>{row.right}</td></tr>)}
+        </tbody>
+      </table>
+    </div>
+    <p class="meta">商品仕様・価格・在庫は変更される可能性があります。購入時点の公式ページと販売ページをご確認ください。</p>
+
+    <h2 id="decision-guide">選ぶときの確認順</h2>
+    <ol>
+      <li>使う場所と目的を決める。</li>
+      <li>サイズ、対応機器、容量など変更しにくい条件を確認する。</li>
+      <li>手入れ、消耗品、保証、返品条件を確認する。</li>
+      <li>最後に価格・送料・ポイントを販売ページで比較する。</li>
+    </ol>
+
+    <div class="purchase-cards">
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
+    </div>
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faq.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
+    </div>
+
+    <h2>購入前の注意</h2>
+    <p>ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+    </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {article.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}
+    </ol>
+  </article>
+</BaseLayout>

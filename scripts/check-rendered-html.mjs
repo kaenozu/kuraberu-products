@@ -254,9 +254,25 @@ export function validateArticleCtas(relative, html, expectedCount) {
     } else {
       // アフィリエイトでないCTA（未差し替え時の楽天検索フォールバック等）は
       // 許可済みの楽天ホストだけを許し、nofollow を必須にする。
-      errors.push(
-        `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
-      );
+      let isRakutenFallback = false;
+      try {
+        const url = new URL(href);
+        isRakutenFallback =
+          url.protocol === "https:" &&
+          (url.hostname === "search.rakuten.co.jp" ||
+            url.hostname.endsWith(".rakuten.co.jp"));
+      } catch {
+        // The generic validation below reports malformed URLs.
+      }
+      if (!isRakutenFallback) {
+        errors.push(
+          `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
+        );
+      } else if (!/\bnofollow\b/i.test(rel)) {
+        errors.push(
+          `${relative}: CTA ${index + 1} fallback URL is missing nofollow rel attribute`,
+        );
+      }
     }
   }
   return errors;

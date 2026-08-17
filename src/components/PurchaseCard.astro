@@ -15,6 +15,8 @@ interface Props {
   imagePath?: string;
   placement?: string;
   note?: string;
+  searchQuery?: string;
+  requiredTerms?: readonly string[];
 }
 
 const {
@@ -25,6 +27,8 @@ const {
   imagePath,
   placement = ARTICLE_LAYOUT.defaultPlacement,
   note,
+  searchQuery,
+  requiredTerms,
 } = Astro.props;
 ---
 <article class="purchase-card">
@@ -44,6 +48,8 @@ const {
     subLabel="商品ページを確認する"
     imagePath={undefined}
     placement={placement}
+    searchQuery={searchQuery}
+    requiredTerms={requiredTerms}
   />
   {note && <p class="purchase-card__note">{note}</p>}
 </article>
