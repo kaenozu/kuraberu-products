@@ -8,6 +8,9 @@ const publicPaths = [
   "/about/",
   "/privacy/",
   "/disclaimer/",
+  "/tools/product-finder/",
+  "/tools/product-finder/baby-bottle/",
+  "/tools/product-finder/diaper/",
   ...articleMetadata.map((article) => article.path),
 ] as const;
 

@@ -5,6 +5,7 @@ import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import DiagnosisCta from '../../../components/DiagnosisCta.astro';
 import {moonyMArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
@@ -135,7 +136,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-
+    <DiagnosisCta href="/tools/product-finder/diaper/" />
 
     <h2 id="official">公式情報</h2>
     <p>「低刺激であんしん」Mは、体重6〜11kg向けのテープタイプで、楽天のユニ・チャーム公式店では46枚入りです。主な機能として、ゆるうんちの水分を下層へ吸収する「うんち水分吸収シート」と「おしりガイド」が案内されています。新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加です。また、公式には新生児〜Mについて「オーガニックコットンは含まれておりません」と明記されています。商品は2025年秋にリニューアルされています。</p>
