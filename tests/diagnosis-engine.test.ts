@@ -383,6 +383,22 @@ describe("tie break", () => {
       ]),
     ).toBeGreaterThan(0);
   });
+
+  it("editorialPriority は config の記載順に関わらず最後に適用される", () => {
+    // capacity asc で差が出るペア（160 vs 240）。editorialPriority が
+    // 先頭に書かれていても、属性比較が優先されるべき。
+    const left = bottle160Glass;
+    const right = bottle240Ppsu;
+    expect(
+      tieBreakCompare(left, right, [
+        {
+          type: "editorialPriority",
+          productIds: [right.id, left.id],
+        },
+        { type: "attribute", key: "capacity", direction: "asc" },
+      ]),
+    ).toBeLessThan(0);
+  });
 });
 
 // ---- おむつ診断の回帰フィクスチャ（商品データ変更時に結果が変わったら検知する） ----

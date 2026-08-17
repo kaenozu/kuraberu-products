@@ -8,8 +8,6 @@
 
 import type { ReasonDictionary } from "./types";
 
-export const defaultReasonMessages: ReasonDictionary = {};
-
 /** reasonCode を表示文言へ変換する。辞書に無ければコードをそのまま返す。 */
 export function reasonMessage(
   code: string,

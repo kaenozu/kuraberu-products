@@ -50,7 +50,7 @@ const description =
       </details>
       <details class="faq-item">
         <summary><h3>診断はどのカテゴリにありますか？</h3></summary>
-        <p>現在は授乳用品（哺乳瓶）の1カテゴリです。順次、おむつ・抱っこ紐・鼻吸い器などへ拡大予定です。</p>
+        <p>現在は{diagnosisCategories.map((category) => category.config.categoryLabel).join('・')}の{diagnosisCategories.length}カテゴリです。順次、抱っこ紐・鼻吸い器などへ拡大予定です。</p>
       </details>
     </div>
 

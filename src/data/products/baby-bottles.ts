@@ -40,6 +40,8 @@ export const babyBottle160Glass: Product = {
     lightweight: false,
     portable: false,
     longTermUse: false,
+    /** 汚れの落ちやすさ（ピジョン公式Q&A: ガラス製は「汚れが落ちやすいので清潔」と案内） */
+    easyToClean: true,
   },
   articleUrls: ["/articles/pigeon-bottle-160-240/"],
   purchaseLinks: [
@@ -65,6 +67,8 @@ export const babyBottle160Ppsu: Product = {
     lightweight: true,
     portable: true,
     longTermUse: false,
+    /** 汚れの落ちやすさ（公式Q&A: プラスチック製は「キズがつきやすく、色やにおいなどが吸着しやすい」） */
+    easyToClean: false,
   },
   articleUrls: ["/articles/pigeon-bottle-160-240/"],
   purchaseLinks: [
@@ -90,6 +94,8 @@ export const babyBottle240Glass: Product = {
     lightweight: false,
     portable: false,
     longTermUse: true,
+    /** 汚れの落ちやすさ（ピジョン公式Q&A: ガラス製は「汚れが落ちやすいので清潔」と案内） */
+    easyToClean: true,
   },
   articleUrls: ["/articles/pigeon-bottle-240/"],
   purchaseLinks: [
@@ -115,6 +121,8 @@ export const babyBottle240Ppsu: Product = {
     lightweight: true,
     portable: true,
     longTermUse: true,
+    /** 汚れの落ちやすさ（公式Q&A: プラスチック製は「キズがつきやすく、色やにおいなどが吸着しやすい」） */
+    easyToClean: false,
   },
   articleUrls: ["/articles/pigeon-bottle-240/"],
   purchaseLinks: [

@@ -11,6 +11,16 @@ export const ARTICLE_LAYOUT = {
   placements: ["after-decision", "article-end"],
   // 診断結果カードのクリック計測用 placement（/tools/product-finder/ 配下）
   diagnosisPlacement: "diagnosis-result",
+  // 診断ページのイベント名（/api/events が受け付ける）。仕様（Analytics 節）の
+  // イベント群を定義し、レイアウト契約と同じくここが唯一の情報源。
+  diagnosisEvents: [
+    "diagnosis_view",
+    "diagnosis_start",
+    "diagnosis_complete",
+    "diagnosis_restart",
+    "result_article_click",
+    "result_affiliate_click",
+  ],
   // PurchaseCard の placement 省略時の既定値（v3 では末尾が原則）
   defaultPlacement: "article-end",
   // 標準記事の購入 CTA 構成（配置ごとの「商品1つにつき何枚」）。

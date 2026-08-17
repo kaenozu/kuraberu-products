@@ -66,20 +66,30 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid payload" }, 400);
   }
 
-  // イベント名は config/article-layout.mjs の CTA マーカー値と一致するものだけ許可
+  // イベント名の検証。
+  // - 記事 CTA: config/article-layout.mjs の ctaEvent（purchase）
+  // - 診断イベント: 同じく diagnosisEvents の許可リスト（view/start/complete 等）
+  // どちらも config が唯一の情報源で、未知のイベントは拒否する。
   const event = typeof body.event === "string" ? body.event : "";
-  if (event !== ARTICLE_LAYOUT.ctaEvent) {
+  const allowedEvents = [
+    ARTICLE_LAYOUT.ctaEvent,
+    ...ARTICLE_LAYOUT.diagnosisEvents,
+  ];
+  if (!allowedEvents.includes(event)) {
     return json({ ok: false, error: "unknown event" }, 400);
   }
 
   // 配置は config の許可リストで検証（レイアウト変更時は config だけを直す）。
   // 診断結果カード（placement=diagnosis-result）も、記事と同じイベント種別で受け付ける。
+  // 診断フローイベント（view/start/complete/restart）は配置を持たないため、
+  // placement は記事CTAのときだけ必須とする。
   const placement = typeof body.placement === "string" ? body.placement : "";
   const allowedPlacements = [
     ...ARTICLE_LAYOUT.placements,
     ARTICLE_LAYOUT.diagnosisPlacement,
   ];
-  if (!allowedPlacements.includes(placement)) {
+  const isPurchase = event === ARTICLE_LAYOUT.ctaEvent;
+  if (isPurchase && !allowedPlacements.includes(placement)) {
     return json({ ok: false, error: "invalid placement" }, 400);
   }
 
@@ -107,7 +117,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     const value = JSON.stringify({
       event,
       ...(productId ? { productId } : {}),
-      placement,
+      ...(placement ? { placement } : {}),
       ...(rank ? { rank } : {}),
       ...(path ? { path } : {}),
       at: new Date().toISOString(),

@@ -329,4 +329,54 @@ describe("click analytics endpoint", () => {
     expect(value.placement).toBe("diagnosis-result");
     expect(value.rank).toBeUndefined();
   });
+
+  it("accepts diagnosis flow events without a placement", async () => {
+    for (const event of [
+      "diagnosis_view",
+      "diagnosis_start",
+      "diagnosis_complete",
+      "diagnosis_restart",
+    ]) {
+      const { kv, put } = makeKv();
+      const response = await onRequestPost(
+        context(
+          postRequest(
+            JSON.stringify({
+              event,
+              path: "/tools/product-finder/baby-bottle/",
+            }),
+          ),
+          baseEnv(undefined, kv),
+        ),
+      );
+      expect(response.status).toBe(204);
+      expect(put).toHaveBeenCalledTimes(1);
+      const value = JSON.parse(put.mock.calls[0][1] as string);
+      expect(value.event).toBe(event);
+      expect(value.placement).toBeUndefined();
+    }
+  });
+
+  it("accepts a result_article_click event with productId and rank", async () => {
+    const { kv, put } = makeKv();
+    const response = await onRequestPost(
+      context(
+        postRequest(
+          JSON.stringify({
+            event: "result_article_click",
+            productId: "bo240-ppsu",
+            rank: "2",
+            path: "/tools/product-finder/baby-bottle/",
+          }),
+        ),
+        baseEnv(undefined, kv),
+      ),
+    );
+    expect(response.status).toBe(204);
+    expect(put).toHaveBeenCalledTimes(1);
+    const value = JSON.parse(put.mock.calls[0][1] as string);
+    expect(value.event).toBe("result_article_click");
+    expect(value.productId).toBe("bo240-ppsu");
+    expect(value.rank).toBe("2");
+  });
 });
