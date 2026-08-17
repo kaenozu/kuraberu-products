@@ -91,7 +91,7 @@ const xBadSearch = 'https://x.com/search?q=%E3%83%A0%E3%83%BC%E3%83%8B%E3%83%BC%
 const faqEntries = __FAQ__;
 
 const teishigekiCandidate: ComparisonCandidate = {
-  product: 'ムーニー 低刺激であんしん（テープ・M）',
+  product: 'ムーニー',
   line: '低刺激であんしん',
   tone: 'standard',
   audience: 'うんち水分吸収シートの機能を確認したい人の候補',
@@ -100,7 +100,7 @@ const teishigekiCandidate: ComparisonCandidate = {
 };
 
 const mashumaroCandidate: ComparisonCandidate = {
-  product: 'ムーニー マシュマロ肌ごこちモレ安心（テープ・M）',
+  product: 'ムーニー',
   line: 'マシュマロ肌ごこちモレ安心',
   tone: 'standard',
   audience: '無添加弱酸性素材とゆるうんちストッパーを確認したい人の候補',
