@@ -61,6 +61,27 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 - 差分が 5〜6 項目以下 → 詳細比較を折りたたまずそのまま表示。
 - 全仕様が長い（7 項目以上 or 数値表が大きい）→ `<details>` 折りたたみ。
 
+## トップページ（カテゴリ入口・よく比較される商品）
+
+トップページ（`src/pages/index.astro`）は、カテゴリ入口と「よく比較される商品」を持つ。
+構成の唯一の情報源は `config/article-layout.mjs` の `topPage`。
+
+- **カテゴリ入口**（`data-top-categories`）: `articleMetadata` のカテゴリのうち、
+  記事数が `topPage.categoryMinArticles`（2）以上のものだけを表示する。
+  件数が多い順 → 名前順。リンク先は `/articles/?category=…`（一覧ページの
+  クライアント側フィルタが URL パラメータを読んで絞り込む）。
+- **よく比較される商品**（`data-top-featured`）: `topPage.featuredPaths` に
+  載せた比較記事（3〜6 件）をカードで表示する。パスは必ず `articleMetadata` に存在させる。
+
+検証は 2 段構え。
+
+- **品質ゲート**（`scripts/check-rendered-html.mjs`）: ビルド後 HTML で
+  featured の全パスがリンクされていること・カテゴリ入口の各カテゴリが
+  比較記事一覧の option に実在することを照合する。
+- **実ビルド整合テスト**（`tests/top-page.test.ts`）: `dist/index.html` と
+  `articleMetadata` を突き合わせ、カテゴリ集合・件数ラベル・並び順・featured の
+  完全一致を検証する。
+
 ## 記事末尾の関連記事（関連性スコア）
 
 記事末尾は「関連する比較記事（最大 4 件）+ ほかの比較記事（最大 3 件）」で構成する。

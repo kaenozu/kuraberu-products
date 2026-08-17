@@ -369,6 +369,72 @@ export function validateRelatedArticleSection(relative, html) {
   return errors;
 }
 
+// トップページ（dist/index.html）のカテゴリ入口を検証する。
+// 各カテゴリリンクの category 値が、比較記事一覧（dist/articles/index.html）の
+// カテゴリ select の option に必ず存在することを照合する（カテゴリ名の実在性）。
+// 件数・掲載カテゴリの完全一致は config（topPage.categoryMinArticles）と
+// articleMetadata の両方に依存するため、実ビルド整合テスト
+// （tests/top-page.test.ts）が担う。
+export function validateTopPageCategories(topHtml, articlesIndexHtml) {
+  const errors = [];
+  const categoryLinks = [
+    ...topHtml.matchAll(/href="\/articles\/\?category=([^"]+)"/g),
+  ].map((match) => decodeURIComponent(match[1]));
+  const knownCategories = [
+    ...articlesIndexHtml.matchAll(/<option value="([^"]+)">/g),
+  ].map((match) => match[1]);
+  if (!knownCategories.length) {
+    errors.push(
+      "top page: cannot validate categories: no category options found in /articles/",
+    );
+    return errors;
+  }
+  for (const category of categoryLinks) {
+    if (!knownCategories.includes(category)) {
+      errors.push(
+        `top page: category entry points to an unknown category: ${category}`,
+      );
+    }
+  }
+  return errors;
+}
+
+// トップページ（dist/index.html）の「よく比較される商品」を検証する。
+// config の topPage.featuredPaths（3〜6件）がすべてトップにリンクされ、
+// リンク数が config と一致することを照合する。
+export function validateTopPageFeatured(topHtml) {
+  const errors = [];
+  const featuredPaths = ARTICLE_LAYOUT.topPage.featuredPaths;
+  if (featuredPaths.length < 3 || featuredPaths.length > 6) {
+    errors.push(
+      `config/article-layout.mjs: topPage.featuredPaths must have 3-6 items, found ${featuredPaths.length}`,
+    );
+  }
+  const section = topHtml.match(
+    /<section\b[^>]*data-top-featured[^>]*>([\s\S]*?)<\/section\s*>/i,
+  );
+  if (!section) {
+    errors.push("top page: missing data-top-featured section");
+    return errors;
+  }
+  const hrefs = [...section[1].matchAll(/href="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const expected = new Set(featuredPaths);
+  for (const path of featuredPaths) {
+    if (!hrefs.includes(path)) {
+      errors.push(`top page: featured article not linked: ${path}`);
+    }
+  }
+  const unexpected = hrefs.filter((href) => !expected.has(href));
+  if (unexpected.length) {
+    errors.push(
+      `top page: unexpected link in data-top-featured section: ${unexpected.join(", ")}`,
+    );
+  }
+  return errors;
+}
+
 // 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
 // 次のいずれかに該当する見出しを空セクションとみなす。
 // - 見出しの直後に別の見出し（h1〜h6）が続く
@@ -559,6 +625,33 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       })),
     ),
   );
+
+  // トップページ（dist/index.html）のカテゴリ入口と「よく比較される商品」。
+  // カテゴリの実在性は比較記事一覧（dist/articles/index.html）の option と照合する。
+  const topPage = htmlFiles.find(
+    (filePath) =>
+      path.relative(distDirectory, filePath).replace(/\\/g, "/") ===
+      "index.html",
+  );
+  const articlesIndex = htmlFiles.find(
+    (filePath) =>
+      path.relative(distDirectory, filePath).replace(/\\/g, "/") ===
+      "articles/index.html",
+  );
+  if (topPage) {
+    if (!articlesIndex) {
+      errors.push(
+        "top page: cannot validate: /articles/ index not found in dist",
+      );
+    } else {
+      const topHtml = fs.readFileSync(topPage, "utf8");
+      const articlesIndexHtml = fs.readFileSync(articlesIndex, "utf8");
+      errors.push(
+        ...validateTopPageCategories(topHtml, articlesIndexHtml),
+        ...validateTopPageFeatured(topHtml),
+      );
+    }
+  }
 
   // 外部埋め込み（X / YouTube / TikTok / Pinterest）はユーザーが同意した後に
   // JSで挿入する設計（docs/external-embed-policy.md）。
