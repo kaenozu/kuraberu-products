@@ -2,6 +2,7 @@
 import {
   createExternalEmbedConfig,
   externalEmbedProviderLabel,
+  type ExternalEmbedMatchRank,
   type ExternalEmbedProvider,
 } from "../lib/external-embeds";
 
@@ -9,6 +10,8 @@ interface Props {
   provider: ExternalEmbedProvider;
   url: string;
   title: string;
+  /** 採用基準ランク: model（型番一致）/ series（シリーズ一致）/ brand（ブランド一般） */
+  match: ExternalEmbedMatchRank;
   purpose?: string;
   autoload?: boolean;
   tone?: "good" | "bad" | "mixed";
@@ -16,7 +19,8 @@ interface Props {
   compact?: boolean;
 }
 
-const { provider, url, title, purpose, autoload, tone, compact } = Astro.props;
+const { provider, url, title, purpose, autoload, tone, compact, match } =
+  Astro.props;
 const config = createExternalEmbedConfig(provider, url);
 const providerLabel = externalEmbedProviderLabel(provider);
 const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
@@ -31,6 +35,7 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
   data-external-embed
   data-config={JSON.stringify(config)}
   data-provider={provider}
+  data-match={match}
   data-tone={tone}
   data-embed-state="idle"
   data-autoload={autoload ? "true" : undefined}

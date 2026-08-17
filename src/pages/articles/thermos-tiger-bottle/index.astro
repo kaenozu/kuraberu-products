@@ -3,8 +3,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import ExternalEmbed from '../../../components/ExternalEmbed.astro';
-import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import HeroComparison from '../../../components/HeroComparison.astro';
 import ComparisonHero from '../../../components/ComparisonHero.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
@@ -255,52 +253,6 @@ const keyDiffRows: KeyDiffRow[] = [
         <a class="card-link" href={tigerOfficial} target="_blank" rel="noopener noreferrer">タイガー 真空断熱ボトル MTA-J050 公式ページ →</a>
       </p>
     </details>
-
-    <ArticleSocialProof
-      query="サーモス JNL-S500 タイガー MTA-J050 水筒"
-      checkedAt={articleMetadata.productInfoCheckedAt ?? '2026-08-12'}
-      hasPosts={true}
-    >
-      <div class="sns-embeds">
-      <ExternalEmbed
-        provider="x"
-        url="https://x.com/pipichan_lovely/status/2084896382750761442"
-        title="サーモス製水筒について「去年買って一番良かったもの」という声"
-        purpose="サーモス製の水筒を買って良かったという投稿。"
-        tone="good"
-        autoload
-        compact
-      />
-      <ExternalEmbed
-        provider="x"
-        url="https://x.com/gudarakudara/status/2087050731782340707"
-        title="サーモス製水筒について「10年使っても保温力は落ちない」という声"
-        purpose="10年使った後の塗装の状態と、交換パッキンの入手性に関する投稿。"
-        tone="good"
-        autoload
-        compact
-      />
-      <ExternalEmbed
-        provider="x"
-        url="https://x.com/hisashi_935/status/2086083404450418709"
-        title="サーモス製の水筒・弁当箱について「サーモスには信用しかない」という声"
-        purpose="サーモスの水筒・弁当箱を長く使っているという投稿。"
-        tone="good"
-        autoload
-        compact
-      />
-      <ExternalEmbed
-        provider="x"
-        url="https://x.com/suzu0em0/status/2086750494303850788"
-        title="タイガー製水筒について「3ヶ月使ってみてとてもよい」という声"
-        purpose="タイガーの水筒を3ヶ月使った感想。コップ飲みの衛生面と、直飲みは全パーツ食洗機対応で便利という投稿。"
-        tone="good"
-        autoload
-        compact
-      />
-    </div>
-    </ArticleSocialProof>
-
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => (
@@ -362,28 +314,6 @@ const keyDiffRows: KeyDiffRow[] = [
 </BaseLayout>
 
 <style is:global>
-  /* SNS 感想セクション: 埋め込みを2列グリッドで小さめに表示 */
-  .sns-embeds {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
-    margin-block: 1.25rem;
-  }
-
-  .sns-embeds .external-embed__intro h3 {
-    font-size: 0.95rem;
-  }
-
-  .sns-embeds .external-embed__target {
-    font-size: 0.9rem;
-  }
-
-  @media (max-width: 720px) {
-    .sns-embeds {
-      grid-template-columns: 1fr;
-    }
-  }
-
   /* ページ内ジャンプナビ（小型） */
   .jump-nav {
     display: flex;

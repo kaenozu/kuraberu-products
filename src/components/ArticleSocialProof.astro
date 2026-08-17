@@ -1,18 +1,28 @@
 ---
-// SNS セクション（参考情報）。hasPosts=true のときだけ描画する。
-// 投稿が見つからなかった記事では「0件」の空セクションを出さず、
-// セクションごと非表示にする（記事末尾に確認記録を残す必要がある場合は
-// 別途小さな表記を置く方針とし、ここでは出さない）。
+// SNS セクション（参考情報）。hasPosts=true かつ bestMatch が brand 以外のときだけ描画する。
+// 投稿が見つからなかった記事、または C（ブランド一般）の投稿しか無い記事では
+// セクションごと非表示にする。bestMatch は埋め込み投稿の採用基準ランクの最上位
+// （model > series > brand）を宣言し、品質ゲート scripts/validate-sns-ranks.mjs が
+// 実際の埋め込みと突合する。
+import type { ExternalEmbedMatchRank } from "../lib/external-embeds";
+
 interface Props {
   query: string;
   checkedAt?: string;
   hasPosts?: boolean;
+  /** 埋め込み投稿の採用基準ランクの最上位（model / series / brand）。brand のみなら非表示 */
+  bestMatch?: ExternalEmbedMatchRank;
 }
 
-const { hasPosts = false } = Astro.props;
+const { hasPosts = false, bestMatch } = Astro.props;
+const visible = hasPosts && bestMatch !== undefined && bestMatch !== "brand";
 ---
-{hasPosts ? (
-  <section class="article-social-proof" id="sns">
+{visible ? (
+  <section
+    class="article-social-proof"
+    id="sns"
+    data-best-match={bestMatch}
+  >
     <h2>SNS での感想（参考情報）</h2>
     <p>
       SNS投稿は実際の利用者の感想を知るための参考情報です。商品の仕様や比較結論の根拠には使用していません。比較の根拠はメーカー公式情報のみです。

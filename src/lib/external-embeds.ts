@@ -7,6 +7,18 @@ export const EXTERNAL_EMBED_PROVIDERS = [
 
 export type ExternalEmbedProvider = (typeof EXTERNAL_EMBED_PROVIDERS)[number];
 
+/**
+ * SNS 投稿の採用基準ランク（対象商品との一致度）。
+ * - model  = A: 型番一致（比較対象の型番そのものに触れている）
+ * - series = B: シリーズ一致（比較対象と同じシリーズ・製品ライン）
+ * - brand  = C: ブランド一般（ブランドの商品一般で、対象型番を確認できない）
+ * C のみの投稿しかない記事は SNS セクション自体を表示しない（docs/external-embed-policy.md）。
+ */
+export const EXTERNAL_EMBED_MATCH_RANKS = ["model", "series", "brand"] as const;
+
+export type ExternalEmbedMatchRank =
+  (typeof EXTERNAL_EMBED_MATCH_RANKS)[number];
+
 export type ExternalEmbedConfig = {
   provider: ExternalEmbedProvider;
   canonicalUrl: string;
