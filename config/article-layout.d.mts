@@ -33,6 +33,15 @@ export interface ArticleLayout {
   midArticleSet: ArticleCtaSet;
   /** 記事末尾の関連記事の選定ルール（関連性スコアベース） */
   relatedSelection: RelatedSelectionConfig;
+  /** トップページ（カテゴリ入口・「よく比較される商品」）の構成 */
+  topPage: TopPageConfig;
+}
+
+export interface TopPageConfig {
+  /** 「よく比較される商品」としてトップに出す比較記事パス（3〜6件） */
+  featuredPaths: readonly string[];
+  /** トップのカテゴリ入口に載せる最低記事数 */
+  categoryMinArticles: number;
 }
 
 export const ARTICLE_LAYOUT: ArticleLayout;
