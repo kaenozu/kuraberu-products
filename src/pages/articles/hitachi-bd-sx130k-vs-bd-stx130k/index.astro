@@ -1,0 +1,111 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import PurchaseCard from '../../../components/PurchaseCard.astro'
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import { additionalCommercialArticles } from '../../../content/articles'
+
+const articleMetadata = additionalCommercialArticles.find((article) => article.id === 'hitachi-bd-sx130k-vs-bd-stx130k')!
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+
+const left = {
+  brand: '日立',
+  model: 'BD-SX130K',
+  name: '日立 ビッグドラム BD-SX130K',
+  official: 'https://kadenfan.hitachi.co.jp/wash/lineup/bd-sx130k/',
+  spec: 'https://kadenfan.hitachi.co.jp/wash/lineup/bd-sx130k/spec.html',
+  rakuten: 'https://a.r10.to/hgXjdE',
+  image: '/products/hitachi-bd-sx130k.png',
+  capacity: '洗濯・脱水13kg／洗濯～乾燥・乾燥7kg',
+  panel: 'プッシュボタン式操作パネル',
+  weight: '約92kg',
+}
+
+const right = {
+  brand: '日立',
+  model: 'BD-STX130K',
+  name: '日立 ビッグドラム BD-STX130K',
+  official: 'https://kadenfan.hitachi.co.jp/wash/lineup/bd-stx130k/',
+  spec: 'https://kadenfan.hitachi.co.jp/wash/lineup/bd-stx130k/spec.html',
+  rakuten: 'https://a.r10.to/hRIzoN',
+  image: '/products/hitachi-bd-stx130k.png',
+  capacity: '洗濯・脱水13kg／洗濯～乾燥・乾燥7kg',
+  panel: 'ワイドカラー液晶タッチパネル',
+  weight: '約93kg',
+}
+
+const faqEntries = [
+  {
+    question: '日立 BD-SX130KとBD-STX130Kはどっちがいい？',
+    answer: 'どちらも洗濯・脱水容量13kg、洗濯～乾燥・乾燥容量7kgです。BD-SX130Kはプッシュボタン式、BD-STX130Kはワイドカラー液晶タッチパネルで、温水やスチームアイロンコースなどの搭載内容にも違いがあります。',
+  },
+  {
+    question: 'BD-SX130KとBD-STX130Kの容量は違う？',
+    answer: '日立公式の仕様では、どちらも洗濯・脱水容量13kg、洗濯～乾燥・乾燥容量7kgです。',
+  },
+  {
+    question: 'BD-SX130KとBD-STX130Kの違いは？',
+    answer: 'BD-SX130Kはプッシュボタン式操作パネルで、BD-STX130Kはワイドカラー液晶タッチパネルです。BD-STX130Kには温水コースやスチームアイロンコースが案内されています。',
+  },
+] as const
+
+const rows: KeyDiffRow[] = [
+  { label: '操作パネル', left: left.panel, right: right.panel, highlight: 'right', highlightNote: 'カラー液晶タッチパネル' },
+  { label: '温水機能', left: 'ー', right: '60℃・40℃・30℃など', highlight: 'right', highlightNote: '温水コースあり' },
+  { label: 'シワ伸ばし', left: 'ー', right: 'スチームアイロンコース', highlight: 'right', highlightNote: 'コースあり' },
+  { label: '本体質量', left: left.weight, right: right.weight },
+  { label: '洗濯・乾燥容量', left: left.capacity, right: right.capacity },
+]
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">日立のドラム式洗濯乾燥機、BD-SX130KとBD-STX130Kを比較します。公式仕様で確認できる容量・乾燥方式・操作パネル・温水機能・お手入れ機能を分けて整理します。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#specs">詳細仕様</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{brand: left.brand, line: left.model, tagline: 'ボタン操作を選ぶなら', image: left.image, imageAlt: left.name, officialHref: left.official, guidePoints: ['プッシュボタン式操作パネルを確認したい', '温水機能を使わない構成を選びたい']}}
+      right={{brand: right.brand, line: right.model, tagline: '温水・タッチ操作なら', image: right.image, imageAlt: right.name, officialHref: right.official, guidePoints: ['ワイドカラー液晶タッチパネルを使いたい', '温水やスチームアイロンコースを確認したい']}}
+      rows={rows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <p>両機種とも洗濯・脱水容量13kg、洗濯～乾燥・乾燥容量7kgです。公式仕様上の主な差は操作パネルと、温水・シワ伸ばしなどのコース構成です。</p>
+
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（公式ページで確認した項目）</summary>
+      <div class="table-scroll">
+        <table class="comparison">
+          <thead><tr><th scope="col">比較項目</th><th scope="col">BD-SX130K</th><th scope="col">BD-STX130K</th><th scope="col">根拠</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">洗濯・脱水容量</th><td>13kg</td><td>13kg</td><td>各仕様ページ</td></tr>
+            <tr><th scope="row">洗濯～乾燥・乾燥容量</th><td>7kg</td><td>7kg</td><td>各仕様ページ</td></tr>
+            <tr><th scope="row">操作パネル</th><td>{left.panel}</td><td>{right.panel}</td><td>各仕様ページ</td></tr>
+            <tr><th scope="row">乾燥方式</th><td>らくはや 風アイロン（ヒートポンプ式）</td><td>らくはや 風アイロン（ヒートポンプ式）</td><td>各仕様ページ</td></tr>
+            <tr><th scope="row">温水</th><td>ー</td><td>60℃ 2kg、40℃つけおき 2kg、40℃ 6kgなど</td><td>各仕様ページ</td></tr>
+            <tr><th scope="row">シワ伸ばし</th><td>ー</td><td>スチームアイロンコース</td><td>各仕様ページ</td></tr>
+            <tr><th scope="row">外形寸法</th><td>幅630mm×奥行720mm×高さ1,065mm</td><td>幅630mm×奥行720mm×高さ1,065mm</td><td>各仕様ページ</td></tr>
+            <tr><th scope="row">質量</th><td>{left.weight}</td><td>{right.weight}</td><td>各仕様ページ</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p>
+      <p class="source-links"><a class="card-link" href={left.official} target="_blank" rel="noopener noreferrer">BD-SX130K 公式ページ →</a><a class="card-link" href={right.official} target="_blank" rel="noopener noreferrer">BD-STX130K 公式ページ →</a><a class="card-link" href={left.spec} target="_blank" rel="noopener noreferrer">BD-SX130K 仕様 →</a><a class="card-link" href={right.spec} target="_blank" rel="noopener noreferrer">BD-STX130K 仕様 →</a></p>
+    </details>
+
+    <h2 id="official">公式情報</h2>
+    <p>比較の根拠は、日立公式の商品ページと仕様ページで確認できる情報に限定しています。設置前には、防水パンの内寸や搬入経路など、各公式ページの注意事項も確認してください。</p>
+    <ArticleSocialProof query="日立 BD-SX130K BD-STX130K" checkedAt={articleMetadata.productInfoCheckedAt} hasPosts={false} />
+    <section id="faq" class="faq-section">
+      <h2>FAQ</h2>
+      {faqEntries.map((entry) => <details class="faq-item"><summary>{entry.question}</summary><p>{entry.answer}</p></details>)}
+    </section>
+    <div class="purchase-cards article-end-purchase-cards">
+      <PurchaseCard name={left.name} audience="プッシュボタン式操作パネルを確認して選びたい人向け" href={left.rakuten} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name={right.name} audience="温水・タッチ操作・スチームアイロンコースを確認したい人向け" href={right.rakuten} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <h2>情報源一覧</h2>
+    <ul class="source-list"><li><a href={left.official} target="_blank" rel="noopener noreferrer">日立 BD-SX130K 公式商品ページ</a>（2026-08-17確認）</li><li><a href={left.spec} target="_blank" rel="noopener noreferrer">日立 BD-SX130K 仕様ページ</a>（2026-08-17確認）</li><li><a href={right.official} target="_blank" rel="noopener noreferrer">日立 BD-STX130K 公式商品ページ</a>（2026-08-17確認）</li><li><a href={right.spec} target="_blank" rel="noopener noreferrer">日立 BD-STX130K 仕様ページ</a>（2026-08-17確認）</li></ul>
+  </article>
+</BaseLayout>
