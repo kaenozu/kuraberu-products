@@ -20,6 +20,13 @@ if (!article || !seed) {
 
 const leftSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
 const rightSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
+const localImages: Record<string, { left?: string; right?: string }> = {
+  'panasonic-eh-na9m-vs-refa-beautech': { left: '/products/panasonic-eh-na9m.jpg' },
+  'sharp-kc-s50-vs-panasonic-f-vxw55': { left: '/products/sharp-kc-s50.jpg' },
+  't-fal-ko5901jp-vs-zoujirushi-ck-pa08': { left: '/products/tefal-ko5901jp.jpg', right: '/products/zojirushi-ck-pa08.webp' },
+  'tiger-jpv-l100-vs-zojirushi-nw-fc10': { left: '/products/tiger-jpv-l100.jpg' },
+};
+const images = localImages[articleId] ?? {};
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
 const resolveRakutenProduct = async (name: string, terms: string[]) => {
@@ -82,8 +89,8 @@ const faq = [
     </ol>
 
     <div class="purchase-cards">
-      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imageUrl={leftRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
-      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imageUrl={rightRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imagePath={images.left} imageUrl={leftRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imagePath={images.right} imageUrl={rightRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
     </div>
 
     <h2 id="faq">よくある質問</h2>
@@ -94,8 +101,8 @@ const faq = [
     <h2>購入前の注意</h2>
     <p>ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。</p>
     <div class="purchase-cards">
-      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imageUrl={leftRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
-      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imageUrl={rightRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imagePath={images.left} imageUrl={leftRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imagePath={images.right} imageUrl={rightRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
     </div>
 
     <h2>更新履歴</h2>
