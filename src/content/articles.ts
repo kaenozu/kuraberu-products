@@ -1704,6 +1704,24 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   },
 ];
 
+const commercialArticleImages: Readonly<
+  Record<string, { left?: `/${string}`; right?: `/${string}` }>
+> = {
+  "panasonic-eh-na9m-vs-refa-beautech": {
+    left: "/products/panasonic-eh-na9m.jpg",
+  },
+  "sharp-kc-s50-vs-panasonic-f-vxw55": {
+    left: "/products/sharp-kc-s50.jpg",
+  },
+  "t-fal-ko5901jp-vs-zoujirushi-ck-pa08": {
+    left: "/products/tefal-ko5901jp.jpg",
+    right: "/products/zojirushi-ck-pa08.webp",
+  },
+  "tiger-jpv-l100-vs-zojirushi-nw-fc10": {
+    left: "/products/tiger-jpv-l100.jpg",
+  },
+};
+
 const createCommercialArticle = (
   seed: CommercialArticleSeed,
 ): ArticleMetadata =>
@@ -1722,6 +1740,7 @@ const createCommercialArticle = (
     publishedAt: "2026-08-17",
     modifiedAt: "2026-08-17",
     purchaseLinkStatus: "unverified",
+    imagePath: commercialArticleImages[seed.id]?.left,
     changeLog: [
       {
         date: "2026-08-17",
