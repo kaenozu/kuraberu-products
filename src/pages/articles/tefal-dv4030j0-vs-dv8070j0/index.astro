@@ -7,8 +7,6 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 import {tefalGarmentSteamerArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
-
 const supreOfficial = 'https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steamsupre-1830009138/';
 const rafreOfficial = 'https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steam-rafrai-1830009402/';
 const supreRakutenUrl = 'https://a.r10.to/hPgKfj';
@@ -31,8 +29,6 @@ const faqEntries = [
     answer: '本体重量はDV4030J0が約690g、DV8070J0が約680gです。公式記載上の差は約10gで、どちらも軽量コンパクトと案内されています。',
   },
 ] as const;
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
 const keyDiffRows: KeyDiffRow[] = [
   {label: 'スチーム量', left: '通常平均13g/分・ジェット最大16g/分', right: '平均17g/分', highlight: 'right', highlightNote: '平均値が大きい'},
   {label: '立ち上がり', left: '約40秒', right: '約19秒', highlight: 'right', highlightNote: '約21秒短い', bar: {left: 40, right: 19}},
@@ -55,19 +51,15 @@ const keyDiffRows: KeyDiffRow[] = [
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">ティファールの衣類スチーマー「スチーム シュプレ DV4030J0」と「スチーム ラフレ DV8070J0」を比較します。公式仕様から、スチーム量・立ち上がり・連続使用時間・水タンク容量の違いを整理します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">主な比較ポイント</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
-
     <details class="fold-section" id="specs"><summary>詳細仕様（全部の数値を見る）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">DV4030J0</th><th scope="col">DV8070J0</th></tr></thead><tbody>
       <tr><th scope="row">消費電力</th><td>800W</td><td>950W</td></tr><tr><th scope="row">本体サイズ（幅×奥行×高さ）</th><td>17.0×9.5×13.0cm</td><td>17.0×7.0×12.6cm</td></tr><tr><th scope="row">本体重量</th><td>約690g</td><td>約680g</td></tr><tr><th scope="row">水タンク容量</th><td>120mL</td><td>140mL</td></tr><tr><th scope="row">スチーム量</th><td>通常平均13g/分・ジェット最大16g/分</td><td>平均17g/分</td></tr><tr><th scope="row">立ち上がり</th><td>約40秒（高温設定時）</td><td>約19秒（高温設定時）</td></tr><tr><th scope="row">連続運転</th><td>約9分</td><td>約14分（中温設定時）</td></tr><tr><th scope="row">かけ面</th><td>アルミニウム＋PTFE</td><td>セラミック</td></tr>
     </tbody></table></div><p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p><p class="source-links"><a class="card-link" href={supreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV4030J0 公式ページ →</a><a class="card-link" href={rafreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV8070J0 公式ページ →</a></p></details>
         <ArticleSocialProof query="ティファール DV4030J0 DV8070J0" checkedAt="2026-08-14" hasPosts={false} />
-
 <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-
     <div class="purchase-cards">
       <PurchaseCard name="ティファール DV4030J0" audience="ジェットスチーム・コンパクトさを重視する人向け" href={supreRakutenUrl} imagePath="/products/tefal-dv4030j0.jpg" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
       <PurchaseCard name="ティファール DV8070J0" audience="スチーム量・速さ・連続使用を重視する人向け" href={rafreRakutenUrl} imagePath="/products/tefal-dv8070j0.png" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
     <details class="fold-section"><summary>更新履歴・情報源・購入時の注意</summary><h3>更新履歴</h3><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol><h3>情報源一覧</h3><ul class="source-list"><li><a href={supreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV4030J0 公式ページ</a>（2026-08-13確認）</li><li><a href={rafreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV8070J0 公式ページ</a>（2026-08-13確認）</li></ul><h3>調査方法・免責事項</h3><p>この比較は、メーカー公式の商品ページで確認できる仕様のみを根拠にしています。価格・在庫・個人の使用感は公式ページと販売先でご確認ください。</p></details>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p><div class="verification-summary" aria-label="購入リンクの確認状況">{productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}</div>
   </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>
