@@ -41,6 +41,7 @@ import {
   thermosKfm020VsKfi020Article,
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
+  tigerKettlePcjVsPcmArticle,
   additionalCommercialArticles,
 } from "../src/content/articles";
 
@@ -152,6 +153,7 @@ describe("article metadata", () => {
       thermosKfm020VsKfi020Article,
       tigerMtaJ050GuideArticle,
       panasonicEhNa9mVsEhNa7mArticle,
+      tigerKettlePcjVsPcmArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
