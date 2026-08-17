@@ -186,19 +186,7 @@ export const babyBottleDiagnosis: DiagnosisConfig = {
         {
           id: "yes",
           label: "はい",
-          rules: [
-            {
-              type: "score",
-              match: {
-                field: "attributes",
-                key: "material",
-                operator: "eq",
-                value: "glass",
-              },
-              score: 1,
-              reasonCode: "GLASS_CLEANING",
-            },
-          ],
+          rules: [],
         },
         {
           id: "no",
@@ -233,9 +221,9 @@ export const babyBottleDiagnosis: DiagnosisConfig = {
               type: "score",
               match: {
                 field: "attributes",
-                key: "material",
+                key: "easyToClean",
                 operator: "eq",
-                value: "glass",
+                value: true,
               },
               score: 2,
               reasonCode: "GLASS_CLEANING",
@@ -308,6 +296,8 @@ export const babyBottlePageContent: DiagnosisPageContent = {
   pageDescription:
     "ピジョン母乳実感（160ml/240ml × 耐熱ガラス/PPSU）から、あなたの使い方に合う哺乳瓶を30秒で診断。公式情報に基づくスコアリングで、理由つきでおすすめを表示します。",
   lead: "ピジョン母乳実感の「160ml/240ml」と「耐熱ガラス/PPSU」の組み合わせ4商品から、あなたの使い方に合う1本を、公式情報にもとづいて診断します。5問に答えるだけです。",
+  audience:
+    "出産準備中の人や新生児の保護者で、母乳実感の容量・素材どちらを選べばいいか迷っている人向けの診断です。",
   targetItems: [
     "母乳実感 哺乳びん 耐熱ガラス製 160ml（対象月齢目安 0ヵ月から・SSサイズ乳首付属）",
     "母乳実感 哺乳びん プラスチック製（PPSU）160ml（対象月齢目安 0ヵ月から・SSサイズ乳首付属）",
@@ -317,7 +307,7 @@ export const babyBottlePageContent: DiagnosisPageContent = {
   guideSections: [
     {
       heading: "1. 容量（160ml / 240ml）で選ぶ",
-      body: "新生児期から使うなら、対象月齢目安0ヵ月から・SSサイズ乳首（丸穴）付属の160mlが候補です。哺乳量が増えて長く使いたいなら240mlで、対象月齢目安は3ヵ月頃から、付属乳首はMサイズ（Y字形）です。2026年8月11日時点の公式オンラインショップ表示価格は、160mlが2,750円、240mlが2,860円（どちらも税込）です。",
+      body: "新生児期から使うなら、対象月齢目安0ヵ月から・SSサイズ乳首（丸穴）付属の160mlが候補です。哺乳量が増えて長く使いたいなら240mlで、対象月齢目安は3ヵ月頃から、付属乳首はMサイズ（Y字形）です。",
     },
     {
       heading: "2. 素材（耐熱ガラス / PPSU）で選ぶ",

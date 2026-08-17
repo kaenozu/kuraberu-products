@@ -27,6 +27,8 @@ export interface ArticleLayout {
   placements: readonly string[];
   /** 診断結果カードのクリック計測用 placement（/tools/product-finder/ 配下） */
   diagnosisPlacement: string;
+  /** 診断ページのイベント名（/api/events が受け付ける許可リスト） */
+  diagnosisEvents: readonly string[];
   defaultPlacement: string;
   ctaSets: readonly ArticleCtaSet[];
   /** 長文記事のみ許容する途中 CTA セット（midArticleCta が付いた記事に適用） */
