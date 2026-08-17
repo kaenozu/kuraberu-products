@@ -100,7 +100,13 @@ To confirm the attempts history was recorded correctly from the actual run:
    - the final attempt's `checks` are all `PASS`, including `Deployed commit matches expected SHA` with the expected SHA;
    - `expectedCommitSha` matches the deployed SHA and `secretsIncluded` is `false`.
 
-   The CI run's `report.json` lives on the ephemeral runner and is not uploaded as an artifact; the step logs and summary above are the run's own evidence, and this local re-run reproduces the identical report for machine-readable confirmation.
+   The deploy workflow uploads the run's own `report.json` files (`production-build-*/report.json` and `post-deploy-*/report.json`) as the `acceptance-reports-<run-id>` artifact — even when verification ends BLOCKER — so the machine-readable evidence can be downloaded after the run:
+
+   ```bash
+   gh run download <run-id> --repo kaenozu/kuraberu-products -n acceptance-reports-<run-id>
+   ```
+
+   The artifact name is printed in the `Production deployment` step summary. The local re-run above remains the way to produce a report from your own host (e.g. against a rolled-back deployment), and the step logs and summary are the run's own non-downloadable evidence.
 
    Interpretation: `attempts=1` means the edge already served the exact HEAD; `attempts>1` with a trailing `PASS` is normal CDN convergence; any last result of `BLOCKER` means the deployment is not verified and the Rollback procedure applies.
 
