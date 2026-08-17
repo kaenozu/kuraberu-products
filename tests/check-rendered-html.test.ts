@@ -13,6 +13,8 @@ import {
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
+  validateTopPageCategories,
+  validateTopPageFeatured,
 } from "../scripts/check-rendered-html.mjs";
 import {
   ARTICLE_LAYOUT,
@@ -595,5 +597,104 @@ describe("rendered empty sections", () => {
     expect(validateRenderedHtml({ distDirectory: directory }).errors).toContain(
       `${path.join(directory, "index.html")}: empty section: <h2>購入時の注意</h2>`,
     );
+  });
+});
+
+describe("top page featured section", () => {
+  const featured = (paths: readonly string[]) =>
+    `<section data-top-featured><div class="article-list">${paths
+      .map(
+        (path) =>
+          `<article class="card article-list-card"><div class="card-body"><h2><a href="${path}">見出し</a></h2></div></article>`,
+      )
+      .join("")}</div></section>`;
+
+  it("accepts the top page when every config path is linked and nothing else", () => {
+    expect(
+      validateTopPageFeatured(featured(ARTICLE_LAYOUT.topPage.featuredPaths)),
+    ).toEqual([]);
+  });
+
+  it("reports a missing featured section", () => {
+    expect(validateTopPageFeatured("<main></main>")).toEqual([
+      "top page: missing data-top-featured section",
+    ]);
+  });
+
+  it("reports a config path that is not linked", () => {
+    const paths = [...ARTICLE_LAYOUT.topPage.featuredPaths];
+    paths.pop();
+    expect(validateTopPageFeatured(featured(paths))).toEqual([
+      `top page: featured article not linked: ${ARTICLE_LAYOUT.topPage.featuredPaths.at(-1)}`,
+    ]);
+  });
+
+  it("reports an unexpected link inside the featured section", () => {
+    expect(
+      validateTopPageFeatured(
+        featured([
+          ...ARTICLE_LAYOUT.topPage.featuredPaths,
+          "/articles/unexpected/",
+        ]),
+      ),
+    ).toContain(
+      "top page: unexpected link in data-top-featured section: /articles/unexpected/",
+    );
+  });
+
+  it("enforces the 3-6 item range in config", () => {
+    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
+      3,
+    );
+    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(6);
+  });
+});
+
+describe("top page category entries", () => {
+  const categories = (names: string[]) =>
+    `<section data-top-categories><ul class="category-list">${names
+      .map(
+        (name) =>
+          `<li><a class="card-link" href="/articles/?category=${encodeURIComponent(name)}">${name}</a></li>`,
+      )
+      .join("")}</ul></section>`;
+  const articlesIndex = (names: string[]) =>
+    `<select name="category">${names
+      .map((name) => `<option value="${name}">${name}</option>`)
+      .join("")}</select>`;
+
+  it("accepts category entries that exist in the articles index", () => {
+    expect(
+      validateTopPageCategories(
+        categories(["育児用品", "生活家電"]),
+        articlesIndex(["育児用品", "生活家電", "キッチン家電"]),
+      ),
+    ).toEqual([]);
+  });
+
+  it("reports a category entry that does not exist in the articles index", () => {
+    expect(
+      validateTopPageCategories(
+        categories(["育児用品", "存在しないカテゴリ"]),
+        articlesIndex(["育児用品"]),
+      ),
+    ).toEqual([
+      "top page: category entry points to an unknown category: 存在しないカテゴリ",
+    ]);
+  });
+
+  it("reports when the articles index has no category options", () => {
+    expect(
+      validateTopPageCategories(categories(["育児用品"]), "<main/>"),
+    ).toEqual([
+      "top page: cannot validate categories: no category options found in /articles/",
+    ]);
+  });
+
+  it("decodes percent-encoded category values before comparing", () => {
+    const html = categories(["キッチン・ごみ箱収納"]);
+    expect(
+      validateTopPageCategories(html, articlesIndex(["キッチン・ごみ箱収納"])),
+    ).toEqual([]);
   });
 });
