@@ -118,8 +118,11 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         : Array.isArray(item.smallImageUrls)
           ? item.smallImageUrls
           : [];
-      const firstImage = asRecord(imageEntries[0]);
-      const imageUrl = String(firstImage.imageUrl ?? "");
+      const firstImage = imageEntries[0];
+      const imageUrl =
+        typeof firstImage === "string"
+          ? firstImage
+          : String(asRecord(firstImage).imageUrl ?? "");
 
       return {
         id: String(item.itemCode ?? ""),
@@ -129,7 +132,9 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
           affiliateUrl && isAllowedRakutenUrl(affiliateUrl)
             ? affiliateUrl
             : undefined,
-        imageUrl: /^https:\/\/image\.rakuten\.co\.jp\//i.test(imageUrl)
+        imageUrl: /^https:\/\/(?:[^/]+\.)?image\.rakuten\.co\.jp\//i.test(
+          imageUrl,
+        )
           ? imageUrl
           : undefined,
         price: Number(item.itemPrice ?? 0),
