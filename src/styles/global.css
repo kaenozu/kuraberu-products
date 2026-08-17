@@ -660,6 +660,38 @@ a {
 .discovery-empty {
   margin-top: 1rem;
 }
+.article-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 2rem 0 0;
+}
+.article-pagination a,
+.article-pagination__current {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  padding: 0.35rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  font-weight: 750;
+  text-decoration: none;
+}
+.article-pagination a:hover,
+.article-pagination a:focus-visible {
+  border-color: var(--ink);
+  background: var(--wash);
+}
+.article-pagination__current {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
 [hidden] {
   display: none !important;
 }
