@@ -2,6 +2,7 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
+import TrustLine from '../../../components/TrustLine.astro';
 import {panasonicEhNa9mGuideArticle as articleMetadata} from '../../../content/articles';
 
 const rakutenSearch =
@@ -41,6 +42,7 @@ const faqEntries = [
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 美容家電 · 商品ガイド · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
+    <TrustLine checkedAt={articleMetadata.productInfoCheckedAt} />
     <p class="lead">パナソニック ナノケア EH-NA9Mは、ミネラル・UVケア・複数モードを搭載した上位モデルのドライヤーです。公式仕様ではTURBO時1.5㎥/分の風量で、質量は約580gです。この記事では、パナソニック公式ページで2026年8月16日時点に確認できた情報だけを使って、この製品の特徴と向いている人を整理します。公式ページに記載されていることは「確認できること」として扱い、使用感など公式情報だけでは判断できないことは推測しません。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#conclusion">向いている人</a>

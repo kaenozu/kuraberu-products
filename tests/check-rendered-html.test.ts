@@ -13,6 +13,7 @@ import {
   validateArticleCtas,
   validateArticleContentType,
   validateArticleCardThumbnails,
+  validateArticleTrustLine,
   validateSourceToggle,
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
@@ -362,7 +363,7 @@ describe("article product count meta", () => {
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="1"><meta name="article:content-type" content="guide">${oneEndCta}`,
+        `<meta name="article:product-count" content="1"><meta name="article:content-type" content="guide"><p class="trust-line">広告を含みます</p>${oneEndCta}`,
       ),
     );
 
@@ -379,7 +380,7 @@ describe("article product count meta", () => {
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true">${fourCtas}`,
+        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true"><p class="trust-line">広告を含みます</p>${fourCtas}`,
       ),
     );
 
@@ -883,6 +884,75 @@ describe("article card thumbnails (image or text tile)", () => {
         "about/index.html",
         "<main><p>hi</p></main>",
       ),
+    ).toEqual([]);
+  });
+});
+
+describe("article trust line (compressed header)", () => {
+  const checkedAtMeta = (date: string) =>
+    `<meta name="article:product-info-checked-at" content="${date}">`;
+  const datedLine = (date: string) =>
+    `<p class="trust-line">✓ 公式確認済み（${date}）・広告を含みます</p>`;
+  const draftLine = '<p class="trust-line">広告を含みます</p>';
+
+  it("accepts the compressed trust line with a date matching the meta", () => {
+    expect(
+      validateArticleTrustLine(
+        "articles/x/index.html",
+        `${checkedAtMeta("2026-08-16")}${datedLine("2026-08-16")}`,
+      ),
+    ).toEqual([]);
+  });
+
+  it("accepts the date-less draft line when no checked-at meta exists", () => {
+    expect(
+      validateArticleTrustLine("articles/x/index.html", draftLine),
+    ).toEqual([]);
+  });
+
+  it("rejects a date-less line when the meta declares a checked date", () => {
+    const errors = validateArticleTrustLine(
+      "articles/x/index.html",
+      `${checkedAtMeta("2026-08-16")}${draftLine}`,
+    );
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain("trust-line must be");
+    expect(errors[0]).toContain("✓ 公式確認済み（2026-08-16）・広告を含みます");
+    expect(errors[0]).toContain('meta checkedAt="2026-08-16"');
+  });
+
+  it("rejects a missing trust line", () => {
+    expect(
+      validateArticleTrustLine("articles/x/index.html", "<main/>"),
+    ).toEqual([
+      "articles/x/index.html: expected exactly one trust-line, found 0",
+    ]);
+  });
+
+  it("rejects two trust lines", () => {
+    expect(
+      validateArticleTrustLine(
+        "articles/x/index.html",
+        `${checkedAtMeta("2026-08-16")}${datedLine("2026-08-16")}${datedLine("2026-08-16")}`,
+      ),
+    ).toEqual([
+      "articles/x/index.html: expected exactly one trust-line, found 2",
+    ]);
+  });
+
+  it("rejects legacy hero trust text and ad notice", () => {
+    const html = `${checkedAtMeta("2026-08-16")}${datedLine(
+      "2026-08-16",
+    )}<p>公式情報確認済み · 2026-08-16</p><p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>`;
+    expect(validateArticleTrustLine("articles/x/index.html", html)).toEqual([
+      'articles/x/index.html: legacy hero trust text "公式情報確認済み · " found',
+      'articles/x/index.html: legacy ad notice "広告表示：この記事には広告リンクを含みます" found',
+    ]);
+  });
+
+  it("ignores non-article pages", () => {
+    expect(
+      validateArticleTrustLine("index.html", "<main><p>hi</p></main>"),
     ).toEqual([]);
   });
 });

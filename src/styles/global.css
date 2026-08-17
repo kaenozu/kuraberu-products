@@ -503,6 +503,16 @@ a {
   padding: 1rem 1.2rem;
   border-radius: 0 10px 10px 0;
 }
+
+/* 記事冒頭の信頼表示（TrustLine）: 「✓ 公式確認済み（日付）・広告を含みます」の 1 行 */
+.trust-line {
+  margin: 0.25rem 0 1.25rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.trust-line::first-letter {
+  color: var(--accent);
+}
 .cta {
   display: inline-block;
   background: var(--ink);

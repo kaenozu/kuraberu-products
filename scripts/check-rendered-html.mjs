@@ -256,6 +256,51 @@ export function validateArticleContentType(relative, html, productCount) {
   return errors;
 }
 
+// 記事冒頭の信頼表示は TrustLine の 1 行に統一する。
+// - 確認日あり（meta article:product-info-checked-at）:
+//   「✓ 公式確認済み（YYYY-MM-DD）・広告を含みます」
+// - 確認日なし（公開待ちの初稿テンプレート記事）: 「広告を含みます」
+// 旧形式（「公式情報確認済み · 日付」のヒーロー行・「広告表示：…」の notice）の
+// 残存と、信頼行の欠落・複数化を fail-closed で検出する。
+function readArticleCheckedAt(html) {
+  return (
+    html.match(
+      /<meta name="article:product-info-checked-at" content="(\d{4}-\d{2}-\d{2})"\s*\/?>/,
+    )?.[1] ?? null
+  );
+}
+
+const LEGACY_HERO_TRUST = "公式情報確認済み · ";
+const LEGACY_AD_NOTICE = "広告表示：この記事には広告リンクを含みます";
+
+export function validateArticleTrustLine(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const errors = [];
+  const trustLines = [...html.matchAll(/<p class="trust-line">[\s\S]*?<\/p>/g)];
+  const checkedAt = readArticleCheckedAt(html);
+  const expected = checkedAt
+    ? `<p class="trust-line">✓ 公式確認済み（${checkedAt}）・広告を含みます</p>`
+    : '<p class="trust-line">広告を含みます</p>';
+  if (trustLines.length !== 1) {
+    errors.push(
+      `${relative}: expected exactly one trust-line, found ${trustLines.length}`,
+    );
+  } else if (trustLines[0][0] !== expected) {
+    errors.push(
+      `${relative}: trust-line must be ${JSON.stringify(expected)} (meta checkedAt=${JSON.stringify(checkedAt)})`,
+    );
+  }
+  if (html.includes(LEGACY_HERO_TRUST)) {
+    errors.push(
+      `${relative}: legacy hero trust text "${LEGACY_HERO_TRUST}" found`,
+    );
+  }
+  if (html.includes(LEGACY_AD_NOTICE)) {
+    errors.push(`${relative}: legacy ad notice "${LEGACY_AD_NOTICE}" found`);
+  }
+  return errors;
+}
+
 // 記事カード（ArticleCard.astro）は常に 132px のサムネイル枠を持つ。
 // 画像あり = <img class="card-thumb">、画像なし = カテゴリ名のテキストタイル
 // （<div class="card-tile">）。data-thumb 属性と実際の要素を照合し、
@@ -743,6 +788,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     if (productCount === null) continue;
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
+    errors.push(...validateArticleTrustLine(relative, html));
     const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(

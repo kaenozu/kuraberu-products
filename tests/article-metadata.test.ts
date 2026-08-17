@@ -437,3 +437,32 @@ describe("source-toggle fold (rendered dist)", () => {
     );
   });
 });
+
+describe("article trust line (rendered dist)", () => {
+  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name !== "page")
+    .map((entry) => entry.name)
+    .sort();
+
+  it("renders exactly one compressed trust line per article with the checked date", () => {
+    for (const slug of articleSlugs) {
+      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+      const article = articleMetadata.find(
+        (entry) => entry.path === `/articles/${slug}/`,
+      );
+      expect(article, `unknown article ${slug}`).toBeDefined();
+      const trustLines = [
+        ...html.matchAll(/<p class="trust-line">[\s\S]*?<\/p>/g),
+      ];
+      expect(trustLines.length, `${slug}: trust line count`).toBe(1);
+      const checkedAt = article!.productInfoCheckedAt;
+      const expected = checkedAt
+        ? `<p class="trust-line">✓ 公式確認済み（${checkedAt}）・広告を含みます</p>`
+        : '<p class="trust-line">広告を含みます</p>';
+      expect(trustLines[0][0]).toBe(expected);
+      // 旧形式（ヒーロー信頼行・広告表示 notice）が残っていない
+      expect(html).not.toContain("公式情報確認済み · ");
+      expect(html).not.toContain("広告表示：この記事には広告リンクを含みます");
+    }
+  });
+});

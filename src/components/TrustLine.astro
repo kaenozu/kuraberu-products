@@ -1,0 +1,19 @@
+---
+interface Props {
+  /**
+   * 商品情報確認日（productInfoCheckedAt）。
+   * 確認日が未宣言の記事（公開待ちの初稿テンプレート記事）は、
+   * 確認済みを主張せず「広告を含みます」のみ表示する。
+   */
+  checkedAt?: string;
+}
+
+const { checkedAt } = Astro.props;
+---
+
+{/* 記事冒頭の信頼表示を 1 行に圧縮したもの（docs/article-layout-v3-2026-08.md）。 */}
+{checkedAt ? (
+  <p class="trust-line">✓ 公式確認済み（{checkedAt}）・広告を含みます</p>
+) : (
+  <p class="trust-line">広告を含みます</p>
+)}
