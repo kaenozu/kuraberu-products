@@ -117,6 +117,8 @@ To confirm the attempts history was recorded correctly from the actual run:
 
    Interpretation: `attempts=1` means the edge already served the exact HEAD; `attempts>1` with a trailing `PASS` is normal CDN convergence; any last result of `BLOCKER` means the deployment is not verified and the Rollback procedure applies.
 
+   **Per-deploy evidence issue.** Open one issue per production deploy using the `本番デプロイ検証証跡（post-deploy verification evidence）` issue template (`.github/ISSUE_TEMPLATE/production-deploy-verification.yml`), fill in the run ID / SHAs / step-log excerpt / step-summary / report.json field checklist / Check Run audit output, then record the verifier and date and close it. This keeps a searchable evidence trail (one issue per deploy) that can be audited independently of the Check Run history.
+
 ## 5. X announcement drafts
 
 The production deploy workflow generates X (Twitter) announcement drafts for newly published articles after public verification succeeds. It never posts: drafts are written to `.acceptance/x-announcements-*/report.md` and included in the workflow summary for human review, then posted manually from `@kuraberu_biyori` (or via the X API with credentials that are not stored in CI).

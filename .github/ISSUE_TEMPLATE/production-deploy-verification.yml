@@ -1,0 +1,137 @@
+name: 本番デプロイ検証証跡（post-deploy verification evidence）
+description: 本番デプロイごとに attempts 履歴と report フィールドのチェックリストを埋めて証跡を残すためのテンプレート。手順は docs/production-operations.md の Section 4 を参照。
+title: "[deploy-verification] <run-id> (<yyyy-MM-dd>)"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 使い方
+
+        - 本番デプロイ（`Deploy production` workflow、`expected_sha` + `confirm: DEPLOY`）の完了後にこのテンプレートで issue を 1 件立て、下記を埋めて**検証者・検証日**を記入して Close する。
+        - 手順の詳細は `docs/production-operations.md` の **Section 4「Public verification」/「Confirm the attempts history after a production run」** を参照。
+        - 検証スクリプト: `Invoke-PostDeployVerification.ps1`（既定値 `-MaxAttempts 4 -RetryDelaySeconds 15`、検証前に 20 秒の伝播待ち）。
+        - 機械可読証跡: artifact `acceptance-reports-<run-id>` / Check Run `production-post-deploy-verification`。
+
+  - type: input
+    id: run-id
+    attributes:
+      label: 実行 run ID
+      description: Deploy production workflow の run 番号（Actions の URL 末尾）
+      placeholder: "例: 3201234567"
+    validations:
+      required: true
+
+  - type: input
+    id: expected-sha
+    attributes:
+      label: expected SHA（ディスパッチ時に指定した 40 桁）
+      placeholder: "例: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0"
+    validations:
+      required: true
+
+  - type: input
+    id: deployed-sha
+    attributes:
+      label: deployed SHA（実際にデプロイされた commit）
+      description: expected SHA と一致するはず。不一致ならデプロイ対象の検証自体が無効。
+      placeholder: "例: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0"
+    validations:
+      required: true
+
+  - type: input
+    id: deployed-at
+    attributes:
+      label: デプロイ日時（UTC）
+      placeholder: "例: 2026-08-17 09:15 UTC"
+    validations:
+      required: true
+
+  - type: input
+    id: base-url
+    attributes:
+      label: 対象 URL
+      placeholder: "例: https://kuraberu-products.pages.dev"
+    validations:
+      required: true
+
+  - type: input
+    id: artifact-name
+    attributes:
+      label: artifact 名
+      description: step summary に表示される `acceptance-reports-<run-id>`
+      placeholder: "例: acceptance-reports-3201234567"
+    validations:
+      required: true
+
+  - type: textarea
+    id: step-log
+    attributes:
+      label: "「Verify public deployment」ステップのログ抜粋"
+      description: "`gh run view --repo kaenozu/kuraberu-products <run-id> --log | grep -E 'Attempt [0-9]/4|Result:'` の出力。fresh は `Attempt 1/4: PASS`、収束は `BLOCKER → Waiting 15s... → Attempt 2/4: PASS`、末尾は `Result: PASS`。"
+      render: text
+    validations:
+      required: true
+
+  - type: textarea
+    id: step-summary
+    attributes:
+      label: step summary の Attempts 行
+      description: "`Production deployment` サマリーの report.md 行（例: `- Attempts: 2 (BLOCKER, PASS)`）"
+      render: text
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: report-fields
+    attributes:
+      label: report.json フィールド確認（最終 attempt）
+      description: artifact を `gh run download <run-id> -n acceptance-reports-<run-id>` で取得し、`post-deploy-*/report.json` を確認。
+      options:
+        - label: "`result` が記録されている（PASS、または BLOCKER を意図的に記録）"
+        - label: "`attempts` が整数かつ 1〜4 で、`resultsPerAttempt` の長さと一致"
+        - label: "`resultsPerAttempt` が PASS/BLOCKER のみ（PASS デプロイでは末尾が PASS）"
+        - label: "最終 attempt の全 `checks` が PASS（`Deployed commit matches expected SHA` 含む）"
+        - label: "`expectedCommitSha` が expected SHA と一致"
+        - label: "`secretsIncluded` が false"
+
+  - type: textarea
+    id: check-run
+    attributes:
+      label: Check Run 監査クエリの出力
+      description: '`gh api repos/kaenozu/kuraberu-products/commits/<deployed-sha>/check-runs --jq ''.check_runs[] | select(.name == "production-post-deploy-verification") | {conclusion, created_at, summary: .output.summary}''` の結果を貼付。'
+      render: text
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: extra
+    attributes:
+      label: 付随確認
+      options:
+        - label: "artifact をダウンロードして report.json を確認した"
+        - label: "BLOCKER だった場合、Rollback 手順を適用・記録した（該当なしの場合は不要）"
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 解釈ルール
+
+        - `attempts=1` … エッジが最初から expected HEAD を配信（fresh）
+        - `attempts>1` で末尾 `PASS` … CDN 伝播収束（正常）
+        - 末尾 `BLOCKER` … デプロイ未検証 → **Rollback 手順を適用**（リトライはゲートを弱めない）
+
+  - type: input
+    id: verifier
+    attributes:
+      label: 検証者
+      placeholder: "例: @operator"
+    validations:
+      required: true
+
+  - type: input
+    id: verified-on
+    attributes:
+      label: 検証日
+      placeholder: "例: 2026-08-17"
+    validations:
+      required: true
