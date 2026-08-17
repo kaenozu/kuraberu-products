@@ -46,10 +46,7 @@ const keyDiffRows: KeyDiffRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
     <p>一度に多めに沸かしたいなら1,200mLのKO5901JP、温度を使い分けたり保温したりしたいなら800mLのKO8601J0が候補です。これは公式ページで確認した仕様差にもとづく選び分けです。</p>
-    <div class="purchase-cards">
-      <PurchaseCard name="ティファール KO5901JP" audience={leftAudience} href={leftSearch} imagePath={leftImage} note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="ティファール KO8601J0" audience={rightAudience} href={rightSearch} imagePath={rightImage} note="価格・在庫は販売先でご確認ください。" />
-    </div>
+
     <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">KO5901JP</th><th scope="col">KO8601J0</th><th scope="col">根拠</th></tr></thead><tbody>
       <tr><th scope="row">容量</th><td>1,200mL</td><td>800mL</td><td><a href={leftOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a> / <a href={rightOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a></td></tr>
       <tr><th scope="row">本体重量</th><td>約900g</td><td>約790g</td><td>各公式商品ページ</td></tr>
