@@ -75,14 +75,16 @@ jobs:
           & ./tools/production/Invoke-ProductionBuildAndDeploy.ps1 @parameters
 
       - name: Wait for asset propagation
-        run: sleep 10
+        run: sleep 20
 
       - name: Verify public deployment
         shell: pwsh
         run: |
           & ./tools/production/Invoke-PostDeployVerification.ps1 `
             -BaseUrl '${{ vars.PUBLIC_SITE_URL }}' `
-            -ExpectedCommitSha '${{ inputs.expected_sha }}'
+            -ExpectedCommitSha '${{ inputs.expected_sha }}' `
+            -MaxAttempts 4 `
+            -RetryDelaySeconds 15
 
       - name: Generate X announcement drafts
         shell: bash
