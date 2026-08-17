@@ -18,6 +18,7 @@ import {
   moonyMArticle,
   pampersNewbornArticle,
   panasonicBabyMonitorArticle,
+  panasonicEhNa9mGuideArticle,
   pigeonBottle240Article,
   pigeonSlim240Article,
   thermosTigerBottleArticle,
@@ -144,6 +145,7 @@ describe("article metadata", () => {
       kingjimTepraArticle,
       panasonicFyhvx120VsFyhvx90Article,
       panasonicBabyMonitorArticle,
+      panasonicEhNa9mGuideArticle,
       thermosKfm020VsKfi020Article,
       tigerMtaJ050GuideArticle,
       panasonicEhNa9mVsEhNa7mArticle,
@@ -173,13 +175,53 @@ describe("article metadata", () => {
         Number.isInteger(article.productCount) && article.productCount >= 1,
       ).toBe(true);
     }
-    // 比較記事は productCount: 2、単一商品記事は productCount: 1。
+    // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(56);
+    ).toHaveLength(57);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
-    ).toEqual([panasonicBabyMonitorArticle]);
+    ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
+  });
+
+  it("declares aboutProductNames matching productCount for JSON-LD", () => {
+    // 商品ガイドは単一商品名を必須で宣言する
+    expect(panasonicBabyMonitorArticle.aboutProductNames).toEqual([
+      "パナソニック ベビーモニター KX-HC705",
+    ]);
+    expect(panasonicEhNa9mGuideArticle.aboutProductNames).toEqual([
+      "パナソニック ナノケア EH-NA9M",
+    ]);
+    // 全記事で宣言がある場合は productCount と一致する
+    for (const article of articleMetadata) {
+      if (!article.aboutProductNames) continue;
+      expect(article.aboutProductNames.length).toBe(article.productCount);
+    }
+    // 比較記事（商用シード）は leftProduct / rightProduct から導出される
+    const commercial = articleMetadata.find(
+      (article) => article.id === "roborock-qrevo-curv-vs-dreame-x50",
+    );
+    expect(commercial?.aboutProductNames).toEqual([
+      "Roborock Qrevo Curv",
+      "Dreame X50 Ultra",
+    ]);
+  });
+
+  it("rejects aboutProductNames that do not match productCount", () => {
+    expect(() =>
+      defineArticleMetadata({
+        ...panasonicBabyMonitorArticle,
+        aboutProductNames: ["商品A", "商品B"],
+      }),
+    ).toThrow("aboutProductNames must have exactly 1 non-empty entries");
+    expect(() =>
+      defineArticleMetadata({
+        ...panasonicBabyMonitorArticle,
+        aboutProductNames: undefined,
+      }),
+    ).toThrow(
+      "aboutProductNames must be declared for single-product (guide) articles",
+    );
   });
 
   it("rejects invalid product counts", () => {
@@ -277,11 +319,84 @@ describe("article metadata", () => {
     expect(panasonicBabyMonitorArticle.productCount).toBe(1);
   });
 
+  it("marks the single-product article as a guide without a comparison section", () => {
+    const html = readFileSync(
+      "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
+      "utf8",
+    );
+    expect(html).toContain(
+      `<meta name="article:content-type" content="guide">`,
+    );
+    // 商品ガイドは比較セクション（ArticleComparisonV2）を持たない
+    expect(html).not.toContain("article-comparison-v2");
+    // 記事の meta 行にコンテンツタイプが表示される
+    expect(html).toContain("商品ガイド");
+    // 内部メモ（サンプル）と v3 で廃止した表示が残っていない
+    expect(html).not.toContain("サンプル");
+    expect(html).not.toContain("verification-summary");
+  });
+
+  it("marks a two-product article as a comparison with a comparison section", () => {
+    const html = readFileSync(
+      "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
+      "utf8",
+    );
+    expect(html).toContain(
+      `<meta name="article:content-type" content="comparison">`,
+    );
+    expect(html).toContain("article-comparison-v2");
+  });
+
   it("keeps ordinary pages as WebPage without article dates", () => {
     const html = readFileSync("dist/about/index.html", "utf8");
     const data = extractJsonLd(html);
     expect(data.some((item) => item["@type"] === "WebPage")).toBe(true);
     expect(html).not.toContain("article:published_time");
     expect(html).not.toContain("article:product-count");
+  });
+});
+
+describe("article JSON-LD by content type (rendered dist)", () => {
+  const articleOf = (html: string) =>
+    extractJsonLd(html).find((item) => item["@type"] === "Article") as Record<
+      string,
+      unknown
+    >;
+
+  it("marks a product guide with a single Product in about", () => {
+    const expectedNames: Record<string, string> = {
+      "panasonic-baby-monitor-kx-hc705":
+        panasonicBabyMonitorArticle.aboutProductNames![0],
+      "panasonic-eh-na9m-guide":
+        panasonicEhNa9mGuideArticle.aboutProductNames![0],
+    };
+    for (const [slug, expectedName] of Object.entries(expectedNames)) {
+      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+      const article = articleOf(html);
+      expect(article.about).toEqual([
+        { "@type": "Product", name: expectedName },
+      ]);
+    }
+  });
+
+  it("marks a comparison article with two Products in about when names are declared", () => {
+    const html = readFileSync(
+      "dist/articles/roborock-qrevo-curv-vs-dreame-x50/index.html",
+      "utf8",
+    );
+    const article = articleOf(html);
+    expect(article.about).toEqual([
+      { "@type": "Product", name: "Roborock Qrevo Curv" },
+      { "@type": "Product", name: "Dreame X50 Ultra" },
+    ]);
+  });
+
+  it("omits about on a comparison article without declared product names", () => {
+    const html = readFileSync(
+      "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
+      "utf8",
+    );
+    const article = articleOf(html);
+    expect(article.about).toBeUndefined();
   });
 });

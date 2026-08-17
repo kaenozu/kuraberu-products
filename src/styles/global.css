@@ -601,6 +601,11 @@ a {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+/* コンテンツタイプ（商品ガイド / 比較記事）のタグ。カテゴリタグの補助なので控えめにする */
+.tag--type {
+  color: var(--ink-soft, inherit);
+  font-weight: 700;
+}
 .article h1 {
   font-size: clamp(2rem, 5vw, 3.8rem);
   line-height: 1.2;
@@ -1067,4 +1072,27 @@ a {
 }
 .diagnosis-index-note p {
   margin: 0;
+}
+.diagnosis-error {
+  display: grid;
+  gap: 0.75rem;
+}
+.diagnosis-error h2,
+.diagnosis-error p {
+  margin: 0;
+}
+.diagnosis-card__note-label {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.diagnosis-card__cautions {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.diagnosis-card__case {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
 }

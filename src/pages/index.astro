@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { publicArticleMetadata } from '../content/articles';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
+import {diagnosisCategories} from '../data/diagnoses';
 
 const latest = [...publicArticleMetadata]
   .sort((a, b) => (a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0))
@@ -64,19 +65,7 @@ const categories = [...categoryCounts.entries()]
     <p class="lead">よく選ばれている比較を、公式情報の確認状況と合わせてまとめています。</p>
     <div class="article-list">
       {featured.map((article) => (
-        <article class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}>
-          {article.imagePath && (
-            <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
-          )}
-          <div class="card-body">
-            <span class="card-tag-row">
-              <span class="tag">{article.category}</span>
-            </span>
-            <h2><a href={article.path}>{article.headline}</a></h2>
-            <p class="card-desc">{article.summary}</p>
-            <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          </div>
-        </article>
+        <ArticleCard article={article} />
       ))}
     </div>
   </section>
@@ -84,19 +73,7 @@ const categories = [...categoryCounts.entries()]
   <section class="section wrap article-index">
     <div class="article-list">
       {latest.length > 0 ? latest.map((article) => (
-        <article class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}>
-          {article.imagePath && (
-            <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
-          )}
-          <div class="card-body">
-            <span class="card-tag-row">
-              <span class="tag">{article.category}</span>
-            </span>
-            <h2><a href={article.path}>{article.headline}</a></h2>
-            <p class="card-desc">{article.summary}</p>
-            <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          </div>
-        </article>
+        <ArticleCard article={article} />
       )) : (
         <p>比較記事は準備中です。</p>
       )}
@@ -111,15 +88,17 @@ const categories = [...categoryCounts.entries()]
     </div>
     <p class="lead">「どちらも良さそうで決められない」とき、あなたの使い方に合う商品を診断します。判定はメーカー公式情報に基づくスコアリング方式です。</p>
     <div class="article-list">
-      <article class="card article-list-card">
-        <div class="card-body">
-          <span class="card-tag-row">
-            <span class="tag">授乳用品</span>
-          </span>
-          <h2><a href="/tools/product-finder/baby-bottle/">母乳実感 160ml/240ml・素材 選び方診断</a></h2>
-          <p class="card-desc">ピジョン母乳実感（160ml/240ml × 耐熱ガラス/PPSU）から、あなたの使い方に合う1本を診断します。</p>
-        </div>
-      </article>
+      {diagnosisCategories.map((category) => (
+        <article class="card article-list-card">
+          <div class="card-body">
+            <span class="card-tag-row">
+              <span class="tag">{category.config.categoryLabel}</span>
+            </span>
+            <h2><a href={`/tools/product-finder/${category.slug}/`}>{category.config.title}</a></h2>
+            <p class="card-desc">{category.config.description}</p>
+          </div>
+        </article>
+      ))}
     </div>
     <p class="meta"><a href="/tools/product-finder/">商品選択診断の一覧を見る →</a></p>
   </section>

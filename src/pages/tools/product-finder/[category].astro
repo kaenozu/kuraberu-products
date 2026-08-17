@@ -99,7 +99,17 @@ const clientData = {
         <button type="button" class="primary-button" data-diagnosis-restart>条件を変えて診断する</button>
         <a class="secondary-button" href={pageContent.relatedArticles[0]?.path ?? '/articles/'}>比較記事を見る</a>
       </section>
+
+      <!-- エラー（診断データの読み込み失敗時のみ表示） -->
+      <section class="diagnosis-error" data-diagnosis-error hidden>
+        <h2>条件に一致する商品を判定できませんでした</h2>
+        <p>診断データの読み込みに失敗しました。時間をおいて、もう一度お試しください。</p>
+        <a class="secondary-button" href="/articles/">比較記事一覧を見る</a>
+      </section>
     </div>
+
+    <h2 id="diagnosis-audience">こんな人向けの診断です</h2>
+    <p>{pageContent.audience}</p>
 
     <h2 id="diagnosis-guide">診断対象と選び方</h2>
     <p>この診断の対象は、次の商品です。</p>
@@ -141,6 +151,7 @@ const clientData = {
 
 <script>
   import { runDiagnosis } from '../../../domain/diagnosis/engine';
+  import { reasonMessages } from '../../../domain/diagnosis/reasons';
   import type { DiagnosisConfig, Product } from '../../../domain/diagnosis/types';
 
   interface ClientDiagnosisData {
@@ -149,12 +160,44 @@ const clientData = {
     reasons: Record<string, string>;
   }
 
+  // 診断イベントの計測（同一オリジンの /api/events へ送信。失敗は黙って無視）。
+  function trackDiagnosisEvent(
+    event: string,
+    extra: { productId?: string; rank?: string } = {},
+  ) {
+    try {
+      const body = JSON.stringify({
+        event,
+        ...(extra.productId ? { productId: extra.productId } : {}),
+        ...(extra.rank ? { rank: extra.rank } : {}),
+        path: location.pathname,
+      });
+      const blob = new Blob([body], { type: 'application/json' });
+      if (typeof navigator.sendBeacon === 'function') {
+        navigator.sendBeacon('/api/events', blob);
+      }
+    } catch {
+      // 計測失敗はユーザー体験に影響させない
+    }
+  }
+
   const widget = document.querySelector('[data-diagnosis-widget]');
   if (widget) {
     const root = widget;
     const raw = root.getAttribute('data-diagnosis-data');
-    const parsed: ClientDiagnosisData | null = raw ? JSON.parse(raw) : null;
-    if (parsed) {
+    let parsed: ClientDiagnosisData | null = null;
+    try {
+      parsed = raw ? JSON.parse(raw) : null;
+    } catch {
+      parsed = null;
+    }
+    if (!parsed) {
+      // 診断データの読み込みに失敗した場合はエラー表示に切り替える
+      const errorSection = root.querySelector('[data-diagnosis-error]') as HTMLElement;
+      const startSection = root.querySelector('[data-diagnosis-start]') as HTMLElement;
+      if (errorSection) errorSection.hidden = false;
+      if (startSection) startSection.hidden = true;
+    } else {
       const data = parsed;
       const storageKey = `product-diagnosis:${data.diagnosis.id}:v1`;
       const answers: Record<string, string | string[] | number | boolean> = {};
@@ -272,33 +315,45 @@ const clientData = {
 
         const ranking = root.querySelector('[data-diagnosis-ranking]') as HTMLElement;
         ranking.textContent = '';
-        for (const [index, entry] of result.rankedProducts.entries()) {
-          if (index >= 3) break;
+        // 表示件数: 1位 + 2位以下最大3件（計4件まで）。理由は重複を除いて最大3点。
+        const visible = result.rankedProducts.slice(0, 4);
+        for (const [index, entry] of visible.entries()) {
           const product = data.products.find((p) => p.id === entry.productId);
           if (!product) continue;
           const card = document.createElement('article');
           card.className = index === 0 ? 'diagnosis-card diagnosis-card--top' : 'diagnosis-card';
-          const rankLabel = index === 0 ? 'おすすめ' : index === 1 ? '次点' : '条件次第でおすすめ';
+          const rankLabel = index === 0 ? 'おすすめ' : `${index + 1}位`;
+          const reasons = reasonMessages(entry.positiveReasons, data.reasons).slice(0, 3);
+          const cautions = reasonMessages(entry.cautions, data.reasons).slice(0, 3);
           card.innerHTML = `
             <p class="diagnosis-card__rank">${rankLabel}</p>
             <h3>${product.name}</h3>
             <ul class="diagnosis-card__reasons">
-              ${entry.positiveReasons.map((code: string) => `<li>✓ ${data.reasons[code] ?? code}</li>`).join('')}
-              ${entry.cautions.map((code: string) => `<li>・${data.reasons[code] ?? code}</li>`).join('')}
+              ${reasons.map((message: string) => `<li>✓ ${message}</li>`).join('')}
             </ul>
+            ${
+              index === 0
+                ? cautions.length > 0
+                  ? `<p class="diagnosis-card__note-label">気になる点</p><ul class="diagnosis-card__cautions">${cautions.map((message: string) => `<li>・${message}</li>`).join('')}</ul>`
+                  : ''
+                : `<p class="diagnosis-card__note-label">こちらが向くケース</p><p class="diagnosis-card__case">${cautions.length > 0 ? cautions.join('。') : '条件によってはこちらも候補になります。'}</p>`
+            }
             <div class="diagnosis-card__links">
-              ${product.articleUrls.map((url: string) => `<a href="${url}" data-diagnosis-article-link data-rank="${index + 1}">詳しい比較を見る</a>`).join('')}
+              ${product.articleUrls.map((url: string) => `<a href="${url}" data-diagnosis-article-link data-product-id="${product.id}" data-rank="${index + 1}">詳しい比較を見る</a>`).join('')}
               ${product.purchaseLinks.map((link: { provider: string; url: string; affiliate: boolean }) => `<a href="${link.url}" rel="noopener noreferrer" target="_blank" data-cta-event="purchase" data-product-id="${product.id}" data-placement="diagnosis-result" data-rank="${index + 1}">楽天で商品を見る</a>`).join('')}
             </div>
           `;
           ranking.append(card);
         }
+        // 診断完了イベント
+        trackDiagnosisEvent('diagnosis_complete');
       }
 
       root.querySelector('[data-diagnosis-begin]')?.addEventListener('click', () => {
         currentIndex = 0;
         showSection(questionSection);
         renderQuestion();
+        trackDiagnosisEvent('diagnosis_start');
       });
       prevBtn.addEventListener('click', () => {
         if (currentIndex > 0) {
@@ -334,6 +389,18 @@ const clientData = {
           clearState();
           showSection(questionSection);
           renderQuestion();
+          trackDiagnosisEvent('diagnosis_restart');
+        });
+      });
+
+      // 比較記事リンクのクリック計測（イベントデリゲーションで捕捉）
+      root.addEventListener('click', (event) => {
+        const target = event.target as Element | null;
+        const link = target?.closest('[data-diagnosis-article-link]') as HTMLElement | null;
+        if (!link) return;
+        trackDiagnosisEvent('result_article_click', {
+          productId: link.closest('[data-product-id]')?.getAttribute('data-product-id') ?? undefined,
+          rank: link.dataset.rank,
         });
       });
 
@@ -343,6 +410,9 @@ const clientData = {
         showSection(questionSection);
         renderQuestion();
       }
+
+      // ページ表示の計測（診断ウィジェットが存在する時点で1回）
+      trackDiagnosisEvent('diagnosis_view');
     }
   }
 </script>

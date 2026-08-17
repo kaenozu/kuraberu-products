@@ -24,6 +24,12 @@ export interface ArticleMetadata {
   purchaseLinkStatus: "verified" | "unverified" | "unavailable";
   changeLog: readonly ArticleChangeLogEntry[];
   imagePath?: `/${string}`;
+  /**
+   * JSON-LD の about（schema.org Product）に出す商品名。
+   * 件数は productCount と一致させる（商品ガイド = 1、比較記事 = 2）。
+   * 商品ガイド（productCount = 1）は必須。比較記事は未宣言なら about を出力しない。
+   */
+  aboutProductNames?: readonly string[];
 }
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
@@ -36,6 +42,20 @@ export function defineArticleMetadata(
 ): ArticleMetadata {
   if (!Number.isInteger(metadata.productCount) || metadata.productCount < 1) {
     throw new TypeError("productCount must be a positive integer");
+  }
+  if (metadata.productCount === 1 && !metadata.aboutProductNames) {
+    throw new TypeError(
+      "aboutProductNames must be declared for single-product (guide) articles",
+    );
+  }
+  if (
+    metadata.aboutProductNames !== undefined &&
+    (metadata.aboutProductNames.length !== metadata.productCount ||
+      metadata.aboutProductNames.some((name) => name.trim().length === 0))
+  ) {
+    throw new TypeError(
+      `aboutProductNames must have exactly ${metadata.productCount} non-empty entries (one per product)`,
+    );
   }
   for (const [label, value] of [
     ["publishedAt", metadata.publishedAt],
@@ -1223,16 +1243,51 @@ export const panasonicBabyMonitorArticle = defineArticleMetadata({
   summary:
     "KX-HC705はDECT方式で接続設定が不要・音/動作/温度の3センサーを搭載した単品ベビーモニター。公式情報を確認して整理します。",
   publishedAt: "2026-08-14",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-14",
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
   imagePath: "/products/panasonic-kx-hc705.jpg",
+  aboutProductNames: ["パナソニック ベビーモニター KX-HC705"],
   changeLog: [
     {
       date: "2026-08-14",
+      summary: "初回公開。パナソニック公式の商品機能と仕様を確認。",
+    },
+    {
+      date: "2026-08-17",
       summary:
-        "初回公開。パナソニック公式の商品機能と仕様を確認。単一商品記事のサンプルとして追加。",
+        "商品ガイドとして正式公開。単一商品記事のコンテンツタイプを整理し、構成を標準に合わせた。",
+    },
+  ],
+});
+
+export const panasonicEhNa9mGuideArticle = defineArticleMetadata({
+  id: "panasonic-eh-na9m-guide",
+  productCount: 1,
+  path: "/articles/panasonic-eh-na9m-guide/",
+  title: "パナソニック ナノケア EH-NA9M、向いている人｜くらべる商品メモ",
+  headline: "パナソニック ナノケア EH-NA9Mはどんな人向け？公式情報から整理",
+  description:
+    "パナソニック ナノケア EH-NA9Mの機能・モード・風量・質量を、公式ページで確認できる情報から単品で整理",
+  category: "美容家電",
+  tags: ["ドライヤー", "ナノケア", "パナソニック"],
+  audiences: ["髪のケア機能を重視する人", "複数のモードを使い分けたい人"],
+  uses: ["毎日のヘアケア"],
+  summary:
+    "EH-NA9Mはミネラル・UVケア・複数モードを搭載したパナソニック ナノケアの上位モデル。公式情報を確認して整理します。",
+  publishedAt: "2026-08-17",
+  modifiedAt: "2026-08-17",
+  productInfoCheckedAt: "2026-08-16",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-eh-na9m.jpg",
+  aboutProductNames: ["パナソニック ナノケア EH-NA9M"],
+  changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "初回公開。パナソニック公式の商品ページ・仕様ページで EH-NA9M の機能と仕様を確認。",
     },
   ],
 });
@@ -1344,6 +1399,9 @@ type CommercialArticleSeed = {
   rightProduct: string;
   leftPoint: string;
   rightPoint: string;
+  productInfoCheckedAt?: string;
+  purchaseLinksCheckedAt?: string;
+  purchaseLinkStatus?: "verified" | "unverified";
 };
 
 const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
@@ -1776,6 +1834,29 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     leftPoint: "映像処理とGoogle TVの連携を確認したい人向け",
     rightPoint: "録画機能とゲーム向け設定を確認したい人向け",
   },
+  {
+    id: "hitachi-bd-sx130k-vs-bd-stx130k",
+    title: "日立 BD-SX130KとBD-STX130K、どっち？｜くらべる商品メモ",
+    headline: "日立のドラム式洗濯乾燥機を比較。操作パネル・温水・乾燥で選ぶ",
+    description:
+      "日立 BD-SX130KとBD-STX130Kを、公式の容量・乾燥方式・操作パネル・温水・お手入れ機能で比較します。",
+    category: "生活家電",
+    tags: ["ドラム式洗濯乾燥機", "日立", "洗濯"],
+    audiences: [
+      "洗濯から乾燥まで一台で済ませたい人",
+      "購入前に公式仕様を比較したい人",
+    ],
+    uses: ["毎日の洗濯", "洗濯乾燥", "設置前の仕様確認"],
+    summary:
+      "日立のドラム式洗濯乾燥機を、操作パネル・温水・乾燥・容量の確認項目で比べます。",
+    leftProduct: "日立 BD-SX130K",
+    rightProduct: "日立 BD-STX130K",
+    leftPoint: "プッシュボタン式操作パネルを確認したい人向け",
+    rightPoint: "温水・タッチ操作・スチームアイロンコースを確認したい人向け",
+    purchaseLinkStatus: "verified",
+    purchaseLinksCheckedAt: "2026-08-17",
+    productInfoCheckedAt: "2026-08-17",
+  },
 ];
 
 export const commercialArticleImages: Readonly<
@@ -1877,6 +1958,10 @@ export const commercialArticleImages: Readonly<
     left: "/products/sony-bravia-55-xr80-vs-regza-55z870n-left.jpg",
     right: "/products/sony-bravia-55-xr80-vs-regza-55z870n-right.jpg",
   },
+  "hitachi-bd-sx130k-vs-bd-stx130k": {
+    left: "/products/hitachi-bd-sx130k.png",
+    right: "/products/hitachi-bd-stx130k.png",
+  },
 };
 
 const createCommercialArticle = (
@@ -1896,10 +1981,13 @@ const createCommercialArticle = (
     summary: seed.summary,
     publishedAt: "2026-08-17",
     modifiedAt: "2026-08-17",
-    purchaseLinkStatus: "unverified",
+    productInfoCheckedAt: seed.productInfoCheckedAt,
+    purchaseLinksCheckedAt: seed.purchaseLinksCheckedAt,
+    purchaseLinkStatus: seed.purchaseLinkStatus ?? "unverified",
     imagePath:
       commercialArticleImages[seed.id]?.left ??
       commercialArticleImages[seed.id]?.right,
+    aboutProductNames: [seed.leftProduct, seed.rightProduct],
     changeLog: [
       {
         date: "2026-08-17",
@@ -1946,6 +2034,7 @@ export const articleMetadata = Object.freeze([
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicBabyMonitorArticle,
+  panasonicEhNa9mGuideArticle,
   thermosKfm020VsKfi020Article,
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,

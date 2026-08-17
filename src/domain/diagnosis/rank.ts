@@ -1,13 +1,14 @@
 /**
  * ランキングとタイブレーク。
  *
- * スコア降順で並べ、同点時のみ TieBreaker を適用する。TieBreaker は
- * 属性比較 → editorialPriority の順に試し、決定論的に順位を決める。
- * editorialPriority は最後のタイブレーク専用で、恣意的な順位操作には
- * 使わない。
+ * スコア降順で並べ、同点時のみタイブレークを適用する。タイブレークは
+ * 仕様（21節）に従い、属性比較（公式仕様上の差）→ editorialPriority の順に
+ * 試す。editorialPriority は常に最後のタイブレークとして扱い、恣意的な
+ * 順位操作には使わない。
  */
 
 import type { Product, ProductScore, TieBreakerRule } from "./types";
+import { toNumber } from "./filter";
 
 function compareNumbers(left: number, right: number): number {
   return left < right ? -1 : left > right ? 1 : 0;
@@ -21,8 +22,8 @@ function compareByAttribute(
 ): number {
   const leftValue = left.attributes[key];
   const rightValue = right.attributes[key];
-  const leftNumber = typeof leftValue === "number" ? leftValue : undefined;
-  const rightNumber = typeof rightValue === "number" ? rightValue : undefined;
+  const leftNumber = toNumber(leftValue as string | number | boolean);
+  const rightNumber = toNumber(rightValue as string | number | boolean);
   if (leftNumber !== undefined && rightNumber !== undefined) {
     return compareNumbers(leftNumber, rightNumber);
   }
@@ -46,14 +47,19 @@ function compareByEditorialPriority(
 
 /**
  * 同点の商品ペアをタイブレーク規則で比較する。
- * 最初に差が出た規則の結果を返す。全規則で同点なら 0。
+ * editorialPriority は常に最後に適用する（config の記載順に依存しない）。
+ * 全規則で同点なら 0。
  */
 export function tieBreakCompare(
   left: Product,
   right: Product,
   rules: readonly TieBreakerRule[],
 ): number {
-  for (const rule of rules) {
+  const ordered = [
+    ...rules.filter((rule) => rule.type === "attribute"),
+    ...rules.filter((rule) => rule.type === "editorialPriority"),
+  ];
+  for (const rule of ordered) {
     let result = 0;
     if (rule.type === "attribute") {
       result = compareByAttribute(left, right, rule.key);

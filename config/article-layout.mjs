@@ -11,6 +11,16 @@ export const ARTICLE_LAYOUT = {
   placements: ["after-decision", "article-end"],
   // 診断結果カードのクリック計測用 placement（/tools/product-finder/ 配下）
   diagnosisPlacement: "diagnosis-result",
+  // 診断ページのイベント名（/api/events が受け付ける）。仕様（Analytics 節）の
+  // イベント群を定義し、レイアウト契約と同じくここが唯一の情報源。
+  diagnosisEvents: [
+    "diagnosis_view",
+    "diagnosis_start",
+    "diagnosis_complete",
+    "diagnosis_restart",
+    "result_article_click",
+    "result_affiliate_click",
+  ],
   // PurchaseCard の placement 省略時の既定値（v3 では末尾が原則）
   defaultPlacement: "article-end",
   // 標準記事の購入 CTA 構成（配置ごとの「商品1つにつき何枚」）。
@@ -54,6 +64,16 @@ export const ARTICLE_LAYOUT = {
       "キングジム",
     ],
   },
+  // 記事のコンテンツタイプ。productCount から機械的に導出する
+  // （src/layouts/BaseLayout.astro が article:content-type meta として出力し、
+  //  品質ゲート scripts/check-rendered-html.mjs が照合する）。
+  // - 商品ガイド（guide）: productCount = 1 の単一商品記事。比較セクション
+  //   （article-comparison-v2）を持たない。
+  // - 比較記事（comparison）: productCount >= 2 の複数商品比較。
+  contentTypes: {
+    guide: { maxProductCount: 1, label: "商品ガイド" },
+    comparison: { minProductCount: 2, label: "比較記事" },
+  },
   // トップページ（src/pages/index.astro）の構成。唯一の情報源で、
   // 品質ゲート scripts/check-rendered-html.mjs と実ビルド整合テスト
   // （tests/top-page.test.ts）がここから期待値を導出する。
@@ -93,6 +113,18 @@ export function expectedPurchaseCtasPerArticle(
     total += layout.midArticleSet.cardsPerProduct * productCount;
   }
   return total;
+}
+
+// 記事のコンテンツタイプ（"guide" / "comparison"）を productCount から導出する。
+// 単一商品記事（productCount = 1）は「商品ガイド」、複数商品比較は「比較記事」。
+export function contentTypeFor(productCount, layout = ARTICLE_LAYOUT) {
+  if (!Number.isInteger(productCount) || productCount < 1) {
+    throw new TypeError("productCount must be a positive integer");
+  }
+  if (productCount === layout.contentTypes.guide.maxProductCount) {
+    return "guide";
+  }
+  return "comparison";
 }
 
 // placement ごとの期待枚数を返す（ゲートが actual と照合する）。
