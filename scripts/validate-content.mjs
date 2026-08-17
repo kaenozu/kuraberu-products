@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { validateExternalEmbedDirectory } from "./external-embed-limit.mjs";
+import { validateHeroNamesDirectory } from "./validate-hero-names.mjs";
 
 const root = "src";
 const includedExtensions = new Set([
@@ -57,6 +58,9 @@ for (const file of files) {
 }
 
 for (const error of validateExternalEmbedDirectory("src/pages")) {
+  errors.push(error);
+}
+for (const error of validateHeroNamesDirectory()) {
   errors.push(error);
 }
 
