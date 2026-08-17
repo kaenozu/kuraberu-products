@@ -7,7 +7,6 @@ import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {pampersNewbornArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {
   ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
@@ -34,13 +33,6 @@ const standardCandidate: ComparisonCandidate = {
   note: '公式ページでサイズ・仕様を確認',
   status: 'official',
 };
-
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(
-  articleMetadata.productInfoCheckedAt,
-  contentAsOf,
-);
 
 const faqEntries = [
   {
@@ -83,19 +75,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">パンパースの新生児用テープ「肌へのいちばん」と「さらさらケア」を、公式商品ページで確認できる機能・サイズ展開で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    {articleMetadata.productInfoCheckedAt && (
-      <div class="verification-summary" aria-label="記事情報の確認状況">
-        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-      </div>
-    )}
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/pampers-premium-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: premium, guidePoints: [premiumCandidate.audience] }}
@@ -104,12 +90,11 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-    <p>パンパースの新生児用テープには「肌へのいちばん」と「さらさらケア」があります。この記事では、公式商品ページで確認できる機能だけを比較し、価格や使用感など購入時に別途確認が必要な項目と分けて整理します。</p>
+    <p>まとめ：ゆるうんち対策・肌ざわりを優先するなら「肌へのいちばん」、ゆるうんちモレ・フィット・吸収を優先するなら「さらさらケア」が候補です。新生児サイズは肌へのいちばんだけ3,000gまでの展開があります。</p>
 
-
-
-    <h2 id="checked">確認できる項目</h2>
-    <div class="table-scroll">
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（公式ページで確認した項目）</summary>
+      <div class="table-scroll">
       <table class="comparison">
         <thead><tr><th scope="col">比較項目</th><th scope="col">肌へのいちばん</th><th scope="col">さらさらケア</th><th scope="col">根拠・確認先</th></tr></thead>
         <tbody>
@@ -119,42 +104,15 @@ const differenceRows: DifferenceRow[] = [
           <tr><th scope="row">価格・在庫</th><td>販売ページで確認</td><td>販売ページで確認</td><td>楽天市場の検索結果</td></tr>
         </tbody>
       </table>
-    </div>
-    <p class="meta">商品仕様やサイズ展開は変更される可能性があります。購入時点の公式商品ページとパッケージを確認してください。</p>
+      </div>
+      <p class="meta">商品仕様やサイズ展開は変更される可能性があります。購入時点の公式商品ページとパッケージを確認してください。</p>
+    </details>
 
     <h2 id="official">公式情報</h2>
     <p>肌へのいちばんの公式ページでは、ゆるうんちを肌に残りにくくする設計、ワセリン配合シート、ふかふか素材が案内されています。さらさらケアの公式ページでは、ゆるうんちモレガード、フィットテープ、吸収体が案内されています。</p>
     <div class="source-links">
       <a class="card-link" href={premium} target="_blank" rel="noopener noreferrer">肌へのいちばん公式商品ページ →</a>
       <a class="card-link" href={sarasara} target="_blank" rel="noopener noreferrer">さらさらケア公式商品ページ →</a>
-    </div>
-
-    <h2>どんな確認を優先するか</h2>
-    <ul>
-      <li>肌へのいちばん：摩擦、ゆるうんちの肌残り、肌ざわりに関する公式機能を確認したい場合。</li>
-      <li>さらさらケア：ゆるうんちモレ、フィット、吸収に関する公式機能を確認したい場合。</li>
-    </ul>
-    <p>これは公式ページに掲載された機能の整理であり、どちらがすべての赤ちゃんに合うと断定するものではありません。</p>
-
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="肌へのいちばん"
-        audience="肌ざわりと肌へのやさしさ（ワセリン配合・ふかふか素材）、小さめ新生児向けのサイズを優先する人向け"
-        href={premiumSearch}
-        productId="pampers-premium-newborn"
-        imagePath="/products/pampers-premium-newborn.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="さらさらケア"
-        audience="モレ・ムレ対策（ゆるうんちモレガード・フィットテープ・吸収体）を優先する人向け"
-        href={sarasaraSearch}
-        productId="pampers-sarasara-newborn"
-        imagePath="/products/pampers-sarasara-newborn.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
     </div>
 
     <ArticleSocialProof

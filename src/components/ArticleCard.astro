@@ -1,0 +1,35 @@
+---
+import type {ArticleMetadata} from '../content/articles';
+import {contentTypeFor} from '../../config/article-layout.mjs';
+import {contentTypeLabel} from '../lib/content-types';
+
+interface Props {
+  article: ArticleMetadata;
+  /**
+   * 記事カードに付与する追加の data-* 属性（記事一覧の検索フィルタ用）。
+   * 例: {'data-article-card': '', 'data-search': '…', 'data-category': '…', 'data-tags': '…'}
+   */
+  data?: Record<string, string>;
+}
+
+const {article, data} = Astro.props;
+---
+
+<article
+  class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}
+  data-content-type={contentTypeFor(article.productCount)}
+  {...data}
+>
+  {article.imagePath && (
+    <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
+  )}
+  <div class="card-body">
+    <span class="card-tag-row">
+      <span class="tag">{article.category}</span>
+      <span class="tag tag--type">{contentTypeLabel(article.productCount)}</span>
+    </span>
+    <h2><a href={article.path}>{article.headline}</a></h2>
+    <p class="card-desc">{article.summary}</p>
+    <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
+  </div>
+</article>

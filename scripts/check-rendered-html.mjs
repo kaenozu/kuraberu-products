@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
 import {
   ARTICLE_LAYOUT,
+  contentTypeFor,
   expectedPlacementCounts,
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
@@ -218,9 +219,46 @@ export function readArticleMidCta(relative, html, errors) {
   return match[1] === "true";
 }
 
+// 記事のコンテンツタイプを
+// <meta name="article:content-type" content="guide|comparison"> から読み取る。
+export function readArticleContentType(relative, html, errors) {
+  const match = html.match(
+    /<meta name="article:content-type" content="(guide|comparison)">/i,
+  );
+  if (!match) {
+    errors.push(`${relative}: missing article:content-type meta`);
+    return null;
+  }
+  return match[1];
+}
+
+// 記事のコンテンツタイプを productCount から導出した期待値と照合する。
+// 商品ガイド（guide）は比較セクション（article-comparison-v2）を持たない。
+export function validateArticleContentType(relative, html, productCount) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const errors = [];
+  const expected = contentTypeFor(productCount);
+  const actual = readArticleContentType(relative, html, errors);
+  if (actual === null) return errors;
+  if (actual !== expected) {
+    errors.push(
+      `${relative}: article:content-type is "${actual}" but productCount ${productCount} expects "${expected}" (per config/article-layout.mjs)`,
+    );
+  }
+  if (
+    expected === "guide" &&
+    /<section\b[^>]*class="[^"]*\barticle-comparison-v2\b[^"]*"/i.test(html)
+  ) {
+    errors.push(
+      `${relative}: guide article renders a comparison section (article-comparison-v2)`,
+    );
+  }
+  return errors;
+}
+
 // 期待 CTA 枚数は、記事メタデータの商品数（productCount）と
 // config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から記事ごとに導出する。
-// 比較記事（productCount=2）→ 4枚、単一商品記事（productCount=1）→ 2枚。
+// 比較記事（productCount=2）→ 2枚、単一商品記事（productCount=1）→ 1枚（v3）。
 // レイアウト変更時は config だけを直し、ここに枚数をハードコードしない。
 const AFFILIATE_URL_PATTERN =
   /https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i;
@@ -320,7 +358,7 @@ export function validateArticleCtas(
   return errors;
 }
 
-// 記事末尾の「関連する比較記事」（同カテゴリ）のカード件数を数える。
+// 記事末尾の「関連する比較記事」のカード件数を数える。
 // セクションは RelatedArticles.astro が aria-labelledby="related-heading" で
 // 出力するため、その中にある .article-list-card を数える。
 export function countRelatedArticleCards(html) {
@@ -334,19 +372,105 @@ export function countRelatedArticleCards(html) {
   return cards?.length ?? 0;
 }
 
-// 記事ページの「関連する比較記事」件数が config/article-layout.mjs の
-// relatedArticlesLimit を超えないことを検証する。
+// 記事末尾の「ほかの比較記事」のリンク件数を数える。
+// セクションは RelatedArticles.astro が aria-labelledby="others-heading" で
+// 出力するため、その中にある .related-links の <li> を数える。
+export function countOtherArticleLinks(html) {
+  const section = html.match(
+    /<section\b[^>]*aria-labelledby="others-heading"[^>]*>([\s\S]*?)<\/section\s*>/i,
+  );
+  if (!section) return 0;
+  const items = section[1].match(/<li\b[^>]*>/gi);
+  return items?.length ?? 0;
+}
+
+// 記事ページの関連記事セクションが config/article-layout.mjs の
+// relatedSelection（limit / othersLimit）を超えないことを検証する。
 // 件数の唯一の情報源は config（コンポーネントもここから slice する）。
 export function validateRelatedArticleSection(relative, html) {
   if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
-  const count = countRelatedArticleCards(html);
-  const limit = ARTICLE_LAYOUT.relatedArticlesLimit;
-  if (count > limit) {
-    return [
-      `${relative}: related comparison articles exceed the limit: found ${count}, maximum is ${limit} (per config/article-layout.mjs)`,
-    ];
+  const errors = [];
+  const relatedCount = countRelatedArticleCards(html);
+  const relatedLimit = ARTICLE_LAYOUT.relatedSelection.limit;
+  if (relatedCount > relatedLimit) {
+    errors.push(
+      `${relative}: related comparison articles exceed the limit: found ${relatedCount}, maximum is ${relatedLimit} (per config/article-layout.mjs)`,
+    );
   }
-  return [];
+  const othersCount = countOtherArticleLinks(html);
+  const othersLimit = ARTICLE_LAYOUT.relatedSelection.othersLimit;
+  if (othersCount > othersLimit) {
+    errors.push(
+      `${relative}: other comparison articles exceed the limit: found ${othersCount}, maximum is ${othersLimit} (per config/article-layout.mjs)`,
+    );
+  }
+  return errors;
+}
+
+// トップページ（dist/index.html）のカテゴリ入口を検証する。
+// 各カテゴリリンクの category 値が、比較記事一覧（dist/articles/index.html）の
+// カテゴリ select の option に必ず存在することを照合する（カテゴリ名の実在性）。
+// 件数・掲載カテゴリの完全一致は config（topPage.categoryMinArticles）と
+// articleMetadata の両方に依存するため、実ビルド整合テスト
+// （tests/top-page.test.ts）が担う。
+export function validateTopPageCategories(topHtml, articlesIndexHtml) {
+  const errors = [];
+  const categoryLinks = [
+    ...topHtml.matchAll(/href="\/articles\/\?category=([^"]+)"/g),
+  ].map((match) => decodeURIComponent(match[1]));
+  const knownCategories = [
+    ...articlesIndexHtml.matchAll(/<option value="([^"]+)">/g),
+  ].map((match) => match[1]);
+  if (!knownCategories.length) {
+    errors.push(
+      "top page: cannot validate categories: no category options found in /articles/",
+    );
+    return errors;
+  }
+  for (const category of categoryLinks) {
+    if (!knownCategories.includes(category)) {
+      errors.push(
+        `top page: category entry points to an unknown category: ${category}`,
+      );
+    }
+  }
+  return errors;
+}
+
+// トップページ（dist/index.html）の「よく比較される商品」を検証する。
+// config の topPage.featuredPaths（3〜6件）がすべてトップにリンクされ、
+// リンク数が config と一致することを照合する。
+export function validateTopPageFeatured(topHtml) {
+  const errors = [];
+  const featuredPaths = ARTICLE_LAYOUT.topPage.featuredPaths;
+  if (featuredPaths.length < 3 || featuredPaths.length > 6) {
+    errors.push(
+      `config/article-layout.mjs: topPage.featuredPaths must have 3-6 items, found ${featuredPaths.length}`,
+    );
+  }
+  const section = topHtml.match(
+    /<section\b[^>]*data-top-featured[^>]*>([\s\S]*?)<\/section\s*>/i,
+  );
+  if (!section) {
+    errors.push("top page: missing data-top-featured section");
+    return errors;
+  }
+  const hrefs = [...section[1].matchAll(/href="([^"]+)"/g)].map(
+    (match) => match[1],
+  );
+  const expected = new Set(featuredPaths);
+  for (const path of featuredPaths) {
+    if (!hrefs.includes(path)) {
+      errors.push(`top page: featured article not linked: ${path}`);
+    }
+  }
+  const unexpected = hrefs.filter((href) => !expected.has(href));
+  if (unexpected.length) {
+    errors.push(
+      `top page: unexpected link in data-top-featured section: ${unexpected.join(", ")}`,
+    );
+  }
+  return errors;
 }
 
 // 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
@@ -516,6 +640,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // （meta タグ経由）と config の ctaSets / midArticleSet から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
+    errors.push(...validateArticleContentType(relative, html, productCount));
     const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(
@@ -539,6 +664,33 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       })),
     ),
   );
+
+  // トップページ（dist/index.html）のカテゴリ入口と「よく比較される商品」。
+  // カテゴリの実在性は比較記事一覧（dist/articles/index.html）の option と照合する。
+  const topPage = htmlFiles.find(
+    (filePath) =>
+      path.relative(distDirectory, filePath).replace(/\\/g, "/") ===
+      "index.html",
+  );
+  const articlesIndex = htmlFiles.find(
+    (filePath) =>
+      path.relative(distDirectory, filePath).replace(/\\/g, "/") ===
+      "articles/index.html",
+  );
+  if (topPage) {
+    if (!articlesIndex) {
+      errors.push(
+        "top page: cannot validate: /articles/ index not found in dist",
+      );
+    } else {
+      const topHtml = fs.readFileSync(topPage, "utf8");
+      const articlesIndexHtml = fs.readFileSync(articlesIndex, "utf8");
+      errors.push(
+        ...validateTopPageCategories(topHtml, articlesIndexHtml),
+        ...validateTopPageFeatured(topHtml),
+      );
+    }
+  }
 
   // 外部埋め込み（X / YouTube / TikTok / Pinterest）はユーザーが同意した後に
   // JSで挿入する設計（docs/external-embed-policy.md）。

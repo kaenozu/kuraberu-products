@@ -3,15 +3,20 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  countOtherArticleLinks,
   countRelatedArticleCards,
   countRenderedExternalEmbeds,
   findEmptySections,
+  readArticleContentType,
   readArticleMidCta,
   readArticleProductCount,
   validateArticleCtas,
+  validateArticleContentType,
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
+  validateTopPageCategories,
+  validateTopPageFeatured,
 } from "../scripts/check-rendered-html.mjs";
 import {
   ARTICLE_LAYOUT,
@@ -235,28 +240,41 @@ describe("article mid-cta meta", () => {
 describe("related comparison article limit", () => {
   const card = (path: string) =>
     `<article class="card article-list-card"><h3><a href="${path}">見出し</a></h3><p>概要</p></article>`;
+  const link = (path: string) => `<li><a href="${path}">見出し</a></li>`;
   const relatedSection = (cards: string) =>
     `<section class="related-articles section wrap" aria-labelledby="related-heading"><h2 id="related-heading">関連する比較記事</h2><div class="article-list">${cards}</div></section>`;
+  const othersSection = (links: string) =>
+    `<section class="related-articles section wrap" aria-labelledby="others-heading"><h2 id="others-heading">ほかの比較記事</h2><ul class="related-links">${links}</ul></section>`;
 
   it("uses the layout config as the source of truth", () => {
-    expect(ARTICLE_LAYOUT.relatedArticlesLimit).toBeGreaterThanOrEqual(3);
-    expect(ARTICLE_LAYOUT.relatedArticlesLimit).toBeLessThanOrEqual(4);
+    expect(ARTICLE_LAYOUT.relatedSelection.limit).toBeGreaterThanOrEqual(3);
+    expect(ARTICLE_LAYOUT.relatedSelection.limit).toBeLessThanOrEqual(4);
+    expect(ARTICLE_LAYOUT.relatedSelection.othersLimit).toBeGreaterThanOrEqual(
+      2,
+    );
+    expect(ARTICLE_LAYOUT.relatedSelection.othersLimit).toBeLessThanOrEqual(4);
   });
 
   it("counts only cards inside the related section", () => {
     const html =
-      `<section class="related-articles section wrap" aria-labelledby="others-heading">${card("/a/")}</section>` +
-      relatedSection(card("/b/") + card("/c/"));
+      othersSection(link("/a/")) + relatedSection(card("/b/") + card("/c/"));
     expect(countRelatedArticleCards(html)).toBe(2);
+    expect(countOtherArticleLinks(html)).toBe(1);
   });
 
-  it("returns zero when no related section is rendered", () => {
+  it("returns zero when no section is rendered", () => {
     expect(countRelatedArticleCards(validPage(""))).toBe(0);
+    expect(countOtherArticleLinks(validPage(""))).toBe(0);
   });
 
-  it("accepts up to the configured limit on an article page", () => {
+  it("accepts up to the configured limits on an article page", () => {
     const html = validPage(
-      relatedSection(card("/a/").repeat(ARTICLE_LAYOUT.relatedArticlesLimit)),
+      relatedSection(
+        card("/a/").repeat(ARTICLE_LAYOUT.relatedSelection.limit),
+      ) +
+        othersSection(
+          link("/b/").repeat(ARTICLE_LAYOUT.relatedSelection.othersLimit),
+        ),
     );
     expect(
       validateRelatedArticleSection("articles/example/index.html", html),
@@ -266,15 +284,30 @@ describe("related comparison article limit", () => {
   it("rejects more than the configured limit on an article page", () => {
     const html = validPage(
       relatedSection(
-        card("/a/").repeat(ARTICLE_LAYOUT.relatedArticlesLimit + 1),
+        card("/a/").repeat(ARTICLE_LAYOUT.relatedSelection.limit + 1),
       ),
     );
     expect(
       validateRelatedArticleSection("articles/example/index.html", html),
     ).toEqual([
       `articles/example/index.html: related comparison articles exceed the limit: found ${
-        ARTICLE_LAYOUT.relatedArticlesLimit + 1
-      }, maximum is ${ARTICLE_LAYOUT.relatedArticlesLimit} (per config/article-layout.mjs)`,
+        ARTICLE_LAYOUT.relatedSelection.limit + 1
+      }, maximum is ${ARTICLE_LAYOUT.relatedSelection.limit} (per config/article-layout.mjs)`,
+    ]);
+  });
+
+  it("rejects more than the others limit on an article page", () => {
+    const html = validPage(
+      othersSection(
+        link("/b/").repeat(ARTICLE_LAYOUT.relatedSelection.othersLimit + 1),
+      ),
+    );
+    expect(
+      validateRelatedArticleSection("articles/example/index.html", html),
+    ).toEqual([
+      `articles/example/index.html: other comparison articles exceed the limit: found ${
+        ARTICLE_LAYOUT.relatedSelection.othersLimit + 1
+      }, maximum is ${ARTICLE_LAYOUT.relatedSelection.othersLimit} (per config/article-layout.mjs)`,
     ]);
   });
 
@@ -326,7 +359,9 @@ describe("article product count meta", () => {
     mkdirSync(articlesDir, { recursive: true });
     writeFileSync(
       path.join(articlesDir, "index.html"),
-      validPage(`<meta name="article:product-count" content="1">${oneEndCta}`),
+      validPage(
+        `<meta name="article:product-count" content="1"><meta name="article:content-type" content="guide">${oneEndCta}`,
+      ),
     );
 
     expect(validateRenderedHtml({ distDirectory: directory }).errors).toEqual(
@@ -342,7 +377,7 @@ describe("article product count meta", () => {
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="2"><meta name="article:mid-cta" content="true">${fourCtas}`,
+        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true">${fourCtas}`,
       ),
     );
 
@@ -566,5 +601,185 @@ describe("rendered empty sections", () => {
     expect(validateRenderedHtml({ distDirectory: directory }).errors).toContain(
       `${path.join(directory, "index.html")}: empty section: <h2>購入時の注意</h2>`,
     );
+  });
+});
+
+describe("top page featured section", () => {
+  const featured = (paths: readonly string[]) =>
+    `<section data-top-featured><div class="article-list">${paths
+      .map(
+        (path) =>
+          `<article class="card article-list-card"><div class="card-body"><h2><a href="${path}">見出し</a></h2></div></article>`,
+      )
+      .join("")}</div></section>`;
+
+  it("accepts the top page when every config path is linked and nothing else", () => {
+    expect(
+      validateTopPageFeatured(featured(ARTICLE_LAYOUT.topPage.featuredPaths)),
+    ).toEqual([]);
+  });
+
+  it("reports a missing featured section", () => {
+    expect(validateTopPageFeatured("<main></main>")).toEqual([
+      "top page: missing data-top-featured section",
+    ]);
+  });
+
+  it("reports a config path that is not linked", () => {
+    const paths = [...ARTICLE_LAYOUT.topPage.featuredPaths];
+    paths.pop();
+    expect(validateTopPageFeatured(featured(paths))).toEqual([
+      `top page: featured article not linked: ${ARTICLE_LAYOUT.topPage.featuredPaths.at(-1)}`,
+    ]);
+  });
+
+  it("reports an unexpected link inside the featured section", () => {
+    expect(
+      validateTopPageFeatured(
+        featured([
+          ...ARTICLE_LAYOUT.topPage.featuredPaths,
+          "/articles/unexpected/",
+        ]),
+      ),
+    ).toContain(
+      "top page: unexpected link in data-top-featured section: /articles/unexpected/",
+    );
+  });
+
+  it("enforces the 3-6 item range in config", () => {
+    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
+      3,
+    );
+    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(6);
+  });
+});
+
+describe("top page category entries", () => {
+  const categories = (names: string[]) =>
+    `<section data-top-categories><ul class="category-list">${names
+      .map(
+        (name) =>
+          `<li><a class="card-link" href="/articles/?category=${encodeURIComponent(name)}">${name}</a></li>`,
+      )
+      .join("")}</ul></section>`;
+  const articlesIndex = (names: string[]) =>
+    `<select name="category">${names
+      .map((name) => `<option value="${name}">${name}</option>`)
+      .join("")}</select>`;
+
+  it("accepts category entries that exist in the articles index", () => {
+    expect(
+      validateTopPageCategories(
+        categories(["育児用品", "生活家電"]),
+        articlesIndex(["育児用品", "生活家電", "キッチン家電"]),
+      ),
+    ).toEqual([]);
+  });
+
+  it("reports a category entry that does not exist in the articles index", () => {
+    expect(
+      validateTopPageCategories(
+        categories(["育児用品", "存在しないカテゴリ"]),
+        articlesIndex(["育児用品"]),
+      ),
+    ).toEqual([
+      "top page: category entry points to an unknown category: 存在しないカテゴリ",
+    ]);
+  });
+
+  it("reports when the articles index has no category options", () => {
+    expect(
+      validateTopPageCategories(categories(["育児用品"]), "<main/>"),
+    ).toEqual([
+      "top page: cannot validate categories: no category options found in /articles/",
+    ]);
+  });
+
+  it("decodes percent-encoded category values before comparing", () => {
+    const html = categories(["キッチン・ごみ箱収納"]);
+    expect(
+      validateTopPageCategories(html, articlesIndex(["キッチン・ごみ箱収納"])),
+    ).toEqual([]);
+  });
+});
+
+describe("article content type", () => {
+  const guidePage = (withComparison = false) =>
+    `<main>${
+      withComparison
+        ? '<section class="article-comparison-v2" aria-label="商品の比較"></section>'
+        : ""
+    }</main>`;
+  const validPageWithMeta = (body: string, contentType: string) =>
+    `<meta name="article:product-count" content="1"><meta name="article:content-type" content="${contentType}">${body}`;
+
+  it("reads the content type meta", () => {
+    const errors: string[] = [];
+    expect(
+      readArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(), "guide"),
+        errors,
+      ),
+    ).toBe("guide");
+    expect(errors).toEqual([]);
+  });
+
+  it("reports a missing content type meta", () => {
+    const errors: string[] = [];
+    expect(
+      readArticleContentType(
+        "articles/guide/index.html",
+        "<main></main>",
+        errors,
+      ),
+    ).toBeNull();
+    expect(errors).toEqual([
+      "articles/guide/index.html: missing article:content-type meta",
+    ]);
+  });
+
+  it("accepts a guide with productCount 1 and no comparison section", () => {
+    expect(
+      validateArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(), "guide"),
+        1,
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a comparison section inside a guide", () => {
+    expect(
+      validateArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(true), "guide"),
+        1,
+      ),
+    ).toEqual([
+      "articles/guide/index.html: guide article renders a comparison section (article-comparison-v2)",
+    ]);
+  });
+
+  it("reports a content type that contradicts the product count", () => {
+    expect(
+      validateArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(), "comparison"),
+        1,
+      ),
+    ).toEqual([
+      'articles/guide/index.html: article:content-type is "comparison" but productCount 1 expects "guide" (per config/article-layout.mjs)',
+    ]);
+  });
+
+  it("rejects a non-article page path", () => {
+    expect(
+      validateArticleContentType(
+        "index.html",
+        validPageWithMeta(guidePage(), "guide"),
+        1,
+      ),
+    ).toEqual([]);
   });
 });

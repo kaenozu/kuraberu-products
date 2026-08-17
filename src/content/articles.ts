@@ -24,6 +24,12 @@ export interface ArticleMetadata {
   purchaseLinkStatus: "verified" | "unverified" | "unavailable";
   changeLog: readonly ArticleChangeLogEntry[];
   imagePath?: `/${string}`;
+  /**
+   * JSON-LD の about（schema.org Product）に出す商品名。
+   * 件数は productCount と一致させる（商品ガイド = 1、比較記事 = 2）。
+   * 商品ガイド（productCount = 1）は必須。比較記事は未宣言なら about を出力しない。
+   */
+  aboutProductNames?: readonly string[];
 }
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
@@ -36,6 +42,20 @@ export function defineArticleMetadata(
 ): ArticleMetadata {
   if (!Number.isInteger(metadata.productCount) || metadata.productCount < 1) {
     throw new TypeError("productCount must be a positive integer");
+  }
+  if (metadata.productCount === 1 && !metadata.aboutProductNames) {
+    throw new TypeError(
+      "aboutProductNames must be declared for single-product (guide) articles",
+    );
+  }
+  if (
+    metadata.aboutProductNames !== undefined &&
+    (metadata.aboutProductNames.length !== metadata.productCount ||
+      metadata.aboutProductNames.some((name) => name.trim().length === 0))
+  ) {
+    throw new TypeError(
+      `aboutProductNames must have exactly ${metadata.productCount} non-empty entries (one per product)`,
+    );
   }
   for (const [label, value] of [
     ["publishedAt", metadata.publishedAt],
@@ -136,7 +156,6 @@ export function defineArticleMetadata(
 export const pampersNewbornArticle = defineArticleMetadata({
   id: "pampers-newborn",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pampers-newborn/",
   title: "パンパースの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -150,12 +169,17 @@ export const pampersNewbornArticle = defineArticleMetadata({
   summary:
     "「肌へのいちばん」と「さらさらケア」を、公式情報・販売ページ・口コミの確認状況に分けて比較します。",
   publishedAt: "2026-07-31",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-07-31",
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
   imagePath: "/products/pampers-premium-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -171,7 +195,6 @@ export const pampersNewbornArticle = defineArticleMetadata({
 export const merriesNewbornArticle = defineArticleMetadata({
   id: "merries-newborn",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/merries-newborn/",
   title: "メリーズの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -185,11 +208,16 @@ export const merriesNewbornArticle = defineArticleMetadata({
   summary:
     "「ファーストプレミアム」と「ずっと肌さらエアスルー」を、公式情報・販売ページ・確認状況に分けて比較します。",
   publishedAt: "2026-08-08",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-08",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -205,7 +233,6 @@ export const merriesNewbornArticle = defineArticleMetadata({
 export const pigeonBottle240Article = defineArticleMetadata({
   id: "pigeon-bottle-240",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pigeon-bottle-240/",
   title: "ピジョン母乳実感240ml、どっち？｜くらべる商品メモ",
   headline:
@@ -219,11 +246,16 @@ export const pigeonBottle240Article = defineArticleMetadata({
   summary:
     "「耐熱ガラス製」と「プラスチック製（PPSU）」を、公式情報・素材の特長・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-09",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -240,7 +272,6 @@ export const pigeonBottle240Article = defineArticleMetadata({
 export const pigeonSlim240Article = defineArticleMetadata({
   id: "pigeon-slim-240",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pigeon-slim-240/",
   title: "ピジョン母乳実感 vs スリムタイプ、どっち？｜くらべる商品メモ",
   headline:
@@ -254,11 +285,16 @@ export const pigeonSlim240Article = defineArticleMetadata({
   summary:
     "「母乳実感」と「スリムタイプ」の240mlを、公式情報・乳首体系・形状・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-09",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -275,7 +311,6 @@ export const pigeonSlim240Article = defineArticleMetadata({
 export const moonyMArticle = defineArticleMetadata({
   id: "moony-m",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/moony-m/",
   title: "ムーニーのテープ、どっち？｜くらべる商品メモ",
   headline:
@@ -289,11 +324,16 @@ export const moonyMArticle = defineArticleMetadata({
   summary:
     "「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式情報・サイズ別仕様・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-09",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/moony-teishigeki-m.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -315,7 +355,6 @@ export const moonyMArticle = defineArticleMetadata({
 export const merriesPantsArticle = defineArticleMetadata({
   id: "merries-pants",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/merries-pants/",
   title: "メリーズのパンツ、どっち？｜くらべる商品メモ",
   headline:
@@ -329,10 +368,16 @@ export const merriesPantsArticle = defineArticleMetadata({
   summary:
     "「ファーストプレミアム」と「ずっと肌さらエアスルー」のパンツタイプを、公式情報・販売ページ・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
+  imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -348,7 +393,6 @@ export const merriesPantsArticle = defineArticleMetadata({
 export const shupotArticle = defineArticleMetadata({
   id: "shupot",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/shupot/",
   title: "ピジョンの鼻吸い器、どっち？｜くらべる商品メモ",
   headline:
@@ -362,11 +406,16 @@ export const shupotArticle = defineArticleMetadata({
   summary:
     "「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を、公式情報・お手入れ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/shupot-dendo.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -383,7 +432,6 @@ export const shupotArticle = defineArticleMetadata({
 export const babybjornArticle = defineArticleMetadata({
   id: "babybjorn",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「HARMONY」と「MINI」を比較",
@@ -400,11 +448,16 @@ export const babybjornArticle = defineArticleMetadata({
   summary:
     "「HARMONY」と「MINI」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-harmony.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -420,7 +473,6 @@ export const babybjornArticle = defineArticleMetadata({
 export const babybjornOnekaiArticle = defineArticleMetadata({
   id: "babybjorn-onekai",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-onekai/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「ONE KAI」と「MOVE」を比較",
@@ -437,11 +489,16 @@ export const babybjornOnekaiArticle = defineArticleMetadata({
   summary:
     "「ONE KAI」と「MOVE」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-onekai.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -457,7 +514,6 @@ export const babybjornOnekaiArticle = defineArticleMetadata({
 export const babybjornBouncerArticle = defineArticleMetadata({
   id: "babybjorn-bouncer",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-bouncer/",
   title: "ベビービョルンのバウンサー、どっち？｜くらべる商品メモ",
   headline:
@@ -475,11 +531,16 @@ export const babybjornBouncerArticle = defineArticleMetadata({
   summary:
     "「Bliss」と「バランスソフト」を、ベビービョルン公式のガイド・対象月齢・シート素材・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-bouncer-bliss.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -496,7 +557,6 @@ export const babybjornBouncerArticle = defineArticleMetadata({
 export const cradleArticle = defineArticleMetadata({
   id: "babybjorn-cradle",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-cradle/",
   title: "ゆりかご型ベビーベッド、どっち？｜くらべる商品メモ",
   headline:
@@ -514,11 +574,16 @@ export const cradleArticle = defineArticleMetadata({
   summary:
     "「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、各メーカー公式の案内・対象期間・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-cradle.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-16",
       summary:
@@ -540,7 +605,6 @@ export const cradleArticle = defineArticleMetadata({
 export const pottyArticle = defineArticleMetadata({
   id: "babybjorn-potty",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-potty/",
   title: "トイレトレーニング、どっち？｜くらべる商品メモ",
   headline:
@@ -558,11 +622,16 @@ export const pottyArticle = defineArticleMetadata({
   summary:
     "「スマートポッティ」と「ポッティチェア」を、ベビービョルン公式の商品ページ・形状・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-16",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-smart-potty.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-16",
       summary:
@@ -583,7 +652,6 @@ export const pottyArticle = defineArticleMetadata({
 export const pigeonBottleSizeArticle = defineArticleMetadata({
   id: "pigeon-bottle-160-240",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pigeon-bottle-160-240/",
   title: "ピジョン母乳実感160ml vs 240ml、どっち？｜くらべる商品メモ",
   headline: "ピジョンの哺乳びん、どっち？「母乳実感160ml」と「240ml」を比較",
@@ -596,11 +664,16 @@ export const pigeonBottleSizeArticle = defineArticleMetadata({
   summary:
     "「160ml」と「240ml」を、公式情報・付属乳首・対象月齢目安・確認状況に分けて比較します。",
   publishedAt: "2026-08-11",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-11",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/pigeon-bottle-160-240-160ml.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -849,7 +922,6 @@ export const panasonicNeFl1aVsNeFl1cArticle = defineArticleMetadata({
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/thermos-tiger-bottle/",
   title: "サーモスとタイガーの水筒、どっち？｜くらべる商品メモ",
   headline:
@@ -863,11 +935,16 @@ export const thermosTigerBottleArticle = defineArticleMetadata({
   summary:
     "「JNL-S500」と「MTA-J050」を、公式の保温・保冷効力とサイズ・お手入れ方法に分けて比較します。",
   publishedAt: "2026-08-12",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-12",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/thermos-jnl-s500.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -1166,15 +1243,51 @@ export const panasonicBabyMonitorArticle = defineArticleMetadata({
   summary:
     "KX-HC705はDECT方式で接続設定が不要・音/動作/温度の3センサーを搭載した単品ベビーモニター。公式情報を確認して整理します。",
   publishedAt: "2026-08-14",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-14",
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-kx-hc705.jpg",
+  aboutProductNames: ["パナソニック ベビーモニター KX-HC705"],
   changeLog: [
     {
       date: "2026-08-14",
+      summary: "初回公開。パナソニック公式の商品機能と仕様を確認。",
+    },
+    {
+      date: "2026-08-17",
       summary:
-        "初回公開。パナソニック公式の商品機能と仕様を確認。単一商品記事のサンプルとして追加。",
+        "商品ガイドとして正式公開。単一商品記事のコンテンツタイプを整理し、構成を標準に合わせた。",
+    },
+  ],
+});
+
+export const panasonicEhNa9mGuideArticle = defineArticleMetadata({
+  id: "panasonic-eh-na9m-guide",
+  productCount: 1,
+  path: "/articles/panasonic-eh-na9m-guide/",
+  title: "パナソニック ナノケア EH-NA9M、向いている人｜くらべる商品メモ",
+  headline: "パナソニック ナノケア EH-NA9Mはどんな人向け？公式情報から整理",
+  description:
+    "パナソニック ナノケア EH-NA9Mの機能・モード・風量・質量を、公式ページで確認できる情報から単品で整理",
+  category: "美容家電",
+  tags: ["ドライヤー", "ナノケア", "パナソニック"],
+  audiences: ["髪のケア機能を重視する人", "複数のモードを使い分けたい人"],
+  uses: ["毎日のヘアケア"],
+  summary:
+    "EH-NA9Mはミネラル・UVケア・複数モードを搭載したパナソニック ナノケアの上位モデル。公式情報を確認して整理します。",
+  publishedAt: "2026-08-17",
+  modifiedAt: "2026-08-17",
+  productInfoCheckedAt: "2026-08-16",
+  purchaseLinksCheckedAt: "2026-08-16",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-eh-na9m.jpg",
+  aboutProductNames: ["パナソニック ナノケア EH-NA9M"],
+  changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "初回公開。パナソニック公式の商品ページ・仕様ページで EH-NA9M の機能と仕様を確認。",
     },
   ],
 });
@@ -1286,9 +1399,9 @@ type CommercialArticleSeed = {
   rightProduct: string;
   leftPoint: string;
   rightPoint: string;
-  purchaseLinkStatus?: ArticleMetadata["purchaseLinkStatus"];
-  purchaseLinksCheckedAt?: string;
   productInfoCheckedAt?: string;
+  purchaseLinksCheckedAt?: string;
+  purchaseLinkStatus?: "verified" | "unverified";
 };
 
 const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
@@ -1746,25 +1859,108 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   },
 ];
 
-const commercialArticleImages: Readonly<
+export const commercialArticleImages: Readonly<
   Record<string, { left?: `/${string}`; right?: `/${string}` }>
 > = {
-  "panasonic-eh-na9m-vs-refa-beautech": {
-    left: "/products/panasonic-eh-na9m.jpg",
+  "roborock-qrevo-curv-vs-dreame-x50": {
+    left: "/products/roborock-qrevo-curv-vs-dreame-x50-left.jpg",
+    right: "/products/roborock-qrevo-curv-vs-dreame-x50-right.jpg",
+  },
+  "makita-cl107-vs-cl286": {
+    left: "/products/makita-cl107-vs-cl286-left.jpg",
+    right: "/products/makita-cl107-vs-cl286-right.jpg",
+  },
+  "iris-airfryer-fvx-d3-vs-tefal-ey201": {
+    left: "/products/iris-airfryer-fvx-d3-vs-tefal-ey201-left.jpg",
+    right: "/products/iris-airfryer-fvx-d3-vs-tefal-ey201-right.jpg",
+  },
+  "recolte-automatic-cooker-vs-panasonic-nf-pc400": {
+    left: "/products/recolte-automatic-cooker-vs-panasonic-nf-pc400-left.jpg",
+    right: "/products/recolte-automatic-cooker-vs-panasonic-nf-pc400-right.jpg",
+  },
+  "brita-marella-vs-zero-water": {
+    right: "/products/brita-marella-vs-zero-water-right.jpg",
+  },
+  "tiger-jpv-l100-vs-zojirushi-nw-fc10": {
+    left: "/products/tiger-jpv-l100-vs-zojirushi-nw-fc10-left.jpg",
+    right: "/products/tiger-jpv-l100-vs-zojirushi-nw-fc10-right.jpg",
   },
   "sharp-kc-s50-vs-panasonic-f-vxw55": {
-    left: "/products/sharp-kc-s50.jpg",
+    left: "/products/sharp-kc-s50-vs-panasonic-f-vxw55-left.jpg",
+    right: "/products/sharp-kc-s50-vs-panasonic-f-vxw55-right.jpg",
+  },
+  "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n": {
+    left: "/products/anker-soundcore-liberty-4-nc-vs-sony-wf-c710n-left.jpg",
+    right: "/products/anker-soundcore-liberty-4-nc-vs-sony-wf-c710n-right.jpg",
+  },
+  "xiaomi-redmi-watch-5-vs-huawei-band-10": {
+    left: "/products/xiaomi-redmi-watch-5-vs-huawei-band-10-left.jpg",
+    right: "/products/xiaomi-redmi-watch-5-vs-huawei-band-10-right.jpg",
+  },
+  "panasonic-eh-na9m-vs-refa-beautech": {
+    left: "/products/panasonic-eh-na9m-vs-refa-beautech-left.jpg",
+    right: "/products/panasonic-eh-na9m-vs-refa-beautech-right.jpg",
+  },
+  "philips-s9000-vs-braun-series9pro": {
+    left: "/products/philips-s9000-vs-braun-series9pro-left.jpg",
+    right: "/products/philips-s9000-vs-braun-series9pro-right.jpg",
+  },
+  "anessa-perfect-uv-vs-biore-aqua-rich": {
+    left: "/products/anessa-perfect-uv-vs-biore-aqua-rich-left.jpg",
+    right: "/products/anessa-perfect-uv-vs-biore-aqua-rich-right.jpg",
+  },
+  "tempur-original-vs-nishikawa-air-pillow": {
+    left: "/products/tempur-original-vs-nishikawa-air-pillow-left.jpg",
+    right: "/products/tempur-original-vs-nishikawa-air-pillow-right.jpg",
+  },
+  "samsonite-c-lite-vs-proteca-maxpass": {
+    left: "/products/samsonite-c-lite-vs-proteca-maxpass-left.jpg",
+    right: "/products/samsonite-c-lite-vs-proteca-maxpass-right.jpg",
+  },
+  "montbell-tri-pack-vs-anello-backpack": {
+    left: "/products/montbell-tri-pack-vs-anello-backpack-left.jpg",
+    right: "/products/montbell-tri-pack-vs-anello-backpack-right.jpg",
+  },
+  "thermos-jdp-501-vs-zojirushi-sm-za48": {
+    left: "/products/thermos-jdp-501-vs-zojirushi-sm-za48-left.jpg",
+    right: "/products/thermos-jdp-501-vs-zojirushi-sm-za48-right.jpg",
+  },
+  "panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k": {
+    left: "/products/panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k-left.jpg",
+    right:
+      "/products/panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k-right.jpg",
+  },
+  "sharp-heater-hv-r55-vs-iris-uhk500": {
+    left: "/products/sharp-heater-hv-r55-vs-iris-uhk500-left.jpg",
+    right: "/products/sharp-heater-hv-r55-vs-iris-uhk500-right.jpg",
+  },
+  "dyson-v12-detect-slim-vs-shark-evo-power": {
+    left: "/products/dyson-v12-detect-slim-vs-shark-evo-power-left.jpg",
+    right: "/products/dyson-v12-detect-slim-vs-shark-evo-power-right.jpg",
   },
   "t-fal-ko5901jp-vs-zoujirushi-ck-pa08": {
-    left: "/products/tefal-ko5901jp.jpg",
-    right: "/products/zojirushi-ck-pa08.webp",
+    left: "/products/t-fal-ko5901jp-vs-zoujirushi-ck-pa08-left.jpg",
+    right: "/products/t-fal-ko5901jp-vs-zoujirushi-ck-pa08-right.jpg",
+  },
+  "re-fa-straight-iron-vs-panasonic-eh-hs0e": {
+    left: "/products/re-fa-straight-iron-vs-panasonic-eh-hs0e-left.jpg",
+    right: "/products/re-fa-straight-iron-vs-panasonic-eh-hs0e-right.jpg",
+  },
+  "nitori-n-sleep-vs-nishikawa-air-mattress": {
+    left: "/products/nitori-n-sleep-vs-nishikawa-air-mattress-left.jpg",
+    right: "/products/nitori-n-sleep-vs-nishikawa-air-mattress-right.jpg",
+  },
+  "apple-watch-se-vs-xiaomi-redmi-watch-5": {
+    left: "/products/apple-watch-se-vs-xiaomi-redmi-watch-5-left.jpg",
+    right: "/products/apple-watch-se-vs-xiaomi-redmi-watch-5-right.jpg",
+  },
+  "sony-bravia-55-xr80-vs-regza-55z870n": {
+    left: "/products/sony-bravia-55-xr80-vs-regza-55z870n-left.jpg",
+    right: "/products/sony-bravia-55-xr80-vs-regza-55z870n-right.jpg",
   },
   "hitachi-bd-sx130k-vs-bd-stx130k": {
     left: "/products/hitachi-bd-sx130k.png",
     right: "/products/hitachi-bd-stx130k.png",
-  },
-  "tiger-jpv-l100-vs-zojirushi-nw-fc10": {
-    left: "/products/tiger-jpv-l100.jpg",
   },
 };
 
@@ -1788,7 +1984,10 @@ const createCommercialArticle = (
     productInfoCheckedAt: seed.productInfoCheckedAt,
     purchaseLinksCheckedAt: seed.purchaseLinksCheckedAt,
     purchaseLinkStatus: seed.purchaseLinkStatus ?? "unverified",
-    imagePath: commercialArticleImages[seed.id]?.left,
+    imagePath:
+      commercialArticleImages[seed.id]?.left ??
+      commercialArticleImages[seed.id]?.right,
+    aboutProductNames: [seed.leftProduct, seed.rightProduct],
     changeLog: [
       {
         date: "2026-08-17",
@@ -1835,6 +2034,7 @@ export const articleMetadata = Object.freeze([
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicBabyMonitorArticle,
+  panasonicEhNa9mGuideArticle,
   thermosKfm020VsKfi020Article,
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,

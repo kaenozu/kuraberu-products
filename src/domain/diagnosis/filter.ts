@@ -8,7 +8,7 @@
 import type { Product, ProductCondition, ProductScore } from "./types";
 
 /** 属性値を比較可能な数値へ変換する（できない場合は undefined） */
-function toNumber(value: string | number | boolean): number | undefined {
+export function toNumber(value: string | number | boolean): number | undefined {
   if (typeof value === "number") return value;
   if (typeof value === "boolean") return value ? 1 : 0;
   const parsed = Number(value);
@@ -60,7 +60,6 @@ export function initializeScores(
       excluded: false,
       positiveReasons: [],
       negativeReasons: [],
-      matchedRules: [],
     });
   }
   return scores;

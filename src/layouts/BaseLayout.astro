@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/accessibility.css';
 import {site} from '../config/site';
 import type {ArticleMetadata} from '../content/articles';
+import {contentTypeFor} from '../../config/article-layout.mjs';
 
 interface Props {
   title?: string;
@@ -31,6 +32,13 @@ const currentPath = Astro.url.pathname;
 const articleImage = article?.imagePath
   ? new URL(article.imagePath, `${site.url}/`).toString()
   : undefined;
+// 記事の JSON-LD 分化（article:content-type と同一の contentTypeFor から導出）。
+// 商品名を宣言した記事だけ about（schema.org Product）を出力する:
+// 商品ガイド = 1 商品、比較記事 = 2 商品。未宣言の比較記事は about を出さない。
+const aboutProducts = article?.aboutProductNames?.map((name) => ({
+  '@type': 'Product',
+  name,
+}));
 const organization = {
   '@type': 'Organization',
   name: site.name,
@@ -47,6 +55,7 @@ const structuredData = resolvedOgType === 'article'
       datePublished: article?.publishedAt,
       dateModified: article?.modifiedAt,
       ...(articleImage ? {image: articleImage} : {}),
+      ...(aboutProducts ? {about: aboutProducts} : {}),
       author: organization,
       publisher: organization,
       isAccessibleForFree: true,
@@ -129,6 +138,7 @@ const breadcrumbStructuredData = article
     {article?.modifiedAt && <meta property="og:updated_time" content={article.modifiedAt} />}
     {/* 商品数（品質ゲートが CTA 期待枚数を記事ごとに導出するための内部メタ） */}
     {article && <meta name="article:product-count" content={String(article.productCount)} />}
+    {article && <meta name="article:content-type" content={contentTypeFor(article.productCount)} />}
     {article?.midArticleCta && <meta name="article:mid-cta" content="true" />}
     <meta name="twitter:card" content={articleImage ? 'summary_large_image' : 'summary'} />
     {articleImage && <meta name="twitter:image" content={articleImage} />}

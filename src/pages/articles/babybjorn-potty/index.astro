@@ -6,7 +6,6 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {pottyArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const smartPottyOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/smart-potty/';
@@ -55,10 +54,6 @@ const pottyChairCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-
 const differenceRows: DifferenceRow[] = [
   {
     "label": "形状",
@@ -102,38 +97,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 育児用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">スマートポッティとポッティチェアは、どちらもベビービョルンのトイレトレーニング用おまるです。最大の違いは形状と収納方法です。スマートポッティはコンパクトな収納式、ポッティチェアは長く座れるイス型で中桶付きです。この記事では、ベビービョルン公式楽天市場店で2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使いやすさや実際の反応など、公式情報だけでは判断できないことは推測しません。</p>
+    <p class="lead">ベビービョルンのトイレトレーニング用おまる「スマートポッティ」と「ポッティチェア」を、公式楽天市場店で確認できる内容で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="ベビービョルン スマートポッティ"
-        audience="コンパクトに収納でき、狭いバスルームでも場所を取らないおまるを優先する人向け"
-        href={smartPottyRakutenUrl}
-        productId="babybjorn-smart-potty"
-        imagePath="/products/babybjorn-smart-potty.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="ベビービョルン ポッティチェア"
-        audience="長い時間座れるイス型で、中桶をそのまま流せる手軽さを優先する人向け"
-        href={pottyChairRakutenUrl}
-        productId="babybjorn-potty-chair"
-        imagePath="/products/babybjorn-potty-chair.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
@@ -143,6 +113,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
+    <p>まとめ：コンパクトに収納できるおまるを探すなら「スマートポッティ」、長い時間座れるイス型おまるを探すなら「ポッティチェア」が候補です。</p>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ベビービョルン公式楽天市場店の商品ページで確認できた内容を整理します。使いやすさ・実際の反応・お子さまの好みなど、公式情報だけでは確認できないことは書いていません。</p>

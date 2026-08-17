@@ -118,7 +118,6 @@ export function applyScores(
           const score = scores.get(product.id);
           if (!score) continue;
           score.score += rule.score;
-          score.matchedRules.push(rule.reasonCode ?? "score");
           if (rule.reasonCode) {
             if (rule.score > 0) {
               score.positiveReasons.push(rule.reasonCode);

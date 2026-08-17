@@ -7,15 +7,12 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
 import {thermosKfm020VsKfi020Article as articleMetadata} from '../../../content/articles'
-import {isContentStale} from '../../../lib/content-freshness'
-
 const kfmOfficial = 'https://www.thermos.jp/product/series/kfm.html'
 const kfiOfficial = 'https://www.thermos.jp/product/series/kfi.html'
 const kfmRakutenUrl = 'https://a.r10.to/h5dcek'
 const kfiRakutenUrl = 'https://a.r10.to/h90Ny1'
 const kfmImage = '/products/thermos-kfm-020.jpg'
 const kfiImage = '/products/thermos-kfi-020.jpg'
-
 const faqEntries = [
   {
     question: 'サーモス KFM-020 と KFI-020 はどっち？',
@@ -34,9 +31,6 @@ const faqEntries = [
     answer: '内径はどちらも約20cmです。本体寸法はKFM-020が幅42.0×奥行21.5×高さ9.5cm、KFI-020が幅39.0×奥行21.0×高さ7.0cmです。メーカー希望小売価格はKFM-020が4,400円（税込）、KFI-020が3,520円（税込）と公式仕様に記載されています。',
   },
 ] as const
-
-const contentAsOf = new Date().toISOString().slice(0, 10)
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf)
 const keyDiffRows: KeyDiffRow[] = [
   {
     label: '対応熱源',
@@ -78,7 +72,6 @@ const keyDiffRows: KeyDiffRow[] = [
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">サーモスの約20cmフライパン「KFM-020」と「KFI-020」を比較します。メーカー公式ページで確認できる熱源、重量、寸法、価格を整理し、確認できない使用感や耐久性の推測は加えていません。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">主な比較ポイント</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
-
     <details class="fold-section" id="specs">
       <summary>詳細仕様（全部の数値を見る）</summary>
       <div class="table-scroll">
@@ -115,8 +108,6 @@ const keyDiffRows: KeyDiffRow[] = [
       <h3>調査方法・免責事項</h3>
       <p>この比較は、メーカー公式の商品ページで確認できる仕様のみを根拠にしています。価格・在庫・個人の使用感は公式ページと販売先でご確認ください。</p>
     </details>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <div class="verification-summary" aria-label="購入リンクの確認状況">{productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}</div>
   </article>
   <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>

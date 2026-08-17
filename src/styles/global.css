@@ -320,6 +320,32 @@ a {
   outline: 2px solid var(--ink);
   outline-offset: 4px;
 }
+
+/* トップページのカテゴリ入口（src/pages/index.astro の data-top-categories） */
+.category-list {
+  list-style: none;
+  margin: 2rem 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+.category-list a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--ink);
+}
+.category-list__name {
+  font-weight: 800;
+}
+.category-list__count {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ink-soft, inherit);
+  white-space: nowrap;
+}
 .section {
   padding: clamp(3rem, 7vw, 6rem) 0;
 }
@@ -574,6 +600,11 @@ a {
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+/* コンテンツタイプ（商品ガイド / 比較記事）のタグ。カテゴリタグの補助なので控えめにする */
+.tag--type {
+  color: var(--ink-soft, inherit);
+  font-weight: 700;
 }
 .article h1 {
   font-size: clamp(2rem, 5vw, 3.8rem);
@@ -1041,4 +1072,27 @@ a {
 }
 .diagnosis-index-note p {
   margin: 0;
+}
+.diagnosis-error {
+  display: grid;
+  gap: 0.75rem;
+}
+.diagnosis-error h2,
+.diagnosis-error p {
+  margin: 0;
+}
+.diagnosis-card__note-label {
+  margin: 0.25rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+.diagnosis-card__cautions {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.diagnosis-card__case {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
 }

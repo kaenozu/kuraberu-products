@@ -8,7 +8,6 @@ import ComparisonHero from '../../../components/ComparisonHero.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
 import DecisionGuide from '../../../components/DecisionGuide.astro';
 import {thermosTigerBottleArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import {thermosJnlS500, tigerMtaJ050} from '../../../lib/products';
 
 const thermosOfficial = thermosJnlS500.officialUrl;
@@ -45,12 +44,6 @@ const faqEntries = [
       'タイガーMTA-J050の内面は「スーパークリーンPlus」で、公式案内では汚れ・においがつきにくくサビにも強いため、塩分を含むスポーツドリンクを入れてもOKとされています（使用後はすぐに水ですすぐなどお手入れが必要）。サーモスJNL-S500のスポーツドリンク対応については、今回確認した公式ページには明記されていません。',
   },
 ] as const;
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(
-  articleMetadata.productInfoCheckedAt,
-  contentAsOf,
-);
 
 /** 主要差分（判断軸 → 数値の順で表示・bar は数値の大きさの相対比率） */
 const keyDiffRows: KeyDiffRow[] = [
@@ -209,25 +202,6 @@ const keyDiffRows: KeyDiffRow[] = [
       }}
     />
 
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="サーモス JNL-S500"
-        audience="軽さ・コンパクト・食洗機対応を優先する人向け"
-        href={thermosJnlS500.rakutenUrl}
-        imagePath={thermosJnlS500.imagePath}
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="タイガー MTA-J050"
-        audience="保冷力・ハンドル・大きめの飲み口を優先する人向け"
-        href={tigerMtaJ050.rakutenUrl}
-        imagePath={tigerMtaJ050.imagePath}
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
-
     <details class="fold-section" id="specs">
       <summary>詳細仕様（全部の数値を見る）</summary>
       <div class="table-scroll">
@@ -305,10 +279,6 @@ const keyDiffRows: KeyDiffRow[] = [
       <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
     </details>
 
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <div class="verification-summary" aria-label="購入リンクの確認状況">
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
   </article>
   <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>

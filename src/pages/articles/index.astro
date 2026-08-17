@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
 import {articleMetadata} from '../../content/articles';
 import {normalizeDiscoveryText} from '../../lib/article-discovery';
 
@@ -47,25 +48,15 @@ const visibleArticles = sorted.slice(0, pageSize);
 
     <div class="article-list" data-discovery-results>
       {visibleArticles.map((article) => (
-        <article
-          class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}
-          data-article-card
-          data-search={normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' '))}
-          data-category={article.category}
-          data-tags={JSON.stringify(article.tags)}
-        >
-          {article.imagePath && (
-            <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
-          )}
-          <div class="card-body">
-            <span class="card-tag-row">
-              <span class="tag">{article.category}</span>
-            </span>
-            <h2><a href={article.path}>{article.headline}</a></h2>
-            <p class="card-desc">{article.summary}</p>
-            <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          </div>
-        </article>
+        <ArticleCard
+          article={article}
+          data={{
+            'data-article-card': '',
+            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' ')),
+            'data-category': article.category,
+            'data-tags': JSON.stringify(article.tags),
+          }}
+        />
       ))}
     </div>
     <div class="card discovery-empty" hidden data-discovery-empty>
