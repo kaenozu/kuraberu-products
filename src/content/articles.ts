@@ -1399,6 +1399,9 @@ type CommercialArticleSeed = {
   rightProduct: string;
   leftPoint: string;
   rightPoint: string;
+  productInfoCheckedAt?: string;
+  purchaseLinksCheckedAt?: string;
+  purchaseLinkStatus?: "verified" | "unverified";
 };
 
 const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
