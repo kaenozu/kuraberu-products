@@ -108,7 +108,9 @@ try {
         repositoryHead = $head
         siteOrigin = $SiteUrl.GetLeftPart([System.UriPartial]::Authority)
         purchaseLinkMode = $(if ($UseRakutenApi) { 'rakuten-api' } else { 'direct-urls' })
-        deploymentOutputRecorded = $Apply
+        # [bool] keeps report.json a plain true/false; a [switch] would
+        # serialize as {"IsPresent": ...}.
+        deploymentOutputRecorded = [bool]$Apply
         secretsIncluded = $false
     }
     $report | ConvertTo-Json -Depth 20 | Set-Content -LiteralPath (Join-Path $runDirectory 'report.json') -Encoding utf8
