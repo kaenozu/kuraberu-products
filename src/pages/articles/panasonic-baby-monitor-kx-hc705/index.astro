@@ -65,16 +65,7 @@ const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, co
       <p>一方で、スマートフォンでの視聴や録画機能を求める場合は、公式ページで確認できる情報からは KX-HC705 がその用途に合うか判断できません。製品選びの前に、公式ページや販売ページで最新の情報を確認してください。</p>
     </section>
 
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="パナソニック ベビーモニター KX-HC705"
-        audience="無線LAN設定なしですぐ見守りを始めたい人、音・動作・温度のお知らせを優先する人向け"
-        href={rakutenSearch}
-        productId="panasonic-kx-hc705"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
+
     <div class="verification-summary" aria-label="記事情報の確認状況">
       <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
       {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}

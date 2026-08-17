@@ -1,5 +1,9 @@
 # Article Layout v2 — 標準記事構成（2026-08-12）
 
+> **注意: このレイアウトは v3 に置き換えられました（`docs/article-layout-v3-2026-08.md`）。**
+> v3 では購入カードは「末尾 1 セット」が原則で、途中 CTA（after-decision）は
+> 長文記事（`midArticleCta: true`）だけに許容されます。本ファイルは v2 時代の記録です。
+
 全比較記事に適用する標準骨格。UI/UX 仕様書（`docs/ui-ux-spec-2026-08.md`）の S-1〜S-3 と、
 Issue #52（比較/CTA UX改善）の受入判断（2026-08-12・chatgpt.com 相談）を統合したもの。
 

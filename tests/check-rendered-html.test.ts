@@ -6,6 +6,7 @@ import {
   countRelatedArticleCards,
   countRenderedExternalEmbeds,
   findEmptySections,
+  readArticleMidCta,
   readArticleProductCount,
   validateArticleCtas,
   validateRelatedArticleSection,
@@ -14,6 +15,7 @@ import {
 } from "../scripts/check-rendered-html.mjs";
 import {
   ARTICLE_LAYOUT,
+  expectedPlacementCounts,
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
 
@@ -21,19 +23,27 @@ const fixtureDirectories: string[] = [];
 
 const embed = '<div data-external-embed="x"></div>';
 
-const validCta = (href: string, placement = "after-decision") =>
+const validCta = (href: string, placement = "article-end") =>
   `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="${placement}">商品を確認（広告）</a>`;
 
-const twoCtas = `${validCta("https://a.r10.to/one")}${validCta(
+// 通常の 2 商品記事: 末尾のみ 1×2 = 2 枚
+const twoEndCtas = `${validCta("https://a.r10.to/one")}${validCta(
   "https://a.r10.to/two",
 )}`;
 
+// 長文の 2 商品記事: 末尾 2 枚 + 途中（after-decision）2 枚 = 4 枚
 const fourCtas =
-  `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two")}` +
+  `${validCta("https://a.r10.to/one", "after-decision")}${validCta(
+    "https://a.r10.to/two",
+    "after-decision",
+  )}` +
   `${validCta("https://a.r10.to/three", "article-end")}${validCta(
     "https://a.r10.to/four",
     "article-end",
   )}`;
+
+// 通常の単一商品記事: 末尾 1 枚
+const oneEndCta = validCta("https://a.r10.to/one");
 
 function validPage(body: string) {
   return `<!doctype html>
@@ -49,21 +59,33 @@ function sectionsOf(html: string) {
 }
 
 describe("rendered article CTA audit", () => {
-  it("accepts exactly four complete Rakuten affiliate CTAs for a two-product article", () => {
+  it("accepts exactly two article-end CTAs for a two-product article", () => {
     expect(
       validateArticleCtas(
         "articles/example/index.html",
-        fourCtas,
+        twoEndCtas,
         expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([]);
   });
 
-  it("accepts two CTAs for a single-product article", () => {
+  it("accepts four CTAs for a long two-product article (midArticleCta)", () => {
     expect(
       validateArticleCtas(
         "articles/example/index.html",
-        twoCtas,
+        fourCtas,
+        expectedPurchaseCtasPerArticle(2, ARTICLE_LAYOUT, {
+          midArticleCta: true,
+        }),
+      ),
+    ).toEqual([]);
+  });
+
+  it("accepts one article-end CTA for a single-product article", () => {
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        oneEndCta,
         expectedPurchaseCtasPerArticle(1),
       ),
     ).toEqual([]);
@@ -77,13 +99,13 @@ describe("rendered article CTA audit", () => {
         expectedPurchaseCtasPerArticle(1),
       ),
     ).toEqual([
-      "articles/example/index.html: expected exactly 2 purchase CTAs (per config/article-layout.mjs and article productCount), found 4",
+      "articles/example/index.html: expected exactly 1 purchase CTAs (per config/article-layout.mjs and article productCount), found 4",
     ]);
   });
 
   it("rejects missing CTA count, disallowed host, and missing nofollow", () => {
     const html =
-      '<a href="https://example.com" data-cta-event="purchase" data-placement="after-decision">購入</a>';
+      '<a href="https://example.com" data-cta-event="purchase" data-placement="article-end">購入</a>';
     expect(
       validateArticleCtas(
         "articles/example/index.html",
@@ -91,18 +113,18 @@ describe("rendered article CTA audit", () => {
         expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([
-      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs and article productCount), found 1",
+      "articles/example/index.html: expected exactly 2 purchase CTAs (per config/article-layout.mjs and article productCount), found 1",
       "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
     ]);
   });
 
   it("accepts a plain Rakuten search fallback CTA with nofollow", () => {
     const searchCta =
-      '<a href="https://search.rakuten.co.jp/search/mall/KX-HC705" rel="nofollow noopener noreferrer" data-cta-event="purchase" data-placement="after-decision">楽天市場で検索</a>';
+      '<a href="https://search.rakuten.co.jp/search/mall/KX-HC705" rel="nofollow noopener noreferrer" data-cta-event="purchase" data-placement="article-end">楽天市場で検索</a>';
     expect(
       validateArticleCtas(
         "articles/example/index.html",
-        `${searchCta}${searchCta}`,
+        searchCta,
         expectedPurchaseCtasPerArticle(1),
       ),
     ).toEqual([]);
@@ -110,32 +132,54 @@ describe("rendered article CTA audit", () => {
 
   it("rejects a placeholder affiliate URL", () => {
     const placeholderCta =
-      '<a href="https://a.r10.to/placeholder-kx-hc705" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="after-decision">商品を確認（広告）</a>';
+      '<a href="https://a.r10.to/placeholder-kx-hc705" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="article-end">商品を確認（広告）</a>';
     expect(
       validateArticleCtas(
         "articles/example/index.html",
-        `${placeholderCta}${placeholderCta}`,
+        placeholderCta,
         expectedPurchaseCtasPerArticle(1),
       ),
     ).toEqual([
       "articles/example/index.html: CTA 1 must not contain a placeholder URL",
-      "articles/example/index.html: CTA 2 must not contain a placeholder URL",
     ]);
   });
 
   it("rejects a CTA whose placement is not allowed by the layout config", () => {
     const html =
-      `${validCta("https://a.r10.to/one")}${validCta("https://a.r10.to/two", "article-end")}` +
+      `${validCta("https://a.r10.to/one", "after-decision")}${validCta(
+        "https://a.r10.to/two",
+        "after-decision",
+      )}` +
       `<a href="https://a.r10.to/three" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>` +
       `${validCta("https://a.r10.to/four", "article-end")}`;
     expect(
       validateArticleCtas(
         "articles/example/index.html",
         html,
-        expectedPurchaseCtasPerArticle(2),
+        expectedPurchaseCtasPerArticle(2, ARTICLE_LAYOUT, {
+          midArticleCta: true,
+        }),
       ),
     ).toEqual([
       "articles/example/index.html: CTA 3 has unrecognized placement: bogus (allowed: after-decision, article-end)",
+    ]);
+  });
+
+  it("rejects a mid CTA on a non-long article via per-placement counts", () => {
+    // 総数は合う（2 枚）が、article-end が 1 枚しかない v2 混在パターン
+    const mixed = `${validCta(
+      "https://a.r10.to/one",
+      "after-decision",
+    )}${validCta("https://a.r10.to/two")}`;
+    expect(
+      validateArticleCtas(
+        "articles/example/index.html",
+        mixed,
+        expectedPurchaseCtasPerArticle(2),
+        expectedPlacementCounts(2),
+      ),
+    ).toEqual([
+      'articles/example/index.html: expected 2 purchase CTAs with placement "article-end", found 1 (per config/article-layout.mjs)',
     ]);
   });
 
@@ -147,6 +191,44 @@ describe("rendered article CTA audit", () => {
         expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([]);
+  });
+});
+
+describe("article mid-cta meta", () => {
+  it("reads the long-article flag from the rendered meta tag", () => {
+    const errors: string[] = [];
+    expect(
+      readArticleMidCta(
+        "articles/example/index.html",
+        '<meta name="article:mid-cta" content="true">',
+        errors,
+      ),
+    ).toBe(true);
+    expect(
+      readArticleMidCta(
+        "articles/example/index.html",
+        '<meta name="article:mid-cta" content="false">',
+        errors,
+      ),
+    ).toBe(false);
+    expect(
+      readArticleMidCta("articles/example/index.html", "<html></html>", errors),
+    ).toBe(false);
+    expect(errors).toEqual([]);
+  });
+
+  it("reports an invalid mid-cta value", () => {
+    const errors: string[] = [];
+    expect(
+      readArticleMidCta(
+        "articles/example/index.html",
+        '<meta name="article:mid-cta" content="yes">',
+        errors,
+      ),
+    ).toBe(false);
+    expect(errors).toEqual([
+      'articles/example/index.html: invalid article:mid-cta "yes" (must be true or false)',
+    ]);
   });
 });
 
@@ -237,14 +319,31 @@ describe("article product count meta", () => {
     ]);
   });
 
-  it("derives the per-article expected count from the meta tag through validateRenderedHtml", () => {
+  it("derives the per-article expected count from the meta tags through validateRenderedHtml", () => {
     const directory = mkdtempSync(path.join(os.tmpdir(), "kuraberu-ctas-"));
     fixtureDirectories.push(directory);
     const articlesDir = path.join(directory, "articles", "example");
     mkdirSync(articlesDir, { recursive: true });
     writeFileSync(
       path.join(articlesDir, "index.html"),
-      validPage(`<meta name="article:product-count" content="1">${twoCtas}`),
+      validPage(`<meta name="article:product-count" content="1">${oneEndCta}`),
+    );
+
+    expect(validateRenderedHtml({ distDirectory: directory }).errors).toEqual(
+      [],
+    );
+  });
+
+  it("derives four CTAs for a long article from the mid-cta meta through validateRenderedHtml", () => {
+    const directory = mkdtempSync(path.join(os.tmpdir(), "kuraberu-ctas-"));
+    fixtureDirectories.push(directory);
+    const articlesDir = path.join(directory, "articles", "long");
+    mkdirSync(articlesDir, { recursive: true });
+    writeFileSync(
+      path.join(articlesDir, "index.html"),
+      validPage(
+        `<meta name="article:product-count" content="2"><meta name="article:mid-cta" content="true">${fourCtas}`,
+      ),
     );
 
     expect(validateRenderedHtml({ distDirectory: directory }).errors).toEqual(

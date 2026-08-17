@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
 import {
   ARTICLE_LAYOUT,
+  expectedPlacementCounts,
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
 
@@ -203,6 +204,20 @@ export function readArticleProductCount(relative, html, errors) {
   return productCount;
 }
 
+// 長文記事フラグを <meta name="article:mid-cta" content="true"> から読み取る。
+// v3: 途中 CTA（after-decision）は midArticleCta な記事だけに許容される。
+export function readArticleMidCta(relative, html, errors) {
+  const match = html.match(/<meta name="article:mid-cta" content="(\w+)">/i);
+  if (!match) return false;
+  if (match[1] !== "true" && match[1] !== "false") {
+    errors.push(
+      `${relative}: invalid article:mid-cta "${match[1]}" (must be true or false)`,
+    );
+    return false;
+  }
+  return match[1] === "true";
+}
+
 // 期待 CTA 枚数は、記事メタデータの商品数（productCount）と
 // config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から記事ごとに導出する。
 // 比較記事（productCount=2）→ 4枚、単一商品記事（productCount=1）→ 2枚。
@@ -210,7 +225,19 @@ export function readArticleProductCount(relative, html, errors) {
 const AFFILIATE_URL_PATTERN =
   /https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i;
 
-export function validateArticleCtas(relative, html, expectedCount) {
+/**
+ * 記事ページの購入 CTA を検査する。
+ * @param {string} relative dist からの相対パス
+ * @param {string} html レンダリング済み HTML
+ * @param {number} expectedCount 期待 CTA 総数
+ * @param {Record<string, number> | null} [expectedByPlacement] placement 別の期待枚数（指定時は照合）
+ */
+export function validateArticleCtas(
+  relative,
+  html,
+  expectedCount,
+  expectedByPlacement = null,
+) {
   if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
   const ctaPattern = new RegExp(
     `<a\\b[^>]*data-cta-event="${ARTICLE_LAYOUT.ctaEvent}"[^>]*>[\\s\\S]*?<\\/a>`,
@@ -222,6 +249,21 @@ export function validateArticleCtas(relative, html, expectedCount) {
     errors.push(
       `${relative}: expected exactly ${expectedCount} purchase CTAs (per config/article-layout.mjs and article productCount), found ${tags.length}`,
     );
+  }
+  if (expectedByPlacement) {
+    const actual = {};
+    for (const tag of tags) {
+      const placement = tag.match(/\bdata-placement="([^"]+)"/i)?.[1] ?? null;
+      if (placement === null) continue;
+      actual[placement] = (actual[placement] ?? 0) + 1;
+    }
+    for (const [placement, expected] of Object.entries(expectedByPlacement)) {
+      if ((actual[placement] ?? 0) !== expected) {
+        errors.push(
+          `${relative}: expected ${expected} purchase CTAs with placement "${placement}", found ${actual[placement] ?? 0} (per config/article-layout.mjs)`,
+        );
+      }
+    }
   }
   for (const [index, tag] of tags.entries()) {
     const href = tag.match(/\bhref="([^"]+)"/i)?.[1] ?? "";
@@ -470,15 +512,21 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     if (!ARTICLE_PAGE_PATTERN.test(relative)) continue;
     // 「関連する比較記事」の件数上限（config/article-layout.mjs 由来）
     errors.push(...validateRelatedArticleSection(relative, html));
-    // 記事ごとの期待 CTA 枚数は、記事メタデータの productCount（meta タグ経由）と
-    // config の ctaSets から導出する。
+    // 記事ごとの期待 CTA 枚数は、記事メタデータの productCount / midArticleCta
+    // （meta タグ経由）と config の ctaSets / midArticleSet から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
+    const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(
         relative,
         html,
-        expectedPurchaseCtasPerArticle(productCount),
+        expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT, {
+          midArticleCta,
+        }),
+        expectedPlacementCounts(productCount, ARTICLE_LAYOUT, {
+          midArticleCta,
+        }),
       ),
     );
   }
