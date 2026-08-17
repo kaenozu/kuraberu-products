@@ -3,6 +3,7 @@ import '../styles/global.css';
 import '../styles/accessibility.css';
 import {site} from '../config/site';
 import type {ArticleMetadata} from '../content/articles';
+import {contentTypeFor} from '../../config/article-layout.mjs';
 
 interface Props {
   title?: string;
@@ -129,6 +130,7 @@ const breadcrumbStructuredData = article
     {article?.modifiedAt && <meta property="og:updated_time" content={article.modifiedAt} />}
     {/* 商品数（品質ゲートが CTA 期待枚数を記事ごとに導出するための内部メタ） */}
     {article && <meta name="article:product-count" content={String(article.productCount)} />}
+    {article && <meta name="article:content-type" content={contentTypeFor(article.productCount)} />}
     {article?.midArticleCta && <meta name="article:mid-cta" content="true" />}
     <meta name="twitter:card" content={articleImage ? 'summary_large_image' : 'summary'} />
     {articleImage && <meta name="twitter:image" content={articleImage} />}

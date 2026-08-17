@@ -260,6 +260,34 @@ describe("article metadata", () => {
     expect(panasonicBabyMonitorArticle.productCount).toBe(1);
   });
 
+  it("marks the single-product article as a guide without a comparison section", () => {
+    const html = readFileSync(
+      "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
+      "utf8",
+    );
+    expect(html).toContain(
+      `<meta name="article:content-type" content="guide">`,
+    );
+    // 商品ガイドは比較セクション（ArticleComparisonV2）を持たない
+    expect(html).not.toContain("article-comparison-v2");
+    // 記事の meta 行にコンテンツタイプが表示される
+    expect(html).toContain("商品ガイド");
+    // 内部メモ（サンプル）と v3 で廃止した表示が残っていない
+    expect(html).not.toContain("サンプル");
+    expect(html).not.toContain("verification-summary");
+  });
+
+  it("marks a two-product article as a comparison with a comparison section", () => {
+    const html = readFileSync(
+      "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
+      "utf8",
+    );
+    expect(html).toContain(
+      `<meta name="article:content-type" content="comparison">`,
+    );
+    expect(html).toContain("article-comparison-v2");
+  });
+
   it("keeps ordinary pages as WebPage without article dates", () => {
     const html = readFileSync("dist/about/index.html", "utf8");
     const data = extractJsonLd(html);

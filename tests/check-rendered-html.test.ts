@@ -7,9 +7,11 @@ import {
   countRelatedArticleCards,
   countRenderedExternalEmbeds,
   findEmptySections,
+  readArticleContentType,
   readArticleMidCta,
   readArticleProductCount,
   validateArticleCtas,
+  validateArticleContentType,
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
@@ -357,7 +359,9 @@ describe("article product count meta", () => {
     mkdirSync(articlesDir, { recursive: true });
     writeFileSync(
       path.join(articlesDir, "index.html"),
-      validPage(`<meta name="article:product-count" content="1">${oneEndCta}`),
+      validPage(
+        `<meta name="article:product-count" content="1"><meta name="article:content-type" content="guide">${oneEndCta}`,
+      ),
     );
 
     expect(validateRenderedHtml({ distDirectory: directory }).errors).toEqual(
@@ -373,7 +377,7 @@ describe("article product count meta", () => {
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="2"><meta name="article:mid-cta" content="true">${fourCtas}`,
+        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true">${fourCtas}`,
       ),
     );
 
@@ -695,6 +699,87 @@ describe("top page category entries", () => {
     const html = categories(["キッチン・ごみ箱収納"]);
     expect(
       validateTopPageCategories(html, articlesIndex(["キッチン・ごみ箱収納"])),
+    ).toEqual([]);
+  });
+});
+
+describe("article content type", () => {
+  const guidePage = (withComparison = false) =>
+    `<main>${
+      withComparison
+        ? '<section class="article-comparison-v2" aria-label="商品の比較"></section>'
+        : ""
+    }</main>`;
+  const validPageWithMeta = (body: string, contentType: string) =>
+    `<meta name="article:product-count" content="1"><meta name="article:content-type" content="${contentType}">${body}`;
+
+  it("reads the content type meta", () => {
+    const errors: string[] = [];
+    expect(
+      readArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(), "guide"),
+        errors,
+      ),
+    ).toBe("guide");
+    expect(errors).toEqual([]);
+  });
+
+  it("reports a missing content type meta", () => {
+    const errors: string[] = [];
+    expect(
+      readArticleContentType(
+        "articles/guide/index.html",
+        "<main></main>",
+        errors,
+      ),
+    ).toBeNull();
+    expect(errors).toEqual([
+      "articles/guide/index.html: missing article:content-type meta",
+    ]);
+  });
+
+  it("accepts a guide with productCount 1 and no comparison section", () => {
+    expect(
+      validateArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(), "guide"),
+        1,
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a comparison section inside a guide", () => {
+    expect(
+      validateArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(true), "guide"),
+        1,
+      ),
+    ).toEqual([
+      "articles/guide/index.html: guide article renders a comparison section (article-comparison-v2)",
+    ]);
+  });
+
+  it("reports a content type that contradicts the product count", () => {
+    expect(
+      validateArticleContentType(
+        "articles/guide/index.html",
+        validPageWithMeta(guidePage(), "comparison"),
+        1,
+      ),
+    ).toEqual([
+      'articles/guide/index.html: article:content-type is "comparison" but productCount 1 expects "guide" (per config/article-layout.mjs)',
+    ]);
+  });
+
+  it("rejects a non-article page path", () => {
+    expect(
+      validateArticleContentType(
+        "index.html",
+        validPageWithMeta(guidePage(), "guide"),
+        1,
+      ),
     ).toEqual([]);
   });
 });
