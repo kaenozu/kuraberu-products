@@ -41,8 +41,16 @@ describe("article discovery", () => {
       "q=%E6%96%B0%E7%94%9F%E5%85%90&tag=%E7%B4%99%E3%81%8A%E3%82%80%E3%81%A4",
     );
   });
-  it("renders every article before JavaScript and exposes accessible filters", () => {
-    const html = readFileSync("dist/articles/index.html", "utf8");
+  it("renders paginated article lists before JavaScript and exposes accessible filters", () => {
+    const pageFiles = [
+      "dist/articles/index.html",
+      "dist/articles/page/2/index.html",
+      "dist/articles/page/3/index.html",
+      "dist/articles/page/4/index.html",
+      "dist/articles/page/5/index.html",
+    ];
+    const html = pageFiles.map((file) => readFileSync(file, "utf8")).join("\n");
+    const firstPage = readFileSync("dist/articles/index.html", "utf8");
     expect(html).toContain('role="search"');
     expect(html).toContain("data-article-card");
     expect(html).toContain(pampersNewbornArticle.path);
@@ -52,5 +60,8 @@ describe("article discovery", () => {
       '<script src="/scripts/article-discovery.js" defer></script>',
     );
     expect(html).not.toContain("data-discovery-form]");
+    expect(
+      (firstPage.match(/data-article-card/g) ?? []).length,
+    ).toBeLessThanOrEqual(12);
   });
 });
