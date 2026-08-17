@@ -278,6 +278,35 @@ export function validateArticleCtas(relative, html, expectedCount) {
   return errors;
 }
 
+// 記事末尾の「関連する比較記事」（同カテゴリ）のカード件数を数える。
+// セクションは RelatedArticles.astro が aria-labelledby="related-heading" で
+// 出力するため、その中にある .article-list-card を数える。
+export function countRelatedArticleCards(html) {
+  const section = html.match(
+    /<section\b[^>]*aria-labelledby="related-heading"[^>]*>([\s\S]*?)<\/section\s*>/i,
+  );
+  if (!section) return 0;
+  const cards = section[1].match(
+    /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*>/g,
+  );
+  return cards?.length ?? 0;
+}
+
+// 記事ページの「関連する比較記事」件数が config/article-layout.mjs の
+// relatedArticlesLimit を超えないことを検証する。
+// 件数の唯一の情報源は config（コンポーネントもここから slice する）。
+export function validateRelatedArticleSection(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const count = countRelatedArticleCards(html);
+  const limit = ARTICLE_LAYOUT.relatedArticlesLimit;
+  if (count > limit) {
+    return [
+      `${relative}: related comparison articles exceed the limit: found ${count}, maximum is ${limit} (per config/article-layout.mjs)`,
+    ];
+  }
+  return [];
+}
+
 // 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
 // 次のいずれかに該当する見出しを空セクションとみなす。
 // - 見出しの直後に別の見出し（h1〜h6）が続く
@@ -439,6 +468,8 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       }
     }
     if (!ARTICLE_PAGE_PATTERN.test(relative)) continue;
+    // 「関連する比較記事」の件数上限（config/article-layout.mjs 由来）
+    errors.push(...validateRelatedArticleSection(relative, html));
     // 記事ごとの期待 CTA 枚数は、記事メタデータの productCount（meta タグ経由）と
     // config の ctaSets から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
