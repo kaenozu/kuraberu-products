@@ -1,7 +1,5 @@
 // 記事検索のクライアント側絞り込み。
-// normalize の仕様（NFKC → toLocaleLowerCase('ja-JP') → trim → 空白正規化）は
-// src/lib/article-discovery.ts と同一に保つこと（仕様の単一情報源はTS側）。
-// 変更時は両方と tests/article-discovery.test.ts を同期させる。
+// 通常時は静的ページの12件表示、条件指定時は全公開記事の検索結果を表示する。
 (() => {
   const root = document.querySelector("[data-article-discovery]");
   if (!(root instanceof HTMLElement)) return;
@@ -10,11 +8,15 @@
   const tag = root.querySelector("[data-discovery-tag]");
   const count = root.querySelector("[data-discovery-count]");
   const empty = root.querySelector("[data-discovery-empty]");
-  const cards = [...root.querySelectorAll("[data-article-card]")];
+  const results = root.querySelector("[data-discovery-results]");
+  const pagination = root.querySelector(".article-pagination");
+  const indexNode = root.querySelector("[data-discovery-index]");
   if (
     !(query instanceof HTMLInputElement) ||
     !(category instanceof HTMLSelectElement) ||
-    !(tag instanceof HTMLSelectElement)
+    !(tag instanceof HTMLSelectElement) ||
+    !(results instanceof HTMLElement) ||
+    !(indexNode instanceof HTMLScriptElement)
   )
     return;
 
@@ -26,24 +28,95 @@
       .replace(/\s+/g, " ");
   const allowed = (select, value) =>
     [...select.options].some((option) => option.value === value) ? value : "";
+  const initialMarkup = results.innerHTML;
+  let index = [];
+  try {
+    index = JSON.parse(indexNode.textContent || "[]");
+  } catch {
+    index = [];
+  }
+
+  const articleSearchText = (article) =>
+    normalize(
+      [
+        article.headline,
+        article.summary,
+        article.category,
+        ...(article.tags || []),
+        ...(article.audiences || []),
+        ...(article.uses || []),
+      ].join(" "),
+    );
+
+  const createCard = (article) => {
+    const card = document.createElement("article");
+    card.className = `card article-list-card${article.imagePath ? " has-image" : ""}`;
+    card.dataset.articleCard = "";
+    card.dataset.search = articleSearchText(article);
+    card.dataset.category = article.category;
+    card.dataset.tags = JSON.stringify(article.tags || []);
+    if (article.imagePath) {
+      const image = document.createElement("img");
+      image.className = "card-thumb";
+      image.src = article.imagePath;
+      image.alt = article.headline;
+      image.width = 132;
+      image.height = 132;
+      image.loading = "lazy";
+      card.append(image);
+    }
+    const body = document.createElement("div");
+    body.className = "card-body";
+    const tagRow = document.createElement("span");
+    tagRow.className = "card-tag-row";
+    const tagLabel = document.createElement("span");
+    tagLabel.className = "tag";
+    tagLabel.textContent = article.category;
+    tagRow.append(tagLabel);
+    body.append(tagRow);
+    const heading = document.createElement("h2");
+    const link = document.createElement("a");
+    link.href = article.path;
+    link.textContent = article.headline;
+    heading.append(link);
+    body.append(heading);
+    const summary = document.createElement("p");
+    summary.className = "card-desc";
+    summary.textContent = article.summary;
+    body.append(summary);
+    const meta = document.createElement("p");
+    meta.className = "meta";
+    meta.textContent = `更新日 ${article.modifiedAt}`;
+    body.append(meta);
+    card.append(body);
+    return card;
+  };
+
   const initial = new URLSearchParams(location.search);
   query.value = (initial.get("q") || "").slice(0, 100);
   category.value = allowed(category, initial.get("category") || "");
   tag.value = allowed(tag, initial.get("tag") || "");
 
   const apply = () => {
-    const terms = normalize(query.value).split(" ").filter(Boolean);
+    const queryText = normalize(query.value);
+    const terms = queryText.split(" ").filter(Boolean);
+    const hasFilter = Boolean(queryText || category.value || tag.value);
     let visible = 0;
-    cards.forEach((card) => {
-      if (!(card instanceof HTMLElement)) return;
-      const tags = JSON.parse(card.dataset.tags || "[]");
-      const matches =
-        (!category.value || card.dataset.category === category.value) &&
-        (!tag.value || tags.includes(tag.value)) &&
-        terms.every((term) => (card.dataset.search || "").includes(term));
-      card.hidden = !matches;
-      if (matches) visible += 1;
-    });
+    if (hasFilter) {
+      const matches = index.filter(
+        (article) =>
+          (!category.value || article.category === category.value) &&
+          (!tag.value || (article.tags || []).includes(tag.value)) &&
+          terms.every((term) => articleSearchText(article).includes(term)),
+      );
+      results.replaceChildren(...matches.map(createCard));
+      visible = matches.length;
+      if (pagination instanceof HTMLElement) pagination.hidden = true;
+    } else {
+      results.innerHTML = initialMarkup;
+      visible = results.querySelectorAll("[data-article-card]").length;
+      if (pagination instanceof HTMLElement) pagination.hidden = false;
+    }
     if (count) count.textContent = visible + "件の記事";
     if (empty instanceof HTMLElement) empty.hidden = visible !== 0;
     const params = new URLSearchParams();

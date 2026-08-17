@@ -46,8 +46,6 @@ describe("article discovery", () => {
       "dist/articles/index.html",
       "dist/articles/page/2/index.html",
       "dist/articles/page/3/index.html",
-      "dist/articles/page/4/index.html",
-      "dist/articles/page/5/index.html",
     ];
     const html = pageFiles.map((file) => readFileSync(file, "utf8")).join("\n");
     const firstPage = readFileSync("dist/articles/index.html", "utf8");

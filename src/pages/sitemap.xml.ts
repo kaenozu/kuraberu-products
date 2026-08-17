@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { site } from "../config/site";
-import { articleMetadata } from "../content/articles";
+import { publicArticleMetadata } from "../content/articles";
 
 const publicPaths = [
   "/",
@@ -11,7 +11,7 @@ const publicPaths = [
   "/tools/product-finder/",
   "/tools/product-finder/baby-bottle/",
   "/tools/product-finder/diaper/",
-  ...articleMetadata.map((article) => article.path),
+  ...publicArticleMetadata.map((article) => article.path),
 ] as const;
 
 function escapeXml(value: string): string {
@@ -27,7 +27,9 @@ export const GET: APIRoute = () => {
   const urls = publicPaths
     .map((pathname) => {
       const location = new URL(pathname, `${site.url}/`).toString();
-      const article = articleMetadata.find((entry) => entry.path === pathname);
+      const article = publicArticleMetadata.find(
+        (entry) => entry.path === pathname,
+      );
       // 記事URLには更新日（modifiedAt）を lastmod として付与する。
       const lastmod = article
         ? `<lastmod>${escapeXml(article.modifiedAt)}</lastmod>`

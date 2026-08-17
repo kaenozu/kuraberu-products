@@ -1,5 +1,5 @@
 ---
-import { articleMetadata } from '../content/articles';
+import { publicArticleMetadata } from '../content/articles';
 import { selectRelatedArticles } from '../lib/related-articles';
 
 interface Props {
@@ -13,7 +13,7 @@ const { currentPath, currentCategory } = Astro.props;
 // （用途・タグ・検索意図・カテゴリの一致度）で選ぶ。
 // 上限は config/article-layout.mjs の relatedSelection が唯一の情報源。
 const { related, others } = selectRelatedArticles(
-  articleMetadata,
+  publicArticleMetadata,
   currentPath,
   currentCategory,
 );
