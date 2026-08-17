@@ -12,6 +12,7 @@ import {
   readArticleProductCount,
   validateArticleCtas,
   validateArticleContentType,
+  validateArticleCardThumbnails,
   validateSourceToggle,
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
@@ -821,5 +822,67 @@ describe("source-toggle fold (根拠・確認先 column)", () => {
 
   it("ignores non-article pages", () => {
     expect(validateSourceToggle("index.html", sourceTable(false))).toEqual([]);
+  });
+});
+
+describe("article card thumbnails (image or text tile)", () => {
+  const card = (attrs: string, inner: string) =>
+    `<article class="card article-list-card" ${attrs}>${inner}<div class="card-body"><h2><a href="/articles/x/">タイトル</a></h2></div></article>`;
+  const imageCard = card(
+    'data-content-type="comparison" data-thumb="image"',
+    '<img class="card-thumb" src="/products/x.jpg" alt="タイトル">',
+  );
+  const tileCard = card(
+    'data-content-type="comparison" data-thumb="tile"',
+    '<div class="card-tile" role="img" aria-label="商品比較：育児用品"><span class="card-tile-label">育児用品</span></div>',
+  );
+
+  it("accepts an image thumbnail card", () => {
+    expect(validateArticleCardThumbnails("index.html", imageCard)).toEqual([]);
+  });
+
+  it("accepts a text-tile card", () => {
+    expect(validateArticleCardThumbnails("index.html", tileCard)).toEqual([]);
+  });
+
+  it("rejects a card without data-thumb", () => {
+    const html = card('data-content-type="comparison"', "");
+    expect(validateArticleCardThumbnails("index.html", html)).toEqual([
+      'index.html: article card must declare data-thumb="image|tile", found null',
+    ]);
+  });
+
+  it("rejects data-thumb=image without an img", () => {
+    const html = card('data-content-type="comparison" data-thumb="image"', "");
+    expect(validateArticleCardThumbnails("index.html", html)).toEqual([
+      'index.html: data-thumb="image" card must render exactly one img.card-thumb (img=false, tile=false)',
+    ]);
+  });
+
+  it("rejects a tile card with an empty label", () => {
+    const html = card(
+      'data-content-type="comparison" data-thumb="tile"',
+      '<div class="card-tile" role="img"><span class="card-tile-label"> </span></div>',
+    );
+    expect(validateArticleCardThumbnails("index.html", html)).toEqual([
+      'index.html: data-thumb="tile" card must render a card-tile with a non-empty label (img=false, tile=true, label="")',
+    ]);
+  });
+
+  it("ignores compact cards without data-content-type (related/memo/tool)", () => {
+    const relatedCard =
+      '<article class="card article-list-card"><span class="tag">育児用品</span><h3><a href="/articles/x/">タイトル</a></h3><p>概要</p></article>';
+    expect(
+      validateArticleCardThumbnails("articles/x/index.html", relatedCard),
+    ).toEqual([]);
+  });
+
+  it("ignores pages without article cards", () => {
+    expect(
+      validateArticleCardThumbnails(
+        "about/index.html",
+        "<main><p>hi</p></main>",
+      ),
+    ).toEqual([]);
   });
 });

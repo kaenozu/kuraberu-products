@@ -256,6 +256,55 @@ export function validateArticleContentType(relative, html, productCount) {
   return errors;
 }
 
+// 記事カード（ArticleCard.astro）は常に 132px のサムネイル枠を持つ。
+// 画像あり = <img class="card-thumb">、画像なし = カテゴリ名のテキストタイル
+// （<div class="card-tile">）。data-thumb 属性と実際の要素を照合し、
+// サムネイル欠落・二重表示を fail-closed で検出する。
+// 対象は ArticleCard.astro が出力するカード（data-content-type を持つ）のみ。
+// 関連記事（RelatedArticles.astro）・比較メモ・商品診断カードは別コンポーネントのため対象外。
+function collectArticleCards(html) {
+  const cards = [];
+  for (const match of html.matchAll(
+    /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*>[\s\S]*?<\/article>/gi,
+  )) {
+    const card = match[0];
+    if (!/\bdata-content-type="(?:guide|comparison)"/.test(card)) continue;
+    cards.push(card);
+  }
+  return cards;
+}
+
+export function validateArticleCardThumbnails(relative, html) {
+  const errors = [];
+  for (const card of collectArticleCards(html)) {
+    const thumb = card.match(/\bdata-thumb="([^"]+)"/)?.[1] ?? null;
+    const hasImg = /<img\b[^>]*class="[^"]*\bcard-thumb\b[^"]*"/.test(card);
+    const tileMatch = card.match(
+      /<div\b[^>]*class="[^"]*\bcard-tile\b[^"]*"[^>]*>[\s\S]*?<span\b[^>]*class="[^"]*\bcard-tile-label\b[^"]*"[^>]*>([\s\S]*?)<\/span>[\s\S]*?<\/div>/,
+    );
+    const hasTile = tileMatch !== null;
+    const tileLabel = tileMatch?.[1]?.trim() ?? "";
+
+    if (thumb !== "image" && thumb !== "tile") {
+      errors.push(
+        `${relative}: article card must declare data-thumb="image|tile", found ${JSON.stringify(thumb)}`,
+      );
+      continue;
+    }
+    if (thumb === "image" && (!hasImg || hasTile)) {
+      errors.push(
+        `${relative}: data-thumb="image" card must render exactly one img.card-thumb (img=${hasImg}, tile=${hasTile})`,
+      );
+    }
+    if (thumb === "tile" && (hasImg || !hasTile || tileLabel.length === 0)) {
+      errors.push(
+        `${relative}: data-thumb="tile" card must render a card-tile with a non-empty label (img=${hasImg}, tile=${hasTile}, label=${JSON.stringify(tileLabel)})`,
+      );
+    }
+  }
+  return errors;
+}
+
 // 「根拠・確認先」列（4列目）を持つ比較表は、スマホでは
 // <details class="source-toggle"> で折りたたむ（CSS-only、docs/article-layout-v3-2026-08.md）。
 // 根拠列テーブルを描画する記事にはトグルが必須、逆にトグルのみ存在して
@@ -652,6 +701,8 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
         `${file}: empty section: <h${section.level}>${section.heading}</h${section.level}>`,
       );
     }
+
+    errors.push(...validateArticleCardThumbnails(file, html));
   }
 
   // Content leakage guard: article-specific copy must never leak into other pages.
