@@ -2,7 +2,7 @@
 import {isAllowedRakutenUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {fetchRakutenProducts, selectRakutenProduct, type RakutenSelectionOptions} from '../lib/rakuten';
-const {href,label,productId,placement,imagePath,subLabel} = Astro.props;
+const {href,label,productId,placement,imagePath,subLabel,searchQuery,requiredTerms} = Astro.props;
 
 type ProductId =
   | 'pampers-premium-newborn'
@@ -123,11 +123,20 @@ const productQueries: Record<ProductId, ProductQuery> = {
 } as const;
 
 const directHref = typeof href === 'string' && isAllowedRakutenUrl(href) ? href : undefined;
-const query = productQueries[productId as ProductId];
-const generated = !directHref && query
+const genericQuery = typeof searchQuery === 'string' && searchQuery.trim()
+  ? {
+      keyword: searchQuery,
+      requiredTerms: Array.isArray(requiredTerms) && requiredTerms.length > 0
+        ? requiredTerms
+        : searchQuery.split(/\s+/).filter(Boolean),
+      selection: {},
+    }
+  : undefined;
+const query = productQueries[productId as ProductId] ?? genericQuery;
+const generated = query
   ? selectRakutenProduct(await fetchRakutenProducts(query.keyword), query.requiredTerms, query.selection)?.affiliateUrl
   : undefined;
-const resolvedHref = directHref ?? generated;
+const resolvedHref = generated ?? directHref;
 const valid = isAllowedRakutenUrl(resolvedHref);
 const isAffiliateHref = Boolean(resolvedHref && /^https:\/\/(?:[^./]+\.)?(?:hb\.afl\.rakuten\.co\.jp|r10\.to|a\.r10\.to)(?:\/|$)/i.test(resolvedHref));
 const ctaRel = isAffiliateHref

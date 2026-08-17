@@ -37,6 +37,7 @@ import {
   thermosKfm020VsKfi020Article,
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
+  additionalCommercialArticles,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -129,6 +130,7 @@ describe("article metadata", () => {
       thermosKfm020VsKfi020Article,
       tigerMtaJ050GuideArticle,
       panasonicEhNa9mVsEhNa7mArticle,
+      ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
     expect(
@@ -157,7 +159,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(32);
+    ).toHaveLength(56);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle]);

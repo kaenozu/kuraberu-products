@@ -15,6 +15,11 @@ function purchaseCardBlocks(source: string): string[] {
   );
 }
 
+const commercialArticleTemplate = readFileSync(
+  "src/components/CommercialArticlePage.astro",
+  "utf8",
+);
+
 describe("article CTA layout vs metadata productCount", () => {
   it("keeps per-placement PurchaseCard counts consistent with productCount", () => {
     for (const article of articleMetadata) {
@@ -22,7 +27,11 @@ describe("article CTA layout vs metadata productCount", () => {
         join("src/pages/articles", article.id, "index.astro"),
         "utf8",
       );
-      const blocks = purchaseCardBlocks(source);
+      const blocks = purchaseCardBlocks(
+        source.includes("CommercialArticlePage")
+          ? commercialArticleTemplate
+          : source,
+      );
 
       const counts = new Map<string, number>();
       for (const block of blocks) {
@@ -61,7 +70,11 @@ describe("article CTA layout vs metadata productCount", () => {
         "utf8",
       );
       expect(
-        purchaseCardBlocks(source).length,
+        purchaseCardBlocks(
+          source.includes("CommercialArticlePage")
+            ? commercialArticleTemplate
+            : source,
+        ).length,
         `${article.id}: must render at least one PurchaseCard`,
       ).toBeGreaterThan(0);
     }
