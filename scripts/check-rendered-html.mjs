@@ -320,7 +320,7 @@ export function validateArticleCtas(
   return errors;
 }
 
-// 記事末尾の「関連する比較記事」（同カテゴリ）のカード件数を数える。
+// 記事末尾の「関連する比較記事」のカード件数を数える。
 // セクションは RelatedArticles.astro が aria-labelledby="related-heading" で
 // 出力するため、その中にある .article-list-card を数える。
 export function countRelatedArticleCards(html) {
@@ -334,19 +334,39 @@ export function countRelatedArticleCards(html) {
   return cards?.length ?? 0;
 }
 
-// 記事ページの「関連する比較記事」件数が config/article-layout.mjs の
-// relatedArticlesLimit を超えないことを検証する。
+// 記事末尾の「ほかの比較記事」のリンク件数を数える。
+// セクションは RelatedArticles.astro が aria-labelledby="others-heading" で
+// 出力するため、その中にある .related-links の <li> を数える。
+export function countOtherArticleLinks(html) {
+  const section = html.match(
+    /<section\b[^>]*aria-labelledby="others-heading"[^>]*>([\s\S]*?)<\/section\s*>/i,
+  );
+  if (!section) return 0;
+  const items = section[1].match(/<li\b[^>]*>/gi);
+  return items?.length ?? 0;
+}
+
+// 記事ページの関連記事セクションが config/article-layout.mjs の
+// relatedSelection（limit / othersLimit）を超えないことを検証する。
 // 件数の唯一の情報源は config（コンポーネントもここから slice する）。
 export function validateRelatedArticleSection(relative, html) {
   if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
-  const count = countRelatedArticleCards(html);
-  const limit = ARTICLE_LAYOUT.relatedArticlesLimit;
-  if (count > limit) {
-    return [
-      `${relative}: related comparison articles exceed the limit: found ${count}, maximum is ${limit} (per config/article-layout.mjs)`,
-    ];
+  const errors = [];
+  const relatedCount = countRelatedArticleCards(html);
+  const relatedLimit = ARTICLE_LAYOUT.relatedSelection.limit;
+  if (relatedCount > relatedLimit) {
+    errors.push(
+      `${relative}: related comparison articles exceed the limit: found ${relatedCount}, maximum is ${relatedLimit} (per config/article-layout.mjs)`,
+    );
   }
-  return [];
+  const othersCount = countOtherArticleLinks(html);
+  const othersLimit = ARTICLE_LAYOUT.relatedSelection.othersLimit;
+  if (othersCount > othersLimit) {
+    errors.push(
+      `${relative}: other comparison articles exceed the limit: found ${othersCount}, maximum is ${othersLimit} (per config/article-layout.mjs)`,
+    );
+  }
+  return errors;
 }
 
 // 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。

@@ -23,10 +23,37 @@ export const ARTICLE_LAYOUT = {
   // 長文記事のみ許容する途中 CTA セット（同じく商品1つにつき1枚）。
   // 記事メタデータの midArticleCta: true が付いた記事にだけ適用される。
   midArticleSet: { placement: "after-decision", cardsPerProduct: 1 },
-  // 記事末尾の「関連する比較記事」（同カテゴリ）の最大件数。
-  // 同カテゴリ全件を出すと KX-HC705 のような記事で育児用品10件超が並ぶため、
-  // 関連性の高い同カテゴリでも最大この件数に抑える。
-  relatedArticlesLimit: 4,
+  // 記事末尾の関連記事の選定ルール（src/lib/related-articles.ts が実装）。
+  // 同カテゴリの先頭 n 件ではなく、関連性スコア（用途・タグ・検索意図・カテゴリの一致度）で選ぶ。
+  // - related  : スコア >= minScore の上位 limit 件を「関連する比較記事」として表示
+  // - others   : 残りをスコア順で othersLimit 件「ほかの比較記事」として表示
+  // - brandTags: ブランド名タグ（パナソニック 等）は一致しても brandTagWeight の弱信号。
+  //   ブランド同一性だけで「関連」と表示せず、製品タイプ（紙おむつ/水筒 等）を優先する。
+  relatedSelection: {
+    limit: 4,
+    othersLimit: 3,
+    minScore: 1,
+    weights: { tag: 3, use: 2, audience: 2, category: 1 },
+    brandTagWeight: 1,
+    brandTags: [
+      "パンパース",
+      "メリーズ",
+      "ムーニー",
+      "ピジョン",
+      "ベビービョルン",
+      "アップリカ",
+      "コンビ",
+      "タイガー",
+      "パナソニック",
+      "ティファール",
+      "シャープ",
+      "サーモス",
+      "山崎実業",
+      "山崎産業",
+      "象印",
+      "キングジム",
+    ],
+  },
 };
 
 // 記事ごとに期待する購入 CTA 総数を、記事メタデータの商品数（productCount）と
