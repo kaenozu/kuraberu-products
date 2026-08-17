@@ -10,6 +10,8 @@ export interface ArticleLayout {
   diagnosisPlacement: string;
   defaultPlacement: string;
   ctaSets: readonly ArticleCtaSet[];
+  /** 記事末尾の「関連する比較記事」（同カテゴリ）の最大件数 */
+  relatedArticlesLimit: number;
 }
 
 export const ARTICLE_LAYOUT: ArticleLayout;

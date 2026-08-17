@@ -3,14 +3,19 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  countRelatedArticleCards,
   countRenderedExternalEmbeds,
   findEmptySections,
   readArticleProductCount,
   validateArticleCtas,
+  validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
 } from "../scripts/check-rendered-html.mjs";
-import { expectedPurchaseCtasPerArticle } from "../config/article-layout.mjs";
+import {
+  ARTICLE_LAYOUT,
+  expectedPurchaseCtasPerArticle,
+} from "../config/article-layout.mjs";
 
 const fixtureDirectories: string[] = [];
 
@@ -142,6 +147,58 @@ describe("rendered article CTA audit", () => {
         expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([]);
+  });
+});
+
+describe("related comparison article limit", () => {
+  const card = (path: string) =>
+    `<article class="card article-list-card"><h3><a href="${path}">見出し</a></h3><p>概要</p></article>`;
+  const relatedSection = (cards: string) =>
+    `<section class="related-articles section wrap" aria-labelledby="related-heading"><h2 id="related-heading">関連する比較記事</h2><div class="article-list">${cards}</div></section>`;
+
+  it("uses the layout config as the source of truth", () => {
+    expect(ARTICLE_LAYOUT.relatedArticlesLimit).toBeGreaterThanOrEqual(3);
+    expect(ARTICLE_LAYOUT.relatedArticlesLimit).toBeLessThanOrEqual(4);
+  });
+
+  it("counts only cards inside the related section", () => {
+    const html =
+      `<section class="related-articles section wrap" aria-labelledby="others-heading">${card("/a/")}</section>` +
+      relatedSection(card("/b/") + card("/c/"));
+    expect(countRelatedArticleCards(html)).toBe(2);
+  });
+
+  it("returns zero when no related section is rendered", () => {
+    expect(countRelatedArticleCards(validPage(""))).toBe(0);
+  });
+
+  it("accepts up to the configured limit on an article page", () => {
+    const html = validPage(
+      relatedSection(card("/a/").repeat(ARTICLE_LAYOUT.relatedArticlesLimit)),
+    );
+    expect(
+      validateRelatedArticleSection("articles/example/index.html", html),
+    ).toEqual([]);
+  });
+
+  it("rejects more than the configured limit on an article page", () => {
+    const html = validPage(
+      relatedSection(
+        card("/a/").repeat(ARTICLE_LAYOUT.relatedArticlesLimit + 1),
+      ),
+    );
+    expect(
+      validateRelatedArticleSection("articles/example/index.html", html),
+    ).toEqual([
+      `articles/example/index.html: related comparison articles exceed the limit: found ${
+        ARTICLE_LAYOUT.relatedArticlesLimit + 1
+      }, maximum is ${ARTICLE_LAYOUT.relatedArticlesLimit} (per config/article-layout.mjs)`,
+    ]);
+  });
+
+  it("ignores non-article pages", () => {
+    const html = validPage(relatedSection(card("/a/").repeat(10)));
+    expect(validateRelatedArticleSection("about/index.html", html)).toEqual([]);
   });
 });
 

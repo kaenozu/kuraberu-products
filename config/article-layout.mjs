@@ -22,6 +22,10 @@ export const ARTICLE_LAYOUT = {
     { placement: "after-decision", cardsPerProduct: 1 },
     { placement: "article-end", cardsPerProduct: 1 },
   ],
+  // 記事末尾の「関連する比較記事」（同カテゴリ）の最大件数。
+  // 同カテゴリ全件を出すと KX-HC705 のような記事で育児用品10件超が並ぶため、
+  // 関連性の高い同カテゴリでも最大この件数に抑える。
+  relatedArticlesLimit: 4,
 };
 
 // 記事ごとに期待する購入 CTA 総数を、記事メタデータの商品数（productCount）と
