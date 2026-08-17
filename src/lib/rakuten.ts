@@ -5,6 +5,7 @@ export type RakutenProduct = {
   name: string;
   url: string;
   affiliateUrl?: string;
+  imageUrl?: string;
   price: number;
 };
 
@@ -112,6 +113,13 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
       const affiliateUrl = item.affiliateUrl
         ? String(item.affiliateUrl)
         : undefined;
+      const imageEntries = Array.isArray(item.mediumImageUrls)
+        ? item.mediumImageUrls
+        : Array.isArray(item.smallImageUrls)
+          ? item.smallImageUrls
+          : [];
+      const firstImage = asRecord(imageEntries[0]);
+      const imageUrl = String(firstImage.imageUrl ?? "");
 
       return {
         id: String(item.itemCode ?? ""),
@@ -121,6 +129,9 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
           affiliateUrl && isAllowedRakutenUrl(affiliateUrl)
             ? affiliateUrl
             : undefined,
+        imageUrl: /^https:\/\/image\.rakuten\.co\.jp\//i.test(imageUrl)
+          ? imageUrl
+          : undefined,
         price: Number(item.itemPrice ?? 0),
       } satisfies RakutenProduct;
     })
