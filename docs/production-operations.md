@@ -77,6 +77,39 @@ Checks include:
 - article JSON-LD parses and contains article URL and dates;
 - Rakuten CTAs exist only on the approved host allowlist.
 
+**Confirm the attempts history after a production run.** The deploy workflow runs this same verification with the script defaults pinned explicitly (`-MaxAttempts 4 -RetryDelaySeconds 15`) after a 20-second propagation wait. Each attempt is one full unit of checks; the script retries only while the edge is still converging and records the full history so a stale-edge PASS is never confused with a real failure. The retry never weakens the gate: if the last attempt still fails, the step exits 1 and the deployment must be treated as failed.
+
+To confirm the attempts history was recorded correctly from the actual run:
+
+1. Open the completed run's log and locate the `Verify public deployment` step (e.g. `gh run view --repo kaenozu/kuraberu-products <run-id> --log | grep -E 'Attempt [0-9]/4|Result:'`). Expected lines: `Attempt 1/4: PASS` (edge already fresh), or `Attempt 1/4: BLOCKER` → `Waiting 15s before re-verifying (CDN edge propagation)...` → `Attempt 2/4: PASS` (stale→fresh convergence), ending with `Result: PASS`.
+2. The `Production deployment` step summary in the Actions UI includes the report.md line `- Attempts: N (PASS, ...)`; the sequence must end in `PASS`.
+3. For machine-readable evidence, re-run the verification against the deployed site with a local output root:
+
+   ```powershell
+   pwsh ./tools/production/Invoke-PostDeployVerification.ps1 `
+     -BaseUrl https://kuraberu-products.pages.dev `
+     -ExpectedCommitSha <deployed-sha> `
+     -OutputRoot <local-dir>
+   ```
+
+   Open `<local-dir>/post-deploy-<timestamp>/report.json` and confirm:
+
+   - `result` is `PASS`;
+   - `attempts` is an integer ≥ 1 and ≤ 4, equal to the length of `resultsPerAttempt`;
+   - `resultsPerAttempt` contains only `PASS`/`BLOCKER` and its last entry is `PASS`;
+   - the final attempt's `checks` are all `PASS`, including `Deployed commit matches expected SHA` with the expected SHA;
+   - `expectedCommitSha` matches the deployed SHA and `secretsIncluded` is `false`.
+
+   The deploy workflow uploads the run's own `report.json` files (`production-build-*/report.json` and `post-deploy-*/report.json`) as the `acceptance-reports-<run-id>` artifact — even when verification ends BLOCKER — so the machine-readable evidence can be downloaded after the run:
+
+   ```bash
+   gh run download <run-id> --repo kaenozu/kuraberu-products -n acceptance-reports-<run-id>
+   ```
+
+   The artifact name is printed in the `Production deployment` step summary. The local re-run above remains the way to produce a report from your own host (e.g. against a rolled-back deployment), and the step logs and summary are the run's own non-downloadable evidence.
+
+   Interpretation: `attempts=1` means the edge already served the exact HEAD; `attempts>1` with a trailing `PASS` is normal CDN convergence; any last result of `BLOCKER` means the deployment is not verified and the Rollback procedure applies.
+
 ## 5. X announcement drafts
 
 The production deploy workflow generates X (Twitter) announcement drafts for newly published articles after public verification succeeds. It never posts: drafts are written to `.acceptance/x-announcements-*/report.md` and included in the workflow summary for human review, then posted manually from `@kuraberu_biyori` (or via the X API with credentials that are not stored in CI).

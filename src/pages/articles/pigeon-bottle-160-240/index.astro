@@ -6,6 +6,7 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
+import DiagnosisCta from '../../../components/DiagnosisCta.astro';
 import {pigeonBottleSizeArticle as articleMetadata} from '../../../content/articles';
 import {isContentStale} from '../../../lib/content-freshness';
 import type {
@@ -127,6 +128,8 @@ const differenceRows: DifferenceRow[] = [
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
+
+    <DiagnosisCta />
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">

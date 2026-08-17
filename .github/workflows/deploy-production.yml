@@ -102,6 +102,20 @@ jobs:
             echo
             echo '- Expected SHA: `${{ inputs.expected_sha }}`'
             echo '- Site: `${{ vars.PUBLIC_SITE_URL }}`'
+            echo '- Artifact: `acceptance-reports-${{ github.run_id }}`'
             echo '- Secret values are not printed.'
             find .acceptance -name report.md -type f -print -exec cat {} \; 2>/dev/null || true
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload acceptance reports
+        # Preserve the run's machine-readable evidence (build and post-deploy
+        # verification report.json) even when the verification ends BLOCKER.
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: acceptance-reports-${{ github.run_id }}
+          path: |
+            .acceptance/production-build-*/report.json
+            .acceptance/post-deploy-*/report.json
+          if-no-files-found: warn
+          retention-days: 90

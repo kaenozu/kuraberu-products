@@ -12,6 +12,8 @@ Astro + TypeScript で構築した、日本向けの2商品比較サイトです
 
 開発・レビュー規約は [CONTRIBUTING.md](./CONTRIBUTING.md)、AIエージェントと並行作業の安全規約は [AGENTS.md](./AGENTS.md) を参照してください。
 
+商品選択診断（/tools/product-finder/）の設計・メンテナンス手順は [docs/product-diagnosis.md](./docs/product-diagnosis.md) を参照してください。
+
 ## 開発
 
 ### 必要環境

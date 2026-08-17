@@ -18,6 +18,7 @@ interface AnalyticsEvent {
   productId?: string;
   placement?: string;
   path?: string;
+  rank?: string;
 }
 
 function isValidProductId(value: string): boolean {
@@ -71,9 +72,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "unknown event" }, 400);
   }
 
-  // 配置は config の許可リストで検証（レイアウト変更時は config だけを直す）
+  // 配置は config の許可リストで検証（レイアウト変更時は config だけを直す）。
+  // 診断結果カード（placement=diagnosis-result）も、記事と同じイベント種別で受け付ける。
   const placement = typeof body.placement === "string" ? body.placement : "";
-  if (!ARTICLE_LAYOUT.placements.includes(placement)) {
+  const allowedPlacements = [
+    ...ARTICLE_LAYOUT.placements,
+    ARTICLE_LAYOUT.diagnosisPlacement,
+  ];
+  if (!allowedPlacements.includes(placement)) {
     return json({ ok: false, error: "invalid placement" }, 400);
   }
 
@@ -81,6 +87,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (productId && !isValidProductId(productId)) {
     return json({ ok: false, error: "invalid product id" }, 400);
   }
+
+  // 診断結果の順位（rank）は任意。無ければ保存しない。
+  const rank =
+    typeof body.rank === "string" && /^[1-9]\d{0,2}$/.test(body.rank)
+      ? body.rank
+      : undefined;
 
   const path = typeof body.path === "string" ? body.path : "";
   if (path && !isValidPath(path)) {
@@ -96,6 +108,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       event,
       ...(productId ? { productId } : {}),
       placement,
+      ...(rank ? { rank } : {}),
       ...(path ? { path } : {}),
       at: new Date().toISOString(),
     });
