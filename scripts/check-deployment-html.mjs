@@ -101,7 +101,9 @@ for (const file of htmlFiles) {
   const pathname = pathnameFor(file);
   const is404 = path.relative("dist", file) === "404.html";
   const isArticle =
-    pathname.startsWith("/articles/") && pathname !== "/articles/";
+    pathname.startsWith("/articles/") &&
+    pathname !== "/articles/" &&
+    !pathname.startsWith("/articles/page/");
   const isPrivateMemo = pathname === "/memo/";
   const expectedRobots =
     is404 || isPrivateMemo ? "noindex,nofollow" : expectedDefaultRobots;
