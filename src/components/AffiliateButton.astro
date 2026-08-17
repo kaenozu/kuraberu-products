@@ -136,7 +136,16 @@ const query = productQueries[productId as ProductId] ?? genericQuery;
 const generated = query
   ? selectRakutenProduct(await fetchRakutenProducts(query.keyword), query.requiredTerms, query.selection)?.affiliateUrl
   : undefined;
-const resolvedHref = generated ?? directHref;
+const RAKUTEN_AFFILIATE_REDIRECT = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=';
+const toAffiliateHref = (value: string | undefined) => {
+  if (!value) return undefined;
+  if (/^https:\/\/(?:[^./]+\.)?(?:hb\.afl\.rakuten\.co\.jp|r10\.to|a\.r10\.to)(?:\/|$)/i.test(value)) return value;
+  if (/^https:\/\/(?:search\.|www\.)?rakuten\.co\.jp\//i.test(value)) {
+    return `${RAKUTEN_AFFILIATE_REDIRECT}${encodeURIComponent(value)}&link_type=text`;
+  }
+  return value;
+};
+const resolvedHref = toAffiliateHref(generated ?? directHref);
 const valid = isAllowedRakutenUrl(resolvedHref);
 const isAffiliateHref = Boolean(resolvedHref && /^https:\/\/(?:[^./]+\.)?(?:hb\.afl\.rakuten\.co\.jp|r10\.to|a\.r10\.to)(?:\/|$)/i.test(resolvedHref));
 const ctaRel = isAffiliateHref
