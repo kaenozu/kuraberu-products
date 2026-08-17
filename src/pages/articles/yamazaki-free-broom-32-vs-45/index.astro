@@ -7,7 +7,6 @@ import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
 import {yamazakiFreeBroomArticle as articleMetadata} from '../../../content/articles'
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
-
 const shortOfficial = 'https://product.yamazaki-sangyo.co.jp/product/209613'
 const longOfficial = 'https://product.yamazaki-sangyo.co.jp/product/209620'
 const shortSearch = 'https://a.r10.to/hP00rN'
@@ -38,13 +37,11 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">山崎産業のJS自由箒32と45を、メーカー公式ページで確認できる商品名・サイズ・重量・材質の範囲で比較します。</p>
     <p>幅と重量に差があるため、掃く範囲を優先するか、持ち運びやすさを優先するかで確認するポイントが変わります。価格・在庫は販売先でご確認ください。</p>
     <ArticleComparisonV2 left={{brand: '山崎産業 JS自由箒', line: '32（BR952-032J-MB）', tagline: '軽さ・扱いやすさなら', image: shortImage, imageAlt: '山崎産業 JS自由箒32 BR952-032J-MB', imageWidth: 821, imageHeight: 2547, officialHref: shortOfficial, guidePoints: [shortAudience]}} right={{brand: '山崎産業 JS自由箒', line: '45（BR952-045J-MB）', tagline: '幅広く掃くなら', image: longImage, imageAlt: '山崎産業 JS自由箒45 BR952-045J-MB', imageWidth: 937, imageHeight: 2584, officialHref: longOfficial, guidePoints: [longAudience]}} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} />
-
     <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">BR952-032J-MB</th><th scope="col">BR952-045J-MB</th><th scope="col">根拠</th></tr></thead><tbody><tr><th scope="row">使用サイズ</th><td>幅330×全長1320mm</td><td>幅460×全長1320mm</td><td>各公式ページ</td></tr><tr><th scope="row">個装ケースサイズ</th><td>幅92×奥行44×高さ445mm</td><td>幅92×奥行44×高さ462mm</td><td>各公式ページ</td></tr><tr><th scope="row">材質</th><td>ハンドル：アルミパイプ（φ約22mm）、甲：PP、毛：PP・再生PET・馬毛・除電材</td><td>ハンドル：アルミパイプ（φ約22mm）、甲：PP、毛：PP・再生PET・馬毛・除電材</td><td>各公式ページ</td></tr><tr><th scope="row">重量</th><td>約320g</td><td>約370g</td><td>各公式ページ</td></tr></tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
     <h2 id="official">公式情報</h2><p>仕様の根拠は、山崎産業公式の商品ページで2026年8月16日に確認しました。両製品とも公式ページに「防災備蓄保管に適した省スペースパッケージで持ち運びにも最適」「ネジ込み式 組立ハンドル」と記載されています。</p><div class="source-links"><a class="card-link" href={shortOfficial} target="_blank" rel="noopener noreferrer">BR952-032J-MB 公式商品ページ →</a><a class="card-link" href={longOfficial} target="_blank" rel="noopener noreferrer">BR952-045J-MB 公式商品ページ →</a></div>
     <ArticleSocialProof query="山崎産業 JS自由箒 BR952-032J-MB BR952-045J-MB" checkedAt="2026-08-16" hasPosts={false} />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <div class="purchase-cards"><PurchaseCard name="山崎産業 JS自由箒32 BR952-032J-MB" audience={shortAudience} href={shortSearch} imagePath={shortImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="山崎産業 JS自由箒45 BR952-045J-MB" audience={longAudience} href={longSearch} imagePath={longImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={shortOfficial} target="_blank" rel="noopener noreferrer">山崎産業公式：JS自由箒32 BR952-032J-MB</a>（2026-08-16確認）</li><li><a href={longOfficial} target="_blank" rel="noopener noreferrer">山崎産業公式：JS自由箒45 BR952-045J-MB</a>（2026-08-16確認）</li></ul>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p><div class="verification-summary" aria-label="記事情報の確認状況"><p>公式商品情報確認済み：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p></div>
   </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>

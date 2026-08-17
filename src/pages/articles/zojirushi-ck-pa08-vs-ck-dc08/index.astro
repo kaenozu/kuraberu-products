@@ -7,8 +7,6 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 import {zojirushiElectricKettleArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
-
 const paOfficial = 'https://www.zojirushi.co.jp/syohin/stan/product/electric_kettle/ck-pa.html';
 const dcOfficial = 'https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/';
 const paRakutenUrl = 'https://a.r10.to/hPwhA2';
@@ -31,9 +29,6 @@ const faqEntries = [
     answer: 'CK-DC08には、公式に「注ぎ口ほこりブロック」が案内されています。CK-PA08にも広口内容器や軽くはずせるふたが案内されていますが、今回確認した公式ページでは同じ名称の注ぎ口ほこりブロックは確認できませんでした。',
   },
 ] as const;
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
 const keyDiffRows: KeyDiffRow[] = [
   {
     label: '本体の軽さ',
@@ -77,7 +72,6 @@ const keyDiffRows: KeyDiffRow[] = [
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">象印の0.8L電気ケトル「CK-PA08」と「CK-DC08」を比較します。どちらも1300Wで同じ容量・沸とう時間ですが、公式に案内されている安全設計やほこり対策、ふたと手入れの情報に違いがあります。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">主な比較ポイント</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
-
     <details class="fold-section" id="specs">
       <summary>詳細仕様（全部の数値を見る）</summary>
       <div class="table-scroll">
@@ -98,12 +92,10 @@ const keyDiffRows: KeyDiffRow[] = [
       <p class="source-links"><a class="card-link" href={paOfficial} target="_blank" rel="noopener noreferrer">象印 CK-PA08 公式ページ →</a><a class="card-link" href={dcOfficial} target="_blank" rel="noopener noreferrer">象印 CK-DC08 公式ページ →</a></p>
     </details>
         <ArticleSocialProof query="象印 CK-PA08 CK-DC08 電気ケトル" checkedAt="2026-08-14" hasPosts={false} />
-
 <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
     </div>
-
     <div class="purchase-cards">
       <PurchaseCard name="象印 CK-PA08" audience="ふたの外しやすさ・広口内容器を重視する人向け" href={paRakutenUrl} imagePath={articleMetadata.imagePath} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
       <PurchaseCard name="象印 CK-DC08" audience="安全設計・ほこり対策を重視する人向け" href={dcRakutenUrl} imagePath="/products/zojirushi-ck-dc08.png" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
@@ -117,8 +109,6 @@ const keyDiffRows: KeyDiffRow[] = [
       <h3>調査方法・免責事項</h3>
       <p>この比較は、メーカー公式の商品ページで確認できる仕様のみを根拠にしています。価格・在庫・個人の使用感は公式ページと販売先でご確認ください。</p>
     </details>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
-    <div class="verification-summary" aria-label="購入リンクの確認状況">{productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}</div>
   </article>
   <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>

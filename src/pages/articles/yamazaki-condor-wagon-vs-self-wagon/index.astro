@@ -7,7 +7,6 @@ import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
 import {yamazakiCondorWagonArticle as articleMetadata} from '../../../content/articles'
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
-
 const meshOfficial = 'https://product.yamazaki-sangyo.co.jp/product/209460'
 const selfOfficial = 'https://product.yamazaki-sangyo.co.jp/product/209477'
 const meshSearch = 'https://a.r10.to/heE5GH'
@@ -39,18 +38,14 @@ const keyDiffRows: KeyDiffRow[] = [
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2 left={{brand: '山崎産業 コンドル', line: 'FU943-000X-MB', tagline: 'サイドメッシュのワゴンなら', image: meshImage, imageAlt: '山崎産業 コンドル サイドメッシュワゴンII FU943-000X-MB', officialHref: meshOfficial, guidePoints: [meshAudience]}} right={{brand: '山崎産業 コンドル', line: 'FU944-000X-MB', tagline: '軽さを優先するなら', image: selfImage, imageAlt: '山崎産業 コンドル セルフワゴンII FU944-000X-MB', officialHref: selfOfficial, guidePoints: [selfAudience]}} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} />
     <p>サイドメッシュワゴンIIは公式説明に折りたたみ式とあり、セルフワゴンIIは今回確認した公式ページ上で約1.1kgと案内されています。設置場所に必要な幅・奥行・高さと、商品の説明を照らし合わせて選んでください。</p>
-
     <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">FU943-000X-MB</th><th scope="col">FU944-000X-MB</th><th scope="col">根拠</th></tr></thead><tbody><tr><th scope="row">商品名</th><td>コンドル サイドメッシュワゴンII</td><td>コンドル セルフワゴンII</td><td>各公式ページ</td></tr><tr><th scope="row">使用サイズ</th><td>幅435×奥行260×高さ500mm</td><td>幅430×奥行300×高さ485mm</td><td>各公式ページ</td></tr><tr><th scope="row">材質・成分</th><td>スチール粉体塗装</td><td>スチール粉体塗装</td><td>各公式ページ</td></tr><tr><th scope="row">重量</th><td>約1.4kg</td><td>約1.1kg</td><td>各公式ページ</td></tr></tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
     <h2 id="official">公式情報</h2><p>仕様の根拠は、山崎産業公式の商品ページで2026年8月14日に確認しました。FU943は商品ページに「折りたたみ式サイドワゴン」と記載されています。</p><div class="source-links"><a class="card-link" href={meshOfficial} target="_blank" rel="noopener noreferrer">FU943-000X-MB 公式商品ページ →</a><a class="card-link" href={selfOfficial} target="_blank" rel="noopener noreferrer">FU944-000X-MB 公式商品ページ →</a></div>
         <ArticleSocialProof query="山崎産業 コンドル サイドメッシュワゴンII セルフワゴンII" checkedAt="2026-08-14" hasPosts={false} />
-
 <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-
     <div class="purchase-cards">
       <PurchaseCard name="コンドル サイドメッシュワゴンII FU943-000X-MB" audience={meshAudience} href={meshSearch} imagePath={meshImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
       <PurchaseCard name="コンドル セルフワゴンII FU944-000X-MB" audience={selfAudience} href={selfSearch} imagePath={selfImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={meshOfficial} target="_blank" rel="noopener noreferrer">山崎産業公式：コンドル サイドメッシュワゴンII FU943-000X-MB</a>（2026-08-14確認）</li><li><a href={selfOfficial} target="_blank" rel="noopener noreferrer">山崎産業公式：コンドル セルフワゴンII FU944-000X-MB</a>（2026-08-14確認）</li></ul>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p><div class="verification-summary" aria-label="記事情報の確認状況"><p>公式商品情報確認済み：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p></div>
   </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
 </BaseLayout>
