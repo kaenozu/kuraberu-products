@@ -24,6 +24,12 @@ export interface ArticleMetadata {
   purchaseLinkStatus: "verified" | "unverified" | "unavailable";
   changeLog: readonly ArticleChangeLogEntry[];
   imagePath?: `/${string}`;
+  /**
+   * JSON-LD の about（schema.org Product）に出す商品名。
+   * 件数は productCount と一致させる（商品ガイド = 1、比較記事 = 2）。
+   * 商品ガイド（productCount = 1）は必須。比較記事は未宣言なら about を出力しない。
+   */
+  aboutProductNames?: readonly string[];
 }
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
@@ -36,6 +42,20 @@ export function defineArticleMetadata(
 ): ArticleMetadata {
   if (!Number.isInteger(metadata.productCount) || metadata.productCount < 1) {
     throw new TypeError("productCount must be a positive integer");
+  }
+  if (metadata.productCount === 1 && !metadata.aboutProductNames) {
+    throw new TypeError(
+      "aboutProductNames must be declared for single-product (guide) articles",
+    );
+  }
+  if (
+    metadata.aboutProductNames !== undefined &&
+    (metadata.aboutProductNames.length !== metadata.productCount ||
+      metadata.aboutProductNames.some((name) => name.trim().length === 0))
+  ) {
+    throw new TypeError(
+      `aboutProductNames must have exactly ${metadata.productCount} non-empty entries (one per product)`,
+    );
   }
   for (const [label, value] of [
     ["publishedAt", metadata.publishedAt],
@@ -1228,6 +1248,7 @@ export const panasonicBabyMonitorArticle = defineArticleMetadata({
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
   imagePath: "/products/panasonic-kx-hc705.jpg",
+  aboutProductNames: ["パナソニック ベビーモニター KX-HC705"],
   changeLog: [
     {
       date: "2026-08-14",
@@ -1261,6 +1282,7 @@ export const panasonicEhNa9mGuideArticle = defineArticleMetadata({
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
   imagePath: "/products/panasonic-eh-na9m.jpg",
+  aboutProductNames: ["パナソニック ナノケア EH-NA9M"],
   changeLog: [
     {
       date: "2026-08-17",
@@ -1933,6 +1955,7 @@ const createCommercialArticle = (
     imagePath:
       commercialArticleImages[seed.id]?.left ??
       commercialArticleImages[seed.id]?.right,
+    aboutProductNames: [seed.leftProduct, seed.rightProduct],
     changeLog: [
       {
         date: "2026-08-17",
