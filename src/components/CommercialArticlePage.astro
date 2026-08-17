@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ComparisonMemoButton from './ComparisonMemoButton.astro';
 import PurchaseCard from './PurchaseCard.astro';
-import { articleMetadata, additionalCommercialArticleSeeds } from '../content/articles';
+import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
 import { fetchRakutenProducts, selectRakutenProduct } from '../lib/rakuten';
 
@@ -20,13 +20,7 @@ if (!article || !seed) {
 
 const leftSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
 const rightSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
-const localImages: Record<string, { left?: string; right?: string }> = {
-  'panasonic-eh-na9m-vs-refa-beautech': { left: '/products/panasonic-eh-na9m.jpg' },
-  'sharp-kc-s50-vs-panasonic-f-vxw55': { left: '/products/sharp-kc-s50.jpg' },
-  't-fal-ko5901jp-vs-zoujirushi-ck-pa08': { left: '/products/tefal-ko5901jp.jpg', right: '/products/zojirushi-ck-pa08.webp' },
-  'tiger-jpv-l100-vs-zojirushi-nw-fc10': { left: '/products/tiger-jpv-l100.jpg' },
-};
-const images = localImages[articleId] ?? {};
+const images = commercialArticleImages[articleId] ?? {};
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
 const resolveRakutenProduct = async (name: string, terms: string[]) => {
