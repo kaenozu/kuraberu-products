@@ -73,6 +73,12 @@
 - 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
 - 公開確認: 記事URL・生成HTML・CTAは定期巡回で確認する。
 
+### 象印 EC-KV50 vs EC-MA60（実装済み・verify済み・PR作成前）
+
+- slug: `zojirushi-ec-kv50-vs-ec-ma60`
+- 公式個別ページ、比較仕様、公式画像、楽天公式短縮URL2本を確認済み。
+- 調査メモ: `C:\\Users\\neoen\\kuraberu-notes\\zojirushi-ec-kv50-ec-ma60-research-2026-08-17.md`
+
 ## 追加確認・保留
 
 ### パナソニック ナノケア EH-NA9M vs EH-NA7M（公開済み・購入リンク未検証）

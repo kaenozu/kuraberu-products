@@ -279,6 +279,16 @@
         "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pct-a/"
       ],
       "note": ""
+    },
+    {
+      "articleId": "zojirushi-ec-kv50-vs-ec-ma60",
+      "checkedAt": "2026-08-17",
+      "claimsFingerprint": "sha256:7991e7b63ebc39dc9cfcb82aa9b1b573a69b3b1817b22740986a803acb6910e3",
+      "officialUrls": [
+        "https://www.zojirushi.co.jp/syohin/kitchen/coffee_maker/ec-kv/",
+        "https://www.zojirushi.co.jp/syohin/kitchen/coffee_maker/ec-ma/"
+      ],
+      "note": ""
     }
   ]
 }
