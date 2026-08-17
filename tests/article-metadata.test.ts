@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { validateSourceToggle } from "../scripts/check-rendered-html.mjs";
 import {
   articleMetadata,
   publicArticleMetadata,
@@ -398,5 +399,41 @@ describe("article JSON-LD by content type (rendered dist)", () => {
     );
     const article = articleOf(html);
     expect(article.about).toBeUndefined();
+  });
+});
+
+describe("source-toggle fold (rendered dist)", () => {
+  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name !== "page")
+    .map((entry) => entry.name)
+    .sort();
+
+  it("every 根拠・確認先 table article renders the source-toggle and passes the gate", () => {
+    let pagesWithSourceTable = 0;
+    let pagesWithToggle = 0;
+    for (const slug of articleSlugs) {
+      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+      const relative = `articles/${slug}/index.html`;
+      const errors = validateSourceToggle(relative, html);
+      expect(errors).toEqual([]);
+      if (/根拠・確認先/.test(html)) pagesWithSourceTable += 1;
+      if (/class="source-toggle"/.test(html)) pagesWithToggle += 1;
+    }
+    // 根拠列テーブルを持つ記事とトグルを持つ記事は同数（fold 過不足なし）
+    expect(pagesWithSourceTable).toBeGreaterThan(0);
+    expect(pagesWithToggle).toBe(pagesWithSourceTable);
+  });
+
+  it("renders the toggle immediately before the table on pampers", () => {
+    const html = readFileSync(
+      "dist/articles/pampers-newborn/index.html",
+      "utf8",
+    );
+    const tableIndex = html.indexOf('<div class="table-scroll">');
+    const before = html.slice(tableIndex - 60, tableIndex);
+    expect(before).toMatch(/<\/details>\s*$/);
+    expect(html).toMatch(
+      /<details class="source-toggle">[\s\S]*?<summary>根拠・確認先を表示<\/summary>/,
+    );
   });
 });
