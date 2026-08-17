@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
 import {
   ARTICLE_LAYOUT,
+  contentTypeFor,
   expectedPlacementCounts,
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
@@ -218,9 +219,46 @@ export function readArticleMidCta(relative, html, errors) {
   return match[1] === "true";
 }
 
+// 記事のコンテンツタイプを
+// <meta name="article:content-type" content="guide|comparison"> から読み取る。
+export function readArticleContentType(relative, html, errors) {
+  const match = html.match(
+    /<meta name="article:content-type" content="(guide|comparison)">/i,
+  );
+  if (!match) {
+    errors.push(`${relative}: missing article:content-type meta`);
+    return null;
+  }
+  return match[1];
+}
+
+// 記事のコンテンツタイプを productCount から導出した期待値と照合する。
+// 商品ガイド（guide）は比較セクション（article-comparison-v2）を持たない。
+export function validateArticleContentType(relative, html, productCount) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const errors = [];
+  const expected = contentTypeFor(productCount);
+  const actual = readArticleContentType(relative, html, errors);
+  if (actual === null) return errors;
+  if (actual !== expected) {
+    errors.push(
+      `${relative}: article:content-type is "${actual}" but productCount ${productCount} expects "${expected}" (per config/article-layout.mjs)`,
+    );
+  }
+  if (
+    expected === "guide" &&
+    /<section\b[^>]*class="[^"]*\barticle-comparison-v2\b[^"]*"/i.test(html)
+  ) {
+    errors.push(
+      `${relative}: guide article renders a comparison section (article-comparison-v2)`,
+    );
+  }
+  return errors;
+}
+
 // 期待 CTA 枚数は、記事メタデータの商品数（productCount）と
 // config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から記事ごとに導出する。
-// 比較記事（productCount=2）→ 4枚、単一商品記事（productCount=1）→ 2枚。
+// 比較記事（productCount=2）→ 2枚、単一商品記事（productCount=1）→ 1枚（v3）。
 // レイアウト変更時は config だけを直し、ここに枚数をハードコードしない。
 const AFFILIATE_URL_PATTERN =
   /https:\/\/(?:[^./]+\.)?(?:a\.r10\.to|r10\.to|hb\.afl\.rakuten\.co\.jp)(?:\/|$)/i;
@@ -602,6 +640,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // （meta タグ経由）と config の ctaSets / midArticleSet から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
+    errors.push(...validateArticleContentType(relative, html, productCount));
     const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(

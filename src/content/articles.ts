@@ -1223,7 +1223,7 @@ export const panasonicBabyMonitorArticle = defineArticleMetadata({
   summary:
     "KX-HC705はDECT方式で接続設定が不要・音/動作/温度の3センサーを搭載した単品ベビーモニター。公式情報を確認して整理します。",
   publishedAt: "2026-08-14",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-14",
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
@@ -1231,8 +1231,12 @@ export const panasonicBabyMonitorArticle = defineArticleMetadata({
   changeLog: [
     {
       date: "2026-08-14",
+      summary: "初回公開。パナソニック公式の商品機能と仕様を確認。",
+    },
+    {
+      date: "2026-08-17",
       summary:
-        "初回公開。パナソニック公式の商品機能と仕様を確認。単一商品記事のサンプルとして追加。",
+        "商品ガイドとして正式公開。単一商品記事のコンテンツタイプを整理し、構成を標準に合わせた。",
     },
   ],
 });

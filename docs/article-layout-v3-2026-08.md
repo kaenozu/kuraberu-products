@@ -61,6 +61,21 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 - 差分が 5〜6 項目以下 → 詳細比較を折りたたまずそのまま表示。
 - 全仕様が長い（7 項目以上 or 数値表が大きい）→ `<details>` 折りたたみ。
 
+## コンテンツタイプ（商品ガイド / 比較記事）
+
+記事は `productCount` から機械的に導出されるコンテンツタイプを持つ
+（定義: `config/article-layout.mjs` の `contentTypes`、導出: `contentTypeFor()`）。
+
+- **商品ガイド（guide）** = `productCount` 1 の単一商品記事。
+  例: `panasonic-baby-monitor-kx-hc705`（KX-HC705）。比較セクション
+  （`article-comparison-v2`）を持たず、1 商品の特徴・向いている人・公式情報を
+  単品で整理する。記事の meta 行に「商品ガイド」と表示する。
+- **比較記事（comparison）** = `productCount` 2 以上の複数商品比較。
+
+BaseLayout が `<meta name="article:content-type" content="guide|comparison">` を
+出力し、品質ゲート（`scripts/check-rendered-html.mjs`）が productCount と照合する。
+商品ガイドが比較セクションを描画するとゲートが fail する。
+
 ## トップページ（カテゴリ入口・よく比較される商品）
 
 トップページ（`src/pages/index.astro`）は、カテゴリ入口と「よく比較される商品」を持つ。

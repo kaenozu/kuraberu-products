@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   ARTICLE_LAYOUT,
+  contentTypeFor,
   expectedPlacementCounts,
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
@@ -89,5 +90,25 @@ describe("article layout config", () => {
       true,
     );
     expect(ARTICLE_LAYOUT.midArticleSet.cardsPerProduct).toBeGreaterThan(0);
+  });
+
+  it("derives the content type from the product count", () => {
+    // 単一商品記事（productCount = 1）＝ 商品ガイド
+    expect(contentTypeFor(1)).toBe("guide");
+    expect(ARTICLE_LAYOUT.contentTypes.guide.label).toBe("商品ガイド");
+    // 複数商品比較（productCount >= 2）＝ 比較記事
+    expect(contentTypeFor(2)).toBe("comparison");
+    expect(contentTypeFor(3)).toBe("comparison");
+    expect(ARTICLE_LAYOUT.contentTypes.comparison.label).toBe("比較記事");
+    // 商品ガイドは productCount 1 のみに限定される
+    expect(ARTICLE_LAYOUT.contentTypes.guide.maxProductCount).toBe(1);
+    expect(ARTICLE_LAYOUT.contentTypes.comparison.minProductCount).toBe(2);
+  });
+
+  it("rejects a non-positive product count for the content type", () => {
+    expect(() => contentTypeFor(0)).toThrow();
+    expect(() => contentTypeFor(-1)).toThrow();
+    expect(() => contentTypeFor(1.5)).toThrow();
+    expect(() => contentTypeFor(NaN)).toThrow();
   });
 });
