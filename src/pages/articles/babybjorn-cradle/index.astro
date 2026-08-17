@@ -6,7 +6,6 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {cradleArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const cradleOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/';
@@ -58,10 +57,6 @@ const cocoNelCandidate: ComparisonCandidate = {
   note: '新生児〜24カ月（13kg）・折りたたみ式・サークル兼用・収納袋付き',
   status: 'official',
 };
-
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -120,38 +115,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 育児用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">ベビービョルン クレードルとアップリカ ココネルエアー AB は、どちらも新生児期のベビーベッドです。最大の違いは、使用できる期間と揺れ（ゆりかご機能）の有無です。クレードルは新生児〜生後6か月の手動ゆりかご型、ココネルエアー AB は新生児〜24カ月まで使える折りたたみ式で、ベビーサークルとしても使えます。この記事では、ベビービョルン公式楽天市場店とアップリカ公式楽天市場店で2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の寝心地など、公式情報だけでは判断できないことは推測しません。</p>
+    <p class="lead">新生児期のベビーベッド「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、公式楽天市場店で確認できる内容で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="クレードル"
-        audience="手動のゆりかご機能で揺らして寝かしつけたい、新生児期の使用を優先する人向け"
-        href={cradleRakutenUrl}
-        productId="babybjorn-cradle"
-        imagePath="/products/babybjorn-cradle.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="ココネルエアー AB"
-        audience="新生児〜24カ月まで長く使えて、折りたたみ・ベビーサークル兼用を優先する人向け"
-        href={cocoNelRakutenUrl}
-        productId="aprica-coconel-air"
-        imagePath="/products/aprica-coconel-air.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
@@ -161,6 +131,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
+    <p>まとめ：新生児期の揺らして寝かしつけを重視するなら「ベビービョルン クレードル」、長く使えて折りたためるベビーベッドを探すなら「アップリカ ココネルエアー AB」が候補です。</p>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ベビービョルン公式楽天市場店・アップリカ公式楽天市場店の商品ページで確認できた内容を整理します。使用感・実際の寝心地・赤ちゃんの反応など、公式情報だけでは確認できないことは書いていません。</p>

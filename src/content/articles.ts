@@ -136,7 +136,6 @@ export function defineArticleMetadata(
 export const pampersNewbornArticle = defineArticleMetadata({
   id: "pampers-newborn",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pampers-newborn/",
   title: "パンパースの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -150,12 +149,17 @@ export const pampersNewbornArticle = defineArticleMetadata({
   summary:
     "「肌へのいちばん」と「さらさらケア」を、公式情報・販売ページ・口コミの確認状況に分けて比較します。",
   publishedAt: "2026-07-31",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-07-31",
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
   imagePath: "/products/pampers-premium-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -171,7 +175,6 @@ export const pampersNewbornArticle = defineArticleMetadata({
 export const merriesNewbornArticle = defineArticleMetadata({
   id: "merries-newborn",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/merries-newborn/",
   title: "メリーズの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -185,11 +188,16 @@ export const merriesNewbornArticle = defineArticleMetadata({
   summary:
     "「ファーストプレミアム」と「ずっと肌さらエアスルー」を、公式情報・販売ページ・確認状況に分けて比較します。",
   publishedAt: "2026-08-08",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-08",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -205,7 +213,6 @@ export const merriesNewbornArticle = defineArticleMetadata({
 export const pigeonBottle240Article = defineArticleMetadata({
   id: "pigeon-bottle-240",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pigeon-bottle-240/",
   title: "ピジョン母乳実感240ml、どっち？｜くらべる商品メモ",
   headline:
@@ -219,11 +226,16 @@ export const pigeonBottle240Article = defineArticleMetadata({
   summary:
     "「耐熱ガラス製」と「プラスチック製（PPSU）」を、公式情報・素材の特長・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-09",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -240,7 +252,6 @@ export const pigeonBottle240Article = defineArticleMetadata({
 export const pigeonSlim240Article = defineArticleMetadata({
   id: "pigeon-slim-240",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pigeon-slim-240/",
   title: "ピジョン母乳実感 vs スリムタイプ、どっち？｜くらべる商品メモ",
   headline:
@@ -254,11 +265,16 @@ export const pigeonSlim240Article = defineArticleMetadata({
   summary:
     "「母乳実感」と「スリムタイプ」の240mlを、公式情報・乳首体系・形状・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-09",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -275,7 +291,6 @@ export const pigeonSlim240Article = defineArticleMetadata({
 export const moonyMArticle = defineArticleMetadata({
   id: "moony-m",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/moony-m/",
   title: "ムーニーのテープ、どっち？｜くらべる商品メモ",
   headline:
@@ -289,11 +304,16 @@ export const moonyMArticle = defineArticleMetadata({
   summary:
     "「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式情報・サイズ別仕様・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-09",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/moony-teishigeki-m.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -315,7 +335,6 @@ export const moonyMArticle = defineArticleMetadata({
 export const merriesPantsArticle = defineArticleMetadata({
   id: "merries-pants",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/merries-pants/",
   title: "メリーズのパンツ、どっち？｜くらべる商品メモ",
   headline:
@@ -329,11 +348,16 @@ export const merriesPantsArticle = defineArticleMetadata({
   summary:
     "「ファーストプレミアム」と「ずっと肌さらエアスルー」のパンツタイプを、公式情報・販売ページ・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -349,7 +373,6 @@ export const merriesPantsArticle = defineArticleMetadata({
 export const shupotArticle = defineArticleMetadata({
   id: "shupot",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/shupot/",
   title: "ピジョンの鼻吸い器、どっち？｜くらべる商品メモ",
   headline:
@@ -363,11 +386,16 @@ export const shupotArticle = defineArticleMetadata({
   summary:
     "「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を、公式情報・お手入れ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/shupot-dendo.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -384,7 +412,6 @@ export const shupotArticle = defineArticleMetadata({
 export const babybjornArticle = defineArticleMetadata({
   id: "babybjorn",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「HARMONY」と「MINI」を比較",
@@ -401,11 +428,16 @@ export const babybjornArticle = defineArticleMetadata({
   summary:
     "「HARMONY」と「MINI」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-harmony.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -421,7 +453,6 @@ export const babybjornArticle = defineArticleMetadata({
 export const babybjornOnekaiArticle = defineArticleMetadata({
   id: "babybjorn-onekai",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-onekai/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「ONE KAI」と「MOVE」を比較",
@@ -438,11 +469,16 @@ export const babybjornOnekaiArticle = defineArticleMetadata({
   summary:
     "「ONE KAI」と「MOVE」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-onekai.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -458,7 +494,6 @@ export const babybjornOnekaiArticle = defineArticleMetadata({
 export const babybjornBouncerArticle = defineArticleMetadata({
   id: "babybjorn-bouncer",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-bouncer/",
   title: "ベビービョルンのバウンサー、どっち？｜くらべる商品メモ",
   headline:
@@ -476,11 +511,16 @@ export const babybjornBouncerArticle = defineArticleMetadata({
   summary:
     "「Bliss」と「バランスソフト」を、ベビービョルン公式のガイド・対象月齢・シート素材・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-bouncer-bliss.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -497,7 +537,6 @@ export const babybjornBouncerArticle = defineArticleMetadata({
 export const cradleArticle = defineArticleMetadata({
   id: "babybjorn-cradle",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-cradle/",
   title: "ゆりかご型ベビーベッド、どっち？｜くらべる商品メモ",
   headline:
@@ -515,11 +554,16 @@ export const cradleArticle = defineArticleMetadata({
   summary:
     "「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、各メーカー公式の案内・対象期間・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-cradle.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-16",
       summary:
@@ -541,7 +585,6 @@ export const cradleArticle = defineArticleMetadata({
 export const pottyArticle = defineArticleMetadata({
   id: "babybjorn-potty",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/babybjorn-potty/",
   title: "トイレトレーニング、どっち？｜くらべる商品メモ",
   headline:
@@ -559,11 +602,16 @@ export const pottyArticle = defineArticleMetadata({
   summary:
     "「スマートポッティ」と「ポッティチェア」を、ベビービョルン公式の商品ページ・形状・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-16",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/babybjorn-smart-potty.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-16",
       summary:
@@ -584,7 +632,6 @@ export const pottyArticle = defineArticleMetadata({
 export const pigeonBottleSizeArticle = defineArticleMetadata({
   id: "pigeon-bottle-160-240",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/pigeon-bottle-160-240/",
   title: "ピジョン母乳実感160ml vs 240ml、どっち？｜くらべる商品メモ",
   headline: "ピジョンの哺乳びん、どっち？「母乳実感160ml」と「240ml」を比較",
@@ -597,11 +644,16 @@ export const pigeonBottleSizeArticle = defineArticleMetadata({
   summary:
     "「160ml」と「240ml」を、公式情報・付属乳首・対象月齢目安・確認状況に分けて比較します。",
   publishedAt: "2026-08-11",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-11",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/pigeon-bottle-160-240-160ml.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -850,7 +902,6 @@ export const panasonicNeFl1aVsNeFl1cArticle = defineArticleMetadata({
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
   productCount: 2,
-  midArticleCta: true,
   path: "/articles/thermos-tiger-bottle/",
   title: "サーモスとタイガーの水筒、どっち？｜くらべる商品メモ",
   headline:
@@ -864,11 +915,16 @@ export const thermosTigerBottleArticle = defineArticleMetadata({
   summary:
     "「JNL-S500」と「MTA-J050」を、公式の保温・保冷効力とサイズ・お手入れ方法に分けて比較します。",
   publishedAt: "2026-08-12",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-12",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/thermos-jnl-s500.jpg",
   changeLog: [
+    {
+      date: "2026-08-17",
+      summary:
+        "記事本文を新テンプレートへ短縮（1行結論→比較→違い→どっち向き→詳細→FAQ）。途中CTAを削除し、購入カードは記事末尾に統一。",
+    },
     {
       date: "2026-08-14",
       summary:

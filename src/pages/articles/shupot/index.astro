@@ -7,7 +7,6 @@ import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {shupotArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const dendoOfficial = 'https://shop.pigeon.co.jp/products/1032018';
@@ -63,10 +62,6 @@ const shudoCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-
 const differenceRows: DifferenceRow[] = [
   {
     "label": "電源と使える場所",
@@ -96,38 +91,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 育児用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">電動鼻吸い器 シュポットと、手動鼻吸い器 シュポットポンプ＋フィット鼻ノズルは、どちらもピジョンの鼻吸い器ですが、電源の有無、吸引方法、お手入れ、価格に大きな違いがあります。この記事では、ピジョン公式ショップで2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の吸いやすさなど、公式情報だけでは判断できないことは推測しません。</p>
+    <p class="lead">ピジョンの鼻吸い器「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を、公式ショップで確認できる電源・吸引方法・お手入れ・価格で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="電動鼻吸い器 シュポット"
-        audience="コンセントのある場所でパワフルな吸引と吸引力のダイヤル調整を優先する人向け"
-        href={dendoRakutenUrl}
-        productId="shupot-dendo"
-        imagePath="/products/shupot-dendo.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="手動鼻吸い器 シュポットポンプ"
-        audience="電源不要の手軽さ・コンパクトさと価格を優先する人向け"
-        href={shudoRakutenUrl}
-        productId="shupot-shudo"
-        imagePath="/products/shupot-shudo.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
@@ -137,7 +107,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-
+    <p>まとめ：コンセントのある場所でパワフルに吸引したいなら「電動 シュポット」、電源不要で価格と気軽さを優先するなら「シュポットポンプ＋フィット鼻ノズル」が候補です。</p>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ピジョン公式ショップで確認できた内容を整理します。使用感・実際の吸いやすさ・子どもの反応など、公式情報だけでは確認できないことは書いていません。</p>
@@ -162,8 +132,6 @@ const differenceRows: DifferenceRow[] = [
       <li>電源不要で大きな音がでない。</li>
       <li>洗い替え用を含め、フィット鼻ノズルが計2個付属。</li>
     </ul>
-
-
 
     <ArticleSocialProof
       query="ピジョン シュポット 電動 手動"

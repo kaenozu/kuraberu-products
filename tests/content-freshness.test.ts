@@ -27,8 +27,11 @@ describe("content freshness", () => {
       "dist/articles/pampers-newborn/index.html",
       "utf8",
     );
-    expect(html).toContain("商品情報確認日：");
+    // v3 短縮で verification-summary（商品情報確認日）は廃止。
+    // 確認日はヒーローの「公式情報確認済み」と情報源一覧で表示する。
+    expect(html).toContain("公式情報確認済み");
     expect(html).toContain('datetime="2026-07-31"');
+    expect(html).toContain("2026-07-31確認");
     expect(html).not.toContain("最終確認日は未記録");
     expect(html).not.toContain("購入リンク：未確認");
     expect(html).toContain("更新履歴");

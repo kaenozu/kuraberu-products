@@ -236,19 +236,18 @@ describe("article metadata", () => {
     );
   });
 
-  it("renders the mid-cta meta only for long articles (v3)", () => {
-    const longHtml = readFileSync(
+  it("renders no mid-cta meta after the v3 shortening (no long articles)", () => {
+    // v3 短縮で旧育児記事を含む全記事が短文化されたため、
+    // midArticleCta を宣言する記事は存在せず、mid-cta meta も出力されない。
+    expect(
+      articleMetadata.filter((article) => article.midArticleCta === true),
+    ).toEqual([]);
+    const pampersHtml = readFileSync(
       "dist/articles/pampers-newborn/index.html",
       "utf8",
     );
-    expect(longHtml).toContain('<meta name="article:mid-cta" content="true">');
-    expect(pampersNewbornArticle.midArticleCta).toBe(true);
-
-    const shortHtml = readFileSync(
-      "dist/articles/sharp-kc-s50-vs-fu-s50/index.html",
-      "utf8",
-    );
-    expect(shortHtml).not.toContain('name="article:mid-cta"');
+    expect(pampersHtml).not.toContain('name="article:mid-cta"');
+    expect(pampersNewbornArticle.midArticleCta).toBeUndefined();
     expect(sharpKcS50VsFuS50Article.midArticleCta).toBeUndefined();
   });
 
