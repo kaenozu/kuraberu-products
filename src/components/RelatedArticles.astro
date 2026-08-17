@@ -1,5 +1,6 @@
 ---
 import { articleMetadata } from '../content/articles';
+import { ARTICLE_LAYOUT } from '../../config/article-layout.mjs';
 
 interface Props {
   currentPath: string;
@@ -8,9 +9,14 @@ interface Props {
 
 const { currentPath, currentCategory } = Astro.props;
 
-const related = articleMetadata.filter(
-  (article) => article.path !== currentPath && article.category === currentCategory,
-);
+// 同カテゴリの「関連する比較記事」も、カテゴリ内の記事数に関わらず
+// 最大 relatedArticlesLimit 件に抑える（config/article-layout.mjs が唯一の情報源）。
+const related = articleMetadata
+  .filter(
+    (article) =>
+      article.path !== currentPath && article.category === currentCategory,
+  )
+  .slice(0, ARTICLE_LAYOUT.relatedArticlesLimit);
 const others = articleMetadata
   .filter((article) => article.path !== currentPath && article.category !== currentCategory)
   .slice(0, 3);
