@@ -4,6 +4,7 @@ import ComparisonMemoButton from './ComparisonMemoButton.astro';
 import PurchaseCard from './PurchaseCard.astro';
 import { articleMetadata, additionalCommercialArticleSeeds } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
+import { fetchRakutenProducts, selectRakutenProduct } from '../lib/rakuten';
 
 interface Props {
   articleId: string;
@@ -21,6 +22,14 @@ const leftSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponen
 const rightSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
+const [leftRakutenProduct, rightRakutenProduct] = await Promise.all([
+  fetchRakutenProducts(seed.leftProduct).then((products) =>
+    selectRakutenProduct(products, leftTerms),
+  ),
+  fetchRakutenProducts(seed.rightProduct).then((products) =>
+    selectRakutenProduct(products, rightTerms),
+  ),
+]);
 const rows: DifferenceRow[] = [
   { label: '主な比較軸', left: seed.leftPoint, right: seed.rightPoint },
   { label: '公式情報で確認する項目', left: '仕様・サイズ・対応機能', right: '仕様・サイズ・対応機能' },
@@ -69,8 +78,8 @@ const faq = [
     </ol>
 
     <div class="purchase-cards">
-      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
-      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imageUrl={leftRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imageUrl={rightRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
     </div>
 
     <h2 id="faq">よくある質問</h2>
@@ -81,8 +90,8 @@ const faq = [
     <h2>購入前の注意</h2>
     <p>ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。</p>
     <div class="purchase-cards">
-      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} placement="article-end" note="購入時点の販売条件をご確認ください。" />
-      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imageUrl={leftRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imageUrl={rightRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
     </div>
 
     <h2>更新履歴</h2>

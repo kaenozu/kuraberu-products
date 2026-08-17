@@ -17,6 +17,7 @@ interface Props {
   note?: string;
   searchQuery?: string;
   requiredTerms?: readonly string[];
+  imageUrl?: string;
 }
 
 const {
@@ -29,12 +30,13 @@ const {
   note,
   searchQuery,
   requiredTerms,
+  imageUrl,
 } = Astro.props;
 ---
 <article class="purchase-card">
   <div class="purchase-card__main">
-    {imagePath && (
-      <img class="purchase-card__image" src={imagePath} alt="" width="96" height="96" loading="lazy" />
+    {(imagePath || imageUrl) && (
+      <img class="purchase-card__image" src={imagePath ?? imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
     )}
     <div class="purchase-card__body">
       <h3 class="purchase-card__name">{name}</h3>
