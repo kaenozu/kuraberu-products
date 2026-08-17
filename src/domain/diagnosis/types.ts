@@ -141,7 +141,6 @@ export type ProductScore = {
   positiveReasons: string[];
   /** 減点・注意理由（reasonCode） */
   negativeReasons: string[];
-  matchedRules: string[];
 };
 
 /** 順位付き商品 */
@@ -191,6 +190,8 @@ export type DiagnosisPageContent = {
   pageDescription: string;
   /** ページ冒頭のリード文 */
   lead: string;
+  /** 誰向けの診断か（1文） */
+  audience: string;
   /** 診断対象の商品説明（箇条書き） */
   targetItems: string[];
   /** 選び方のポイント（h3見出し + 本文） */
