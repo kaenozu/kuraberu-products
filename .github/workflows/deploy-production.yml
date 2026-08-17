@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  checks: write
 
 concurrency:
   group: production-deploy
@@ -119,3 +120,45 @@ jobs:
             .acceptance/post-deploy-*/report.json
           if-no-files-found: warn
           retention-days: 90
+
+      - name: Record post-deploy verification check run
+        # Attach the verification outcome (result, attempts, resultsPerAttempt
+        # and the final attempt's checks) to the deployed commit as a Check Run
+        # so the history is auditable via the GitHub Checks API. Runs even on
+        # BLOCKER (and even when verification never ran) so every deploy
+        # attempt leaves one record. Recording problems are warnings only.
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          report=$(find .acceptance -path '*/post-deploy-*/report.json' -type f 2>/dev/null | sort | tail -n 1)
+          if [ -n "$report" ]; then
+            result=$(jq -r '.result' "$report")
+            attempts=$(jq -r '.attempts' "$report")
+            results=$(jq -r '.resultsPerAttempt | join(", ")' "$report")
+            expected_sha=$(jq -r '.expectedCommitSha' "$report")
+            base_url=$(jq -r '.baseUrl' "$report")
+            total_checks=$(jq -r '.checks | length' "$report")
+            failed_checks=$(jq -r '[.checks[] | select(.status == "FAIL")] | length' "$report")
+            checks_text=$(jq -r '.checks[] | "- [" + .status + "] " + .name' "$report")
+            if [ "$result" = "BLOCKER" ]; then conclusion="failure"; else conclusion="success"; fi
+            summary=$(printf -- '- Result: %s\n- Attempts: %s (%s)\n- Final-attempt checks: %s total, %s FAIL\n- Expected commit: %s\n- Base URL: %s\n- Report artifact: acceptance-reports-%s' \
+              "$result" "$attempts" "$results" "$total_checks" "$failed_checks" "$expected_sha" "$base_url" "${{ github.run_id }}")
+            text=$(printf -- '### Final-attempt checks (%s attempts: %s)\n%s' "$attempts" "$results" "$checks_text")
+            payload=$(jq -n \
+              --arg head_sha "${{ inputs.expected_sha }}" \
+              --arg conclusion "$conclusion" \
+              --arg title "Post-deploy verification $result (attempts=$attempts)" \
+              --arg summary "$summary" \
+              --arg text "$text" \
+              '{name:"production-post-deploy-verification", head_sha:$head_sha, status:"completed", conclusion:$conclusion, output:{title:$title, summary:$summary, text:$text}}')
+          else
+            payload=$(jq -n \
+              --arg head_sha "${{ inputs.expected_sha }}" \
+              '{name:"production-post-deploy-verification", head_sha:$head_sha, status:"completed", conclusion:"failure", output:{title:"Post-deploy verification did not run", summary:"The deploy run did not reach the public verification step (no post-deploy report.json was produced). See the run log for the failing step.", text:""}}')
+          fi
+          if ! echo "$payload" | gh api --method POST "repos/${{ github.repository }}/check-runs" --input - >/dev/null; then
+            echo "::warning::Failed to record post-deploy verification check run"
+          fi

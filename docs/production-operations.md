@@ -108,6 +108,13 @@ To confirm the attempts history was recorded correctly from the actual run:
 
    The artifact name is printed in the `Production deployment` step summary. The local re-run above remains the way to produce a report from your own host (e.g. against a rolled-back deployment), and the step logs and summary are the run's own non-downloadable evidence.
 
+   Every deploy attempt also creates a **Check Run** named `production-post-deploy-verification` on the deployed commit, with conclusion `success`/`failure` and the attempts history in its output (created even when verification BLOCKERs or never ran, so the history is complete). Audit it mechanically via the Checks API:
+
+   ```bash
+   gh api repos/kaenozu/kuraberu-products/commits/<deployed-sha>/check-runs \
+     --jq '.check_runs[] | select(.name == "production-post-deploy-verification") | {conclusion, created_at, summary: .output.summary}'
+   ```
+
    Interpretation: `attempts=1` means the edge already served the exact HEAD; `attempts>1` with a trailing `PASS` is normal CDN convergence; any last result of `BLOCKER` means the deployment is not verified and the Rollback procedure applies.
 
 ## 5. X announcement drafts
