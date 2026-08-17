@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import {articleMetadata} from '../content/articles';
+import ArticleCard from '../components/ArticleCard.astro';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 
 const latest = [...articleMetadata]
@@ -64,19 +65,7 @@ const categories = [...categoryCounts.entries()]
     <p class="lead">よく選ばれている比較を、公式情報の確認状況と合わせてまとめています。</p>
     <div class="article-list">
       {featured.map((article) => (
-        <article class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}>
-          {article.imagePath && (
-            <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
-          )}
-          <div class="card-body">
-            <span class="card-tag-row">
-              <span class="tag">{article.category}</span>
-            </span>
-            <h2><a href={article.path}>{article.headline}</a></h2>
-            <p class="card-desc">{article.summary}</p>
-            <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          </div>
-        </article>
+        <ArticleCard article={article} />
       ))}
     </div>
   </section>
@@ -84,19 +73,7 @@ const categories = [...categoryCounts.entries()]
   <section class="section wrap article-index">
     <div class="article-list">
       {latest.length > 0 ? latest.map((article) => (
-        <article class={`card article-list-card${article.imagePath ? ' has-image' : ''}`}>
-          {article.imagePath && (
-            <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
-          )}
-          <div class="card-body">
-            <span class="card-tag-row">
-              <span class="tag">{article.category}</span>
-            </span>
-            <h2><a href={article.path}>{article.headline}</a></h2>
-            <p class="card-desc">{article.summary}</p>
-            <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
-          </div>
-        </article>
+        <ArticleCard article={article} />
       )) : (
         <p>比較記事は準備中です。</p>
       )}

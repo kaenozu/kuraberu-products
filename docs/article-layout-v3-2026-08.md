@@ -76,6 +76,11 @@ BaseLayout が `<meta name="article:content-type" content="guide|comparison">` �
 出力し、品質ゲート（`scripts/check-rendered-html.mjs`）が productCount と照合する。
 商品ガイドが比較セクションを描画するとゲートが fail する。
 
+トップページと比較記事一覧の記事カードには、カテゴリタグの隣にコンテンツタイプの
+ラベルタグ（`tag--type`）を表示する。ラベル文言は `src/lib/content-types.ts` の
+`contentTypeLabel()` が config から導出し、カード要素に `data-content-type` 属性を
+付与する（実ビルドテスト `tests/top-page.test.ts` が属性とラベルの描画を検証する）。
+
 ## トップページ（カテゴリ入口・よく比較される商品）
 
 トップページ（`src/pages/index.astro`）は、カテゴリ入口と「よく比較される商品」を持つ。

@@ -601,6 +601,11 @@ a {
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+/* コンテンツタイプ（商品ガイド / 比較記事）のタグ。カテゴリタグの補助なので控えめにする */
+.tag--type {
+  color: var(--ink-soft, inherit);
+  font-weight: 700;
+}
 .article h1 {
   font-size: clamp(2rem, 5vw, 3.8rem);
   line-height: 1.2;
