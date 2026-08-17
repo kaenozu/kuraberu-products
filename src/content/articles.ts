@@ -332,6 +332,7 @@ export const merriesPantsArticle = defineArticleMetadata({
   modifiedAt: "2026-08-14",
   productInfoCheckedAt: "2026-08-10",
   purchaseLinkStatus: "unverified",
+  imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
     {
       date: "2026-08-14",
@@ -1170,6 +1171,7 @@ export const panasonicBabyMonitorArticle = defineArticleMetadata({
   productInfoCheckedAt: "2026-08-14",
   purchaseLinksCheckedAt: "2026-08-16",
   purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-kx-hc705.jpg",
   changeLog: [
     {
       date: "2026-08-14",
@@ -1720,21 +1722,104 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   },
 ];
 
-const commercialArticleImages: Readonly<
+export const commercialArticleImages: Readonly<
   Record<string, { left?: `/${string}`; right?: `/${string}` }>
 > = {
-  "panasonic-eh-na9m-vs-refa-beautech": {
-    left: "/products/panasonic-eh-na9m.jpg",
+  "roborock-qrevo-curv-vs-dreame-x50": {
+    left: "/products/roborock-qrevo-curv-vs-dreame-x50-left.jpg",
+    right: "/products/roborock-qrevo-curv-vs-dreame-x50-right.jpg",
   },
-  "sharp-kc-s50-vs-panasonic-f-vxw55": {
-    left: "/products/sharp-kc-s50.jpg",
+  "makita-cl107-vs-cl286": {
+    left: "/products/makita-cl107-vs-cl286-left.jpg",
+    right: "/products/makita-cl107-vs-cl286-right.jpg",
   },
-  "t-fal-ko5901jp-vs-zoujirushi-ck-pa08": {
-    left: "/products/tefal-ko5901jp.jpg",
-    right: "/products/zojirushi-ck-pa08.webp",
+  "iris-airfryer-fvx-d3-vs-tefal-ey201": {
+    left: "/products/iris-airfryer-fvx-d3-vs-tefal-ey201-left.jpg",
+    right: "/products/iris-airfryer-fvx-d3-vs-tefal-ey201-right.jpg",
+  },
+  "recolte-automatic-cooker-vs-panasonic-nf-pc400": {
+    left: "/products/recolte-automatic-cooker-vs-panasonic-nf-pc400-left.jpg",
+    right: "/products/recolte-automatic-cooker-vs-panasonic-nf-pc400-right.jpg",
+  },
+  "brita-marella-vs-zero-water": {
+    right: "/products/brita-marella-vs-zero-water-right.jpg",
   },
   "tiger-jpv-l100-vs-zojirushi-nw-fc10": {
-    left: "/products/tiger-jpv-l100.jpg",
+    left: "/products/tiger-jpv-l100-vs-zojirushi-nw-fc10-left.jpg",
+    right: "/products/tiger-jpv-l100-vs-zojirushi-nw-fc10-right.jpg",
+  },
+  "sharp-kc-s50-vs-panasonic-f-vxw55": {
+    left: "/products/sharp-kc-s50-vs-panasonic-f-vxw55-left.jpg",
+    right: "/products/sharp-kc-s50-vs-panasonic-f-vxw55-right.jpg",
+  },
+  "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n": {
+    left: "/products/anker-soundcore-liberty-4-nc-vs-sony-wf-c710n-left.jpg",
+    right: "/products/anker-soundcore-liberty-4-nc-vs-sony-wf-c710n-right.jpg",
+  },
+  "xiaomi-redmi-watch-5-vs-huawei-band-10": {
+    left: "/products/xiaomi-redmi-watch-5-vs-huawei-band-10-left.jpg",
+    right: "/products/xiaomi-redmi-watch-5-vs-huawei-band-10-right.jpg",
+  },
+  "panasonic-eh-na9m-vs-refa-beautech": {
+    left: "/products/panasonic-eh-na9m-vs-refa-beautech-left.jpg",
+    right: "/products/panasonic-eh-na9m-vs-refa-beautech-right.jpg",
+  },
+  "philips-s9000-vs-braun-series9pro": {
+    left: "/products/philips-s9000-vs-braun-series9pro-left.jpg",
+    right: "/products/philips-s9000-vs-braun-series9pro-right.jpg",
+  },
+  "anessa-perfect-uv-vs-biore-aqua-rich": {
+    left: "/products/anessa-perfect-uv-vs-biore-aqua-rich-left.jpg",
+    right: "/products/anessa-perfect-uv-vs-biore-aqua-rich-right.jpg",
+  },
+  "tempur-original-vs-nishikawa-air-pillow": {
+    left: "/products/tempur-original-vs-nishikawa-air-pillow-left.jpg",
+    right: "/products/tempur-original-vs-nishikawa-air-pillow-right.jpg",
+  },
+  "samsonite-c-lite-vs-proteca-maxpass": {
+    left: "/products/samsonite-c-lite-vs-proteca-maxpass-left.jpg",
+    right: "/products/samsonite-c-lite-vs-proteca-maxpass-right.jpg",
+  },
+  "montbell-tri-pack-vs-anello-backpack": {
+    left: "/products/montbell-tri-pack-vs-anello-backpack-left.jpg",
+    right: "/products/montbell-tri-pack-vs-anello-backpack-right.jpg",
+  },
+  "thermos-jdp-501-vs-zojirushi-sm-za48": {
+    left: "/products/thermos-jdp-501-vs-zojirushi-sm-za48-left.jpg",
+    right: "/products/thermos-jdp-501-vs-zojirushi-sm-za48-right.jpg",
+  },
+  "panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k": {
+    left: "/products/panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k-left.jpg",
+    right:
+      "/products/panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k-right.jpg",
+  },
+  "sharp-heater-hv-r55-vs-iris-uhk500": {
+    left: "/products/sharp-heater-hv-r55-vs-iris-uhk500-left.jpg",
+    right: "/products/sharp-heater-hv-r55-vs-iris-uhk500-right.jpg",
+  },
+  "dyson-v12-detect-slim-vs-shark-evo-power": {
+    left: "/products/dyson-v12-detect-slim-vs-shark-evo-power-left.jpg",
+    right: "/products/dyson-v12-detect-slim-vs-shark-evo-power-right.jpg",
+  },
+  "t-fal-ko5901jp-vs-zoujirushi-ck-pa08": {
+    left: "/products/t-fal-ko5901jp-vs-zoujirushi-ck-pa08-left.jpg",
+    right: "/products/t-fal-ko5901jp-vs-zoujirushi-ck-pa08-right.jpg",
+  },
+  "re-fa-straight-iron-vs-panasonic-eh-hs0e": {
+    left: "/products/re-fa-straight-iron-vs-panasonic-eh-hs0e-left.jpg",
+    right: "/products/re-fa-straight-iron-vs-panasonic-eh-hs0e-right.jpg",
+  },
+  "nitori-n-sleep-vs-nishikawa-air-mattress": {
+    left: "/products/nitori-n-sleep-vs-nishikawa-air-mattress-left.jpg",
+    right: "/products/nitori-n-sleep-vs-nishikawa-air-mattress-right.jpg",
+  },
+  "apple-watch-se-vs-xiaomi-redmi-watch-5": {
+    left: "/products/apple-watch-se-vs-xiaomi-redmi-watch-5-left.jpg",
+    right: "/products/apple-watch-se-vs-xiaomi-redmi-watch-5-right.jpg",
+  },
+  "sony-bravia-55-xr80-vs-regza-55z870n": {
+    left: "/products/sony-bravia-55-xr80-vs-regza-55z870n-left.jpg",
+    right: "/products/sony-bravia-55-xr80-vs-regza-55z870n-right.jpg",
   },
 };
 
@@ -1756,7 +1841,9 @@ const createCommercialArticle = (
     publishedAt: "2026-08-17",
     modifiedAt: "2026-08-17",
     purchaseLinkStatus: "unverified",
-    imagePath: commercialArticleImages[seed.id]?.left,
+    imagePath:
+      commercialArticleImages[seed.id]?.left ??
+      commercialArticleImages[seed.id]?.right,
     changeLog: [
       {
         date: "2026-08-17",
