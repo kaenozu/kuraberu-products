@@ -9,6 +9,8 @@ export const ARTICLE_LAYOUT = {
   ctaEvent: "purchase",
   // PurchaseCard の placement prop が取り得る値
   placements: ["after-decision", "article-end"],
+  // 診断結果カードのクリック計測用 placement（/tools/product-finder/ 配下）
+  diagnosisPlacement: "diagnosis-result",
   // PurchaseCard の placement 省略時の既定値
   defaultPlacement: "after-decision",
   // 標準記事の購入 CTA 構成（配置ごとの「商品1つにつき何枚」）。

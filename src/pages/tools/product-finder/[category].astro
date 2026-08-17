@@ -1,0 +1,348 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import RelatedArticles from '../../../components/RelatedArticles.astro';
+import { diagnosisCategories, findDiagnosisCategory } from '../../../data/diagnoses';
+import { validateDiagnosisData } from '../../../domain/diagnosis/validate';
+
+export function getStaticPaths() {
+  return diagnosisCategories.map((entry) => ({
+    params: { category: entry.slug },
+  }));
+}
+
+const { category = '' } = Astro.params;
+
+// 存在しないカテゴリは Astro の getStaticPaths で除外済みだが、
+// 万一の場合はビルドエラーにする（ビルド時検証で防ぐ）。
+const entry: (typeof diagnosisCategories)[number] | undefined =
+  findDiagnosisCategory(category);
+if (!entry) {
+  throw new Error(`unknown diagnosis category: ${category}`);
+}
+
+const { config, products, reasons, pageContent } = entry;
+
+// ビルド時に診断データを検証する（不整合があればビルドが失敗する）
+validateDiagnosisData(config, products, reasons);
+
+// クライアントへ渡す診断データ（JSON にシリアライズ可能な形に絞る）
+const clientData = {
+  diagnosis: {
+    id: config.id,
+    categoryId: config.categoryId,
+    productIds: config.productIds,
+    questions: config.questions,
+    tieBreaker: config.tieBreaker,
+    resultConfig: config.resultConfig,
+  },
+  products: products.map((product: (typeof products)[number]) => ({
+    id: product.id,
+    name: product.name,
+    brand: product.brand,
+    articleUrls: product.articleUrls,
+    purchaseLinks: product.purchaseLinks,
+    tags: product.tags,
+    attributes: product.attributes,
+  })),
+  reasons,
+};
+---
+
+<BaseLayout
+  title={pageContent.pageTitle}
+  description={pageContent.pageDescription}
+  faq={pageContent.faq}
+>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / <a href="/tools/product-finder/">商品選択診断</a> / {config.categoryLabel}</p>
+
+    <h1>{pageContent.headline}</h1>
+    <p class="lead">{pageContent.lead}</p>
+
+    <div class="diagnosis-widget" data-diagnosis-widget data-diagnosis-data={JSON.stringify(clientData)}>
+      <p class="notice">広告・PRを含みます。判定はメーカー公式情報に基づき、広告の有無で順位は変わりません。</p>
+
+      <!-- 開始画面 -->
+      <section class="diagnosis-start" data-diagnosis-start>
+        <h2>30秒で自分に合う商品を診断</h2>
+        <p>質問は{config.questions.length}問。回答はこのブラウザ内だけで処理され、サーバーへ送信されません。</p>
+        <button type="button" class="primary-button" data-diagnosis-begin>診断をはじめる</button>
+      </section>
+
+      <!-- 質問画面 -->
+      <section class="diagnosis-question" data-diagnosis-question hidden>
+        <p class="meta" data-diagnosis-progress>質問</p>
+        <h2 data-diagnosis-label>診断の質問</h2>
+        <p data-diagnosis-description>質問に回答してください。</p>
+        <fieldset class="diagnosis-options" data-diagnosis-options></fieldset>
+        <div class="diagnosis-nav">
+          <button type="button" class="secondary-button" data-diagnosis-prev hidden>前の質問へ</button>
+          <button type="button" class="primary-button" data-diagnosis-next disabled>次へ</button>
+        </div>
+      </section>
+
+      <!-- 結果画面 -->
+      <section class="diagnosis-result" data-diagnosis-result hidden aria-live="polite">
+        <h2 data-diagnosis-top-heading>診断結果</h2>
+        <div data-diagnosis-ranking>回答を集計しています。</div>
+        <p class="diagnosis-disclaimer" data-diagnosis-disclaimer></p>
+        <div class="diagnosis-actions">
+          <button type="button" class="secondary-button" data-diagnosis-restart>もう一度診断する</button>
+          <a class="secondary-button" href="#diagnosis-guide">選び方をもう一度見る</a>
+        </div>
+      </section>
+
+      <!-- 候補ゼロ -->
+      <section class="diagnosis-empty" data-diagnosis-empty hidden>
+        <h2>条件に合う商品がありませんでした</h2>
+        <p>今回の条件では、診断対象商品の中にすべての条件を満たすものがありません。条件を緩めるか、比較記事をご覧ください。</p>
+        <button type="button" class="primary-button" data-diagnosis-restart>条件を変えて診断する</button>
+        <a class="secondary-button" href={pageContent.relatedArticles[0]?.path ?? '/articles/'}>比較記事を見る</a>
+      </section>
+    </div>
+
+    <h2 id="diagnosis-guide">診断対象と選び方</h2>
+    <p>この診断の対象は、次の商品です。</p>
+    <ul>
+      {pageContent.targetItems.map((item: string) => <li>{item}</li>)}
+    </ul>
+    <p>選び方のポイントは次の通りです。</p>
+    {pageContent.guideSections.map((section: (typeof pageContent.guideSections)[number]) => (
+      <>
+        <h3>{section.heading}</h3>
+        <p>{section.body}</p>
+      </>
+    ))}
+    <p class="diagnosis-disclaimer">{config.resultConfig.disclaimer}</p>
+
+    <h2>関連する比較記事</h2>
+    <div class="purchase-cards">
+      {pageContent.relatedArticles.map((article: (typeof pageContent.relatedArticles)[number]) => (
+        <a class="card-link" href={article.path}>{article.label} →</a>
+      ))}
+    </div>
+
+    <h2>よくある質問</h2>
+    <div class="faq-list">
+      {pageContent.faq.map((entry: (typeof pageContent.faq)[number]) => (
+        <details class="faq-item">
+          <summary><h3>{entry.question}</h3></summary>
+          <p>{entry.answer}</p>
+        </details>
+      ))}
+    </div>
+
+    <h2>調査方法・免責事項</h2>
+    <p>この診断は、メーカー公式の商品ページで確認できる情報のみを根拠としています。個人の感想や口コミは判定に使っていません。商品仕様や価格は変更される可能性があるため、購入時点の公式商品ページと販売ページを確認してください。広告の有無は判定順位に影響しません。</p>
+  </article>
+
+  <RelatedArticles currentPath={`/tools/product-finder/${category}/`} currentCategory={config.categoryLabel} />
+</BaseLayout>
+
+<script>
+  import { runDiagnosis } from '../../../domain/diagnosis/engine';
+  import type { DiagnosisConfig, Product } from '../../../domain/diagnosis/types';
+
+  interface ClientDiagnosisData {
+    diagnosis: DiagnosisConfig;
+    products: Product[];
+    reasons: Record<string, string>;
+  }
+
+  const widget = document.querySelector('[data-diagnosis-widget]');
+  if (widget) {
+    const root = widget;
+    const raw = root.getAttribute('data-diagnosis-data');
+    const parsed: ClientDiagnosisData | null = raw ? JSON.parse(raw) : null;
+    if (parsed) {
+      const data = parsed;
+      const storageKey = `product-diagnosis:${data.diagnosis.id}:v1`;
+      const answers: Record<string, string | string[] | number | boolean> = {};
+      let currentIndex = 0;
+
+      // 途中経過の保存・復元（localStorage）。個人情報は保存しない。
+      function saveState() {
+        try {
+          localStorage.setItem(
+            storageKey,
+            JSON.stringify({ answers, currentQuestionIndex: currentIndex }),
+          );
+        } catch {
+          // プライベートモード等で保存できない場合は黙って無視する
+        }
+      }
+      function loadState() {
+        try {
+          const saved = localStorage.getItem(storageKey);
+          if (!saved) return;
+          const state = JSON.parse(saved);
+          if (state && typeof state === 'object' && state.answers) {
+            for (const key of Object.keys(state.answers)) {
+              answers[key] = state.answers[key];
+            }
+            if (
+              Number.isInteger(state.currentQuestionIndex) &&
+              state.currentQuestionIndex >= 0 &&
+              state.currentQuestionIndex < data.diagnosis.questions.length
+            ) {
+              currentIndex = state.currentQuestionIndex;
+            }
+          }
+        } catch {
+          // 壊れた保存データは無視して最初から始める
+        }
+      }
+      function clearState() {
+        try {
+          localStorage.removeItem(storageKey);
+        } catch {
+          // 無視
+        }
+      }
+
+      const startSection = root.querySelector('[data-diagnosis-start]') as HTMLElement;
+      const questionSection = root.querySelector('[data-diagnosis-question]') as HTMLElement;
+      const resultSection = root.querySelector('[data-diagnosis-result]') as HTMLElement;
+      const emptySection = root.querySelector('[data-diagnosis-empty]') as HTMLElement;
+      const progressEl = root.querySelector('[data-diagnosis-progress]') as HTMLElement;
+      const labelEl = root.querySelector('[data-diagnosis-label]') as HTMLElement;
+      const descriptionEl = root.querySelector('[data-diagnosis-description]') as HTMLElement;
+      const optionsEl = root.querySelector('[data-diagnosis-options]') as HTMLElement;
+      const prevBtn = root.querySelector('[data-diagnosis-prev]') as HTMLButtonElement;
+      const nextBtn = root.querySelector('[data-diagnosis-next]') as HTMLButtonElement;
+
+      function showSection(section: HTMLElement) {
+        [startSection, questionSection, resultSection, emptySection].forEach((el) => {
+          el.hidden = el !== section;
+        });
+      }
+
+      function renderQuestion() {
+        const question = data.diagnosis.questions[currentIndex];
+        progressEl.textContent = `${currentIndex + 1} / ${data.diagnosis.questions.length} 問目`;
+        labelEl.textContent = question.label;
+        descriptionEl.textContent = question.description ?? '';
+        optionsEl.textContent = '';
+        prevBtn.hidden = currentIndex === 0;
+        nextBtn.textContent = currentIndex === data.diagnosis.questions.length - 1 ? '結果を見る' : '次へ';
+        nextBtn.disabled = !question.required || !hasAnswer(question.id);
+
+        for (const option of question.options ?? []) {
+          const label = document.createElement('label');
+          label.className = 'diagnosis-option';
+          const input = document.createElement('input');
+          input.type = 'radio';
+          input.name = question.id;
+          input.value = option.id;
+          input.checked = answers[question.id] === option.id;
+          input.addEventListener('change', () => {
+            answers[question.id] = option.id;
+            nextBtn.disabled = false;
+            saveState();
+          });
+          label.append(input, document.createElement('span'));
+          (label.lastChild as HTMLElement).textContent = option.label;
+          optionsEl.append(label);
+        }
+      }
+
+      function hasAnswer(questionId: string): boolean {
+        const answer = answers[questionId];
+        if (Array.isArray(answer)) return answer.length > 0;
+        return answer !== undefined && answer !== null && String(answer).trim().length > 0;
+      }
+
+      function renderResult() {
+        const result = runDiagnosis(
+          data.diagnosis,
+          data.products,
+          answers,
+        );
+        const top = result.rankedProducts[0];
+        const topHeading = root.querySelector('[data-diagnosis-top-heading]') as HTMLElement;
+        if (top) {
+          const product = data.products.find((p) => p.id === top.productId);
+          topHeading.textContent = data.diagnosis.resultConfig.topHeadingTemplate.replace(
+            '{productName}',
+            product?.name ?? '',
+          );
+        }
+        const disclaimer = root.querySelector('[data-diagnosis-disclaimer]') as HTMLElement;
+        disclaimer.textContent = data.diagnosis.resultConfig.disclaimer;
+
+        const ranking = root.querySelector('[data-diagnosis-ranking]') as HTMLElement;
+        ranking.textContent = '';
+        for (const [index, entry] of result.rankedProducts.entries()) {
+          if (index >= 3) break;
+          const product = data.products.find((p) => p.id === entry.productId);
+          if (!product) continue;
+          const card = document.createElement('article');
+          card.className = index === 0 ? 'diagnosis-card diagnosis-card--top' : 'diagnosis-card';
+          const rankLabel = index === 0 ? 'おすすめ' : index === 1 ? '次点' : '条件次第でおすすめ';
+          card.innerHTML = `
+            <p class="diagnosis-card__rank">${rankLabel}</p>
+            <h3>${product.name}</h3>
+            <ul class="diagnosis-card__reasons">
+              ${entry.positiveReasons.map((code: string) => `<li>✓ ${data.reasons[code] ?? code}</li>`).join('')}
+              ${entry.cautions.map((code: string) => `<li>・${data.reasons[code] ?? code}</li>`).join('')}
+            </ul>
+            <div class="diagnosis-card__links">
+              ${product.articleUrls.map((url: string) => `<a href="${url}" data-diagnosis-article-link data-rank="${index + 1}">詳しい比較を見る</a>`).join('')}
+              ${product.purchaseLinks.map((link: { provider: string; url: string; affiliate: boolean }) => `<a href="${link.url}" rel="noopener noreferrer" target="_blank" data-cta-event="purchase" data-product-id="${product.id}" data-placement="diagnosis-result" data-rank="${index + 1}">楽天で商品を見る</a>`).join('')}
+            </div>
+          `;
+          ranking.append(card);
+        }
+      }
+
+      root.querySelector('[data-diagnosis-begin]')?.addEventListener('click', () => {
+        currentIndex = 0;
+        showSection(questionSection);
+        renderQuestion();
+      });
+      prevBtn.addEventListener('click', () => {
+        if (currentIndex > 0) {
+          currentIndex -= 1;
+          renderQuestion();
+          saveState();
+        }
+      });
+      nextBtn.addEventListener('click', () => {
+        if (currentIndex < data.diagnosis.questions.length - 1) {
+          currentIndex += 1;
+          renderQuestion();
+          saveState();
+        } else {
+          const result = runDiagnosis(
+            data.diagnosis,
+            data.products,
+            answers,
+          );
+          if (result.rankedProducts.length === 0) {
+            showSection(emptySection);
+          } else {
+            showSection(resultSection);
+            renderResult();
+          }
+          clearState();
+        }
+      });
+      root.querySelectorAll('[data-diagnosis-restart]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          for (const key of Object.keys(answers)) delete answers[key];
+          currentIndex = 0;
+          clearState();
+          showSection(questionSection);
+          renderQuestion();
+        });
+      });
+
+      // 途中経過があれば復元して質問画面から再開する
+      loadState();
+      if (Object.keys(answers).length > 0) {
+        showSection(questionSection);
+        renderQuestion();
+      }
+    }
+  }
+</script>
