@@ -52,7 +52,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("excludes incomplete commercial drafts from public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(33);
+    expect(publicArticleMetadata).toHaveLength(35);
     expect(
       publicArticleMetadata.some(
         (article) => article.id === "roborock-qrevo-curv-vs-dreame-x50",

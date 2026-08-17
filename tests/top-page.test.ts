@@ -1,7 +1,10 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { publicArticleMetadata } from "../src/content/articles";
-import { ARTICLE_LAYOUT } from "../config/article-layout.mjs";
+import {
+  publicArticleMetadata,
+  articleMetadata,
+} from "../src/content/articles";
+import { contentTypeFor, ARTICLE_LAYOUT } from "../config/article-layout.mjs";
 
 // 実ビルド（astro build）後の dist を検証する。verify チェーンは build の後に
 // vitest を実行するため、CI では常に dist が存在する。
