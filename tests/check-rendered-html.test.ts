@@ -12,6 +12,7 @@ import {
   readArticleProductCount,
   validateArticleCtas,
   validateArticleContentType,
+  validateSourceToggle,
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
@@ -781,5 +782,44 @@ describe("article content type", () => {
         1,
       ),
     ).toEqual([]);
+  });
+});
+
+describe("source-toggle fold (根拠・確認先 column)", () => {
+  const sourceTable = (toggle: boolean) =>
+    `<details class="fold-section" id="specs"><summary>詳細仕様</summary>${toggle ? '<details class="source-toggle"><summary>根拠・確認先を表示</summary></details>' : ""}<div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">A</th><th scope="col">B</th><th scope="col">根拠・確認先</th></tr></thead><tbody><tr><th scope="row">重量</th><td>1kg</td><td>2kg</td><td>公式ページ</td></tr></tbody></table></div></details>`;
+
+  it("accepts a 4-column source table preceded by the toggle", () => {
+    expect(
+      validateSourceToggle("articles/example/index.html", sourceTable(true)),
+    ).toEqual([]);
+  });
+
+  it("rejects a 4-column source table without the toggle", () => {
+    expect(
+      validateSourceToggle("articles/example/index.html", sourceTable(false)),
+    ).toEqual([
+      'articles/example/index.html: 根拠・確認先 column table must be preceded by <details class="source-toggle">',
+    ]);
+  });
+
+  it("rejects a toggle with no 4-column source table (dead toggle)", () => {
+    const html =
+      '<details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">A</th><th scope="col">B</th></tr></thead></table></div>';
+    expect(validateSourceToggle("articles/example/index.html", html)).toEqual([
+      "articles/example/index.html: source-toggle present but no 根拠・確認先 column table found",
+    ]);
+  });
+
+  it("ignores 3-column tables without a toggle (no false positive)", () => {
+    const html =
+      '<div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">A</th><th scope="col">B</th></tr></thead></table></div>';
+    expect(validateSourceToggle("articles/example/index.html", html)).toEqual(
+      [],
+    );
+  });
+
+  it("ignores non-article pages", () => {
+    expect(validateSourceToggle("index.html", sourceTable(false))).toEqual([]);
   });
 });

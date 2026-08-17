@@ -626,6 +626,68 @@ a {
 .article .comparison th {
   font-size: 0.95rem;
 }
+
+/*
+ * 比較表の「根拠・確認先」列（4列目）はスマホでは折りたたむ。
+ * テーブル直前の <details class="source-toggle"> をタップすると展開する（CSS-only）。
+ * デスクトップでは常時4列表示で、トグル自体は非表示。
+ */
+.source-toggle {
+  display: none;
+}
+
+.source-toggle summary {
+  cursor: pointer;
+  list-style: none;
+  font-size: 0.9rem;
+  font-weight: 650;
+  color: var(--accent);
+  margin: 0.25rem 0 0.5rem;
+}
+
+.source-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.source-toggle summary::after {
+  content: "＋";
+  float: right;
+  color: var(--accent);
+  font-weight: 800;
+  margin-left: 0.6rem;
+}
+
+.source-toggle[open] summary::after {
+  content: "−";
+}
+
+.source-toggle summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (max-width: 640px) {
+  .source-toggle {
+    display: block;
+  }
+
+  /* 折りたたみ中は4列目を非表示にし、3列で収まるよう最小幅を解除 */
+  .source-toggle ~ .table-scroll .comparison {
+    min-width: 0;
+  }
+
+  .source-toggle ~ .table-scroll th:nth-child(4),
+  .source-toggle ~ .table-scroll td:nth-child(4) {
+    display: none;
+  }
+
+  .source-toggle[open] ~ .table-scroll th:nth-child(4),
+  .source-toggle[open] ~ .table-scroll td:nth-child(4) {
+    display: table-cell;
+  }
+}
+
 @media (min-width: 700px) {
   .grid.two {
     grid-template-columns: repeat(2, 1fr);

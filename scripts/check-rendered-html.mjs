@@ -256,6 +256,56 @@ export function validateArticleContentType(relative, html, productCount) {
   return errors;
 }
 
+// 「根拠・確認先」列（4列目）を持つ比較表は、スマホでは
+// <details class="source-toggle"> で折りたたむ（CSS-only、docs/article-layout-v3-2026-08.md）。
+// 根拠列テーブルを描画する記事にはトグルが必須、逆にトグルのみ存在して
+// 根拠列テーブルが無い記事は壊れたトグルとして検出する（fail-closed）。
+const SOURCE_COLUMN_HEADER_PATTERN = /^(?:根拠|根拠・確認先)$/;
+
+function isSourceColumnTable(block) {
+  const thead = block.match(/<thead>[\s\S]*?<\/thead>/)?.[0] ?? "";
+  const headers = [...thead.matchAll(/<th[^>]*>([\s\S]*?)<\/th>/g)].map((m) =>
+    m[1].trim(),
+  );
+  if (headers.length !== 4) return false;
+  return SOURCE_COLUMN_HEADER_PATTERN.test(headers[3] ?? "");
+}
+
+export function validateSourceToggle(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const errors = [];
+  const tableScrolls = [...html.matchAll(/<div class="table-scroll">/g)];
+  let hasSourceTable = false;
+
+  for (let index = 0; index < tableScrolls.length; index += 1) {
+    const divStart = tableScrolls[index].index;
+    const divEnd =
+      index + 1 < tableScrolls.length
+        ? tableScrolls[index + 1].index
+        : html.length;
+    const block = html.slice(divStart, divEnd);
+    if (!isSourceColumnTable(block)) continue;
+    hasSourceTable = true;
+
+    // 直前の要素（空白を挟んでもよい）が </details> であること
+    let cursor = divStart - 1;
+    while (cursor >= 0 && /\s/.test(html[cursor])) cursor -= 1;
+    const tail = html.slice(Math.max(0, cursor - 9), cursor + 1);
+    if (!tail.endsWith("</details>")) {
+      errors.push(
+        `${relative}: 根拠・確認先 column table must be preceded by <details class="source-toggle">`,
+      );
+    }
+  }
+
+  if (!hasSourceTable && /<details class="source-toggle">/.test(html)) {
+    errors.push(
+      `${relative}: source-toggle present but no 根拠・確認先 column table found`,
+    );
+  }
+  return errors;
+}
+
 // 期待 CTA 枚数は、記事メタデータの商品数（productCount）と
 // config/article-layout.mjs（ARTICLE_LAYOUT.ctaSets）から記事ごとに導出する。
 // 比較記事（productCount=2）→ 2枚、単一商品記事（productCount=1）→ 1枚（v3）。
@@ -641,6 +691,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
     errors.push(...validateArticleContentType(relative, html, productCount));
+    errors.push(...validateSourceToggle(relative, html));
     const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(
