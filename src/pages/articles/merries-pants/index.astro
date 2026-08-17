@@ -7,7 +7,6 @@ import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {merriesPantsArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {
   ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
@@ -54,13 +53,6 @@ const standardCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(
-  articleMetadata.productInfoCheckedAt,
-  contentAsOf,
-);
-
 const differenceRows: DifferenceRow[] = [
   {
     label: '公式が案内する主な機能',
@@ -90,20 +82,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">メリーズのパンツタイプには「ファーストプレミアム」と「ずっと肌さらエアスルー」の2つがあります。この記事では、花王公式で確認できる機能・サイズ展開だけをもとに、どちらを先に確認すればよいかを整理します。あてずっぽうではなく「公式に書かれていること」と「まだ確認が必要なこと」を分けて書いています。</p>
+    <p class="lead">メリーズのパンツタイプ「ファーストプレミアム」と「ずっと肌さらエアスルー」を、花王公式で確認できる機能・サイズ展開で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    {articleMetadata.productInfoCheckedAt && (
-      <div class="verification-summary" aria-label="記事情報の確認状況">
-        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-      </div>
-    )}
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience] }}
@@ -112,7 +97,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-
+    <p>まとめ：肌ざわり・肌への配慮を優先するなら「ファーストプレミアム」、ムレ・おしっこ対策を優先するなら「ずっと肌さらエアスルー」が候補です。</p>
 
     <h2 id="checked">確認できる項目</h2>
     <div class="table-scroll">
@@ -133,36 +118,6 @@ const differenceRows: DifferenceRow[] = [
     <div class="source-links">
       <a class="card-link" href={firstPremium} target="_blank" rel="noopener noreferrer">ファーストプレミアム公式商品ページ →</a>
       <a class="card-link" href={airsle} target="_blank" rel="noopener noreferrer">ずっと肌さらエアスルー公式商品ページ →</a>
-    </div>
-
-
-
-    <h2>どんな確認を優先するか</h2>
-    <ul>
-      <li>ファーストプレミアム：肌ざわり・肌への配慮の公式機能を確認したい場合。</li>
-      <li>ずっと肌さらエアスルー：ムレ対策・おしっこ吸収の公式機能を確認したい場合。</li>
-    </ul>
-    <p>これは公式ページに掲載された機能の整理であり、どちらがすべての赤ちゃんに合うと断定するものではありません。</p>
-
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="ファーストプレミアム"
-        audience="肌ざわり・肌への配慮の機能を優先する人向け"
-        href={firstPremiumSearch}
-        productId="merries-fp-pants"
-        imagePath="/products/merries-fp-newborn.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="ずっと肌さらエアスルー"
-        audience="ムレ対策・おしっこ吸収の機能を優先する人向け"
-        href={airsleSearch}
-        productId="merries-airsle-pants"
-        imagePath="/products/merries-airsle-newborn.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
     </div>
 
     <ArticleSocialProof

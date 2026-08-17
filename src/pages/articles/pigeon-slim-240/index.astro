@@ -7,7 +7,6 @@ import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import DiagnosisCta from '../../../components/DiagnosisCta.astro';
 import {pigeonSlim240Article as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {
   ComparisonCandidate, DifferenceRow,
 } from '../../../lib/comparison';
@@ -65,12 +64,6 @@ const faqEntries = [
   },
 ] as const;
 
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(
-  articleMetadata.productInfoCheckedAt,
-  contentAsOf,
-);
-
 const breastCandidate: ComparisonCandidate = {
   product: 'ピジョン',
   line: '母乳実感 240ml',
@@ -88,7 +81,6 @@ const slimCandidate: ComparisonCandidate = {
   note: '公式商品ページで仕様を確認',
   status: 'official',
 };
-
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -126,20 +118,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 授乳用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">ピジョンには「母乳実感」と「スリムタイプ」の2つの哺乳びんシリーズがあります。この記事では、ピジョン公式で確認できる形状・乳首・消毒方法だけをもとに、2つの240mlの違いを整理します。「どちらもMの乳首が付く」と誤解しやすい点を、公式情報で確認できる範囲で解きほぐしていきます。</p>
+    <p class="lead">ピジョンの「母乳実感」と「スリムタイプ」の240mlを、公式で確認できる形状・乳首・消毒方法で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    {articleMetadata.productInfoCheckedAt && (
-      <div class="verification-summary" aria-label="記事情報の確認状況">
-        <p>商品情報確認日：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-        {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-      </div>
-    )}
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: breastCandidate.product, line: breastCandidate.line, tagline: breastCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${breastCandidate.product} ${breastCandidate.line}`, officialHref: breast, guidePoints: [breastCandidate.audience] }}
@@ -147,6 +132,8 @@ const differenceRows: DifferenceRow[] = [
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
+
+    <p>まとめ：広口で持ちやすく、乳首の選択肢が多いタイプを求めるなら「母乳実感」、転がりにくくコンパクトな形状を求めるなら「スリムタイプ」が候補です。</p>
 
     <DiagnosisCta heading="まだ迷っているなら" />
 
@@ -175,27 +162,6 @@ const differenceRows: DifferenceRow[] = [
       <li>スリムタイプ 240ml：細身で転がりにくいボトルを探している人、乳首をシンプルな4サイズ（S・M・Y・L）の中から選びたい人。</li>
     </ul>
     <p>これは公式ページに書かれた特徴の整理であり、どちらがすべての家庭に合うと断定するものではありません。購入前に対象月齢に合う乳首があるかも確認してください。</p>
-
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="母乳実感 プラスチック製 240ml"
-        audience="広口タイプの調乳・洗浄のしやすさと、6サイズの乳首ラインナップを優先する人向け"
-        href={breastSearch}
-        productId="pigeon-ppsu-240"
-        imagePath="/products/pigeon-bottle-ppsu240.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="スリムタイプ 240ml"
-        audience="細身で転がりにくく持ちやすい形と、シンプルな4サイズの乳首ラインナップを優先する人向け"
-        href={slimSearch}
-        productId="pigeon-slim-240"
-        imagePath="/products/pigeon-slim-pp240.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
 
     <ArticleSocialProof
       query="ピジョン 母乳実感 スリムタイプ 240ml"

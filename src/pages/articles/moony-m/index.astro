@@ -7,7 +7,6 @@ import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import DiagnosisCta from '../../../components/DiagnosisCta.astro';
 import {moonyMArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const teishigekiSeries = 'https://jp.moony.com/ja/products/nmn1.html';
@@ -62,10 +61,6 @@ const mashumaroCandidate: ComparisonCandidate = {
   status: 'official',
 };
 
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
-
 const differenceRows: DifferenceRow[] = [
   {
     "label": "うんちへの対策",
@@ -95,38 +90,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">ユニ・チャームのテープタイプMサイズには、「低刺激であんしん」と「マシュマロ肌ごこち モレ安心」があります。どちらも体重6〜11kg向けですが、公式に案内されている機能や無添加成分には違いがあります。「低刺激であんしん」Mは46枚入りで、うんち水分吸収シートとおしりガイドを搭載しています。一方、「マシュマロ肌ごこち モレ安心」Mは54枚入りで、背中と足回りのゆるうんちストッパーや最大12時間吸収などが案内されています。この記事では、2026年8月9日時点で確認できた公式情報だけを使って、Mサイズ同士の違いを整理します。</p>
+    <p class="lead">ユニ・チャームのテープタイプMサイズ「低刺激であんしん」（46枚入り）と「マシュマロ肌ごこち モレ安心」（54枚入り）を、公式で確認できる機能・入数で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="低刺激であんしん"
-        audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
-        href={teishigekiSearch}
-        productId="moony-teishigeki-m"
-        imagePath="/products/moony-teishigeki-m.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="マシュマロ肌ごこちモレ安心"
-        audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
-        href={mashumaroSearch}
-        productId="moony-mashumaro-m"
-        imagePath="/products/moony-mashumaro-m.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
@@ -136,14 +106,14 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
+    <p>まとめ：うんち水分吸収シート・おしりガイドを重視するなら「低刺激であんしん」、無添加弱酸性素材とゆるうんちストッパーを重視するなら「マシュマロ肌ごこち モレ安心」が候補です。</p>
+
     <DiagnosisCta href="/tools/product-finder/diaper/" />
 
     <h2 id="official">公式情報</h2>
     <p>「低刺激であんしん」Mは、体重6〜11kg向けのテープタイプで、楽天のユニ・チャーム公式店では46枚入りです。主な機能として、ゆるうんちの水分を下層へ吸収する「うんち水分吸収シート」と「おしりガイド」が案内されています。新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加です。また、公式には新生児〜Mについて「オーガニックコットンは含まれておりません」と明記されています。商品は2025年秋にリニューアルされています。</p>
     <p>なお、「低刺激であんしん」でオーガニックコットン一部配合シートが案内されているのはLサイズです。Lでは、石油由来油・香料・ラテックス・合成着色料の4成分無添加となり、オリーブ・ホホバ・ライスの植物オイルも使われています。これらはLサイズの仕様であり、Mサイズの仕様として扱わないよう注意が必要です。</p>
     <p>「マシュマロ肌ごこち モレ安心」Mも体重6〜11kg向けのテープタイプで、楽天のユニ・チャーム公式店では54枚入りです。無添加弱酸性素材、背中と足回りのゆるうんちストッパー、お知らせサイン、最大12時間吸収が公式に案内されています。全サイズで、石油由来油剤・香料・ラテックス・合成着色料の4成分無添加です。なお、新生児用にはおへそカット、Lサイズにはさらさら全面通気シートとのびーるフィットギャザーがありますが、これらはMサイズの機能としては扱いません。</p>
-
-
 
     <ArticleSocialProof
       query="ムーニー 低刺激 マシュマロ"

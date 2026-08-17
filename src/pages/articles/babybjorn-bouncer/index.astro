@@ -6,7 +6,6 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {babybjornBouncerArticle as articleMetadata} from '../../../content/articles';
-import {isContentStale} from '../../../lib/content-freshness';
 import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const bouncerGuideUrl = 'https://www.rakuten.ne.jp/gold/babybjorn/topics/bouncer-guide/';
@@ -59,10 +58,6 @@ const balanceCandidate: ComparisonCandidate = {
   note: '2トーン生地が特長・直近カラーバリエーション増加中',
   status: 'official',
 };
-
-
-const contentAsOf = new Date().toISOString().slice(0, 10);
-const productInfoStale = isContentStale(articleMetadata.productInfoCheckedAt, contentAsOf);
 
 const differenceRows: DifferenceRow[] = [
   {
@@ -121,38 +116,13 @@ const differenceRows: DifferenceRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 育児用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">バウンサー Bliss とバウンサー バランスソフトは、どちらもベビービョルンのバウンサーです。対象月齢や機能はほぼ同じで、違いは主にシートの素材とデザインにあります。この記事では、ベビービョルン公式のガイド・商品ページで2026年8月10日時点に確認できた情報だけを使って比較します。公式ページに記載されていることは「確認できること」として整理し、使用感や実際の肌触りなど、公式情報だけでは判断できないことは推測しません。</p>
+    <p class="lead">ベビービョルンのバウンサー「Bliss」と「バランスソフト」を、公式のガイド・商品ページで確認できる内容で比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ">
       <a href="#key-differences">違い</a>
       <a href="#decision-guide">どっち向き？</a>
 
       <a href="#faq">FAQ</a>
     </nav>
-    <div class="purchase-cards">
-      <PurchaseCard
-        name="バウンサー Bliss"
-        audience="シートカバーの柔らかさと、3Dジャージーを含む20種類以上の素材バリエーションを優先する人向け"
-        href={blissRakutenUrl}
-        productId="babybjorn-bouncer-bliss"
-        imagePath="/products/babybjorn-bouncer-bliss.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-      <PurchaseCard
-        name="バウンサー バランスソフト"
-        audience="2トーンの落ち着いたデザインと、コットン・メッシュなど定番素材を優先する人向け"
-        href={balanceRakutenUrl}
-        productId="babybjorn-bouncer-balance"
-        imagePath="/products/babybjorn-bouncer-balance.jpg"
-        placement="after-decision"
-        note="価格・在庫は販売先でご確認ください。"
-      />
-    </div>
-    <div class="verification-summary" aria-label="記事情報の確認状況">
-      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
-      {productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}
-    </div>
-    <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
@@ -162,7 +132,7 @@ const differenceRows: DifferenceRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
 
-
+    <p>まとめ：最新モデルでシート素材・デザインのバリエーションから選びたいならBliss、2トーンの落ち着いたデザインを好むならバランスソフトが候補です。</p>
 
     <h2 id="official">公式情報</h2>
     <p>ここでは、ベビービョルン公式のガイド・商品ページで確認できた内容を整理します。使用感・実際の肌触り・赤ちゃんの反応など、公式情報だけでは確認できないことは書いていません。</p>

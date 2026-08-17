@@ -45,6 +45,8 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
   BaseLayout が `<meta name="article:mid-cta" content="true">` を出力し、
   品質ゲート（`scripts/check-rendered-html.mjs`）が `product-count` / `mid-cta` の両 meta から
   期待枚数（総数 + placement 別）を導出して照合する。
+  2026-08-17 の v3 短縮で旧育児記事 14 本が短文化されたため、現在 `midArticleCta: true` の記事は無い
+  （全記事が末尾セットのみ）。今後長文記事を追加する場合は 3,000 文字目安でフラグを付ける。
 - 期待枚数:
   - 通常記事: 比較 2 / 単一 1（article-end のみ）
   - 長文記事: 比較 4 / 単一 2（article-end + after-decision）
