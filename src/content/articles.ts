@@ -2040,3 +2040,16 @@ export const articleMetadata = Object.freeze([
   panasonicEhNa9mVsEhNa7mArticle,
   ...additionalCommercialArticles,
 ]);
+
+const commercialArticleIds = new Set(
+  additionalCommercialArticleSeeds.map((article) => article.id),
+);
+
+// 初稿の共通テンプレート記事は、商品情報の確認日が入るまで公開対象から外す。
+export const publicArticleMetadata = Object.freeze(
+  articleMetadata.filter(
+    (article) =>
+      !commercialArticleIds.has(article.id) ||
+      Boolean(article.productInfoCheckedAt),
+  ),
+);

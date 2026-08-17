@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   articleMetadata,
+  publicArticleMetadata,
   babybjornArticle,
   babybjornBouncerArticle,
   babybjornOnekaiArticle,
@@ -50,6 +51,20 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 }
 
 describe("article metadata", () => {
+  it("excludes incomplete commercial drafts from public discovery surfaces", () => {
+    expect(publicArticleMetadata).toHaveLength(35);
+    expect(
+      publicArticleMetadata.some(
+        (article) => article.id === "roborock-qrevo-curv-vs-dreame-x50",
+      ),
+    ).toBe(false);
+    expect(
+      publicArticleMetadata.some(
+        (article) => article.id === "thermos-tiger-bottle",
+      ),
+    ).toBe(true);
+  });
+
   it("keeps the article page directories synchronized with the canonical master", () => {
     const articlesDir = join(process.cwd(), "src/pages/articles");
     const pagePaths = readdirSync(articlesDir, { withFileTypes: true })
@@ -69,10 +84,10 @@ describe("article metadata", () => {
     const memoPage = readFileSync("src/pages/memo.astro", "utf8");
     const sitemap = readFileSync("src/pages/sitemap.xml.ts", "utf8");
 
-    expect(articleIndex).toContain("import {articleMetadata}");
-    expect(memoPage).toContain("import { articleMetadata }");
+    expect(articleIndex).toContain("publicArticleMetadata");
+    expect(memoPage).toContain("publicArticleMetadata");
     expect(sitemap).toContain(
-      "...articleMetadata.map((article) => article.path)",
+      "...publicArticleMetadata.map((article) => article.path)",
     );
     expect(articleIndex).not.toContain("thermos-tiger-bottle");
     expect(memoPage).not.toContain("thermos-tiger-bottle");
@@ -86,8 +101,10 @@ describe("article metadata", () => {
     );
 
     expect(waterBottle).toBeDefined();
-    expect(memoPage).toContain("{articleMetadata.map((article) => (");
-    expect(memoPage).toContain("data-memo-item data-article-id={article.id}");
+    expect(memoPage).toContain("{publicArticleMetadata.map((article) => (");
+    expect(memoPage).toContain(
+      "data-memo-template data-article-id={article.id}",
+    );
     expect(memoPage).toContain(
       "sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds)",
     );

@@ -12,9 +12,9 @@ const { articleId } = Astro.props;
 <script>
   import { comparisonMemoStorageKey, encodeComparisonMemo, sanitizeComparisonMemo, toggleComparisonMemo } from '../lib/comparison-memo';
   import type { ComparisonMemoState } from '../lib/comparison-memo';
-  import { articleMetadata } from '../content/articles';
+  import { publicArticleMetadata } from '../content/articles';
 
-  const knownIds = articleMetadata.map((article) => article.id);
+  const knownIds = publicArticleMetadata.map((article) => article.id);
   document.querySelectorAll('[data-memo-control]').forEach((node) => {
     if (!(node instanceof HTMLElement) || node.dataset.memoBound === 'true') return;
     node.dataset.memoBound = 'true';

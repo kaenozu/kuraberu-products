@@ -1,25 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import {articleMetadata} from '../content/articles';
 import ArticleCard from '../components/ArticleCard.astro';
+import { publicArticleMetadata } from '../content/articles';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {diagnosisCategories} from '../data/diagnoses';
 
-const latest = [...articleMetadata]
+const latest = [...publicArticleMetadata]
   .sort((a, b) => (a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0))
   .slice(0, 6);
 
 // 「よく比較される商品」：config/article-layout.mjs の topPage.featuredPaths が
-// 唯一の情報源（3〜6件）。パスは articleMetadata に必ず存在する（ゲートが検証）。
+// 唯一の情報源（3〜6件）。パスは publicArticleMetadata に必ず存在する（ゲートが検証）。
 const featured = ARTICLE_LAYOUT.topPage.featuredPaths
-  .map((path) => articleMetadata.find((article) => article.path === path))
+  .map((path) => publicArticleMetadata.find((article) => article.path === path))
   .filter((article) => article !== undefined);
 
 // カテゴリ入口：記事数が topPage.categoryMinArticles 以上のカテゴリを表示。
 // 件数が多い順 → 名前順。リンク先は /articles/?category=…（一覧ページの
 // クライアント側フィルタが URL パラメータを読んで絞り込む）。
 const categoryCounts = new Map<string, number>();
-for (const article of articleMetadata) {
+for (const article of publicArticleMetadata) {
   categoryCounts.set(article.category, (categoryCounts.get(article.category) ?? 0) + 1);
 }
 const categories = [...categoryCounts.entries()]

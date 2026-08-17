@@ -1,17 +1,20 @@
 import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { articleMetadata } from "../src/content/articles";
-import { ARTICLE_LAYOUT, contentTypeFor } from "../config/article-layout.mjs";
+import {
+  publicArticleMetadata,
+  articleMetadata,
+} from "../src/content/articles";
+import { contentTypeFor, ARTICLE_LAYOUT } from "../config/article-layout.mjs";
 
 // 実ビルド（astro build）後の dist を検証する。verify チェーンは build の後に
 // vitest を実行するため、CI では常に dist が存在する。
 const topHtml = readFileSync("dist/index.html", "utf8");
 const articlesIndexHtml = readFileSync("dist/articles/index.html", "utf8");
 
-// 期待するカテゴリ集合は articleMetadata と config（topPage.categoryMinArticles）
+// 期待するカテゴリ集合は publicArticleMetadata と config（topPage.categoryMinArticles）
 // から導出する（トップページの実装と同一ロジック）。
 const categoryCounts = new Map<string, number>();
-for (const article of articleMetadata) {
+for (const article of publicArticleMetadata) {
   categoryCounts.set(
     article.category,
     (categoryCounts.get(article.category) ?? 0) + 1,
@@ -31,11 +34,11 @@ describe("top page (rendered dist)", () => {
     );
     expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(6);
 
-    // config のパスはすべて articleMetadata に存在する（存在しないパスはゲートも落とす）
+    // config のパスはすべて publicArticleMetadata に存在する（存在しないパスはゲートも落とす）
     for (const path of ARTICLE_LAYOUT.topPage.featuredPaths) {
-      expect(articleMetadata.some((article) => article.path === path)).toBe(
-        true,
-      );
+      expect(
+        publicArticleMetadata.some((article) => article.path === path),
+      ).toBe(true);
     }
 
     const section = topHtml.match(
@@ -58,7 +61,7 @@ describe("top page (rendered dist)", () => {
     ].map((match) => decodeURIComponent(match[1]));
     expect(links).toEqual(expectedCategories.map(([name]) => name));
 
-    // 各カテゴリの件数ラベルが articleMetadata の実数と一致する
+    // 各カテゴリの件数ラベルが publicArticleMetadata の実数と一致する
     for (const [name, count] of expectedCategories) {
       expect(section![1]).toContain(`${name}</span>`);
       expect(section![1]).toContain(`${count}件`);

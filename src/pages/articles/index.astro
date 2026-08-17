@@ -1,17 +1,29 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
-import {articleMetadata} from '../../content/articles';
+import { publicArticleMetadata } from '../../content/articles';
 import {normalizeDiscoveryText} from '../../lib/article-discovery';
 
-const categories = [...new Set(articleMetadata.map((article) => article.category))].sort();
-const tags = [...new Set(articleMetadata.flatMap((article) => article.tags))].sort();
-const sorted = [...articleMetadata].sort((a, b) =>
+const categories = [...new Set(publicArticleMetadata.map((article) => article.category))].sort();
+const tags = [...new Set(publicArticleMetadata.flatMap((article) => article.tags))].sort();
+const sorted = [...publicArticleMetadata].sort((a, b) =>
   a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0,
 );
 const pageSize = 12;
 const totalPages = Math.ceil(sorted.length / pageSize);
 const visibleArticles = sorted.slice(0, pageSize);
+const discoveryIndex = sorted.map((article) => ({
+  id: article.id,
+  path: article.path,
+  headline: article.headline,
+  summary: article.summary,
+  category: article.category,
+  tags: article.tags,
+  audiences: article.audiences,
+  uses: article.uses,
+  modifiedAt: article.modifiedAt,
+  imagePath: article.imagePath,
+}));
 ---
 <BaseLayout title="比較記事一覧｜くらべる商品メモ" description="メーカー公式の情報で商品を比べる記事一覧">
   <section class="section wrap article-index" data-article-discovery>
@@ -44,8 +56,9 @@ const visibleArticles = sorted.slice(0, pageSize);
       </label>
       <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
     </form>
-    <p class="meta" aria-live="polite" data-discovery-count>{articleMetadata.length}件の記事</p>
+    <p class="meta" aria-live="polite" data-discovery-count>{publicArticleMetadata.length}件の記事</p>
 
+    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex)}></script>
     <div class="article-list" data-discovery-results>
       {visibleArticles.map((article) => (
         <ArticleCard

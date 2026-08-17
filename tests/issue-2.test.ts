@@ -11,7 +11,7 @@ const read = (path: string) => readFileSync(path, "utf8");
 describe("Issue #2 editorial comparison UI", () => {
   it("keeps articles discoverable from the homepage", () => {
     const homepage = read("src/pages/index.astro");
-    expect(homepage).toContain("articleMetadata");
+    expect(homepage).toContain("publicArticleMetadata");
     expect(homepage).toContain("/articles/");
     expect(homepage).toContain("比較記事");
   });
