@@ -22,13 +22,17 @@ const leftSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponen
 const rightSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
+const resolveRakutenProduct = async (name: string, terms: string[]) => {
+  const products = await fetchRakutenProducts(name);
+  return (
+    selectRakutenProduct(products, terms) ??
+    products.find((product) => product.imageUrl) ??
+    undefined
+  );
+};
 const [leftRakutenProduct, rightRakutenProduct] = await Promise.all([
-  fetchRakutenProducts(seed.leftProduct).then((products) =>
-    selectRakutenProduct(products, leftTerms),
-  ),
-  fetchRakutenProducts(seed.rightProduct).then((products) =>
-    selectRakutenProduct(products, rightTerms),
-  ),
+  resolveRakutenProduct(seed.leftProduct, leftTerms),
+  resolveRakutenProduct(seed.rightProduct, rightTerms),
 ]);
 const rows: DifferenceRow[] = [
   { label: '主な比較軸', left: seed.leftPoint, right: seed.rightPoint },
