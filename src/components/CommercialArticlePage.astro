@@ -82,11 +82,6 @@ const faq = [
       <li>最後に価格・送料・ポイントを販売ページで比較する。</li>
     </ol>
 
-    <div class="purchase-cards">
-      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imagePath={images.left} imageUrl={leftRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
-      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imagePath={images.right} imageUrl={rightRakutenProduct?.imageUrl} placement="after-decision" note="価格・在庫・送料は販売先でご確認ください。" />
-    </div>
-
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faq.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}

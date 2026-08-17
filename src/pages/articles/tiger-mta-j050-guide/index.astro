@@ -35,10 +35,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">タイガー MTA-J050とMTA-J080は、ハンドル付きのワンプッシュマグボトルです。この記事では、タイガー公式ページで確認できる容量・重量・保温保冷効力・寸法の違いを比較します。お手入れやハンドルなどシリーズ共通の特徴と、サイズ選びに関わる差分を分けて整理します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
-    <div class="purchase-cards">
-      <PurchaseCard name="タイガー MTA-J050" audience="0.5L・軽さを優先する人向け" href={tigerMtaJ050.rakutenUrl} productId="tiger-mta-j050" imagePath={tigerMtaJ050.imagePath} placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="タイガー MTA-J080" audience="0.8L・容量を優先する人向け" href={mtaJ080Rakuten} productId="tiger-mta-j080" imagePath={mtaJ080Image} placement="after-decision" note="価格・在庫は販売先でご確認ください。" />
-    </div>
+
     <div class="verification-summary" aria-label="記事情報の確認状況"><p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>{productInfoStale && <p class="notice">商品情報の確認から時間が経過しています。購入前に公式ページで最新仕様を確認してください。</p>}</div>
     <p class="notice">広告表示：この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p>
     <ArticleComparisonV2

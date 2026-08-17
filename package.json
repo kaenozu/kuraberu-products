@@ -20,13 +20,14 @@
     "validate:content": "node scripts/validate-content.mjs",
     "check:css-usage": "node scripts/report-css-usage.mjs --fail-on-unused",
     "check:spec-claims": "node scripts/spec-claims.mjs check",
+    "check:official-links": "node scripts/check-official-links.mjs check",
     "check:rendered": "node scripts/check-rendered-html.mjs",
     "check:deployment": "node scripts/check-deployment-html.mjs",
     "check:external-link-syntax": "node scripts/check-external-links.mjs",
     "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
     "check:external-links": "node scripts/check-external-links.mjs",
     "announce:draft": "node scripts/generate-x-announcements.mjs",
-    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/check-external-links.mjs && node scripts/spec-claims.mjs check && vitest run"
+    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check && vitest run"
   },
   "dependencies": {
     "astro": "7.2.0",

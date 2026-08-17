@@ -61,7 +61,7 @@ describe("PurchaseCard", () => {
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
   });
 
-  it("defaults to after-decision placement and renders image", async () => {
+  it("defaults to article-end placement (v3 principle) and renders image", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
       props: {
@@ -73,7 +73,7 @@ describe("PurchaseCard", () => {
     });
 
     expect(html).toContain("タイガー MTA-J050");
-    expect(html).toContain('data-placement="after-decision"');
+    expect(html).toContain('data-placement="article-end"');
     expect(html).toContain('src="/products/tiger-mta-j050.jpg"');
   });
 

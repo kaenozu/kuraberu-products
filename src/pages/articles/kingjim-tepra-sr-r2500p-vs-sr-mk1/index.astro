@@ -47,10 +47,7 @@ const keyDiffRows: KeyDiffRow[] = [
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
     <p>軽さと持ち運びやすさを優先するならSR-R2500P、24mm幅のラベルやACアダプターも使いたいならSR-MK1が候補です。両機種ともBluetooth接続とオートカッターに対応しています。</p>
-    <div class="purchase-cards">
-      <PurchaseCard name="キングジム テプラ PRO SR-R2500P" audience={leftAudience} href={leftSearch} imagePath={leftImage} note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="キングジム テプラ PRO SR-MK1" audience={rightAudience} href={rightSearch} imagePath={rightImage} note="価格・在庫は販売先でご確認ください。" />
-    </div>
+
     <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">SR-R2500P</th><th scope="col">SR-MK1</th><th scope="col">根拠</th></tr></thead><tbody>
       <tr><th scope="row">対応テープ幅</th><td>4〜18mm</td><td>4〜24mm</td><td><a href={leftOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a> / <a href={rightOfficial} target="_blank" rel="noopener noreferrer">公式ページ</a></td></tr>
       <tr><th scope="row">質量（電池・テープ除く）</th><td>約420g</td><td>約470g</td><td>各公式商品ページ</td></tr>
@@ -61,8 +58,8 @@ const keyDiffRows: KeyDiffRow[] = [
     </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
     <h2 id="official">公式情報</h2><p>比較の根拠は、キングジム公式の商品ページで2026年8月14日に確認した仕様です。両機種ともBluetooth接続に対応し、テプラPRO用アプリからラベルを作成できます。</p>
     <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">SR-R2500P 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">SR-MK1 公式商品ページ →</a></div>
-    <ArticleSocialProof query="キングジム テプラ SR-R2500P SR-MK1" checkedAt="2026-08-14" hasPosts={true}>
-      <ExternalEmbed provider="youtube" url="https://www.youtube.com/watch?v=BVY2RKXn7uc" title="キングジム公式：テプラ PRO MARK（SR-MK1）とSR-R2500Pの違い" purpose="キングジム公式YouTubeチャンネルによる、MARK（SR-MK1）とSR-R2500Pの比較動画です。" autoload />
+    <ArticleSocialProof query="キングジム テプラ SR-R2500P SR-MK1" checkedAt="2026-08-14" hasPosts={true} bestMatch="model">
+      <ExternalEmbed provider="youtube" match="model" url="https://www.youtube.com/watch?v=BVY2RKXn7uc" title="キングジム公式：テプラ PRO MARK（SR-MK1）とSR-R2500Pの違い" purpose="キングジム公式YouTubeチャンネルによる、MARK（SR-MK1）とSR-R2500Pの比較動画です。" autoload />
     </ArticleSocialProof>
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <h2>購入時の注意</h2><p>使いたいラベル幅、電源方式、持ち運びやすさを購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>

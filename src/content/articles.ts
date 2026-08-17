@@ -6,6 +6,8 @@ export interface ArticleChangeLogEntry {
 export interface ArticleMetadata {
   id: string;
   productCount: number;
+  /** 長文記事フラグ（true の記事だけ途中 CTA = after-decision を許容する。v3） */
+  midArticleCta?: boolean;
   path: `/articles/${string}/`;
   title: string;
   headline: string;
@@ -134,6 +136,7 @@ export function defineArticleMetadata(
 export const pampersNewbornArticle = defineArticleMetadata({
   id: "pampers-newborn",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/pampers-newborn/",
   title: "パンパースの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -168,6 +171,7 @@ export const pampersNewbornArticle = defineArticleMetadata({
 export const merriesNewbornArticle = defineArticleMetadata({
   id: "merries-newborn",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/merries-newborn/",
   title: "メリーズの新生児用、どっち？｜くらべる商品メモ",
   headline:
@@ -201,6 +205,7 @@ export const merriesNewbornArticle = defineArticleMetadata({
 export const pigeonBottle240Article = defineArticleMetadata({
   id: "pigeon-bottle-240",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/pigeon-bottle-240/",
   title: "ピジョン母乳実感240ml、どっち？｜くらべる商品メモ",
   headline:
@@ -235,6 +240,7 @@ export const pigeonBottle240Article = defineArticleMetadata({
 export const pigeonSlim240Article = defineArticleMetadata({
   id: "pigeon-slim-240",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/pigeon-slim-240/",
   title: "ピジョン母乳実感 vs スリムタイプ、どっち？｜くらべる商品メモ",
   headline:
@@ -269,6 +275,7 @@ export const pigeonSlim240Article = defineArticleMetadata({
 export const moonyMArticle = defineArticleMetadata({
   id: "moony-m",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/moony-m/",
   title: "ムーニーのテープ、どっち？｜くらべる商品メモ",
   headline:
@@ -308,6 +315,7 @@ export const moonyMArticle = defineArticleMetadata({
 export const merriesPantsArticle = defineArticleMetadata({
   id: "merries-pants",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/merries-pants/",
   title: "メリーズのパンツ、どっち？｜くらべる商品メモ",
   headline:
@@ -341,6 +349,7 @@ export const merriesPantsArticle = defineArticleMetadata({
 export const shupotArticle = defineArticleMetadata({
   id: "shupot",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/shupot/",
   title: "ピジョンの鼻吸い器、どっち？｜くらべる商品メモ",
   headline:
@@ -375,6 +384,7 @@ export const shupotArticle = defineArticleMetadata({
 export const babybjornArticle = defineArticleMetadata({
   id: "babybjorn",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/babybjorn/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「HARMONY」と「MINI」を比較",
@@ -411,6 +421,7 @@ export const babybjornArticle = defineArticleMetadata({
 export const babybjornOnekaiArticle = defineArticleMetadata({
   id: "babybjorn-onekai",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/babybjorn-onekai/",
   title: "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
   headline: "ベビービョルンの抱っこひも、どっち？「ONE KAI」と「MOVE」を比較",
@@ -447,6 +458,7 @@ export const babybjornOnekaiArticle = defineArticleMetadata({
 export const babybjornBouncerArticle = defineArticleMetadata({
   id: "babybjorn-bouncer",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/babybjorn-bouncer/",
   title: "ベビービョルンのバウンサー、どっち？｜くらべる商品メモ",
   headline:
@@ -485,6 +497,7 @@ export const babybjornBouncerArticle = defineArticleMetadata({
 export const cradleArticle = defineArticleMetadata({
   id: "babybjorn-cradle",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/babybjorn-cradle/",
   title: "ゆりかご型ベビーベッド、どっち？｜くらべる商品メモ",
   headline:
@@ -528,6 +541,7 @@ export const cradleArticle = defineArticleMetadata({
 export const pottyArticle = defineArticleMetadata({
   id: "babybjorn-potty",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/babybjorn-potty/",
   title: "トイレトレーニング、どっち？｜くらべる商品メモ",
   headline:
@@ -570,6 +584,7 @@ export const pottyArticle = defineArticleMetadata({
 export const pigeonBottleSizeArticle = defineArticleMetadata({
   id: "pigeon-bottle-160-240",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/pigeon-bottle-160-240/",
   title: "ピジョン母乳実感160ml vs 240ml、どっち？｜くらべる商品メモ",
   headline: "ピジョンの哺乳びん、どっち？「母乳実感160ml」と「240ml」を比較",
@@ -835,6 +850,7 @@ export const panasonicNeFl1aVsNeFl1cArticle = defineArticleMetadata({
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
   productCount: 2,
+  midArticleCta: true,
   path: "/articles/thermos-tiger-bottle/",
   title: "サーモスとタイガーの水筒、どっち？｜くらべる商品メモ",
   headline:

@@ -236,6 +236,22 @@ describe("article metadata", () => {
     );
   });
 
+  it("renders the mid-cta meta only for long articles (v3)", () => {
+    const longHtml = readFileSync(
+      "dist/articles/pampers-newborn/index.html",
+      "utf8",
+    );
+    expect(longHtml).toContain('<meta name="article:mid-cta" content="true">');
+    expect(pampersNewbornArticle.midArticleCta).toBe(true);
+
+    const shortHtml = readFileSync(
+      "dist/articles/sharp-kc-s50-vs-fu-s50/index.html",
+      "utf8",
+    );
+    expect(shortHtml).not.toContain('name="article:mid-cta"');
+    expect(sharpKcS50VsFuS50Article.midArticleCta).toBeUndefined();
+  });
+
   it("renders the single-product count for the single-product check article", () => {
     const html = readFileSync(
       "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
