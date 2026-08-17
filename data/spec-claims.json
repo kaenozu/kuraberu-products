@@ -250,6 +250,16 @@
         "https://panasonic.jp/hair/products/EH-NA9M.html"
       ],
       "note": ""
+    },
+    {
+      "articleId": "panasonic-eh-na9m-guide",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:ccefadbe73f8269f2a111b44f33fcc0c9ba306d4b9a1ffa4dd28b895ef51b28f",
+      "officialUrls": [
+        "https://panasonic.jp/hair/products/EH-NA9M.html",
+        "https://panasonic.jp/hair/products/EH-NA9M/spec.html"
+      ],
+      "note": ""
     }
   ]
 }
