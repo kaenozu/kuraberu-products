@@ -186,13 +186,29 @@ export function readProductsSpecData() {
  */
 export const SPEC_PATTERN_KEYS = SPEC_PATTERNS.map((pattern) => pattern.key);
 
-/** 1記事分の仕様クレームと公式URLを収集する（products.ts 参照時はマスタ値も含む）。 */
+/** products.ts に定義された Product レコード const の名前一覧。 */
+export function readProductRecordNames() {
+  const file = "src/lib/products.ts";
+  if (!existsSync(file)) return [];
+  const text = readFileSync(file, "utf8");
+  return [...text.matchAll(/export const (\w+): Product = \{/g)].map(
+    (m) => m[1],
+  );
+}
+
+/**
+ * 1記事分の仕様クレームと公式URLを収集する。
+ * 記事が Product レコード（thermosJnlS500 等）を参照する場合のみ、
+ * マスタの仕様値・公式URLを指紋に含める（articlePurchaseLinks だけの
+ * 参照では含めない — 購入URLは仕様クレームではない）。
+ */
 export function collectArticleClaims(articleId) {
   const file = `src/pages/articles/${articleId}/index.astro`;
   const text = readFileSync(file, "utf8");
   let claims = extractSpecClaims(text);
   let officialUrls = extractOfficialUrls(text);
-  if (/lib\/products/.test(text)) {
+  const recordNames = readProductRecordNames();
+  if (recordNames.some((name) => new RegExp(`\\b${name}\\b`).test(text))) {
     const products = readProductsSpecData();
     claims = claims.concat(products.spec);
     officialUrls = officialUrls.concat(products.urls);

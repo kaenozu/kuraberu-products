@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -11,8 +12,6 @@ import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 const bouncerGuideUrl = 'https://www.rakuten.ne.jp/gold/babybjorn/topics/bouncer-guide/';
 const blissOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-bouncers/bouncer-bliss/';
 const balanceOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-bouncers/bouncer-balance-soft/sky-blue-white-mesh-light-grey/';
-const blissRakutenUrl = 'https://a.r10.to/h5dRLC';
-const balanceRakutenUrl = 'https://a.r10.to/hPmZhN';
 
 const faqEntries = [
   {
@@ -126,8 +125,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, officialHref: blissOfficialProductUrl, guidePoints: [blissCandidate.audience], purchaseHref: blissRakutenUrl, productId: 'babybjorn-bouncer-bliss'}}
-      right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, officialHref: balanceOfficialProductUrl, guidePoints: [balanceCandidate.audience], purchaseHref: balanceRakutenUrl, productId: 'babybjorn-bouncer-balance'}}
+      left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, officialHref: blissOfficialProductUrl, guidePoints: [blissCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-bouncer:left'].purchaseUrl, productId: 'babybjorn-bouncer-bliss'}}
+      right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, officialHref: balanceOfficialProductUrl, guidePoints: [balanceCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-bouncer:right'].purchaseUrl, productId: 'babybjorn-bouncer-balance'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -180,7 +179,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="バウンサー Bliss"
         audience="シートカバーの柔らかさと、3Dジャージーを含む20種類以上の素材バリエーションを優先する人向け"
-        href={blissRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-bouncer:left'].purchaseUrl}
         productId="babybjorn-bouncer-bliss"
         imagePath="/products/babybjorn-bouncer-bliss.jpg"
         placement="article-end"
@@ -189,7 +188,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="バウンサー バランスソフト"
         audience="2トーンの落ち着いたデザインと、コットン・メッシュなど定番素材を優先する人向け"
-        href={balanceRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-bouncer:right'].purchaseUrl}
         productId="babybjorn-bouncer-balance"
         imagePath="/products/babybjorn-bouncer-balance.jpg"
         placement="article-end"

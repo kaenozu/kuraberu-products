@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import RelatedArticles from '../../../components/RelatedArticles.astro'
 import PurchaseCard from '../../../components/PurchaseCard.astro'
@@ -10,8 +11,6 @@ import {panasonicFyhvx120VsFyhvx90Article as articleMetadata} from '../../../con
 
 const leftOfficial = 'https://panasonic.jp/joshitsu/products/F-YHVX120/spec.html'
 const rightOfficial = 'https://panasonic.jp/joshitsu/products/F-YHVX90/spec.html'
-const leftSearch = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX120&link_type=text'
-const rightSearch = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX90&link_type=text'
 const leftImage = '/products/f-yhvx120.jpg'
 const rightImage = '/products/f-yhvx90.jpg'
 const leftAudience = '大容量タンク・広い木造対応畳数・本体幅を重視する人向け'
@@ -39,8 +38,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">パナソニックの衣類乾燥除湿機 F-YHVX120とF-YHVX90を、公式仕様のタンク容量・木造対応畳数・重量・寸法・強運転音で比較します。価格・在庫は販売先でご確認ください。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: 'パナソニック', line: 'F-YHVX120', tagline: '容量・対応畳数なら', image: leftImage, imageAlt: 'パナソニック 衣類乾燥除湿機 F-YHVX120', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: leftSearch}}
-      right={{brand: 'パナソニック', line: 'F-YHVX90', tagline: '軽さ・幅なら', image: rightImage, imageAlt: 'パナソニック 衣類乾燥除湿機 F-YHVX90', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: rightSearch}}
+      left={{brand: 'パナソニック', line: 'F-YHVX120', tagline: '容量・対応畳数なら', image: leftImage, imageAlt: 'パナソニック 衣類乾燥除湿機 F-YHVX120', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-f-yhvx120-vs-f-yhvx90:left'].purchaseUrl}}
+      right={{brand: 'パナソニック', line: 'F-YHVX90', tagline: '軽さ・幅なら', image: rightImage, imageAlt: 'パナソニック 衣類乾燥除湿機 F-YHVX90', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-f-yhvx120-vs-f-yhvx90:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -71,8 +70,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <h2>購入時の注意</h2>
     <p>除湿機は設置場所の幅・奥行き・高さ、タンク容量、使用する部屋の条件を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
     <div class="purchase-cards">
-      <PurchaseCard name="パナソニック F-YHVX120" audience={leftAudience} href={leftSearch} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="パナソニック F-YHVX90" audience={rightAudience} href={rightSearch} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="パナソニック F-YHVX120" audience={leftAudience} href={articlePurchaseLinks['panasonic-f-yhvx120-vs-f-yhvx90:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="パナソニック F-YHVX90" audience={rightAudience} href={articlePurchaseLinks['panasonic-f-yhvx120-vs-f-yhvx90:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
     <h2>更新履歴</h2>
     <ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>

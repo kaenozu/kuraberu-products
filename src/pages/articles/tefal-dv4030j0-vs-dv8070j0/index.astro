@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -9,8 +10,6 @@ import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 import {tefalGarmentSteamerArticle as articleMetadata} from '../../../content/articles';
 const supreOfficial = 'https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steamsupre-1830009138/';
 const rafreOfficial = 'https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steam-rafrai-1830009402/';
-const supreRakutenUrl = 'https://a.r10.to/hPgKfj';
-const rafreRakutenUrl = 'https://a.r10.to/hgIiiI';
 const faqEntries = [
   {
     question: 'ティファール DV4030J0 と DV8070J0 はどっち？',
@@ -43,8 +42,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 衣類ケア · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ArticleComparisonV2
-      left={{brand: 'ティファール', line: 'DV4030J0', tagline: 'ジェットスチーム・コンパクトさなら', image: '/products/tefal-dv4030j0.jpg', imageAlt: 'ティファール スチーム シュプレ DV4030J0', officialHref: supreOfficial, guidePoints: ['ジェットスチーム最大16g/分を確認したい', 'コンパクトな2WAYモデルを選びたい', 'ワンプッシュおまかせスチームを使いたい'], purchaseHref: supreRakutenUrl}}
-      right={{brand: 'ティファール', line: 'DV8070J0', tagline: '量・速さ・連続使用なら', image: '/products/tefal-dv8070j0.png', imageAlt: 'ティファール スチーム ラフレ DV8070J0', officialHref: rafreOfficial, guidePoints: ['平均17g/分のスチーム量を重視したい', '立ち上がり約19秒を優先したい', '連続運転約14分・140mLタンクを確認したい'], purchaseHref: rafreRakutenUrl}}
+      left={{brand: 'ティファール', line: 'DV4030J0', tagline: 'ジェットスチーム・コンパクトさなら', image: '/products/tefal-dv4030j0.jpg', imageAlt: 'ティファール スチーム シュプレ DV4030J0', officialHref: supreOfficial, guidePoints: ['ジェットスチーム最大16g/分を確認したい', 'コンパクトな2WAYモデルを選びたい', 'ワンプッシュおまかせスチームを使いたい'], purchaseHref: articlePurchaseLinks['tefal-dv4030j0-vs-dv8070j0:left'].purchaseUrl}}
+      right={{brand: 'ティファール', line: 'DV8070J0', tagline: '量・速さ・連続使用なら', image: '/products/tefal-dv8070j0.png', imageAlt: 'ティファール スチーム ラフレ DV8070J0', officialHref: rafreOfficial, guidePoints: ['平均17g/分のスチーム量を重視したい', '立ち上がり約19秒を優先したい', '連続運転約14分・140mLタンクを確認したい'], purchaseHref: articlePurchaseLinks['tefal-dv4030j0-vs-dv8070j0:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -57,8 +56,8 @@ const keyDiffRows: KeyDiffRow[] = [
         <ArticleSocialProof query="ティファール DV4030J0 DV8070J0" checkedAt="2026-08-14" hasPosts={false} />
 <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <div class="purchase-cards">
-      <PurchaseCard name="ティファール DV4030J0" audience="ジェットスチーム・コンパクトさを重視する人向け" href={supreRakutenUrl} imagePath="/products/tefal-dv4030j0.jpg" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="ティファール DV8070J0" audience="スチーム量・速さ・連続使用を重視する人向け" href={rafreRakutenUrl} imagePath="/products/tefal-dv8070j0.png" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="ティファール DV4030J0" audience="ジェットスチーム・コンパクトさを重視する人向け" href={articlePurchaseLinks['tefal-dv4030j0-vs-dv8070j0:left'].purchaseUrl} imagePath="/products/tefal-dv4030j0.jpg" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="ティファール DV8070J0" audience="スチーム量・速さ・連続使用を重視する人向け" href={articlePurchaseLinks['tefal-dv4030j0-vs-dv8070j0:right'].purchaseUrl} imagePath="/products/tefal-dv8070j0.png" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
     <details class="fold-section"><summary>更新履歴・情報源・購入時の注意</summary><h3>更新履歴</h3><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol><h3>情報源一覧</h3><ul class="source-list"><li><a href={supreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV4030J0 公式ページ</a>（2026-08-13確認）</li><li><a href={rafreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV8070J0 公式ページ</a>（2026-08-13確認）</li></ul><h3>調査方法・免責事項</h3><p>この比較は、メーカー公式の商品ページで確認できる仕様のみを根拠にしています。価格・在庫・個人の使用感は公式ページと販売先でご確認ください。</p></details>
   </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />

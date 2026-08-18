@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -9,8 +10,6 @@ import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 import {zojirushiElectricKettleArticle as articleMetadata} from '../../../content/articles';
 const paOfficial = 'https://www.zojirushi.co.jp/syohin/stan/product/electric_kettle/ck-pa.html';
 const dcOfficial = 'https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/';
-const paRakutenUrl = 'https://a.r10.to/hPwhA2';
-const dcRakutenUrl = 'https://a.r10.to/hPdpn7';
 const faqEntries = [
   {
     question: '象印 CK-PA08 と CK-DC08 はどっち？',
@@ -64,8 +63,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ArticleComparisonV2
-      left={{brand: '象印', line: 'CK-PA08', tagline: 'ふた・手入れなら', image: '/products/zojirushi-ck-pa08.webp', imageAlt: '象印 CK-PA08 電気ケトル', officialHref: paOfficial, guidePoints: ['軽くはずせるふたを重視したい', '広口内容器で手入れしたい', '0.8L・1300Wの基本仕様で選びたい'], purchaseHref: paRakutenUrl}}
-      right={{brand: '象印', line: 'CK-DC08', tagline: '安全・ほこり対策なら', image: '/products/zojirushi-ck-dc08.png', imageAlt: '象印 CK-DC08 電気ケトル', officialHref: dcOfficial, guidePoints: ['注ぎ口ほこりブロックを確認したい', '転倒湯もれ防止など安全設計を重視したい', '本体約0.8kgの軽さを優先したい'], purchaseHref: dcRakutenUrl}}
+      left={{brand: '象印', line: 'CK-PA08', tagline: 'ふた・手入れなら', image: '/products/zojirushi-ck-pa08.webp', imageAlt: '象印 CK-PA08 電気ケトル', officialHref: paOfficial, guidePoints: ['軽くはずせるふたを重視したい', '広口内容器で手入れしたい', '0.8L・1300Wの基本仕様で選びたい'], purchaseHref: articlePurchaseLinks['zojirushi-ck-pa08-vs-ck-dc08:left'].purchaseUrl}}
+      right={{brand: '象印', line: 'CK-DC08', tagline: '安全・ほこり対策なら', image: '/products/zojirushi-ck-dc08.png', imageAlt: '象印 CK-DC08 電気ケトル', officialHref: dcOfficial, guidePoints: ['注ぎ口ほこりブロックを確認したい', '転倒湯もれ防止など安全設計を重視したい', '本体約0.8kgの軽さを優先したい'], purchaseHref: articlePurchaseLinks['zojirushi-ck-pa08-vs-ck-dc08:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -97,8 +96,8 @@ const keyDiffRows: KeyDiffRow[] = [
       {faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
     </div>
     <div class="purchase-cards">
-      <PurchaseCard name="象印 CK-PA08" audience="ふたの外しやすさ・広口内容器を重視する人向け" href={paRakutenUrl} imagePath={articleMetadata.imagePath} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="象印 CK-DC08" audience="安全設計・ほこり対策を重視する人向け" href={dcRakutenUrl} imagePath="/products/zojirushi-ck-dc08.png" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="象印 CK-PA08" audience="ふたの外しやすさ・広口内容器を重視する人向け" href={articlePurchaseLinks['zojirushi-ck-pa08-vs-ck-dc08:left'].purchaseUrl} imagePath={articleMetadata.imagePath} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="象印 CK-DC08" audience="安全設計・ほこり対策を重視する人向け" href={articlePurchaseLinks['zojirushi-ck-pa08-vs-ck-dc08:right'].purchaseUrl} imagePath="/products/zojirushi-ck-dc08.png" placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
     <details class="fold-section">
       <summary>更新履歴・情報源・購入時の注意</summary>

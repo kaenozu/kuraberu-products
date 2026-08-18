@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -16,8 +17,6 @@ const teishigekiLp = 'https://jp.moony.com/ja/products/nmn/nmn-l.html';
 const mashumaroNbs = 'https://jp.moony.com/ja/products/mn/mn-nbs.html';
 const mashumaroM = 'https://jp.moony.com/ja/products/mn/mn-m.html';
 const mashumaroLp = 'https://jp.moony.com/ja/products/mn/mn-l.html';
-const teishigekiSearch = 'https://a.r10.to/h58jf3';
-const mashumaroSearch = 'https://a.r10.to/h5ZjVa';
 
 const faqEntries = [
   {
@@ -99,8 +98,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience], purchaseHref: teishigekiSearch, productId: 'moony-teishigeki-m'}}
-      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience], purchaseHref: mashumaroSearch, productId: 'moony-mashumaro-m'}}
+      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience], purchaseHref: articlePurchaseLinks['moony-m:left'].purchaseUrl, productId: 'moony-teishigeki-m'}}
+      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience], purchaseHref: articlePurchaseLinks['moony-m:right'].purchaseUrl, productId: 'moony-mashumaro-m'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"
@@ -137,7 +136,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="低刺激であんしん"
         audience="うんち水分吸収シートによる肌への付着対策と、3成分無添加の低刺激設計を優先する人向け"
-        href={teishigekiSearch}
+        href={articlePurchaseLinks['moony-m:left'].purchaseUrl}
         productId="moony-teishigeki-m"
         imagePath="/products/moony-teishigeki-m.jpg"
         placement="article-end"
@@ -146,7 +145,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="マシュマロ肌ごこちモレ安心"
         audience="背中・足回りのゆるうんちストッパーや4成分無添加、最大12時間吸収などモレ安心の機能を優先する人向け"
-        href={mashumaroSearch}
+        href={articlePurchaseLinks['moony-m:right'].purchaseUrl}
         productId="moony-mashumaro-m"
         imagePath="/products/moony-mashumaro-m.jpg"
         placement="article-end"
@@ -168,8 +167,8 @@ const differenceRows: DifferenceRow[] = [
       <li><a href={mashumaroNbs} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（新生児用）公式</a>（2026-08-09確認）</li>
       <li><a href={mashumaroM} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（M）公式</a>（2026-08-09確認）</li>
       <li><a href={mashumaroLp} target="_blank" rel="noopener noreferrer">マシュマロ肌ごこちモレ安心（L）公式</a>（2026-08-09確認）</li>
-      <li><a href={teishigekiSearch} target="_blank" rel="noopener noreferrer">楽天市場：低刺激であんしん</a>（価格・在庫用）</li>
-      <li><a href={mashumaroSearch} target="_blank" rel="noopener noreferrer">楽天市場：マシュマロ肌ごこちモレ安心</a>（価格・在庫用）</li>
+      <li><a href={articlePurchaseLinks['moony-m:left'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：低刺激であんしん</a>（価格・在庫用）</li>
+      <li><a href={articlePurchaseLinks['moony-m:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：マシュマロ肌ごこちモレ安心</a>（価格・在庫用）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

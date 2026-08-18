@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -13,8 +14,6 @@ import type {
 
 const firstPremium = 'https://www.kao.co.jp/merries/products/fp/';
 const airsle = 'https://www.kao.co.jp/merries/products/air/';
-const firstPremiumSearch = 'https://a.r10.to/hPx3cE';
-const airsleSearch = 'https://a.r10.to/h5LbWy';
 
 const faqEntries = [
   {
@@ -91,8 +90,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience], purchaseHref: firstPremiumSearch, productId: 'merries-fp-pants'}}
-      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience], purchaseHref: airsleSearch, productId: 'merries-airsle-pants'}}
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience], purchaseHref: articlePurchaseLinks['merries-pants:left'].purchaseUrl, productId: 'merries-fp-pants'}}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience], purchaseHref: articlePurchaseLinks['merries-pants:right'].purchaseUrl, productId: 'merries-airsle-pants'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"
@@ -154,7 +153,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ファーストプレミアム"
         audience="肌ざわり・肌への配慮の機能を優先する人向け"
-        href={firstPremiumSearch}
+        href={articlePurchaseLinks['merries-pants:left'].purchaseUrl}
         productId="merries-fp-pants"
         imagePath="/products/merries-fp-newborn.jpg"
         placement="article-end"
@@ -163,7 +162,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ずっと肌さらエアスルー"
         audience="ムレ対策・おしっこ吸収の機能を優先する人向け"
-        href={airsleSearch}
+        href={articlePurchaseLinks['merries-pants:right'].purchaseUrl}
         productId="merries-airsle-pants"
         imagePath="/products/merries-airsle-newborn.jpg"
         placement="article-end"
@@ -184,8 +183,8 @@ const differenceRows: DifferenceRow[] = [
     <ul class="source-list">
       <li><a href={firstPremium} target="_blank" rel="noopener noreferrer">花王：ファーストプレミアム パンツ</a>（2026-08-10確認）</li>
       <li><a href={airsle} target="_blank" rel="noopener noreferrer">花王：ずっと肌さらエアスルー パンツ</a>（2026-08-10確認）</li>
-      <li><a href={firstPremiumSearch} target="_blank" rel="noopener noreferrer">楽天市場：ファーストプレミアム パンツ検索</a>（価格・在庫確認用）</li>
-      <li><a href={airsleSearch} target="_blank" rel="noopener noreferrer">楽天市場：エアスルー パンツ検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['merries-pants:left'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：ファーストプレミアム パンツ検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['merries-pants:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：エアスルー パンツ検索</a>（価格・在庫確認用）</li>
     </ul>
     <h2>調査方法・免責事項</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

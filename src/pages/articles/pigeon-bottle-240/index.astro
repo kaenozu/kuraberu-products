@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -13,8 +14,6 @@ import type {
 const glass = 'https://products.pigeon.co.jp/item/index-2382.html';
 const ppsu = 'https://products.pigeon.co.jp/item/index-2378.html';
 const materialFaq = 'https://support.pigeon.co.jp/faq/detail-1.html';
-const glassSearch = 'https://a.r10.to/hR4mwU';
-const ppsuSearch = 'https://a.r10.to/hk5urF';
 
 const faqEntries = [
   {
@@ -107,8 +106,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: glassCandidate.product, line: glassCandidate.line, tagline: glassCandidate.audience, image: '/products/pigeon-bottle-glass240.jpg', imageAlt: `${glassCandidate.product} ${glassCandidate.line}`, officialHref: glass, guidePoints: [glassCandidate.audience], purchaseHref: glassSearch, productId: 'pigeon-glass-240'}}
-      right={{ brand: ppsuCandidate.product, line: ppsuCandidate.line, tagline: ppsuCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${ppsuCandidate.product} ${ppsuCandidate.line}`, officialHref: ppsu, guidePoints: [ppsuCandidate.audience], purchaseHref: ppsuSearch, productId: 'pigeon-ppsu-240'}}
+      left={{ brand: glassCandidate.product, line: glassCandidate.line, tagline: glassCandidate.audience, image: '/products/pigeon-bottle-glass240.jpg', imageAlt: `${glassCandidate.product} ${glassCandidate.line}`, officialHref: glass, guidePoints: [glassCandidate.audience], purchaseHref: articlePurchaseLinks['pigeon-bottle-240:left'].purchaseUrl, productId: 'pigeon-glass-240'}}
+      right={{ brand: ppsuCandidate.product, line: ppsuCandidate.line, tagline: ppsuCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${ppsuCandidate.product} ${ppsuCandidate.line}`, officialHref: ppsu, guidePoints: [ppsuCandidate.audience], purchaseHref: articlePurchaseLinks['pigeon-bottle-240:right'].purchaseUrl, productId: 'pigeon-ppsu-240'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/baby-bottle/"
@@ -170,7 +169,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="母乳実感 耐熱ガラス製 240ml"
         audience="自宅中心で、汚れの落ちやすさ・清潔さを優先する人向け"
-        href={glassSearch}
+        href={articlePurchaseLinks['pigeon-bottle-240:left'].purchaseUrl}
         productId="pigeon-glass-240"
         imagePath="/products/pigeon-bottle-glass240.jpg"
         placement="article-end"
@@ -179,7 +178,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="母乳実感 プラスチック製 240ml"
         audience="持ち運びや軽さ・割れにくさを優先し、外出時にも使いたい人向け"
-        href={ppsuSearch}
+        href={articlePurchaseLinks['pigeon-bottle-240:right'].purchaseUrl}
         productId="pigeon-ppsu-240"
         imagePath="/products/pigeon-bottle-ppsu240.jpg"
         placement="article-end"
@@ -201,8 +200,8 @@ const differenceRows: DifferenceRow[] = [
       <li><a href={glass} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 耐熱ガラス製 240ml</a>（2026-08-09確認）</li>
       <li><a href={ppsu} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 プラスチック製 240ml</a>（2026-08-09確認）</li>
       <li><a href={materialFaq} target="_blank" rel="noopener noreferrer">ピジョン公式Q&A：ガラス製とプラスチック製の選び方</a>（2026-08-09確認）</li>
-      <li><a href={glassSearch} target="_blank" rel="noopener noreferrer">楽天市場：哺乳びん検索</a>（価格・在庫確認用）</li>
-      <li><a href={ppsuSearch} target="_blank" rel="noopener noreferrer">楽天市場：PPSU検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['pigeon-bottle-240:left'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：哺乳びん検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['pigeon-bottle-240:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：PPSU検索</a>（価格・在庫確認用）</li>
     </ul>
     <h2>調査方法・免責事項</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

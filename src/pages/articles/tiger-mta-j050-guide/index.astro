@@ -6,12 +6,11 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {tigerMtaJ050GuideArticle as articleMetadata} from '../../../content/articles';
-import {tigerMtaJ050} from '../../../lib/products';
+import {tigerMtaJ050, articlePurchaseLinks} from '../../../lib/products';
 import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 const officialPage = tigerMtaJ050.officialUrl;
 const mtaJ080Image = 'https://www.tiger-corporation.com/wp-content/uploads/2025/07/MTA-J080_750x750-d1adb21a6e79c156ac1d5d974c9b75dd.jpg';
 // 既存サイトで検証済みの楽天アフィリエイト導線に、MTA-J080の検索先を設定。
-const mtaJ080Rakuten = 'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2582%25BF%25E3%2582%25A4%25E3%2582%25AC%25E3%2583%25BC%2BMTA-J080%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9';
 const faqEntries = [
   {question: 'MTA-J050とMTA-J080の違いは？', answer: '容量がMTA-J050は0.5L、MTA-J080は0.8Lです。公式仕様では、MTA-J050が約0.26kg、MTA-J080が約0.36kgで、MTA-J080の方が容量と重量が大きくなっています。'},
   {question: '軽いのはどっち？', answer: '公式仕様の本体質量は、MTA-J050が約0.26kg、MTA-J080が約0.36kgです。持ち運び時の軽さを優先するなら、MTA-J050が候補になります。'},
@@ -33,8 +32,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">タイガー MTA-J050とMTA-J080は、ハンドル付きのワンプッシュマグボトルです。この記事では、タイガー公式ページで確認できる容量・重量・保温保冷効力・寸法の違いを比較します。お手入れやハンドルなどシリーズ共通の特徴と、サイズ選びに関わる差分を分けて整理します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: 'タイガー', line: 'MTA-J050', tagline: '0.5L・軽さを優先するなら', image: tigerMtaJ050.imagePath, imageAlt: 'タイガー MTA-J050', officialHref: officialPage, guidePoints: ['容量0.5Lで持ち歩きやすい', '本体質量約0.26kgで軽い', '通勤・通学など日常の持ち歩き向け'], purchaseHref: tigerMtaJ050.rakutenUrl, productId: 'tiger-mta-j050'}}
-      right={{brand: 'タイガー', line: 'MTA-J080', tagline: '0.8L・容量を優先するなら', image: mtaJ080Image, imageAlt: 'タイガー MTA-J080', officialHref: officialPage, guidePoints: ['容量0.8Lで多めに入れられる', '保冷効力7℃以下の案内', '長時間の外出や水分補給向け'], purchaseHref: mtaJ080Rakuten, productId: 'tiger-mta-j080'}}
+      left={{brand: 'タイガー', line: 'MTA-J050', tagline: '0.5L・軽さを優先するなら', image: tigerMtaJ050.imagePath, imageAlt: 'タイガー MTA-J050', officialHref: officialPage, guidePoints: ['容量0.5Lで持ち歩きやすい', '本体質量約0.26kgで軽い', '通勤・通学など日常の持ち歩き向け'], purchaseHref: articlePurchaseLinks['tiger-mta-j050-guide:left'].purchaseUrl, productId: 'tiger-mta-j050'}}
+      right={{brand: 'タイガー', line: 'MTA-J080', tagline: '0.8L・容量を優先するなら', image: mtaJ080Image, imageAlt: 'タイガー MTA-J080', officialHref: officialPage, guidePoints: ['容量0.8Lで多めに入れられる', '保冷効力7℃以下の案内', '長時間の外出や水分補給向け'], purchaseHref: articlePurchaseLinks['tiger-mta-j050-guide:right'].purchaseUrl, productId: 'tiger-mta-j080'}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -47,9 +46,9 @@ const keyDiffRows: KeyDiffRow[] = [
     <ArticleSocialProof query="タイガー MTA-J050 MTA-J080 水筒" checkedAt="2026-08-16" hasPosts={false} />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <h2>購入時の注意</h2><p>価格・在庫・カラーの販売状況は販売先で変わる可能性があります。購入時は型番、容量、カラー、付属品、最新の取扱説明を確認してください。</p>
-    <div class="purchase-cards"><PurchaseCard name="タイガー MTA-J050" audience="0.5L・軽さを優先する人向け" href={tigerMtaJ050.rakutenUrl} productId="tiger-mta-j050" imagePath={tigerMtaJ050.imagePath} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="タイガー MTA-J080" audience="0.8L・容量を優先する人向け" href={mtaJ080Rakuten} productId="tiger-mta-j080" imagePath={mtaJ080Image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
+    <div class="purchase-cards"><PurchaseCard name="タイガー MTA-J050" audience="0.5L・軽さを優先する人向け" href={articlePurchaseLinks['tiger-mta-j050-guide:left'].purchaseUrl} productId="tiger-mta-j050" imagePath={tigerMtaJ050.imagePath} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="タイガー MTA-J080" audience="0.8L・容量を優先する人向け" href={articlePurchaseLinks['tiger-mta-j050-guide:right'].purchaseUrl} productId="tiger-mta-j080" imagePath={mtaJ080Image} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
-    <h2>情報源一覧</h2><ul class="source-list"><li><a href={officialPage} target="_blank" rel="noopener noreferrer">タイガー MTA-J050/J080公式ページ</a>（2026-08-16確認）</li><li><a href={mtaJ080Rakuten} target="_blank" rel="noopener noreferrer">楽天市場：タイガー MTA-J080</a>（価格・在庫用）</li></ul>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={officialPage} target="_blank" rel="noopener noreferrer">タイガー MTA-J050/J080公式ページ</a>（2026-08-16確認）</li><li><a href={articlePurchaseLinks['tiger-mta-j050-guide:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：タイガー MTA-J080</a>（価格・在庫用）</li></ul>
     <p>この記事はメーカー公式の商品ページを根拠に整理しています。個人の感想や口コミは比較の根拠にしていません。</p>
   </article>
   <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />

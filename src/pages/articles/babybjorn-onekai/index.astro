@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -11,8 +12,6 @@ import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 const chartOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
 const onekaiOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/';
 const moveOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/';
-const onekaiRakutenUrl = 'https://a.r10.to/hYhUfN';
-const moveRakutenUrl = 'https://a.r10.to/h41WNP';
 
 const faqEntries = [
   {
@@ -133,8 +132,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiOfficialProductUrl, guidePoints: [onekaiCandidate.audience], purchaseHref: onekaiRakutenUrl, productId: 'babybjorn-onekai'}}
-      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveOfficialProductUrl, guidePoints: [moveCandidate.audience], purchaseHref: moveRakutenUrl, productId: 'babybjorn-move'}}
+      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiOfficialProductUrl, guidePoints: [onekaiCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-onekai:left'].purchaseUrl, productId: 'babybjorn-onekai'}}
+      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveOfficialProductUrl, guidePoints: [moveCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-onekai:right'].purchaseUrl, productId: 'babybjorn-move'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -186,7 +185,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ベビーキャリア ONE KAI"
         audience="新生児から約36ヶ月まで長く使えて、4通りの抱っこ（おんぶ含む）と幅広ウエストベルトを優先する人向け"
-        href={onekaiRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-onekai:left'].purchaseUrl}
         productId="babybjorn-onekai"
         imagePath="/products/babybjorn-onekai.jpg"
         placement="article-end"
@@ -195,7 +194,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ベビーキャリア MOVE"
         audience="フルメッシュ素材の通気性と軽量設計（約860g）を優先する人向け"
-        href={moveRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-onekai:right'].purchaseUrl}
         productId="babybjorn-move"
         imagePath="/products/babybjorn-move.jpg"
         placement="article-end"

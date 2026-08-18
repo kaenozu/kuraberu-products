@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import RelatedArticles from '../../../components/RelatedArticles.astro'
 import PurchaseCard from '../../../components/PurchaseCard.astro'
@@ -10,8 +11,6 @@ import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
 
 const leftOfficial = 'https://www.t-fal.co.jp/kettle/products/justine-lock-7211419308/'
 const rightOfficial = 'https://www.t-fal.co.jp/kettle/products/aprecia-lock-control-7211419696/'
-const leftSearch = 'https://a.r10.to/hk5Hnn'
-const rightSearch = 'https://a.r10.to/h5Qe2o'
 const leftImage = '/products/tefal-ko5901jp.jpg'
 const rightImage = '/products/tefal-ko8601j0.jpg'
 const leftAudience = '容量1.2Lで、温度調節や保温より一度に沸かせる量を優先する人向け'
@@ -40,8 +39,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">ティファールの電気ケトル2機種を、公式ページで確認できる容量・重量・温度調節・保温・安全機能に分けて比較します。価格は販売先でご確認ください。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: 'ティファール', line: 'KO5901JP', tagline: '容量を優先するなら', image: leftImage, imageAlt: 'ティファール ジャスティン ロック ホワイト KO5901JP', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: leftSearch}}
-      right={{brand: 'ティファール', line: 'KO8601J0', tagline: '温度調節を使うなら', image: rightImage, imageAlt: 'ティファール アプレシア ロック コントロール ホワイト KO8601J0', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: rightSearch}}
+      left={{brand: 'ティファール', line: 'KO5901JP', tagline: '容量を優先するなら', image: leftImage, imageAlt: 'ティファール ジャスティン ロック ホワイト KO5901JP', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['tefal-ko5901jp-vs-ko8601j0:left'].purchaseUrl}}
+      right={{brand: 'ティファール', line: 'KO8601J0', tagline: '温度調節を使うなら', image: rightImage, imageAlt: 'ティファール アプレシア ロック コントロール ホワイト KO8601J0', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['tefal-ko5901jp-vs-ko8601j0:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -62,8 +61,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <h2>購入時の注意</h2><p>容量、温度調節、保温、給湯ロックなど、必要な機能を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
 
     <div class="purchase-cards">
-      <PurchaseCard name="ティファール KO5901JP" audience={leftAudience} href={leftSearch} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="ティファール KO8601J0" audience={rightAudience} href={rightSearch} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="ティファール KO5901JP" audience={leftAudience} href={articlePurchaseLinks['tefal-ko5901jp-vs-ko8601j0:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="ティファール KO8601J0" audience={rightAudience} href={articlePurchaseLinks['tefal-ko5901jp-vs-ko8601j0:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">ティファール ジャスティン ロック KO5901JP 公式商品ページ</a>（2026-08-13確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">ティファール アプレシア ロック コントロール KO8601J0 公式商品ページ</a>（2026-08-13確認）</li></ul>

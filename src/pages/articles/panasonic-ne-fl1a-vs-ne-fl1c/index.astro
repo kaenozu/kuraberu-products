@@ -9,6 +9,7 @@ import DecisionGuide from '../../../components/DecisionGuide.astro'
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
 import NextStepBlock from '../../../components/NextStepBlock.astro'
 import { panasonicNeFl1aVsNeFl1cArticle as articleMetadata } from '../../../content/articles'
+import { articlePurchaseLinks } from '../../../lib/products';
 
 const left = {
   brand: 'パナソニック',
@@ -16,7 +17,6 @@ const left = {
   fullName: 'パナソニック 単機能レンジ NE-FL1A',
   officialUrl: 'https://panasonic.jp/range/products/NE-FL1A.html',
   specUrl: 'https://panasonic.jp/range/products/NE-FL1A/spec.html',
-  rakutenUrl: 'https://a.r10.to/hFqCMV',
   image: '/products/panasonic-ne-fl1a.jpg',
   imageAlt: 'パナソニック NE-FL1A',
   capacity: '22L',
@@ -33,7 +33,6 @@ const right = {
   fullName: 'パナソニック 単機能レンジ NE-FL1C',
   officialUrl: 'https://panasonic.jp/range/products/NE-FL1C.html',
   specUrl: 'https://panasonic.jp/range/products/NE-FL1C/spec.html',
-  rakutenUrl: 'https://a.r10.to/hPJAxE',
   image: '/products/panasonic-ne-fl1c.png',
   imageAlt: 'パナソニック NE-FL1C',
   capacity: '22L',
@@ -150,8 +149,8 @@ const keyDiffRows: KeyDiffRow[] = [
     />
 
     <NextStepBlock
-      left={{ label: 'パナソニック NE-FL1A', href: left.rakutenUrl }}
-      right={{ label: 'パナソニック NE-FL1C', href: right.rakutenUrl }}
+      left={{ label: 'パナソニック NE-FL1A', href: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:left'].purchaseUrl }}
+      right={{ label: 'パナソニック NE-FL1C', href: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:right'].purchaseUrl }}
     />
 
     <details class="fold-section" id="specs">
@@ -195,8 +194,8 @@ const keyDiffRows: KeyDiffRow[] = [
     </section>
 
     <div class="purchase-cards article-end-purchase-cards">
-      <PurchaseCard name="パナソニック NE-FL1A" audience="NE-FL1Aの公式仕様を確認して選びたい人向け" href={left.rakutenUrl} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="パナソニック NE-FL1C" audience="軽さ・庫内幅・自動メニュー数を重視する人向け" href={right.rakutenUrl} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="パナソニック NE-FL1A" audience="NE-FL1Aの公式仕様を確認して選びたい人向け" href={articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:left'].purchaseUrl} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="パナソニック NE-FL1C" audience="軽さ・庫内幅・自動メニュー数を重視する人向け" href={articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:right'].purchaseUrl} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
   </article>
 </BaseLayout>

@@ -160,7 +160,7 @@ describe("daysSince / findStaleEntries", () => {
 });
 
 describe("collectArticleClaims", () => {
-  it("includes product-master specs when the article imports products.ts", () => {
+  it("includes product-master specs when the article references a product record", () => {
     const { claims, officialUrls } = collectArticleClaims(
       "thermos-tiger-bottle",
     );
@@ -172,6 +172,11 @@ describe("collectArticleClaims", () => {
         "https://www.thermos.jp/product/series/jnl-s00.html",
       ]),
     );
+  });
+
+  it("does not fold in product-master specs when the article only uses articlePurchaseLinks", () => {
+    const { claims } = collectArticleClaims("moony-m");
+    expect(claims.some((claim) => claim.includes("約0.2kg"))).toBe(false);
   });
 });
 

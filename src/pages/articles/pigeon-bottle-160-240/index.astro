@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -15,8 +16,6 @@ const bottle160 = 'https://products.pigeon.co.jp/item/index-2377.html';
 const bottle240 = 'https://products.pigeon.co.jp/item/index-2378.html';
 const nippleInfo = 'https://products.pigeon.co.jp/category/index-21.html';
 const pigeonShopOfficialUrl = 'https://shop.pigeon.co.jp/products/1026735';
-const size160Search = 'https://a.r10.to/h4SQzW';
-const size240Search = 'https://a.r10.to/hk5u4n';
 
 const faqEntries = [
   {
@@ -107,8 +106,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: size160Candidate.product, line: size160Candidate.line, tagline: size160Candidate.audience, image: '/products/pigeon-bottle-160-240-160ml.jpg', imageAlt: `${size160Candidate.product} ${size160Candidate.line}`, officialHref: bottle160, guidePoints: [size160Candidate.audience], purchaseHref: size160Search, productId: 'pigeon-160'}}
-      right={{ brand: size240Candidate.product, line: size240Candidate.line, tagline: size240Candidate.audience, image: '/products/pigeon-bottle-160-240-240ml.jpg', imageAlt: `${size240Candidate.product} ${size240Candidate.line}`, officialHref: bottle240, guidePoints: [size240Candidate.audience], purchaseHref: size240Search, productId: 'pigeon-ppsu-240'}}
+      left={{ brand: size160Candidate.product, line: size160Candidate.line, tagline: size160Candidate.audience, image: '/products/pigeon-bottle-160-240-160ml.jpg', imageAlt: `${size160Candidate.product} ${size160Candidate.line}`, officialHref: bottle160, guidePoints: [size160Candidate.audience], purchaseHref: articlePurchaseLinks['pigeon-bottle-160-240:left'].purchaseUrl, productId: 'pigeon-160'}}
+      right={{ brand: size240Candidate.product, line: size240Candidate.line, tagline: size240Candidate.audience, image: '/products/pigeon-bottle-160-240-240ml.jpg', imageAlt: `${size240Candidate.product} ${size240Candidate.line}`, officialHref: bottle240, guidePoints: [size240Candidate.audience], purchaseHref: articlePurchaseLinks['pigeon-bottle-160-240:right'].purchaseUrl, productId: 'pigeon-ppsu-240'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/baby-bottle/"
@@ -174,7 +173,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="母乳実感 プラスチック製 160ml"
         audience="新生児期から使う人や、まず小容量の哺乳びんを用意したい人向け"
-        href={size160Search}
+        href={articlePurchaseLinks['pigeon-bottle-160-240:left'].purchaseUrl}
         productId="pigeon-160"
         imagePath="/products/pigeon-bottle-160-240-160ml.jpg"
         placement="article-end"
@@ -183,7 +182,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="母乳実感 プラスチック製 240ml"
         audience="哺乳量が増えてきた人や、大きめの容量の哺乳びんを用意したい人向け"
-        href={size240Search}
+        href={articlePurchaseLinks['pigeon-bottle-160-240:right'].purchaseUrl}
         productId="pigeon-ppsu-240"
         imagePath="/products/pigeon-bottle-160-240-240ml.jpg"
         placement="article-end"
@@ -206,8 +205,8 @@ const differenceRows: DifferenceRow[] = [
       <li><a href={bottle240} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 プラスチック製 240ml</a>（2026-08-11確認）</li>
       <li><a href={nippleInfo} target="_blank" rel="noopener noreferrer">ピジョン：母乳実感 哺乳びん カテゴリページ</a>（2026-08-11確認）</li>
       <li><a href={pigeonShopOfficialUrl} target="_blank" rel="noopener noreferrer">ピジョン公式オンラインショップ：母乳実感 プラスチック製（160ml/240ml）</a>（2026-08-11確認、2026-08-16再確認）</li>
-      <li><a href={size160Search} target="_blank" rel="noopener noreferrer">楽天市場：母乳実感 160ml 検索</a>（価格・在庫確認用）</li>
-      <li><a href={size240Search} target="_blank" rel="noopener noreferrer">楽天市場：母乳実感 240ml 検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['pigeon-bottle-160-240:left'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：母乳実感 160ml 検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['pigeon-bottle-160-240:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：母乳実感 240ml 検索</a>（価格・在庫確認用）</li>
     </ul>
     <h2>調査方法・免責事項</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
