@@ -302,19 +302,15 @@ describe("article metadata", () => {
     );
   });
 
-  it("renders no mid-cta meta after the v3 shortening (no long articles)", () => {
-    // v3 短縮で旧育児記事を含む全記事が短文化されたため、
-    // midArticleCta を宣言する記事は存在せず、mid-cta meta も出力されない。
-    expect(
-      articleMetadata.filter((article) => article.midArticleCta === true),
-    ).toEqual([]);
+  it("renders no mid-cta meta (midArticleCta path removed 2026-08-18)", () => {
+    // v3 短縮後、途中 CTA（after-decision）は長文記事のみ許容だったが、
+    // 宣言する記事がゼロのまま 2026-08-18 に経路ごと削除された。
+    // 将来も mid-cta meta が出力されないことを代表記事で確認する。
     const pampersHtml = readFileSync(
       "dist/articles/pampers-newborn/index.html",
       "utf8",
     );
     expect(pampersHtml).not.toContain('name="article:mid-cta"');
-    expect(pampersNewbornArticle.midArticleCta).toBeUndefined();
-    expect(sharpKcS50VsFuS50Article.midArticleCta).toBeUndefined();
   });
 
   it("renders the single-product count for the single-product check article", () => {

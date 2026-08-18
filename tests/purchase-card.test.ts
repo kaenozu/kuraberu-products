@@ -14,7 +14,7 @@ describe("PurchaseCard", () => {
         href: validRakutenUrl,
         productId: "thermos-jnl-s500",
         imagePath: "/products/thermos-jnl-s500.jpg",
-        placement: "after-decision",
+        placement: "article-end",
         note: "価格・在庫は販売先でご確認ください。",
       },
     });
@@ -25,7 +25,7 @@ describe("PurchaseCard", () => {
     expect(html).toContain("商品ページを確認する");
     expect(html).toContain("（広告）");
     expect(html).toContain("価格・在庫は販売先でご確認ください。");
-    expect(html).toContain('data-placement="after-decision"');
+    expect(html).toContain('data-placement="article-end"');
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
   });
 
