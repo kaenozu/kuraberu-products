@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ComparisonMemoButton from './ComparisonMemoButton.astro';
 import PurchaseCard from './PurchaseCard.astro';
 import TrustLine from './TrustLine.astro';
-import DiagnosisCta from './DiagnosisCta.astro';
+import NextStepBlock from './NextStepBlock.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
 import { fetchRakutenProducts, selectRakutenProduct } from '../lib/rakuten';
@@ -94,7 +94,10 @@ const faq = [
       <li>最後に価格・送料・ポイントを販売ページで比較する。</li>
     </ol>
 
-    <DiagnosisCta />
+    <NextStepBlock
+      left={{ label: seed.leftProduct, href: leftSearch }}
+      right={{ label: seed.rightProduct, href: rightSearch }}
+    />
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">

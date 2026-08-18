@@ -84,8 +84,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience] }}
-      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience] }}
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/merries-fp-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: firstPremium, guidePoints: [premiumCandidate.audience], purchaseHref: firstPremiumSearch, productId: 'merries-fp-newborn'}}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience], purchaseHref: airsleSearch, productId: 'merries-airsle-newborn'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"

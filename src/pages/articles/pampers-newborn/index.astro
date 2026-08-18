@@ -84,8 +84,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/pampers-premium-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: premium, guidePoints: [premiumCandidate.audience] }}
-      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/pampers-sarasara-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: sarasara, guidePoints: [standardCandidate.audience] }}
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/pampers-premium-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: premium, guidePoints: [premiumCandidate.audience], purchaseHref: premiumSearch, productId: 'pampers-premium-newborn'}}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/pampers-sarasara-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: sarasara, guidePoints: [standardCandidate.audience], purchaseHref: sarasaraSearch, productId: 'pampers-sarasara-newborn'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"

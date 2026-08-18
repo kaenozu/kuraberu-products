@@ -479,37 +479,51 @@ describe("article diagnosis CTA (rendered dist)", () => {
     .map((entry) => entry.name)
     .sort();
 
-  it("renders exactly one diagnosis CTA on every comparison article, before #specs", () => {
+  it("renders exactly one next-step block on every comparison article, before #specs", () => {
     let comparisonPages = 0;
     for (const slug of articleSlugs) {
       const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
       const contentType = html.match(
         /<meta name="article:content-type" content="(guide|comparison)">/i,
       )?.[1];
-      const ctaCount = (
+      const blockCount = (
         html.match(
-          /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
+          /<section\b[^>]*\bnext-step\b[^>]*\bdata-next-step\b[^>]*>/gi,
         ) ?? []
       ).length;
       if (contentType === "guide") {
-        expect(ctaCount, `${slug}: guide must not render diagnosis CTA`).toBe(
-          0,
-        );
+        expect(
+          blockCount,
+          `${slug}: guide must not render next-step block`,
+        ).toBe(0);
         continue;
       }
       comparisonPages += 1;
       expect(
-        ctaCount,
-        `${slug}: comparison must render one diagnosis CTA`,
+        blockCount,
+        `${slug}: comparison must render one next-step block`,
       ).toBe(1);
       expect(html).toMatch(
-        /<a class="diagnosis-cta__button" href="\/tools\/product-finder\//,
+        /<a class="next-step__diagnosis-link" href="\/tools\/product-finder\//,
       );
+      const buyLinks = html.match(
+        /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
+      );
+      expect(
+        buyLinks?.length,
+        `${slug}: next-step has 2 purchase buttons`,
+      ).toBe(2);
       const specsIndex = html.indexOf('id="specs"');
-      const ctaIndex = html.indexOf('class="diagnosis-cta"');
+      const blockIndex = html.indexOf('class="next-step"');
       if (specsIndex !== -1) {
-        expect(ctaIndex, `${slug}: CTA before #specs`).toBeGreaterThan(-1);
-        expect(ctaIndex, `${slug}: CTA before #specs`).toBeLessThan(specsIndex);
+        expect(
+          blockIndex,
+          `${slug}: next-step block before #specs`,
+        ).toBeGreaterThan(-1);
+        expect(
+          blockIndex,
+          `${slug}: next-step block before #specs`,
+        ).toBeLessThan(specsIndex);
       }
     }
     expect(comparisonPages).toBeGreaterThan(30);
@@ -529,7 +543,7 @@ describe("article diagnosis CTA (rendered dist)", () => {
     for (const [slug, href] of Object.entries(expectations)) {
       const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
       const match = html.match(
-        /<a class="diagnosis-cta__button" href="([^"]+)"/,
+        /<a class="next-step__diagnosis-link" href="([^"]+)"/,
       );
       expect(match?.[1], `${slug} diagnosis href`).toBe(href);
     }

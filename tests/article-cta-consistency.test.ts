@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import { articleMetadata } from "../src/content/articles";
 import {
   ARTICLE_LAYOUT,
+  contentTypeFor,
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
 
@@ -33,6 +34,17 @@ describe("article CTA layout vs metadata productCount", () => {
           : source,
       );
       const midArticleCta = article.midArticleCta === true;
+      // 結論直後の next-step ブロックの購入ボタン数（レンダリング済み HTML から）。
+      // comparisonOnly セットの照合と総数チェックの両方で使う。
+      const renderedHtml = readFileSync(
+        join("dist/articles", article.id, "index.html"),
+        "utf8",
+      );
+      const nextStepBuyCount = (
+        renderedHtml.match(
+          /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
+        ) ?? []
+      ).length;
 
       const counts = new Map<string, number>();
       for (const block of blocks) {
@@ -47,13 +59,28 @@ describe("article CTA layout vs metadata productCount", () => {
         counts.set(placement, (counts.get(placement) ?? 0) + 1);
       }
 
-      // v3: 末尾セットは常に商品数分
+      // v3: 末尾セットは常に商品数分。
+      // next-step（comparisonOnly）は PurchaseCard ではなく NextStepBlock が描画する
+      // （比較記事の結論直後ブロック）ため、レンダリング済み HTML の
+      // next-step__buy ボタン数を照合する。
       for (const set of ARTICLE_LAYOUT.ctaSets) {
-        const expected = set.cardsPerProduct * article.productCount;
-        expect(
-          counts.get(set.placement) ?? 0,
-          `${article.id}: ${set.placement} should have ${expected} cards`,
-        ).toBe(expected);
+        const isComparison =
+          contentTypeFor(article.productCount) === "comparison";
+        const expected =
+          set.comparisonOnly && !isComparison
+            ? 0
+            : set.cardsPerProduct * article.productCount;
+        if (set.comparisonOnly) {
+          expect(
+            nextStepBuyCount,
+            `${article.id}: ${set.placement} should have ${expected} buy buttons (NextStepBlock)`,
+          ).toBe(expected);
+        } else {
+          expect(
+            counts.get(set.placement) ?? 0,
+            `${article.id}: ${set.placement} should have ${expected} cards`,
+          ).toBe(expected);
+        }
       }
 
       // v3: 途中 CTA（after-decision）は長文記事（midArticleCta）だけ商品数分
@@ -66,10 +93,11 @@ describe("article CTA layout vs metadata productCount", () => {
         `${article.id}: ${midSet.placement} should have ${expectedMid} cards (midArticleCta=${midArticleCta})`,
       ).toBe(expectedMid);
 
-      // 総枚数 = 期待 CTA 総数（productCount と midArticleCta から導出）
+      // 総枚数 = PurchaseCard 数 + next-step ボタン数 = 期待 CTA 総数
+      // （productCount と midArticleCta から導出）
       expect(
-        blocks.length,
-        `${article.id}: total cards should match expectedPurchaseCtasPerArticle(${article.productCount}, layout, { midArticleCta })`,
+        blocks.length + nextStepBuyCount,
+        `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout, { midArticleCta })`,
       ).toBe(
         expectedPurchaseCtasPerArticle(article.productCount, ARTICLE_LAYOUT, {
           midArticleCta,

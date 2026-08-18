@@ -133,8 +133,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiOfficialProductUrl, guidePoints: [onekaiCandidate.audience] }}
-      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveOfficialProductUrl, guidePoints: [moveCandidate.audience] }}
+      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiOfficialProductUrl, guidePoints: [onekaiCandidate.audience], purchaseHref: onekaiRakutenUrl, productId: 'babybjorn-onekai'}}
+      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveOfficialProductUrl, guidePoints: [moveCandidate.audience], purchaseHref: moveRakutenUrl, productId: 'babybjorn-move'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

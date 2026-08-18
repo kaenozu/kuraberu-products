@@ -64,8 +64,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ArticleComparisonV2
-      left={{brand: '象印', line: 'CK-PA08', tagline: 'ふた・手入れなら', image: '/products/zojirushi-ck-pa08.webp', imageAlt: '象印 CK-PA08 電気ケトル', officialHref: paOfficial, guidePoints: ['軽くはずせるふたを重視したい', '広口内容器で手入れしたい', '0.8L・1300Wの基本仕様で選びたい']}}
-      right={{brand: '象印', line: 'CK-DC08', tagline: '安全・ほこり対策なら', image: '/products/zojirushi-ck-dc08.png', imageAlt: '象印 CK-DC08 電気ケトル', officialHref: dcOfficial, guidePoints: ['注ぎ口ほこりブロックを確認したい', '転倒湯もれ防止など安全設計を重視したい', '本体約0.8kgの軽さを優先したい']}}
+      left={{brand: '象印', line: 'CK-PA08', tagline: 'ふた・手入れなら', image: '/products/zojirushi-ck-pa08.webp', imageAlt: '象印 CK-PA08 電気ケトル', officialHref: paOfficial, guidePoints: ['軽くはずせるふたを重視したい', '広口内容器で手入れしたい', '0.8L・1300Wの基本仕様で選びたい'], purchaseHref: paRakutenUrl}}
+      right={{brand: '象印', line: 'CK-DC08', tagline: '安全・ほこり対策なら', image: '/products/zojirushi-ck-dc08.png', imageAlt: '象印 CK-DC08 電気ケトル', officialHref: dcOfficial, guidePoints: ['注ぎ口ほこりブロックを確認したい', '転倒湯もれ防止など安全設計を重視したい', '本体約0.8kgの軽さを優先したい'], purchaseHref: dcRakutenUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

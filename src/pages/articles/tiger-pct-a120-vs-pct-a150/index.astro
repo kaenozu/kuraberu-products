@@ -48,8 +48,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">タイガーのPCT-A120とPCT-A150は、どちらも1300Wの電気ケトルです。公式ページで確認できる容量、本体質量、沸とう時間を分けて比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{ brand: a120Model.brand, line: a120Model.line, tagline: "軽さと1.2Lを確認するなら", image: a120Model.image, imageAlt: a120Model.imageAlt, officialHref: official, guidePoints: [a120Model.audience] }}
-      right={{ brand: a150Model.brand, line: a150Model.line, tagline: "1.5Lの容量を優先するなら", image: a150Model.image, imageAlt: a150Model.imageAlt, officialHref: official, guidePoints: [a150Model.audience] }}
+      left={{ brand: a120Model.brand, line: a120Model.line, tagline: "軽さと1.2Lを確認するなら", image: a120Model.image, imageAlt: a120Model.imageAlt, officialHref: official, guidePoints: [a120Model.audience], purchaseHref: a120Search}}
+      right={{ brand: a150Model.brand, line: a150Model.line, tagline: "1.5Lの容量を優先するなら", image: a150Model.image, imageAlt: a150Model.imageAlt, officialHref: official, guidePoints: [a150Model.audience], purchaseHref: a150Search}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

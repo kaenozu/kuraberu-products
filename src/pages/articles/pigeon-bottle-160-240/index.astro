@@ -107,8 +107,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: size160Candidate.product, line: size160Candidate.line, tagline: size160Candidate.audience, image: '/products/pigeon-bottle-160-240-160ml.jpg', imageAlt: `${size160Candidate.product} ${size160Candidate.line}`, officialHref: bottle160, guidePoints: [size160Candidate.audience] }}
-      right={{ brand: size240Candidate.product, line: size240Candidate.line, tagline: size240Candidate.audience, image: '/products/pigeon-bottle-160-240-240ml.jpg', imageAlt: `${size240Candidate.product} ${size240Candidate.line}`, officialHref: bottle240, guidePoints: [size240Candidate.audience] }}
+      left={{ brand: size160Candidate.product, line: size160Candidate.line, tagline: size160Candidate.audience, image: '/products/pigeon-bottle-160-240-160ml.jpg', imageAlt: `${size160Candidate.product} ${size160Candidate.line}`, officialHref: bottle160, guidePoints: [size160Candidate.audience], purchaseHref: size160Search, productId: 'pigeon-160'}}
+      right={{ brand: size240Candidate.product, line: size240Candidate.line, tagline: size240Candidate.audience, image: '/products/pigeon-bottle-160-240-240ml.jpg', imageAlt: `${size240Candidate.product} ${size240Candidate.line}`, officialHref: bottle240, guidePoints: [size240Candidate.audience], purchaseHref: size240Search, productId: 'pigeon-ppsu-240'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/baby-bottle/"

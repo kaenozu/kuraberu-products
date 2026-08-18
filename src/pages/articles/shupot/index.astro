@@ -101,8 +101,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: dendoCandidate.product, line: dendoCandidate.line, tagline: dendoCandidate.audience, image: '/products/shupot-dendo.jpg', imageAlt: `${dendoCandidate.product} ${dendoCandidate.line}`, officialHref: dendoOfficial, guidePoints: [dendoCandidate.audience] }}
-      right={{ brand: shudoCandidate.product, line: shudoCandidate.line, tagline: shudoCandidate.audience, image: '/products/shupot-shudo.jpg', imageAlt: `${shudoCandidate.product} ${shudoCandidate.line}`, officialHref: shudoOfficial, guidePoints: [shudoCandidate.audience] }}
+      left={{ brand: dendoCandidate.product, line: dendoCandidate.line, tagline: dendoCandidate.audience, image: '/products/shupot-dendo.jpg', imageAlt: `${dendoCandidate.product} ${dendoCandidate.line}`, officialHref: dendoOfficial, guidePoints: [dendoCandidate.audience], purchaseHref: dendoRakutenUrl, productId: 'shupot-dendo'}}
+      right={{ brand: shudoCandidate.product, line: shudoCandidate.line, tagline: shudoCandidate.audience, image: '/products/shupot-shudo.jpg', imageAlt: `${shudoCandidate.product} ${shudoCandidate.line}`, officialHref: shudoOfficial, guidePoints: [shudoCandidate.audience], purchaseHref: shudoRakutenUrl, productId: 'shupot-shudo'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"

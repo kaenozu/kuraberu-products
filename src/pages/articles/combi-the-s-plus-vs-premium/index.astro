@@ -70,8 +70,8 @@ const keyDiffRows: KeyDiffRow[] = [
       <a href="#faq">FAQ</a>
     </nav>
     <ArticleComparisonV2
-      left={{brand: plus.brand, line: plus.line, tagline: '4才頃まで・価格を抑えるなら', image: plus.image, imageAlt: plus.imageAlt, officialHref: plus.official, guidePoints: [plus.audience]}}
-      right={{brand: premium.brand, line: premium.line, tagline: '7才頃まで・長く使うなら', image: premium.image, imageAlt: premium.imageAlt, officialHref: premium.official, guidePoints: [premium.audience]}}
+      left={{brand: plus.brand, line: plus.line, tagline: '4才頃まで・価格を抑えるなら', image: plus.image, imageAlt: plus.imageAlt, officialHref: plus.official, guidePoints: [plus.audience], purchaseHref: plusSearch}}
+      right={{brand: premium.brand, line: premium.line, tagline: '7才頃まで・長く使うなら', image: premium.image, imageAlt: premium.imageAlt, officialHref: premium.official, guidePoints: [premium.audience], purchaseHref: premiumSearch}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

@@ -126,8 +126,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, officialHref: blissOfficialProductUrl, guidePoints: [blissCandidate.audience] }}
-      right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, officialHref: balanceOfficialProductUrl, guidePoints: [balanceCandidate.audience] }}
+      left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, officialHref: blissOfficialProductUrl, guidePoints: [blissCandidate.audience], purchaseHref: blissRakutenUrl, productId: 'babybjorn-bouncer-bliss'}}
+      right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, officialHref: balanceOfficialProductUrl, guidePoints: [balanceCandidate.audience], purchaseHref: balanceRakutenUrl, productId: 'babybjorn-bouncer-balance'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

@@ -1,0 +1,170 @@
+---
+// NextStepBlock — 結論直後の「次にすること」1ブロック（Article Layout v3）。
+// それまで別々の箱だった「購入CTA」と「30秒診断」を1つのコンテナへ統合し、
+// 記事のビジュアルリズムを整える（docs/article-layout-v3-2026-08.md 4.x）。
+//
+// 構成:
+//   1. A/B の購入ボタン（アフィリエイトURL、data-cta-event="purchase" /
+//      data-placement="next-step" でクリック計測に参加）
+//   2. 「まだ迷っている？」→ 30秒診断へのリンク
+//
+// 配置・枚数の機械的契約は config/article-layout.mjs（next-step set）が唯一の定義で、
+// 品質ゲート scripts/check-rendered-html.mjs（validateArticleNextStep）が照合する。
+import {toAffiliateRakutenUrl, isAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
+import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
+
+export interface NextStepProduct {
+  /** 商品名（例: パナソニック NE-FL1A） */
+  label: string;
+  /** 購入（アフィリエイト）URL。search.rakuten.co.jp は hb.afl リダイレクトへ変換 */
+  href?: string;
+  /** クリック計測用の商品ID（任意） */
+  productId?: string;
+}
+
+interface Props {
+  left: NextStepProduct;
+  right: NextStepProduct;
+  /** 診断カテゴリページURL（省略時は診断一覧） */
+  diagnosisHref?: string;
+}
+
+const {left, right, diagnosisHref = '/tools/product-finder/'} = Astro.props;
+const leftHref = toAffiliateRakutenUrl(left.href);
+const rightHref = toAffiliateRakutenUrl(right.href);
+const leftAffiliate = isAffiliateRakutenUrl(leftHref);
+const rightAffiliate = isAffiliateRakutenUrl(rightHref);
+const buyRel = (affiliate: boolean) =>
+  affiliate ? 'sponsored nofollow noopener noreferrer' : 'nofollow noopener noreferrer';
+---
+
+<section class="next-step" aria-label="次にすること" data-next-step>
+  <div class="subsection-heading">
+    <p class="section-label">次にすること</p>
+    <h2 id="next-step">迷ったら、ここから決める</h2>
+  </div>
+  <div class="next-step__grid">
+    {leftHref ? (
+      <a
+        class="next-step__buy next-step__buy--left"
+        href={leftHref}
+        target="_blank"
+        rel={buyRel(leftAffiliate)}
+        data-cta-event={ARTICLE_LAYOUT.ctaEvent}
+        data-placement="next-step"
+        data-product-id={left.productId}
+      >
+        <span class="next-step__buy-name">{left.label}</span>
+        <span class="next-step__buy-action">
+          販売ページを見る
+          {leftAffiliate && <span class="ad-note">（広告）</span>}
+        </span>
+      </a>
+    ) : (
+      <span class="next-step__buy next-step__buy--missing">左の商品情報が未設定です</span>
+    )}
+    {rightHref ? (
+      <a
+        class="next-step__buy next-step__buy--right"
+        href={rightHref}
+        target="_blank"
+        rel={buyRel(rightAffiliate)}
+        data-cta-event={ARTICLE_LAYOUT.ctaEvent}
+        data-placement="next-step"
+        data-product-id={right.productId}
+      >
+        <span class="next-step__buy-name">{right.label}</span>
+        <span class="next-step__buy-action">
+          販売ページを見る
+          {rightAffiliate && <span class="ad-note">（広告）</span>}
+        </span>
+      </a>
+    ) : (
+      <span class="next-step__buy next-step__buy--missing">右の商品情報が未設定です</span>
+    )}
+  </div>
+  <p class="next-step__diagnosis">
+    まだ迷っている？
+    <a class="next-step__diagnosis-link" href={diagnosisHref}>
+      30秒で診断する →
+    </a>
+  </p>
+</section>
+
+<style>
+  .next-step {
+    margin-block: 1.5rem 2.5rem;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--paper, #fff);
+    padding: 1.25rem 1.25rem 1rem;
+  }
+  .next-step .section-label {
+    margin-bottom: 0.3rem;
+  }
+  .next-step h2 {
+    margin: 0 0 1rem;
+    font-size: 1.2rem;
+  }
+  .next-step__grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+  }
+  .next-step__buy {
+    --product-color: var(--product-left);
+    display: grid;
+    gap: 0.2rem;
+    min-height: 64px;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 4px solid var(--product-color);
+    border-radius: 10px;
+    background: var(--surface, #fff);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .next-step__buy--right {
+    --product-color: var(--product-right);
+  }
+  .next-step__buy:hover,
+  .next-step__buy:focus-visible {
+    border-color: var(--product-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  }
+  .next-step__buy-name {
+    font-weight: 800;
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+  .next-step__buy-action {
+    font-size: 0.82rem;
+    color: var(--ink-soft, #555);
+  }
+  .next-step__buy--missing {
+    color: var(--muted);
+    font-size: 0.85rem;
+    align-content: center;
+  }
+  .next-step__diagnosis {
+    margin: 0.9rem 0 0;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--line);
+    font-size: 0.95rem;
+    color: var(--ink-soft, #555);
+  }
+  .next-step__diagnosis-link {
+    color: var(--accent);
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .next-step__diagnosis-link:hover {
+    text-decoration: underline;
+  }
+  @media (max-width: 480px) {
+    .next-step__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

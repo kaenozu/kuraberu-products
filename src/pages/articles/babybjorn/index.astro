@@ -127,8 +127,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyOfficialProductUrl, guidePoints: [harmonyCandidate.audience] }}
-      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniOfficialProductUrl, guidePoints: [miniCandidate.audience] }}
+      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyOfficialProductUrl, guidePoints: [harmonyCandidate.audience], purchaseHref: harmonyRakutenUrl, productId: 'babybjorn-harmony'}}
+      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniOfficialProductUrl, guidePoints: [miniCandidate.audience], purchaseHref: miniRakutenUrl, productId: 'babybjorn-mini'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
