@@ -1261,7 +1261,7 @@ describe("article next-step block (conclusion → 次にすること: A/B購入 
     const errors = validateArticleNextStep("articles/x/index.html", html);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toContain(
-      "next-step block must appear right after the conclusion (before #specs)",
+      "next-step block must appear before the spec section (#specs)",
     );
   });
 
