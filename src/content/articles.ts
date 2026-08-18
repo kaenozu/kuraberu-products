@@ -3041,6 +3041,7 @@ export const commercialArticleImages: Readonly<
     right: "/products/recolte-automatic-cooker-vs-panasonic-nf-pc400-right.jpg",
   },
   "brita-marella-vs-zero-water": {
+    left: "/products/brita-marella-vs-zero-water-left.jpg",
     right: "/products/brita-marella-vs-zero-water-right.jpg",
   },
   "tiger-jpv-l100-vs-zojirushi-nw-fc10": {
