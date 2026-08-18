@@ -1,6 +1,5 @@
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { describe, expect, it } from "vitest";
-import ComparisonHero from "../src/components/ComparisonHero.astro";
 import VisualKeyDifferences from "../src/components/VisualKeyDifferences.astro";
 
 describe("VisualKeyDifferences", () => {
@@ -33,57 +32,5 @@ describe("VisualKeyDifferences", () => {
     });
 
     expect(html).toContain("この一覧以外は両商品とも同じです。");
-  });
-});
-
-describe("ComparisonHero", () => {
-  it("renders condition lines, difference count, anchor, and trust line", async () => {
-    const container = await AstroContainer.create();
-    const html = await container.renderToString(ComparisonHero, {
-      props: {
-        lines: [
-          {
-            condition: "軽さ・食洗機を重視する",
-            brand: "サーモス",
-            model: "JNL-S500",
-          },
-          {
-            condition: "保冷力・ハンドルを重視する",
-            brand: "タイガー",
-            model: "MTA-J050",
-          },
-        ],
-        differences: [
-          { label: "軽さ", note: "約60g差" },
-          { label: "カラー", note: "12色 vs 4色" },
-        ],
-        diffAnchor: "#key-differences",
-        checkedAt: "2026-08-12",
-      },
-    });
-
-    expect(html).toContain("軽さ・食洗機を重視する →");
-    expect(html).toContain("サーモス JNL-S500");
-    expect(html).toContain("大きな違いは2つ");
-    expect(html).toContain("約60g差");
-    expect(html).toContain('href="#key-differences"');
-    expect(html).toContain("違いを詳しく見る");
-    expect(html).toContain("✓ 公式確認済み（2026-08-12）・広告を含みます");
-  });
-
-  it("renders the trust line without a date when checkedAt is not provided", async () => {
-    const container = await AstroContainer.create();
-    const html = await container.renderToString(ComparisonHero, {
-      props: {
-        lines: [{ condition: "A向き", brand: "甲", model: "X" }],
-        differences: [{ label: "価格" }],
-        diffAnchor: "#diffs",
-      },
-    });
-
-    // 確認日なし（公開待ちの初稿）は確認済みを主張せず、広告のみ表示する
-    expect(html).toContain("広告を含みます");
-    expect(html).not.toContain("✓ 公式確認済み");
-    expect(html).toContain("大きな違いは1つ");
   });
 });

@@ -69,7 +69,7 @@ src/
 
 - **比較記事へのCTA**: 結論直後の「次にすること」ブロック（`NextStepBlock`）の診断リンクを
   対象カテゴリへつなぐ。標準の比較記事（`ArticleComparisonV2`）は `diagnosisHref` prop を、
-  `ComparisonHero` / 商用記事（`CommercialArticlePage`）は `<NextStepBlock … diagnosisHref="/tools/product-finder/{slug}/" />` を指定する
+  商用記事（`CommercialArticlePage`）は `<NextStepBlock … diagnosisHref="/tools/product-finder/{slug}/" />` を指定する
 - **sitemap**: `src/pages/sitemap.xml.ts` の `publicPaths` に `/tools/product-finder/{slug}/` を追加
 - **回帰フィクスチャテスト**: `tests/diagnosis-engine.test.ts` に代表回答パターンと期待1位を追加
   （商品データ変更時に結果が変わったらテストが検知する）
