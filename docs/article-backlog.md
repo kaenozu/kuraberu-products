@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（58本）
+## 現在の公開済み（68本）
 
 | slug                                             | 状態     |
 | ------------------------------------------------ | -------- |
@@ -67,6 +67,16 @@
 | `logicool-mx-master-3s-vs-m650`                  | 公開済み |
 | `logicool-lift-vs-m550`                          | 公開済み |
 | `logicool-zone-vibe-100-vs-zone-300`             | 公開済み |
+| `roborock-qrevo-curv-vs-dreame-x50`              | 公開済み |
+| `makita-cl107-vs-cl286`                          | 公開済み |
+| `iris-airfryer-fvx-d3-vs-tefal-ey201`            | 公開済み |
+| `recolte-automatic-cooker-vs-panasonic-nf-pc400` | 公開済み |
+| `brita-marella-vs-zero-water`                    | 公開済み |
+| `tiger-jpv-l100-vs-zojirushi-nw-fc10`            | 公開済み |
+| `sharp-kc-s50-vs-panasonic-f-vxw55`              | 公開済み |
+| `anker-soundcore-liberty-4-nc-vs-sony-wf-c710n`  | 公開済み |
+| `xiaomi-redmi-watch-5-vs-huawei-band-10`         | 公開済み |
+| `panasonic-eh-na9m-vs-refa-beautech`             | 公開済み |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
