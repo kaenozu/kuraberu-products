@@ -84,6 +84,12 @@
     summary.className = "card-desc";
     summary.textContent = article.summary;
     body.append(summary);
+    if ((article.audiences || []).length > 0) {
+      const audiences = document.createElement("p");
+      audiences.className = "card-audiences";
+      audiences.textContent = `向き: ${article.audiences.join("・")}`;
+      body.append(audiences);
+    }
     const meta = document.createElement("p");
     meta.className = "meta";
     meta.textContent = `更新日 ${article.modifiedAt}`;

@@ -35,6 +35,9 @@ const {article, data} = Astro.props;
     </span>
     <h2><a href={article.path}>{article.headline}</a></h2>
     <p class="card-desc">{article.summary}</p>
+    {article.audiences.length > 0 && (
+      <p class="card-audiences">向き: {article.audiences.join('・')}</p>
+    )}
     <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
   </div>
 </article>

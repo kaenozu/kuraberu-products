@@ -12,8 +12,10 @@ import {
   readArticleProductCount,
   validateArticleCtas,
   validateArticleContentType,
+  validateArticleCardAudiences,
   validateArticleCardThumbnails,
   validateArticleTrustLine,
+  validateTopSearch,
   validateSourceToggle,
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
@@ -884,6 +886,95 @@ describe("article card thumbnails (image or text tile)", () => {
         "about/index.html",
         "<main><p>hi</p></main>",
       ),
+    ).toEqual([]);
+  });
+});
+
+describe("article card audiences (向き line)", () => {
+  const card = (inner: string) =>
+    `<article class="card article-list-card" data-content-type="comparison" data-thumb="image">${inner}</article>`;
+  const bodyWithAudiences =
+    '<div class="card-body"><p class="card-audiences">向き: 軽さ重視・機能重視</p></div>';
+
+  it("accepts a card with the 向き line", () => {
+    expect(
+      validateArticleCardAudiences(
+        "articles/index.html",
+        card(bodyWithAudiences),
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a card without the 向き line", () => {
+    const html = card(
+      '<div class="card-body"><p class="card-desc">概要</p></div>',
+    );
+    expect(validateArticleCardAudiences("articles/index.html", html)).toEqual([
+      "articles/index.html: article card must render a card-audiences line with the 向き selection",
+    ]);
+  });
+
+  it("rejects an empty 向き line", () => {
+    const html = card(
+      '<div class="card-body"><p class="card-audiences"> </p></div>',
+    );
+    expect(validateArticleCardAudiences("articles/index.html", html)).toEqual([
+      "articles/index.html: article card must render a card-audiences line with the 向き selection",
+    ]);
+  });
+
+  it("ignores compact cards without data-content-type", () => {
+    const relatedCard =
+      '<article class="card article-list-card"><h3><a href="/articles/x/">タイトル</a></h3></article>';
+    expect(
+      validateArticleCardAudiences("articles/x/index.html", relatedCard),
+    ).toEqual([]);
+  });
+
+  it("ignores pages without article cards", () => {
+    expect(
+      validateArticleCardAudiences(
+        "about/index.html",
+        "<main><p>hi</p></main>",
+      ),
+    ).toEqual([]);
+  });
+});
+
+describe("top page search form", () => {
+  const topPage = (form: string) => `<main>${form}</main>`;
+  const validForm =
+    '<form class="top-search" role="search" data-top-search action="/articles/" method="get"><input type="search" name="q" /><button type="submit">検索</button></form>';
+
+  it("accepts the top search form", () => {
+    expect(validateTopSearch("index.html", topPage(validForm))).toEqual([]);
+  });
+
+  it("rejects a top page without the search form", () => {
+    expect(validateTopSearch("index.html", "<main><p>hi</p></main>")).toEqual([
+      "index.html: top page must render a search form with data-top-search",
+    ]);
+  });
+
+  it("rejects a form without the q input", () => {
+    const html = topPage(validForm.replace('name="q"', ""));
+    expect(validateTopSearch("index.html", html)).toEqual([
+      "index.html: top search form must contain an input named q",
+    ]);
+  });
+
+  it("rejects a form not submitting to /articles/", () => {
+    const html = topPage(
+      validForm.replace('action="/articles/"', 'action="/tools/"'),
+    );
+    expect(validateTopSearch("index.html", html)).toEqual([
+      'index.html: top search form must submit to action="/articles/"',
+    ]);
+  });
+
+  it("ignores non-top pages", () => {
+    expect(
+      validateTopSearch("articles/index.html", topPage(validForm)),
     ).toEqual([]);
   });
 });
