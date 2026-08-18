@@ -1,6 +1,8 @@
 export interface ArticleCtaSet {
   placement: string;
   cardsPerProduct: number;
+  /** 比較記事のみに適用するセット（例: 結論直後の next-step ブロック） */
+  comparisonOnly?: boolean;
 }
 
 export interface RelatedSelectionConfig {

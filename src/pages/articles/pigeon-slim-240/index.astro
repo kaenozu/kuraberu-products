@@ -126,8 +126,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: breastCandidate.product, line: breastCandidate.line, tagline: breastCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${breastCandidate.product} ${breastCandidate.line}`, officialHref: breast, guidePoints: [breastCandidate.audience] }}
-      right={{ brand: slimCandidate.product, line: slimCandidate.line, tagline: slimCandidate.audience, image: '/products/pigeon-slim-pp240.jpg', imageAlt: `${slimCandidate.product} ${slimCandidate.line}`, officialHref: slim, guidePoints: [slimCandidate.audience] }}
+      left={{ brand: breastCandidate.product, line: breastCandidate.line, tagline: breastCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${breastCandidate.product} ${breastCandidate.line}`, officialHref: breast, guidePoints: [breastCandidate.audience], purchaseHref: breastSearch, productId: 'pigeon-ppsu-240'}}
+      right={{ brand: slimCandidate.product, line: slimCandidate.line, tagline: slimCandidate.audience, image: '/products/pigeon-slim-pp240.jpg', imageAlt: `${slimCandidate.product} ${slimCandidate.line}`, officialHref: slim, guidePoints: [slimCandidate.audience], purchaseHref: slimSearch, productId: 'pigeon-slim-240'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/baby-bottle/"

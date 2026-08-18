@@ -3,7 +3,7 @@ import HeroComparison from './HeroComparison.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from './VisualKeyDifferences.astro';
 import DecisionGuide from './DecisionGuide.astro';
 import TrustLine from './TrustLine.astro';
-import DiagnosisCta from './DiagnosisCta.astro';
+import NextStepBlock from './NextStepBlock.astro';
 
 interface Side {
   brand: string;
@@ -15,6 +15,10 @@ interface Side {
   imageHeight?: number;
   officialHref: string;
   guidePoints: string[];
+  /** 購入（アフィリエイト）URL — NextStepBlock の「次にすること」ボタン用 */
+  purchaseHref?: string;
+  /** クリック計測用の商品ID（任意） */
+  productId?: string;
 }
 
 interface Props {
@@ -39,6 +43,10 @@ const { left, right, rows, checkedAt, diagnosisHref } = Astro.props;
     left={{ brand: left.brand, line: left.line, points: left.guidePoints }}
     right={{ brand: right.brand, line: right.line, points: right.guidePoints }}
   />
-  <DiagnosisCta href={diagnosisHref} />
+  <NextStepBlock
+    left={{ label: `${left.brand} ${left.line}`, href: left.purchaseHref, productId: left.productId }}
+    right={{ label: `${right.brand} ${right.line}`, href: right.purchaseHref, productId: right.productId }}
+    diagnosisHref={diagnosisHref}
+  />
   <TrustLine checkedAt={checkedAt} />
 </section>

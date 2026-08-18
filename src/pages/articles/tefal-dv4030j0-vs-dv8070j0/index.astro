@@ -43,8 +43,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 衣類ケア · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ArticleComparisonV2
-      left={{brand: 'ティファール', line: 'DV4030J0', tagline: 'ジェットスチーム・コンパクトさなら', image: '/products/tefal-dv4030j0.jpg', imageAlt: 'ティファール スチーム シュプレ DV4030J0', officialHref: supreOfficial, guidePoints: ['ジェットスチーム最大16g/分を確認したい', 'コンパクトな2WAYモデルを選びたい', 'ワンプッシュおまかせスチームを使いたい']}}
-      right={{brand: 'ティファール', line: 'DV8070J0', tagline: '量・速さ・連続使用なら', image: '/products/tefal-dv8070j0.png', imageAlt: 'ティファール スチーム ラフレ DV8070J0', officialHref: rafreOfficial, guidePoints: ['平均17g/分のスチーム量を重視したい', '立ち上がり約19秒を優先したい', '連続運転約14分・140mLタンクを確認したい']}}
+      left={{brand: 'ティファール', line: 'DV4030J0', tagline: 'ジェットスチーム・コンパクトさなら', image: '/products/tefal-dv4030j0.jpg', imageAlt: 'ティファール スチーム シュプレ DV4030J0', officialHref: supreOfficial, guidePoints: ['ジェットスチーム最大16g/分を確認したい', 'コンパクトな2WAYモデルを選びたい', 'ワンプッシュおまかせスチームを使いたい'], purchaseHref: supreRakutenUrl}}
+      right={{brand: 'ティファール', line: 'DV8070J0', tagline: '量・速さ・連続使用なら', image: '/products/tefal-dv8070j0.png', imageAlt: 'ティファール スチーム ラフレ DV8070J0', officialHref: rafreOfficial, guidePoints: ['平均17g/分のスチーム量を重視したい', '立ち上がり約19秒を優先したい', '連続運転約14分・140mLタンクを確認したい'], purchaseHref: rafreRakutenUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

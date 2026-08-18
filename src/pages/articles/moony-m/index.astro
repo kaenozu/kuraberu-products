@@ -99,8 +99,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience] }}
-      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience] }}
+      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience], purchaseHref: teishigekiSearch, productId: 'moony-teishigeki-m'}}
+      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience], purchaseHref: mashumaroSearch, productId: 'moony-mashumaro-m'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"

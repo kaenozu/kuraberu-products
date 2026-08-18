@@ -15,7 +15,7 @@ import {
   validateArticleCardAudiences,
   validateArticleCardThumbnails,
   validateArticleTrustLine,
-  validateArticleDiagnosisCta,
+  validateArticleNextStep,
   validateTopSearch,
   validateHeaderNav,
   validateComparisonCardLabels,
@@ -45,7 +45,7 @@ const twoEndCtas = `${validCta("https://a.r10.to/one")}${validCta(
   "https://a.r10.to/two",
 )}`;
 
-// 長文の 2 商品記事: 末尾 2 枚 + 途中（after-decision）2 枚 = 4 枚
+// 長文の 2 商品記事: 末尾 2 枚 + 途中（after-decision）2 枚 + 結論直後（next-step）2 枚 = 6 枚
 const fourCtas =
   `${validCta("https://a.r10.to/one", "after-decision")}${validCta(
     "https://a.r10.to/two",
@@ -55,6 +55,17 @@ const fourCtas =
     "https://a.r10.to/four",
     "article-end",
   )}`;
+const sixCtas =
+  `${validCta("https://a.r10.to/one", "next-step")}${validCta(
+    "https://a.r10.to/two",
+    "next-step",
+  )}` + fourCtas;
+
+// 結論直後の「次にすること」ブロック（NextStepBlock 相当）の fixture。
+// 購入ボタン2つ（next-step__buy）と診断リンク（next-step__diagnosis-link）を1つの
+// section.next-step[data-next-step] に持つ。
+const nextStepBlockFixture = (diagnosisHref = "/tools/product-finder/") =>
+  `<section class="next-step" data-next-step aria-label="次にすること"><div class="next-step__grid"><a class="next-step__buy next-step__buy--left" href="https://a.r10.to/one" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="next-step">Aを見る（広告）</a><a class="next-step__buy next-step__buy--right" href="https://a.r10.to/two" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="next-step">Bを見る（広告）</a></div><p class="next-step__diagnosis">まだ迷っている？<a class="next-step__diagnosis-link" href="${diagnosisHref}">30秒で診断する →</a></p></section>`;
 
 // 通常の単一商品記事: 末尾 1 枚
 const oneEndCta = validCta("https://a.r10.to/one");
@@ -78,21 +89,27 @@ function sectionsOf(html: string) {
 }
 
 describe("rendered article CTA audit", () => {
-  it("accepts exactly two article-end CTAs for a two-product article", () => {
+  it("accepts four CTAs for a two-product article (article-end + next-step)", () => {
+    const standardComparisonCtas =
+      twoEndCtas +
+      `${validCta("https://a.r10.to/three", "next-step")}${validCta(
+        "https://a.r10.to/four",
+        "next-step",
+      )}`;
     expect(
       validateArticleCtas(
         "articles/example/index.html",
-        twoEndCtas,
+        standardComparisonCtas,
         expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([]);
   });
 
-  it("accepts four CTAs for a long two-product article (midArticleCta)", () => {
+  it("accepts six CTAs for a long two-product article (midArticleCta + next-step)", () => {
     expect(
       validateArticleCtas(
         "articles/example/index.html",
-        fourCtas,
+        sixCtas,
         expectedPurchaseCtasPerArticle(2, ARTICLE_LAYOUT, {
           midArticleCta: true,
         }),
@@ -132,7 +149,7 @@ describe("rendered article CTA audit", () => {
         expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([
-      "articles/example/index.html: expected exactly 2 purchase CTAs (per config/article-layout.mjs and article productCount), found 1",
+      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs and article productCount), found 1",
       "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
     ]);
   });
@@ -170,7 +187,11 @@ describe("rendered article CTA audit", () => {
         "after-decision",
       )}` +
       `<a href="https://a.r10.to/three" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>` +
-      `${validCta("https://a.r10.to/four", "article-end")}`;
+      `${validCta("https://a.r10.to/four", "article-end")}` +
+      `${validCta("https://a.r10.to/five", "next-step")}${validCta(
+        "https://a.r10.to/six",
+        "next-step",
+      )}`;
     expect(
       validateArticleCtas(
         "articles/example/index.html",
@@ -180,12 +201,12 @@ describe("rendered article CTA audit", () => {
         }),
       ),
     ).toEqual([
-      "articles/example/index.html: CTA 3 has unrecognized placement: bogus (allowed: after-decision, article-end)",
+      "articles/example/index.html: CTA 3 has unrecognized placement: bogus (allowed: after-decision, article-end, next-step)",
     ]);
   });
 
   it("rejects a mid CTA on a non-long article via per-placement counts", () => {
-    // 総数は合う（2 枚）が、article-end が 1 枚しかない v2 混在パターン
+    // 総数は合わない（2 枚 vs 期待 4 枚）上に、article-end が 1 枚しかない v2 混在パターン
     const mixed = `${validCta(
       "https://a.r10.to/one",
       "after-decision",
@@ -198,7 +219,9 @@ describe("rendered article CTA audit", () => {
         expectedPlacementCounts(2),
       ),
     ).toEqual([
+      "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs and article productCount), found 2",
       'articles/example/index.html: expected 2 purchase CTAs with placement "article-end", found 1 (per config/article-layout.mjs)',
+      'articles/example/index.html: expected 2 purchase CTAs with placement "next-step", found 0 (per config/article-layout.mjs)',
     ]);
   });
 
@@ -398,7 +421,7 @@ describe("article product count meta", () => {
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true"><p class="trust-line">広告を含みます</p><section class="diagnosis-cta" aria-label="商品選択診断への誘導"><a class="diagnosis-cta__button" href="/tools/product-finder/">診断をはじめる</a></section>${fourCtas}`,
+        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true"><p class="trust-line">広告を含みます</p>${nextStepBlockFixture()}${fourCtas}`,
       ),
     );
 
@@ -1214,11 +1237,24 @@ describe("article trust line (compressed header)", () => {
   });
 });
 
-describe("article diagnosis CTA (conclusion → 30秒診断)", () => {
+describe("article next-step block (conclusion → 次にすること: A/B購入 + 30秒診断)", () => {
   const contentTypeMeta = (type: string) =>
     `<meta name="article:content-type" content="${type}">`;
-  const diagnosisCta = (href = "/tools/product-finder/") =>
-    `<section class="diagnosis-cta" aria-label="商品選択診断への誘導"><h2 class="diagnosis-cta__heading">まだ迷っているなら</h2><p class="diagnosis-cta__lead">あなたの使い方ならどちらが合う？30秒で診断</p><a class="diagnosis-cta__button" href="${href}">診断をはじめる</a></section>`;
+  const nextStep = (
+    diagnosisHref = "/tools/product-finder/",
+    opts: { buyHrefs?: [string, string]; buyCount?: number } = {},
+  ) => {
+    const buyHrefs = opts.buyHrefs ?? [
+      "https://a.r10.to/one",
+      "https://a.r10.to/two",
+    ];
+    const buyCount = opts.buyCount ?? buyHrefs.length;
+    const buys = Array.from({ length: buyCount }, (_, index) => {
+      const href = buyHrefs[index] ?? "https://a.r10.to/extra";
+      return `<a class="next-step__buy" href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="next-step">商品${index + 1}を見る（広告）</a>`;
+    }).join("");
+    return `<section class="next-step" data-next-step aria-label="次にすること"><div class="next-step__grid">${buys}</div><p class="next-step__diagnosis">まだ迷っている？<a class="next-step__diagnosis-link" href="${diagnosisHref}">30秒で診断する →</a></p></section>`;
+  };
   const comparisonWith = (extra: string, specs = false) =>
     `${contentTypeMeta("comparison")}<article>${extra}${
       specs
@@ -1226,74 +1262,100 @@ describe("article diagnosis CTA (conclusion → 30秒診断)", () => {
         : ""
     }</article>`;
 
-  it("accepts exactly one diagnosis CTA on a comparison article", () => {
+  it("accepts exactly one next-step block on a comparison article", () => {
     expect(
-      validateArticleDiagnosisCta(
+      validateArticleNextStep(
         "articles/x/index.html",
-        comparisonWith(
-          diagnosisCta("/tools/product-finder/baby-bottle/"),
-          true,
-        ),
+        comparisonWith(nextStep("/tools/product-finder/baby-bottle/"), true),
       ),
     ).toEqual([]);
   });
 
   it("accepts the diagnosis index href as a valid destination", () => {
     expect(
-      validateArticleDiagnosisCta(
+      validateArticleNextStep(
         "articles/x/index.html",
-        comparisonWith(diagnosisCta(), true),
+        comparisonWith(nextStep(), true),
       ),
     ).toEqual([]);
   });
 
-  it("rejects a comparison article without a diagnosis CTA", () => {
+  it("rejects a comparison article without a next-step block", () => {
     expect(
-      validateArticleDiagnosisCta(
+      validateArticleNextStep(
         "articles/x/index.html",
         comparisonWith("<p>まとめ：候補です。</p>", true),
       ),
     ).toEqual([
-      "articles/x/index.html: comparison article must render exactly one diagnosis CTA (diagnosis-cta), found 0",
+      "articles/x/index.html: comparison article must render exactly one next-step block (section.next-step[data-next-step]), found 0",
     ]);
   });
 
-  it("rejects a CTA whose link is not a diagnosis page", () => {
-    const errors = validateArticleDiagnosisCta(
+  it("rejects a block whose diagnosis link is not a diagnosis page", () => {
+    const errors = validateArticleNextStep(
       "articles/x/index.html",
-      comparisonWith(diagnosisCta("https://example.com/"), true),
+      comparisonWith(nextStep("https://example.com/"), true),
     );
     expect(errors).toHaveLength(1);
     expect(errors[0]).toContain(
-      "diagnosis CTA must link to /tools/product-finder/…",
+      "next-step block must link the diagnosis to /tools/product-finder/…",
     );
   });
 
-  it("rejects a CTA placed after the specs fold", () => {
+  it("rejects a block whose purchase button has no real URL", () => {
+    const errors = validateArticleNextStep(
+      "articles/x/index.html",
+      comparisonWith(
+        nextStep("/tools/product-finder/", {
+          buyHrefs: ["", "https://a.r10.to/two"],
+        }),
+        true,
+      ),
+    );
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain(
+      "next-step purchase button 1 must have a real purchase URL",
+    );
+  });
+
+  it("rejects a block placed after the specs fold", () => {
     const html =
       `${contentTypeMeta("comparison")}<details class="fold-section" id="specs"><summary>詳細仕様</summary></details>` +
-      diagnosisCta();
-    const errors = validateArticleDiagnosisCta("articles/x/index.html", html);
+      nextStep();
+    const errors = validateArticleNextStep("articles/x/index.html", html);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toContain(
-      "diagnosis CTA must appear right after the conclusion (before #specs)",
-    ); // 1つ目は件数チェックは通る（1つある）ので位置エラーのみ
+      "next-step block must appear right after the conclusion (before #specs)",
+    );
   });
 
-  it("rejects a guide article that renders a diagnosis CTA", () => {
+  it("rejects a legacy standalone diagnosis CTA on any article", () => {
+    const legacy =
+      '<section class="diagnosis-cta"><a class="diagnosis-cta__button" href="/tools/product-finder/">診断をはじめる</a></section>';
+    const errors = validateArticleNextStep(
+      "articles/x/index.html",
+      comparisonWith(`${legacy}${nextStep()}`, true),
+    );
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain(
+      "legacy diagnosis CTA (diagnosis-cta) must be replaced by the next-step block",
+    );
+  });
+
+  it("rejects a guide article that renders a next-step block", () => {
     expect(
-      validateArticleDiagnosisCta(
+      validateArticleNextStep(
         "articles/tiger-mta-j050-guide/index.html",
-        `${contentTypeMeta("guide")}${diagnosisCta()}`,
+        `${contentTypeMeta("guide")}${nextStep()}`,
       ),
     ).toEqual([
-      "articles/tiger-mta-j050-guide/index.html: guide article must not render a diagnosis CTA, found 1",
+      "articles/tiger-mta-j050-guide/index.html: guide article must not render a next-step block, found 1",
     ]);
   });
 
-  it("accepts a guide article without a diagnosis CTA", () => {
+  it("accepts a guide article without a next-step block", () => {
     expect(
-      validateArticleDiagnosisCta(
+      validateArticleNextStep(
         "articles/panasonic-eh-na9m-guide/index.html",
         `${contentTypeMeta("guide")}<main>ガイド本文</main>`,
       ),
@@ -1301,8 +1363,6 @@ describe("article diagnosis CTA (conclusion → 30秒診断)", () => {
   });
 
   it("ignores non-article pages", () => {
-    expect(validateArticleDiagnosisCta("index.html", diagnosisCta())).toEqual(
-      [],
-    );
+    expect(validateArticleNextStep("index.html", nextStep())).toEqual([]);
   });
 });

@@ -5,10 +5,10 @@
 // レイアウトを変更するときはこのファイルだけを直す（ゲートは自動追随する）。
 
 export const ARTICLE_LAYOUT = {
-  // 購入 CTA を識別するマーカー属性の値（AffiliateButton が出力し、ゲートが探す）
+  // 購入 CTA を識別するマーカー属性の値（AffiliateButton / NextStepBlock が出力し、ゲートが探す）
   ctaEvent: "purchase",
-  // PurchaseCard の placement prop が取り得る値
-  placements: ["after-decision", "article-end"],
+  // PurchaseCard / NextStepBlock の placement prop が取り得る値
+  placements: ["after-decision", "article-end", "next-step"],
   // 診断結果カードのクリック計測用 placement（/tools/product-finder/ 配下）
   diagnosisPlacement: "diagnosis-result",
   // 診断ページのイベント名（/api/events が受け付ける）。仕様（Analytics 節）の
@@ -29,7 +29,13 @@ export const ARTICLE_LAYOUT = {
   // 商品数（productCount）は記事メタデータ（src/content/articles.ts）が持つため、
   // ここには枚数の絶対値ではなく商品あたり枚数を書く。
   // 比較記事（productCount=2）→ 末尾2枚、単一商品記事（productCount=1）→ 末尾1枚。
-  ctaSets: [{ placement: "article-end", cardsPerProduct: 1 }],
+  // next-step: 結論直後の「次にすること」1ブロック（NextStepBlock.astro）の購入ボタン。
+  // 比較記事のみ（comparisonOnly: true）で、商品ガイド（productCount=1）には出さない。
+  // 購入カード本体（末尾の詳細カード）とは別のコンパクトなボタン。
+  ctaSets: [
+    { placement: "article-end", cardsPerProduct: 1 },
+    { placement: "next-step", cardsPerProduct: 1, comparisonOnly: true },
+  ],
   // 長文記事のみ許容する途中 CTA セット（同じく商品1つにつき1枚）。
   // 記事メタデータの midArticleCta: true が付いた記事にだけ適用される。
   midArticleSet: { placement: "after-decision", cardsPerProduct: 1 },
@@ -105,10 +111,13 @@ export function expectedPurchaseCtasPerArticle(
   if (!Number.isInteger(productCount) || productCount < 1) {
     throw new TypeError("productCount must be a positive integer");
   }
-  let total = layout.ctaSets.reduce(
-    (sum, set) => sum + set.cardsPerProduct * productCount,
-    0,
-  );
+  // comparisonOnly なセット（next-step）は商品ガイドには適用しない。
+  const isComparison = contentTypeFor(productCount, layout) === "comparison";
+  let total = 0;
+  for (const set of layout.ctaSets) {
+    if (set.comparisonOnly && !isComparison) continue;
+    total += set.cardsPerProduct * productCount;
+  }
   if (midArticleCta && layout.midArticleSet) {
     total += layout.midArticleSet.cardsPerProduct * productCount;
   }
@@ -137,8 +146,10 @@ export function expectedPlacementCounts(
   if (!Number.isInteger(productCount) || productCount < 1) {
     throw new TypeError("productCount must be a positive integer");
   }
+  const isComparison = contentTypeFor(productCount, layout) === "comparison";
   const counts = {};
   for (const set of layout.ctaSets) {
+    if (set.comparisonOnly && !isComparison) continue;
     counts[set.placement] = set.cardsPerProduct * productCount;
   }
   if (midArticleCta && layout.midArticleSet) {

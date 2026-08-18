@@ -20,6 +20,10 @@ export function normalizeOptionalPublicUrl(
   name?: string,
 ): string | undefined;
 export function isAllowedRakutenUrl(value: unknown): boolean;
+export function toAffiliateRakutenUrl(
+  value: string | undefined,
+): string | undefined;
+export function isAffiliateRakutenUrl(value: string | undefined): boolean;
 export function normalizeOptionalRakutenUrl(
   value: string | undefined,
   name: string,

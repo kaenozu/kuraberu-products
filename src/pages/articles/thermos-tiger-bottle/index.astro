@@ -7,7 +7,7 @@ import HeroComparison from '../../../components/HeroComparison.astro';
 import ComparisonHero from '../../../components/ComparisonHero.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
 import DecisionGuide from '../../../components/DecisionGuide.astro';
-import DiagnosisCta from '../../../components/DiagnosisCta.astro';
+import NextStepBlock from '../../../components/NextStepBlock.astro';
 import {thermosTigerBottleArticle as articleMetadata} from '../../../content/articles';
 import {thermosJnlS500, tigerMtaJ050} from '../../../lib/products';
 
@@ -203,7 +203,10 @@ const keyDiffRows: KeyDiffRow[] = [
       }}
     />
 
-    <DiagnosisCta />
+    <NextStepBlock
+      left={{ label: 'サーモス JNL-S500', href: thermosJnlS500.rakutenUrl }}
+      right={{ label: 'タイガー MTA-J050', href: tigerMtaJ050.rakutenUrl }}
+    />
 
     <details class="fold-section" id="specs">
       <summary>詳細仕様（全部の数値を見る）</summary>

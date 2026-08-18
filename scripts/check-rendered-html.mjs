@@ -301,58 +301,91 @@ export function validateArticleTrustLine(relative, html) {
   return errors;
 }
 
-// 比較記事の結論直後には診断誘導CTA（DiagnosisCta.astro）がちょうど1つ必要。
+// 比較記事の結論直後には「次にすること」1ブロック（NextStepBlock.astro）が必要。
+// ブロックは A/B の購入ボタン（next-step__buy）と 30秒診断リンク
+// （next-step__diagnosis-link）を1つの section に統合する
+// （購入CTAの枚数・配置・URLは validateArticleCtas が別途照合する）。
 // - 比較記事（article:content-type="comparison"）: 必ず1つ。
-//   href は診断ページ（/tools/product-finder/…）を指し、詳細仕様（#specs）より前に置く。
-// - 商品ガイド（article:content-type="guide"）: 診断CTAを出さない（hideDiagnosisCta 経由）。
-export function validateArticleDiagnosisCta(relative, html) {
+//   診断リンクは診断ページ（/tools/product-finder/…）を指し、詳細仕様（#specs）より前に置く。
+// - 商品ガイド（article:content-type="guide"）: ブロックを出さない。
+// - 旧形式の独立診断CTA（diagnosis-cta）は全記事で禁止（統合済みブロックへ置換済みのため）。
+export function validateArticleNextStep(relative, html) {
   if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
   const errors = [];
   const contentType =
     html.match(
       /<meta name="article:content-type" content="(guide|comparison)">/i,
     )?.[1] ?? null;
-  const ctaSections = [
+  const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
     ),
   ];
+  if (legacyCtas.length > 0) {
+    errors.push(
+      `${relative}: legacy diagnosis CTA (diagnosis-cta) must be replaced by the next-step block, found ${legacyCtas.length}`,
+    );
+  }
+  const blocks = [
+    ...html.matchAll(
+      /<section\b[^>]*\bnext-step\b[^>]*\bdata-next-step\b[^>]*>/gi,
+    ),
+  ];
 
   if (contentType === "guide") {
-    if (ctaSections.length > 0) {
+    if (blocks.length > 0) {
       errors.push(
-        `${relative}: guide article must not render a diagnosis CTA, found ${ctaSections.length}`,
+        `${relative}: guide article must not render a next-step block, found ${blocks.length}`,
       );
     }
     return errors;
   }
 
-  if (ctaSections.length !== 1) {
+  if (blocks.length !== 1) {
     errors.push(
-      `${relative}: comparison article must render exactly one diagnosis CTA (diagnosis-cta), found ${ctaSections.length}`,
+      `${relative}: comparison article must render exactly one next-step block (section.next-step[data-next-step]), found ${blocks.length}`,
     );
     return errors;
   }
 
   const section =
     html.match(
-      /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>[\s\S]*?<\/section>/i,
+      /<section\b[^>]*\bnext-step\b[^>]*\bdata-next-step\b[^>]*>[\s\S]*?<\/section>/i,
     )?.[0] ?? "";
-  const href =
-    section.match(
-      /<a\b[^>]*class="[^"]*\bdiagnosis-cta__button\b[^"]*"[^>]*href="([^"]+)"/i,
-    )?.[1] ?? null;
-  if (!href || !href.startsWith("/tools/product-finder/")) {
+  const buyLinks = [
+    ...section.matchAll(
+      /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
+    ),
+  ];
+  if (buyLinks.length !== 2) {
     errors.push(
-      `${relative}: diagnosis CTA must link to /tools/product-finder/…, found ${JSON.stringify(href)}`,
+      `${relative}: next-step block must render exactly 2 purchase buttons (next-step__buy), found ${buyLinks.length}`,
+    );
+  } else {
+    for (const [index, link] of buyLinks.entries()) {
+      const href = link[0].match(/\bhref="([^"]*)"/i)?.[1] ?? "";
+      if (!href || /placeholder|undefined/i.test(href)) {
+        errors.push(
+          `${relative}: next-step purchase button ${index + 1} must have a real purchase URL, found ${JSON.stringify(href)}`,
+        );
+      }
+    }
+  }
+  const diagnosisHref =
+    section.match(
+      /<a\b[^>]*class="[^"]*\bnext-step__diagnosis-link\b[^"]*"[^>]*href="([^"]+)"/i,
+    )?.[1] ?? null;
+  if (!diagnosisHref || !diagnosisHref.startsWith("/tools/product-finder/")) {
+    errors.push(
+      `${relative}: next-step block must link the diagnosis to /tools/product-finder/…, found ${JSON.stringify(diagnosisHref)}`,
     );
   }
 
   const specsIndex = html.indexOf('id="specs"');
-  const ctaIndex = html.indexOf('class="diagnosis-cta"');
-  if (specsIndex !== -1 && (ctaIndex === -1 || ctaIndex > specsIndex)) {
+  const blockIndex = html.indexOf('class="next-step"');
+  if (specsIndex !== -1 && (blockIndex === -1 || blockIndex > specsIndex)) {
     errors.push(
-      `${relative}: diagnosis CTA must appear right after the conclusion (before #specs)`,
+      `${relative}: next-step block must appear right after the conclusion (before #specs)`,
     );
   }
   return errors;
@@ -994,7 +1027,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
-    errors.push(...validateArticleDiagnosisCta(relative, html));
+    errors.push(...validateArticleNextStep(relative, html));
     const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(

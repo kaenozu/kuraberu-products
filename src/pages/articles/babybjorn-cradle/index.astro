@@ -125,8 +125,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleOfficialProductUrl, guidePoints: [cradleCandidate.audience] }}
-      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelOfficialProductUrl, guidePoints: [cocoNelCandidate.audience] }}
+      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleOfficialProductUrl, guidePoints: [cradleCandidate.audience], purchaseHref: cradleRakutenUrl, productId: 'babybjorn-cradle'}}
+      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelOfficialProductUrl, guidePoints: [cocoNelCandidate.audience], purchaseHref: cocoNelRakutenUrl, productId: 'aprica-coconel-air'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

@@ -64,8 +64,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ArticleComparisonV2
-      left={{brand: 'サーモス', line: 'KFM-020', tagline: 'IH対応なら', image: kfmImage, imageAlt: 'サーモス KFM-020 フライパン', officialHref: kfmOfficial, guidePoints: ['IHでも使いたい', 'ガス火とIHの両方で使いたい', '深型タイプを選びたい']}}
-      right={{brand: 'サーモス', line: 'KFI-020', tagline: '軽さなら', image: kfiImage, imageAlt: 'サーモス KFI-020 フライパン', officialHref: kfiOfficial, guidePoints: ['ガス火専用で使う', '片手で軽く扱いたい', '約0.4kgを優先したい']}}
+      left={{brand: 'サーモス', line: 'KFM-020', tagline: 'IH対応なら', image: kfmImage, imageAlt: 'サーモス KFM-020 フライパン', officialHref: kfmOfficial, guidePoints: ['IHでも使いたい', 'ガス火とIHの両方で使いたい', '深型タイプを選びたい'], purchaseHref: kfmRakutenUrl}}
+      right={{brand: 'サーモス', line: 'KFI-020', tagline: '軽さなら', image: kfiImage, imageAlt: 'サーモス KFI-020 フライパン', officialHref: kfiOfficial, guidePoints: ['ガス火専用で使う', '片手で軽く扱いたい', '約0.4kgを優先したい'], purchaseHref: kfiRakutenUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

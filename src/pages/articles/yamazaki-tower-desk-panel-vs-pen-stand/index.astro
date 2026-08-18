@@ -47,8 +47,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">山崎実業 towerのデスク横トレー付きスチールパネルとマグネットペンスタンドを、買って使えるかに直結する設置条件・用途・組み合わせ方を中心に比較します。重量や耐荷重などの数値は詳細仕様にまとめます。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: panel.brand, line: panel.line, tagline: 'デスク横の面を使ってまとめるなら', image: panel.image, imageAlt: panel.imageAlt, officialHref: panelOfficial, guidePoints: [panel.audience]}}
-      right={{brand: penStand.brand, line: penStand.line, tagline: 'ペンを立てて省スペースに置くなら', image: penStand.image, imageAlt: penStand.imageAlt, officialHref: penStandOfficial, guidePoints: [penStand.audience]}}
+      left={{brand: panel.brand, line: panel.line, tagline: 'デスク横の面を使ってまとめるなら', image: panel.image, imageAlt: panel.imageAlt, officialHref: panelOfficial, guidePoints: [panel.audience], purchaseHref: panelSearch, productId: 'yamazaki-tower-desk-panel'}}
+      right={{brand: penStand.brand, line: penStand.line, tagline: 'ペンを立てて省スペースに置くなら', image: penStand.image, imageAlt: penStand.imageAlt, officialHref: penStandOfficial, guidePoints: [penStand.audience], purchaseHref: penStandSearch, productId: 'yamazaki-tower-magnetic-pen-stand'}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

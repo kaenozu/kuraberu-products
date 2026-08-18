@@ -41,8 +41,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">象印のEC-KV50とEC-MA60は、容量や抽出方法、濃度調節、本体サイズが異なるコーヒーメーカーです。この記事では、象印公式ページで確認できる仕様と、まだ販売先で確認が必要な情報を分けて整理します。</p>
     <p class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></p>
     <ArticleComparisonV2
-      left={{brand: kvModel.brand, line: kvModel.line, tagline: '濃さの選択肢なら', image: kvModel.image, imageAlt: kvModel.imageAlt, officialHref: kvOfficial, guidePoints: [kvModel.audience]}}
-      right={{brand: maModel.brand, line: maModel.line, tagline: '小ささ・軽さなら', image: maModel.image, imageAlt: maModel.imageAlt, officialHref: maOfficial, guidePoints: [maModel.audience]}}
+      left={{brand: kvModel.brand, line: kvModel.line, tagline: '濃さの選択肢なら', image: kvModel.image, imageAlt: kvModel.imageAlt, officialHref: kvOfficial, guidePoints: [kvModel.audience], purchaseHref: kvSearch}}
+      right={{brand: maModel.brand, line: maModel.line, tagline: '小ささ・軽さなら', image: maModel.image, imageAlt: maModel.imageAlt, officialHref: maOfficial, guidePoints: [maModel.audience], purchaseHref: maSearch}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

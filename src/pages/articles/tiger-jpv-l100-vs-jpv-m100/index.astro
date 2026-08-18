@@ -39,8 +39,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">タイガーのJPV-L100とJPV-M100は、どちらも5.5合の圧力IHジャー炊飯器です。公式ページで確認できるモデルの位置づけ、価格、容量、サイズ、質量を分けて比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: lModel.brand, line: lModel.line, tagline: '上位モデルを選ぶなら', image: lModel.image, imageAlt: lModel.imageAlt, officialHref: lOfficial, guidePoints: [lModel.audience]}}
-      right={{brand: mModel.brand, line: mModel.line, tagline: '価格を抑えるなら', image: mModel.image, imageAlt: mModel.imageAlt, officialHref: mOfficial, guidePoints: [mModel.audience]}}
+      left={{brand: lModel.brand, line: lModel.line, tagline: '上位モデルを選ぶなら', image: lModel.image, imageAlt: lModel.imageAlt, officialHref: lOfficial, guidePoints: [lModel.audience], purchaseHref: lSearch}}
+      right={{brand: mModel.brand, line: mModel.line, tagline: '価格を抑えるなら', image: mModel.image, imageAlt: mModel.imageAlt, officialHref: mOfficial, guidePoints: [mModel.audience], purchaseHref: mSearch}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />

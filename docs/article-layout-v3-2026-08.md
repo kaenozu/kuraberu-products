@@ -70,30 +70,43 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 - 品質ゲート（`validateArticleTrustLine`）が、全記事で信頼行がちょうど 1 つ・
   `YYYY-MM-DD` 付きであることと、旧形式の残存を fail-closed で検出する。
 
-## 記事内の診断誘導（DiagnosisCta）
+## 結論直後の「次にすること」1ブロック（NextStepBlock）
 
-比較記事の結論直後（「どっち向き？」の判定直後）に、**診断誘導 CTA を 1 つ**置く:
+比較記事の結論直後（「どっち向き？」の判定直後）に、**A/B 購入 + 30秒診断を
+1 つのブロック**として置く。それまで別々の箱だった「購入CTA」と「診断誘導」を
+1 つのコンテナへ統合し、記事のビジュアルリズムを整える:
 
 ```
-まだ迷っているなら
-あなたの使い方ならどちらが合う？30秒で診断
-[診断をはじめる]
+次にすること
+迷ったら、ここから決める
+
+[ Aを見る（販売ページ） ]  [ Bを見る（販売ページ） ]
+────────────────────────────
+まだ迷っている？  30秒で診断する →
 ```
 
-- 実装は共通コンポーネント `src/components/DiagnosisCta.astro`。
-  `href` 省略時は診断一覧 `/tools/product-finder/` へ遷移する。
+- 実装は共通コンポーネント `src/components/NextStepBlock.astro`。
+  `left` / `right` に商品名と購入（アフィリエイト）URL を渡す。
+  購入 URL は `toAffiliateRakutenUrl` で正規化され、`search.rakuten.co.jp` は
+  `hb.afl` のリダイレクトへ変換される。ボタンは `data-cta-event="purchase"` +
+  `data-placement="next-step"` を持ち、クリック計測に参加する。
+- 購入ボタンの枚数・配置は `config/article-layout.mjs` の `ctaSets`
+  （`next-step` set、比較記事のみ `comparisonOnly`）が唯一の定義で、
+  末尾の購入カード（`article-end`）とは別カウント。
 - **診断カテゴリが存在する記事** は該当カテゴリへ直接つなぐ:
   - 哺乳瓶記事 → `/tools/product-finder/baby-bottle/`（`pigeon-*`）
   - おむつ記事 → `/tools/product-finder/diaper/`（`moony-m`・`merries-*`・`pampers-newborn`・`shupot`）
   - それ以外（診断カテゴリ未整備の記事）→ 診断一覧へ
 - 配置はテンプレートごとに共通化している:
   - `ArticleComparisonV2`（比較記事の標準ヒーロー）が `DecisionGuide` の直後に描画する。
-    `diagnosisHref` prop で遷移先を上書きできる。
+    `left.purchaseHref` / `right.purchaseHref`（+ 任意の `productId`）と
+    `diagnosisHref` prop で上書きできる。
   - `ComparisonHero` 記事・商用記事（`CommercialArticlePage`）は同様に判定セクション直後に置く。
   - **商品ガイド**（`article:content-type="guide"`）は対象外（現行ガイドは `ArticleComparisonV2` を使わない）。
-- 品質ゲート（`validateArticleDiagnosisCta`）が、比較記事では CTA がちょうど 1 つ・
-  `/tools/product-finder/` を指す・`#specs` より前に置かれることを、
-  ガイドでは CTA が描画されないことを fail-closed で検証する。
+- 品質ゲート（`validateArticleNextStep`）が、比較記事ではブロックがちょうど 1 つ・
+  購入ボタンが 2 つ・診断リンクが `/tools/product-finder/` を指す・`#specs` より前に
+  置かれることを、ガイドではブロックが描画されないことを、旧形式の独立診断 CTA
+  （`diagnosis-cta`）が残っていないことを fail-closed で検証する。
 
 ## 記事ごとの判断ルール
 

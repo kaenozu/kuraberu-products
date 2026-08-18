@@ -107,8 +107,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyOfficialProductUrl, guidePoints: [smartPottyCandidate.audience] }}
-      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairOfficialProductUrl, guidePoints: [pottyChairCandidate.audience] }}
+      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyOfficialProductUrl, guidePoints: [smartPottyCandidate.audience], purchaseHref: smartPottyRakutenUrl, productId: 'babybjorn-smart-potty'}}
+      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairOfficialProductUrl, guidePoints: [pottyChairCandidate.audience], purchaseHref: pottyChairRakutenUrl, productId: 'babybjorn-potty-chair'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
