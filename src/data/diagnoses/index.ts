@@ -21,6 +21,24 @@ import {
   diaperReasonDictionary,
 } from "./diaper";
 import { diaperProducts } from "../products/diapers";
+import {
+  waterBottleDiagnosis,
+  waterBottlePageContent,
+  waterBottleReasonDictionary,
+} from "./water-bottle";
+import { waterBottleProducts } from "../products/water-bottles";
+import {
+  hairDryerDiagnosis,
+  hairDryerPageContent,
+  hairDryerReasonDictionary,
+} from "./hair-dryer";
+import { hairDryerProducts } from "../products/hair-dryers";
+import {
+  riceCookerDiagnosis,
+  riceCookerPageContent,
+  riceCookerReasonDictionary,
+} from "./rice-cooker";
+import { riceCookerProducts } from "../products/rice-cookers";
 
 export const diagnosisCategories: readonly DiagnosisCategory[] = [
   {
@@ -36,6 +54,27 @@ export const diagnosisCategories: readonly DiagnosisCategory[] = [
     products: diaperProducts,
     reasons: diaperReasonDictionary,
     pageContent: diaperPageContent,
+  },
+  {
+    slug: "water-bottle",
+    config: waterBottleDiagnosis,
+    products: waterBottleProducts,
+    reasons: waterBottleReasonDictionary,
+    pageContent: waterBottlePageContent,
+  },
+  {
+    slug: "hair-dryer",
+    config: hairDryerDiagnosis,
+    products: hairDryerProducts,
+    reasons: hairDryerReasonDictionary,
+    pageContent: hairDryerPageContent,
+  },
+  {
+    slug: "rice-cooker",
+    config: riceCookerDiagnosis,
+    products: riceCookerProducts,
+    reasons: riceCookerReasonDictionary,
+    pageContent: riceCookerPageContent,
   },
 ];
 

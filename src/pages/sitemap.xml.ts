@@ -11,6 +11,9 @@ const publicPaths = [
   "/tools/product-finder/",
   "/tools/product-finder/baby-bottle/",
   "/tools/product-finder/diaper/",
+  "/tools/product-finder/water-bottle/",
+  "/tools/product-finder/hair-dryer/",
+  "/tools/product-finder/rice-cooker/",
   ...publicArticleMetadata.map((article) => article.path),
 ] as const;
 

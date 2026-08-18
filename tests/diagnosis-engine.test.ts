@@ -10,6 +10,12 @@ import type {
 } from "../src/domain/diagnosis/types";
 import { diaperDiagnosis } from "../src/data/diagnoses/diaper";
 import { diaperProducts } from "../src/data/products/diapers";
+import { waterBottleDiagnosis } from "../src/data/diagnoses/water-bottle";
+import { waterBottleProducts } from "../src/data/products/water-bottles";
+import { hairDryerDiagnosis } from "../src/data/diagnoses/hair-dryer";
+import { hairDryerProducts } from "../src/data/products/hair-dryers";
+import { riceCookerDiagnosis } from "../src/data/diagnoses/rice-cooker";
+import { riceCookerProducts } from "../src/data/products/rice-cookers";
 
 // ---- テスト用フィクスチャ（母乳実感 160/240ml × ガラス/PPSU） ----
 
@@ -438,5 +444,93 @@ describe("diaper regression fixtures", () => {
     const resultB = runDiagnosis(diaperDiagnosis, diaperProducts, {});
     expect(resultA.rankedProducts).toEqual(resultB.rankedProducts);
     expect(resultA.rankedProducts[0].productId).toBe("moony-mashumaro-m");
+  });
+});
+
+// ---- 水筒診断の回帰フィクスチャ（商品データ変更時に結果が変わったら検知する） ----
+
+describe("water-bottle regression fixtures", () => {
+  it("軽さ優先 + 食洗機 + ハンドル不要 → サーモス JNL-S500 が1位", () => {
+    const result = runDiagnosis(waterBottleDiagnosis, waterBottleProducts, {
+      priority: "light",
+      "dishwasher-important": "yes",
+      "handle-important": "no",
+    });
+    expect(result.rankedProducts[0].productId).toBe("thermos-jnl-s500");
+  });
+
+  it("保冷力優先 + ハンドル必要 → タイガー MTA-J050 が1位", () => {
+    const result = runDiagnosis(waterBottleDiagnosis, waterBottleProducts, {
+      priority: "cold",
+      "dishwasher-important": "no",
+      "handle-important": "yes",
+    });
+    expect(result.rankedProducts[0].productId).toBe("tiger-mta-j050");
+  });
+
+  it("全回答なし → タイブレーク（軽さ昇順）でサーモスが先に並ぶ", () => {
+    const resultA = runDiagnosis(waterBottleDiagnosis, waterBottleProducts, {});
+    const resultB = runDiagnosis(waterBottleDiagnosis, waterBottleProducts, {});
+    expect(resultA.rankedProducts).toEqual(resultB.rankedProducts);
+    expect(resultA.rankedProducts[0].productId).toBe("thermos-jnl-s500");
+  });
+});
+
+// ---- ドライヤー診断の回帰フィクスチャ ----
+
+describe("hair-dryer regression fixtures", () => {
+  it("ケア機能優先 + 折りたたみ不要 → EH-NA9M が1位", () => {
+    const result = runDiagnosis(hairDryerDiagnosis, hairDryerProducts, {
+      priority: "care",
+      "fold-important": "no",
+      "care-important": "yes",
+    });
+    expect(result.rankedProducts[0].productId).toBe("panasonic-eh-na9m");
+  });
+
+  it("持ち運び優先 + 折りたたみ必要 → EH-NA7M が1位", () => {
+    const result = runDiagnosis(hairDryerDiagnosis, hairDryerProducts, {
+      priority: "portable",
+      "fold-important": "yes",
+      "care-important": "no",
+      "light-important": "yes",
+    });
+    expect(result.rankedProducts[0].productId).toBe("panasonic-eh-na7m");
+  });
+
+  it("全回答なし → タイブレーク（軽さ昇順）でEH-NA7Mが先に並ぶ", () => {
+    const resultA = runDiagnosis(hairDryerDiagnosis, hairDryerProducts, {});
+    const resultB = runDiagnosis(hairDryerDiagnosis, hairDryerProducts, {});
+    expect(resultA.rankedProducts).toEqual(resultB.rankedProducts);
+    expect(resultA.rankedProducts[0].productId).toBe("panasonic-eh-na7m");
+  });
+});
+
+// ---- 炊飯器診断の回帰フィクスチャ ----
+
+describe("rice-cooker regression fixtures", () => {
+  it("価格優先 + 5万円以下 + エントリーOK → JPV-M100 が1位", () => {
+    const result = runDiagnosis(riceCookerDiagnosis, riceCookerProducts, {
+      priority: "price",
+      budget: "under-50k",
+      "entry-ok": "yes",
+    });
+    expect(result.rankedProducts[0].productId).toBe("tiger-jpv-m100");
+  });
+
+  it("上位モデル優先 + 5〜6万円 + エントリー不十分 → JPV-L100 が1位", () => {
+    const result = runDiagnosis(riceCookerDiagnosis, riceCookerProducts, {
+      priority: "premium",
+      budget: "50-60k",
+      "entry-ok": "no",
+    });
+    expect(result.rankedProducts[0].productId).toBe("tiger-jpv-l100");
+  });
+
+  it("全回答なし → タイブレーク（価格昇順）でJPV-M100が先に並ぶ", () => {
+    const resultA = runDiagnosis(riceCookerDiagnosis, riceCookerProducts, {});
+    const resultB = runDiagnosis(riceCookerDiagnosis, riceCookerProducts, {});
+    expect(resultA.rankedProducts).toEqual(resultB.rankedProducts);
+    expect(resultA.rankedProducts[0].productId).toBe("tiger-jpv-m100");
   });
 });
