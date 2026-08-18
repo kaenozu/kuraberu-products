@@ -456,6 +456,57 @@ export function validateArticleCardAudiences(relative, html) {
   return errors;
 }
 
+// 全ページのヘッダーは「ロゴ + ハンバーガー（details.nav-toggle） + リンク群（nav.navlinks）」
+// 構造であることが必須。スマホ（<560px）では details のネイティブ開閉でドロワー表示に
+// なるため、この構造が無いページはモバイルメニューを持たない（fail-closed）。
+export function validateHeaderNav(relative, html) {
+  const errors = [];
+  const header = html.match(/<header\b[^>]*>[\s\S]*?<\/header>/i)?.[0] ?? "";
+  if (!header) {
+    errors.push(`${relative}: page must render a header`);
+    return errors;
+  }
+  // details の内側だけを対象に summary / navlinks の有無を判定する
+  // （<summary> が details の外に置かれた場合を検出するため）。
+  const toggle =
+    header.match(
+      /<details\b[^>]*class="[^"]*\bnav-toggle\b[^"]*"[^>]*>([\s\S]*?)<\/details>/i,
+    )?.[1] ?? null;
+  if (toggle === null) {
+    errors.push(
+      `${relative}: header must render the mobile menu (<details class="nav-toggle">)`,
+    );
+    return errors;
+  }
+  if (!/<summary/i.test(toggle)) {
+    errors.push(
+      `${relative}: nav-toggle must contain a <summary> (hamburger trigger)`,
+    );
+  }
+  if (!/<nav\b[^>]*class="[^"]*\bnavlinks\b[^"]*"[^>]*>/i.test(toggle)) {
+    errors.push(
+      `${relative}: nav-toggle must contain the nav.navlinks link group`,
+    );
+  }
+  return errors;
+}
+
+// 比較表（table.comparison）を描画するページは、スマホの比較カード表示で各セルに
+// 商品名ラベル（data-label）を付与するスクリプト（BaseLayout の comparison-card-labels）
+// が必ず同梱されている必要がある（fail-closed）。
+export function validateComparisonCardLabels(relative, html) {
+  const errors = [];
+  if (!/<table\b[^>]*class="[^"]*\bcomparison\b[^"]*"/i.test(html)) {
+    return errors;
+  }
+  if (!/comparison-card-labels/.test(html)) {
+    errors.push(
+      `${relative}: pages with a comparison table must include the comparison-card-labels script`,
+    );
+  }
+  return errors;
+}
+
 // 「根拠・確認先」列（4列目）を持つ比較表は、スマホでは
 // <details class="source-toggle"> で折りたたむ（CSS-only、docs/article-layout-v3-2026-08.md）。
 // 根拠列テーブルを描画する記事にはトグルが必須、逆にトグルのみ存在して
@@ -891,6 +942,8 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
 
     errors.push(...validateArticleCardThumbnails(file, html));
     errors.push(...validateArticleCardAudiences(file, html));
+    errors.push(...validateHeaderNav(file, html));
+    errors.push(...validateComparisonCardLabels(file, html));
   } // トップページの検索フォーム（index.html のみ。fixture 等で無ければスキップ）。
   const topPagePath = path.join(distDirectory, "index.html");
   if (fs.existsSync(topPagePath)) {
