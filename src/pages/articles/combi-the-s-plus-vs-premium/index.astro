@@ -51,8 +51,8 @@ const faqEntries = [
 const keyDiffRows: KeyDiffRow[] = [
   {label: '使用期間の目安', left: '新生児〜4才頃・身長40〜105cm', right: '新生児〜7才頃・身長40〜125cm', highlight: 'right', highlightNote: '長く使える', bar: {left: 105, right: 125}},
   {label: 'ジュニアモード', left: '公式ページで案内なし', right: '前向き・身長100〜125cm', highlight: 'right', highlightNote: 'ジュニアまで対応'},
-  {label: '本体重量', left: '13.8kg', right: '14.1kg', highlight: 'left', highlightNote: '約300g軽い', bar: {left: 13.8, right: 14.1}},
-  {label: '公式表示価格', left: '88,000円', right: '95,700円', highlight: 'left', highlightNote: '7,700円安い', bar: {left: 88000, right: 95700}},
+  {label: '本体重量', left: '13.8kg', right: '14.1kg', highlight: 'left', highlightNote: '約300g軽い', bar: {left: 13.8, right: 14.1}, direction: 'lower-is-better'},
+  {label: '公式表示価格', left: '88,000円', right: '95,700円', highlight: 'left', highlightNote: '7,700円安い', bar: {left: 88000, right: 95700}, direction: 'lower-is-better'},
   {label: '回転・固定', left: '360°回転・ISOFIX＋サポートレッグ', right: '360°回転・ISOFIX＋サポートレッグ'},
 ];
 ---
@@ -85,11 +85,11 @@ const keyDiffRows: KeyDiffRow[] = [
         <table class="comparison">
           <thead><tr><th scope="col">比較項目</th><th scope="col">THE S plus</th><th scope="col">THE S premium</th><th scope="col">根拠</th></tr></thead>
           <tbody>
-            <tr><th scope="row">対象身長</th><td>40〜105cm</td><td>40〜125cm</td><td><a href={plusOfficial} target="_blank" rel="noopener noreferrer">plus公式</a> / <a href={premiumOfficial} target="_blank" rel="noopener noreferrer">premium公式</a></td></tr>
-            <tr><th scope="row">参考年齢</th><td>新生児〜4才頃</td><td>新生児〜7才頃</td><td>各公式商品ページ</td></tr>
-            <tr><th scope="row">本体重量</th><td>13.8kg</td><td>14.1kg</td><td>各公式商品ページ</td></tr>
-            <tr><th scope="row">回転・固定</th><td>360°回転・ISOFIX＋サポートレッグ</td><td>360°回転・ISOFIX＋サポートレッグ</td><td>各公式商品ページ</td></tr>
-            <tr><th scope="row">公式表示価格</th><td>88,000円</td><td>95,700円</td><td>各公式商品ページ</td></tr>
+            <tr><th scope="row">対象身長</th><td data-label="THE S plus">40〜105cm</td><td data-label="THE S premium">40〜125cm</td><td data-label="根拠"><a href={plusOfficial} target="_blank" rel="noopener noreferrer">plus公式</a> / <a href={premiumOfficial} target="_blank" rel="noopener noreferrer">premium公式</a></td></tr>
+            <tr><th scope="row">参考年齢</th><td data-label="THE S plus">新生児〜4才頃</td><td data-label="THE S premium">新生児〜7才頃</td><td data-label="根拠">各公式商品ページ</td></tr>
+            <tr><th scope="row">本体重量</th><td data-label="THE S plus">13.8kg</td><td data-label="THE S premium">14.1kg</td><td data-label="根拠">各公式商品ページ</td></tr>
+            <tr><th scope="row">回転・固定</th><td data-label="THE S plus">360°回転・ISOFIX＋サポートレッグ</td><td data-label="THE S premium">360°回転・ISOFIX＋サポートレッグ</td><td data-label="根拠">各公式商品ページ</td></tr>
+            <tr><th scope="row">公式表示価格</th><td data-label="THE S plus">88,000円</td><td data-label="THE S premium">95,700円</td><td data-label="根拠">各公式商品ページ</td></tr>
           </tbody>
         </table>
       </div>

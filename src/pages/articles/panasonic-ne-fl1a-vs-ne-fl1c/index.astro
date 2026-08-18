@@ -2,12 +2,9 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import PurchaseCard from '../../../components/PurchaseCard.astro'
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
-import ComparisonHero from '../../../components/ComparisonHero.astro'
-import HeroComparison from '../../../components/HeroComparison.astro'
-import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
-import DecisionGuide from '../../../components/DecisionGuide.astro'
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
-import NextStepBlock from '../../../components/NextStepBlock.astro'
 import { panasonicNeFl1aVsNeFl1cArticle as articleMetadata } from '../../../content/articles'
 import { articlePurchaseLinks } from '../../../lib/products';
 
@@ -99,26 +96,6 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
 
-    <ComparisonHero
-      lines={[
-        { condition: '軽さ・庫内幅・自動メニューを重視する', brand: right.brand, model: right.model },
-        { condition: 'NE-FL1Aの仕様を確認して選ぶ', brand: left.brand, model: left.model },
-      ]}
-      differences={[
-        { label: '本体質量', note: 'NE-FL1Cが0.6kg軽い' },
-        { label: '庫内幅', note: 'NE-FL1Cが11mm広い' },
-        { label: '自動メニュー数', note: 'NE-FL1Cが1つ多い' },
-      ]}
-      diffAnchor="#key-differences"
-      checkedAt={articleMetadata.productInfoCheckedAt}
-    />
-
-    <HeroComparison
-      eyebrow="30秒でわかる"
-      left={{ brand: left.brand, line: left.model, tagline: 'NE-FL1Aの仕様なら', image: left.image, imageAlt: left.imageAlt, officialHref: left.officialUrl }}
-      right={{ brand: right.brand, line: right.model, tagline: '軽さ・庫内幅なら', image: right.image, imageAlt: right.imageAlt, officialHref: right.officialUrl }}
-    />
-
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">パナソニックの22L単機能レンジ、NE-FL1AとNE-FL1Cを比較します。公式仕様で確認できる容量・庫内寸法・質量・自動メニュー数を中心に、違いと共通点を整理します。</p>
 
@@ -129,28 +106,30 @@ const keyDiffRows: KeyDiffRow[] = [
       <a href="#faq">FAQ</a>
     </nav>
 
-    <VisualKeyDifferences leftLabel="パナソニック NE-FL1A" rightLabel="パナソニック NE-FL1C" items={keyDiffRows} />
-
-    <div class="common-specs" aria-label="共通仕様">
-      <p>どちらも同じ：<b>総庫内容量22L</b>・<b>フラット庫内</b>・<b>最高出力1000W（最大1分30秒）</b>・<b>外形寸法 幅488mm×奥行380mm×高さ298mm</b>。</p>
-    </div>
-
-    <DecisionGuide
+    <ArticleComparisonV2
       left={{
         brand: left.brand,
         line: left.model,
-        points: ['NE-FL1Aの公式仕様を確認して選びたい', `自動メニュー数${left.menus.replace('自動メニュー数', '')}で足りる`, `庫内幅321mmを確認して置きたい`],
+        tagline: 'NE-FL1Aの仕様なら',
+        image: left.image,
+        imageAlt: left.imageAlt,
+        officialHref: left.officialUrl,
+        guidePoints: ['NE-FL1Aの公式仕様を確認して選びたい', `自動メニュー数${left.menus.replace('自動メニュー数', '')}で足りる`, `庫内幅321mmを確認して置きたい`],
+        purchaseHref: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:left'].purchaseUrl,
       }}
       right={{
         brand: right.brand,
         line: right.model,
-        points: ['本体を少しでも軽くしたい（8.9kg）', '庫内幅332mmを確認して選びたい', '自動メニュー数3を使いたい'],
+        tagline: '軽さ・庫内幅なら',
+        image: right.image,
+        imageAlt: right.imageAlt,
+        officialHref: right.officialUrl,
+        guidePoints: ['本体を少しでも軽くしたい（8.9kg）', '庫内幅332mmを確認して選びたい', '自動メニュー数3を使いたい'],
+        purchaseHref: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:right'].purchaseUrl,
       }}
-    />
-
-    <NextStepBlock
-      left={{ label: 'パナソニック NE-FL1A', href: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:left'].purchaseUrl }}
-      right={{ label: 'パナソニック NE-FL1C', href: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:right'].purchaseUrl }}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+      commonNote="どちらも同じ：総庫内容量22L・フラット庫内・最高出力1000W（最大1分30秒）・外形寸法 幅488mm×奥行380mm×高さ298mm。"
     />
 
     <details class="fold-section" id="specs">
@@ -159,16 +138,16 @@ const keyDiffRows: KeyDiffRow[] = [
         <table class="comparison">
           <thead><tr><th scope="col">比較項目</th><th scope="col">NE-FL1A</th><th scope="col">NE-FL1C</th></tr></thead>
           <tbody>
-            <tr><th scope="row">総庫内容量</th><td>{left.capacity}</td><td>{right.capacity}</td></tr>
-            <tr><th scope="row">庫内形状</th><td>フラット</td><td>フラット</td></tr>
-            <tr><th scope="row">庫内寸法</th><td>{left.cavity}</td><td>{right.cavity}</td></tr>
-            <tr><th scope="row">外形寸法</th><td>幅488mm×奥行380mm×高さ298mm</td><td>幅488mm×奥行380mm×高さ298mm</td></tr>
-            <tr><th scope="row">本体質量</th><td>{left.weight}</td><td>{right.weight}</td></tr>
-            <tr><th scope="row">消費電力</th><td>1.40kW</td><td>1400W</td></tr>
-            <tr><th scope="row">最高出力</th><td>{left.output}</td><td>{right.output}</td></tr>
-            <tr><th scope="row">自動メニュー数</th><td>{left.menus}</td><td>{right.menus}</td></tr>
-            <tr><th scope="row">センサー</th><td>蒸気センサー</td><td>蒸気センサー</td></tr>
-            <tr><th scope="row">お手入れ・庫内灯</th><td>{left.care}</td><td>{right.care}</td></tr>
+            <tr><th scope="row">総庫内容量</th><td data-label="NE-FL1A">{left.capacity}</td><td data-label="NE-FL1C">{right.capacity}</td></tr>
+            <tr><th scope="row">庫内形状</th><td data-label="NE-FL1A">フラット</td><td data-label="NE-FL1C">フラット</td></tr>
+            <tr><th scope="row">庫内寸法</th><td data-label="NE-FL1A">{left.cavity}</td><td data-label="NE-FL1C">{right.cavity}</td></tr>
+            <tr><th scope="row">外形寸法</th><td data-label="NE-FL1A">幅488mm×奥行380mm×高さ298mm</td><td data-label="NE-FL1C">幅488mm×奥行380mm×高さ298mm</td></tr>
+            <tr><th scope="row">本体質量</th><td data-label="NE-FL1A">{left.weight}</td><td data-label="NE-FL1C">{right.weight}</td></tr>
+            <tr><th scope="row">消費電力</th><td data-label="NE-FL1A">1.40kW</td><td data-label="NE-FL1C">1400W</td></tr>
+            <tr><th scope="row">最高出力</th><td data-label="NE-FL1A">{left.output}</td><td data-label="NE-FL1C">{right.output}</td></tr>
+            <tr><th scope="row">自動メニュー数</th><td data-label="NE-FL1A">{left.menus}</td><td data-label="NE-FL1C">{right.menus}</td></tr>
+            <tr><th scope="row">センサー</th><td data-label="NE-FL1A">蒸気センサー</td><td data-label="NE-FL1C">蒸気センサー</td></tr>
+            <tr><th scope="row">お手入れ・庫内灯</th><td data-label="NE-FL1A">{left.care}</td><td data-label="NE-FL1C">{right.care}</td></tr>
           </tbody>
         </table>
       </div>

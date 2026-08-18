@@ -36,11 +36,17 @@ src/
 ├─ data/
 │  ├─ products/                 # 商品データ（カテゴリごと）
 │  │  ├─ baby-bottles.ts
-│  │  └─ diapers.ts
+│  │  ├─ diapers.ts
+│  │  ├─ water-bottles.ts
+│  │  ├─ hair-dryers.ts
+│  │  └─ rice-cookers.ts
 │  └─ diagnoses/                # 診断設定（カテゴリごと）
 │     ├─ index.ts               # レジストリ。新カテゴリはここに1行追加
 │     ├─ baby-bottle.ts
-│     └─ diaper.ts
+│     ├─ diaper.ts
+│     ├─ water-bottle.ts
+│     ├─ hair-dryer.ts
+│     └─ rice-cooker.ts
 └─ pages/tools/product-finder/
    ├─ index.astro               # カテゴリ一覧（レジストリから自動生成）
    └─ [category].astro          # 診断ページ（動的ルート。全カテゴリ共通）
@@ -69,7 +75,7 @@ src/
 
 - **比較記事へのCTA**: 結論直後の「次にすること」ブロック（`NextStepBlock`）の診断リンクを
   対象カテゴリへつなぐ。標準の比較記事（`ArticleComparisonV2`）は `diagnosisHref` prop を、
-  `ComparisonHero` / 商用記事（`CommercialArticlePage`）は `<NextStepBlock … diagnosisHref="/tools/product-finder/{slug}/" />` を指定する
+  商用記事（`CommercialArticlePage`）は `<NextStepBlock … diagnosisHref="/tools/product-finder/{slug}/" />` を指定する
 - **sitemap**: `src/pages/sitemap.xml.ts` の `publicPaths` に `/tools/product-finder/{slug}/` を追加
 - **回帰フィクスチャテスト**: `tests/diagnosis-engine.test.ts` に代表回答パターンと期待1位を追加
   （商品データ変更時に結果が変わったらテストが検知する）

@@ -1531,6 +1531,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "Dreame X50 Ultra",
     leftPoint: "モップ洗浄・乾燥や障害物回避の仕様を確認したい人向け",
     rightPoint: "段差対応や清掃ステーションの仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "Roborock Qrevo Curv 公式商品ページ",
+        url: "https://jp.roborock.com/pages/roborock-qrevo-curv",
+      },
+      {
+        label: "Dreame X50 Ultra 公式商品ページ",
+        url: "https://www.dreametech.jp/products/x50-ultra",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "Roborock Qrevo Curv",
+        right: "Dreame X50 Ultra",
+      },
+      {
+        label: "公式確認項目",
+        left: "吸引・モップ洗浄・障害物回避",
+        right: "吸引・モップ洗浄・段差対応",
+      },
+      {
+        label: "選定の観点",
+        left: "モップ洗浄・乾燥や障害物回避の仕様",
+        right: "段差対応や清掃ステーションの仕様",
+      },
+    ],
   },
   {
     id: "makita-cl107-vs-cl286",
@@ -1548,6 +1578,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "マキタ CL286FD",
     leftPoint: "軽さと手軽さを優先する人向け",
     rightPoint: "吸引力や運転時間の選択肢を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "マキタ CL107FD 公式商品ページ",
+        url: "https://www.makita.co.jp/product/detail/?model=CL107FD",
+      },
+      {
+        label: "マキタ CL286FD 公式商品ページ",
+        url: "https://www.makita.co.jp/product/detail/?model=CL286FD",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "マキタ CL107FDSHW（CL107FD系）",
+        right: "マキタ CL286FD",
+      },
+      {
+        label: "公式確認項目",
+        left: "重量・吸引・運転時間・充電",
+        right: "重量・吸引・運転時間・充電",
+      },
+      {
+        label: "選定の観点",
+        left: "軽さと手軽さ",
+        right: "吸引力や運転時間の選択肢",
+      },
+    ],
   },
   {
     id: "iris-airfryer-fvx-d3-vs-tefal-ey201",
@@ -1566,6 +1626,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ティファール EY201",
     leftPoint: "容量と操作方法を確認して選びたい人向け",
     rightPoint: "調理モードやブランドの使い勝手を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "アイリスオーヤマ FVX-D3 公式商品情報",
+        url: "https://www.irisohyama.co.jp/products/web-catalog/?cid=H569241O",
+      },
+      {
+        label: "Tefal EASYFRY CLASSIC 4.2L EY201 公式商品ページ",
+        url: "https://www.tefal-me.com/en/Electrical-Cooking/Oil-Less-Fryers/EASYFRY-CLASSIC-4-2L-EY201/p/1510001520",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "アイリスオーヤマ FVX-D3",
+        right: "Tefal EY201827",
+      },
+      {
+        label: "公式確認項目",
+        left: "容量・操作方法・調理仕様",
+        right: "容量・操作方法・調理仕様",
+      },
+      {
+        label: "選定の観点",
+        left: "容量と操作方法",
+        right: "調理モードと操作",
+      },
+    ],
   },
   {
     id: "recolte-automatic-cooker-vs-panasonic-nf-pc400",
@@ -1584,6 +1674,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "パナソニック NF-PC400",
     leftPoint: "少量調理と置き場所を優先する人向け",
     rightPoint: "家族分の調理容量と多機能さを確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "récolte 自動調理ポット 公式商品ページ",
+        url: "https://recolte-jp.com/products/auto-cooking-pot/",
+      },
+      {
+        label: "パナソニック NF-PC400 公式商品情報",
+        url: "https://panasonic.jp/cook/products/NF-PC400.html",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "récolte 自動調理ポット",
+        right: "パナソニック NF-PC400",
+      },
+      {
+        label: "公式確認項目",
+        left: "容量・調理モード・サイズ",
+        right: "容量・調理モード・サイズ",
+      },
+      {
+        label: "選定の観点",
+        left: "少量調理と置き場所",
+        right: "調理容量と多機能さ",
+      },
+    ],
   },
   {
     id: "brita-marella-vs-zero-water",
@@ -1600,6 +1720,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ゼロウォーター 10カップ",
     leftPoint: "入手しやすい交換カートリッジを重視する人向け",
     rightPoint: "ろ過性能の確認を優先したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "BRITA マレーラ 公式商品ページ",
+        url: "https://www.brita.co.jp/製品一覧/ポット型浄水器/マレーラ",
+      },
+      {
+        label: "ZeroWater 10 Cup Pitcher 公式商品ページ",
+        url: "https://shop.culligan.com/products/10-cup-zerowater-pitcher",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・容量",
+        left: "ブリタ マレーラ",
+        right: "ZeroWater 10カップ",
+      },
+      {
+        label: "公式確認項目",
+        left: "ろ過方式・容量・カートリッジ",
+        right: "ろ過方式・容量・付属メーター",
+      },
+      {
+        label: "選定の観点",
+        left: "交換カートリッジの入手性",
+        right: "ろ過性能の確認",
+      },
+    ],
   },
   {
     id: "tiger-jpv-l100-vs-zojirushi-nw-fc10",
@@ -1617,6 +1767,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "象印 NW-FC10",
     leftPoint: "土鍋系の炊き上がりと操作を確認したい人向け",
     rightPoint: "圧力・メニュー数と保温仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "タイガー JPV-L100 公式商品ページ",
+        url: "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/",
+      },
+      {
+        label: "象印 NW-FC 公式商品ページ",
+        url: "https://www.zojirushi.co.jp/syohin/rice/ricecooker/nw-fc/#container",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "タイガー JPV-L100",
+        right: "象印 NW-FC10",
+      },
+      {
+        label: "公式確認項目",
+        left: "炊飯方式・内釜・メニュー",
+        right: "炊飯方式・内釜・メニュー",
+      },
+      {
+        label: "選定の観点",
+        left: "炊き上がりと操作",
+        right: "圧力・メニュー数と保温仕様",
+      },
+    ],
   },
   {
     id: "sharp-kc-s50-vs-panasonic-f-vxw55",
@@ -1637,6 +1817,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "パナソニック F-VXW55",
     leftPoint: "プラズマクラスターと基本性能を確認したい人向け",
     rightPoint: "ナノイーや加湿運転の仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "シャープ KC-S50 公式商品ページ",
+        url: "https://jp.sharp/kuusei/products/kcs50/",
+      },
+      {
+        label: "パナソニック F-VXW55 公式商品ページ",
+        url: "https://panasonic.jp/airrich/products/F-VXW55.html",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "シャープ KC-S50",
+        right: "パナソニック F-VXW55",
+      },
+      {
+        label: "公式確認項目",
+        left: "適用床面積・加湿・フィルター",
+        right: "適用床面積・加湿・フィルター",
+      },
+      {
+        label: "選定の観点",
+        left: "プラズマクラスターと基本性能",
+        right: "ナノイーと加湿運転の仕様",
+      },
+    ],
   },
   {
     id: "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
@@ -1655,6 +1865,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ソニー WF-C710N",
     leftPoint: "機能数と長時間再生を確認したい人向け",
     rightPoint: "軽さとソニーの音質・装着設計を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "soundcore Liberty 4 NC 公式商品ページ",
+        url: "https://www.soundcore.com/products/liberty-4-nc-a3947z11",
+      },
+      {
+        label: "ソニー WF-C710N 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WF-C710N/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "soundcore Liberty 4 NC（A3947Z11）",
+        right: "ソニー WF-C710N",
+      },
+      {
+        label: "公式確認項目",
+        left: "ノイズキャンセリング・再生時間・防水",
+        right: "ノイズキャンセリング・再生時間・防水",
+      },
+      {
+        label: "選定の観点",
+        left: "機能数と長時間再生",
+        right: "軽さと装着設計",
+      },
+    ],
   },
   {
     id: "xiaomi-redmi-watch-5-vs-huawei-band-10",
@@ -1672,6 +1912,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "HUAWEI Band 10",
     leftPoint: "大きな画面と時計らしい操作を優先する人向け",
     rightPoint: "軽さとバンド型の装着感を優先する人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "Xiaomi Redmi Watch 5 公式商品ページ",
+        url: "https://www.mi.com/global/product/redmi-watch-5/",
+      },
+      {
+        label: "HUAWEI Band 10 公式商品ページ",
+        url: "https://consumer.huawei.com/jp/wearables/band10/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "Xiaomi Redmi Watch 5",
+        right: "HUAWEI Band 10",
+      },
+      {
+        label: "公式確認項目",
+        left: "画面・電池・通知・健康記録",
+        right: "画面・電池・通知・健康記録",
+      },
+      {
+        label: "選定の観点",
+        left: "大きな画面と時計らしい操作",
+        right: "軽さとバンド型の装着感",
+      },
+    ],
   },
   {
     id: "panasonic-eh-na9m-vs-refa-beautech",
@@ -1692,6 +1962,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ReFa BEAUTECH DRYER",
     leftPoint: "複数のケアモードと風量を確認したい人向け",
     rightPoint: "温度管理やサロン系の仕上がりを確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "パナソニック EH-NA9M 公式商品ページ",
+        url: "https://panasonic.jp/hair/products/EH-NA9M.html",
+      },
+      {
+        label: "ReFa BEAUTECH DRYER 公式商品ページ",
+        url: "https://www.refa.net/item/refa_beautech_dryer/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "パナソニック ナノケア EH-NA9M",
+        right: "ReFa BEAUTECH DRYER",
+      },
+      {
+        label: "公式確認項目",
+        left: "ケア機能・モード・風量・質量",
+        right: "温度管理・モード・風量・質量",
+      },
+      {
+        label: "選定の観点",
+        left: "複数のケアモードと風量",
+        right: "温度管理やサロン系の機能",
+      },
+    ],
   },
   {
     id: "philips-s9000-vs-braun-series9pro",
@@ -1978,35 +2278,50 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック NT-T501とパナソニック NT-D700について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック NT-T501とNT-D700を、消費電力・庫内寸法・火力/温度制御・タイマー・トースト枚数の公式仕様で比較します。",
     leftProduct: "パナソニック NT-T501",
     rightProduct: "パナソニック NT-D700",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "4枚焼きと5段階の火力切換を重視する人向け",
+    rightPoint: "自動メニュー・温度調節・インテリジェント制御を重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック NT-T501 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/toaster/products/NT-T501.html",
       },
       {
-        label: "パナソニック NT-D700 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/toaster/products/NT-T501/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/toaster/products/NT-D700.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/toaster/products/NT-D700/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "タイプ",
-        left: "オーブントースター",
-        right: "ビストロ オーブントースター",
+        label: "タイプ・枚数",
+        left: "オーブントースター・トースト4枚",
+        right: "ビストロ オーブントースター・トースト2枚",
+      },
+      { label: "消費電力", left: "1200W", right: "1300W" },
+      {
+        label: "庫内寸法",
+        left: "幅28.4×奥行27.5×高さ8.7cm",
+        right: "幅26.0×奥行25.0×高さ9.5cm",
       },
       {
-        label: "公式仕様で確認する項目",
-        left: "消費電力・庫内寸法・タイマー",
-        right: "消費電力・庫内寸法・タイマー",
+        label: "火力・温度制御",
+        left: "火力5段階（1200/885/600/570/315W）",
+        right: "120〜260℃・8段階、マイコン温度コントロール",
       },
+      { label: "タイマー", left: "30分タイマー", right: "デジタル30秒〜25分" },
     ],
   },
   {
@@ -2021,34 +2336,49 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック ビストロ NE-BS9Cとパナソニック ビストロ NE-UBS10Cについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック ビストロ NE-BS9CとNE-UBS10Cを、容量・出力・寸法・質量・液晶操作・自動メニュー数の公式仕様で比較します。",
     leftProduct: "パナソニック ビストロ NE-BS9C",
     rightProduct: "パナソニック ビストロ NE-UBS10C",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "基本機能とホワイトバックライト液晶、215レシピを重視する人向け",
+    rightPoint: "カラータッチ液晶・ソフトダンパー・267レシピを重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック ビストロ NE-BS9C 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/range/products/NE-BS9C.html",
       },
       {
-        label: "パナソニック ビストロ NE-UBS10C 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/range/products/NE-BS9C/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/range/products/NE-UBS10C.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/range/products/NE-UBS10C/spec.html",
       },
     ],
     verifiedRows: [
+      { label: "総庫内容量", left: "30L", right: "30L" },
       {
-        label: "タイプ",
-        left: "スチームオーブンレンジ",
-        right: "スチームオーブンレンジ",
+        label: "レンジ出力",
+        left: "最高1000W（約5分後700W）、手動800/600/500/300/150W相当",
+        right: "最高1000W（約5分後700W）、手動800/600/500/300/150W相当",
       },
       {
-        label: "公式仕様で確認する項目",
-        left: "総庫内容量・出力・寸法・質量",
-        right: "総庫内容量・出力・寸法・質量",
+        label: "外形・庫内寸法",
+        left: "幅494×奥行435×高さ370mm／庫内394×309×235mm",
+        right: "幅494×奥行435×高さ370mm／庫内394×309×235mm",
+      },
+      { label: "質量", left: "約19.9kg", right: "約20.0kg" },
+      {
+        label: "操作・レシピ",
+        left: "大型ホワイトバックライト液晶・レシピ215",
+        right: "カラータッチ液晶・レシピ267",
       },
     ],
   },
@@ -2064,34 +2394,53 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック MC-JP860Kとパナソニック MC-SB70KMについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック MC-JP860KとMC-SB70KMを、方式・集じん容量・質量・運転時間・充電時間・コードの有無で比較します。",
     leftProduct: "パナソニック MC-JP860K",
     rightProduct: "パナソニック MC-SB70KM",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "紙パック式・コード付きで長時間掃除したい人向け",
+    rightPoint: "コードレスで軽く、ふき掃除や壁ぎわ集じんも使いたい人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック MC-JP860K 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/soji/products/MC-JP860K.html",
       },
       {
-        label: "パナソニック MC-SB70KM 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/soji/products/MC-JP860K/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/soji/products/MC-SB70KM.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/soji/products/MC-SB70KM/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "タイプ",
-        left: "紙パック式キャニスター",
-        right: "コードレススティック",
+        label: "方式",
+        left: "紙パック式・コード付き",
+        right: "サイクロン式・コードレス",
+      },
+      { label: "集じん容量", left: "1.2L", right: "0.37L" },
+      {
+        label: "質量",
+        left: "本体2.0kg、標準質量3.5kg",
+        right: "スティック時1.7kg、本体1.0kg",
       },
       {
-        label: "公式仕様で確認する項目",
-        left: "集じん容量・寸法・質量・運転仕様",
-        right: "集じん容量・寸法・質量・運転仕様",
+        label: "運転・充電",
+        left: "コード式のため充電不要",
+        right: "HIGH約8分、AUTO約10〜20分・充電約3.0時間",
+      },
+      {
+        label: "サイズ・機能",
+        left: "本体195×383×191mm、エコナビ",
+        right: "スティック220×219×1142mm、マイクロミスト・壁ぎわ集じん",
       },
     ],
   },
@@ -2107,30 +2456,49 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック SQ-LD560とパナソニック SQ-LD540について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック SQ-LD560とSQ-LD540を、照度区分・調光・光色・可動範囲・光束・消費電力・寸法で比較します。",
     leftProduct: "パナソニック SQ-LD560",
     rightProduct: "パナソニック SQ-LD540",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "AA形の明るさ、7段階調光、広い可動範囲を重視する人向け",
+    rightPoint: "A形相当でコンパクトなデスクライトを選びたい人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック SQ-LD560 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/light/products/SQ-LD560.html",
       },
       {
-        label: "パナソニック SQ-LD540 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/light/products/SQ-LD560/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/light/products/SQ-LD540.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/light/products/SQ-LD540/spec.html",
       },
     ],
     verifiedRows: [
-      { label: "用途", left: "LEDデスクスタンド", right: "LEDデスクスタンド" },
+      { label: "照度区分", left: "JIS:AA形", right: "JIS:A形相当（散光）" },
       {
-        label: "公式仕様で確認する項目",
-        left: "消費電力・明るさ・色温度・可動範囲",
-        right: "消費電力・明るさ・色温度・可動範囲",
+        label: "調光",
+        left: "7段階、約20〜100%",
+        right: "約20〜100%・集光/散光切替",
+      },
+      {
+        label: "光色・光束",
+        left: "昼光色6200K/昼白色5000K、950lm",
+        right: "昼光色6200K、413lm",
+      },
+      { label: "消費電力", left: "9.4W", right: "7W" },
+      {
+        label: "寸法・可動",
+        left: "セード幅18.8cm、可動4か所",
+        right: "セード幅12.4cm、上アーム20cm・下アーム27cm",
       },
     ],
   },
@@ -2146,30 +2514,45 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック NI-FS70Aとパナソニック NI-FS60Bについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック NI-FS70AとNI-FS60Bを、立ち上がり・注水量・質量・スチーム時間/量・消費電力で比較します。",
     leftProduct: "パナソニック NI-FS70A",
     rightProduct: "パナソニック NI-FS60B",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "立ち上がり約17秒、130mL、連続8分のスチームを重視する人向け",
+    rightPoint: "約690gで基本機能を使いたい人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック NI-FS70A 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/iron/products/NI-FS70A.html",
       },
       {
-        label: "パナソニック NI-FS60B 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/iron/products/NI-FS70A/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/iron/products/NI-FS60B.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/iron/products/NI-FS60B/spec.html",
       },
     ],
     verifiedRows: [
-      { label: "タイプ", left: "衣類スチーマー", right: "衣類スチーマー" },
+      { label: "立ち上がり", left: "約17秒", right: "約19秒" },
+      { label: "注水量", left: "約130mL", right: "約115mL" },
+      { label: "質量", left: "約660g", right: "約690g" },
       {
-        label: "公式仕様で確認する項目",
-        left: "消費電力・スチーム量・タンク容量・質量",
-        right: "消費電力・スチーム量・タンク容量・質量",
+        label: "スチーム",
+        left: "連続約8分・平均約15g/分",
+        right: "連続約7分・平均約15g/分",
+      },
+      {
+        label: "消費電力・噴射",
+        left: "950W・360°全方向噴射",
+        right: "950W・360°全方向噴射",
       },
     ],
   },
@@ -2185,35 +2568,50 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック ナノケア EH-NA0Jとパナソニック ナノケア EH-NA0Gについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック ナノケア EH-NA0JとEH-NA0Gを、風量・寸法・質量・モード・消費電力の公式仕様で比較します。",
     leftProduct: "パナソニック ナノケア EH-NA0J",
     rightProduct: "パナソニック ナノケア EH-NA0G",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "1.6m³/分の風量と約550gの軽さを重視する人向け",
+    rightPoint: "インテリジェント温風モードを含む多機能モデルを選びたい人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック ナノケア EH-NA0J 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/hair/products/EH-NA0J.html",
       },
       {
-        label: "パナソニック ナノケア EH-NA0G 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/hair/products/EH-NA0J/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/hair/products/EH-NA0G.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/hair/products/EH-NA0G/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "タイプ",
-        left: "ナノケアドライヤー",
-        right: "ナノケアドライヤー",
+        label: "風量",
+        left: "1.6m³/分（強）",
+        right: "1.5m³/分（ターボ）※条件が異なる",
       },
       {
-        label: "公式仕様で確認する項目",
-        left: "風量・寸法・質量・搭載モード",
-        right: "風量・寸法・質量・搭載モード",
+        label: "寸法",
+        left: "高さ22.1×幅14.8×奥行7.4cm",
+        right: "高さ22.4×幅21.6×奥行8.9cm",
       },
+      { label: "質量", left: "約550g", right: "約595g" },
+      {
+        label: "搭載モード",
+        left: "温冷リズム・スカルプ・スキン・毛先集中ケア",
+        right: "左記＋インテリジェント温風",
+      },
+      { label: "消費電力", left: "1200W", right: "1200W" },
     ],
   },
   {
@@ -2228,35 +2626,50 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック MC-SB53Kとパナソニック MC-SB33Jについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック MC-SB53KとMC-SB33Jを、集じん容量・運転時間・充電時間・質量・方式の公式仕様で比較します。",
     leftProduct: "パナソニック MC-SB53K",
     rightProduct: "パナソニック MC-SB33J",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "AUTO運転とスティック時1.5kgを重視する人向け",
+    rightPoint: "スティック時1.3kgの軽さを重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック MC-SB53K 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/soji/products/MC-SB53K.html",
       },
       {
-        label: "パナソニック MC-SB33J 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/soji/products/MC-SB53K/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/soji/products/MC-SB33J.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/soji/products/MC-SB33J/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "タイプ",
-        left: "コードレススティック掃除機",
-        right: "コードレススティック掃除機",
+        label: "集じん方式・容量",
+        left: "サイクロン式・0.15L",
+        right: "サイクロン式・0.15L",
       },
       {
-        label: "公式仕様で確認する項目",
-        left: "集じん容量・運転時間・充電時間・質量",
-        right: "集じん容量・運転時間・充電時間・質量",
+        label: "運転時間",
+        left: "HIGH約6分、AUTO約10〜15分/約15〜30分",
+        right: "HIGH約6分、ON約15分/約30分",
       },
+      { label: "充電時間", left: "約3.5時間", right: "約3.5時間" },
+      {
+        label: "質量",
+        left: "スティック時1.5kg、本体0.9kg",
+        right: "スティック時1.3kg、本体0.9kg",
+      },
+      { label: "電源方式", left: "コードレス式", right: "コードレス式" },
     ],
   },
   {
@@ -2271,30 +2684,53 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック ドルツ EW-DP57とパナソニック ドルツ EW-DT73について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック ドルツ EW-DP57とEW-DT73を、使用時間・防水・磨きモード・付属品・充電方式で比較します。",
     leftProduct: "パナソニック ドルツ EW-DP57",
     rightProduct: "パナソニック ドルツ EW-DT73",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "その他のモードで約22日間使いたい人向け",
+    rightPoint: "カスタムモード、ラージブラシ、携帯ケースを重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック ドルツ EW-DP57 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/teeth/products/EW-DP57.html",
       },
       {
-        label: "パナソニック ドルツ EW-DT73 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/teeth/products/EW-DP57/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/teeth/products/EW-DT73.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/teeth/products/EW-DT73/spec.html",
       },
     ],
     verifiedRows: [
-      { label: "タイプ", left: "電動歯ブラシ", right: "電動歯ブラシ" },
       {
-        label: "公式仕様で確認する項目",
-        left: "使用時間・防水IPX7・磨きモード",
-        right: "使用時間・防水IPX7・磨きモード",
+        label: "使用時間",
+        left: "その他モード約22日（約90分）",
+        right: "その他モード約16日（約66分）",
+      },
+      { label: "防水", left: "IPX7", right: "IPX7" },
+      {
+        label: "磨きモード",
+        left: "5モード",
+        right: "6モード（カスタムを追加）",
+      },
+      {
+        label: "付属品",
+        left: "基本ブラシ3種・スタンド等",
+        right: "ラージブラシと携帯ケースを追加",
+      },
+      {
+        label: "充電方式",
+        left: "USB・フル充電約3時間",
+        right: "USB・フル充電約3時間",
       },
     ],
   },
@@ -2310,30 +2746,49 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック ドルツ EW-DA19とパナソニック ドルツ EW-DA49について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック ドルツ EW-DA19とEW-DA49を、モード・充電・使用時間・防水・付属品で比較します。",
     leftProduct: "パナソニック ドルツ EW-DA19",
     rightProduct: "パナソニック ドルツ EW-DA49",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "携帯ケースを使わず基本機能で選びたい人向け",
+    rightPoint: "携帯ケースと3種のブラシを求める人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック ドルツ EW-DA19 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/teeth/products/EW-DA19.html",
       },
       {
-        label: "パナソニック ドルツ EW-DA49 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/teeth/products/EW-DA19/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/teeth/products/EW-DA49.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/teeth/products/EW-DA49/spec.html",
       },
     ],
     verifiedRows: [
-      { label: "タイプ", left: "電動歯ブラシ", right: "電動歯ブラシ" },
+      { label: "モード", left: "3モード", right: "3モード" },
       {
-        label: "公式仕様で確認する項目",
-        left: "防水IPX7・USB電源・モード記憶",
-        right: "防水IPX7・USB電源・モード記憶",
+        label: "使用時間",
+        left: "約2時間充電で約90分",
+        right: "約2時間充電で約90分",
+      },
+      { label: "防水", left: "IPX7", right: "IPX7" },
+      {
+        label: "付属品",
+        left: "公式ページで全構成を一覧確認できず",
+        right: "3種のブラシ、携帯ケース、充電スタンド等",
+      },
+      {
+        label: "充電・機能",
+        left: "4分充電で約2分、モード記憶",
+        right: "4分充電で約2分、モード記憶",
       },
     ],
   },
@@ -2350,31 +2805,46 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック ラムダッシュPRO ES-LV9Wとパナソニック ラムダッシュPRO ES-LV7Wについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック ラムダッシュPRO ES-LV9WとES-LV7Wを、洗浄充電器・充電・使用日数・表示・付属品・防水で比較します。",
     leftProduct: "パナソニック ラムダッシュPRO ES-LV9W",
     rightProduct: "パナソニック ラムダッシュPRO ES-LV7W",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "5段階残量表示とセミハードケースを重視する人向け",
+    rightPoint: "3段階残量表示とポーチで基本の全自動洗浄充電を使いたい人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック ラムダッシュPRO ES-LV9W 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/shaver/products/ES-LV9W.html",
       },
       {
-        label: "パナソニック ラムダッシュPRO ES-LV7W 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/shaver/products/ES-LV9W/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/shaver/products/ES-LV7W.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/shaver/products/ES-LV7W/spec.html",
       },
     ],
     verifiedRows: [
-      { label: "タイプ", left: "5枚刃シェーバー", right: "5枚刃シェーバー" },
       {
-        label: "公式仕様で確認する項目",
-        left: "防水・お風呂剃り・洗浄機能",
-        right: "防水・お風呂剃り・洗浄機能",
+        label: "洗浄・充電",
+        left: "全自動洗浄充電器、急速1時間充電",
+        right: "全自動洗浄充電器、急速1時間充電",
       },
+      { label: "使用日数", left: "約14日間", right: "約14日間" },
+      { label: "表示", left: "5段階充電残量表示", right: "3段階充電残量表示" },
+      {
+        label: "付属品",
+        left: "セミハードケース、洗浄剤等",
+        right: "ポーチ、洗浄剤等",
+      },
+      { label: "防水・質量", left: "IPX7、約210g", right: "IPX7、約210g" },
     ],
   },
   {
@@ -2389,34 +2859,57 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック ナノケア EH-NC80とパナソニック ナノケア EH-NC50について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック ナノケア EH-NC80とEH-NC50を、パーソナルメニュー数・ケア機能・風の特徴・付属品の公式説明で比較します。",
     leftProduct: "パナソニック ナノケア EH-NC80",
     rightProduct: "パナソニック ナノケア EH-NC50",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "4つのメニューと第2世代高浸透ナノイーを重視する人向け",
+    rightPoint: "3つのメニューで基本ケアを選びたい人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック ナノケア EH-NC80 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/hair/products/EH-NC80.html",
       },
       {
-        label: "パナソニック ナノケア EH-NC50 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/hair/products/EH-NC80/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/hair/products/EH-NC50.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/hair/products/EH-NC50/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "タイプ",
-        left: "ナノケアドライヤー",
-        right: "ナノケアドライヤー",
+        label: "メニュー数",
+        left: "4つ：MOIST/STRAIGHT/AIRY/SMOOTH",
+        right: "3つのパーソナルメニュー",
       },
       {
-        label: "公式仕様で確認する項目",
-        left: "搭載モード・寸法・質量・ケア機能",
-        right: "搭載モード・寸法・質量・ケア機能",
+        label: "ケア機能",
+        left: "第2世代高浸透ナノイー、ミネラル、UV/摩擦ケア等",
+        right: "第2世代高浸透ナノイー、ミネラル等",
+      },
+      {
+        label: "風の特徴",
+        left: "高回転モーター、高圧・高速、速乾性能約1.5倍",
+        right: "高回転モーター、高圧・高速",
+      },
+      {
+        label: "付属品・表示",
+        left: "アタッチメント、スタンド、液晶表示の公式説明あり",
+        right: "公式ページで本体機能・モードを説明",
+      },
+      {
+        label: "数値仕様",
+        left: "商品ページ本文で寸法・質量・風量数値を確認できず",
+        right: "商品ページ本文で寸法・質量・風量数値を確認できず",
       },
     ],
   },
@@ -2432,30 +2925,57 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック EH-NA0Kとパナソニック EH-NE9Nについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック EH-NA0KとEH-NE9Nを、風量・モード・段階・質量・ノズルの公式説明で比較します。",
     leftProduct: "パナソニック EH-NA0K",
     rightProduct: "パナソニック EH-NE9N",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "最大風量1.6m³/分と4つの多彩なモードを重視する人向け",
+    rightPoint: "風温4段階・風量3段階と温風リズムヘッドスパを重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック EH-NA0K 公式商品ページ",
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/hair/products/EH-NA0K.html",
       },
       {
-        label: "パナソニック EH-NE9N 公式商品ページ",
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/hair/products/EH-NA0K/spec.html",
+      },
+      {
+        label: "Panasonic公式 source",
         url: "https://panasonic.jp/hair/products/EH-NE9N.html",
+      },
+      {
+        label: "Panasonic公式 source",
+        url: "https://panasonic.jp/hair/products/EH-NE9N/spec.html",
       },
     ],
     verifiedRows: [
-      { label: "タイプ", left: "ナノケアドライヤー", right: "ドライヤー" },
       {
-        label: "公式仕様で確認する項目",
-        left: "サイズ・質量・モード・電源仕様",
-        right: "サイズ・質量・モード・電源仕様",
+        label: "風量",
+        left: "最大1.6m³/分",
+        right: "風量3段階（数値は本文で確認できず）",
+      },
+      {
+        label: "モード・段階",
+        left: "4つの多彩なモード、スキン/毛先集中ケア",
+        right: "風温4段階・風量3段階、温風リズムヘッドスパ",
+      },
+      {
+        label: "質量",
+        left: "本文で数値を確認できず",
+        right: "約455g（ヘッドスパノズル未装着時）",
+      },
+      {
+        label: "ケア機能",
+        left: "スキンモード、ヘアカラー退色抑制",
+        right: "温風リズムヘッドスパ、UVケア",
+      },
+      {
+        label: "寸法・消費電力",
+        left: "本文で数値を確認できず",
+        right: "本文で数値を確認できず",
       },
     ],
   },
@@ -2472,11 +2992,11 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック リアルプロ EP-MA110とパナソニック リアルプロ EP-MA121について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック リアルプロ EP-MA110とEP-MA121を、外形寸法・質量・張地・コースの公式specで比較します。",
     leftProduct: "パナソニック リアルプロ EP-MA110",
     rightProduct: "パナソニック リアルプロ EP-MA121",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "幅68cm・約65kgで設置しやすいモデルを選びたい人向け",
+    rightPoint: "幅85cm・約91kgで施療コースを重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
@@ -2491,11 +3011,22 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
     ],
     verifiedRows: [
-      { label: "タイプ", left: "マッサージチェア", right: "マッサージチェア" },
       {
-        label: "公式仕様で確認する項目",
-        left: "寸法・質量・設置サイズ",
-        right: "寸法・質量・設置サイズ",
+        label: "外形寸法（非リクライニング）",
+        left: "高さ約122×幅約68×奥行約118cm",
+        right: "高さ約122×幅約85×奥行約135cm",
+      },
+      { label: "質量", left: "約65kg", right: "約91kg" },
+      { label: "張地", left: "ファブリック", right: "合成皮革" },
+      {
+        label: "自動コース",
+        left: "さすり・もみ揉ねつ・指圧等",
+        right: "さすり・もみ揉ねつ・指圧・ストレッチ等",
+      },
+      {
+        label: "設置性",
+        left: "リクライニング時最大奥行約180cm",
+        right: "リクライニング時奥行約200cm",
       },
     ],
   },
@@ -2512,11 +3043,12 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
-      "パナソニック スムースエピ ES-WP9Bとパナソニック スムースエピ ES-WG0Bについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "パナソニック スムースエピ ES-WP9BとES-WG0Bを、出力段階・モード・照射回数・アタッチメント・質量の公式specで比較します。",
     leftProduct: "パナソニック スムースエピ ES-WP9B",
     rightProduct: "パナソニック スムースエピ ES-WG0B",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint: "4種アタッチメントと2モード、約390gを重視する人向け",
+    rightPoint:
+      "3モードとワイドアタッチメント、据え置き型の構成を重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
@@ -2531,11 +3063,30 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
     ],
     verifiedRows: [
-      { label: "タイプ", left: "光美容器", right: "光美容器" },
       {
-        label: "公式仕様で確認する項目",
-        left: "照射面積・モード・使用可能部位",
-        right: "照射面積・モード・使用可能部位",
+        label: "出力・モード",
+        left: "5段階出力・2モード",
+        right: "5段階出力・3モード",
+      },
+      {
+        label: "連続使用回数",
+        left: "約600回（スピードモード時約350回）",
+        right: "約600回（クール/ハイパワー時約100回）",
+      },
+      {
+        label: "アタッチメント",
+        left: "ボディ/Vゾーン、スポット、フェイス、I/Oゾーン用",
+        right: "フェイス＆ボディ、I/Oゾーン、ワイド",
+      },
+      {
+        label: "質量",
+        left: "約390g（ボディ/Vゾーン用装着時）",
+        right: "照射部約380g、アタッチメント装着時約890g",
+      },
+      {
+        label: "寸法",
+        left: "高さ22.3×幅4.6×奥行11.2cm",
+        right: "照射部高さ23.2×幅7.5×奥行5.6cm、コントローラーあり",
       },
     ],
   },
@@ -2771,6 +3322,7 @@ export const commercialArticleImages: Readonly<
     right: "/products/recolte-automatic-cooker-vs-panasonic-nf-pc400-right.jpg",
   },
   "brita-marella-vs-zero-water": {
+    left: "/products/brita-marella-vs-zero-water-left.jpg",
     right: "/products/brita-marella-vs-zero-water-right.jpg",
   },
   "tiger-jpv-l100-vs-zojirushi-nw-fc10": {

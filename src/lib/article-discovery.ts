@@ -1,4 +1,5 @@
 import type { ArticleMetadata } from "../content/articles";
+import { comparisonSubjects } from "./article-subjects";
 
 /**
  * 記事検索（比較記事一覧）の仕様の単一情報源。
@@ -33,6 +34,11 @@ export function matchesArticle(
   if (state.tag && !article.tags.includes(state.tag)) return false;
   const query = normalizeDiscoveryText(state.query);
   if (!query) return true;
+  // 型番・ライン名（カードの card-subjects 行）も検索対象に含める。
+  // 型番が headline に登場しない記事（例: 日立 BD-SX130K vs BD-STX130K）でも
+  // モデル番号検索が成立するようにする。クライアント側（article-discovery.js の
+  // articleSearchText）と同一のフィールド集合に保つこと。
+  const subjects = comparisonSubjects(article) ?? [];
   const haystack = normalizeDiscoveryText(
     [
       article.title,
@@ -42,6 +48,7 @@ export function matchesArticle(
       ...article.tags,
       ...article.audiences,
       ...article.uses,
+      ...subjects,
     ].join(" "),
   );
   return query.split(" ").every((term) => haystack.includes(term));

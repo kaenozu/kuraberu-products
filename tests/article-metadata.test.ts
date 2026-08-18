@@ -56,13 +56,25 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 }
 
 describe("article metadata", () => {
-  it("excludes incomplete commercial drafts from public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(59);
-    expect(
-      publicArticleMetadata.some(
-        (article) => article.id === "roborock-qrevo-curv-vs-dreame-x50",
-      ),
-    ).toBe(false);
+  it("includes verified commercial articles in public discovery surfaces", () => {
+    expect(publicArticleMetadata).toHaveLength(68);
+    const newlyPublishedIds = [
+      "roborock-qrevo-curv-vs-dreame-x50",
+      "makita-cl107-vs-cl286",
+      "iris-airfryer-fvx-d3-vs-tefal-ey201",
+      "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+      "brita-marella-vs-zero-water",
+      "tiger-jpv-l100-vs-zojirushi-nw-fc10",
+      "sharp-kc-s50-vs-panasonic-f-vxw55",
+      "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
+      "xiaomi-redmi-watch-5-vs-huawei-band-10",
+      "panasonic-eh-na9m-vs-refa-beautech",
+    ];
+    for (const id of newlyPublishedIds) {
+      expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
+        true,
+      );
+    }
     expect(
       publicArticleMetadata.some(
         (article) => article.id === "thermos-tiger-bottle",
@@ -577,6 +589,12 @@ describe("article card audiences 向き line (rendered dist)", () => {
           /<p class="card-audiences">向き: [^<]+<\/p>/.test(card[1]),
           `card on ${file} must render the 向き line`,
         ).toBe(true);
+        if (/data-content-type="comparison"/.test(card[0])) {
+          expect(
+            /<p class="card-subjects">[^<]+<\/p>/.test(card[1]),
+            `comparison card on ${file} must render the 型番 line`,
+          ).toBe(true);
+        }
       }
     }
     expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);

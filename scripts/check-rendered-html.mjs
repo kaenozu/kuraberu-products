@@ -475,6 +475,27 @@ export function validateArticleCardAudiences(relative, html) {
   return errors;
 }
 
+// 比較記事カードには「型番行」（card-subjects）が必須。
+// comparisonSubjects 由来の A/B 商品名（型番・シリーズ名）を欠落させると、
+// 「探す場所」としてのカードが成立しないため fail-closed で検出する。
+// 商品ガイド（productCount = 1）はペアを持たないため対象外。
+export function validateArticleCardSubjects(relative, html) {
+  const errors = [];
+  for (const card of collectArticleCards(html)) {
+    if (!/\bdata-content-type="comparison"/.test(card)) continue;
+    const line =
+      card.match(
+        /<p\b[^>]*class="[^"]*\bcard-subjects\b[^"]*"[^>]*>([\s\S]*?)<\/p>/,
+      )?.[1] ?? "";
+    if (!line.trim()) {
+      errors.push(
+        `${relative}: comparison article card must render a card-subjects line with the A/B model numbers`,
+      );
+    }
+  }
+  return errors;
+}
+
 // 全ページのヘッダーは「ロゴ + ハンバーガー（details.nav-toggle） + リンク群（nav.navlinks）」
 // 構造であることが必須。スマホ（<560px）では details のネイティブ開閉でドロワー表示に
 // なるため、この構造が無いページはモバイルメニューを持たない（fail-closed）。
@@ -515,13 +536,34 @@ export function validateHeaderNav(relative, html) {
 // が必ず同梱されている必要がある（fail-closed）。
 export function validateComparisonCardLabels(relative, html) {
   const errors = [];
-  if (!/<table\b[^>]*class="[^"]*\bcomparison\b[^"]*"/i.test(html)) {
+  const tables = [
+    ...html.matchAll(
+      /<table\b[^>]*class="[^"]*\bcomparison\b[^"]*"[^>]*>[\s\S]*?<\/table>/gi,
+    ),
+  ];
+  if (tables.length === 0) {
     return errors;
   }
   if (!/comparison-card-labels/.test(html)) {
     errors.push(
       `${relative}: pages with a comparison table must include the comparison-card-labels script`,
     );
+  }
+  // スマホの縦カード表示は静的 HTML の data-label で成立させる（JS はフォールバック）。
+  // 全セルに data-label が焼き込まれていることを fail-closed で検証する。
+  for (const table of tables) {
+    const body = table[0].match(/<tbody>([\s\S]*?)<\/tbody>/i)?.[1] ?? "";
+    for (const row of body.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
+      const cells = [...row[1].matchAll(/<td\b[^>]*>/gi)];
+      for (const cell of cells) {
+        if (!/\bdata-label\s*=\s*"/.test(cell[0])) {
+          errors.push(
+            `${relative}: comparison table cells must carry a data-label (mobile card view needs it)`,
+          );
+          break;
+        }
+      }
+    }
   }
   return errors;
 }
@@ -961,6 +1003,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
 
     errors.push(...validateArticleCardThumbnails(file, html));
     errors.push(...validateArticleCardAudiences(file, html));
+    errors.push(...validateArticleCardSubjects(file, html));
     errors.push(...validateHeaderNav(file, html));
     errors.push(...validateComparisonCardLabels(file, html));
   } // トップページの検索フォーム（index.html のみ。fixture 等で無ければスキップ）。

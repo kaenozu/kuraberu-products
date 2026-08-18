@@ -26,6 +26,19 @@ describe("article discovery", () => {
       false,
     );
   });
+  it("matches model numbers that appear only in the subjects line", () => {
+    // 型番が headline に登場しない記事（例: 日立 BD-SX130K vs BD-STX130K）でも、
+    // card-subjects 行（comparisonSubjects 由来）が検索対象になること。
+    const article = {
+      ...pampersNewbornArticle,
+      id: "hitachi-bd-sx130k-vs-bd-stx130k",
+      title: "日立 BD-SX130K と BD-STX130K、どっち？｜くらべる商品メモ",
+      headline: "日立のドラム式洗濯乾燥機を比較。操作パネル・温水・乾燥で選ぶ",
+      aboutProductNames: ["日立 BD-SX130K", "日立 BD-STX130K"],
+    };
+    expect(matchesArticle(article, { query: "BD-SX130K" })).toBe(true);
+    expect(matchesArticle(article, { query: "BD-STX130K" })).toBe(true);
+  });
   it("ignores unknown query parameters and serializes known state", () => {
     const parsed = parseDiscoveryState(
       new URLSearchParams("q=新生児&category=unknown&tag=紙おむつ"),

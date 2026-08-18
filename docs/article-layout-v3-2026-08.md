@@ -68,7 +68,7 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 
 - 実装は共通コンポーネント `src/components/TrustLine.astro`。
   `checkedAt`（= `productInfoCheckedAt`）を受け取り、未宣言なら日付を省略する。
-- 呼び出し元は 3 系統（ハンドライトのヒーロー `ArticleComparisonV2` / `ComparisonHero`、
+- 呼び出し元は 2 系統（ハンドライトの比較記事 `ArticleComparisonV2`、
   商用記事 `CommercialArticlePage`）。旧形式（「公式情報確認済み · 日付」のヒーロー行・
   「広告表示：…」の notice）は廃止。
 - 商用記事（`createCommercialArticle`）は確認日未宣言の場合 `2026-08-17`（初稿公開日）を
@@ -102,12 +102,16 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 - **診断カテゴリが存在する記事** は該当カテゴリへ直接つなぐ:
   - 哺乳瓶記事 → `/tools/product-finder/baby-bottle/`（`pigeon-*`）
   - おむつ記事 → `/tools/product-finder/diaper/`（`moony-m`・`merries-*`・`pampers-newborn`・`shupot`）
+  - 水筒記事 → `/tools/product-finder/water-bottle/`（`thermos-tiger-bottle`）
+  - ドライヤー記事 → `/tools/product-finder/hair-dryer/`（`panasonic-eh-na9m-vs-eh-na7m`）
+  - 炊飯器記事 → `/tools/product-finder/rice-cooker/`（`tiger-jpv-l100-vs-jpv-m100`）
   - それ以外（診断カテゴリ未整備の記事）→ 診断一覧へ
 - 配置はテンプレートごとに共通化している:
-  - `ArticleComparisonV2`（比較記事の標準ヒーロー）が `DecisionGuide` の直後に描画する。
-    `left.purchaseHref` / `right.purchaseHref`（+ 任意の `productId`）と
-    `diagnosisHref` prop で上書きできる。
-  - `ComparisonHero` 記事・商用記事（`CommercialArticlePage`）は同様に判定セクション直後に置く。
+  - `ArticleComparisonV2`（比較記事の標準テンプレート。2026-08-18 に旧ヒーロー記事
+    `ComparisonHero` を統合し、比較記事は全てこの 1 系統になった）が
+    「結局どっち？」の直後に `NextStepBlock` を描画する。`left.purchaseHref` /
+    `right.purchaseHref`（+ 任意の `productId`）と `diagnosisHref` prop で上書きできる。
+  - 商用記事（`CommercialArticlePage`）は判定セクション直後に置く。
   - **商品ガイド**（`article:content-type="guide"`）は対象外（現行ガイドは `ArticleComparisonV2` を使わない）。
 - 品質ゲート（`validateArticleNextStep`）が、比較記事ではブロックがちょうど 1 つ・
   購入ボタンが 2 つ・診断リンクが `/tools/product-finder/` を指す・`#specs` より前に
@@ -240,6 +244,22 @@ BaseLayout が `<meta name="article:content-type" content="guide|comparison">` �
   （`validateArticleCardThumbnails`）が「画像とタイルはちょうど一方だけ」を
   fail-closed で検証する。実ビルドテスト（`tests/top-page.test.ts`）も
   `articleMetadata.imagePath` と `data-thumb` の一致を突き合わせる。
+
+## 記事カードの構成（型番行・向き行）
+
+記事カード（`ArticleCard.astro`・検索結果の `createCard`）は「読む場所」でなく
+「**探す場所**」として、情報量を絞る（2026-08-18 更新）:
+
+- **型番行** `<p class="card-subjects">` — `comparisonSubjects()`
+  （`src/lib/article-subjects.ts`）が `aboutProductNames` → headline の
+  「A」と「B」引用 → 「A と B、どっち？/を比較」の順で A/B 商品名を導出し、
+  `JNL-S500 / MTA-J050` 形式で表示する。
+- **向き行** `<p class="card-audiences">` — audiences 由来の「向き: …」1 行。
+- 説明文（`card-desc`）・更新日（`meta`）はカードに載せない。
+- 品質ゲート（`validateArticleCardSubjects`）が**比較記事カードに型番行の
+  存在を fail-closed で強制**する（商品ガイドはペアを持たないため対象外）。
+- 検索結果カード（`article-discovery.js`）も同じ構成を描画し、
+  discovery index の `subjects` フィールド（`comparisonSubjects()` 由来）を参照する。
 
 ## 比較表の「根拠・確認先」列（スマホ折りたたみ）
 

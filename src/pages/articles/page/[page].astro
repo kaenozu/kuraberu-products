@@ -3,6 +3,7 @@ import ArticleCard from '../../../components/ArticleCard.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { publicArticleMetadata } from '../../../content/articles';
 import {normalizeDiscoveryText} from '../../../lib/article-discovery';
+import {comparisonSubjects} from '../../../lib/article-subjects';
 
 const categories = [...new Set(publicArticleMetadata.map((article) => article.category))].sort();
 const tags = [...new Set(publicArticleMetadata.flatMap((article) => article.tags))].sort();
@@ -42,6 +43,7 @@ const discoveryIndex = sorted.map((article) => ({
   uses: article.uses,
   modifiedAt: article.modifiedAt,
   imagePath: article.imagePath,
+  subjects: comparisonSubjects(article),
 }));
 ---
 <BaseLayout title={`比較記事一覧 ${currentPage}ページ目｜くらべる商品メモ`} description="メーカー公式の情報で商品を比べる記事一覧">
@@ -80,7 +82,7 @@ const discoveryIndex = sorted.map((article) => ({
           article={article}
           data={{
             'data-article-card': '',
-            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' ')),
+            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses, ...(comparisonSubjects(article) ?? [])].join(' ')),
             'data-category': article.category,
             'data-tags': JSON.stringify(article.tags),
           }}

@@ -12,6 +12,7 @@ import {
   validateArticleCtas,
   validateArticleContentType,
   validateArticleCardAudiences,
+  validateArticleCardSubjects,
   validateArticleCardThumbnails,
   validateArticleTrustLine,
   validateArticleNextStep,
@@ -967,6 +968,62 @@ describe("article card audiences (向き line)", () => {
   });
 });
 
+describe("article card subjects (型番行)", () => {
+  const card = (contentType: string, inner: string) =>
+    `<article class="card article-list-card" data-content-type="${contentType}" data-thumb="image">${inner}</article>`;
+  const subjectsBody =
+    '<div class="card-body"><p class="card-subjects">JNL-S500 / MTA-J050</p><p class="card-audiences">向き: 軽さ重視・機能重視</p></div>';
+
+  it("accepts a comparison card with the 型番 line", () => {
+    expect(
+      validateArticleCardSubjects(
+        "articles/index.html",
+        card("comparison", subjectsBody),
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a comparison card without the 型番 line", () => {
+    const html = card(
+      "comparison",
+      '<div class="card-body"><p class="card-audiences">向き: 軽さ重視</p></div>',
+    );
+    expect(validateArticleCardSubjects("articles/index.html", html)).toEqual([
+      "articles/index.html: comparison article card must render a card-subjects line with the A/B model numbers",
+    ]);
+  });
+
+  it("rejects an empty 型番 line", () => {
+    const html = card(
+      "comparison",
+      '<div class="card-body"><p class="card-subjects"> </p></div>',
+    );
+    expect(validateArticleCardSubjects("articles/index.html", html)).toEqual([
+      "articles/index.html: comparison article card must render a card-subjects line with the A/B model numbers",
+    ]);
+  });
+
+  it("ignores guide cards (single product has no pair)", () => {
+    expect(
+      validateArticleCardSubjects(
+        "articles/index.html",
+        card(
+          "guide",
+          '<div class="card-body"><p class="card-audiences">向き: 軽さ重視</p></div>',
+        ),
+      ),
+    ).toEqual([]);
+  });
+
+  it("ignores cards without data-content-type", () => {
+    const relatedCard =
+      '<article class="card article-list-card"><h3><a href="/articles/x/">タイトル</a></h3></article>';
+    expect(
+      validateArticleCardSubjects("articles/x/index.html", relatedCard),
+    ).toEqual([]);
+  });
+});
+
 describe("top page search form", () => {
   const topPage = (form: string) => `<main>${form}</main>`;
   const validForm =
@@ -1094,6 +1151,24 @@ describe("comparison card labels script (validateComparisonCardLabels)", () => {
       ),
     ).toEqual([
       "articles/x/index.html: pages with a comparison table must include the comparison-card-labels script",
+    ]);
+  });
+
+  it("accepts a comparison table with data-label on every cell", () => {
+    const table =
+      '<table class="comparison"><thead><tr><th>比較項目</th><th>A</th><th>B</th></tr></thead><tbody><tr><th scope="row">容量</th><td data-label="A">1L</td><td data-label="B">2L</td></tr></tbody></table>';
+    expect(
+      validateComparisonCardLabels("articles/x/index.html", withTable(table)),
+    ).toEqual([]);
+  });
+
+  it("rejects a comparison table whose cells lack data-label", () => {
+    const table =
+      '<table class="comparison"><thead><tr><th>比較項目</th><th>A</th><th>B</th></tr></thead><tbody><tr><th scope="row">容量</th><td>1L</td><td data-label="B">2L</td></tr></tbody></table>';
+    expect(
+      validateComparisonCardLabels("articles/x/index.html", withTable(table)),
+    ).toEqual([
+      "articles/x/index.html: comparison table cells must carry a data-label (mobile card view needs it)",
     ]);
   });
 

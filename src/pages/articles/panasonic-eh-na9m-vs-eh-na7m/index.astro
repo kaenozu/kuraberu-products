@@ -43,15 +43,16 @@ const keyDiffRows: KeyDiffRow[] = [
       right={{brand: 'パナソニック ナノケア', line: 'EH-NA7M', tagline: '持ち運び・収納性なら', image: rightImage, imageAlt: 'パナソニック ナノケア EH-NA7M', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      diagnosisHref="/tools/product-finder/hair-dryer/"
     />
     <p>EH-NA9Mはミネラル・UVケア・複数モードなどの機能を重視する人向け、EH-NA7Mは折りたたみやすさと軽さを重視する人向けです。風量は両モデルとも公式仕様で1.5㎥/分と確認できます。</p>
 
     <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">EH-NA9M</th><th scope="col">EH-NA7M</th></tr></thead><tbody>
-      <tr><th scope="row">搭載機能</th><td>ミネラル・UVケア・ナノイーイオンチャージPLUS</td><td>静電気抑制・ナノイーイオンチャージ</td></tr>
-      <tr><th scope="row">モード</th><td>温冷リズム・毛先集中ケア・スカルプ・スキン</td><td>公式比較では記載なし</td></tr>
-      <tr><th scope="row">風量（TURBO）</th><td>1.5㎥/分</td><td>1.5㎥/分</td></tr>
-      <tr><th scope="row">質量</th><td>約580g</td><td>約565g</td></tr>
-      <tr><th scope="row">本体寸法</th><td>高さ22.1×幅16.1×奥行7.4cm</td><td>高さ22.1×幅16.1×奥行7.4cm</td></tr>
+      <tr><th scope="row">搭載機能</th><td data-label="EH-NA9M">ミネラル・UVケア・ナノイーイオンチャージPLUS</td><td data-label="EH-NA7M">静電気抑制・ナノイーイオンチャージ</td></tr>
+      <tr><th scope="row">モード</th><td data-label="EH-NA9M">温冷リズム・毛先集中ケア・スカルプ・スキン</td><td data-label="EH-NA7M">公式比較では記載なし</td></tr>
+      <tr><th scope="row">風量（TURBO）</th><td data-label="EH-NA9M">1.5㎥/分</td><td data-label="EH-NA7M">1.5㎥/分</td></tr>
+      <tr><th scope="row">質量</th><td data-label="EH-NA9M">約580g</td><td data-label="EH-NA7M">約565g</td></tr>
+      <tr><th scope="row">本体寸法</th><td data-label="EH-NA9M">高さ22.1×幅16.1×奥行7.4cm</td><td data-label="EH-NA7M">高さ22.1×幅16.1×奥行7.4cm</td></tr>
     </tbody></table></div><p class="meta">仕様は変更される可能性があります。購入時点の公式ページで最新情報を確認してください。</p></details>
     <h2 id="official">公式情報</h2><p>比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した情報です。公式情報確認日：{articleMetadata.productInfoCheckedAt}。</p><div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">EH-NA9M 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">EH-NA7M 公式商品ページ →</a></div>
     <p class="meta"><a href={leftSpec} target="_blank" rel="noopener noreferrer">EH-NA9M 仕様ページ</a> / <a href={rightSpec} target="_blank" rel="noopener noreferrer">EH-NA7M 仕様ページ</a></p>

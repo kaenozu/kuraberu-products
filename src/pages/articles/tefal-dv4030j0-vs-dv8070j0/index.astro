@@ -30,10 +30,10 @@ const faqEntries = [
 ] as const;
 const keyDiffRows: KeyDiffRow[] = [
   {label: 'スチーム量', left: '通常平均13g/分・ジェット最大16g/分', right: '平均17g/分', highlight: 'right', highlightNote: '平均値が大きい'},
-  {label: '立ち上がり', left: '約40秒', right: '約19秒', highlight: 'right', highlightNote: '約21秒短い', bar: {left: 40, right: 19}},
+  {label: '立ち上がり', left: '約40秒', right: '約19秒', highlight: 'right', highlightNote: '約21秒短い', bar: {left: 40, right: 19}, direction: 'lower-is-better'},
   {label: '連続運転時間', left: '約9分', right: '約14分', highlight: 'right', highlightNote: '約5分長い', bar: {left: 9, right: 14}},
   {label: '水タンク容量', left: '120mL', right: '140mL', highlight: 'right', highlightNote: '20mL多い', bar: {left: 120, right: 140}},
-  {label: '本体重量', left: '約690g', right: '約680g', highlight: 'right', highlightNote: '約10g軽い', bar: {left: 690, right: 680}},
+  {label: '本体重量', left: '約690g', right: '約680g', highlight: 'right', highlightNote: '約10g軽い', bar: {left: 690, right: 680}, direction: 'lower-is-better'},
   {label: 'かけ面', left: 'アルミニウム＋PTFE', right: 'セラミック'},
 ];
 ---
@@ -51,7 +51,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">ティファールの衣類スチーマー「スチーム シュプレ DV4030J0」と「スチーム ラフレ DV8070J0」を比較します。公式仕様から、スチーム量・立ち上がり・連続使用時間・水タンク容量の違いを整理します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">主な比較ポイント</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
     <details class="fold-section" id="specs"><summary>詳細仕様（全部の数値を見る）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">DV4030J0</th><th scope="col">DV8070J0</th></tr></thead><tbody>
-      <tr><th scope="row">消費電力</th><td>800W</td><td>950W</td></tr><tr><th scope="row">本体サイズ（幅×奥行×高さ）</th><td>17.0×9.5×13.0cm</td><td>17.0×7.0×12.6cm</td></tr><tr><th scope="row">本体重量</th><td>約690g</td><td>約680g</td></tr><tr><th scope="row">水タンク容量</th><td>120mL</td><td>140mL</td></tr><tr><th scope="row">スチーム量</th><td>通常平均13g/分・ジェット最大16g/分</td><td>平均17g/分</td></tr><tr><th scope="row">立ち上がり</th><td>約40秒（高温設定時）</td><td>約19秒（高温設定時）</td></tr><tr><th scope="row">連続運転</th><td>約9分</td><td>約14分（中温設定時）</td></tr><tr><th scope="row">かけ面</th><td>アルミニウム＋PTFE</td><td>セラミック</td></tr>
+      <tr><th scope="row">消費電力</th><td data-label="DV4030J0">800W</td><td data-label="DV8070J0">950W</td></tr><tr><th scope="row">本体サイズ（幅×奥行×高さ）</th><td data-label="DV4030J0">17.0×9.5×13.0cm</td><td data-label="DV8070J0">17.0×7.0×12.6cm</td></tr><tr><th scope="row">本体重量</th><td data-label="DV4030J0">約690g</td><td data-label="DV8070J0">約680g</td></tr><tr><th scope="row">水タンク容量</th><td data-label="DV4030J0">120mL</td><td data-label="DV8070J0">140mL</td></tr><tr><th scope="row">スチーム量</th><td data-label="DV4030J0">通常平均13g/分・ジェット最大16g/分</td><td data-label="DV8070J0">平均17g/分</td></tr><tr><th scope="row">立ち上がり</th><td data-label="DV4030J0">約40秒（高温設定時）</td><td data-label="DV8070J0">約19秒（高温設定時）</td></tr><tr><th scope="row">連続運転</th><td data-label="DV4030J0">約9分</td><td data-label="DV8070J0">約14分（中温設定時）</td></tr><tr><th scope="row">かけ面</th><td data-label="DV4030J0">アルミニウム＋PTFE</td><td data-label="DV8070J0">セラミック</td></tr>
     </tbody></table></div><p class="meta">商品仕様や価格は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p><p class="source-links"><a class="card-link" href={supreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV4030J0 公式ページ →</a><a class="card-link" href={rafreOfficial} target="_blank" rel="noopener noreferrer">ティファール DV8070J0 公式ページ →</a></p></details>
         <ArticleSocialProof query="ティファール DV4030J0 DV8070J0" checkedAt="2026-08-14" hasPosts={false} />
 <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
