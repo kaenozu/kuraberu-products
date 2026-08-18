@@ -15,6 +15,7 @@ on:
 permissions:
   contents: read
   checks: write
+  issues: write
 
 concurrency:
   group: production-deploy
@@ -165,4 +166,26 @@ jobs:
           fi
           if ! echo "$payload" | gh api --method POST "repos/${{ github.repository }}/check-runs" --input - >/dev/null; then
             echo "::warning::Failed to record post-deploy verification check run"
+          fi
+
+      - name: Create deploy verification evidence issue
+        # Auto-file the evidence issue (pre-filled from report.json + Check Run)
+        # right after the deploy, so every production run leaves an auditable
+        # record. Idempotent: re-runs of the same run ID skip creation. The
+        # issue stays OPEN for the human reviewer to verify and Close.
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          report=$(find .acceptance -path '*/post-deploy-*/report.json' -type f 2>/dev/null | sort | tail -n 1)
+          if [ -n "$report" ]; then
+            node scripts/create-deploy-evidence-issue.mjs \
+              --report "$report" \
+              --run-id "${{ github.run_id }}" \
+              --expected-sha "${{ inputs.expected_sha }}" \
+              --site-url "${{ vars.PUBLIC_SITE_URL }}"
+          else
+            echo "::warning::No post-deploy report.json found; skipping evidence issue creation"
           fi
