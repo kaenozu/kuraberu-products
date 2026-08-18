@@ -371,7 +371,7 @@ export function validateArticleNextStep(relative, html) {
   const blockIndex = html.indexOf('class="next-step"');
   if (specsIndex !== -1 && (blockIndex === -1 || blockIndex > specsIndex)) {
     errors.push(
-      `${relative}: next-step block must appear right after the conclusion (before #specs)`,
+      `${relative}: next-step block must appear before the spec section (#specs)`,
     );
   }
   return errors;

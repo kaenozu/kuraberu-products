@@ -1,7 +1,6 @@
 ---
 import HeroComparison from './HeroComparison.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from './VisualKeyDifferences.astro';
-import DecisionGuide from './DecisionGuide.astro';
 import TrustLine from './TrustLine.astro';
 import NextStepBlock from './NextStepBlock.astro';
 
@@ -32,16 +31,28 @@ interface Props {
 
 const { left, right, rows, checkedAt, diagnosisHref } = Astro.props;
 ---
+{/*
+  記事比較の標準骨格（Article Layout v3、2026-08-18 更新）:
+  1. 結局どっち？（30秒でわかる + こんな人におすすめ = HeroComparison + DecisionGuide を統合）
+  2. 主な違い（VisualKeyDifferences — 記事の主役）
+  3. 次にすること（NextStepBlock: A/B 購入 + 30秒診断）
+  4. 信頼表示（TrustLine）
+  ※ #decision-guide アンカーは統合ブロックが引き継ぎ、ページ内ジャンプを維持する。
+*/}
 <section class="article-comparison-v2" aria-label="商品の比較">
-  <HeroComparison eyebrow="30秒でわかる" left={left} right={right} />
+  <HeroComparison
+    eyebrow="30秒でわかる"
+    heading="結局どっち？"
+    anchorId="decision-guide"
+    left={left}
+    right={right}
+    leftPoints={left.guidePoints}
+    rightPoints={right.guidePoints}
+  />
   <VisualKeyDifferences
     leftLabel={`${left.brand} ${left.line}`}
     rightLabel={`${right.brand} ${right.line}`}
     items={rows}
-  />
-  <DecisionGuide
-    left={{ brand: left.brand, line: left.line, points: left.guidePoints }}
-    right={{ brand: right.brand, line: right.line, points: right.guidePoints }}
   />
   <NextStepBlock
     left={{ label: `${left.brand} ${left.line}`, href: left.purchaseHref, productId: left.productId }}
