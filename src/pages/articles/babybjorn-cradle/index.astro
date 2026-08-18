@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -10,8 +11,6 @@ import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const cradleOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/';
 const cocoNelOfficialProductUrl = 'https://www.aprica.jp/products/home/bed/coconel_air/';
-const cradleRakutenUrl = 'https://a.r10.to/hgUiG0';
-const cocoNelRakutenUrl = 'https://a.r10.to/h8tr4u';
 
 const faqEntries = [
   {
@@ -125,8 +124,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleOfficialProductUrl, guidePoints: [cradleCandidate.audience], purchaseHref: cradleRakutenUrl, productId: 'babybjorn-cradle'}}
-      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelOfficialProductUrl, guidePoints: [cocoNelCandidate.audience], purchaseHref: cocoNelRakutenUrl, productId: 'aprica-coconel-air'}}
+      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleOfficialProductUrl, guidePoints: [cradleCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-cradle:left'].purchaseUrl, productId: 'babybjorn-cradle'}}
+      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelOfficialProductUrl, guidePoints: [cocoNelCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-cradle:right'].purchaseUrl, productId: 'aprica-coconel-air'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -180,7 +179,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="クレードル"
         audience="手動のゆりかご機能で揺らして寝かしつけたい、新生児期の使用を優先する人向け"
-        href={cradleRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-cradle:left'].purchaseUrl}
         productId="babybjorn-cradle"
         imagePath="/products/babybjorn-cradle.jpg"
         placement="article-end"
@@ -189,7 +188,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ココネルエアー AB"
         audience="新生児〜24カ月まで長く使えて、折りたたみ・ベビーサークル兼用を優先する人向け"
-        href={cocoNelRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-cradle:right'].purchaseUrl}
         productId="aprica-coconel-air"
         imagePath="/products/aprica-coconel-air.jpg"
         placement="article-end"

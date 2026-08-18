@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -12,10 +13,6 @@ const leftOfficial = 'https://panasonic.jp/hair/products/EH-NA9M.html';
 const rightOfficial = 'https://panasonic.jp/hair/products/EH-NA7M.html';
 const leftSpec = 'https://panasonic.jp/hair/products/EH-NA9M/spec.html';
 const rightSpec = 'https://panasonic.jp/hair/products/EH-NA7M/spec.html';
-const leftSearch =
-  'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA9M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9';
-const rightSearch =
-  'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA7M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9';
 const leftImage = '/products/panasonic-eh-na9m.jpg';
 const rightImage = '/products/panasonic-eh-na7m.jpg';
 const leftAudience = '髪のケア機能と複数モードを重視する人向け';
@@ -42,8 +39,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">パナソニックのナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・重さ・収納性から比較します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: 'パナソニック ナノケア', line: 'EH-NA9M', tagline: '髪のケア機能・モードなら', image: leftImage, imageAlt: 'パナソニック ナノケア EH-NA9M', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: leftSearch}}
-      right={{brand: 'パナソニック ナノケア', line: 'EH-NA7M', tagline: '持ち運び・収納性なら', image: rightImage, imageAlt: 'パナソニック ナノケア EH-NA7M', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: rightSearch}}
+      left={{brand: 'パナソニック ナノケア', line: 'EH-NA9M', tagline: '髪のケア機能・モードなら', image: leftImage, imageAlt: 'パナソニック ナノケア EH-NA9M', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:left'].purchaseUrl}}
+      right={{brand: 'パナソニック ナノケア', line: 'EH-NA7M', tagline: '持ち運び・収納性なら', image: rightImage, imageAlt: 'パナソニック ナノケア EH-NA7M', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -61,7 +58,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <ArticleSocialProof query="パナソニック EH-NA9M EH-NA7M ナノケア" checkedAt={articleMetadata.productInfoCheckedAt} hasPosts={false} />
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <h2>購入時の注意</h2><p>ドライヤーは機能の名称だけで使用感を断定できません。価格・在庫・付属品は購入時点の公式ページと販売先で確認してください。</p>
-    <div class="purchase-cards"><PurchaseCard name="パナソニック ナノケア EH-NA9M" audience={leftAudience} href={leftSearch} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="パナソニック ナノケア EH-NA7M" audience={rightAudience} href={rightSearch} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
+    <div class="purchase-cards"><PurchaseCard name="パナソニック ナノケア EH-NA9M" audience={leftAudience} href={articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="パナソニック ナノケア EH-NA7M" audience={rightAudience} href={articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">パナソニック EH-NA9M 公式商品ページ</a>（{articleMetadata.productInfoCheckedAt}確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">パナソニック EH-NA7M 公式商品ページ</a>（{articleMetadata.productInfoCheckedAt}確認）</li></ul>
     <h2>調査方法・免責事項</h2><p>この比較は、パナソニック公式の商品ページと仕様ページで確認できる情報を根拠にしています。口コミや未確認の販売情報は比較の根拠にしていません。</p>

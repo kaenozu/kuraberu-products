@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -13,8 +14,6 @@ import type {
 
 const premium = 'https://www.jp.pampers.com/products/pampers-premium-line-tape';
 const sarasara = 'https://www.jp.pampers.com/products/pampers-mainline-tape';
-const premiumSearch = 'https://a.r10.to/hPtZZE';
-const sarasaraSearch = 'https://a.r10.to/h5Jh9V';
 
 const premiumCandidate: ComparisonCandidate = {
   product: 'パンパース 新生児用',
@@ -84,8 +83,8 @@ const differenceRows: DifferenceRow[] = [
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/pampers-premium-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: premium, guidePoints: [premiumCandidate.audience], purchaseHref: premiumSearch, productId: 'pampers-premium-newborn'}}
-      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/pampers-sarasara-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: sarasara, guidePoints: [standardCandidate.audience], purchaseHref: sarasaraSearch, productId: 'pampers-sarasara-newborn'}}
+      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/pampers-premium-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: premium, guidePoints: [premiumCandidate.audience], purchaseHref: articlePurchaseLinks['pampers-newborn:left'].purchaseUrl, productId: 'pampers-premium-newborn'}}
+      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/pampers-sarasara-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: sarasara, guidePoints: [standardCandidate.audience], purchaseHref: articlePurchaseLinks['pampers-newborn:right'].purchaseUrl, productId: 'pampers-sarasara-newborn'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"
@@ -147,7 +146,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="肌へのいちばん"
         audience="肌ざわりと肌へのやさしさ（ワセリン配合・ふかふか素材）、小さめ新生児向けのサイズを優先する人向け"
-        href={premiumSearch}
+        href={articlePurchaseLinks['pampers-newborn:left'].purchaseUrl}
         productId="pampers-premium-newborn"
         imagePath="/products/pampers-premium-newborn.jpg"
         placement="article-end"
@@ -156,7 +155,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="さらさらケア"
         audience="モレ・ムレ対策（ゆるうんちモレガード・フィットテープ・吸収体）を優先する人向け"
-        href={sarasaraSearch}
+        href={articlePurchaseLinks['pampers-newborn:right'].purchaseUrl}
         productId="pampers-sarasara-newborn"
         imagePath="/products/pampers-sarasara-newborn.jpg"
         placement="article-end"
@@ -177,8 +176,8 @@ const differenceRows: DifferenceRow[] = [
     <ul class="source-list">
       <li><a href={premium} target="_blank" rel="noopener noreferrer">パンパース：肌へのいちばん テープ</a>（2026-07-31確認）</li>
       <li><a href={sarasara} target="_blank" rel="noopener noreferrer">パンパース：さらさらケア テープ</a>（2026-07-31確認）</li>
-      <li><a href={premiumSearch} target="_blank" rel="noopener noreferrer">楽天市場：肌へのいちばん検索</a>（価格・在庫確認用）</li>
-      <li><a href={sarasaraSearch} target="_blank" rel="noopener noreferrer">楽天市場：さらさらケア検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['pampers-newborn:left'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：肌へのいちばん検索</a>（価格・在庫確認用）</li>
+      <li><a href={articlePurchaseLinks['pampers-newborn:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：さらさらケア検索</a>（価格・在庫確認用）</li>
     </ul>
     <h2>調査方法・免責事項</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

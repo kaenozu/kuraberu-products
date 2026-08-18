@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -12,10 +13,6 @@ import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 const dendoOfficial = 'https://shop.pigeon.co.jp/products/1032018';
 const shudoOfficial = 'https://shop.pigeon.co.jp/products/2000638s';
 const anshinNotice = 'https://support.pigeon.co.jp/anshin/item10.html';
-const dendoSearch = 'https://a.r10.to/hglrVW';
-const shudoSearch = 'https://a.r10.to/hP1cll';
-const dendoRakutenUrl = dendoSearch;
-const shudoRakutenUrl = shudoSearch;
 
 const faqEntries = [
   {
@@ -101,8 +98,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: dendoCandidate.product, line: dendoCandidate.line, tagline: dendoCandidate.audience, image: '/products/shupot-dendo.jpg', imageAlt: `${dendoCandidate.product} ${dendoCandidate.line}`, officialHref: dendoOfficial, guidePoints: [dendoCandidate.audience], purchaseHref: dendoRakutenUrl, productId: 'shupot-dendo'}}
-      right={{ brand: shudoCandidate.product, line: shudoCandidate.line, tagline: shudoCandidate.audience, image: '/products/shupot-shudo.jpg', imageAlt: `${shudoCandidate.product} ${shudoCandidate.line}`, officialHref: shudoOfficial, guidePoints: [shudoCandidate.audience], purchaseHref: shudoRakutenUrl, productId: 'shupot-shudo'}}
+      left={{ brand: dendoCandidate.product, line: dendoCandidate.line, tagline: dendoCandidate.audience, image: '/products/shupot-dendo.jpg', imageAlt: `${dendoCandidate.product} ${dendoCandidate.line}`, officialHref: dendoOfficial, guidePoints: [dendoCandidate.audience], purchaseHref: articlePurchaseLinks['shupot:left'].purchaseUrl, productId: 'shupot-dendo'}}
+      right={{ brand: shudoCandidate.product, line: shudoCandidate.line, tagline: shudoCandidate.audience, image: '/products/shupot-shudo.jpg', imageAlt: `${shudoCandidate.product} ${shudoCandidate.line}`, officialHref: shudoOfficial, guidePoints: [shudoCandidate.audience], purchaseHref: articlePurchaseLinks['shupot:right'].purchaseUrl, productId: 'shupot-shudo'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
       diagnosisHref="/tools/product-finder/diaper/"
@@ -162,7 +159,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="電動鼻吸い器 シュポット"
         audience="コンセントのある場所でパワフルな吸引と吸引力のダイヤル調整を優先する人向け"
-        href={dendoRakutenUrl}
+        href={articlePurchaseLinks['shupot:left'].purchaseUrl}
         productId="shupot-dendo"
         imagePath="/products/shupot-dendo.jpg"
         placement="article-end"
@@ -171,7 +168,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="手動鼻吸い器 シュポットポンプ"
         audience="電源不要の手軽さ・コンパクトさと価格を優先する人向け"
-        href={shudoRakutenUrl}
+        href={articlePurchaseLinks['shupot:right'].purchaseUrl}
         productId="shupot-shudo"
         imagePath="/products/shupot-shudo.jpg"
         placement="article-end"
@@ -190,8 +187,8 @@ const differenceRows: DifferenceRow[] = [
       <li><a href={dendoOfficial} target="_blank" rel="noopener noreferrer">電動鼻吸い器 シュポット（ピジョン公式ショップ）</a>（2026-08-10確認）</li>
       <li><a href={shudoOfficial} target="_blank" rel="noopener noreferrer">手動鼻吸い器 シュポットポンプ＋フィット鼻ノズル（ピジョン公式ショップ）</a>（2026-08-10確認）</li>
       <li><a href={anshinNotice} target="_blank" rel="noopener noreferrer">電動鼻吸い器SHUPOTを安全にお使いいただくために（ピジョン公式）</a>（2026-08-10確認）</li>
-      <li><a href={dendoSearch} target="_blank" rel="noopener noreferrer">楽天市場：電動鼻吸い器 シュポット</a>（価格・在庫用）</li>
-      <li><a href={shudoSearch} target="_blank" rel="noopener noreferrer">楽天市場：手動鼻吸い器 シュポットポンプ</a>（価格・在庫用）</li>
+      <li><a href={articlePurchaseLinks['shupot:left'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：電動鼻吸い器 シュポット</a>（価格・在庫用）</li>
+      <li><a href={articlePurchaseLinks['shupot:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：手動鼻吸い器 シュポットポンプ</a>（価格・在庫用）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

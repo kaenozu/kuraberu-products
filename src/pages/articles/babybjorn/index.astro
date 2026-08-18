@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -12,8 +13,6 @@ import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 const harmonyOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
 const harmonyOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/';
 const miniOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/';
-const harmonyRakutenUrl = 'https://a.r10.to/hgxfw5';
-const miniRakutenUrl = 'https://a.r10.to/hY6U8Q';
 
 const faqEntries = [
   {
@@ -127,8 +126,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyOfficialProductUrl, guidePoints: [harmonyCandidate.audience], purchaseHref: harmonyRakutenUrl, productId: 'babybjorn-harmony'}}
-      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniOfficialProductUrl, guidePoints: [miniCandidate.audience], purchaseHref: miniRakutenUrl, productId: 'babybjorn-mini'}}
+      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyOfficialProductUrl, guidePoints: [harmonyCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn:left'].purchaseUrl, productId: 'babybjorn-harmony'}}
+      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniOfficialProductUrl, guidePoints: [miniCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn:right'].purchaseUrl, productId: 'babybjorn-mini'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -185,7 +184,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ベビーキャリア HARMONY"
         audience="新生児から約36ヶ月まで長く使えて、肩と腰のサポートを優先する人向け"
-        href={harmonyRakutenUrl}
+        href={articlePurchaseLinks['babybjorn:left'].purchaseUrl}
         productId="babybjorn-harmony"
         imagePath="/products/babybjorn-harmony.jpg"
         placement="article-end"
@@ -194,7 +193,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ベビーキャリア MINI"
         audience="新生児期の手軽さ・シンプルな装着方法と価格を優先する人向け"
-        href={miniRakutenUrl}
+        href={articlePurchaseLinks['babybjorn:right'].purchaseUrl}
         productId="babybjorn-mini"
         imagePath="/products/babybjorn-mini.jpg"
         placement="article-end"

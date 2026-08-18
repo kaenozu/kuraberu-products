@@ -4,9 +4,8 @@ import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import TrustLine from '../../../components/TrustLine.astro';
 import {panasonicEhNa9mGuideArticle as articleMetadata} from '../../../content/articles';
+import { articlePurchaseLinks } from '../../../lib/products';
 
-const rakutenSearch =
-  'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA9M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9';
 const officialPage = 'https://panasonic.jp/hair/products/EH-NA9M.html';
 const officialSpec = 'https://panasonic.jp/hair/products/EH-NA9M/spec.html';
 
@@ -89,7 +88,7 @@ const faqEntries = [
       <PurchaseCard
         name="パナソニック ナノケア EH-NA9M"
         audience="髪のケア機能と複数モードを重視する人向け"
-        href={rakutenSearch}
+        href={articlePurchaseLinks['panasonic-eh-na9m-guide:card'].purchaseUrl}
         productId="panasonic-eh-na9m"
         placement="article-end"
         note="価格・在庫は販売先でご確認ください。"
@@ -106,7 +105,7 @@ const faqEntries = [
     <ul class="source-list">
       <li><a href={officialPage} target="_blank" rel="noopener noreferrer">パナソニック EH-NA9M 公式商品ページ</a>（2026-08-16確認）</li>
       <li><a href={officialSpec} target="_blank" rel="noopener noreferrer">パナソニック EH-NA9M 仕様ページ</a>（2026-08-16確認）</li>
-      <li><a href={rakutenSearch} target="_blank" rel="noopener noreferrer">楽天市場：パナソニック ナノケア EH-NA9M</a>（価格・在庫用）</li>
+      <li><a href={articlePurchaseLinks['panasonic-eh-na9m-guide:card'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：パナソニック ナノケア EH-NA9M</a>（価格・在庫用）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの記事は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは根拠にしていません。</p>

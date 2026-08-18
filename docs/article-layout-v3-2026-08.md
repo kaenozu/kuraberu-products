@@ -107,14 +107,23 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
   購入ボタンが 2 つ・診断リンクが `/tools/product-finder/` を指す・`#specs` より前に
   置かれることを、ガイドではブロックが描画されないことを、旧形式の独立診断 CTA
   （`diagnosis-cta`）が残っていないことを fail-closed で検証する。
-- **購入リンクのドリフト防止**（`scripts/check-purchase-link-consistency.mjs`）:
-  ブロックの 2 つの購入リンク（`left/right.purchaseHref` または `NextStepBlock` の
-  `left/right.href`）が、記事末尾の購入カード（`PurchaseCard`）の `href` と
-  **同じ式を同じ順序**で指すことを、Astro ソースの式レベルで検証する。
-  片方だけ差し替えて他方が古いリンクのままになる「ドリフト」をビルド時に検出する。
-  レンダリング結果ではなく式を比較する理由は、`productId` を持つ記事では
-  Rakuten API が末尾 CTA を商品ページへ強化するため正当な差が生じるため
-  （`pigeon-bottle-240`・`logicool-zone` 等）。`pnpm verify` に組み込み済み。
+- **購入URLの単一情報源**（`src/lib/products.ts` の `articlePurchaseLinks`）:
+  全購入（アフィリエイト）URL はレジストリのみに存在する。記事ページのブロック
+  （`left/right.purchaseHref` / `NextStepBlock` の `left/right.href`）・記事末尾の
+  `PurchaseCard`・本文中の購入リンクは、すべて
+  `articlePurchaseLinks['<記事スラグ>:<left|right|card>'].purchaseUrl` を参照する。
+  レジストリのキーは「記事スラグ + 左右」単位で、同じ商品でも記事ごとに
+  異なるリンクを保持できる（例: pigeon PPSU 240ml は記事ごとに別リンク）。
+  商用記事（`CommercialArticlePage`）はビルド時に Rakuten API で URL を解決する
+  ため対象外。
+- **購入リンクの整合ゲート**（`scripts/check-purchase-link-consistency.mjs`）:
+  (1) 購入コンテキストに URL 直書きが無いこと、(2) 参照キーがレジストリに存在
+  すること、(3) ブロックと記事末尾カードが**同一キーを同一順序**で参照すること、
+  を fail-closed で検証する。片方だけ差し替えて他方が古いキーのままになる
+  「ドリフト」をビルド時に検出する。レンダリング結果ではなく式を比較する理由は、
+  `productId` を持つ記事では Rakuten API が末尾 CTA を商品ページへ強化するため
+  正当な差が生じるため（`pigeon-bottle-240`・`logicool-zone` 等）。
+  `pnpm verify` に組み込み済み。
 
 ## 記事ごとの判断ルール
 

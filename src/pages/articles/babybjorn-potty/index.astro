@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
@@ -10,8 +11,6 @@ import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
 const smartPottyOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/smart-potty/';
 const pottyChairOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/potty-chair/';
-const smartPottyRakutenUrl = 'https://a.r10.to/hP1wdW';
-const pottyChairRakutenUrl = 'https://a.r10.to/h5kpDa';
 
 const faqEntries = [
   {
@@ -107,8 +106,8 @@ const differenceRows: DifferenceRow[] = [
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
-      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyOfficialProductUrl, guidePoints: [smartPottyCandidate.audience], purchaseHref: smartPottyRakutenUrl, productId: 'babybjorn-smart-potty'}}
-      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairOfficialProductUrl, guidePoints: [pottyChairCandidate.audience], purchaseHref: pottyChairRakutenUrl, productId: 'babybjorn-potty-chair'}}
+      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyOfficialProductUrl, guidePoints: [smartPottyCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-potty:left'].purchaseUrl, productId: 'babybjorn-smart-potty'}}
+      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairOfficialProductUrl, guidePoints: [pottyChairCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-potty:right'].purchaseUrl, productId: 'babybjorn-potty-chair'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -157,7 +156,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ベビービョルン スマートポッティ"
         audience="コンパクトに収納でき、狭いバスルームでも場所を取らないおまるを優先する人向け"
-        href={smartPottyRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-potty:left'].purchaseUrl}
         productId="babybjorn-smart-potty"
         imagePath="/products/babybjorn-smart-potty.jpg"
         placement="article-end"
@@ -166,7 +165,7 @@ const differenceRows: DifferenceRow[] = [
       <PurchaseCard
         name="ベビービョルン ポッティチェア"
         audience="長い時間座れるイス型で、中桶をそのまま流せる手軽さを優先する人向け"
-        href={pottyChairRakutenUrl}
+        href={articlePurchaseLinks['babybjorn-potty:right'].purchaseUrl}
         productId="babybjorn-potty-chair"
         imagePath="/products/babybjorn-potty-chair.jpg"
         placement="article-end"

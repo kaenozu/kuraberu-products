@@ -1,4 +1,5 @@
 ---
+import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import RelatedArticles from '../../../components/RelatedArticles.astro'
 import PurchaseCard from '../../../components/PurchaseCard.astro'
@@ -11,8 +12,6 @@ import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
 
 const leftOfficial = 'https://www.kingjim.co.jp/products/tepra/sr-r2500p.html'
 const rightOfficial = 'https://www.kingjim.co.jp/products/tepra/sr-mk1.html'
-const leftSearch = 'https://a.r10.to/h9jN67'
-const rightSearch = 'https://a.r10.to/hPnFPC'
 const leftImage = '/products/kingjim-sr-r2500p.jpg'
 const rightImage = '/products/kingjim-sr-mk1.jpg'
 const leftAudience = 'コンパクトさと軽さ、18mmまでのテープ幅で使いたい人向け'
@@ -41,8 +40,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <p class="lead">キングジムの「テプラ」PRO 2機種を、公式ページで確認できる対応テープ幅・電源・寸法・質量・印刷幅に分けて比較します。価格は販売先でご確認ください。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2
-      left={{brand: 'キングジム テプラ PRO', line: 'SR-R2500P', tagline: '軽さとコンパクトさなら', image: leftImage, imageAlt: 'キングジム テプラ PRO SR-R2500P', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: leftSearch}}
-      right={{brand: 'キングジム テプラ PRO', line: 'SR-MK1', tagline: '24mm幅とAC電源なら', image: rightImage, imageAlt: 'キングジム テプラ PRO SR-MK1', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: rightSearch}}
+      left={{brand: 'キングジム テプラ PRO', line: 'SR-R2500P', tagline: '軽さとコンパクトさなら', image: leftImage, imageAlt: 'キングジム テプラ PRO SR-R2500P', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:left'].purchaseUrl}}
+      right={{brand: 'キングジム テプラ PRO', line: 'SR-MK1', tagline: '24mm幅とAC電源なら', image: rightImage, imageAlt: 'キングジム テプラ PRO SR-MK1', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
     />
@@ -65,8 +64,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <h2>購入時の注意</h2><p>使いたいラベル幅、電源方式、持ち運びやすさを購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
 
     <div class="purchase-cards">
-      <PurchaseCard name="キングジム テプラ PRO SR-R2500P" audience={leftAudience} href={leftSearch} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="キングジム テプラ PRO SR-MK1" audience={rightAudience} href={rightSearch} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="キングジム テプラ PRO SR-R2500P" audience={leftAudience} href={articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="キングジム テプラ PRO SR-MK1" audience={rightAudience} href={articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
     </div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">キングジム テプラ PRO SR-R2500P 公式商品ページ</a>（2026-08-14確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">キングジム テプラ PRO SR-MK1 公式商品ページ</a>（2026-08-14確認）</li></ul>

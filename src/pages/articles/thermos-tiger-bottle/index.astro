@@ -9,7 +9,7 @@ import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/Visua
 import DecisionGuide from '../../../components/DecisionGuide.astro';
 import NextStepBlock from '../../../components/NextStepBlock.astro';
 import {thermosTigerBottleArticle as articleMetadata} from '../../../content/articles';
-import {thermosJnlS500, tigerMtaJ050} from '../../../lib/products';
+import {thermosJnlS500, tigerMtaJ050, articlePurchaseLinks} from '../../../lib/products';
 
 const thermosOfficial = thermosJnlS500.officialUrl;
 const tigerOfficial = tigerMtaJ050.officialUrl;
@@ -160,12 +160,12 @@ const keyDiffRows: KeyDiffRow[] = [
     </nav>
 
     <div class="sticky-compare-bar" id="sticky-compare-bar" hidden>
-      <a class="sticky-side is-left" href={thermosJnlS500.rakutenUrl} target="_blank" rel="noopener noreferrer">
+      <a class="sticky-side is-left" href={articlePurchaseLinks['thermos-tiger-bottle:left'].purchaseUrl} target="_blank" rel="noopener noreferrer">
         <span class="sticky-side-name">{thermosJnlS500.brand} {thermosJnlS500.model}</span>
         <span class="sticky-side-cta">楽天で見る</span>
       </a>
       <a class="sticky-guide" href="#decision-guide">どっち向き？</a>
-      <a class="sticky-side is-right" href={tigerMtaJ050.rakutenUrl} target="_blank" rel="noopener noreferrer">
+      <a class="sticky-side is-right" href={articlePurchaseLinks['thermos-tiger-bottle:right'].purchaseUrl} target="_blank" rel="noopener noreferrer">
         <span class="sticky-side-name">{tigerMtaJ050.brand} {tigerMtaJ050.model}</span>
         <span class="sticky-side-cta">楽天で見る</span>
       </a>
@@ -204,8 +204,8 @@ const keyDiffRows: KeyDiffRow[] = [
     />
 
     <NextStepBlock
-      left={{ label: 'サーモス JNL-S500', href: thermosJnlS500.rakutenUrl }}
-      right={{ label: 'タイガー MTA-J050', href: tigerMtaJ050.rakutenUrl }}
+      left={{ label: 'サーモス JNL-S500', href: articlePurchaseLinks['thermos-tiger-bottle:left'].purchaseUrl }}
+      right={{ label: 'タイガー MTA-J050', href: articlePurchaseLinks['thermos-tiger-bottle:right'].purchaseUrl }}
     />
 
     <details class="fold-section" id="specs">
@@ -247,7 +247,7 @@ const keyDiffRows: KeyDiffRow[] = [
       <PurchaseCard
         name="サーモス JNL-S500"
         audience="軽さ・コンパクト・食洗機対応を優先する人向け"
-        href={thermosJnlS500.rakutenUrl}
+        href={articlePurchaseLinks['thermos-tiger-bottle:left'].purchaseUrl}
         imagePath={thermosJnlS500.imagePath}
         placement="article-end"
         note="価格・在庫は販売先でご確認ください。"
@@ -255,7 +255,7 @@ const keyDiffRows: KeyDiffRow[] = [
       <PurchaseCard
         name="タイガー MTA-J050"
         audience="保冷力・ハンドル・大きめの飲み口を優先する人向け"
-        href={tigerMtaJ050.rakutenUrl}
+        href={articlePurchaseLinks['thermos-tiger-bottle:right'].purchaseUrl}
         imagePath={tigerMtaJ050.imagePath}
         placement="article-end"
         note="価格・在庫は販売先でご確認ください。"

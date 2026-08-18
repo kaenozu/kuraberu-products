@@ -4,9 +4,8 @@ import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import TrustLine from '../../../components/TrustLine.astro';
 import {panasonicBabyMonitorArticle as articleMetadata} from '../../../content/articles';
+import { articlePurchaseLinks } from '../../../lib/products';
 
-const rakutenSearch =
-  'https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2583%2591%25E3%2583%258A%25E3%2582%25BD%25E3%2583%258B%25E3%2583%2583%25E3%2582%25AF%2520%25E3%2583%2599%25E3%2583%2593%25E3%2583%25BC%25E3%2583%25A2%25E3%2583%258B%25E3%2582%25BF%25E3%2583%25BC%2520KX-HC705&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9';
 const officialPage = 'https://panasonic.jp/hns/products/KX-HC705.html';
 
 const faqEntries = [
@@ -97,7 +96,7 @@ const faqEntries = [
       <PurchaseCard
         name="パナソニック ベビーモニター KX-HC705"
         audience="無線LAN設定なしですぐ見守りを始めたい人、音・動作・温度のお知らせを優先する人向け"
-        href={rakutenSearch}
+        href={articlePurchaseLinks['panasonic-baby-monitor-kx-hc705:card'].purchaseUrl}
         productId="panasonic-kx-hc705"
         placement="article-end"
         note="価格・在庫は販売先でご確認ください。"
@@ -113,7 +112,7 @@ const faqEntries = [
     <h2>情報源一覧</h2>
     <ul class="source-list">
       <li><a href={officialPage} target="_blank" rel="noopener noreferrer">ベビーモニター KX-HC705 概要（パナソニック公式）</a>（2026-08-14確認）</li>
-      <li><a href={rakutenSearch} target="_blank" rel="noopener noreferrer">楽天市場：パナソニック ベビーモニター KX-HC705</a>（価格・在庫用）</li>
+      <li><a href={articlePurchaseLinks['panasonic-baby-monitor-kx-hc705:card'].purchaseUrl} target="_blank" rel="noopener noreferrer">楽天市場：パナソニック ベビーモニター KX-HC705</a>（価格・在庫用）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの記事は、メーカー公式の商品ページ・公式Q&Aで確認できる情報のみを根拠としています。個人の感想や口コミは根拠にしていません。</p>
