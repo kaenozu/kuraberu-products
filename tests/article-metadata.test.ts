@@ -54,7 +54,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("excludes incomplete commercial drafts from public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(35);
+    expect(publicArticleMetadata).toHaveLength(36);
     expect(
       publicArticleMetadata.some(
         (article) => article.id === "roborock-qrevo-curv-vs-dreame-x50",
@@ -181,7 +181,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(57);
+    ).toHaveLength(58);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
