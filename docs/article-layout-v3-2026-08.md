@@ -245,6 +245,22 @@ BaseLayout が `<meta name="article:content-type" content="guide|comparison">` �
   fail-closed で検証する。実ビルドテスト（`tests/top-page.test.ts`）も
   `articleMetadata.imagePath` と `data-thumb` の一致を突き合わせる。
 
+## 記事カードの構成（型番行・向き行）
+
+記事カード（`ArticleCard.astro`・検索結果の `createCard`）は「読む場所」でなく
+「**探す場所**」として、情報量を絞る（2026-08-18 更新）:
+
+- **型番行** `<p class="card-subjects">` — `comparisonSubjects()`
+  （`src/lib/article-subjects.ts`）が `aboutProductNames` → headline の
+  「A」と「B」引用 → 「A と B、どっち？/を比較」の順で A/B 商品名を導出し、
+  `JNL-S500 / MTA-J050` 形式で表示する。
+- **向き行** `<p class="card-audiences">` — audiences 由来の「向き: …」1 行。
+- 説明文（`card-desc`）・更新日（`meta`）はカードに載せない。
+- 品質ゲート（`validateArticleCardSubjects`）が**比較記事カードに型番行の
+  存在を fail-closed で強制**する（商品ガイドはペアを持たないため対象外）。
+- 検索結果カード（`article-discovery.js`）も同じ構成を描画し、
+  discovery index の `subjects` フィールド（`comparisonSubjects()` 由来）を参照する。
+
 ## 比較表の「根拠・確認先」列（スマホ折りたたみ）
 
 4 列テーブル（比較項目・A・B・根拠・確認先）を描画する比較記事では、

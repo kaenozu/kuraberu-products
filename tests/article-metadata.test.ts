@@ -575,6 +575,12 @@ describe("article card audiences 向き line (rendered dist)", () => {
           /<p class="card-audiences">向き: [^<]+<\/p>/.test(card[1]),
           `card on ${file} must render the 向き line`,
         ).toBe(true);
+        if (/data-content-type="comparison"/.test(card[0])) {
+          expect(
+            /<p class="card-subjects">[^<]+<\/p>/.test(card[1]),
+            `comparison card on ${file} must render the 型番 line`,
+          ).toBe(true);
+        }
       }
     }
     expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);
