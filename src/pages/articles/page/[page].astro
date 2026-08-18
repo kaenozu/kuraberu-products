@@ -82,7 +82,7 @@ const discoveryIndex = sorted.map((article) => ({
           article={article}
           data={{
             'data-article-card': '',
-            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses].join(' ')),
+            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses, ...(comparisonSubjects(article) ?? [])].join(' ')),
             'data-category': article.category,
             'data-tags': JSON.stringify(article.tags),
           }}
