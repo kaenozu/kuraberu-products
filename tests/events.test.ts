@@ -18,7 +18,7 @@ function validPayload(overrides: Record<string, string> = {}): string {
   return JSON.stringify({
     event: "purchase",
     productId: "moony-teishigeki-m",
-    placement: "after-decision",
+    placement: "article-end",
     path: "/articles/moony-m/",
     ...overrides,
   });
@@ -88,7 +88,7 @@ describe("click analytics endpoint", () => {
     const parsed = JSON.parse(value);
     expect(parsed.event).toBe("purchase");
     expect(parsed.productId).toBe("moony-teishigeki-m");
-    expect(parsed.placement).toBe("after-decision");
+    expect(parsed.placement).toBe("article-end");
     expect(parsed.path).toBe("/articles/moony-m/");
     expect(parsed.at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
     expect(options.expirationTtl).toBe(90 * 24 * 60 * 60);
@@ -221,7 +221,7 @@ describe("click analytics endpoint", () => {
     const big = JSON.stringify({
       event: "purchase",
       productId: "x".repeat(5000),
-      placement: "after-decision",
+      placement: "article-end",
     });
     const response = await onRequestPost(context(postRequest(big), baseEnv()));
     expect(response.status).toBe(413);

@@ -205,20 +205,6 @@ export function readArticleProductCount(relative, html, errors) {
   return productCount;
 }
 
-// 長文記事フラグを <meta name="article:mid-cta" content="true"> から読み取る。
-// v3: 途中 CTA（after-decision）は midArticleCta な記事だけに許容される。
-export function readArticleMidCta(relative, html, errors) {
-  const match = html.match(/<meta name="article:mid-cta" content="(\w+)">/i);
-  if (!match) return false;
-  if (match[1] !== "true" && match[1] !== "false") {
-    errors.push(
-      `${relative}: invalid article:mid-cta "${match[1]}" (must be true or false)`,
-    );
-    return false;
-  }
-  return match[1] === "true";
-}
-
 // 記事のコンテンツタイプを
 // <meta name="article:content-type" content="guide|comparison"> から読み取る。
 export function readArticleContentType(relative, html, errors) {
@@ -1020,25 +1006,20 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     if (!ARTICLE_PAGE_PATTERN.test(relative)) continue;
     // 「関連する比較記事」の件数上限（config/article-layout.mjs 由来）
     errors.push(...validateRelatedArticleSection(relative, html));
-    // 記事ごとの期待 CTA 枚数は、記事メタデータの productCount / midArticleCta
-    // （meta タグ経由）と config の ctaSets / midArticleSet から導出する。
+    // 記事ごとの期待 CTA 枚数は、記事メタデータの productCount
+    // （meta タグ経由）と config の ctaSets から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
     errors.push(...validateArticleNextStep(relative, html));
-    const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(
         relative,
         html,
-        expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT, {
-          midArticleCta,
-        }),
-        expectedPlacementCounts(productCount, ARTICLE_LAYOUT, {
-          midArticleCta,
-        }),
+        expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT),
+        expectedPlacementCounts(productCount, ARTICLE_LAYOUT),
       ),
     );
   }

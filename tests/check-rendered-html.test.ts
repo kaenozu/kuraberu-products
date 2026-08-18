@@ -8,7 +8,6 @@ import {
   countRenderedExternalEmbeds,
   findEmptySections,
   readArticleContentType,
-  readArticleMidCta,
   readArticleProductCount,
   validateArticleCtas,
   validateArticleContentType,
@@ -45,21 +44,16 @@ const twoEndCtas = `${validCta("https://a.r10.to/one")}${validCta(
   "https://a.r10.to/two",
 )}`;
 
-// 長文の 2 商品記事: 末尾 2 枚 + 途中（after-decision）2 枚 + 結論直後（next-step）2 枚 = 6 枚
+// 通常の 2 商品記事の CTA 一式: 末尾 2 枚 + 結論直後（next-step）2 枚 = 4 枚
 const fourCtas =
-  `${validCta("https://a.r10.to/one", "after-decision")}${validCta(
+  `${validCta("https://a.r10.to/one", "article-end")}${validCta(
     "https://a.r10.to/two",
-    "after-decision",
-  )}` +
-  `${validCta("https://a.r10.to/three", "article-end")}${validCta(
-    "https://a.r10.to/four",
     "article-end",
-  )}`;
-const sixCtas =
-  `${validCta("https://a.r10.to/one", "next-step")}${validCta(
-    "https://a.r10.to/two",
+  )}` +
+  `${validCta("https://a.r10.to/three", "next-step")}${validCta(
+    "https://a.r10.to/four",
     "next-step",
-  )}` + fourCtas;
+  )}`;
 
 // 結論直後の「次にすること」ブロック（NextStepBlock 相当）の fixture。
 // 購入ボタン2つ（next-step__buy）と診断リンク（next-step__diagnosis-link）を1つの
@@ -101,18 +95,6 @@ describe("rendered article CTA audit", () => {
         "articles/example/index.html",
         standardComparisonCtas,
         expectedPurchaseCtasPerArticle(2),
-      ),
-    ).toEqual([]);
-  });
-
-  it("accepts six CTAs for a long two-product article (midArticleCta + next-step)", () => {
-    expect(
-      validateArticleCtas(
-        "articles/example/index.html",
-        sixCtas,
-        expectedPurchaseCtasPerArticle(2, ARTICLE_LAYOUT, {
-          midArticleCta: true,
-        }),
       ),
     ).toEqual([]);
   });
@@ -182,35 +164,28 @@ describe("rendered article CTA audit", () => {
 
   it("rejects a CTA whose placement is not allowed by the layout config", () => {
     const html =
-      `${validCta("https://a.r10.to/one", "after-decision")}${validCta(
-        "https://a.r10.to/two",
-        "after-decision",
-      )}` +
+      `${validCta("https://a.r10.to/one", "article-end")}` +
       `<a href="https://a.r10.to/three" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>` +
-      `${validCta("https://a.r10.to/four", "article-end")}` +
-      `${validCta("https://a.r10.to/five", "next-step")}${validCta(
-        "https://a.r10.to/six",
+      `${validCta("https://a.r10.to/four", "next-step")}${validCta(
+        "https://a.r10.to/five",
         "next-step",
       )}`;
     expect(
       validateArticleCtas(
         "articles/example/index.html",
         html,
-        expectedPurchaseCtasPerArticle(2, ARTICLE_LAYOUT, {
-          midArticleCta: true,
-        }),
+        expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([
-      "articles/example/index.html: CTA 3 has unrecognized placement: bogus (allowed: after-decision, article-end, next-step)",
+      "articles/example/index.html: CTA 2 has unrecognized placement: bogus (allowed: article-end, next-step)",
     ]);
   });
 
-  it("rejects a mid CTA on a non-long article via per-placement counts", () => {
-    // 総数は合わない（2 枚 vs 期待 4 枚）上に、article-end が 1 枚しかない v2 混在パターン
-    const mixed = `${validCta(
-      "https://a.r10.to/one",
-      "after-decision",
-    )}${validCta("https://a.r10.to/two")}`;
+  it("rejects a mismatched per-placement CTA layout via expectedPlacementCounts", () => {
+    // 総数は合わない（2 枚 vs 期待 4 枚）上に、next-step が無い混在パターン
+    const mixed = `${validCta("https://a.r10.to/one")}${validCta(
+      "https://a.r10.to/two",
+    )}`;
     expect(
       validateArticleCtas(
         "articles/example/index.html",
@@ -220,7 +195,6 @@ describe("rendered article CTA audit", () => {
       ),
     ).toEqual([
       "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs and article productCount), found 2",
-      'articles/example/index.html: expected 2 purchase CTAs with placement "article-end", found 1 (per config/article-layout.mjs)',
       'articles/example/index.html: expected 2 purchase CTAs with placement "next-step", found 0 (per config/article-layout.mjs)',
     ]);
   });
@@ -233,44 +207,6 @@ describe("rendered article CTA audit", () => {
         expectedPurchaseCtasPerArticle(2),
       ),
     ).toEqual([]);
-  });
-});
-
-describe("article mid-cta meta", () => {
-  it("reads the long-article flag from the rendered meta tag", () => {
-    const errors: string[] = [];
-    expect(
-      readArticleMidCta(
-        "articles/example/index.html",
-        '<meta name="article:mid-cta" content="true">',
-        errors,
-      ),
-    ).toBe(true);
-    expect(
-      readArticleMidCta(
-        "articles/example/index.html",
-        '<meta name="article:mid-cta" content="false">',
-        errors,
-      ),
-    ).toBe(false);
-    expect(
-      readArticleMidCta("articles/example/index.html", "<html></html>", errors),
-    ).toBe(false);
-    expect(errors).toEqual([]);
-  });
-
-  it("reports an invalid mid-cta value", () => {
-    const errors: string[] = [];
-    expect(
-      readArticleMidCta(
-        "articles/example/index.html",
-        '<meta name="article:mid-cta" content="yes">',
-        errors,
-      ),
-    ).toBe(false);
-    expect(errors).toEqual([
-      'articles/example/index.html: invalid article:mid-cta "yes" (must be true or false)',
-    ]);
   });
 });
 
@@ -406,7 +342,7 @@ describe("article product count meta", () => {
     );
   });
 
-  it("derives four CTAs for a long article from the mid-cta meta through validateRenderedHtml", () => {
+  it("derives four CTAs for a comparison article through validateRenderedHtml", () => {
     const directory = mkdtempSync(path.join(os.tmpdir(), "kuraberu-ctas-"));
     fixtureDirectories.push(directory);
     const articlesDir = path.join(directory, "articles", "long");
@@ -421,7 +357,7 @@ describe("article product count meta", () => {
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true"><p class="trust-line">広告を含みます</p>${nextStepBlockFixture()}${fourCtas}`,
+        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><p class="trust-line">広告を含みます</p>${nextStepBlockFixture()}${twoEndCtas}`,
       ),
     );
 

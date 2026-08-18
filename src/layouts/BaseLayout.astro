@@ -142,7 +142,6 @@ const breadcrumbStructuredData = article
     {article?.productInfoCheckedAt && (
       <meta name="article:product-info-checked-at" content={article.productInfoCheckedAt} />
     )}
-    {article?.midArticleCta && <meta name="article:mid-cta" content="true" />}
     <meta name="twitter:card" content={articleImage ? 'summary_large_image' : 'summary'} />
     {articleImage && <meta name="twitter:image" content={articleImage} />}
     <script is:inline type="application/ld+json" set:html={structuredDataJson} />
