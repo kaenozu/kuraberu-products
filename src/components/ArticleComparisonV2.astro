@@ -27,9 +27,11 @@ interface Props {
   checkedAt?: string;
   /** 診断カテゴリページURL（省略時は診断一覧） */
   diagnosisHref?: string;
+  /** 「この一覧以外は両商品とも同じ」の注記（VisualKeyDifferences の commonNote へ渡す） */
+  commonNote?: string;
 }
 
-const { left, right, rows, checkedAt, diagnosisHref } = Astro.props;
+const { left, right, rows, checkedAt, diagnosisHref, commonNote } = Astro.props;
 ---
 {/*
   記事比較の標準骨格（Article Layout v3、2026-08-18 更新）:
@@ -53,6 +55,7 @@ const { left, right, rows, checkedAt, diagnosisHref } = Astro.props;
     leftLabel={`${left.brand} ${left.line}`}
     rightLabel={`${right.brand} ${right.line}`}
     items={rows}
+    commonNote={commonNote}
   />
   <NextStepBlock
     left={{ label: `${left.brand} ${left.line}`, href: left.purchaseHref, productId: left.productId }}
