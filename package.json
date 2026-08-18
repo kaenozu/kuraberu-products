@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "@typescript-eslint/parser": "8.65.0",
+    "@typescript-eslint/parser": "8.67.0",
     "cookie": "2.0.1",
     "eslint": "10.8.0",
     "eslint-plugin-astro": "3.0.1",
