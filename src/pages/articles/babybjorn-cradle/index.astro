@@ -122,6 +122,10 @@ const differenceRows: DifferenceRow[] = [
       <a href="#faq">FAQ</a>
     </nav>
 
+    <div class="verification-summary" aria-label="記事情報の確認状況">
+      <p>商品情報確認日: <time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p>
+    </div>
+
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
     <ArticleComparisonV2
       left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleOfficialProductUrl, guidePoints: [cradleCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-cradle:left'].purchaseUrl, productId: 'babybjorn-cradle'}}

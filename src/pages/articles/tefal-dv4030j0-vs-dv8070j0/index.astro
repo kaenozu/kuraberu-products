@@ -30,10 +30,10 @@ const faqEntries = [
 ] as const;
 const keyDiffRows: KeyDiffRow[] = [
   {label: 'スチーム量', left: '通常平均13g/分・ジェット最大16g/分', right: '平均17g/分', highlight: 'right', highlightNote: '平均値が大きい'},
-  {label: '立ち上がり', left: '約40秒', right: '約19秒', highlight: 'right', highlightNote: '約21秒短い', bar: {left: 40, right: 19}},
+  {label: '立ち上がり', left: '約40秒', right: '約19秒', highlight: 'right', highlightNote: '約21秒短い', bar: {left: 40, right: 19}, direction: 'lower-is-better'},
   {label: '連続運転時間', left: '約9分', right: '約14分', highlight: 'right', highlightNote: '約5分長い', bar: {left: 9, right: 14}},
   {label: '水タンク容量', left: '120mL', right: '140mL', highlight: 'right', highlightNote: '20mL多い', bar: {left: 120, right: 140}},
-  {label: '本体重量', left: '約690g', right: '約680g', highlight: 'right', highlightNote: '約10g軽い', bar: {left: 690, right: 680}},
+  {label: '本体重量', left: '約690g', right: '約680g', highlight: 'right', highlightNote: '約10g軽い', bar: {left: 690, right: 680}, direction: 'lower-is-better'},
   {label: 'かけ面', left: 'アルミニウム＋PTFE', right: 'セラミック'},
 ];
 ---
