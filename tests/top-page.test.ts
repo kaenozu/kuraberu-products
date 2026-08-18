@@ -32,7 +32,7 @@ describe("top page (rendered dist)", () => {
     expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
       3,
     );
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(6);
+    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(4);
 
     // config のパスはすべて publicArticleMetadata に存在する（存在しないパスはゲートも落とす）
     for (const path of ARTICLE_LAYOUT.topPage.featuredPaths) {
@@ -88,6 +88,25 @@ describe("top page (rendered dist)", () => {
     for (const [name] of expectedCategories) {
       expect(optionCategories).toContain(name);
     }
+  });
+
+  it("renders a labeled 最近の比較 section that links to the article index", () => {
+    const section = topHtml.match(
+      /<section\b[^>]*data-top-latest[^>]*>([\s\S]*?)<\/section\s*>/i,
+    );
+    expect(section).not.toBeNull();
+    expect(section![1]).toContain("最近の比較");
+    expect(section![1]).toContain("最近追加・更新した比較");
+    expect(section![1]).toMatch(/href="\/articles\/"/);
+    // 最新記事カードが描画されている
+    const cards = [...section![1].matchAll(/\barticle-list-card\b/g)].length;
+    expect(cards).toBeGreaterThanOrEqual(3);
+  });
+
+  it("links to the article index from the featured section (もっと見る)", () => {
+    expect(topHtml).toMatch(
+      /<section\b[^>]*data-top-featured[^>]*>[\s\S]*?<\/section\s*>\s*<p class="meta wrap"><a href="\/articles\/">もっと見る →<\/a><\/p>/i,
+    );
   });
 });
 
@@ -150,7 +169,7 @@ describe("article card content types (rendered dist)", () => {
   });
 
   it("keeps the card tag labels consistent with the article metadata", () => {
-    // 現行データではトップページの記事カードは全て比較記事（featured 5 件 +
+    // 現行データではトップページの記事カードは全て比較記事（featured 4 件 +
     // 最新 6 件）なので、比較記事ラベルが描画される。
     const comparisonLabel = ARTICLE_LAYOUT.contentTypes.comparison.label;
     expect(topHtml).toContain(`>${comparisonLabel}</span>`);

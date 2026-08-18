@@ -177,7 +177,10 @@ BaseLayout が `<meta name="article:content-type" content="guide|comparison">` �
   件数が多い順 → 名前順。リンク先は `/articles/?category=…`（一覧ページの
   クライアント側フィルタが URL パラメータを読んで絞り込む）。
 - **よく比較される商品**（`data-top-featured`）: `topPage.featuredPaths` に
-  載せた比較記事（3〜6 件）をカードで表示する。パスは必ず `articleMetadata` に存在させる。
+  載せた比較記事（**3〜4 件**）をカードで表示する。パスは必ず `articleMetadata` に存在させる。
+  記事一覧を兼ねさせず、セクション直後に「もっと見る → /articles/」を置く。
+- **最近の比較**（`data-top-latest`）: 追加日順の最新記事を**見出し付きセクション**として
+  表示する。featured（人気・編集選定）とは意味を分けた入口で、「もっと見る → /articles/」を持つ。
 
 検証は 2 段構え。
 
