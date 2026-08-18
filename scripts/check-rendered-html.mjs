@@ -350,6 +350,55 @@ export function validateArticleCardThumbnails(relative, html) {
   return errors;
 }
 
+// トップページのファーストビューには商品検索フォームが必須。
+// 送信先は記事一覧の /articles/?q=…（article-discovery.js が URL パラメータを読む）。
+export function validateTopSearch(relative, html) {
+  if (relative !== "index.html") return [];
+  const errors = [];
+  const form = html.match(
+    /<form\b[^>]*\bdata-top-search\b[^>]*>([\s\S]*?)<\/form>/i,
+  );
+  if (!form) {
+    errors.push(
+      "index.html: top page must render a search form with data-top-search",
+    );
+    return errors;
+  }
+  if (
+    !/<form\b[^>]*\bdata-top-search\b[^>]*action="\/articles\/"/i.test(html)
+  ) {
+    errors.push(
+      'index.html: top search form must submit to action="/articles/"',
+    );
+  }
+  if (!/<input\b[^>]*name="q"/.test(form[1])) {
+    errors.push("index.html: top search form must contain an input named q");
+  }
+  if (!/<button\b[^>]*type="submit"/.test(form[1])) {
+    errors.push("index.html: top search form must contain a submit button");
+  }
+  return errors;
+}
+
+// 記事カードには「向き」（選び分け）の1行が必須（audiences 由来）。
+// 記事一覧の検索結果カード（article-discovery.js の createCard）も同じ行を
+// 描画するため、静的カード側の欠落を fail-closed で検出する。
+export function validateArticleCardAudiences(relative, html) {
+  const errors = [];
+  for (const card of collectArticleCards(html)) {
+    const line =
+      card.match(
+        /<p\b[^>]*class="[^"]*\bcard-audiences\b[^"]*"[^>]*>([\s\S]*?)<\/p>/,
+      )?.[1] ?? "";
+    if (!line.trim()) {
+      errors.push(
+        `${relative}: article card must render a card-audiences line with the 向き selection`,
+      );
+    }
+  }
+  return errors;
+}
+
 // 「根拠・確認先」列（4列目）を持つ比較表は、スマホでは
 // <details class="source-toggle"> で折りたたむ（CSS-only、docs/article-layout-v3-2026-08.md）。
 // 根拠列テーブルを描画する記事にはトグルが必須、逆にトグルのみ存在して
@@ -748,6 +797,16 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     }
 
     errors.push(...validateArticleCardThumbnails(file, html));
+    errors.push(...validateArticleCardAudiences(file, html));
+  } // トップページの検索フォーム（index.html のみ。fixture 等で無ければスキップ）。
+  const topPagePath = path.join(distDirectory, "index.html");
+  if (fs.existsSync(topPagePath)) {
+    errors.push(
+      ...validateTopSearch(
+        path.relative(distDirectory, topPagePath).replace(/\\/g, "/"),
+        fs.readFileSync(topPagePath, "utf8"),
+      ),
+    );
   }
 
   // Content leakage guard: article-specific copy must never leak into other pages.

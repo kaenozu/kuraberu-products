@@ -36,7 +36,12 @@ const categories = [...categoryCounts.entries()]
   <section class="wrap section section-intro">
     <p class="eyebrow">くらべる商品メモ</p>
     <h1>くらべて、選ぶ。</h1>
-    <p class="lead">公式情報と確認状況を分けて、商品の選択に役立つ情報を整理しています。</p>
+    <p class="lead">似ていて迷う2商品を、違いと「どっち向き？」で比較します。メーカー公式情報を中心に確認しています。</p>
+    <form class="top-search" role="search" aria-label="比較記事を検索" data-top-search action="/articles/" method="get">
+      <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索（例: 電気ケトル、軽い）" aria-label="商品名・用途・悩みで検索" />
+      <button type="submit" class="secondary-button">検索</button>
+    </form>
+    <p class="meta">迷ったら <a href="/tools/product-finder/">30秒で診断</a> もどうぞ。</p>
   </section>
 
   <section class="wrap section" data-top-categories>

@@ -472,3 +472,38 @@ describe("article trust line (rendered dist)", () => {
     }
   });
 });
+
+describe("article card audiences 向き line (rendered dist)", () => {
+  it("declares non-empty audiences for every public article", () => {
+    for (const article of publicArticleMetadata) {
+      expect(
+        article.audiences.length,
+        `${article.id}: audiences must be non-empty for the card 向き line`,
+      ).toBeGreaterThan(0);
+    }
+  });
+
+  it("renders the 向き line on every ArticleCard on the top and listing pages", () => {
+    const pages = [
+      "dist/index.html",
+      "dist/articles/index.html",
+      ...readdirSync("dist/articles/page", { withFileTypes: true })
+        .filter((entry) => entry.isDirectory())
+        .map((entry) => `dist/articles/page/${entry.name}/index.html`),
+    ];
+    let cardCount = 0;
+    for (const file of pages) {
+      const html = readFileSync(file, "utf8");
+      for (const card of html.matchAll(
+        /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*data-content-type="(?:guide|comparison)"[^>]*>([\s\S]*?)<\/article>/gi,
+      )) {
+        cardCount += 1;
+        expect(
+          /<p class="card-audiences">向き: [^<]+<\/p>/.test(card[1]),
+          `card on ${file} must render the 向き line`,
+        ).toBe(true);
+      }
+    }
+    expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);
+  });
+});

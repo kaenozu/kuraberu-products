@@ -51,6 +51,19 @@ describe("top page (rendered dist)", () => {
     expect(hrefs).toEqual(ARTICLE_LAYOUT.topPage.featuredPaths);
   });
 
+  it("renders the FV search form submitting to /articles/?q=", () => {
+    const form = topHtml.match(
+      /<form\b[^>]*data-top-search[^>]*>([\s\S]*?)<\/form>/i,
+    );
+    expect(form).not.toBeNull();
+    expect(topHtml).toContain("data-top-search");
+    expect(topHtml).toMatch(
+      /<form\b[^>]*data-top-search[^>]*action="\/articles\/"/i,
+    );
+    expect(form![1]).toMatch(/<input\b[^>]*name="q"/);
+    expect(form![1]).toMatch(/<button\b[^>]*type="submit"/);
+  });
+
   it("renders category entries for categories with >= categoryMinArticles articles", () => {
     const section = topHtml.match(
       /<section\b[^>]*data-top-categories[^>]*>([\s\S]*?)<\/section\s*>/i,
