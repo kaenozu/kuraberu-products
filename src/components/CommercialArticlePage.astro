@@ -37,11 +37,13 @@ const [leftRakutenProduct, rightRakutenProduct] = await Promise.all([
   resolveRakutenProduct(seed.leftProduct, leftTerms),
   resolveRakutenProduct(seed.rightProduct, rightTerms),
 ]);
-const rows: DifferenceRow[] = [
-  { label: '主な比較軸', left: seed.leftPoint, right: seed.rightPoint },
-  { label: '公式情報で確認する項目', left: '仕様・サイズ・対応機能', right: '仕様・サイズ・対応機能' },
-  { label: '価格・在庫', left: '販売ページで確認', right: '販売ページで確認' },
-];
+const rows: readonly DifferenceRow[] = seed.verifiedRows?.length
+  ? seed.verifiedRows
+  : [
+      { label: '主な比較軸', left: seed.leftPoint, right: seed.rightPoint },
+      { label: '公式情報で確認する項目', left: '仕様・サイズ・対応機能', right: '仕様・サイズ・対応機能' },
+      { label: '価格・在庫', left: '販売ページで確認', right: '販売ページで確認' },
+    ];
 const faq = [
   {
     question: 'この記事で「売れ筋」として何を比べていますか？',
@@ -63,6 +65,14 @@ const faq = [
     <h1>{article.headline}</h1>
     <ComparisonMemoButton articleId={article.id} />
     <TrustLine checkedAt={article.productInfoCheckedAt} />
+    {seed.officialSources?.length ? (
+      <section class="source-note" aria-labelledby="official-sources">
+        <h2 id="official-sources">公式の確認先</h2>
+        <ul>
+          {seed.officialSources.map((source) => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a></li>)}
+        </ul>
+      </section>
+    ) : null}
 
     <p>{article.summary} ここでは、メーカー公式ページで確認できる仕様と、販売ページで購入時に確認する項目を分けて整理します。</p>
     <h2 id="key-differences">違いを確認する</h2>

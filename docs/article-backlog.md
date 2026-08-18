@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（33本）
+## 現在の公開済み（58本）
 
 | slug                                             | 状態     |
 | ------------------------------------------------ | -------- |
@@ -47,6 +47,26 @@
 | `yamazaki-free-broom-32-vs-45`                   | 公開済み |
 | `yamazaki-tower-desk-panel-vs-pen-stand`         | 公開済み |
 | `zojirushi-ck-pa08-vs-ck-dc08`                   | 公開済み |
+| `panasonic-nt-t501-vs-nt-d700`                   | 公開済み |
+| `panasonic-ne-bs9c-vs-ne-ubs10c`                 | 公開済み |
+| `panasonic-mc-jp860k-vs-mc-sb70km`               | 公開済み |
+| `panasonic-sq-ld560-vs-sq-ld540`                 | 公開済み |
+| `panasonic-ni-fs70a-vs-ni-fs60b`                 | 公開済み |
+| `panasonic-eh-na0j-vs-eh-na0g`                   | 公開済み |
+| `panasonic-mc-sb53k-vs-mc-sb33j`                 | 公開済み |
+| `panasonic-ew-dp57-vs-ew-dt73`                   | 公開済み |
+| `panasonic-ew-da19-vs-ew-da49`                   | 公開済み |
+| `panasonic-es-lv9w-vs-es-lv7w`                   | 公開済み |
+| `panasonic-eh-nc80-vs-eh-nc50`                   | 公開済み |
+| `panasonic-eh-na0k-vs-eh-ne9n`                   | 公開済み |
+| `panasonic-ep-ma110-vs-ep-ma121`                 | 公開済み |
+| `panasonic-es-wp9b-vs-es-wg0b`                   | 公開済み |
+| `logicool-mx-keys-s-vs-mx-keys-mini`             | 公開済み |
+| `logicool-mx-keys-s-for-mac-vs-k780`             | 公開済み |
+| `logicool-k650-vs-k580`                          | 公開済み |
+| `logicool-mx-master-3s-vs-m650`                  | 公開済み |
+| `logicool-lift-vs-m550`                          | 公開済み |
+| `logicool-zone-vibe-100-vs-zone-300`             | 公開済み |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
