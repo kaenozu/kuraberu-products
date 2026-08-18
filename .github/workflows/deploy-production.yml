@@ -111,6 +111,9 @@ jobs:
       - name: Upload acceptance reports
         # Preserve the run's machine-readable evidence (build and post-deploy
         # verification report.json) even when the verification ends BLOCKER.
+        # レポートは .acceptance/（隠しディレクトリ）配下に書かれるため、
+        # upload-artifact の既定（include-hidden-files: false）では対象外になり
+        # 「No files were found」で 0 件アップロードになる。必ず true にする。
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
@@ -118,6 +121,7 @@ jobs:
           path: |
             .acceptance/production-build-*/report.json
             .acceptance/post-deploy-*/report.json
+          include-hidden-files: true
           if-no-files-found: warn
           retention-days: 90
 
