@@ -310,6 +310,14 @@ export const articlePurchaseLinks = {
     name: "シャープ FU-S50",
     purchaseUrl: "https://a.r10.to/hPyHPd",
   },
+  "panasonic-f-px60c-vs-f-px70c:left": {
+    name: "パナソニック F-PX60C",
+    purchaseUrl: "https://a.r10.to/h8GBq2",
+  },
+  "panasonic-f-px60c-vs-f-px70c:right": {
+    name: "パナソニック F-PX70C",
+    purchaseUrl: "https://a.r10.to/h5bABV",
+  },
   "shupot:left": {
     name: "ピジョン 電動鼻吸い器 シュポット 電動 シュポット",
     purchaseUrl: "https://a.r10.to/hglrVW",

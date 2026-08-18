@@ -82,6 +82,15 @@
 
 - `tiger-pcj-a080-vs-pcm-a080` は記事実装済み（専用PRで検証中）。
 
+### パナソニック F-PX60C vs F-PX70C（実装済み・PR作成待ち）
+
+- 記事slug: `panasonic-f-px60c-vs-f-px70c`
+- 状態: 専用worktreeで実装。`DEPLOYMENT_ENV=preview pnpm verify` PASS。PR作成待ち。
+- 比較軸: 適用床面積、8畳の清浄時間、外形寸法、質量、風量、運転音、消費電力、集じんフィルター交換。
+- 公式ページ: [F-PX60C](https://panasonic.jp/airrich/products/F-PX60C.html) / [F-PX70C](https://panasonic.jp/airrich/products/F-PX70C.html)
+- 調査メモ: `C:\\Users\\neoen\\kuraberu-notes\\panasonic-aircleaner-f-px60c-vs-f-px70c-research-2026-08-18.md`
+- 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
+
 これまで「次の候補」に挙げていたパナソニック衣類乾燥除湿機・ティファール電気ケトル・シャープ空気清浄機・コンビチャイルドシートはすべて公開済みです。次は非育児カテゴリ（生活雑貨・デスク用品・キッチン家電など）から、公式ページで比較軸を裏取りできる2商品ペアを選定する。
 
 ### パナソニック NE-FL1A vs NE-FL1C（公開済み）
