@@ -96,7 +96,7 @@ const categories = [...categoryCounts.entries()]
     <p class="lead">よく選ばれている比較を、公式情報の確認状況と合わせてまとめています。</p>
     <div class="article-list">
       {featured.map((article) => (
-        <ArticleCard article={article} compact />
+        <ArticleCard article={article} />
       ))}
     </div>
   </section>
@@ -110,7 +110,7 @@ const categories = [...categoryCounts.entries()]
     <p class="lead">新しく追加・更新した比較からチェックできます。</p>
     <div class="article-list">
       {latest.length > 0 ? latest.map((article) => (
-        <ArticleCard article={article} compact />
+        <ArticleCard article={article} />
       )) : (
         <p>比較記事は準備中です。</p>
       )}

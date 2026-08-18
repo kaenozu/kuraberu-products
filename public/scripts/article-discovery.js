@@ -80,20 +80,23 @@
     link.textContent = article.headline;
     heading.append(link);
     body.append(heading);
-    const summary = document.createElement("p");
-    summary.className = "card-desc";
-    summary.textContent = article.summary;
-    body.append(summary);
+    if (
+      Array.isArray(article.subjects) &&
+      article.subjects.length >= 2 &&
+      article.subjects[0] &&
+      article.subjects[1]
+    ) {
+      const subjects = document.createElement("p");
+      subjects.className = "card-subjects";
+      subjects.textContent = article.subjects.join(" / ");
+      body.append(subjects);
+    }
     if ((article.audiences || []).length > 0) {
       const audiences = document.createElement("p");
       audiences.className = "card-audiences";
       audiences.textContent = `向き: ${article.audiences.join("・")}`;
       body.append(audiences);
     }
-    const meta = document.createElement("p");
-    meta.className = "meta";
-    meta.textContent = `更新日 ${article.modifiedAt}`;
-    body.append(meta);
     card.append(body);
     return card;
   };
