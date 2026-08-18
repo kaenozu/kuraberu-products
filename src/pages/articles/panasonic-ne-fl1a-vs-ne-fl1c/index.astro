@@ -7,6 +7,7 @@ import HeroComparison from '../../../components/HeroComparison.astro'
 import VisualKeyDifferences, { type KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
 import DecisionGuide from '../../../components/DecisionGuide.astro'
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import DiagnosisCta from '../../../components/DiagnosisCta.astro'
 import { panasonicNeFl1aVsNeFl1cArticle as articleMetadata } from '../../../content/articles'
 
 const left = {
@@ -147,6 +148,8 @@ const keyDiffRows: KeyDiffRow[] = [
         points: ['本体を少しでも軽くしたい（8.9kg）', '庫内幅332mmを確認して選びたい', '自動メニュー数3を使いたい'],
       }}
     />
+
+    <DiagnosisCta />
 
     <details class="fold-section" id="specs">
       <summary>詳細仕様（全部の数値を見る）</summary>

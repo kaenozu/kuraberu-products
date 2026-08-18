@@ -6,7 +6,6 @@ import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import DiagnosisCta from '../../../components/DiagnosisCta.astro';
 import {pigeonBottleSizeArticle as articleMetadata} from '../../../content/articles';
 import type {
   ComparisonCandidate, DifferenceRow,
@@ -112,11 +111,10 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: size240Candidate.product, line: size240Candidate.line, tagline: size240Candidate.audience, image: '/products/pigeon-bottle-160-240-240ml.jpg', imageAlt: `${size240Candidate.product} ${size240Candidate.line}`, officialHref: bottle240, guidePoints: [size240Candidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      diagnosisHref="/tools/product-finder/baby-bottle/"
     />
 
     <p>まとめ：新生児期からまず小容量を用意したいなら160ml、哺乳量が増えて大きめの容量を用意したいなら240mlが候補です。240mlにはMサイズ乳首が付属します。</p>
-
-    <DiagnosisCta />
 
     <details class="fold-section" id="specs">
       <summary>詳細仕様（公式ページで確認した項目）</summary>

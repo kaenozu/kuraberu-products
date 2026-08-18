@@ -301,6 +301,63 @@ export function validateArticleTrustLine(relative, html) {
   return errors;
 }
 
+// 比較記事の結論直後には診断誘導CTA（DiagnosisCta.astro）がちょうど1つ必要。
+// - 比較記事（article:content-type="comparison"）: 必ず1つ。
+//   href は診断ページ（/tools/product-finder/…）を指し、詳細仕様（#specs）より前に置く。
+// - 商品ガイド（article:content-type="guide"）: 診断CTAを出さない（hideDiagnosisCta 経由）。
+export function validateArticleDiagnosisCta(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const errors = [];
+  const contentType =
+    html.match(
+      /<meta name="article:content-type" content="(guide|comparison)">/i,
+    )?.[1] ?? null;
+  const ctaSections = [
+    ...html.matchAll(
+      /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
+    ),
+  ];
+
+  if (contentType === "guide") {
+    if (ctaSections.length > 0) {
+      errors.push(
+        `${relative}: guide article must not render a diagnosis CTA, found ${ctaSections.length}`,
+      );
+    }
+    return errors;
+  }
+
+  if (ctaSections.length !== 1) {
+    errors.push(
+      `${relative}: comparison article must render exactly one diagnosis CTA (diagnosis-cta), found ${ctaSections.length}`,
+    );
+    return errors;
+  }
+
+  const section =
+    html.match(
+      /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>[\s\S]*?<\/section>/i,
+    )?.[0] ?? "";
+  const href =
+    section.match(
+      /<a\b[^>]*class="[^"]*\bdiagnosis-cta__button\b[^"]*"[^>]*href="([^"]+)"/i,
+    )?.[1] ?? null;
+  if (!href || !href.startsWith("/tools/product-finder/")) {
+    errors.push(
+      `${relative}: diagnosis CTA must link to /tools/product-finder/…, found ${JSON.stringify(href)}`,
+    );
+  }
+
+  const specsIndex = html.indexOf('id="specs"');
+  const ctaIndex = html.indexOf('class="diagnosis-cta"');
+  if (specsIndex !== -1 && (ctaIndex === -1 || ctaIndex > specsIndex)) {
+    errors.push(
+      `${relative}: diagnosis CTA must appear right after the conclusion (before #specs)`,
+    );
+  }
+  return errors;
+}
+
 // 記事カード（ArticleCard.astro）は常に 132px のサムネイル枠を持つ。
 // 画像あり = <img class="card-thumb">、画像なし = カテゴリ名のテキストタイル
 // （<div class="card-tile">）。data-thumb 属性と実際の要素を照合し、
@@ -848,6 +905,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
+    errors.push(...validateArticleDiagnosisCta(relative, html));
     const midArticleCta = readArticleMidCta(relative, html, errors);
     errors.push(
       ...validateArticleCtas(
