@@ -102,6 +102,9 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 - **診断カテゴリが存在する記事** は該当カテゴリへ直接つなぐ:
   - 哺乳瓶記事 → `/tools/product-finder/baby-bottle/`（`pigeon-*`）
   - おむつ記事 → `/tools/product-finder/diaper/`（`moony-m`・`merries-*`・`pampers-newborn`・`shupot`）
+  - 水筒記事 → `/tools/product-finder/water-bottle/`（`thermos-tiger-bottle`）
+  - ドライヤー記事 → `/tools/product-finder/hair-dryer/`（`panasonic-eh-na9m-vs-eh-na7m`）
+  - 炊飯器記事 → `/tools/product-finder/rice-cooker/`（`tiger-jpv-l100-vs-jpv-m100`）
   - それ以外（診断カテゴリ未整備の記事）→ 診断一覧へ
 - 配置はテンプレートごとに共通化している:
   - `ArticleComparisonV2`（比較記事の標準テンプレート。2026-08-18 に旧ヒーロー記事

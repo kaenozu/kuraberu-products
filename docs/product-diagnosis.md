@@ -36,11 +36,17 @@ src/
 ├─ data/
 │  ├─ products/                 # 商品データ（カテゴリごと）
 │  │  ├─ baby-bottles.ts
-│  │  └─ diapers.ts
+│  │  ├─ diapers.ts
+│  │  ├─ water-bottles.ts
+│  │  ├─ hair-dryers.ts
+│  │  └─ rice-cookers.ts
 │  └─ diagnoses/                # 診断設定（カテゴリごと）
 │     ├─ index.ts               # レジストリ。新カテゴリはここに1行追加
 │     ├─ baby-bottle.ts
-│     └─ diaper.ts
+│     ├─ diaper.ts
+│     ├─ water-bottle.ts
+│     ├─ hair-dryer.ts
+│     └─ rice-cooker.ts
 └─ pages/tools/product-finder/
    ├─ index.astro               # カテゴリ一覧（レジストリから自動生成）
    └─ [category].astro          # 診断ページ（動的ルート。全カテゴリ共通）
