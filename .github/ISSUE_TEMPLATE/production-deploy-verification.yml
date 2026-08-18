@@ -7,7 +7,8 @@ body:
       value: |
         ## 使い方
 
-        - 本番デプロイ（`Deploy production` workflow、`expected_sha` + `confirm: DEPLOY`）の完了後にこのテンプレートで issue を 1 件立て、下記を埋めて**検証者・検証日**を記入して Close する。
+        - 本番デプロイ（`Deploy production` workflow、`expected_sha` + `confirm: DEPLOY`）の完了後、**デプロイ workflow がこのテンプレートの全フィールドを埋めた issue を自動起票**する（`[deploy-verification] <run-id> (YYYY-MM-DD)`）。人間は埋められた内容を確認して**検証者・検証日**を記入し Close する。
+        - 手動で立てる場合は下記を埋めて**検証者・検証日**を記入して Close する。
         - 手順の詳細は `docs/production-operations.md` の **Section 4「Public verification」/「Confirm the attempts history after a production run」** を参照。
         - 検証スクリプト: `Invoke-PostDeployVerification.ps1`（既定値 `-MaxAttempts 4 -RetryDelaySeconds 15`、検証前に 20 秒の伝播待ち）。
         - 機械可読証跡: artifact `acceptance-reports-<run-id>` / Check Run `production-post-deploy-verification`。

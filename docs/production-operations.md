@@ -130,7 +130,14 @@ To confirm the attempts history was recorded correctly from the actual run:
 
    Interpretation: `attempts=1` means the edge already served the exact HEAD; `attempts>1` with a trailing `PASS` is normal CDN convergence; any last result of `BLOCKER` means the deployment is not verified and the Rollback procedure applies.
 
-   **Per-deploy evidence issue.** Open one issue per production deploy using the `本番デプロイ検証証跡（post-deploy verification evidence）` issue template (`.github/ISSUE_TEMPLATE/production-deploy-verification.yml`), fill in the run ID / SHAs / step-log excerpt / step-summary / report.json field checklist / Check Run audit output, then record the verifier and date and close it. This keeps a searchable evidence trail (one issue per deploy) that can be audited independently of the Check Run history.
+   **Per-deploy evidence issue.** The deploy workflow **auto-files one evidence issue per production run** immediately after the Check Run step: `scripts/create-deploy-evidence-issue.mjs` reads the run's own `report.json` (result / attempts / resultsPerAttempt / checks / expectedCommitSha) plus the `production-post-deploy-verification` Check Run, and creates an issue titled `[deploy-verification] <run-id> (YYYY-MM-DD)` with every field of the `本番デプロイ検証証跡（post-deploy verification evidence）` template (`.github/ISSUE_TEMPLATE/production-deploy-verification.yml`) already filled in — run ID, expected/deployed SHAs, deploy time, artifact name, the `Verify public deployment` step-log excerpt, the step-summary attempts line, the report.json field checklist, and the Check Run audit JSON. The creation is idempotent (a re-run of the same run ID skips creation) and runs even on BLOCKER so every deploy leaves a searchable record. The human's job is then only to **verify the filled fields, record the verifier and date, and close the issue**. To create or inspect one manually, either use the issue template or run the script with `--dry-run` against a local report.json:
+
+   ```bash
+   node scripts/create-deploy-evidence-issue.mjs \
+     --report .acceptance/post-deploy-<stamp>/report.json \
+     --run-id <run-id> --expected-sha <sha> --site-url https://kuraberu-products.pages.dev \
+     --dry-run
+   ```
 
 ## 5. X announcement drafts
 
