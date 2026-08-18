@@ -262,6 +262,16 @@
       "note": ""
     },
     {
+      "articleId": "tiger-pcj-a080-vs-pcm-a080",
+      "checkedAt": "2026-08-17",
+      "claimsFingerprint": "sha256:4f333f12c7efe4ac1cbbcdffdc901923c26ebc803546845fca112ef218f68d21",
+      "officialUrls": [
+        "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pcj-a/",
+        "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pcm-a/"
+      ],
+      "note": ""
+    },
+    {
       "articleId": "tiger-pct-a120-vs-pct-a150",
       "checkedAt": "2026-08-18",
       "claimsFingerprint": "sha256:6cb95a705823face37b14df4959829e24610428547af0fb797a5910f2802d294",

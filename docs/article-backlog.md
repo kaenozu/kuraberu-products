@@ -60,6 +60,8 @@
 - 公式ページ: [BD-SX130K](https://kadenfan.hitachi.co.jp/wash/lineup/bd-sx130k/) / [BD-STX130K](https://kadenfan.hitachi.co.jp/wash/lineup/bd-stx130k/)
 - 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
 
+- `tiger-pcj-a080-vs-pcm-a080` は記事実装済み（専用PRで検証中）。
+
 これまで「次の候補」に挙げていたパナソニック衣類乾燥除湿機・ティファール電気ケトル・シャープ空気清浄機・コンビチャイルドシートはすべて公開済みです。次は非育児カテゴリ（生活雑貨・デスク用品・キッチン家電など）から、公式ページで比較軸を裏取りできる2商品ペアを選定する。
 
 ### パナソニック NE-FL1A vs NE-FL1C（公開済み）
