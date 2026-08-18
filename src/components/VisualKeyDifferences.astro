@@ -9,6 +9,12 @@ export interface KeyDiffRow {
   highlightNote?: string;
   /** 数値項目のみ: 左右の相対比率バーを表示する */
   bar?: { left: number; right: number };
+  /**
+   * 数値バーの「良い方向」。既定は大きい方が良い（higher-is-better）。
+   * lower-is-better（軽さ・価格・保冷温度など）の場合はバーを反転し、
+   * 優れた値の側が長くなるようにする。
+   */
+  direction?: "higher-is-better" | "lower-is-better";
 }
 
 interface Props {
@@ -44,9 +50,15 @@ const {
     {items.map((row) => {
       // 比率バーの0除算を防ぐ: 両方が0のときはバーを描画しない。
       const barTotal = row.bar ? row.bar.left + row.bar.right : 0;
-      const leftRatio =
+      const rawRatio =
         row.bar && barTotal > 0 ? (row.bar.left / barTotal) * 100 : null;
-      const rightRatio = leftRatio !== null ? 100 - leftRatio : null;
+      const leftRatio =
+        rawRatio === null
+          ? null
+          : row.direction === 'lower-is-better'
+            ? 100 - rawRatio
+            : rawRatio;
+      const rightRatio = leftRatio === null ? null : 100 - leftRatio;
       return (
         <div class="key-diff-row">
           <p class="key-diff-label">{row.label}</p>
