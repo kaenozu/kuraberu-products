@@ -78,13 +78,13 @@ export const ARTICLE_LAYOUT = {
   // 品質ゲート scripts/check-rendered-html.mjs と実ビルド整合テスト
   // （tests/top-page.test.ts）がここから期待値を導出する。
   topPage: {
-    // 「よく比較される商品」としてトップに出す比較記事（3〜6件）。
+    // 「よく比較される商品」としてトップに出す比較記事（3〜4件）。
     // パスは articleMetadata に存在し、ゲートが件数と存在を検証する。
+    // 意味の違う入口（人気・追加日）として、最近の比較セクションと併用する。
     featuredPaths: [
       "/articles/babybjorn-cradle/",
       "/articles/thermos-tiger-bottle/",
       "/articles/zojirushi-ck-pa08-vs-ck-dc08/",
-      "/articles/sharp-kc-s50-vs-fu-s50/",
       "/articles/panasonic-eh-na9m-vs-eh-na7m/",
     ],
     // トップのカテゴリ入口に載せる最低記事数（これ未満のカテゴリは非表示）。

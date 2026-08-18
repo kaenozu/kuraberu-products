@@ -106,6 +106,19 @@ To confirm the attempts history was recorded correctly from the actual run:
    gh run download <run-id> --repo kaenozu/kuraberu-products -n acceptance-reports-<run-id>
    ```
 
+   The reports are written under `.acceptance/` (a hidden directory), so the
+   `Upload acceptance reports` step must set `include-hidden-files: true`;
+   with the upload-artifact default (`false`) the step logs
+   `No files were found ... No artifacts will be uploaded.` and the artifact is
+   never created even though the step itself passes. If an old run was affected,
+   re-upload its evidence with the **`Re-upload deploy acceptance evidence`**
+   workflow (workflow_dispatch, input `run_id` = the deploy run ID). It rebuilds
+   the post-deploy `report.json` (result / attempts / resultsPerAttempt / final
+   attempt checks) from the `production-post-deploy-verification` Check Run — the
+   only permanent record of the attempts history — via
+   `scripts/reupload-deploy-evidence.mjs` and uploads it as
+   `acceptance-reports-<run-id>` with `include-hidden-files: true`.
+
    The artifact name is printed in the `Production deployment` step summary. The local re-run above remains the way to produce a report from your own host (e.g. against a rolled-back deployment), and the step logs and summary are the run's own non-downloadable evidence.
 
    Every deploy attempt also creates a **Check Run** named `production-post-deploy-verification` on the deployed commit, with conclusion `success`/`failure` and the attempts history in its output (created even when verification BLOCKERs or never ran, so the history is complete). Audit it mechanically via the Checks API:

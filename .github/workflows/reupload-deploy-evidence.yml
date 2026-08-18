@@ -1,0 +1,51 @@
+name: Re-upload deploy acceptance evidence
+
+# 過去の本番デプロイ run の post-deploy 検証 report.json（attempts 履歴を含む）を
+# Check Run から再構築し、acceptance-reports-<run-id> artifact として再アップロードする。
+# 使用場面: upload-artifact の include-hidden-files 既定値（false）により
+# .acceptance/ 配下の report.json がアップロードされなかった run の証跡復旧。
+# 使い方: この workflow を workflow_dispatch で起動し、復旧対象の
+# deploy-production run ID を run_id に入力する。
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Deploy production run ID to rebuild the post-deploy report from
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  reupload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
+        with:
+          node-version-file: .node-version
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Rebuild post-deploy report from the check run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/reupload-deploy-evidence.mjs --run-id ${{ inputs.run_id }}
+
+      - name: Upload rebuilt acceptance reports
+        # 再構築した report.json も .acceptance/（隠しディレクトリ）配下に書くため、
+        # deploy-production.yml と同様に include-hidden-files: true が必須。
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: acceptance-reports-${{ inputs.run_id }}
+          path: .acceptance/post-deploy-*/report.json
+          include-hidden-files: true
+          overwrite: true
+          retention-days: 90

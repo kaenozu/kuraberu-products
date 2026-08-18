@@ -75,8 +75,14 @@ const categories = [...categoryCounts.entries()]
       ))}
     </div>
   </section>
+  <p class="meta wrap"><a href="/articles/">もっと見る →</a></p>
 
-  <section class="section wrap article-index">
+  <section class="section wrap article-index" data-top-latest>
+    <div class="subsection-heading">
+      <p class="section-label">最近の比較</p>
+      <h2>最近追加・更新した比較</h2>
+    </div>
+    <p class="lead">新しく追加・更新した比較からチェックできます。</p>
     <div class="article-list">
       {latest.length > 0 ? latest.map((article) => (
         <ArticleCard article={article} />
@@ -84,7 +90,7 @@ const categories = [...categoryCounts.entries()]
         <p>比較記事は準備中です。</p>
       )}
     </div>
-    <p class="meta">ほかにも記事は <a href="/articles/">比較記事一覧</a> から探せます。</p>
+    <p class="meta"><a href="/articles/">もっと見る →</a></p>
   </section>
 
   <section class="section wrap article-index">
