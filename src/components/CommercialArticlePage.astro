@@ -44,10 +44,21 @@ const rows: readonly DifferenceRow[] = seed.verifiedRows?.length
       { label: '公式情報で確認する項目', left: '仕様・サイズ・対応機能', right: '仕様・サイズ・対応機能' },
       { label: '価格・在庫', left: '販売ページで確認', right: '販売ページで確認' },
     ];
+if (
+  seed.productInfoCheckedAt &&
+  (!seed.verifiedRows?.length ||
+    seed.verifiedRows.some((row) =>
+      /公式仕様で確認する項目|公式情報で確認する項目/.test(`${row.label}${row.left}${row.right}`),
+    ))
+) {
+  throw new Error(
+    `Commercial article ${articleId} contains placeholder comparison rows; add verified values before publishing`,
+  );
+}
 const faq = [
   {
-    question: 'この記事で「売れ筋」として何を比べていますか？',
-    answer: '検索需要が見込まれる定番カテゴリから、比較検討されやすい2商品を候補として整理しています。ランキング順位や価格を保証するものではありません。',
+    question: '比較対象はどのように選んでいますか？',
+    answer: 'メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。ランキング順位や価格を保証するものではありません。',
   },
   {
     question: '価格や在庫は確認できますか？',
