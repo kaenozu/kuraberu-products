@@ -17,6 +17,8 @@ import {
   validateArticleTrustLine,
   validateArticleDiagnosisCta,
   validateTopSearch,
+  validateHeaderNav,
+  validateComparisonCardLabels,
   validateSourceToggle,
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
@@ -58,9 +60,14 @@ const fourCtas =
 const oneEndCta = validCta("https://a.r10.to/one");
 
 function validPage(body: string) {
+  // BaseLayout 相当のヘッダー（ロゴ + details.nav-toggle + nav.navlinks）と
+  // comparison-card-labels マーカー（head の meta。コメントだと注入本文の
+  // 未終了コメント検知を壊すため meta で持つ）を含める
+  // （validateHeaderNav / validateComparisonCardLabels ゲートが要求するため）。
+  // ヘッダーリンクはアンカー（#）にして broken-internal-link 検知を避ける。
   return `<!doctype html>
-<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.invalid/"></head>
-<body><main><h1>Fixture</h1>${body}</main></body></html>`;
+<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.invalid/"><meta name="comparison-card-labels" content="present"></head>
+<body><header><div class="wrap nav"><a class="brand" href="#">Fixture</a><details class="nav-toggle"><summary></summary><nav class="navlinks"><a href="#menu">比較記事</a></nav></details></div></header><main><h1>Fixture</h1>${body}</main></body></html>`;
 }
 
 function sectionsOf(html: string) {
@@ -386,7 +393,7 @@ describe("article product count meta", () => {
     mkdirSync(diagnosisDir, { recursive: true });
     writeFileSync(
       path.join(diagnosisDir, "index.html"),
-      '<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.com/tools/product-finder/"></head><body><main><h1>商品選択診断</h1><p>テスト用スタブ</p></main></body></html>',
+      validPage("<p>テスト用スタブ</p>"),
     );
     writeFileSync(
       path.join(articlesDir, "index.html"),
@@ -1035,6 +1042,105 @@ describe("top page search form", () => {
   it("ignores non-top pages", () => {
     expect(
       validateTopSearch("articles/index.html", topPage(validForm)),
+    ).toEqual([]);
+  });
+});
+
+describe("header mobile menu (validateHeaderNav)", () => {
+  const header = (inner: string) => `<header>${inner}</header>`;
+  const validHeader = header(
+    '<div class="wrap nav"><a class="brand" href="/">サイト</a><details class="nav-toggle"><summary>メニュー</summary><nav class="navlinks"><a href="/articles/">比較記事</a></nav></details></div>',
+  );
+
+  it("accepts the logo + nav-toggle + navlinks header", () => {
+    expect(validateHeaderNav("index.html", validHeader)).toEqual([]);
+  });
+
+  it("rejects a page without a header", () => {
+    expect(validateHeaderNav("index.html", "<main>hi</main>")).toEqual([
+      "index.html: page must render a header",
+    ]);
+  });
+
+  it("rejects a header without the nav-toggle details", () => {
+    expect(
+      validateHeaderNav(
+        "index.html",
+        header('<a class="brand" href="/">サイト</a>'),
+      ),
+    ).toEqual([
+      'index.html: header must render the mobile menu (<details class="nav-toggle">)',
+    ]);
+  });
+
+  it("rejects a non-nested nav-toggle (summary/nav outside details)", () => {
+    expect(
+      validateHeaderNav(
+        "index.html",
+        header(
+          '<details class="nav-toggle"></details><summary>x</summary><nav class="navlinks"></nav>',
+        ),
+      ),
+    ).toEqual([
+      "index.html: nav-toggle must contain a <summary> (hamburger trigger)",
+      "index.html: nav-toggle must contain the nav.navlinks link group",
+    ]);
+  });
+
+  it("rejects a nav-toggle without a summary trigger", () => {
+    expect(
+      validateHeaderNav(
+        "index.html",
+        header(
+          '<details class="nav-toggle"><nav class="navlinks"><a href="/">x</a></nav></details>',
+        ),
+      ),
+    ).toEqual([
+      "index.html: nav-toggle must contain a <summary> (hamburger trigger)",
+    ]);
+  });
+
+  it("rejects a nav-toggle without the navlinks group", () => {
+    expect(
+      validateHeaderNav(
+        "index.html",
+        header(
+          '<details class="nav-toggle"><summary>メニュー</summary></details>',
+        ),
+      ),
+    ).toEqual([
+      "index.html: nav-toggle must contain the nav.navlinks link group",
+    ]);
+  });
+});
+
+describe("comparison card labels script (validateComparisonCardLabels)", () => {
+  const withTable = (table: string) =>
+    `<main>${table}</main><!-- comparison-card-labels -->`;
+
+  it("accepts a comparison table with the label script marker", () => {
+    expect(
+      validateComparisonCardLabels(
+        "articles/x/index.html",
+        withTable('<table class="comparison"><thead></thead></table>'),
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a comparison table without the label script", () => {
+    expect(
+      validateComparisonCardLabels(
+        "articles/x/index.html",
+        '<table class="comparison"><thead></thead></table>',
+      ),
+    ).toEqual([
+      "articles/x/index.html: pages with a comparison table must include the comparison-card-labels script",
+    ]);
+  });
+
+  it("ignores pages without a comparison table", () => {
+    expect(
+      validateComparisonCardLabels("index.html", "<main>no table</main>"),
     ).toEqual([]);
   });
 });

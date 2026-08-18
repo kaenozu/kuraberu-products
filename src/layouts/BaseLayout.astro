@@ -154,12 +154,17 @@ const breadcrumbStructuredData = article
     <header class="site-header">
       <div class="wrap nav">
         <a class="brand" href="/">{site.name}</a>
-        <nav class="navlinks" aria-label="主要メニュー">
-          <a href="/articles/" aria-current={currentPath.startsWith('/articles/') ? 'page' : undefined}>比較記事</a>
-          <a href="/memo/" aria-current={currentPath === '/memo/' ? 'page' : undefined}>比較メモ</a>
-          <a href="/tools/product-finder/" aria-current={currentPath.startsWith('/tools/product-finder/') ? 'page' : undefined}>商品診断</a>
-          <a href="/about/" aria-current={currentPath === '/about/' ? 'page' : undefined}>運営者情報</a>
-        </nav>
+        <!-- スマホ（<560px）では ロゴ + ☰ になり、リンクはドロワーパネルに格納される。
+             details/summary のネイティブ開閉を使うため JS 不要。 -->
+        <details class="nav-toggle">
+          <summary aria-label="メニューを開く"><span class="nav-toggle-icon" aria-hidden="true"></span></summary>
+          <nav class="navlinks" aria-label="主要メニュー">
+            <a href="/articles/" aria-current={currentPath.startsWith('/articles/') ? 'page' : undefined}>比較記事</a>
+            <a href="/memo/" aria-current={currentPath === '/memo/' ? 'page' : undefined}>比較メモ</a>
+            <a href="/tools/product-finder/" aria-current={currentPath.startsWith('/tools/product-finder/') ? 'page' : undefined}>商品診断</a>
+            <a href="/about/" aria-current={currentPath === '/about/' ? 'page' : undefined}>運営者情報</a>
+          </nav>
+        </details>
       </div>
     </header>
     <main id="main-content" tabindex="-1"><slot /></main>
@@ -171,5 +176,35 @@ const breadcrumbStructuredData = article
     </footer>
     <!-- クリック計測（プライバシー配慮型・同一オリジン）。詳細: docs/click-analytics.md -->
     <script is:inline src="/click-beacon.js" defer></script>
+    <!-- 比較表のスマホ比較カード表示用: 各セルへ列見出し（商品名）を data-label として付与する。
+         無くても表は読める（値のみ表示）ため段階的拡張。
+         marker: comparison-card-labels -->
+    <script is:inline>
+      (function () {
+        function labelComparisonTables() {
+          document.querySelectorAll("table.comparison").forEach(function (table) {
+            const thead = table.querySelector("thead");
+            const tbody = table.querySelector("tbody");
+            if (!thead || !tbody) return;
+            const headers = Array.prototype.slice.call(thead.querySelectorAll("th"));
+            if (headers.length < 2) return;
+            Array.prototype.forEach.call(tbody.querySelectorAll("tr"), function (row) {
+              const cells = row.querySelectorAll("td");
+              for (let i = 0; i < cells.length; i++) {
+                const header = headers[i + 1];
+                if (header && !cells[i].hasAttribute("data-label")) {
+                  cells[i].setAttribute("data-label", header.textContent.trim());
+                }
+              }
+            });
+          });
+        }
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", labelComparisonTables);
+        } else {
+          labelComparisonTables();
+        }
+      })();
+    </script>
   </body>
 </html>

@@ -95,6 +95,16 @@ a {
   text-decoration-thickness: 2px;
   text-underline-offset: 0.35rem;
 }
+/* スマホ用ハンバーガーメニュー（<560px）。
+   デスクトップでは summary を非表示にして navlinks を通常の横並び表示のままにする。
+   モバイルでは details のネイティブ開閉でリンクをドロワーパネルに出す（JS 不要）。 */
+.nav-toggle summary {
+  display: none;
+  list-style: none;
+}
+.nav-toggle summary::-webkit-details-marker {
+  display: none;
+}
 .eyebrow {
   text-transform: uppercase;
   color: var(--accent);
@@ -259,7 +269,7 @@ a {
 /* 記事カードは常に 132px のサムネイル枠を持つ（画像 or テキストタイル）。
    画像なし記事は .card-tile でカテゴリ名を表示し、全カードの見た目を統一する。 */
 .article-list-card {
-  max-width: 700px;
+  max-width: 900px;
   display: grid;
   grid-template-columns: 132px 1fr;
   gap: 1rem;
@@ -646,6 +656,17 @@ a {
   letter-spacing: -0.03em;
   text-wrap: balance;
 }
+/* 長い日本語商品名でもスマホのファーストビューがタイトルだけにならないよう上限を抑える。
+   全 h1 の基本ルールより後ろに置く（後続ルールに上書きされないため）。 */
+@media (max-width: 640px) {
+  .article-index h1,
+  .section-intro h1 {
+    font-size: clamp(1.8rem, 8vw, 2.4rem);
+  }
+  .article h1 {
+    font-size: clamp(1.6rem, 7.5vw, 2.2rem);
+  }
+}
 .article h2 {
   margin-top: 3rem;
   line-height: 1.45;
@@ -720,6 +741,58 @@ a {
   .source-toggle[open] ~ .table-scroll td:nth-child(4) {
     display: table-cell;
   }
+
+  /* スマホは表を横スクロールさせるのではなく「比較カード」形式に組む。
+     行 = 1 カード（項目名は全幅、各値に商品名ラベル）。ラベルは
+     BaseLayout の comparison-card-labels スクリプトが data-label を付与する。
+     JS が無くても項目名 + 値として読める段階的拡張。 */
+  .table-scroll {
+    overflow-x: visible;
+    margin-inline: 0;
+    padding-inline: 0;
+  }
+  .comparison {
+    min-width: 0;
+    display: block;
+    border-radius: 12px;
+  }
+  .comparison thead {
+    display: none;
+  }
+  .comparison tbody {
+    display: block;
+  }
+  .comparison tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem 0.75rem;
+    padding: 0.9rem;
+  }
+  .comparison tr + tr {
+    border-top: 1px solid var(--line);
+  }
+  .comparison th[scope="row"] {
+    grid-column: 1 / -1;
+    background: none;
+    padding: 0;
+    font-weight: 800;
+  }
+  .comparison td {
+    background: none !important;
+    padding: 0;
+    font-size: 0.92rem;
+  }
+  .comparison td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 0.15rem;
+  }
+  .comparison td:nth-child(4) {
+    grid-column: 1 / -1;
+  }
 }
 
 @media (min-width: 700px) {
@@ -731,16 +804,66 @@ a {
   .nav {
     min-height: 64px;
   }
-  .navlinks {
-    gap: 0.75rem;
-    font-size: 0.78rem;
-  }
   .wrap {
     width: min(100% - 1.5rem, 1120px);
   }
   .hero-actions {
     align-items: flex-start;
     flex-direction: column;
+  }
+  /* モバイル: ロゴ + ☰。リンクはドロワーに格納し、4リンクを横並べしない。 */
+  .nav-toggle {
+    position: relative;
+  }
+  .nav-toggle summary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--paper);
+    cursor: pointer;
+  }
+  .nav-toggle summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .nav-toggle-icon::before {
+    content: "\2630";
+    font-size: 1.15rem;
+    line-height: 1;
+  }
+  .nav-toggle[open] .nav-toggle-icon::before {
+    content: "\00d7";
+  }
+  .navlinks {
+    display: none;
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    z-index: 50;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+    min-width: 13.5rem;
+    padding: 0.4rem;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    box-shadow: 0 10px 28px rgba(26, 47, 35, 0.14);
+  }
+  .nav-toggle[open] .navlinks {
+    display: flex;
+  }
+  .navlinks a {
+    padding: 0.7rem 0.9rem;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+  .navlinks a:hover {
+    background: var(--sage, #f1f5f2);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -836,6 +959,18 @@ a {
     height: 96px;
   }
 }
+/* 480px 以下は記事カードを 1 カラム（横長サムネイル）にして本文列の窮屈さを解消する。 */
+@media (max-width: 480px) {
+  .article-list-card {
+    grid-template-columns: 1fr;
+  }
+  .article-list-card .card-thumb,
+  .article-list-card .card-tile {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+}
 
 .memo-control {
   display: flex;
@@ -911,6 +1046,16 @@ a {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.25rem;
+  }
+  /* トップ検索はスマホで縦積み（入力 + 全幅ボタン） */
+  .top-search {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: none;
+  }
+  .top-search .secondary-button {
+    width: 100%;
+    min-height: 44px;
   }
 }
 

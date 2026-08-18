@@ -10,9 +10,14 @@ interface Props {
    * 例: {'data-article-card': '', 'data-search': '…', 'data-category': '…', 'data-tags': '…'}
    */
   data?: Record<string, string>;
+  /**
+   * コンパクト表示（トップページ用）。説明文と更新日を省き、
+   * 画像 + タイトル + 向き の選択ファーストなカードにする。
+   */
+  compact?: boolean;
 }
 
-const {article, data} = Astro.props;
+const {article, data, compact = false} = Astro.props;
 ---
 
 <article
@@ -34,10 +39,10 @@ const {article, data} = Astro.props;
       <span class="tag tag--type">{contentTypeLabel(article.productCount)}</span>
     </span>
     <h2><a href={article.path}>{article.headline}</a></h2>
-    <p class="card-desc">{article.summary}</p>
+    {!compact && <p class="card-desc">{article.summary}</p>}
     {article.audiences.length > 0 && (
       <p class="card-audiences">向き: {article.audiences.join('・')}</p>
     )}
-    <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
+    {!compact && <p class="meta">更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>}
   </div>
 </article>
