@@ -1097,6 +1097,24 @@ describe("comparison card labels script (validateComparisonCardLabels)", () => {
     ]);
   });
 
+  it("accepts a comparison table with data-label on every cell", () => {
+    const table =
+      '<table class="comparison"><thead><tr><th>比較項目</th><th>A</th><th>B</th></tr></thead><tbody><tr><th scope="row">容量</th><td data-label="A">1L</td><td data-label="B">2L</td></tr></tbody></table>';
+    expect(
+      validateComparisonCardLabels("articles/x/index.html", withTable(table)),
+    ).toEqual([]);
+  });
+
+  it("rejects a comparison table whose cells lack data-label", () => {
+    const table =
+      '<table class="comparison"><thead><tr><th>比較項目</th><th>A</th><th>B</th></tr></thead><tbody><tr><th scope="row">容量</th><td>1L</td><td data-label="B">2L</td></tr></tbody></table>';
+    expect(
+      validateComparisonCardLabels("articles/x/index.html", withTable(table)),
+    ).toEqual([
+      "articles/x/index.html: comparison table cells must carry a data-label (mobile card view needs it)",
+    ]);
+  });
+
   it("ignores pages without a comparison table", () => {
     expect(
       validateComparisonCardLabels("index.html", "<main>no table</main>"),

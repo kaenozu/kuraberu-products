@@ -284,10 +284,12 @@ Hero「くらべて、選ぶ。」
 
 - ≤640px: 横スクロール表をやめ、`table.comparison` を「行 = 1 カード」に組み替える。
   thead は非表示、項目名（th[scope=row]）は全幅、各値は 2 カラム。
-- 各セルには BaseLayout の `comparison-card-labels` スクリプトが商品名（列見出し）を
-  `data-label` として付与し、`td::before` で表示する（JS なしでも項目名 + 値として読める段階的拡張）。
+- 各セルには商品名（列見出し）を **静的 HTML の `data-label` として焼き込み**、`td::before` で表示する。
+  2026-08-18 に全 28 記事の比較表へ機械付与済み（JS 無効でも項目名 + 値として成立）。
+  BaseLayout の `comparison-card-labels` スクリプトは未付与セルへのフォールバック。
 - 「根拠・確認先」列は従来どおり source-toggle で折りたたみ、開いたときは全幅表示。
-- ゲート `validateComparisonCardLabels` が比較表ページへのスクリプト同梱を要求。
+- ゲート `validateComparisonCardLabels` が比較表ページへのスクリプト同梱と**全セルの
+  data-label 焼き込み**を要求（fail-closed）。
 
 **その他**
 

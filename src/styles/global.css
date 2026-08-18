@@ -753,8 +753,9 @@ a {
 
   /* スマホは表を横スクロールさせるのではなく「比較カード」形式に組む。
      行 = 1 カード（項目名は全幅、各値に商品名ラベル）。ラベルは
-     BaseLayout の comparison-card-labels スクリプトが data-label を付与する。
-     JS が無くても項目名 + 値として読める段階的拡張。 */
+     静的 HTML へ data-label として焼き込み済み（BaseLayout の
+     comparison-card-labels スクリプトは JS 無効時のフォールバック）。
+     ゲート validateComparisonCardLabels が全セルの data-label を強制する。 */
   .table-scroll {
     overflow-x: visible;
     margin-inline: 0;

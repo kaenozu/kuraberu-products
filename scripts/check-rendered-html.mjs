@@ -515,13 +515,34 @@ export function validateHeaderNav(relative, html) {
 // が必ず同梱されている必要がある（fail-closed）。
 export function validateComparisonCardLabels(relative, html) {
   const errors = [];
-  if (!/<table\b[^>]*class="[^"]*\bcomparison\b[^"]*"/i.test(html)) {
+  const tables = [
+    ...html.matchAll(
+      /<table\b[^>]*class="[^"]*\bcomparison\b[^"]*"[^>]*>[\s\S]*?<\/table>/gi,
+    ),
+  ];
+  if (tables.length === 0) {
     return errors;
   }
   if (!/comparison-card-labels/.test(html)) {
     errors.push(
       `${relative}: pages with a comparison table must include the comparison-card-labels script`,
     );
+  }
+  // スマホの縦カード表示は静的 HTML の data-label で成立させる（JS はフォールバック）。
+  // 全セルに data-label が焼き込まれていることを fail-closed で検証する。
+  for (const table of tables) {
+    const body = table[0].match(/<tbody>([\s\S]*?)<\/tbody>/i)?.[1] ?? "";
+    for (const row of body.matchAll(/<tr\b[^>]*>([\s\S]*?)<\/tr>/gi)) {
+      const cells = [...row[1].matchAll(/<td\b[^>]*>/gi)];
+      for (const cell of cells) {
+        if (!/\bdata-label\s*=\s*"/.test(cell[0])) {
+          errors.push(
+            `${relative}: comparison table cells must carry a data-label (mobile card view needs it)`,
+          );
+          break;
+        }
+      }
+    }
   }
   return errors;
 }

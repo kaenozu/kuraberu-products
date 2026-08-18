@@ -159,16 +159,16 @@ const keyDiffRows: KeyDiffRow[] = [
         <table class="comparison">
           <thead><tr><th scope="col">比較項目</th><th scope="col">NE-FL1A</th><th scope="col">NE-FL1C</th></tr></thead>
           <tbody>
-            <tr><th scope="row">総庫内容量</th><td>{left.capacity}</td><td>{right.capacity}</td></tr>
-            <tr><th scope="row">庫内形状</th><td>フラット</td><td>フラット</td></tr>
-            <tr><th scope="row">庫内寸法</th><td>{left.cavity}</td><td>{right.cavity}</td></tr>
-            <tr><th scope="row">外形寸法</th><td>幅488mm×奥行380mm×高さ298mm</td><td>幅488mm×奥行380mm×高さ298mm</td></tr>
-            <tr><th scope="row">本体質量</th><td>{left.weight}</td><td>{right.weight}</td></tr>
-            <tr><th scope="row">消費電力</th><td>1.40kW</td><td>1400W</td></tr>
-            <tr><th scope="row">最高出力</th><td>{left.output}</td><td>{right.output}</td></tr>
-            <tr><th scope="row">自動メニュー数</th><td>{left.menus}</td><td>{right.menus}</td></tr>
-            <tr><th scope="row">センサー</th><td>蒸気センサー</td><td>蒸気センサー</td></tr>
-            <tr><th scope="row">お手入れ・庫内灯</th><td>{left.care}</td><td>{right.care}</td></tr>
+            <tr><th scope="row">総庫内容量</th><td data-label="NE-FL1A">{left.capacity}</td><td data-label="NE-FL1C">{right.capacity}</td></tr>
+            <tr><th scope="row">庫内形状</th><td data-label="NE-FL1A">フラット</td><td data-label="NE-FL1C">フラット</td></tr>
+            <tr><th scope="row">庫内寸法</th><td data-label="NE-FL1A">{left.cavity}</td><td data-label="NE-FL1C">{right.cavity}</td></tr>
+            <tr><th scope="row">外形寸法</th><td data-label="NE-FL1A">幅488mm×奥行380mm×高さ298mm</td><td data-label="NE-FL1C">幅488mm×奥行380mm×高さ298mm</td></tr>
+            <tr><th scope="row">本体質量</th><td data-label="NE-FL1A">{left.weight}</td><td data-label="NE-FL1C">{right.weight}</td></tr>
+            <tr><th scope="row">消費電力</th><td data-label="NE-FL1A">1.40kW</td><td data-label="NE-FL1C">1400W</td></tr>
+            <tr><th scope="row">最高出力</th><td data-label="NE-FL1A">{left.output}</td><td data-label="NE-FL1C">{right.output}</td></tr>
+            <tr><th scope="row">自動メニュー数</th><td data-label="NE-FL1A">{left.menus}</td><td data-label="NE-FL1C">{right.menus}</td></tr>
+            <tr><th scope="row">センサー</th><td data-label="NE-FL1A">蒸気センサー</td><td data-label="NE-FL1C">蒸気センサー</td></tr>
+            <tr><th scope="row">お手入れ・庫内灯</th><td data-label="NE-FL1A">{left.care}</td><td data-label="NE-FL1C">{right.care}</td></tr>
           </tbody>
         </table>
       </div>
