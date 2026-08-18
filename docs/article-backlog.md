@@ -82,10 +82,10 @@
 
 - `tiger-pcj-a080-vs-pcm-a080` は記事実装済み（専用PRで検証中）。
 
-### パナソニック F-PX60C vs F-PX70C（実装済み・PR作成待ち）
+### パナソニック F-PX60C vs F-PX70C（PR #279 でレビュー中）
 
 - 記事slug: `panasonic-f-px60c-vs-f-px70c`
-- 状態: 専用worktreeで実装。`DEPLOYMENT_ENV=preview pnpm verify` PASS。PR作成待ち。
+- 状態: PR #279 でレビュー中。`DEPLOYMENT_ENV=preview pnpm verify` PASS。
 - 比較軸: 適用床面積、8畳の清浄時間、外形寸法、質量、風量、運転音、消費電力、集じんフィルター交換。
 - 公式ページ: [F-PX60C](https://panasonic.jp/airrich/products/F-PX60C.html) / [F-PX70C](https://panasonic.jp/airrich/products/F-PX70C.html)
 - 調査メモ: `C:\\Users\\neoen\\kuraberu-notes\\panasonic-aircleaner-f-px60c-vs-f-px70c-research-2026-08-18.md`
