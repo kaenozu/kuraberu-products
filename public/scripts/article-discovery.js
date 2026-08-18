@@ -45,6 +45,7 @@
         ...(article.tags || []),
         ...(article.audiences || []),
         ...(article.uses || []),
+        ...(Array.isArray(article.subjects) ? article.subjects : []),
       ].join(" "),
     );
 
