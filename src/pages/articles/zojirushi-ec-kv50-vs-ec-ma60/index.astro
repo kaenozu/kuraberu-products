@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import RelatedArticles from '../../../components/RelatedArticles.astro'
+import PurchaseCard from '../../../components/PurchaseCard.astro'
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import {zojirushiCoffeeArticle as articleMetadata} from '../../../content/articles'
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+
+const kvOfficial = 'https://www.zojirushi.co.jp/syohin/kitchen/coffee_maker/ec-kv/'
+const maOfficial = 'https://www.zojirushi.co.jp/syohin/kitchen/coffee_maker/ec-ma/'
+const kvSearch = 'https://a.r10.to/h5QPUy'
+const maSearch = 'https://a.r10.to/h5Ob79'
+
+const kvModel = {brand: '象印', line: 'EC-KV50', image: '/products/zojirushi-ec-kv50.png', imageAlt: '象印 コーヒーメーカー EC-KV50', audience: 'ステンレスサーバーと3段階の濃度調節を確認したい人向け'}
+const maModel = {brand: '象印', line: 'EC-MA60', image: '/products/zojirushi-ec-ma60.png', imageAlt: '象印 コーヒーメーカー EC-MA60', audience: '容量と本体のコンパクトさを確認したい人向け'}
+
+const faqEntries = [
+  {question: '象印 EC-KV50 と EC-MA60 の違いは？', answer: '公式仕様では、EC-KV50は容量675mL・カップ5杯タイプ（カップ1杯約120mL）で、3段階濃度調節とステンレスサーバーを採用しています。EC-MA60は容量810mL・カップ6杯タイプ（カップ1杯約120mL）で、2段階濃度調節とガラス容器を採用しています。'},
+  {question: 'サイズと重さはどちらが小さい？', answer: '公式仕様では、EC-MA60は幅23×奥行15.5×高さ28cm、約1.7kgです。EC-KV50は幅24×奥行16.5×高さ31.5cm、約2.4kgです。'},
+  {question: '濃さを細かく選べるのはどっち？', answer: 'EC-KV50は公式ページで「マイルド」「レギュラー」「ストロング」の3段階濃度調節を案内しています。EC-MA60は2段階濃度調節タイプです。'},
+]
+
+const keyDiffRows: KeyDiffRow[] = [
+  // 容量とカップタイプは公式の「カップ1杯約120mL」を基準に比較できるが、
+  // どちらが多い方が良いとは限らないため優劣表示はしない（別項目に分離）。
+  {label: 'カップタイプ', left: '5杯', right: '6杯', highlight: null},
+  {label: '容量', left: '675mL', right: '810mL', highlight: null},
+  {label: '濃度調節', left: '3段階', right: '2段階', highlight: 'left', highlightNote: '選択肢が多い'},
+  {label: 'サーバー・容器', left: 'ステンレスサーバー', right: 'ガラス容器'},
+  {label: '外形寸法', left: '24×16.5×31.5cm', right: '23×15.5×28cm', highlight: 'right', highlightNote: '小さめ'},
+  {label: '質量', left: '約2.4kg', right: '約1.7kg', highlight: 'right', highlightNote: '約0.7kg軽い'},
+]
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">象印のEC-KV50とEC-MA60は、容量や抽出方法、濃度調節、本体サイズが異なるコーヒーメーカーです。この記事では、象印公式ページで確認できる仕様と、まだ販売先で確認が必要な情報を分けて整理します。</p>
+    <p class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></p>
+    <ArticleComparisonV2
+      left={{brand: kvModel.brand, line: kvModel.line, tagline: '濃さの選択肢なら', image: kvModel.image, imageAlt: kvModel.imageAlt, officialHref: kvOfficial, guidePoints: [kvModel.audience]}}
+      right={{brand: maModel.brand, line: maModel.line, tagline: '小ささ・軽さなら', image: maModel.image, imageAlt: maModel.imageAlt, officialHref: maOfficial, guidePoints: [maModel.audience]}}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+    <p>EC-KV50はステンレスサーバーと3段階濃度調節、EC-MA60はコンパクトな本体と2段階濃度調節が特徴です。容量の表記は公式ページのタイプ表示と仕様表で異なるため、購入前に必要な抽出量を確認してください。</p>
+
+    <details class="fold-section" id="specs"><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">EC-KV50</th><th scope="col">EC-MA60</th><th scope="col">根拠</th></tr></thead><tbody>
+      <tr><th scope="row">容量</th><td>675mL</td><td>810mL</td><td><a href={kvOfficial} target="_blank" rel="noopener noreferrer">KV公式</a> / <a href={maOfficial} target="_blank" rel="noopener noreferrer">MA公式</a></td></tr>
+      <tr><th scope="row">濃度調節</th><td>3段階</td><td>2段階</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">外形寸法</th><td>幅24×奥行16.5×高さ31.5cm</td><td>幅23×奥行15.5×高さ28cm</td><td>各公式商品ページ</td></tr>
+      <tr><th scope="row">質量</th><td>約2.4kg</td><td>約1.7kg</td><td>各公式商品ページ</td></tr>
+    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>象印公式ページでは、EC-KV50はステンレスサーバーや3段階濃度調節、EC-MA60は断熱スイングバスケットによる高温抽出や2段階濃度調節を案内しています。</p>
+    <div class="source-links"><a class="card-link" href={kvOfficial} target="_blank" rel="noopener noreferrer">EC-KV50 公式商品ページ →</a><a class="card-link" href={maOfficial} target="_blank" rel="noopener noreferrer">EC-MA60 公式商品ページ →</a></div>
+    <ArticleSocialProof query="象印 EC-KV50 EC-MA60 コーヒーメーカー" checkedAt="2026-08-17" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2>購入時の注意</h2><p>コーヒーメーカーは、必要な抽出量、サーバーの材質、濃度調節の段階、設置スペースを購入前に公式ページで確認してください。価格や在庫は販売先で変わります。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name="象印 EC-KV50" audience={kvModel.audience} href={kvSearch} imagePath={kvModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="象印 EC-MA60" audience={maModel.audience} href={maSearch} imagePath={maModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={kvOfficial} target="_blank" rel="noopener noreferrer">象印 EC-KV50 公式商品ページ</a>（2026-08-18確認）</li><li><a href={maOfficial} target="_blank" rel="noopener noreferrer">象印 EC-MA60 公式商品ページ</a>（2026-08-18確認）</li></ul>
+    <h2>調査方法・免責事項</h2><p>この比較は、象印公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
