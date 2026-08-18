@@ -1,5 +1,6 @@
 ---
 import { publicArticleMetadata } from '../content/articles';
+import { comparisonSubjects } from '../lib/article-subjects';
 import { selectRelatedArticles } from '../lib/related-articles';
 
 interface Props {
@@ -23,13 +24,17 @@ const { related, others } = selectRelatedArticles(
     <section class="related-articles section wrap" aria-labelledby="related-heading">
       <h2 id="related-heading">関連する比較記事</h2>
       <div class="article-list">
-        {related.map((article) => (
-          <article class="card article-list-card">
-            <span class="tag">{article.category}</span>
-            <h3><a href={article.path}>{article.headline}</a></h3>
-            <p>{article.summary}</p>
-          </article>
-        ))}
+        {related.map((article) => {
+          const subjects = comparisonSubjects(article);
+          return (
+            <article class="card article-list-card">
+              <span class="tag">{article.category}</span>
+              <h3><a href={article.path}>{article.headline}</a></h3>
+              {subjects && <p class="card-subjects">{subjects.join(' / ')}</p>}
+              <p class="card-audiences">向き: {article.audiences.join('・')}</p>
+            </article>
+          );
+        })}
       </div>
     </section>
   )
@@ -54,6 +59,12 @@ const { related, others } = selectRelatedArticles(
   .related-articles h2 {
     font-size: 1.25rem;
     margin-bottom: 1rem;
+  }
+  /* 関連カードはサムネイルを持たないため、.article-list-card の 132px サムネイル
+     列（grid-template-columns: 132px 1fr）を解除して本文を 1 カラムに広げる。 */
+  .related-articles .article-list-card {
+    grid-template-columns: 1fr;
+    max-width: none;
   }
   .related-links {
     list-style: none;
