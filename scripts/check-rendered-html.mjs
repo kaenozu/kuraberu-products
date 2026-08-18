@@ -688,14 +688,16 @@ export function validateTopPageCategories(topHtml, articlesIndexHtml) {
 }
 
 // トップページ（dist/index.html）の「よく比較される商品」を検証する。
-// config の topPage.featuredPaths（3〜6件）がすべてトップにリンクされ、
+// config の topPage.featuredPaths（3〜4件）がすべてトップにリンクされ、
 // リンク数が config と一致することを照合する。
+// 件数を絞ることで「人気（編集選定）」と「最近の比較（追加日）」の
+// 意味の違う入口として機能させる。
 export function validateTopPageFeatured(topHtml) {
   const errors = [];
   const featuredPaths = ARTICLE_LAYOUT.topPage.featuredPaths;
-  if (featuredPaths.length < 3 || featuredPaths.length > 6) {
+  if (featuredPaths.length < 3 || featuredPaths.length > 4) {
     errors.push(
-      `config/article-layout.mjs: topPage.featuredPaths must have 3-6 items, found ${featuredPaths.length}`,
+      `config/article-layout.mjs: topPage.featuredPaths must have 3-4 items, found ${featuredPaths.length}`,
     );
   }
   const section = topHtml.match(
@@ -718,6 +720,40 @@ export function validateTopPageFeatured(topHtml) {
   if (unexpected.length) {
     errors.push(
       `top page: unexpected link in data-top-featured section: ${unexpected.join(", ")}`,
+    );
+  }
+  return errors;
+}
+
+// トップページ（dist/index.html）の「最近の比較」セクションを検証する。
+// 「よく比較される商品」（人気・編集選定）と意味を分けた入口として、
+// 見出し（最近の比較）と記事一覧への導線が必須であることを fail-closed で確認する。
+export function validateTopPageLatest(topHtml) {
+  const errors = [];
+  const section = topHtml.match(
+    /<section\b[^>]*data-top-latest[^>]*>([\s\S]*?)<\/section\s*>/i,
+  );
+  if (!section) {
+    errors.push("top page: missing data-top-latest section");
+    return errors;
+  }
+  if (!/最近の比較/.test(section[1])) {
+    errors.push("top page: data-top-latest section must be labeled 最近の比較");
+  }
+  if (!/<h2[^>]*>\s*最近追加・更新した比較\s*<\/h2>/i.test(section[1])) {
+    errors.push(
+      "top page: data-top-latest section must have the heading 最近追加・更新した比較",
+    );
+  }
+  if (!/href="\/articles\/"/.test(section[1])) {
+    errors.push(
+      "top page: data-top-latest section must link to the article index (/articles/)",
+    );
+  }
+  const cardCount = (section[1].match(/\barticle-list-card\b/g) ?? []).length;
+  if (cardCount < 1) {
+    errors.push(
+      "top page: data-top-latest section must render at least one article card",
     );
   }
   return errors;
@@ -953,6 +989,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       errors.push(
         ...validateTopPageCategories(topHtml, articlesIndexHtml),
         ...validateTopPageFeatured(topHtml),
+        ...validateTopPageLatest(topHtml),
       );
     }
   }
