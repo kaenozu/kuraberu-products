@@ -473,6 +473,69 @@ describe("article trust line (rendered dist)", () => {
   });
 });
 
+describe("article diagnosis CTA (rendered dist)", () => {
+  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
+    .filter((entry) => entry.isDirectory() && entry.name !== "page")
+    .map((entry) => entry.name)
+    .sort();
+
+  it("renders exactly one diagnosis CTA on every comparison article, before #specs", () => {
+    let comparisonPages = 0;
+    for (const slug of articleSlugs) {
+      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+      const contentType = html.match(
+        /<meta name="article:content-type" content="(guide|comparison)">/i,
+      )?.[1];
+      const ctaCount = (
+        html.match(
+          /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
+        ) ?? []
+      ).length;
+      if (contentType === "guide") {
+        expect(ctaCount, `${slug}: guide must not render diagnosis CTA`).toBe(
+          0,
+        );
+        continue;
+      }
+      comparisonPages += 1;
+      expect(
+        ctaCount,
+        `${slug}: comparison must render one diagnosis CTA`,
+      ).toBe(1);
+      expect(html).toMatch(
+        /<a class="diagnosis-cta__button" href="\/tools\/product-finder\//,
+      );
+      const specsIndex = html.indexOf('id="specs"');
+      const ctaIndex = html.indexOf('class="diagnosis-cta"');
+      if (specsIndex !== -1) {
+        expect(ctaIndex, `${slug}: CTA before #specs`).toBeGreaterThan(-1);
+        expect(ctaIndex, `${slug}: CTA before #specs`).toBeLessThan(specsIndex);
+      }
+    }
+    expect(comparisonPages).toBeGreaterThan(30);
+  });
+
+  it("links bottle/diaper comparisons to their matching diagnosis category", () => {
+    const expectations: Record<string, string> = {
+      "pigeon-bottle-160-240": "/tools/product-finder/baby-bottle/",
+      "pigeon-bottle-240": "/tools/product-finder/baby-bottle/",
+      "pigeon-slim-240": "/tools/product-finder/baby-bottle/",
+      "moony-m": "/tools/product-finder/diaper/",
+      "merries-newborn": "/tools/product-finder/diaper/",
+      "merries-pants": "/tools/product-finder/diaper/",
+      "pampers-newborn": "/tools/product-finder/diaper/",
+      shupot: "/tools/product-finder/diaper/",
+    };
+    for (const [slug, href] of Object.entries(expectations)) {
+      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+      const match = html.match(
+        /<a class="diagnosis-cta__button" href="([^"]+)"/,
+      );
+      expect(match?.[1], `${slug} diagnosis href`).toBe(href);
+    }
+  });
+});
+
 describe("article card audiences 向き line (rendered dist)", () => {
   it("declares non-empty audiences for every public article", () => {
     for (const article of publicArticleMetadata) {

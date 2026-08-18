@@ -5,7 +5,6 @@ import PurchaseCard from '../../../components/PurchaseCard.astro';
 import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import DiagnosisCta from '../../../components/DiagnosisCta.astro';
 import {pigeonBottle240Article as articleMetadata} from '../../../content/articles';
 import type {
   ComparisonCandidate, DifferenceRow,
@@ -112,11 +111,10 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: ppsuCandidate.product, line: ppsuCandidate.line, tagline: ppsuCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${ppsuCandidate.product} ${ppsuCandidate.line}`, officialHref: ppsu, guidePoints: [ppsuCandidate.audience] }}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      diagnosisHref="/tools/product-finder/baby-bottle/"
     />
 
     <p>まとめ：自宅中心で汚れの落ちやすさを重視するなら耐熱ガラス製、外出先にも持って行き軽さ・割れにくさを重視するならPPSU製が候補です。</p>
-
-    <DiagnosisCta />
 
     <details class="fold-section" id="specs">
       <summary>詳細仕様（公式ページで確認した項目）</summary>

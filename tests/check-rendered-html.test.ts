@@ -15,6 +15,7 @@ import {
   validateArticleCardAudiences,
   validateArticleCardThumbnails,
   validateArticleTrustLine,
+  validateArticleDiagnosisCta,
   validateTopSearch,
   validateSourceToggle,
   validateRelatedArticleSection,
@@ -379,10 +380,17 @@ describe("article product count meta", () => {
     fixtureDirectories.push(directory);
     const articlesDir = path.join(directory, "articles", "long");
     mkdirSync(articlesDir, { recursive: true });
+    // 診断CTAの遷移先（/tools/product-finder/）が実在することを満たす
+    const diagnosisDir = path.join(directory, "tools", "product-finder");
+    mkdirSync(diagnosisDir, { recursive: true });
+    writeFileSync(
+      path.join(diagnosisDir, "index.html"),
+      '<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.com/tools/product-finder/"></head><body><main><h1>商品選択診断</h1><p>テスト用スタブ</p></main></body></html>',
+    );
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true"><p class="trust-line">広告を含みます</p>${fourCtas}`,
+        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><meta name="article:mid-cta" content="true"><p class="trust-line">広告を含みます</p><section class="diagnosis-cta" aria-label="商品選択診断への誘導"><a class="diagnosis-cta__button" href="/tools/product-finder/">診断をはじめる</a></section>${fourCtas}`,
       ),
     );
 
@@ -1045,5 +1053,98 @@ describe("article trust line (compressed header)", () => {
     expect(
       validateArticleTrustLine("index.html", "<main><p>hi</p></main>"),
     ).toEqual([]);
+  });
+});
+
+describe("article diagnosis CTA (conclusion → 30秒診断)", () => {
+  const contentTypeMeta = (type: string) =>
+    `<meta name="article:content-type" content="${type}">`;
+  const diagnosisCta = (href = "/tools/product-finder/") =>
+    `<section class="diagnosis-cta" aria-label="商品選択診断への誘導"><h2 class="diagnosis-cta__heading">まだ迷っているなら</h2><p class="diagnosis-cta__lead">あなたの使い方ならどちらが合う？30秒で診断</p><a class="diagnosis-cta__button" href="${href}">診断をはじめる</a></section>`;
+  const comparisonWith = (extra: string, specs = false) =>
+    `${contentTypeMeta("comparison")}<article>${extra}${
+      specs
+        ? '<details class="fold-section" id="specs"><summary>詳細仕様</summary></details>'
+        : ""
+    }</article>`;
+
+  it("accepts exactly one diagnosis CTA on a comparison article", () => {
+    expect(
+      validateArticleDiagnosisCta(
+        "articles/x/index.html",
+        comparisonWith(
+          diagnosisCta("/tools/product-finder/baby-bottle/"),
+          true,
+        ),
+      ),
+    ).toEqual([]);
+  });
+
+  it("accepts the diagnosis index href as a valid destination", () => {
+    expect(
+      validateArticleDiagnosisCta(
+        "articles/x/index.html",
+        comparisonWith(diagnosisCta(), true),
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects a comparison article without a diagnosis CTA", () => {
+    expect(
+      validateArticleDiagnosisCta(
+        "articles/x/index.html",
+        comparisonWith("<p>まとめ：候補です。</p>", true),
+      ),
+    ).toEqual([
+      "articles/x/index.html: comparison article must render exactly one diagnosis CTA (diagnosis-cta), found 0",
+    ]);
+  });
+
+  it("rejects a CTA whose link is not a diagnosis page", () => {
+    const errors = validateArticleDiagnosisCta(
+      "articles/x/index.html",
+      comparisonWith(diagnosisCta("https://example.com/"), true),
+    );
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain(
+      "diagnosis CTA must link to /tools/product-finder/…",
+    );
+  });
+
+  it("rejects a CTA placed after the specs fold", () => {
+    const html =
+      `${contentTypeMeta("comparison")}<details class="fold-section" id="specs"><summary>詳細仕様</summary></details>` +
+      diagnosisCta();
+    const errors = validateArticleDiagnosisCta("articles/x/index.html", html);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain(
+      "diagnosis CTA must appear right after the conclusion (before #specs)",
+    ); // 1つ目は件数チェックは通る（1つある）ので位置エラーのみ
+  });
+
+  it("rejects a guide article that renders a diagnosis CTA", () => {
+    expect(
+      validateArticleDiagnosisCta(
+        "articles/tiger-mta-j050-guide/index.html",
+        `${contentTypeMeta("guide")}${diagnosisCta()}`,
+      ),
+    ).toEqual([
+      "articles/tiger-mta-j050-guide/index.html: guide article must not render a diagnosis CTA, found 1",
+    ]);
+  });
+
+  it("accepts a guide article without a diagnosis CTA", () => {
+    expect(
+      validateArticleDiagnosisCta(
+        "articles/panasonic-eh-na9m-guide/index.html",
+        `${contentTypeMeta("guide")}<main>ガイド本文</main>`,
+      ),
+    ).toEqual([]);
+  });
+
+  it("ignores non-article pages", () => {
+    expect(validateArticleDiagnosisCta("index.html", diagnosisCta())).toEqual(
+      [],
+    );
   });
 });

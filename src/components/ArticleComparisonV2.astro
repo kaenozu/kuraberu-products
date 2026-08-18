@@ -3,6 +3,7 @@ import HeroComparison from './HeroComparison.astro';
 import VisualKeyDifferences, { type KeyDiffRow } from './VisualKeyDifferences.astro';
 import DecisionGuide from './DecisionGuide.astro';
 import TrustLine from './TrustLine.astro';
+import DiagnosisCta from './DiagnosisCta.astro';
 
 interface Side {
   brand: string;
@@ -21,9 +22,11 @@ interface Props {
   right: Side;
   rows: KeyDiffRow[];
   checkedAt?: string;
+  /** 診断カテゴリページURL（省略時は診断一覧） */
+  diagnosisHref?: string;
 }
 
-const { left, right, rows, checkedAt } = Astro.props;
+const { left, right, rows, checkedAt, diagnosisHref } = Astro.props;
 ---
 <section class="article-comparison-v2" aria-label="商品の比較">
   <HeroComparison eyebrow="30秒でわかる" left={left} right={right} />
@@ -36,5 +39,6 @@ const { left, right, rows, checkedAt } = Astro.props;
     left={{ brand: left.brand, line: left.line, points: left.guidePoints }}
     right={{ brand: right.brand, line: right.line, points: right.guidePoints }}
   />
+  <DiagnosisCta href={diagnosisHref} />
   <TrustLine checkedAt={checkedAt} />
 </section>

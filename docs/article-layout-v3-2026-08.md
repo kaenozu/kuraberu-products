@@ -70,6 +70,31 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 - 品質ゲート（`validateArticleTrustLine`）が、全記事で信頼行がちょうど 1 つ・
   `YYYY-MM-DD` 付きであることと、旧形式の残存を fail-closed で検出する。
 
+## 記事内の診断誘導（DiagnosisCta）
+
+比較記事の結論直後（「どっち向き？」の判定直後）に、**診断誘導 CTA を 1 つ**置く:
+
+```
+まだ迷っているなら
+あなたの使い方ならどちらが合う？30秒で診断
+[診断をはじめる]
+```
+
+- 実装は共通コンポーネント `src/components/DiagnosisCta.astro`。
+  `href` 省略時は診断一覧 `/tools/product-finder/` へ遷移する。
+- **診断カテゴリが存在する記事** は該当カテゴリへ直接つなぐ:
+  - 哺乳瓶記事 → `/tools/product-finder/baby-bottle/`（`pigeon-*`）
+  - おむつ記事 → `/tools/product-finder/diaper/`（`moony-m`・`merries-*`・`pampers-newborn`・`shupot`）
+  - それ以外（診断カテゴリ未整備の記事）→ 診断一覧へ
+- 配置はテンプレートごとに共通化している:
+  - `ArticleComparisonV2`（比較記事の標準ヒーロー）が `DecisionGuide` の直後に描画する。
+    `diagnosisHref` prop で遷移先を上書きできる。
+  - `ComparisonHero` 記事・商用記事（`CommercialArticlePage`）は同様に判定セクション直後に置く。
+  - **商品ガイド**（`article:content-type="guide"`）は対象外（現行ガイドは `ArticleComparisonV2` を使わない）。
+- 品質ゲート（`validateArticleDiagnosisCta`）が、比較記事では CTA がちょうど 1 つ・
+  `/tools/product-finder/` を指す・`#specs` より前に置かれることを、
+  ガイドでは CTA が描画されないことを fail-closed で検証する。
+
 ## 記事ごとの判断ルール
 
 - **本文が長く、判断直後の誘導が有効な記事** → `midArticleCta: true` を付けて

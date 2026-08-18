@@ -1,5 +1,7 @@
 ---
-// 記事内の診断誘導CTA（比較記事の結論付近に配置する）
+// 記事内の診断誘導CTA（比較記事の結論直後に配置する）
+// href は診断カテゴリページ（/tools/product-finder/<slug>/）か、
+// 診断カテゴリが存在しない記事では一覧（/tools/product-finder/）を渡す。
 interface Props {
   /** 診断カテゴリページURL */
   href?: string;
@@ -8,7 +10,7 @@ interface Props {
 }
 
 const {
-  href = '/tools/product-finder/baby-bottle/',
+  href = '/tools/product-finder/',
   heading = 'まだ迷っているなら',
 } = Astro.props;
 ---
