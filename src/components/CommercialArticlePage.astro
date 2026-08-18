@@ -80,7 +80,7 @@ const faq = [
       <table class="comparison">
         <thead><tr><th scope="col">比較項目</th><th scope="col">{seed.leftProduct}</th><th scope="col">{seed.rightProduct}</th></tr></thead>
         <tbody>
-          {rows.map((row) => <tr><th scope="row">{row.label}</th><td>{row.left}</td><td>{row.right}</td></tr>)}
+          {rows.map((row) => <tr><th scope="row">{row.label}</th><td data-label={seed.leftProduct}>{row.left}</td><td data-label={seed.rightProduct}>{row.right}</td></tr>)}
         </tbody>
       </table>
     </div>

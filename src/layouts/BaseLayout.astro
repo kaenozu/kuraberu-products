@@ -176,7 +176,8 @@ const breadcrumbStructuredData = article
     <!-- クリック計測（プライバシー配慮型・同一オリジン）。詳細: docs/click-analytics.md -->
     <script is:inline src="/click-beacon.js" defer></script>
     <!-- 比較表のスマホ比較カード表示用: 各セルへ列見出し（商品名）を data-label として付与する。
-         無くても表は読める（値のみ表示）ため段階的拡張。
+         2026-08-18 から全記事の比較表は静的 HTML に data-label を焼き込み済みのため、
+         このスクリプトは未付与セルへのフォールバック（ゲートが焼き込みを強制）。
          marker: comparison-card-labels -->
     <script is:inline>
       (function () {
