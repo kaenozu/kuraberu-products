@@ -33,8 +33,6 @@ export interface ArticleLayout {
   diagnosisEvents: readonly string[];
   defaultPlacement: string;
   ctaSets: readonly ArticleCtaSet[];
-  /** 長文記事のみ許容する途中 CTA セット（midArticleCta が付いた記事に適用） */
-  midArticleSet: ArticleCtaSet;
   /** 記事末尾の関連記事の選定ルール（関連性スコアベース） */
   relatedSelection: RelatedSelectionConfig;
   /** 記事のコンテンツタイプ定義（商品ガイド / 比較記事） */
@@ -62,13 +60,11 @@ export const ARTICLE_LAYOUT: ArticleLayout;
 export function expectedPurchaseCtasPerArticle(
   productCount: number,
   layout?: ArticleLayout,
-  options?: { midArticleCta?: boolean },
 ): number;
 
 export function expectedPlacementCounts(
   productCount: number,
   layout?: ArticleLayout,
-  options?: { midArticleCta?: boolean },
 ): Record<string, number>;
 
 export function contentTypeFor(

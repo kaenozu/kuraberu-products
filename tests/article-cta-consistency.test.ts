@@ -22,7 +22,7 @@ const commercialArticleTemplate = readFileSync(
 );
 
 describe("article CTA layout vs metadata productCount", () => {
-  it("keeps per-placement PurchaseCard counts consistent with productCount and midArticleCta", () => {
+  it("keeps per-placement PurchaseCard counts consistent with productCount", () => {
     for (const article of articleMetadata) {
       const source = readFileSync(
         join("src/pages/articles", article.id, "index.astro"),
@@ -33,7 +33,6 @@ describe("article CTA layout vs metadata productCount", () => {
           ? commercialArticleTemplate
           : source,
       );
-      const midArticleCta = article.midArticleCta === true;
       // 結論直後の next-step ブロックの購入ボタン数（レンダリング済み HTML から）。
       // comparisonOnly セットの照合と総数チェックの両方で使う。
       const renderedHtml = readFileSync(
@@ -83,25 +82,13 @@ describe("article CTA layout vs metadata productCount", () => {
         }
       }
 
-      // v3: 途中 CTA（after-decision）は長文記事（midArticleCta）だけ商品数分
-      const midSet = ARTICLE_LAYOUT.midArticleSet;
-      const expectedMid = midArticleCta
-        ? midSet.cardsPerProduct * article.productCount
-        : 0;
-      expect(
-        counts.get(midSet.placement) ?? 0,
-        `${article.id}: ${midSet.placement} should have ${expectedMid} cards (midArticleCta=${midArticleCta})`,
-      ).toBe(expectedMid);
-
       // 総枚数 = PurchaseCard 数 + next-step ボタン数 = 期待 CTA 総数
-      // （productCount と midArticleCta から導出）
+      // （productCount から導出）
       expect(
         blocks.length + nextStepBuyCount,
-        `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout, { midArticleCta })`,
+        `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout)`,
       ).toBe(
-        expectedPurchaseCtasPerArticle(article.productCount, ARTICLE_LAYOUT, {
-          midArticleCta,
-        }),
+        expectedPurchaseCtasPerArticle(article.productCount, ARTICLE_LAYOUT),
       );
     }
   });

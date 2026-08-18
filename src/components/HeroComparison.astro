@@ -19,34 +19,77 @@ interface Props {
   left: HeroProduct;
   right?: HeroProduct;
   eyebrow?: string;
+  /** 結論ブロックとして使う場合の見出し（例: 結局どっち？）。省略時は従来のカード表示のみ。 */
+  heading?: string;
+  /** 見出しの id（ページ内ジャンプのアンカー。例: decision-guide） */
+  anchorId?: string;
+  /** 左カードに表示する「こんな人におすすめ」チェックリスト（省略時は「こちら」ピル表示） */
+  leftPoints?: string[];
+  /** 右カードに表示する「こんな人におすすめ」チェックリスト */
+  rightPoints?: string[];
 }
 
-const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
+const {
+  left,
+  right,
+  eyebrow = '30秒でわかる',
+  heading,
+  anchorId,
+  leftPoints,
+  rightPoints,
+} = Astro.props;
 ---
 
 <section class="hero-compare" aria-label={eyebrow}>
-  <p class="section-label">{eyebrow}</p>
+  {heading ? (
+    <div class="subsection-heading">
+      <p class="section-label">{eyebrow}</p>
+      <h2 id={anchorId}>{heading}</h2>
+    </div>
+  ) : (
+    <p class="section-label">{eyebrow}</p>
+  )}
   <div class={`hero-compare-grid${right ? '' : ' is-single'}`}>
-    <article class="hero-product">
-      <a class="hero-product-img" href={left.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${left.brand} ${left.line} の公式商品ページを見る`}>
-        <img src={left.image} alt={left.imageAlt} width={left.imageWidth ?? 500} height={left.imageHeight ?? 500} loading="eager" />
-      </a>
-      <h2 class="hero-product-name"><span>{left.brand}</span> {left.line}</h2>
-      <p class="hero-product-tagline">{left.tagline}<b>こちら</b></p>
-      <div class="hero-product-actions">
-        <a class="hero-official" href={left.officialHref} target="_blank" rel="noopener noreferrer">公式</a>
-      </div>
-    </article>
-    {right && <article class="hero-product">
-      <a class="hero-product-img" href={right.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${right.brand} ${right.line} の公式商品ページを見る`}>
-        <img src={right.image} alt={right.imageAlt} width={right.imageWidth ?? 500} height={right.imageHeight ?? 500} loading="eager" />
-      </a>
-      <h2 class="hero-product-name"><span>{right.brand}</span> {right.line}</h2>
-      <p class="hero-product-tagline">{right.tagline}<b>こちら</b></p>
-      <div class="hero-product-actions">
-        <a class="hero-official" href={right.officialHref} target="_blank" rel="noopener noreferrer">公式</a>
-      </div>
-    </article>}
+    {/* チェックリストは「こんな人に」の1行（tagline）と重複する要素を除いて表示する
+        （全記事で tagline === guidePoints[0] のため、二重表示を防ぐ）。 */}
+    {(() => {
+      const renderCard = (product: HeroProduct, points?: string[]) => {
+        const visiblePoints = (points ?? []).filter(
+          (point) => point !== product.tagline,
+        );
+        return (
+          <article class="hero-product">
+            <a class="hero-product-img" href={product.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${product.brand} ${product.line} の公式商品ページを見る`}>
+              <img src={product.image} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" />
+            </a>
+            <h2 class="hero-product-name"><span>{product.brand}</span> {product.line}</h2>
+            {points ? (
+              <>
+                <p class="hero-product-tagline">{product.tagline}</p>
+                {visiblePoints.length > 0 && (
+                  <ul class="hero-product-points">
+                    {visiblePoints.map((point) => (
+                      <li>{point}</li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            ) : (
+              <p class="hero-product-tagline">{product.tagline}<b>こちら</b></p>
+            )}
+            <div class="hero-product-actions">
+              <a class="hero-official" href={product.officialHref} target="_blank" rel="noopener noreferrer">公式</a>
+            </div>
+          </article>
+        );
+      };
+      return (
+        <>
+          {renderCard(left, leftPoints)}
+          {right && renderCard(right, rightPoints)}
+        </>
+      );
+    })()}
   </div>
 </section>
 
@@ -118,6 +161,34 @@ const { left, right, eyebrow = '30秒でわかる' } = Astro.props;
     font-weight: 600;
     color: var(--product-highlight);
     line-height: 1.5;
+  }
+  .hero-product-points {
+    margin: 0.15rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .hero-product-points li {
+    position: relative;
+    padding-left: 1.55rem;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  .hero-product-points li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 0.12rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--product-color);
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
   }
   .hero-product-tagline b {
     background: var(--product-highlight);

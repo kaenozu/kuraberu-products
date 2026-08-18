@@ -6,8 +6,6 @@ export interface ArticleChangeLogEntry {
 export interface ArticleMetadata {
   id: string;
   productCount: number;
-  /** 長文記事フラグ（true の記事だけ途中 CTA = after-decision を許容する。v3） */
-  midArticleCta?: boolean;
   path: `/articles/${string}/`;
   title: string;
   headline: string;

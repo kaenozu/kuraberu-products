@@ -6,28 +6,31 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 
 ## v2 からの変更点
 
-| 項目                       | v2                               | v3                                        |
-| -------------------------- | -------------------------------- | ----------------------------------------- |
-| 購入カードの配置           | **判断後 + 記事末尾**の 2 セット | **末尾 1 セットが原則**                   |
-| 途中 CTA（after-decision） | 全記事に配置                     | **長文記事のみ**（`midArticleCta: true`） |
-| 期待 CTA 総数              | 比較記事 4 / 単一 2              | 比較記事 2（長文 4）/ 単一 1（長文 2）    |
-| `defaultPlacement`         | `after-decision`                 | `article-end`                             |
+| 項目                       | v2                               | v3                                       |
+| -------------------------- | -------------------------------- | ---------------------------------------- |
+| 購入カードの配置           | **判断後 + 記事末尾**の 2 セット | **末尾 1 セットが原則**                  |
+| 途中 CTA（after-decision） | 全記事に配置                     | ~~長文記事のみ~~ → **2026-08-18 に削除** |
+| 期待 CTA 総数              | 比較記事 4 / 単一 2              | 比較記事 2 / 単一 1                      |
+| `defaultPlacement`         | `after-decision`                 | `article-end`                            |
 
 ## 方針
 
 - **購入カードは記事末尾に 1 セットだけ置く**（紹介する商品 1 つにつき 1 枚）。
   冒頭〜詳細の途中に広告カードを挟まず、本文を読んでから最後に購入先へ誘導する。
-- **途中 CTA（`placement="after-decision"`）は長文記事のみ許容**。
-  記事メタデータ（`src/content/articles.ts`）の `midArticleCta: true` が付いた記事だけが
-  判断 UI の直後に 1 セット持てる。目安は本文 3,000 文字以上（旧育児記事相当）。
+- **途中 CTA（`placement="after-decision"`）は廃止**。v3 短縮後、`midArticleCta: true` を
+  宣言する記事がゼロのまま放置されていた死に経路だったため、2026-08-18 に
+  config・ゲート・メタデータ・テストごと削除した。今後も復活させない（必要なら
+  NextStepBlock の拡張で対応する）。
 - 新旧テンプレートの混在を解消し、全記事を同じ骨格へ統一する。
 
 ## 標準骨格（全記事デフォルト）
 
 1. タイトル + 1 行結論（リード）
-2. **単一の 30秒比較 / 結論 UI**（HeroComparison など）
-3. **主要差分**（共通仕様より先）
-4. （長文記事のみ）**PurchaseCard × 商品数** — placement="after-decision"
+2. **結局どっち？**（HeroComparison + DecisionGuide を統合した 1 ブロック。
+   A/B カード = 画像 + 型番 + 「こんな人に」1 行 + ✓おすすめポイント。
+   2026-08-18 更新で 30秒比較と条件別結論を 1 つに統合）
+3. **主な違い（3〜5 個）** — VisualKeyDifferences。記事の主役として結論直後に置く
+4. **「次にすること」1 ブロック**（NextStepBlock: A/B 購入 + 30秒診断）
 5. 詳細比較（全仕様が長い記事は `<details>` 折りたたみ）
 6. 公式情報・根拠
 7. FAQ
@@ -35,21 +38,24 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 9. **最終 PurchaseCard × 商品数（記事末尾）** — placement="article-end"
 10. 更新履歴・情報源・免責
 
+> 2026-08-18: サイト監査（「結局どっち？を最速で解決する」方針）への回答として、
+> 冒頭の「30秒比較（A/B カード）」と「どっち向き？（おすすめポイント）」を
+> **1 つの「結局どっち？」ブロックへ統合**した。同時に、比較テンプレート直後の
+> 「まとめ：…」段落（結論の重複）を全 13 記事から削除し、ページ内ジャンプの
+> ラベルを「結局どっち？」へ統一した。`#decision-guide` アンカーは統合ブロックが
+> 引き継ぐ（`HeroComparison` の `anchorId` / `heading` / `leftPoints` / `rightPoints`）。
+
 ## 機械的契約（config / ゲート）
 
 - **唯一の情報源は `config/article-layout.mjs`**:
-  - `ctaSets = [{ placement: "article-end", cardsPerProduct: 1 }]` — 末尾セット（全記事）
-  - `midArticleSet = { placement: "after-decision", cardsPerProduct: 1 }` — 長文記事のみの途中セット
+  - `ctaSets = [{ placement: "article-end", cardsPerProduct: 1 }, { placement: "next-step", cardsPerProduct: 1, comparisonOnly: true }]` — 末尾セット（全記事）+ 次にすることブロック（比較記事のみ）
   - `defaultPlacement = "article-end"`
-- **長文フラグは記事メタデータ**: `midArticleCta: true` を持つ記事だけ途中 CTA を持つ。
-  BaseLayout が `<meta name="article:mid-cta" content="true">` を出力し、
-  品質ゲート（`scripts/check-rendered-html.mjs`）が `product-count` / `mid-cta` の両 meta から
-  期待枚数（総数 + placement 別）を導出して照合する。
-  2026-08-17 の v3 短縮で旧育児記事 14 本が短文化されたため、現在 `midArticleCta: true` の記事は無い
-  （全記事が末尾セットのみ）。今後長文記事を追加する場合は 3,000 文字目安でフラグを付ける。
+  - `placements = ["article-end", "next-step"]`（v2 の `after-decision` は 2026-08-18 に削除）
+- **途中 CTA は存在しない**: 長文フラグ（`midArticleCta`）・`article:mid-cta` meta・
+  `readArticleMidCta` ゲートはすべて削除済み。期待枚数は productCount だけで決まる。
 - 期待枚数:
-  - 通常記事: 比較 2 / 単一 1（article-end のみ）
-  - 長文記事: 比較 4 / 単一 2（article-end + after-decision）
+  - 比較記事: 末尾 2 + next-step 2 = 4
+  - 単一商品記事: 末尾 1 = 1（next-step は比較記事のみ）
 - レイアウト変更時は `config/article-layout.mjs` だけを直す（ゲートは自動追随する）。
 
 ## 記事冒頭の信頼表示（TrustLine）
@@ -127,10 +133,9 @@ v2（`docs/article-layout-v2-2026-08.md`）の後継。サイト監査（2026-08
 
 ## 記事ごとの判断ルール
 
-- **本文が長く、判断直後の誘導が有効な記事** → `midArticleCta: true` を付けて
-  after-decision セットを置く（目安: 本文 3,000 文字以上）。
-- **それ以外の記事** → after-decision を置かない。`midArticleCta` は付けない。
-- **単一商品記事** → `productCount: 1` を宣言し、各セットにカードを 1 枚だけ置く。
+- 途中 CTA（after-decision）は廃止済み。長文記事でも置かない（NextStepBlock が
+  結論直後の誘導を担う）。
+- **単一商品記事** → `productCount: 1` を宣言し、末尾にカードを 1 枚だけ置く。
 - 差分が 5〜6 項目以下 → 詳細比較を折りたたまずそのまま表示。
 - 全仕様が長い（7 項目以上 or 数値表が大きい）→ `<details>` 折りたたみ。
 
