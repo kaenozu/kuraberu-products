@@ -1501,6 +1501,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "Dreame X50 Ultra",
     leftPoint: "モップ洗浄・乾燥や障害物回避の仕様を確認したい人向け",
     rightPoint: "段差対応や清掃ステーションの仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "Roborock Qrevo Curv 公式商品ページ",
+        url: "https://jp.roborock.com/pages/roborock-qrevo-curv",
+      },
+      {
+        label: "Dreame X50 Ultra 公式商品ページ",
+        url: "https://www.dreametech.jp/products/x50-ultra",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "Roborock Qrevo Curv",
+        right: "Dreame X50 Ultra",
+      },
+      {
+        label: "公式確認項目",
+        left: "吸引・モップ洗浄・障害物回避",
+        right: "吸引・モップ洗浄・段差対応",
+      },
+      {
+        label: "選定の観点",
+        left: "モップ洗浄・乾燥や障害物回避の仕様",
+        right: "段差対応や清掃ステーションの仕様",
+      },
+    ],
   },
   {
     id: "makita-cl107-vs-cl286",
@@ -1518,6 +1548,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "マキタ CL286FD",
     leftPoint: "軽さと手軽さを優先する人向け",
     rightPoint: "吸引力や運転時間の選択肢を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "マキタ CL107FD 公式商品ページ",
+        url: "https://www.makita.co.jp/product/detail/?model=CL107FD",
+      },
+      {
+        label: "マキタ CL286FD 公式商品ページ",
+        url: "https://www.makita.co.jp/product/detail/?model=CL286FD",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "マキタ CL107FDSHW（CL107FD系）",
+        right: "マキタ CL286FD",
+      },
+      {
+        label: "公式確認項目",
+        left: "重量・吸引・運転時間・充電",
+        right: "重量・吸引・運転時間・充電",
+      },
+      {
+        label: "選定の観点",
+        left: "軽さと手軽さ",
+        right: "吸引力や運転時間の選択肢",
+      },
+    ],
   },
   {
     id: "iris-airfryer-fvx-d3-vs-tefal-ey201",
@@ -1536,6 +1596,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ティファール EY201",
     leftPoint: "容量と操作方法を確認して選びたい人向け",
     rightPoint: "調理モードやブランドの使い勝手を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "アイリスオーヤマ FVX-D3 公式商品情報",
+        url: "https://www.irisohyama.co.jp/products/web-catalog/?cid=H569241O",
+      },
+      {
+        label: "Tefal EASYFRY CLASSIC 4.2L EY201 公式商品ページ",
+        url: "https://www.tefal-me.com/en/Electrical-Cooking/Oil-Less-Fryers/EASYFRY-CLASSIC-4-2L-EY201/p/1510001520",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "アイリスオーヤマ FVX-D3",
+        right: "Tefal EY201827",
+      },
+      {
+        label: "公式確認項目",
+        left: "容量・操作方法・調理仕様",
+        right: "容量・操作方法・調理仕様",
+      },
+      {
+        label: "選定の観点",
+        left: "容量と操作方法",
+        right: "調理モードと操作",
+      },
+    ],
   },
   {
     id: "recolte-automatic-cooker-vs-panasonic-nf-pc400",
@@ -1554,6 +1644,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "パナソニック NF-PC400",
     leftPoint: "少量調理と置き場所を優先する人向け",
     rightPoint: "家族分の調理容量と多機能さを確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "récolte 自動調理ポット 公式商品ページ",
+        url: "https://recolte-jp.com/products/auto-cooking-pot/",
+      },
+      {
+        label: "パナソニック NF-PC400 公式商品情報",
+        url: "https://panasonic.jp/cook/products/NF-PC400.html",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "récolte 自動調理ポット",
+        right: "パナソニック NF-PC400",
+      },
+      {
+        label: "公式確認項目",
+        left: "容量・調理モード・サイズ",
+        right: "容量・調理モード・サイズ",
+      },
+      {
+        label: "選定の観点",
+        left: "少量調理と置き場所",
+        right: "調理容量と多機能さ",
+      },
+    ],
   },
   {
     id: "brita-marella-vs-zero-water",
@@ -1570,6 +1690,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ゼロウォーター 10カップ",
     leftPoint: "入手しやすい交換カートリッジを重視する人向け",
     rightPoint: "ろ過性能の確認を優先したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "BRITA マレーラ 公式商品ページ",
+        url: "https://www.brita.co.jp/製品一覧/ポット型浄水器/マレーラ",
+      },
+      {
+        label: "ZeroWater 10 Cup Pitcher 公式商品ページ",
+        url: "https://shop.culligan.com/products/10-cup-zerowater-pitcher",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・容量",
+        left: "ブリタ マレーラ",
+        right: "ZeroWater 10カップ",
+      },
+      {
+        label: "公式確認項目",
+        left: "ろ過方式・容量・カートリッジ",
+        right: "ろ過方式・容量・付属メーター",
+      },
+      {
+        label: "選定の観点",
+        left: "交換カートリッジの入手性",
+        right: "ろ過性能の確認",
+      },
+    ],
   },
   {
     id: "tiger-jpv-l100-vs-zojirushi-nw-fc10",
@@ -1587,6 +1737,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "象印 NW-FC10",
     leftPoint: "土鍋系の炊き上がりと操作を確認したい人向け",
     rightPoint: "圧力・メニュー数と保温仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "タイガー JPV-L100 公式商品ページ",
+        url: "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/",
+      },
+      {
+        label: "象印 NW-FC 公式商品ページ",
+        url: "https://www.zojirushi.co.jp/syohin/rice/ricecooker/nw-fc/#container",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "タイガー JPV-L100",
+        right: "象印 NW-FC10",
+      },
+      {
+        label: "公式確認項目",
+        left: "炊飯方式・内釜・メニュー",
+        right: "炊飯方式・内釜・メニュー",
+      },
+      {
+        label: "選定の観点",
+        left: "炊き上がりと操作",
+        right: "圧力・メニュー数と保温仕様",
+      },
+    ],
   },
   {
     id: "sharp-kc-s50-vs-panasonic-f-vxw55",
@@ -1607,6 +1787,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "パナソニック F-VXW55",
     leftPoint: "プラズマクラスターと基本性能を確認したい人向け",
     rightPoint: "ナノイーや加湿運転の仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "シャープ KC-S50 公式商品ページ",
+        url: "https://jp.sharp/kuusei/products/kcs50/",
+      },
+      {
+        label: "パナソニック F-VXW55 公式商品ページ",
+        url: "https://panasonic.jp/airrich/products/F-VXW55.html",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "シャープ KC-S50",
+        right: "パナソニック F-VXW55",
+      },
+      {
+        label: "公式確認項目",
+        left: "適用床面積・加湿・フィルター",
+        right: "適用床面積・加湿・フィルター",
+      },
+      {
+        label: "選定の観点",
+        left: "プラズマクラスターと基本性能",
+        right: "ナノイーと加湿運転の仕様",
+      },
+    ],
   },
   {
     id: "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
@@ -1625,6 +1835,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ソニー WF-C710N",
     leftPoint: "機能数と長時間再生を確認したい人向け",
     rightPoint: "軽さとソニーの音質・装着設計を確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "soundcore Liberty 4 NC 公式商品ページ",
+        url: "https://www.soundcore.com/products/liberty-4-nc-a3947z11",
+      },
+      {
+        label: "ソニー WF-C710N 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WF-C710N/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "soundcore Liberty 4 NC（A3947Z11）",
+        right: "ソニー WF-C710N",
+      },
+      {
+        label: "公式確認項目",
+        left: "ノイズキャンセリング・再生時間・防水",
+        right: "ノイズキャンセリング・再生時間・防水",
+      },
+      {
+        label: "選定の観点",
+        left: "機能数と長時間再生",
+        right: "軽さと装着設計",
+      },
+    ],
   },
   {
     id: "xiaomi-redmi-watch-5-vs-huawei-band-10",
@@ -1642,6 +1882,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "HUAWEI Band 10",
     leftPoint: "大きな画面と時計らしい操作を優先する人向け",
     rightPoint: "軽さとバンド型の装着感を優先する人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "Xiaomi Redmi Watch 5 公式商品ページ",
+        url: "https://www.mi.com/global/product/redmi-watch-5/",
+      },
+      {
+        label: "HUAWEI Band 10 公式商品ページ",
+        url: "https://consumer.huawei.com/jp/wearables/band10/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "Xiaomi Redmi Watch 5",
+        right: "HUAWEI Band 10",
+      },
+      {
+        label: "公式確認項目",
+        left: "画面・電池・通知・健康記録",
+        right: "画面・電池・通知・健康記録",
+      },
+      {
+        label: "選定の観点",
+        left: "大きな画面と時計らしい操作",
+        right: "軽さとバンド型の装着感",
+      },
+    ],
   },
   {
     id: "panasonic-eh-na9m-vs-refa-beautech",
@@ -1662,6 +1932,36 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ReFa BEAUTECH DRYER",
     leftPoint: "複数のケアモードと風量を確認したい人向け",
     rightPoint: "温度管理やサロン系の仕上がりを確認したい人向け",
+    productInfoCheckedAt: "2026-08-18",
+    modifiedAt: "2026-08-18",
+    purchaseLinkStatus: "unverified",
+    officialSources: [
+      {
+        label: "パナソニック EH-NA9M 公式商品ページ",
+        url: "https://panasonic.jp/hair/products/EH-NA9M.html",
+      },
+      {
+        label: "ReFa BEAUTECH DRYER 公式商品ページ",
+        url: "https://www.refa.net/item/refa_beautech_dryer/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "商品名・型番",
+        left: "パナソニック ナノケア EH-NA9M",
+        right: "ReFa BEAUTECH DRYER",
+      },
+      {
+        label: "公式確認項目",
+        left: "ケア機能・モード・風量・質量",
+        right: "温度管理・モード・風量・質量",
+      },
+      {
+        label: "選定の観点",
+        left: "複数のケアモードと風量",
+        right: "温度管理やサロン系の機能",
+      },
+    ],
   },
   {
     id: "philips-s9000-vs-braun-series9pro",
