@@ -316,9 +316,12 @@ const categoryEmoji: Record<string, string> = {
     letter-spacing: -0.045em !important;
   }
   .home-page .stitch-hero .lead {
+    box-sizing: border-box;
+    width: min(100%, 36rem);
     max-width: 36rem;
     margin-inline: auto;
     color: #704f49;
+    overflow-wrap: anywhere;
   }
   .home-page .top-search {
     box-sizing: border-box;
@@ -330,8 +333,10 @@ const categoryEmoji: Record<string, string> = {
     border-radius: var(--radius-md);
     background: #fff;
     box-shadow: 0 3px 10px rgba(93, 55, 46, 0.06);
+    overflow: hidden;
   }
   .home-page .top-search input {
+    flex: 1 1 0;
     min-width: 0;
     border: 0;
     background: transparent;
@@ -365,8 +370,11 @@ const categoryEmoji: Record<string, string> = {
   }
   .home-page .stitch-diagnosis .subsection-heading,
   .home-page .stitch-diagnosis > .lead {
+    box-sizing: border-box;
+    width: 100%;
     max-width: 42rem;
     margin-inline: auto;
+    white-space: normal;
   }
   .home-page .stitch-diagnosis .section-label {
     color: #a52a1e;
