@@ -82,6 +82,13 @@
 
 ## 次の候補
 
+### Panasonic ES-LV5J vs ES-LT2B（実装済み・PR作成待ち）
+
+- 記事slug: `panasonic-es-lv5j-vs-es-lt2b`
+- 状態: 専用worktreeで実装。`DEPLOYMENT_ENV=preview pnpm verify` PASS。PR作成待ち。
+- 比較軸: 刃数、本体寸法、質量、充電方式、使用日数、防水仕様。
+- 公式ページ: [ES-LV5J](https://panasonic.jp/shaver/products/ES-LV5J.html) / [ES-LT2B](https://panasonic.jp/shaver/products/ES-LT2B.html)
+
 ### 日立 BD-SX130K vs BD-STX130K（実装済み・PR作成待ち）
 
 - 記事slug: `hitachi-bd-sx130k-vs-bd-stx130k`

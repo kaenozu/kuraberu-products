@@ -1650,6 +1650,40 @@ export const panasonicEhNa9mVsEhNa7mArticle = defineArticleMetadata({
   ],
 });
 
+export const panasonicShaverEsLv5jVsEsLt2bArticle = defineArticleMetadata({
+  id: "panasonic-es-lv5j-vs-es-lt2b",
+  productCount: 2,
+  path: "/articles/panasonic-es-lv5j-vs-es-lt2b/",
+  title: "パナソニック ES-LV5J と ES-LT2B、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックのラムダッシュ、どっち？「ES-LV5J」と「ES-LT2B」を比較",
+  description:
+    "パナソニック ES-LV5JとES-LT2Bを、公式の刃数・寸法・質量・充電方式・防水仕様で比較",
+  category: "美容家電",
+  tags: ["電気シェーバー", "パナソニック", "ラムダッシュ"],
+  audiences: ["5枚刃と3枚刃で選びたい人", "本体の軽さや寸法を比べたい人"],
+  uses: ["毎日のひげ剃り", "電気シェーバーを比較する", "刃数と軽さで選ぶ"],
+  summary:
+    "ES-LV5JとES-LT2Bを、公式仕様で確認できる刃数・本体寸法・質量・充電方式・防水に分けて比較します。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-es-lv5j.jpg",
+  aboutProductNames: [
+    "パナソニック ラムダッシュPRO ES-LV5J",
+    "パナソニック ラムダッシュ ES-LT2B",
+  ],
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary:
+        "パナソニック公式の商品ページ・仕様ページで比較項目と画像を確認し、楽天アフィリエイト短縮URLを生成して初稿を追加。",
+    },
+  ],
+});
+
 type CommercialArticleSeed = {
   id: string;
   title: string;
@@ -4032,6 +4066,7 @@ export const articleMetadata = Object.freeze([
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
+  panasonicShaverEsLv5jVsEsLt2bArticle,
   ...additionalCommercialArticles,
 ]);
 

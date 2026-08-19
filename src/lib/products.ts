@@ -439,4 +439,12 @@ export const articlePurchaseLinks = {
     name: "象印 EC-MA60",
     purchaseUrl: "https://a.r10.to/h5Ob79",
   },
+  "panasonic-es-lv5j-vs-es-lt2b:left": {
+    name: "パナソニック ラムダッシュPRO ES-LV5J",
+    purchaseUrl: "https://a.r10.to/hF1gXG",
+  },
+  "panasonic-es-lv5j-vs-es-lt2b:right": {
+    name: "パナソニック ラムダッシュ ES-LT2B",
+    purchaseUrl: "https://a.r10.to/hHXQVZ",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;

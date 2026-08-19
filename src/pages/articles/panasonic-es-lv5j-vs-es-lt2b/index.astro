@@ -1,0 +1,97 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { panasonicShaverEsLv5jVsEsLt2bArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://panasonic.jp/shaver/products/ES-LV5J.html'
+const rightOfficial = 'https://panasonic.jp/shaver/products/ES-LT2B.html'
+const leftSpec = 'https://panasonic.jp/shaver/products/ES-LV5J/spec.html'
+const rightSpec = 'https://panasonic.jp/shaver/products/ES-LT2B/spec.html'
+const leftAudience = '5枚刃と防水設計を公式仕様で確認したい人向け'
+const rightAudience = '3枚刃と軽い本体を公式仕様で確認したい人向け'
+
+const leftModel = {
+  brand: 'パナソニック',
+  line: 'ES-LV5J',
+  tagline: '5枚刃と防水設計なら',
+  image: '/products/panasonic-es-lv5j.jpg',
+  imageAlt: 'パナソニック ラムダッシュPRO ES-LV5J',
+  officialHref: leftOfficial,
+  guidePoints: [leftAudience],
+  purchaseHref: articlePurchaseLinks['panasonic-es-lv5j-vs-es-lt2b:left'].purchaseUrl,
+}
+const rightModel = {
+  brand: 'パナソニック',
+  line: 'ES-LT2B',
+  tagline: '軽い3枚刃なら',
+  image: '/products/panasonic-es-lt2b.jpg',
+  imageAlt: 'パナソニック ラムダッシュ ES-LT2B',
+  officialHref: rightOfficial,
+  guidePoints: [rightAudience],
+  purchaseHref: articlePurchaseLinks['panasonic-es-lv5j-vs-es-lt2b:right'].purchaseUrl,
+}
+
+const faqEntries = [
+  {
+    question: 'ES-LV5JとES-LT2Bの大きな違いは？',
+    answer: '公式仕様では、ES-LV5Jは5枚刃・約200g、ES-LT2Bは3枚刃・約145gです。本体寸法や充電方式にも違いがあります。',
+  },
+  {
+    question: '軽いのはどちら？',
+    answer: '公式仕様では、ES-LT2Bが約145g、ES-LV5Jが約200gです。いずれもキャップを除く質量です。',
+  },
+  {
+    question: '使用日数と防水仕様は同じ？',
+    answer: '公式仕様では、どちらもフル充電し1日1回約3分間の使用で約14日間です。防水はES-LV5Jが防水設計（IPX7基準）、ES-LT2BがIPX7基準と記載されています。',
+  },
+  {
+    question: '価格は比較できますか？',
+    answer: '価格・在庫・ポイント・送料は販売先で変わるため、購入時点の楽天市場の商品ページで確認してください。',
+  },
+]
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: '刃数', left: '5枚刃システム', right: 'ステンレス刃物鋼3枚刃', highlight: 'left' },
+  { label: '本体質量（キャップ除く）', left: '約200g', right: '約145g', highlight: 'right', highlightNote: '約55g軽い' },
+  { label: '本体寸法', left: '16.7×7.2×5.9cm', right: '15.5×6.4×5.0cm' },
+  { label: '充電・使用日数', left: '急速1時間充電・約14日間', right: '急速1時間充電・約14日間' },
+]
+
+const specRows = [
+  { label: '刃数', left: '5枚刃システム', right: 'ステンレス刃物鋼3枚刃', sourceLeftHref: leftSpec, sourceLeftLabel: 'ES-LV5J仕様', sourceRightHref: rightSpec, sourceRightLabel: 'ES-LT2B仕様' },
+  { label: '本体寸法', left: '高さ16.7×幅7.2×奥行5.9cm（キャップを除く）', right: '高さ15.5×幅6.4×奥行5.0cm', sourceLeftHref: leftSpec, sourceLeftLabel: 'ES-LV5J仕様', sourceRightHref: rightSpec, sourceRightLabel: 'ES-LT2B仕様' },
+  { label: '質量', left: '約200g（キャップを除く）', right: '約145g（キャップ除く）', sourceLeftHref: leftSpec, sourceLeftLabel: 'ES-LV5J仕様', sourceRightHref: rightSpec, sourceRightLabel: 'ES-LT2B仕様' },
+  { label: '使用日数', left: 'フル充電し1日1回約3分間の使用で約14日間使用可能', right: 'フル充電し1日1回約3分間の使用で約14日間使用可能', sourceLeftHref: leftSpec, sourceLeftLabel: 'ES-LV5J仕様', sourceRightHref: rightSpec, sourceRightLabel: 'ES-LT2B仕様' },
+  { label: '防水', left: '防水設計（IPX7基準）', right: 'IPX7基準', sourceLeftHref: leftSpec, sourceLeftLabel: 'ES-LV5J仕様', sourceRightHref: rightSpec, sourceRightLabel: 'ES-LT2B仕様' },
+]
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={leftModel}
+  right={rightModel}
+  keyDiffRows={keyDiffRows}
+  lead="パナソニックのラムダッシュ ES-LV5JとES-LT2Bを、公式仕様で確認できる刃数・本体寸法・質量・充電方式・防水に分けて比較します。"
+  summaryParagraph="ES-LV5Jは5枚刃システム、ES-LT2Bはステンレス刃物鋼3枚刃です。質量はES-LT2Bが約145g、ES-LV5Jが約200g。使用日数はどちらも約14日間です。"
+  officialDescription="パナソニック公式の各商品ページ・仕様ページで、刃数、本体寸法、質量、使用日数、防水仕様を確認しました。"
+  officialLinks={[
+    { label: 'ES-LV5J 公式商品ページ', href: leftOfficial },
+    { label: 'ES-LT2B 公式商品ページ', href: rightOfficial },
+  ]}
+  specRows={specRows}
+  socialProofQuery="パナソニック ES-LV5J ES-LT2B ラムダッシュ"
+  socialProofCheckedAt="2026-08-19"
+  faqEntries={faqEntries}
+  leftPurchaseName="パナソニック ラムダッシュPRO ES-LV5J"
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName="パナソニック ラムダッシュ ES-LT2B"
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    { label: 'パナソニック ES-LV5J 公式商品ページ', href: leftOfficial, checkedAt: '2026-08-19' },
+    { label: 'パナソニック ES-LV5J 公式仕様ページ', href: leftSpec, checkedAt: '2026-08-19' },
+    { label: 'パナソニック ES-LT2B 公式商品ページ', href: rightOfficial, checkedAt: '2026-08-19' },
+    { label: 'パナソニック ES-LT2B 公式仕様ページ', href: rightSpec, checkedAt: '2026-08-19' },
+  ]}
+  disclaimer="この比較は、パナソニック公式の商品ページと仕様ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。"
+/>
