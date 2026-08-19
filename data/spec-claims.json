@@ -299,6 +299,16 @@
         "https://panasonic.jp/airrich/products/F-PX70C.html"
       ],
       "note": ""
+    },
+    {
+      "articleId": "panasonic-es-lt4b-vs-es-lv7j",
+      "checkedAt": "2026-08-19",
+      "claimsFingerprint": "sha256:ed1e6a28975a4e07f224367f37b35267e9ddabd930d32bedf40969c0d73a9d5e",
+      "officialUrls": [
+        "https://panasonic.jp/shaver/products/ES-LT4B.html",
+        "https://panasonic.jp/shaver/products/ES-LV7J.html"
+      ],
+      "note": ""
     }
   ]
 }
