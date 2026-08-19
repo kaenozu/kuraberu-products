@@ -1,0 +1,283 @@
+---
+/**
+ * ArticleComparisonPage.astro — 手動比較記事の標準レイアウト（Article Layout v3）。
+ *
+ * 2つのモード:
+ * 1. articleId モード: メタデータから自動解決（1行記事）
+ * 2. 明示モード: 全プロップを直接渡す（後方互換）
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RelatedArticles from './RelatedArticles.astro';
+import PurchaseCard from './PurchaseCard.astro';
+import ComparisonMemoButton from './ComparisonMemoButton.astro';
+import ArticleComparisonV2 from './ArticleComparisonV2.astro';
+import ArticleSocialProof from './ArticleSocialProof.astro';
+import type { KeyDiffRow } from './VisualKeyDifferences.astro';
+import { articleMetadata as allArticles } from '../content/articles';
+import { articlePurchaseLinks } from '../lib/products';
+import type { ArticleMetadata, ComparisonSide } from '../content/articles';
+
+interface SpecRow {
+  label: string;
+  left: string;
+  right: string;
+  sourceLeftHref?: string;
+  sourceLeftLabel?: string;
+  sourceRightHref?: string;
+  sourceRightLabel?: string;
+}
+
+interface SourceLink {
+  label: string;
+  href: string;
+  checkedAt?: string;
+}
+
+interface Side {
+  brand: string;
+  line: string;
+  tagline: string;
+  image: string;
+  imageAlt: string;
+  officialHref: string;
+  guidePoints: string[];
+  purchaseHref?: string;
+  productId?: string;
+}
+
+interface ArticleComparisonPageProps {
+  /** 1行記事モード: 記事IDを指定するとメタデータから自動解決 */
+  articleId?: string;
+  /** 明示モード: メタデータ */
+  articleMetadata?: ArticleMetadata;
+  /** 明示モード: 左右モデル */
+  left?: Side;
+  right?: Side;
+  keyDiffRows?: KeyDiffRow[];
+  lead?: string;
+  summaryParagraph?: string;
+  officialDescription?: string;
+  officialLinks?: readonly { label: string; href: string }[];
+  specRows?: readonly SpecRow[];
+  socialProofQuery?: string;
+  socialProofCheckedAt?: string;
+  faqEntries?: readonly { question: string; answer: string }[];
+  leftPurchaseName?: string;
+  leftPurchaseAudience?: string;
+  rightPurchaseName?: string;
+  rightPurchaseAudience?: string;
+  sourceLinks?: readonly SourceLink[];
+  purchaseWarning?: string;
+  disclaimer?: string;
+}
+
+const props = Astro.props as ArticleComparisonPageProps;
+
+// --- Resolve data from articleId or explicit props ---
+let resolved: {
+  articleMetadata: ArticleMetadata;
+  left: Side;
+  right: Side;
+  keyDiffRows: KeyDiffRow[];
+  lead: string;
+  summaryParagraph?: string;
+  officialDescription: string;
+  officialLinks: readonly { label: string; href: string }[];
+  specRows?: readonly SpecRow[];
+  socialProofQuery: string;
+  socialProofCheckedAt?: string;
+  faqEntries: readonly { question: string; answer: string }[];
+  leftPurchaseName: string;
+  leftPurchaseAudience: string;
+  rightPurchaseName: string;
+  rightPurchaseAudience: string;
+  sourceLinks: readonly SourceLink[];
+  purchaseWarning: string;
+  disclaimer: string;
+};
+
+if (props.articleId) {
+  // --- articleId モード: メタデータから自動解決 ---
+  const article = allArticles.find((a) => a.id === props.articleId);
+  if (!article) throw new Error(`Unknown article: ${props.articleId}`);
+  if (!article.leftModel || !article.rightModel) {
+    throw new Error(`Article ${props.articleId} missing leftModel/rightModel`);
+  }
+
+  const lm = article.leftModel;
+  const rm = article.rightModel;
+  const purchaseKey = article.id;
+
+  const toSide = (m: ComparisonSide, side: "left" | "right"): Side => ({
+    ...m,
+    guidePoints: [...m.guidePoints],
+    purchaseHref: (articlePurchaseLinks as Record<string, { purchaseUrl: string }>)[`${purchaseKey}:${side}`]?.purchaseUrl,
+  });
+
+  const leftAudiences = lm.guidePoints.length > 0 ? lm.guidePoints[0] : `${lm.line}を選ぶ人向け`;
+  const rightAudiences = rm.guidePoints.length > 0 ? rm.guidePoints[0] : `${rm.line}を選ぶ人向け`;
+
+  const officialLinks = [
+    { label: `${lm.line} 公式商品ページ`, href: lm.officialHref },
+    { label: `${rm.line} 公式商品ページ`, href: rm.officialHref },
+  ];
+
+  const sourceLinks: SourceLink[] = [
+    { label: `${lm.line} 公式商品ページ`, href: lm.officialHref, checkedAt: article.productInfoCheckedAt },
+    { label: `${rm.line} 公式商品ページ`, href: rm.officialHref, checkedAt: article.productInfoCheckedAt },
+  ];
+
+  resolved = {
+    articleMetadata: article,
+    left: toSide(lm, "left"),
+    right: toSide(rm, "right"),
+    keyDiffRows: [...article.keyDiffRows!],
+    lead: article.lead!,
+    summaryParagraph: article.summaryParagraph,
+    officialDescription: article.officialDescription ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
+    officialLinks,
+    specRows: props.specRows,
+    socialProofQuery: article.socialProofQuery ?? `${lm.brand} ${lm.line} ${rm.line}`,
+    socialProofCheckedAt: article.socialProofCheckedAt,
+    faqEntries: [...article.faqEntries!],
+    leftPurchaseName: `${lm.brand} ${lm.line}`,
+    leftPurchaseAudience: leftAudiences,
+    rightPurchaseName: `${rm.brand} ${rm.line}`,
+    rightPurchaseAudience: rightAudiences,
+    sourceLinks: article.officialSources
+      ? article.officialSources.map((s) => ({ label: s.label, href: s.url, checkedAt: article.productInfoCheckedAt }))
+      : sourceLinks,
+    purchaseWarning: props.purchaseWarning ?? '価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。',
+    disclaimer: props.disclaimer ?? 'この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。',
+  };
+} else {
+  // --- 明示モード: 全プロップを直接渡す ---
+  if (!props.articleMetadata) throw new Error("articleMetadata is required in explicit mode");
+  if (!props.left || !props.right) throw new Error("left/right are required in explicit mode");
+  if (!props.keyDiffRows) throw new Error("keyDiffRows is required in explicit mode");
+  if (!props.lead) throw new Error("lead is required in explicit mode");
+  if (!props.faqEntries) throw new Error("faqEntries is required in explicit mode");
+  // socialProofQuery is optional in explicit mode
+  if (!props.leftPurchaseName) throw new Error("leftPurchaseName is required in explicit mode");
+  if (!props.leftPurchaseAudience) throw new Error("leftPurchaseAudience is required in explicit mode");
+  if (!props.rightPurchaseName) throw new Error("rightPurchaseName is required in explicit mode");
+  if (!props.rightPurchaseAudience) throw new Error("rightPurchaseAudience is required in explicit mode");
+  if (!props.sourceLinks) throw new Error("sourceLinks is required in explicit mode");
+
+  resolved = {
+    articleMetadata: props.articleMetadata,
+    left: props.left,
+    right: props.right,
+    keyDiffRows: props.keyDiffRows,
+    lead: props.lead,
+    summaryParagraph: props.summaryParagraph,
+    officialDescription: props.officialDescription ?? "",
+    officialLinks: props.officialLinks ?? [],
+    specRows: props.specRows,
+    socialProofQuery: props.socialProofQuery ?? "",
+    socialProofCheckedAt: props.socialProofCheckedAt,
+    faqEntries: props.faqEntries,
+    leftPurchaseName: props.leftPurchaseName,
+    leftPurchaseAudience: props.leftPurchaseAudience,
+    rightPurchaseName: props.rightPurchaseName,
+    rightPurchaseAudience: props.rightPurchaseAudience,
+    sourceLinks: props.sourceLinks,
+    purchaseWarning: props.purchaseWarning ?? '価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。',
+    disclaimer: props.disclaimer ?? 'この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。',
+  };
+}
+
+const {
+  articleMetadata, left, right, keyDiffRows, lead, summaryParagraph,
+  officialDescription, officialLinks, specRows: specRowsProp,
+  socialProofQuery, socialProofCheckedAt,
+  faqEntries, leftPurchaseName, leftPurchaseAudience,
+  rightPurchaseName, rightPurchaseAudience, sourceLinks,
+  purchaseWarning, disclaimer,
+} = resolved;
+const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left: r.left, right: r.right }))) as SpecRow[];
+---
+
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / {articleMetadata.category} · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">{lead}</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2 left={left} right={right} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} />
+    {summaryParagraph && <p>{summaryParagraph}</p>}
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（公式ページで確認した項目）</summary>
+      <details class="source-toggle"><summary>根拠・確認先を表示</summary></details>
+      <div class="table-scroll">
+        <table class="comparison">
+          <thead><tr><th scope="col">比較項目</th><th scope="col">{left.line}</th><th scope="col">{right.line}</th><th scope="col">根拠</th></tr></thead>
+          <tbody>
+            {specRows.map((row) => {
+              const hasSource = row.sourceLeftHref || row.sourceRightHref;
+              return (
+                <tr>
+                  <th scope="row">{row.label}</th>
+                  <td data-label={left.line}>{row.left}</td>
+                  <td data-label={right.line}>{row.right}</td>
+                  <td data-label="根拠">
+                    {hasSource ? (
+                      <>
+                        {row.sourceLeftHref && <a href={row.sourceLeftHref} target="_blank" rel="noopener noreferrer">{row.sourceLeftLabel || left.line + "公式"}</a>}
+                        {row.sourceLeftHref && row.sourceRightHref && " / "}
+                        {row.sourceRightHref && <a href={row.sourceRightHref} target="_blank" rel="noopener noreferrer">{row.sourceRightLabel || right.line + "公式"}</a>}
+                      </>
+                    ) : "各公式商品ページ"}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p class="meta">{purchaseWarning}</p>
+    </details>
+    {officialDescription && (
+      <>
+        <h2 id="official">公式情報</h2>
+        <p>{officialDescription}</p>
+        {officialLinks.length > 0 && (
+          <div class="source-links">
+            {officialLinks.map((link) => (
+              <a class="card-link" href={link.href} target="_blank" rel="noopener noreferrer">{link.label} →</a>
+            ))}
+          </div>
+        )}
+      </>
+    )}
+    <ArticleSocialProof query={socialProofQuery} checkedAt={socialProofCheckedAt} hasPosts={false} />
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faqEntries.map((entry) => (
+        <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>
+      ))}
+    </div>
+    <h2>購入時の注意</h2>
+    <p>{purchaseWarning}</p>
+    <div class="purchase-cards">
+      <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {articleMetadata.changeLog.map((entry) => (
+        <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>
+      ))}
+    </ol>
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      {sourceLinks.map((link) => (
+        <li><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{link.checkedAt && "（" + link.checkedAt + "確認）"}</li>
+      ))}
+    </ul>
+    <h2>調査方法・免責事項</h2>
+    <p>{disclaimer}</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

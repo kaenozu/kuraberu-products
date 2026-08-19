@@ -1,17 +1,17 @@
 ---
-import { articlePurchaseLinks } from '../../../lib/products';
-import BaseLayout from '../../../layouts/BaseLayout.astro'
-import RelatedArticles from '../../../components/RelatedArticles.astro'
-import PurchaseCard from '../../../components/PurchaseCard.astro'
-import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
-import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
-import {thermosKfm020VsKfi020Article as articleMetadata} from '../../../content/articles'
+import { articlePurchaseLinks} from '../../../lib/products';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
+import {thermosKfm020VsKfi020Article as articleMetadata} from '../../../content/articles';
+
 const kfmOfficial = 'https://www.thermos.jp/product/series/kfm.html'
+
 const kfiOfficial = 'https://www.thermos.jp/product/series/kfi.html'
+
 const kfmImage = '/products/thermos-kfm-020.jpg'
+
 const kfiImage = '/products/thermos-kfi-020.jpg'
+
 const faqEntries = [
   {
     question: 'サーモス KFM-020 と KFI-020 はどっち？',
@@ -30,6 +30,7 @@ const faqEntries = [
     answer: '内径はどちらも約20cmです。本体寸法はKFM-020が幅42.0×奥行21.5×高さ9.5cm、KFI-020が幅39.0×奥行21.0×高さ7.0cmです。メーカー希望小売価格はKFM-020が4,400円（税込）、KFI-020が3,520円（税込）と公式仕様に記載されています。',
   },
 ] as const
+
 const keyDiffRows: KeyDiffRow[] = [
   {
     label: '対応熱源',
@@ -57,56 +58,23 @@ const keyDiffRows: KeyDiffRow[] = [
     right: '3,520円（税込）',
   },
 ]
+
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
-  <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
-    <h1>{articleMetadata.headline}</h1>
-    <ArticleComparisonV2
-      left={{brand: 'サーモス', line: 'KFM-020', tagline: 'IH対応なら', image: kfmImage, imageAlt: 'サーモス KFM-020 フライパン', officialHref: kfmOfficial, guidePoints: ['IHでも使いたい', 'ガス火とIHの両方で使いたい', '深型タイプを選びたい'], purchaseHref: articlePurchaseLinks['thermos-kfm-020-vs-kfi-020:left'].purchaseUrl}}
-      right={{brand: 'サーモス', line: 'KFI-020', tagline: '軽さなら', image: kfiImage, imageAlt: 'サーモス KFI-020 フライパン', officialHref: kfiOfficial, guidePoints: ['ガス火専用で使う', '片手で軽く扱いたい', '約0.4kgを優先したい'], purchaseHref: articlePurchaseLinks['thermos-kfm-020-vs-kfi-020:right'].purchaseUrl}}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-    />
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">サーモスの約20cmフライパン「KFM-020」と「KFI-020」を比較します。メーカー公式ページで確認できる熱源、重量、寸法、価格を整理し、確認できない使用感や耐久性の推測は加えていません。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">主な比較ポイント</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <details class="fold-section" id="specs">
-      <summary>詳細仕様（全部の数値を見る）</summary>
-      <div class="table-scroll">
-        <table class="comparison">
-          <thead><tr><th scope="col">比較項目</th><th scope="col">KFM-020</th><th scope="col">KFI-020</th></tr></thead>
-          <tbody>
-            <tr><th scope="row">内径</th><td data-label="KFM-020">約20cm</td><td data-label="KFI-020">約20cm</td></tr>
-            <tr><th scope="row">対応熱源</th><td data-label="KFM-020">IH・ガスOK</td><td data-label="KFI-020">ガス火専用</td></tr>
-            <tr><th scope="row">本体寸法</th><td data-label="KFM-020">幅42.0×奥行21.5×高さ9.5cm</td><td data-label="KFI-020">幅39.0×奥行21.0×高さ7.0cm</td></tr>
-            <tr><th scope="row">本体重量</th><td data-label="KFM-020">約0.6kg</td><td data-label="KFI-020">約0.4kg</td></tr>
-            <tr><th scope="row">メーカー希望小売価格</th><td data-label="KFM-020">4,400円（税込）</td><td data-label="KFI-020">3,520円（税込）</td></tr>
-            <tr><th scope="row">公式ページの案内</th><td data-label="KFM-020">深型、耐摩耗性デュラブルコート</td><td data-label="KFI-020">ガス火専用、シリーズ最軽量</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="meta">価格・仕様は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
-      <p class="source-links"><a class="card-link" href={kfmOfficial} target="_blank" rel="noopener noreferrer">サーモス KFM 公式ページ →</a><a class="card-link" href={kfiOfficial} target="_blank" rel="noopener noreferrer">サーモス KFI 公式ページ →</a></p>
-    </details>
-    <ArticleSocialProof query="サーモス KFM-020 KFI-020 フライパン" checkedAt="2026-08-15" hasPosts={false} />
-    <h2 id="faq">よくある質問</h2>
-    <div class="faq-list">
-      {faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
-    </div>
-    <div class="purchase-cards">
-      <PurchaseCard name="サーモス KFM-020" audience="IH・ガス火の両方で使いたい人向け" href={articlePurchaseLinks['thermos-kfm-020-vs-kfi-020:left'].purchaseUrl} imagePath={kfmImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="サーモス KFI-020" audience="ガス火で軽いフライパンを使いたい人向け" href={articlePurchaseLinks['thermos-kfm-020-vs-kfi-020:right'].purchaseUrl} imagePath={kfiImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-    </div>
-    <details class="fold-section">
-      <summary>更新履歴・情報源・購入時の注意</summary>
-      <h3>更新履歴</h3>
-      <ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
-      <h3>情報源一覧</h3>
-      <ul class="source-list"><li><a href={kfmOfficial} target="_blank" rel="noopener noreferrer">サーモス KFM 公式ページ</a>（2026-08-16確認）</li><li><a href={kfiOfficial} target="_blank" rel="noopener noreferrer">サーモス KFI 公式ページ</a>（2026-08-16確認）</li></ul>
-      <h3>調査方法・免責事項</h3>
-      <p>この比較は、メーカー公式の商品ページで確認できる仕様のみを根拠にしています。価格・在庫・個人の使用感は公式ページと販売先でご確認ください。</p>
-    </details>
-  </article>
-  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
-</BaseLayout>
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'サーモス', line: 'KFM-020', tagline: 'IH対応なら', image: kfmImage, imageAlt: 'サーモス KFM-020 フライパン', officialHref: kfmOfficial, guidePoints: ['IHでも使いたい', 'ガス火とIHの両方で使いたい', '深型タイプを選びたい'], purchaseHref: articlePurchaseLinks['thermos-kfm-020-vs-kfi-020:left'].purchaseUrl}}
+  right={{brand: 'サーモス', line: 'KFI-020', tagline: '軽さなら', image: kfiImage, imageAlt: 'サーモス KFI-020 フライパン', officialHref: kfiOfficial, guidePoints: ['ガス火専用で使う', '片手で軽く扱いたい', '約0.4kgを優先したい'], purchaseHref: articlePurchaseLinks['thermos-kfm-020-vs-kfi-020:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={"サーモスの約20cmフライパン「KFM-020」と「KFI-020」を比較します。メーカー公式ページで確認できる熱源、重量、寸法、価格を整理し、確認できない使用感や耐久性の推測は加えていません。"}
+  socialProofQuery={"サーモス KFM-020 KFI-020 フライパン"}
+  faqEntries={faqEntries}
+  leftPurchaseName={"サーモス KFM-020"}
+  leftPurchaseAudience={"IH・ガス火の両方で使いたい人向け"}
+  rightPurchaseName={"サーモス KFI-020"}
+  rightPurchaseAudience={"ガス火で軽いフライパンを使いたい人向け"}
+  sourceLinks={[
+    { label:"サーモス KFM 公式ページ", href:kfmOfficial, checkedAt:"2026-08-16" },
+    { label:"サーモス KFI 公式ページ", href:kfiOfficial, checkedAt:"2026-08-16" },
+  ]}
+/>

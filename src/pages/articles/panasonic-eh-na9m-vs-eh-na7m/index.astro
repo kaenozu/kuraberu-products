@@ -1,28 +1,30 @@
 ---
-import { articlePurchaseLinks } from '../../../lib/products';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import RelatedArticles from '../../../components/RelatedArticles.astro';
-import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
-import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import { articlePurchaseLinks} from '../../../lib/products';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
 import {panasonicEhNa9mVsEhNa7mArticle as articleMetadata} from '../../../content/articles';
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 
 const leftOfficial = 'https://panasonic.jp/hair/products/EH-NA9M.html';
+
 const rightOfficial = 'https://panasonic.jp/hair/products/EH-NA7M.html';
-const leftSpec = 'https://panasonic.jp/hair/products/EH-NA9M/spec.html';
-const rightSpec = 'https://panasonic.jp/hair/products/EH-NA7M/spec.html';
+
+
+
 const leftImage = '/products/panasonic-eh-na9m.jpg';
+
 const rightImage = '/products/panasonic-eh-na7m.jpg';
+
 const leftAudience = '髪のケア機能と複数モードを重視する人向け';
+
 const rightAudience = '折りたたみやすさと持ち運びを重視する人向け';
+
 const faqEntries = [
   {question: 'EH-NA9MとEH-NA7Mの大きな違いは？', answer: '公式仕様では、EH-NA9Mがミネラル・UVケア・ナノイーイオンチャージPLUSと複数のモードを搭載する一方、EH-NA7Mはナノイー・静電気抑制・ナノイーイオンチャージを搭載しています。EH-NA7Mは折りたためる点も公式比較で案内されています。'},
   {question: '風量が大きいのはどちら？', answer: '両モデルとも、公式仕様でTURBO時1.5㎥/分と確認できます。風量だけでは大きな差がないため、機能や収納性も合わせて選ぶのがよさそうです。'},
   {question: '軽いのはどちら？', answer: '公式仕様では、EH-NA7Mが約565g、EH-NA9Mが約580gです。差は約15gなので、重さだけでなく搭載機能や折りたたみの有無も確認してください。'},
   {question: '価格や在庫は比較できる？', answer: 'この記事の購入導線は楽天市場の型番検索です。価格・在庫・ポイント・送料は変動するため、購入時点の販売ページで確認してください。'},
 ];
+
 const keyDiffRows: KeyDiffRow[] = [
   {label: '搭載機能', left: 'ミネラル・UVケア・ナノイーイオンチャージPLUS', right: '静電気抑制・ナノイーイオンチャージ', highlight: 'left'},
   {label: 'モード', left: '温冷リズム・毛先集中ケア・スカルプ・スキン', right: '公式比較では記載なし', highlight: 'left'},
@@ -30,39 +32,31 @@ const keyDiffRows: KeyDiffRow[] = [
   {label: '質量', left: '約580g', right: '約565g', highlight: 'right', highlightNote: '約15g軽い'},
   {label: '収納性', left: '公式比較では折りたたみ案内なし', right: '折りたためるタイプ', highlight: 'right'},
 ];
----
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
-  <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / 美容家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
-    <h1>{articleMetadata.headline}</h1>
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">パナソニックのナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・重さ・収納性から比較します。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2
-      left={{brand: 'パナソニック ナノケア', line: 'EH-NA9M', tagline: '髪のケア機能・モードなら', image: leftImage, imageAlt: 'パナソニック ナノケア EH-NA9M', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:left'].purchaseUrl}}
-      right={{brand: 'パナソニック ナノケア', line: 'EH-NA7M', tagline: '持ち運び・収納性なら', image: rightImage, imageAlt: 'パナソニック ナノケア EH-NA7M', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:right'].purchaseUrl}}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      diagnosisHref="/tools/product-finder/hair-dryer/"
-    />
-    <p>EH-NA9Mはミネラル・UVケア・複数モードなどの機能を重視する人向け、EH-NA7Mは折りたたみやすさと軽さを重視する人向けです。風量は両モデルとも公式仕様で1.5㎥/分と確認できます。</p>
 
-    <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">EH-NA9M</th><th scope="col">EH-NA7M</th></tr></thead><tbody>
-      <tr><th scope="row">搭載機能</th><td data-label="EH-NA9M">ミネラル・UVケア・ナノイーイオンチャージPLUS</td><td data-label="EH-NA7M">静電気抑制・ナノイーイオンチャージ</td></tr>
-      <tr><th scope="row">モード</th><td data-label="EH-NA9M">温冷リズム・毛先集中ケア・スカルプ・スキン</td><td data-label="EH-NA7M">公式比較では記載なし</td></tr>
-      <tr><th scope="row">風量（TURBO）</th><td data-label="EH-NA9M">1.5㎥/分</td><td data-label="EH-NA7M">1.5㎥/分</td></tr>
-      <tr><th scope="row">質量</th><td data-label="EH-NA9M">約580g</td><td data-label="EH-NA7M">約565g</td></tr>
-      <tr><th scope="row">本体寸法</th><td data-label="EH-NA9M">高さ22.1×幅16.1×奥行7.4cm</td><td data-label="EH-NA7M">高さ22.1×幅16.1×奥行7.4cm</td></tr>
-    </tbody></table></div><p class="meta">仕様は変更される可能性があります。購入時点の公式ページで最新情報を確認してください。</p></details>
-    <h2 id="official">公式情報</h2><p>比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した情報です。公式情報確認日：{articleMetadata.productInfoCheckedAt}。</p><div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">EH-NA9M 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">EH-NA7M 公式商品ページ →</a></div>
-    <p class="meta"><a href={leftSpec} target="_blank" rel="noopener noreferrer">EH-NA9M 仕様ページ</a> / <a href={rightSpec} target="_blank" rel="noopener noreferrer">EH-NA7M 仕様ページ</a></p>
-    <ArticleSocialProof query="パナソニック EH-NA9M EH-NA7M ナノケア" checkedAt={articleMetadata.productInfoCheckedAt} hasPosts={false} />
-    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2>購入時の注意</h2><p>ドライヤーは機能の名称だけで使用感を断定できません。価格・在庫・付属品は購入時点の公式ページと販売先で確認してください。</p>
-    <div class="purchase-cards"><PurchaseCard name="パナソニック ナノケア EH-NA9M" audience={leftAudience} href={articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="パナソニック ナノケア EH-NA7M" audience={rightAudience} href={articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
-    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
-    <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">パナソニック EH-NA9M 公式商品ページ</a>（{articleMetadata.productInfoCheckedAt}確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">パナソニック EH-NA7M 公式商品ページ</a>（{articleMetadata.productInfoCheckedAt}確認）</li></ul>
-    <h2>調査方法・免責事項</h2><p>この比較は、パナソニック公式の商品ページと仕様ページで確認できる情報を根拠にしています。口コミや未確認の販売情報は比較の根拠にしていません。</p>
-  </article>
-  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
-</BaseLayout>
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'パナソニック ナノケア', line: 'EH-NA9M', tagline: '髪のケア機能・モードなら', image: leftImage, imageAlt: 'パナソニック ナノケア EH-NA9M', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:left'].purchaseUrl}}
+  right={{brand: 'パナソニック ナノケア', line: 'EH-NA7M', tagline: '持ち運び・収納性なら', image: rightImage, imageAlt: 'パナソニック ナノケア EH-NA7M', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-eh-na9m-vs-eh-na7m:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={"パナソニックのナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・重さ・収納性から比較します。"}
+  summaryParagraph={"EH-NA9Mはミネラル・UVケア・複数モードなどの機能を重視する人向け、EH-NA7Mは折りたたみやすさと軽さを重視する人向けです。風量は両モデルとも公式仕様で1.5㎥/分と確認できます。"}
+  officialDescription={"比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した情報です。公式情報確認日：{articleMetadata.productInfoCheckedAt}。"}
+  officialLinks={[
+    { label: "EH-NA9M 公式商品ページ", href: leftOfficial },
+    { label: "EH-NA7M 公式商品ページ", href: rightOfficial },
+  ]}
+  socialProofQuery={"パナソニック EH-NA9M EH-NA7M ナノケア"}
+  faqEntries={faqEntries}
+  leftPurchaseName={"パナソニック ナノケア EH-NA9M"}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={"パナソニック ナノケア EH-NA7M"}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    { label:"パナソニック EH-NA9M 公式商品ページ", href:leftOfficial, checkedAt:"{articleMetadata.productInfoCheckedAt}" },
+    { label:"パナソニック EH-NA7M 公式商品ページ", href:rightOfficial, checkedAt:"{articleMetadata.productInfoCheckedAt}" },
+  ]}
+  purchaseWarning={"ドライヤーは機能の名称だけで使用感を断定できません。価格・在庫・付属品は購入時点の公式ページと販売先で確認してください。"}
+  disclaimer={"この比較は、パナソニック公式の商品ページと仕様ページで確認できる情報を根拠にしています。口コミや未確認の販売情報は比較の根拠にしていません。"}
+/>

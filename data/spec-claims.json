@@ -74,7 +74,7 @@
     {
       "articleId": "combi-the-s-plus-vs-premium",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:cf20aef111ef9ac801e03962d4a39fafba33d74076cf42ad4fd4f3179f47a289",
+      "claimsFingerprint": "sha256:d7d2b63bbc4ce44a5c6af0ea7ae28716c892446d5e0f71b9297c6393b8e96f47",
       "officialUrls": [
         "https://www.combi.co.jp/store/carseat/thesplus/g/g120066/",
         "https://www.combi.co.jp/store/carseat/thespremium/g/g118991/"
@@ -84,7 +84,7 @@
     {
       "articleId": "tiger-jpv-l100-vs-jpv-m100",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:8b286f80fe58e528d1c74aa71ff163aebe5b15672df32e7b9444cb563ec29624",
+      "claimsFingerprint": "sha256:09e0f7726ee0047a57748b15b14b849ea564b427778ffa8ed0d602405ac30f4d",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/",
         "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-m/"
@@ -94,7 +94,7 @@
     {
       "articleId": "panasonic-mc-sb55k-vs-mc-sb35k",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:433bbb608b48d39e3fd4910835aeceecee01f2e0917df8138794fc2b0604f6ec",
+      "claimsFingerprint": "sha256:9eb50cb48d9002c5494725aa9d4b3699af8ccf3e9b6f3992e1b8f7aaa628312f",
       "officialUrls": [
         "https://panasonic.jp/soji/products/MC-SB35K.html",
         "https://panasonic.jp/soji/products/MC-SB55K.html"
@@ -104,7 +104,7 @@
     {
       "articleId": "tefal-ko5901jp-vs-ko8601j0",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:394c8982cf3469cf285ccd8ac7eab407b565788c006e12bde07d4bd78506fd90",
+      "claimsFingerprint": "sha256:541439a62eb45d7ac2e036e854d31fc4bf82bcfd9ca93196f6da9ee115e6f845",
       "officialUrls": [
         "https://www.t-fal.co.jp/kettle/products/aprecia-lock-control-7211419696/",
         "https://www.t-fal.co.jp/kettle/products/justine-lock-7211419308/"
@@ -114,17 +114,14 @@
     {
       "articleId": "sharp-kc-s50-vs-fu-s50",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:12e111e79054b3c2b048c380b13a7e547b970c4965a670d9229c0919fafcabc7",
-      "officialUrls": [
-        "https://jp.sharp/kuusei/products/fus50/",
-        "https://jp.sharp/kuusei/products/kcs50/"
-      ],
+      "claimsFingerprint": "sha256:8a55f6796b3bc96f91d8b9376bc15cb1718e37ffc798054fffc41242fefaf6b7",
+      "officialUrls": [],
       "note": "外形寸法・重量 7.5/4.9kg・適用畳数・運転音を公式仕様ページで確認"
     },
     {
       "articleId": "thermos-tiger-bottle",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:d989d3a2a9d75ea284981d256f92447a34ecd518814ced3217b1d3866d5cd954",
+      "claimsFingerprint": "sha256:34f25d38bd141243fe59c827302eb27c2b1ede63719ae2323246d4c259c95c02",
       "officialUrls": [
         "https://www.thermos.jp/product/series/jnl-s00.html",
         "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
@@ -134,7 +131,7 @@
     {
       "articleId": "yamazaki-tower-desk-panel-vs-pen-stand",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:f43ef252b556e5299fcf5d8207086e3ef28361f14e4729e288309e4a928930d9",
+      "claimsFingerprint": "sha256:8c4898d95f7283faaa7a3a0e3b9f4eb353b44c029e85caad76caf2fc27b1335a",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/240034",
         "https://www.yamajitsu.co.jp/products/240051"
@@ -144,7 +141,7 @@
     {
       "articleId": "yamazaki-condor-wagon-vs-self-wagon",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:8f93cf88eac30a090e02423d7e02c7cf48086635cb546eacad092098d2460a04",
+      "claimsFingerprint": "sha256:778e7b60e77f45f21247959cc61876d6cff9981d90727496a696366bb7a5a561",
       "officialUrls": [
         "https://product.yamazaki-sangyo.co.jp/product/209460",
         "https://product.yamazaki-sangyo.co.jp/product/209477"
@@ -154,7 +151,7 @@
     {
       "articleId": "yamazaki-dust-wagon-45l-2division-vs-3division",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:ff5a5cf718fcc68750f066a8c890a754afc9d8a8ac1825b87b4a4d17c75cb42a",
+      "claimsFingerprint": "sha256:fac91ad0b5841368cb0e9e1257f73f43cebe70ec84e026eec57a00322acf4cfd",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/240712",
         "https://www.yamajitsu.co.jp/products/240713"
@@ -164,7 +161,7 @@
     {
       "articleId": "zojirushi-ck-pa08-vs-ck-dc08",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:342168b3d9b32ba499fe966e67ac8150aaf7e3bcbf93b620d7e307321db8316d",
+      "claimsFingerprint": "sha256:77cc962f5163698aece725f209876865154654ecd824a4546df3842688c80d24",
       "officialUrls": [
         "https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/",
         "https://www.zojirushi.co.jp/syohin/stan/product/electric_kettle/ck-pa.html"
@@ -174,7 +171,7 @@
     {
       "articleId": "tefal-dv4030j0-vs-dv8070j0",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:a1a11fc1777896596dc183953d63519805e4ae8f725684492c80cd65c7df4b1a",
+      "claimsFingerprint": "sha256:f37f35623cfd766b616b3908034eb12af97a03d6827964eca7ff0cf836ea9fc7",
       "officialUrls": [
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steam-rafrai-1830009402/",
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steamsupre-1830009138/"
@@ -194,7 +191,7 @@
     {
       "articleId": "panasonic-f-yhvx120-vs-f-yhvx90",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:5e51edead30c61592ecb05310d54c6a0c9f2468d69f79ca6887bd56fb861bfed",
+      "claimsFingerprint": "sha256:02ff4355dda0d0be18496941285c8a047eda7b1f8f565141c3e43ca88a84aa87",
       "officialUrls": [
         "https://panasonic.jp/joshitsu/products/F-YHVX120/spec.html",
         "https://panasonic.jp/joshitsu/products/F-YHVX90/spec.html"
@@ -204,7 +201,7 @@
     {
       "articleId": "yamazaki-free-broom-32-vs-45",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:3de44ec91c718eef2bd494769c4f3ea02bf8e7fc4a0e5d6379ae4fbc93390824",
+      "claimsFingerprint": "sha256:28950bd696551b274e339f91fa1435ff5e7e5af9137334a1ccf2bf2176e39bf5",
       "officialUrls": [
         "https://product.yamazaki-sangyo.co.jp/product/209613",
         "https://product.yamazaki-sangyo.co.jp/product/209620"
@@ -224,7 +221,7 @@
     {
       "articleId": "thermos-kfm-020-vs-kfi-020",
       "checkedAt": "2026-08-15",
-      "claimsFingerprint": "sha256:7237243ecd41e7e4cdc366ee16caf48ea59b50713a5c4753d5d40ba3b46b7e0a",
+      "claimsFingerprint": "sha256:06a8841f580441140cbb00f06de4eb749a2e9a2192ff68bde96dac59d6d0d7c9",
       "officialUrls": [
         "https://www.thermos.jp/product/series/kfi.html",
         "https://www.thermos.jp/product/series/kfm.html"
@@ -244,7 +241,7 @@
     {
       "articleId": "panasonic-eh-na9m-vs-eh-na7m",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:d3686c20af52c80a087654ebf011adf0f74c7dc083b4db41012dca8341515317",
+      "claimsFingerprint": "sha256:72fcfce2d6474d7e4c70f63132e42d78dea1940e880b0d780a3bcf9e3818b1da",
       "officialUrls": [
         "https://panasonic.jp/hair/products/EH-NA7M.html",
         "https://panasonic.jp/hair/products/EH-NA9M.html"
@@ -264,7 +261,7 @@
     {
       "articleId": "tiger-pcj-a080-vs-pcm-a080",
       "checkedAt": "2026-08-17",
-      "claimsFingerprint": "sha256:1b0572c086da1b377e8292bd44818fac66b0d9aa5b2a5b4f3a39b95e8bf06cc1",
+      "claimsFingerprint": "sha256:abf2aa253eabf87f7090e7cb3b7ab46eb9aeb32e3557a108d3b50c458b7060d5",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pcj-a/",
         "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pcm-a/"
@@ -274,7 +271,7 @@
     {
       "articleId": "tiger-pct-a120-vs-pct-a150",
       "checkedAt": "2026-08-18",
-      "claimsFingerprint": "sha256:7b9a84e78edf7bedeabad8eec35a4008197a070cb4f1c33ba1e07d5f8b8af1ad",
+      "claimsFingerprint": "sha256:21e0fe1ca30ea8b76aa2e2e5463a6e7d0fcbba2aad6e521433b54359cbc67196",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pct-a/"
       ],
@@ -283,7 +280,7 @@
     {
       "articleId": "zojirushi-ec-kv50-vs-ec-ma60",
       "checkedAt": "2026-08-17",
-      "claimsFingerprint": "sha256:7e9c45a8bdcb09ef362a0b81f599de22d0ca1ea507708985d5206c28f4b5dcf3",
+      "claimsFingerprint": "sha256:5ad7203a4d08a8f33adb8b5e7bb6d615674c5d6ba58c3651b10c88e28fc72224",
       "officialUrls": [
         "https://www.zojirushi.co.jp/syohin/kitchen/coffee_maker/ec-kv/",
         "https://www.zojirushi.co.jp/syohin/kitchen/coffee_maker/ec-ma/"
@@ -293,7 +290,7 @@
     {
       "articleId": "panasonic-f-px60c-vs-f-px70c",
       "checkedAt": "2026-08-19",
-      "claimsFingerprint": "sha256:86bc151b73124d0901708d184d14cba2651a580ad60657298f133560b38e097a",
+      "claimsFingerprint": "sha256:f4057619b12a9893b7749b602600261a9290f8548997bf618990218bb811faba",
       "officialUrls": [
         "https://panasonic.jp/airrich/products/F-PX60C.html",
         "https://panasonic.jp/airrich/products/F-PX70C.html"

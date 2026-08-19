@@ -1,13 +1,8 @@
 ---
-import { articlePurchaseLinks } from '../../../lib/products';
-import BaseLayout from "../../../layouts/BaseLayout.astro";
-import RelatedArticles from "../../../components/RelatedArticles.astro";
-import PurchaseCard from "../../../components/PurchaseCard.astro";
-import ComparisonMemoButton from "../../../components/ComparisonMemoButton.astro";
-import ArticleComparisonV2 from "../../../components/ArticleComparisonV2.astro";
-import ArticleSocialProof from "../../../components/ArticleSocialProof.astro";
+import { articlePurchaseLinks} from '../../../lib/products';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
 import { tigerPctA120VsPctA150Article as articleMetadata } from "../../../content/articles";
-import type { KeyDiffRow } from "../../../components/VisualKeyDifferences.astro";
 
 const official = "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pct-a/";
 
@@ -18,6 +13,7 @@ const a120Model = {
   imageAlt: "タイガー 電気ケトル PCT-A120",
   audience: "1.2Lの容量と本体の軽さを確認したい人向け",
 };
+
 const a150Model = {
   brand: "タイガー",
   line: "PCT-A150",
@@ -38,41 +34,29 @@ const keyDiffRows: KeyDiffRow[] = [
   { label: "定格消費電力", left: "1300W", right: "1300W" },
   { label: "カップ1杯分の沸とう時間", left: "約59秒", right: "約59秒" },
 ];
+
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
-  <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
-    <h1>{articleMetadata.headline}</h1>
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">タイガーのPCT-A120とPCT-A150は、どちらも1300Wの電気ケトルです。公式ページで確認できる容量、本体質量、沸とう時間を分けて比較します。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2
-      left={{ brand: a120Model.brand, line: a120Model.line, tagline: "軽さと1.2Lを確認するなら", image: a120Model.image, imageAlt: a120Model.imageAlt, officialHref: official, guidePoints: [a120Model.audience], purchaseHref: articlePurchaseLinks['tiger-pct-a120-vs-pct-a150:left'].purchaseUrl}}
-      right={{ brand: a150Model.brand, line: a150Model.line, tagline: "1.5Lの容量を優先するなら", image: a150Model.image, imageAlt: a150Model.imageAlt, officialHref: official, guidePoints: [a150Model.audience], purchaseHref: articlePurchaseLinks['tiger-pct-a120-vs-pct-a150:right'].purchaseUrl}}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-    />
-    <p>PCT-A120は1.2Lで約730g、PCT-A150は1.5Lで約770gです。どちらも定格消費電力は1300W、カップ1杯分の沸とう時間は約59秒と公式ページに記載されています。</p>
 
-    <details class="fold-section" id="specs"><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">PCT-A120</th><th scope="col">PCT-A150</th><th scope="col">根拠</th></tr></thead><tbody>
-      <tr><th scope="row">容量</th><td data-label="PCT-A120">1.2L</td><td data-label="PCT-A150">1.5L</td><td data-label="根拠"><a href={official} target="_blank" rel="noopener noreferrer">タイガー公式</a></td></tr>
-      <tr><th scope="row">本体質量</th><td data-label="PCT-A120">約730g</td><td data-label="PCT-A150">約770g</td><td data-label="根拠">タイガー公式商品ページ</td></tr>
-      <tr><th scope="row">定格消費電力</th><td data-label="PCT-A120">1300W</td><td data-label="PCT-A150">1300W</td><td data-label="根拠">タイガー公式商品ページ</td></tr>
-      <tr><th scope="row">カップ1杯分の沸とう時間</th><td data-label="PCT-A120">約59秒</td><td data-label="PCT-A150">約59秒</td><td data-label="根拠">タイガー公式商品ページ</td></tr>
-    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
-    <h2 id="official">公式情報</h2><p>タイガー公式ページでは、PCT-A120（1.2L）とPCT-A150（1.5L）の容量別仕様が案内されています。両モデルの画像と仕様は同じ公式商品ページで確認できます。</p>
-    <div class="source-links"><a class="card-link" href={official} target="_blank" rel="noopener noreferrer">PCT-A120/A150 公式商品ページ →</a></div>
-    <ArticleSocialProof query="タイガー PCT-A120 PCT-A150 電気ケトル" checkedAt="2026-08-17" hasPosts={false} />
-    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2>購入時の注意</h2><p>電気ケトルは、必要な容量、置き場所、電源コードの取り回し、注ぎ方を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。</p>
-
-    <div class="purchase-cards">
-      <PurchaseCard name="タイガー PCT-A120" audience={a120Model.audience} href={articlePurchaseLinks['tiger-pct-a120-vs-pct-a150:left'].purchaseUrl} imagePath={a120Model.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="タイガー PCT-A150" audience={a150Model.audience} href={articlePurchaseLinks['tiger-pct-a120-vs-pct-a150:right'].purchaseUrl} imagePath={a150Model.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-    </div>
-    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
-    <h2>情報源一覧</h2><ul class="source-list"><li><a href={official} target="_blank" rel="noopener noreferrer">タイガー PCT-A120/A150 公式商品ページ</a>（2026-08-17確認）</li></ul>
-    <h2>調査方法・免責事項</h2><p>この比較は、タイガー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
-  </article>
-  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
-</BaseLayout>
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: a120Model.brand, line: a120Model.line, tagline: "軽さと1.2Lを確認するなら", image: a120Model.image, imageAlt: a120Model.imageAlt, officialHref: official, guidePoints: [a120Model.audience], purchaseHref: articlePurchaseLinks['tiger-pct-a120-vs-pct-a150:left'].purchaseUrl}}
+  right={{brand: a150Model.brand, line: a150Model.line, tagline: "1.5Lの容量を優先するなら", image: a150Model.image, imageAlt: a150Model.imageAlt, officialHref: official, guidePoints: [a150Model.audience], purchaseHref: articlePurchaseLinks['tiger-pct-a120-vs-pct-a150:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={"タイガーのPCT-A120とPCT-A150は、どちらも1300Wの電気ケトルです。公式ページで確認できる容量、本体質量、沸とう時間を分けて比較します。"}
+  summaryParagraph={"PCT-A120は1.2Lで約730g、PCT-A150は1.5Lで約770gです。どちらも定格消費電力は1300W、カップ1杯分の沸とう時間は約59秒と公式ページに記載されています。"}
+  officialDescription={"タイガー公式ページでは、PCT-A120（1.2L）とPCT-A150（1.5L）の容量別仕様が案内されています。両モデルの画像と仕様は同じ公式商品ページで確認できます。"}
+  officialLinks={[
+    { label: "PCT-A120/A150 公式商品ページ", href: official },
+  ]}
+  socialProofQuery={"タイガー PCT-A120 PCT-A150 電気ケトル"}
+  faqEntries={faqEntries}
+  leftPurchaseName={"タイガー PCT-A120"}
+  leftPurchaseAudience={a120Model.audience}
+  rightPurchaseName={"タイガー PCT-A150"}
+  rightPurchaseAudience={a150Model.audience}
+  sourceLinks={[
+    { label:"タイガー PCT-A120/A150 公式商品ページ", href:official, checkedAt:"2026-08-17" },
+  ]}
+  purchaseWarning={"電気ケトルは、必要な容量、置き場所、電源コードの取り回し、注ぎ方を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。"}
+  disclaimer={"この比較は、タイガー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。"}
+/>

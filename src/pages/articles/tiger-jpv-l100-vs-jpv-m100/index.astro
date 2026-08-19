@@ -1,18 +1,15 @@
 ---
-import { articlePurchaseLinks } from '../../../lib/products';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import RelatedArticles from '../../../components/RelatedArticles.astro';
-import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
-import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import { articlePurchaseLinks} from '../../../lib/products';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
 import {tigerRiceArticle as articleMetadata} from '../../../content/articles';
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 
 const lOfficial = 'https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/';
+
 const mOfficial = 'https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-m/';
 
 const lModel = {brand: 'タイガー', line: 'JPV-L100', image: '/products/tiger-jpv-l100.jpg', imageAlt: 'タイガー 圧力IHジャー炊飯器 JPV-L100', audience: '上位モデルの機能を優先する人の候補', official: lOfficial};
+
 const mModel = {brand: 'タイガー', line: 'JPV-M100', image: '/products/tiger-jpv-m100.jpg', imageAlt: 'タイガー 圧力IHジャー炊飯器 JPV-M100', audience: '価格を抑えたエントリーモデルを選びたい人の候補', official: mOfficial};
 
 const faqEntries = [
@@ -29,43 +26,31 @@ const keyDiffRows: KeyDiffRow[] = [
   {label: 'サイズ', left: '25.7×38×21.4cm', right: '25.7×38×21.4cm'},
   {label: '質量', left: '約5.4kg', right: '約5.4kg'},
 ];
+
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
-  <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
-    <h1>{articleMetadata.headline}</h1>
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">タイガーのJPV-L100とJPV-M100は、どちらも5.5合の圧力IHジャー炊飯器です。公式ページで確認できるモデルの位置づけ、価格、容量、サイズ、質量を分けて比較します。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2
-      left={{brand: lModel.brand, line: lModel.line, tagline: '上位モデルを選ぶなら', image: lModel.image, imageAlt: lModel.imageAlt, officialHref: lOfficial, guidePoints: [lModel.audience], purchaseHref: articlePurchaseLinks['tiger-jpv-l100-vs-jpv-m100:left'].purchaseUrl}}
-      right={{brand: mModel.brand, line: mModel.line, tagline: '価格を抑えるなら', image: mModel.image, imageAlt: mModel.imageAlt, officialHref: mOfficial, guidePoints: [mModel.audience], purchaseHref: articlePurchaseLinks['tiger-jpv-l100-vs-jpv-m100:right'].purchaseUrl}}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      diagnosisHref="/tools/product-finder/rice-cooker/"
-    />
-    <p>JPV-L100は上位モデル、JPV-M100はエントリーモデルです。5.5合モデルの容量・サイズ・質量は同じで、公式オンライン価格はJPV-M100の方が低く表示されています。機能の詳細は各公式ページで確認してください。</p>
 
-    <details class="fold-section" id="specs"><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">JPV-L100</th><th scope="col">JPV-M100</th><th scope="col">根拠</th></tr></thead><tbody>
-      <tr><th scope="row">加熱方式</th><td data-label="JPV-L100">圧力IH</td><td data-label="JPV-M100">圧力IH</td><td data-label="根拠"><a href={lOfficial} target="_blank" rel="noopener noreferrer">L公式</a> / <a href={mOfficial} target="_blank" rel="noopener noreferrer">M公式</a></td></tr>
-      <tr><th scope="row">白米の炊飯・保温容量</th><td data-label="JPV-L100">0.5〜5.5合</td><td data-label="JPV-M100">0.5〜5.5合</td><td data-label="根拠">各公式商品ページ</td></tr>
-      <tr><th scope="row">公式オンライン価格</th><td data-label="JPV-L100">57,800円〜</td><td data-label="JPV-M100">49,800円〜</td><td data-label="根拠">各公式商品ページ</td></tr>
-      <tr><th scope="row">サイズ</th><td data-label="JPV-L100">25.7×38×21.4cm</td><td data-label="JPV-M100">25.7×38×21.4cm</td><td data-label="根拠">各公式商品ページ</td></tr>
-      <tr><th scope="row">質量</th><td data-label="JPV-L100">約5.4kg</td><td data-label="JPV-M100">約5.4kg</td><td data-label="根拠">各公式商品ページ</td></tr>
-    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
-    <h2 id="official">公式情報</h2><p>タイガー公式ページでは、JPV-L100は圧力IHジャー炊飯器の上位モデル、JPV-M100はエントリーモデルとして案内されています。今回比較した100サイズは、どちらも5.5合炊きです。</p>
-    <div class="source-links"><a class="card-link" href={lOfficial} target="_blank" rel="noopener noreferrer">JPV-L100 公式商品ページ →</a><a class="card-link" href={mOfficial} target="_blank" rel="noopener noreferrer">JPV-M100 公式商品ページ →</a></div>
-    <ArticleSocialProof query="タイガー JPV-L100 JPV-M100 炊飯器" checkedAt="2026-08-13" hasPosts={false} />
-    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2>購入時の注意</h2><p>炊飯器は、炊飯容量、設置スペース、ふたを開けたときの高さ、炊飯メニュー、内なべの保証内容を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。</p>
-
-    <div class="purchase-cards">
-      <PurchaseCard name="タイガー JPV-L100" audience={lModel.audience} href={articlePurchaseLinks['tiger-jpv-l100-vs-jpv-m100:left'].purchaseUrl} imagePath={lModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="タイガー JPV-M100" audience={mModel.audience} href={articlePurchaseLinks['tiger-jpv-l100-vs-jpv-m100:right'].purchaseUrl} imagePath={mModel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-    </div>
-    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
-    <h2>情報源一覧</h2><ul class="source-list"><li><a href={lOfficial} target="_blank" rel="noopener noreferrer">タイガー JPV-L100 公式商品ページ</a>（2026-08-13確認）</li><li><a href={mOfficial} target="_blank" rel="noopener noreferrer">タイガー JPV-M100 公式商品ページ</a>（2026-08-13確認）</li></ul>
-    <h2>調査方法・免責事項</h2><p>この比較は、タイガー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
-  </article>
-  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
-</BaseLayout>
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: lModel.brand, line: lModel.line, tagline: '上位モデルを選ぶなら', image: lModel.image, imageAlt: lModel.imageAlt, officialHref: lOfficial, guidePoints: [lModel.audience], purchaseHref: articlePurchaseLinks['tiger-jpv-l100-vs-jpv-m100:left'].purchaseUrl}}
+  right={{brand: mModel.brand, line: mModel.line, tagline: '価格を抑えるなら', image: mModel.image, imageAlt: mModel.imageAlt, officialHref: mOfficial, guidePoints: [mModel.audience], purchaseHref: articlePurchaseLinks['tiger-jpv-l100-vs-jpv-m100:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={"タイガーのJPV-L100とJPV-M100は、どちらも5.5合の圧力IHジャー炊飯器です。公式ページで確認できるモデルの位置づけ、価格、容量、サイズ、質量を分けて比較します。"}
+  summaryParagraph={"JPV-L100は上位モデル、JPV-M100はエントリーモデルです。5.5合モデルの容量・サイズ・質量は同じで、公式オンライン価格はJPV-M100の方が低く表示されています。機能の詳細は各公式ページで確認してください。"}
+  officialDescription={"タイガー公式ページでは、JPV-L100は圧力IHジャー炊飯器の上位モデル、JPV-M100はエントリーモデルとして案内されています。今回比較した100サイズは、どちらも5.5合炊きです。"}
+  officialLinks={[
+    { label: "JPV-L100 公式商品ページ", href: lOfficial },
+    { label: "JPV-M100 公式商品ページ", href: mOfficial },
+  ]}
+  socialProofQuery={"タイガー JPV-L100 JPV-M100 炊飯器"}
+  faqEntries={faqEntries}
+  leftPurchaseName={"タイガー JPV-L100"}
+  leftPurchaseAudience={lModel.audience}
+  rightPurchaseName={"タイガー JPV-M100"}
+  rightPurchaseAudience={mModel.audience}
+  sourceLinks={[
+    { label:"タイガー JPV-L100 公式商品ページ", href:lOfficial, checkedAt:"2026-08-13" },
+    { label:"タイガー JPV-M100 公式商品ページ", href:mOfficial, checkedAt:"2026-08-13" },
+  ]}
+  purchaseWarning={"炊飯器は、炊飯容量、設置スペース、ふたを開けたときの高さ、炊飯メニュー、内なべの保証内容を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。"}
+  disclaimer={"この比較は、タイガー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。"}
+/>
