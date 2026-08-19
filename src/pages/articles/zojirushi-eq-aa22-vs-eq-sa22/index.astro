@@ -1,0 +1,66 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { zojirushiToasterArticle as articleMetadata } from '../../../content/articles'
+
+const aaOfficial = 'https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-aa/'
+const saOfficial = 'https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sa/'
+
+const aaModel = {
+  brand: '象印',
+  line: 'EQ-AA22',
+  image: '/products/zojirushi-eq-aa22.png',
+  imageAlt: '象印 オーブントースター EQ-AA22',
+  audience: '15分タイマーと幅38.5cmの外形寸法を確認したい人向け',
+}
+
+const saModel = {
+  brand: '象印',
+  line: 'EQ-SA22',
+  image: '/products/zojirushi-eq-sa22.png',
+  imageAlt: '象印 オーブントースター EQ-SA22',
+  audience: '30分タイマーと奥行29cmの外形寸法を確認したい人向け',
+}
+
+const faqEntries = [
+  { question: '象印 EQ-AA22 と EQ-SA22 の違いは？', answer: '公式仕様では、EQ-AA22はタイマー15分・外形寸法約幅38.5×奥行27×高さ23cm・約3.9kg、EQ-SA22はタイマー30分・約幅33.5×奥行29×高さ26cm・約4.3kgです。' },
+  { question: 'EQ-AA22とEQ-SA22のタイマーは？', answer: 'EQ-AA22は15分、EQ-SA22は30分です。いずれも象印公式の商品ページに記載されています。' },
+  { question: '本体が軽いのはどっち？', answer: '公式仕様では、EQ-AA22が約3.9kg、EQ-SA22が約4.3kgです。EQ-AA22の方が約0.4kg軽い仕様です。' },
+  { question: '焼ける枚数と消費電力は違う？', answer: '今回確認した公式ページでは、どちらも消費電力1000W、2枚焼き、トレー内寸約幅22.7×奥行20cmです。' },
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: 'タイマー', left: '15分', right: '30分', highlight: 'right', highlightNote: '15分長い', bar: { left: 15, right: 30 } },
+  { label: '本体質量', left: '約3.9kg', right: '約4.3kg', highlight: 'left', highlightNote: '約0.4kg軽い', bar: { left: 3.9, right: 4.3 } },
+  { label: '外形寸法', left: '約38.5×27×23cm', right: '約33.5×29×26cm' },
+  { label: '庫内寸法', left: '約26×22×10.5cm', right: '約27×23.5×11cm' },
+  { label: '消費電力・枚数', left: '1000W・2枚', right: '1000W・2枚' },
+]
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: aaModel.brand, line: aaModel.line, tagline: '軽さと高さを確認するなら', image: aaModel.image, imageAlt: aaModel.imageAlt, officialHref: aaOfficial, guidePoints: [aaModel.audience], purchaseHref: articlePurchaseLinks['zojirushi-eq-aa22-vs-eq-sa22:left'].purchaseUrl}}
+  right={{brand: saModel.brand, line: saModel.line, tagline: '30分タイマーなら', image: saModel.image, imageAlt: saModel.imageAlt, officialHref: saOfficial, guidePoints: [saModel.audience], purchaseHref: articlePurchaseLinks['zojirushi-eq-aa22-vs-eq-sa22:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'象印のEQ-AA22とEQ-SA22は、どちらも消費電力1000W・2枚焼きのオーブントースターです。公式ページで確認できるタイマー、外形寸法、庫内寸法、質量を分けて比較します。'}
+  summaryParagraph={'EQ-AA22は約3.9kgで15分タイマー、EQ-SA22は30分タイマーです。外形寸法と庫内寸法も異なるため、タイマーの長さだけでなく、設置場所と入れたいもののサイズを公式仕様で確認してください。'}
+  officialDescription={'象印公式ページでは、EQ-AA22とEQ-SA22の消費電力、タイマー、外形寸法、庫内寸法、本体質量、トレー内寸などが案内されています。'}
+  officialLinks={[
+    { label: 'EQ-AA22 公式商品ページ', href: aaOfficial },
+    { label: 'EQ-SA22 公式商品ページ', href: saOfficial },
+  ]}
+  socialProofQuery={'象印 EQ-AA22 EQ-SA22 オーブントースター'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'象印 EQ-AA22'}
+  leftPurchaseAudience={aaModel.audience}
+  rightPurchaseName={'象印 EQ-SA22'}
+  rightPurchaseAudience={saModel.audience}
+  sourceLinks={[
+    { label: '象印 EQ-AA22 公式商品ページ', href: aaOfficial, checkedAt: '2026-08-19' },
+    { label: '象印 EQ-SA22 公式商品ページ', href: saOfficial, checkedAt: '2026-08-19' },
+  ]}
+  purchaseWarning={'オーブントースターは、設置スペース、庫内寸法、タイマー、焼ける枚数を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。'}
+  disclaimer={'この比較は、象印公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。'}
+/>

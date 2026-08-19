@@ -439,4 +439,12 @@ export const articlePurchaseLinks = {
     name: "象印 EC-MA60",
     purchaseUrl: "https://a.r10.to/h5Ob79",
   },
+  "zojirushi-eq-aa22-vs-eq-sa22:left": {
+    name: "象印 EQ-AA22",
+    purchaseUrl: "https://a.r10.to/hFR6ju",
+  },
+  "zojirushi-eq-aa22-vs-eq-sa22:right": {
+    name: "象印 EQ-SA22",
+    purchaseUrl: "https://a.r10.to/h5DVzd",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
