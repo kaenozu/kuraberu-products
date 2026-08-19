@@ -421,7 +421,9 @@ describe("article JSON-LD by content type (rendered dist)", () => {
 
 describe("source-toggle fold (rendered dist)", () => {
   const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name !== "page")
+    .filter(
+      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
+    )
     .map((entry) => entry.name)
     .sort();
 
@@ -457,7 +459,9 @@ describe("source-toggle fold (rendered dist)", () => {
 
 describe("article trust line (rendered dist)", () => {
   const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name !== "page")
+    .filter(
+      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
+    )
     .map((entry) => entry.name)
     .sort();
 
@@ -486,7 +490,9 @@ describe("article trust line (rendered dist)", () => {
 
 describe("article diagnosis CTA (rendered dist)", () => {
   const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter((entry) => entry.isDirectory() && entry.name !== "page")
+    .filter(
+      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
+    )
     .map((entry) => entry.name)
     .sort();
 

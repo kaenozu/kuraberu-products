@@ -172,7 +172,12 @@ export function validateRenderedExternalEmbedCounts(
 }
 
 function internalTarget(href, distDirectory) {
-  const pathname = href.split("#")[0].split("?")[0];
+  let pathname = href.split("#")[0].split("?")[0];
+  try {
+    pathname = decodeURIComponent(pathname);
+  } catch {
+    /* ignore malformed URIs */
+  }
   if (!pathname || !pathname.startsWith("/")) return null;
   if (pathname === "/") return path.join(distDirectory, "index.html");
   if (path.extname(pathname)) return path.join(distDirectory, pathname);
@@ -180,6 +185,81 @@ function internalTarget(href, distDirectory) {
 }
 
 const ARTICLE_PAGE_PATTERN = /^articles\/[^/]+\/index\.html$/;
+// 記事テンプレートのセクション順序契約（config/article-layout.mjs の sectionOrder）。
+// 実ビルド済み HTML からセクションマーカーの出現位置を抽出し、
+// 定義された順序と照合する。順序違反は error として報告する。
+const SECTION_MARKERS = {
+  meta: /<p class="meta">/,
+  h1: /<h1[^>]*>/,
+  lead: /<p class="lead">/,
+  "jump-nav": /<nav class="jump-nav"/,
+  "comparison-v2": /<section[^>]*class="[^"]*\barticle-comparison-v2/,
+  specs: /<details[^>]*id="specs"/,
+  official: /<h2 id="official">/,
+  "trust-line": /<p class="trust-line">/,
+  "next-step": /<section[^>]*data-next-step/,
+  faq: /<h2 id="faq">/,
+  "purchase-cards": /<div class="purchase-cards">/,
+  "change-log": /<ol class="change-log">/,
+  "source-list": /<ul class="source-list">/,
+};
+
+export function validateArticleSectionOrder(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const errors = [];
+  const contentType =
+    html.match(
+      /<meta name="article:content-type" content="(guide|comparison)">/i,
+    )?.[1] ?? null;
+  if (contentType !== "comparison") return [];
+
+  const hasComparisonV2 = /class="[^"]*\barticle-comparison-v2\b/.test(html);
+  const hasNextStep = /data-next-step/.test(html);
+
+  let order;
+  if (hasComparisonV2) {
+    order = ARTICLE_LAYOUT.sectionOrder?.comparisonPage;
+  } else if (hasNextStep) {
+    order = ARTICLE_LAYOUT.sectionOrder?.commercialPage;
+  } else {
+    return [];
+  }
+  if (!order) return [];
+
+  const positions = [];
+  for (const { id } of order) {
+    const re = SECTION_MARKERS[id];
+    if (!re) continue;
+    const match = html.match(re);
+    if (match) {
+      positions.push({ id, pos: match.index });
+    }
+  }
+
+  positions.sort((a, b) => a.pos - b.pos);
+  for (let i = 1; i < positions.length; i++) {
+    const prev = positions[i - 1];
+    const curr = positions[i];
+    const prevIndex = order.findIndex((s) => s.id === prev.id);
+    const currIndex = order.findIndex((s) => s.id === curr.id);
+    if (prevIndex > currIndex) {
+      errors.push(
+        relative +
+          ": section " +
+          JSON.stringify(curr.id) +
+          " appears before " +
+          JSON.stringify(prev.id) +
+          " (expected order: " +
+          prev.id +
+          " → " +
+          curr.id +
+          ")",
+      );
+    }
+  }
+
+  return errors;
+}
 
 // 記事ページの商品数を、BaseLayout が出力する
 // <meta name="article:product-count" content="N"> から読み取る。
@@ -1057,6 +1137,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
     errors.push(...validateArticleNextStep(relative, html));
+    errors.push(...validateArticleSectionOrder(relative, html));
     errors.push(
       ...validateArticleCtas(
         relative,

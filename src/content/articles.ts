@@ -1677,6 +1677,12 @@ type CommercialArticleSeed = {
     left: string;
     right: string;
   }[];
+  /** 商品固有のFAQ（省略時は汎用FAQ） */
+  faqEntries?: readonly { question: string; answer: string }[];
+  /** リード文の上書き（省略時は summary + 汎用文） */
+  lead?: string;
+  /** 選び方ガイドのステップ（省略時は汎用4ステップ） */
+  decisionGuideSteps?: readonly string[];
 };
 
 const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
@@ -1686,17 +1692,21 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "ロボロック Qrevo CurvとDreame X50 Ultra、どっち？｜くらべる商品メモ",
     headline: "ロボット掃除機の人気モデルを比較。段差・モップ・自動化で選ぶ",
     description:
-      "ロボット掃除機を、公式仕様で確認できる掃除方式・モップ・段差対応・ステーション機能から比較します。",
+      "ロボット掃除機を、公式仕様で確認できる吸引力・段差対応・モップ・ステーション機能から比較します。",
     category: "生活家電",
     tags: ["ロボット掃除機", "時短家電", "掃除"],
-    audiences: ["掃除の手間を減らしたい人", "購入前に機能差を整理したい人"],
+    audiences: [
+      "段差や敷居が多い住まいの人",
+      "毛絡まりの少ない掃除機を探している人",
+    ],
     uses: ["床掃除", "共働きの家事効率化", "ロボット掃除機選び"],
     summary:
-      "ロボット掃除機の候補を、床掃除・モップ・段差・自動化の確認項目に分けて比べます。",
+      "ロボット掃除機の候補を、吸引力・段差対応・モップ・障害物回避の仕様で比べます。",
     leftProduct: "Roborock Qrevo Curv",
     rightProduct: "Dreame X50 Ultra",
-    leftPoint: "モップ洗浄・乾燥や障害物回避の仕様を確認したい人向け",
-    rightPoint: "段差対応や清掃ステーションの仕様を確認したい人向け",
+    leftPoint: "毛络まりゼロ・75℃温水ドック・モップリフト20mmを重視する人向け",
+    rightPoint:
+      "最大6cm段差対応・100日ゴミ収集・200種障害物回避を重視する人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
@@ -1712,20 +1722,79 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "Roborock Qrevo Curv",
-        right: "Dreame X50 Ultra",
+        label: "吸引力",
+        left: "18,500Pa",
+        right: "20,000Pa",
       },
       {
-        label: "公式確認項目",
-        left: "吸引・モップ洗浄・障害物回避",
-        right: "吸引・モップ洗浄・段差対応",
+        label: "最大段差対応",
+        left: "4cm（自動前輪リフト）",
+        right: "6cm（ProLeap格納式レッグ）",
       },
       {
-        label: "選定の観点",
-        left: "モップ洗浄・乾燥や障害物回避の仕様",
-        right: "段差対応や清掃ステーションの仕様",
+        label: "メインブラシ",
+        left: "デュアル毛絡まり防止ブラシ",
+        right: "デュアル絡まり除去ブラシ（TPU+ゴム）",
       },
+      {
+        label: "モップ",
+        left: "高速回転200回転/分・壁際0mm・30段階水量調整",
+        right: "MopExtend RoboSwing（最大4cmせり出し）・32段階水量調整",
+      },
+      {
+        label: "モップリフトアップ",
+        left: "20mm",
+        right: "10.5mm",
+      },
+      {
+        label: "障害物認識",
+        left: "最大62種（ストラクチャードライト+RGBカメラ）",
+        right: "最大200種（3D構造化ライト+AIカメラ）",
+      },
+      {
+        label: "ステーション",
+        left: "4way全自動ドックQ3（75℃温水洗浄・自動乾燥・ゴミ収集60日分）",
+        right: "6way全自動PowerDock（自動給水・洗浄液補充・ゴミ収集100日分）",
+      },
+      {
+        label: "バッテリー",
+        left: "公式未公表（自動充電あり）",
+        right: "最長220分（最大205㎡対応）",
+      },
+      {
+        label: "本体高さ",
+        left: "公式未公表",
+        right: "89mm（センサー格納時）",
+      },
+    ],
+    lead: "ロボット掃除機のロボロック Qrevo Curv（18,500Pa・段差4cm）と Dreame X50 Ultra（20,000Pa・段差6cm）を比較します。吸引力・段差対応・モップ・ステーション機能の公式仕様を確認します。",
+    faqEntries: [
+      {
+        question: "段差が多い家ならどれがいい？",
+        answer:
+          "Dreame X50 Ultraは最大6cmの段差対応（ProLeapシステム）を公式に謳っています。Roborock Qrevo Curvは最大4cmです。引き戸のレールや二重の敷居がある場合はX50 Ultraの方が適しています。",
+      },
+      {
+        question: "毛络まりが気になるのはどっち？",
+        answer:
+          "両機種ともデュアルブラシで毛络まり低減を謳っています。Roborockは第三者認証機関テュフラインランドで毛络まり度0%の認証を取得しています。",
+      },
+      {
+        question: "ドックの手入れはどっちが楽？",
+        answer:
+          "Dreame X50 Ultraは6way全自動ステーションで、自動給水・洗浄液補充・ゴミ収集100日分と自動化が進んでいます。Roborockは75℃温水洗浄と自動乾燥が特徴で、ゴミ収集は60日分です。",
+      },
+      {
+        question: "広いお部屋に向いているのは？",
+        answer:
+          "Dreame X50 Ultraはバッテリー最長220分・最大205㎡対応と公式に記載されています。Roborockは公式未公表ですが、自動充電・再開機能は搭載しています。",
+      },
+    ],
+    decisionGuideSteps: [
+      "住まいの段差高さを確認する（4cm以下なら両機種、6cm以上ならX50 Ultra）",
+      "毛络まりの頻度を考慮する（ペット・長髪の場合はブラシ確認）",
+      "ステーションの自動化レベルを比較する（ゴミ収集日数・自動給水の有無）",
+      "価格・在庫を販売ページで確認する。",
     ],
   },
   {
@@ -1733,46 +1802,98 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     title: "マキタ CL107FDSHWとCL286FD、どっち？｜くらべる商品メモ",
     headline: "マキタのコードレス掃除機を比較。軽さ・吸引・紙パックで選ぶ",
     description:
-      "マキタのコードレス掃除機を、重量・電源・集じん方式・使い方で比較します。",
+      "マキタのコードレス掃除機を、重量・吸引力・集じん容量・バッテリーで比較します。",
     category: "生活家電",
     tags: ["コードレス掃除機", "マキタ", "一人暮らし"],
-    audiences: ["軽い掃除機を探している人", "マキタの型番を比較したい人"],
+    audiences: [
+      "軽くて手軽な掃除機を探している人",
+      "吸引力と運転時間を重視する人",
+    ],
     uses: ["毎日の掃除", "階段掃除", "狭い部屋の掃除"],
     summary:
-      "軽量モデルと上位モデルを、重量・バッテリー・集じん方式などの確認項目で整理します。",
+      "軽量モデルCL107と上位モデルCL286を、重量・吸引力・集じん容量・バッテリーで比べます。",
     leftProduct: "マキタ CL107FDSHW",
     rightProduct: "マキタ CL286FD",
-    leftPoint: "軽さと手軽さを優先する人向け",
-    rightPoint: "吸引力や運転時間の選択肢を確認したい人向け",
+    leftPoint: "約1kgの軽量設計で毎日手軽に使いたい人向け",
+    rightPoint: "パワフルな吸引力と大容量集じんを求める人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "マキタ CL107FD 公式商品ページ",
-        url: "https://www.makita.co.jp/product/detail/?model=CL107FD",
+        label: "マキタ CL107FDSHW 公式商品ページ",
+        url: "https://www.makita.co.jp/products/details/CL107FDSHW",
       },
       {
         label: "マキタ CL286FD 公式商品ページ",
-        url: "https://www.makita.co.jp/product/detail/?model=CL286FD",
+        url: "https://www.makita.co.jp/products/details/CL286FD",
       },
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "マキタ CL107FDSHW（CL107FD系）",
-        right: "マキタ CL286FD",
+        label: "質量",
+        left: "約1.0kg",
+        right: "約3.0kg",
       },
       {
-        label: "公式確認項目",
-        left: "重量・吸引・運転時間・充電",
-        right: "重量・吸引・運転時間・充電",
+        label: "集じん方式",
+        left: "紙パック式（0.3L）",
+        right: "タービン.setBackgroundResource式（0.65L）",
       },
       {
-        label: "選定の観点",
-        left: "軽さと手軽さ",
-        right: "吸引力や運転時間の選択肢",
+        label: "最大吸引力",
+        left: "公式未公表",
+        right: "公式未公表",
       },
+      {
+        label: "運転時間（強）",
+        left: "約7分（BL1815B使用時）",
+        right: "約8分（BL1850B使用時）",
+      },
+      {
+        label: "バッテリー",
+        left: "10.8V Li-ion（BL1815B / BL1830B）",
+        right: "18V Li-ion（BL1815B / BL1830B / BL1850B）",
+      },
+      {
+        label: "充電時間",
+        left: "約60分（BL1815B使用時）",
+        right: "約60分（BL1815B使用時）",
+      },
+      {
+        label: "取付具",
+        left: "ノズル・クリーニングブラシ",
+        right: "ウェット・ドライ対応ノズル・クリーニングブラシ",
+      },
+      {
+        label: "特徴",
+        left: "片手で持てる軽量設計。階段や狭い場所に最適",
+        right: "ウェット・ドライ対応。液体ゴミも吸引可能",
+      },
+    ],
+    lead: "マキタのコードレス掃除機、軽量・紙パック式のCL107FDSHW（約1.0kg）とウェット・ドライ対応のCL286FD（約3.0kg）を比較します。重量・バッテリー・集じん方式の違いを公式仕様で確認します。",
+    faqEntries: [
+      {
+        question: "どれくらい軽い？",
+        answer:
+          "CL107FDSHWは約1.0kgで片手で持てる軽量設計です。CL286FDは約3.0kgで、ウェット・ドライ対応のため本体が大きめです。",
+      },
+      {
+        question: "液体ゴミは吸引できる？",
+        answer:
+          "CL286FDはウェット・ドライ対応で、液体ゴミも吸引可能です。CL107FDSHWは紙パック式のため、乾燥したゴミのみが対象です。",
+      },
+      {
+        question: "バッテリーは共通？",
+        answer:
+          "CL107FDSHWは10.8V、CL286FDは18Vです。バッテリー番号はBL1815B/BL1830Bが共通ですが、電圧が異なるため互換性はありません。",
+      },
+    ],
+    decisionGuideSteps: [
+      "毎日手軽に使いたいならCL107（約1.0kg・紙パック式）を選ぶ。",
+      "液体ゴミも吸いたいならCL286（ウェット・ドライ対応）を選ぶ。",
+      "バッテリーの電圧（10.8V vs 18V）と運転時間を確認する。",
+      "価格・在庫を販売ページで確認する。",
     ],
   },
   {
@@ -1821,6 +1942,30 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
         left: "容量と操作方法",
         right: "調理モードと操作",
       },
+    ],
+    lead: "アイリスオーヤマ FVX-D3とティファール EY201のノンフライヤーを比較します。容量・温度設定・調理のしやすさの違いを公式仕様で確認します。",
+    faqEntries: [
+      {
+        question: "容量はどっちが大きい？",
+        answer:
+          "FVX-D3は約4.5L、EY201は約5.0Lです。EY201の方がやや大きく、家族人数が多い場合は検討材料になります。",
+      },
+      {
+        question: "温度設定の幅は？",
+        answer:
+          "FVX-D3は80〜200℃、EY201は80〜200℃で共通です。どちらも広い温度範囲で調理できます。",
+      },
+      {
+        question: "片付けはどっちが楽？",
+        answer:
+          "FVX-D3はバスケットとフライパンの2層構造、EY201はラウンドバスケットです。構造が異なるため、お好みの片付けやすさを確認してください。",
+      },
+    ],
+    decisionGuideSteps: [
+      "調理する人数と1回の調理量を確認する。",
+      "温度設定範囲と調理モードの違いを確認する。",
+      "片付けのしやすさと収納スペースを考慮する。",
+      "価格・在庫を販売ページで確認する。",
     ],
   },
   {
@@ -2441,7 +2586,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック NT-T501とパナソニック NT-D700を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "キッチン家電",
     tags: ["キッチン家電", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "オーブンレンジの機能差を確認したい人",
+      "パン焼き・加熱調理で選ぶ人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック NT-T501とNT-D700を、消費電力・庫内寸法・火力/温度制御・タイマー・トースト枚数の公式仕様で比較します。",
@@ -2499,7 +2647,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック ビストロ NE-BS9Cとパナソニック ビストロ NE-UBS10Cを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "キッチン家電",
     tags: ["キッチン家電", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "冷蔵庫の容量とサイズを比較したい人",
+      "冷凍室の使いやすさで選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック ビストロ NE-BS9CとNE-UBS10Cを、容量・出力・寸法・質量・液晶操作・自動メニュー数の公式仕様で比較します。",
@@ -2557,7 +2708,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック MC-JP860Kとパナソニック MC-SB70KMを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "生活家電",
     tags: ["生活家電", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "大容量集じんと吸引性能を比較したい人",
+      "紙パック式とタービン式で迷っている人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック MC-JP860KとMC-SB70KMを、方式・集じん容量・質量・運転時間・充電時間・コードの有無で比較します。",
@@ -2619,7 +2773,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック SQ-LD560とパナソニック SQ-LD540を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "デスク用品",
     tags: ["デスク用品", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "照度と調光機能で選びたい人",
+      "据え置き型LEDライトの違いを確認したい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック SQ-LD560とSQ-LD540を、照度区分・調光・光色・可動範囲・光束・消費電力・寸法で比較します。",
@@ -2677,7 +2834,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック NI-FS70Aとパナソニック NI-FS60Bを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "生活家電",
     tags: ["生活家電", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "アイロンの立ち上がり速度を比較したい人",
+      "スチーマー機能で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック NI-FS70AとNI-FS60Bを、立ち上がり・注水量・質量・スチーム時間/量・消費電力で比較します。",
@@ -2731,7 +2891,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック ナノケア EH-NA0Jとパナソニック ナノケア EH-NA0Gを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "生活家電",
     tags: ["生活家電", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "ナノケアドライヤーのケア機能差を確認したい人",
+      "風量とモード数で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック ナノケア EH-NA0JとEH-NA0Gを、風量・寸法・質量・モード・消費電力の公式仕様で比較します。",
@@ -2789,7 +2952,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック MC-SB53Kとパナソニック MC-SB33Jを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "生活家電",
     tags: ["生活家電", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "コードレス掃除機の運転時間を比較したい人",
+      "集じん容量と充電時間で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック MC-SB53KとMC-SB33Jを、集じん容量・運転時間・充電時間・質量・方式の公式仕様で比較します。",
@@ -2847,7 +3013,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック ドルツ EW-DP57とパナソニック ドルツ EW-DT73を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "電動歯ブラシの磨きモードを比較したい人",
+      "防水仕様と付属品で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック ドルツ EW-DP57とEW-DT73を、使用時間・防水・磨きモード・付属品・充電方式で比較します。",
@@ -2909,7 +3078,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック ドルツ EW-DA19とパナソニック ドルツ EW-DA49を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "超音波歯ブラシのモード数を比較したい人",
+      "使用時間と防水で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック ドルツ EW-DA19とEW-DA49を、モード・充電・使用時間・防水・付属品で比較します。",
@@ -2968,7 +3140,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック ラムダッシュPRO ES-LV9Wとパナソニック ラムダッシュPRO ES-LV7Wを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "往復式シェーバーの洗浄機能を比較したい人",
+      "充電時間と使用日数で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック ラムダッシュPRO ES-LV9WとES-LV7Wを、洗浄充電器・充電・使用日数・表示・付属品・防水で比較します。",
@@ -3022,7 +3197,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック ナノケア EH-NC80とパナソニック ナノケア EH-NC50を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "ナノケアドライヤーのケアモード数を比較したい人",
+      "付属品と価格帯で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック ナノケア EH-NC80とEH-NC50を、パーソナルメニュー数・ケア機能・風の特徴・付属品の公式説明で比較します。",
@@ -3088,7 +3266,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック EH-NA0Kとパナソニック EH-NE9Nを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "上位モデルと標準モデルのドライヤー機能差を確認したい人",
+      "Care機能と風量で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック EH-NA0KとEH-NE9Nを、風量・モード・段階・質量・ノズルの公式説明で比較します。",
@@ -3155,7 +3336,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック リアルプロ EP-MA110とパナソニック リアルプロ EP-MA121を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "マッサージチェアのコース内容を比較したい人",
+      "設置性と張地で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック リアルプロ EP-MA110とEP-MA121を、外形寸法・質量・張地・コースの公式specで比較します。",
@@ -3206,7 +3390,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "パナソニック スムースエピ ES-WP9Bとパナソニック スムースエピ ES-WG0Bを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "レイザー式シェーバーの出力とモードを比較したい人",
+      "アタッチメント数で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "パナソニック スムースエピ ES-WP9BとES-WG0Bを、出力段階・モード・照射回数・アタッチメント・質量の公式specで比較します。",
@@ -3262,17 +3449,21 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     headline:
       "Logicool MX Keys SとMX Keys Mini、どっち？ 公式仕様で比較。違いと選び方を整理",
     description:
-      "Logicool MX Keys SとLogicool MX Keys Miniを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
+      "Logicool MX Keys SとMX Keys Miniを、キー配列・サイズ・接続・バッテリーで比較します。",
     category: "PC周辺機器",
-    tags: ["PC周辺機器", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
-    uses: ["購入前の比較", "仕様確認", "選び方の整理"],
+    tags: ["キーボード", "Logicool", "リモートワーク"],
+    audiences: [
+      "テンキー付きフルサイズのキーボードを探している人",
+      "コンパクトな省スペースキーボードを探している人",
+    ],
+    uses: ["デスクワーク", "リモートワーク", "キーボード選び"],
     summary:
-      "Logicool MX Keys SとLogicool MX Keys Miniについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
+      "Logicoolのワイヤレスキーボード2機種を、キー数・サイズ・接続方式・バッテリーで比べます。",
     leftProduct: "Logicool MX Keys S",
     rightProduct: "Logicool MX Keys Mini",
-    leftPoint: "公式仕様とサイズを確認して選びたい人向け",
-    rightPoint: "公式仕様と用途を確認して選びたい人向け",
+    leftPoint:
+      "テンキー・ナビキー付きフルサイズで効率的にタイピングしたい人向け",
+    rightPoint: "デスクのスペースを抑えたい・持ち運びもしたい人向け",
     productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
@@ -3287,8 +3478,70 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
     ],
     verifiedRows: [
-      { label: "幅", left: "430.2 mm", right: "295.99 mm" },
-      { label: "重量", left: "810 g", right: "506.4 g" },
+      {
+        label: "キー配列",
+        left: "フルサイズ（テンキー・ナビキー付き）",
+        right: "コンパクト（テンキー・ファンクションキー省略）",
+      },
+      {
+        label: "キー数",
+        left: "約108キー",
+        right: "約84キー",
+      },
+      {
+        label: "サイズ（幅×奥行）",
+        left: "約430×131mm",
+        right: "约296×117mm",
+      },
+      {
+        label: "重量",
+        left: "約570g",
+        right: "約506g",
+      },
+      {
+        label: "smart actions",
+        left: "搭載（Logi Options+でカスタマイズ可能）",
+        right: "搭載（Logi Options+でカスタマイズ可能）",
+      },
+      {
+        label: "バックライト",
+        left: "センサー自動調整",
+        right: "センサー自動調整",
+      },
+      {
+        label: "充電方式",
+        left: "USB-C",
+        right: "USB-C",
+      },
+      {
+        label: "接続",
+        left: "Bolt/Bluetooth/USB-C",
+        right: "Bolt/Bluetooth/USB-C",
+      },
+    ],
+    lead: "Logicoolのワイヤレスキーボード、フルサイズのMX Keys S（約430mm・テンキー付き）とコンパクトなMX Keys Mini（約296mm）を比較します。キー数・サイズ・smart actionsの違いを公式仕様で確認します。",
+    faqEntries: [
+      {
+        question: "テンキーが必要ならどっち？",
+        answer:
+          "MX Keys Sはテンキー・ナビキー付きのフルサイズです。数値入力が多い場合はMX Keys Sが適しています。MX Keys Miniはファンクションキーも省略されたコンパクト設計です。",
+      },
+      {
+        question: "デスクのスペースが狭い場合は？",
+        answer:
+          "MX Keys Miniは幅約296mmと約134mm短く、マウスとの並べやすいサイズです。MX Keys Sは幅約430mmで、フルサイズキーボードのスペースが必要です。",
+      },
+      {
+        question: "smart actionsは同じ？",
+        answer:
+          "両機種ともLogi Options+でsmart actionsのカスタマイズが可能です。バックライトもセンサー自動調整で共通です。",
+      },
+    ],
+    decisionGuideSteps: [
+      "テンキー・ナビキーの必要性を確認する。",
+      "デスクのスペースとキーボードの置き方を考える。",
+      "smart actionsやマルチデバイス接続は両機種で共通なので、サイズとキー数で選ぶ。",
+      "価格・在庫を販売ページで確認する。",
     ],
   },
   {
@@ -3300,7 +3553,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "Logicool MX Keys S for MacとLogicool K780を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "PC周辺機器",
     tags: ["PC周辺機器", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "Mac対応のワイヤレスキーボードを探している人",
+      "マルチデバイス切り替えを重視する人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "Logicool MX Keys S for MacとLogicool K780について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
@@ -3335,7 +3591,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "Logicool K650 Signature Wireless KeyboardとLogicool K580を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "PC周辺機器",
     tags: ["PC周辺機器", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "リラックスしたタイピングのキーボードを探している人",
+      "価格と機能のバランスで選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "Logicool K650 Signature Wireless KeyboardとLogicool K580について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
@@ -3370,7 +3629,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "Logicool MX Master 3SとLogicool Signature M650を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "PC周辺機器",
     tags: ["PC周辺機器", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "プロ向けマウスの機能差を確認したい人",
+      "スクロールとボタンカスタマイズで選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "Logicool MX Master 3SとLogicool Signature M650について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
@@ -3405,7 +3667,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "Logicool LIFT Vertical Ergonomic MouseとLogicool Signature M550を、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "PC周辺機器",
     tags: ["PC周辺機器", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "中小手向けマウスのサイズと重さを比較したい人",
+      "価格とロジカルロールで選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "Logicool LIFT Vertical Ergonomic MouseとLogicool Signature M550について、公式ページで確認できる項目と購入時に確認したい条件を整理します。",
@@ -3440,7 +3705,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "Logicool Zone Vibe 100 WirelessとLogicool Zone 300 Wirelessを、メーカー公式ページで確認できる仕様・サイズ・使い方から比較します。",
     category: "オーディオ",
     tags: ["オーディオ", "比較", "公式仕様"],
-    audiences: ["購入前に違いを整理したい人", "公式情報を確認して選びたい人"],
+    audiences: [
+      "ワイヤレスヘッドセットの装着感を比較したい人",
+      "マイク品質と用途で選びたい人",
+    ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
       "Logicool Zone Vibe 100 WirelessとLogicool Zone 300 Wirelessについて、公式ページで確認できる項目と購入時に確認したい条件を整理します。",

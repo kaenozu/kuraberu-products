@@ -55,20 +55,22 @@ if (
     `Commercial article ${articleId} contains placeholder comparison rows; add verified values before publishing`,
   );
 }
-const faq = [
-  {
-    question: '比較対象はどのように選んでいますか？',
-    answer: 'メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。ランキング順位や価格を保証するものではありません。',
-  },
-  {
-    question: '価格や在庫は確認できますか？',
-    answer: '価格・在庫・ポイント・送料は変動するため、記事内の販売ページで購入時点の情報をご確認ください。',
-  },
-  {
-    question: 'どちらを選べばよいですか？',
-    answer: '用途、置き場所、対応機器、サイズ、手入れのしやすさを優先順位にして、公式仕様と販売ページを照らし合わせてください。',
-  },
-];
+const faq = seed.faqEntries?.length
+  ? seed.faqEntries
+  : [
+      {
+        question: '比較対象はどのように選んでいますか？',
+        answer: 'メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。ランキング順位や価格を保証するものではありません。',
+      },
+      {
+        question: '価格や在庫は確認できますか？',
+        answer: '価格・在庫・ポイント・送料は変動するため、記事内の販売ページで購入時点の情報をご確認ください。',
+      },
+      {
+        question: 'どちらを選べばよいですか？',
+        answer: '用途、置き場所、対応機器、サイズ、手入れのしやすさを優先順位にして、公式仕様と販売ページを照らし合わせてください。',
+      },
+    ];
 ---
 <BaseLayout title={article.title} description={article.description} article={article} faq={faq}>
   <article class="wrap section article">
@@ -85,7 +87,7 @@ const faq = [
       </section>
     ) : null}
 
-    <p>{article.summary} ここでは、メーカー公式ページで確認できる仕様と、販売ページで購入時に確認する項目を分けて整理します。</p>
+    <p>{seed.lead ?? article.summary} ここでは、メーカー公式ページで確認できる仕様と、販売ページで購入時に確認する項目を分けて整理します。</p>
     <h2 id="key-differences">違いを確認する</h2>
     <div class="table-scroll">
       <table class="comparison">
@@ -99,10 +101,12 @@ const faq = [
 
     <h2 id="decision-guide">選ぶときの確認順</h2>
     <ol>
-      <li>使う場所と目的を決める。</li>
-      <li>サイズ、対応機器、容量など変更しにくい条件を確認する。</li>
-      <li>手入れ、消耗品、保証、返品条件を確認する。</li>
-      <li>最後に価格・送料・ポイントを販売ページで比較する。</li>
+      {(seed.decisionGuideSteps ?? [
+        "使う場所と目的を決める。",
+        "サイズ、対応機器、容量など変更しにくい条件を確認する。",
+        "手入れ、消耗品、保証、返品条件を確認する。",
+        "最後に価格・送料・ポイントを販売ページで比較する。",
+      ]).map((step) => <li>{step}</li>)}
     </ol>
 
     <NextStepBlock

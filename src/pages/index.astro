@@ -16,7 +16,7 @@ const featured = ARTICLE_LAYOUT.topPage.featuredPaths
   .filter((article) => article !== undefined);
 
 // カテゴリ入口：記事数が topPage.categoryMinArticles 以上のカテゴリを表示。
-// 件数が多い順 → 名前順。リンク先は /articles/?category=…（一覧ページの
+// 件数が多い順 → 名前順。リンク先は /articles/category/…（カテゴリページの
 // クライアント側フィルタが URL パラメータを読んで絞り込む）。
 const categoryCounts = new Map<string, number>();
 for (const article of publicArticleMetadata) {
@@ -78,7 +78,7 @@ const categories = [...categoryCounts.entries()]
     <ul class="category-list">
       {categories.map(([category, count]) => (
         <li>
-          <a class="card-link" href={`/articles/?category=${encodeURIComponent(category)}`}>
+          <a class="card-link" href={`/articles/category/${encodeURIComponent(category)}/`}>
             <span class="category-list__name">{category}</span>
             <span class="category-list__count">{count}件</span>
           </a>

@@ -78,6 +78,43 @@ export const ARTICLE_LAYOUT = {
     guide: { maxProductCount: 1, label: "商品ガイド" },
     comparison: { minProductCount: 2, label: "比較記事" },
   },
+  // 記事テンプレートのセクション順序契約。
+  // 品質ゲート scripts/check-rendered-html.mjs がここから期待値を導出し、
+  // 実ビルド済み HTML のセクション出現順序と照合する。
+  // 順序が変わったらこの定義だけ直す（ゲートは自動追随する）。
+  // 各配列は HTML に出現する順序で、省略可能なセクションは mustAppear: false。
+  sectionOrder: {
+    // ArticleComparisonPage.astro（手動比較記事）のセクション順序。
+    // ArticleComparisonV2 内部の HeroComparison / VisualKeyDifferences /
+    // NextStepBlock / TrustLine はすべて article-comparison-v2 セクションに含まれる。
+    comparisonPage: [
+      { id: "meta", label: "ブランッド（カテゴリ・日付）", required: true },
+      { id: "h1", label: "見出し", required: true },
+      { id: "lead", label: "リード文", required: true },
+      { id: "jump-nav", label: "ページ内ジャンプ", required: true },
+      {
+        id: "comparison-v2",
+        label: "比較本文（結論・違い・次にすること・信頼）",
+        required: true,
+      },
+      { id: "specs", label: "詳細仕様", required: true },
+      { id: "official", label: "公式情報", required: false },
+      { id: "faq", label: "よくある質問", required: true },
+      { id: "purchase-cards", label: "購入カード", required: true },
+      { id: "change-log", label: "更新履歴", required: true },
+      { id: "source-list", label: "情報源一覧", required: true },
+    ],
+    // CommercialArticlePage.astro（自動生成比較記事）のセクション順序。
+    commercialPage: [
+      { id: "meta", label: "ブランッド（カテゴリ・日付）", required: true },
+      { id: "h1", label: "見出し", required: true },
+      { id: "trust-line", label: "信頼表示", required: true },
+      { id: "next-step", label: "次にすること", required: true },
+      { id: "faq", label: "よくある質問", required: true },
+      { id: "purchase-cards", label: "購入カード", required: true },
+      { id: "change-log", label: "更新履歴", required: true },
+    ],
+  },
   // トップページ（src/pages/index.astro）の構成。唯一の情報源で、
   // 品質ゲート scripts/check-rendered-html.mjs と実ビルド整合テスト
   // （tests/top-page.test.ts）がここから期待値を導出する。

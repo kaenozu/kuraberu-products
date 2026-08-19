@@ -7,7 +7,7 @@ const articlesDir = join(process.cwd(), "dist", "articles");
 function articleHtmlFiles() {
   return readdirSync(articlesDir, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .filter((entry) => entry.name !== "page")
+    .filter((entry) => !"page category".includes(entry.name))
     .map((entry) => join(articlesDir, entry.name, "index.html"));
 }
 
