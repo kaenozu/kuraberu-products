@@ -37,6 +37,19 @@
   --space-3: 1rem;
   --space-4: 1.5rem;
   --space-5: 2.5rem;
+  /* ビジュアル改善用トークン */
+  --hero-gradient: linear-gradient(
+    135deg,
+    #f0f5f1 0%,
+    #f7f3ed 40%,
+    #fdf2ef 100%
+  );
+  --card-shadow-sm: 0 1px 3px rgba(26, 47, 35, 0.06);
+  --card-shadow-md: 0 4px 16px rgba(26, 47, 35, 0.08);
+  --card-shadow-lg: 0 8px 32px rgba(26, 47, 35, 0.1);
+  --section-alt: #f5f7f4;
+  --accent-soft: rgba(176, 76, 59, 0.08);
+  --accent-glow: rgba(176, 76, 59, 0.15);
 }
 * {
   box-sizing: border-box;
@@ -166,9 +179,14 @@ a {
 }
 .faq-item {
   border: 1px solid var(--line);
+  border-left: 3px solid var(--accent-soft, rgba(176, 76, 59, 0.08));
   border-radius: var(--radius-md);
   background: var(--paper);
   padding: 0.9rem 1.1rem;
+  transition: border-color 0.15s ease;
+}
+.faq-item[open] {
+  border-left-color: var(--accent);
 }
 .faq-item summary {
   cursor: pointer;
@@ -283,15 +301,30 @@ a {
   grid-template-columns: 132px 1fr;
   gap: 1rem;
   align-items: start;
+  padding: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  background: var(--paper);
+  transition:
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+.article-list-card:hover {
+  box-shadow: var(--card-shadow-md);
+  border-color: #d4cec2;
 }
 .article-list-card .card-thumb {
   width: 132px;
   height: 132px;
   object-fit: cover;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   border: 1px solid var(--line);
   background: #fff;
   display: block;
+  transition: transform 0.2s ease;
+}
+.article-list-card:hover .card-thumb {
+  transform: scale(1.02);
 }
 .article-list-card .card-tile {
   width: 132px;
@@ -394,6 +427,11 @@ a {
 .section {
   padding: clamp(3rem, 7vw, 6rem) 0;
 }
+.section:nth-of-type(even) {
+  background: var(--section-alt);
+  margin-inline: -100vw;
+  padding-inline: 100vw;
+}
 .section h2 {
   font-size: clamp(1.7rem, 3vw, 2.5rem);
   letter-spacing: -0.05em;
@@ -413,14 +451,15 @@ a {
   border: 1px solid var(--line);
   border-radius: var(--radius-md);
   padding: clamp(1.25rem, 3vw, 2rem);
-  box-shadow: 0 4px 20px rgba(26, 47, 35, 0.06);
+  box-shadow: var(--card-shadow-sm);
   transition:
     transform 160ms ease,
     border-color 160ms ease,
     box-shadow 160ms ease;
 }
 .card:hover {
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-lg);
   border-color: #d4cec2;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -493,12 +532,14 @@ a {
   z-index: 2;
 }
 .comparison thead th:nth-child(2) {
-  background: #e6efec;
+  background: linear-gradient(180deg, #ddeae5, #e6efec);
   color: #1d4a41;
+  font-weight: 800;
 }
 .comparison thead th:nth-child(3) {
-  background: #f6e8de;
+  background: linear-gradient(180deg, #f0dfd3, #f6e8de);
   color: #7c4a2b;
+  font-weight: 800;
 }
 .comparison tbody td:nth-child(2) {
   background: #f3f8f6;
@@ -526,7 +567,7 @@ a {
 }
 .notice {
   border-left: 4px solid var(--accent);
-  background: #fff1ea;
+  background: linear-gradient(90deg, #fff1ea, #fff8f5);
   padding: 1rem 1.2rem;
   border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
@@ -553,7 +594,13 @@ a {
   align-items: center;
   transition:
     transform 0.2s,
-    background 0.2s;
+    background 0.2s,
+    box-shadow 0.2s;
+}
+.cta:hover {
+  background: #16483d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(22, 72, 61, 0.3);
 }
 .cta:hover {
   background: #16483d;
@@ -582,10 +629,13 @@ a {
 }
 .footer {
   border-top: 1px solid var(--line);
-  padding: 2.5rem 0;
-  margin-top: 3rem;
+  padding: 3rem 0 2.5rem;
+  margin-top: 4rem;
   color: var(--muted);
   font-size: 0.88rem;
+  background: var(--section-alt);
+  margin-inline: -100vw;
+  padding-inline: 100vw;
 }
 .source-list {
   padding-left: 1.2rem;
@@ -918,6 +968,13 @@ a {
   font: inherit;
   font-weight: 800;
   cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+.secondary-button:hover {
+  background: var(--ink);
+  color: #fff;
 }
 .discovery-empty {
   margin-top: 1rem;
@@ -1159,10 +1216,17 @@ a {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
-  padding: 1rem;
+  padding: 1.25rem;
   background: var(--surface, #fff);
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--radius-lg);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.purchase-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 .purchase-card__main {
   display: flex;
@@ -1200,10 +1264,15 @@ a {
   margin-top: auto;
   width: 100%;
   justify-content: flex-start;
-  padding: 0.7rem 1rem;
-  background: var(--ink, #1a1a1a);
+  padding: 0.75rem 1rem;
+  background: linear-gradient(180deg, #243d35, var(--ink, #1a1a1a));
   color: #fff;
   border-color: transparent;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+.purchase-card .cta.cta-card:hover {
+  box-shadow: 0 4px 16px rgba(22, 72, 61, 0.25);
 }
 .purchase-card .cta.cta-card:hover {
   border-color: transparent;
@@ -1221,12 +1290,22 @@ a {
   min-height: 48px;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
-  background: var(--accent);
+  background: linear-gradient(180deg, #c45a49, var(--accent));
   color: #fff;
   padding: 0.65rem 1.1rem;
   font: inherit;
   font-weight: 800;
   cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.primary-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(176, 76, 59, 0.3);
+}
+.primary-button:active {
+  transform: translateY(0);
 }
 .primary-button:disabled {
   opacity: 0.45;

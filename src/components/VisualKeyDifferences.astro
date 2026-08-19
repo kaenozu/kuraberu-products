@@ -111,6 +111,10 @@ const {
     border-radius: var(--radius-md);
     background: var(--paper);
     padding: 0.85rem 1rem;
+    transition: box-shadow 0.15s ease;
+  }
+  .key-diff-row:hover {
+    box-shadow: 0 2px 8px rgba(26, 47, 35, 0.05);
   }
   .key-diff-label {
     margin: 0 0 0.4rem;
@@ -142,8 +146,9 @@ const {
     line-height: 1.3;
   }
   .key-diff-value.is-highlighted {
-    background: #fdf2ef;
+    background: linear-gradient(135deg, #fdf2ef, #fef8f5);
     outline: 2px solid #e8b4a8;
+    box-shadow: inset 0 0 0 1px rgba(200, 62, 44, 0.05);
   }
   .key-diff-value.is-highlighted b {
     color: var(--product-highlight);
@@ -159,16 +164,16 @@ const {
   }
   .key-diff-bar-track {
     display: flex;
-    height: 10px;
+    height: 12px;
     border-radius: 999px;
     overflow: hidden;
-    background: #e8e4da;
+    background: linear-gradient(90deg, #e8e4da, #ede9e0);
   }
   .key-diff-bar-fill.is-left {
-    background: var(--product-left);
+    background: linear-gradient(90deg, var(--product-left), #9bc0b7);
   }
   .key-diff-bar-fill.is-right {
-    background: var(--product-right);
+    background: linear-gradient(90deg, #e0a88b, var(--product-right));
   }
   .key-diff-bar-scale {
     display: flex;

@@ -27,16 +27,26 @@ const categories = [...categoryCounts.entries()]
   .sort(([aName, aCount], [bName, bCount]) =>
     bCount - aCount || (aName < bName ? -1 : aName > bName ? 1 : 0),
   );
+
+const categoryEmoji: Record<string, string> = {
+  '育児用品': '👶', 'キッチン家電': '🍳', '美容・健康': '✨',
+  '生活家電': '🏠', 'PC周辺機器': '💻', 'キッチン用品': '🍽️',
+  'オーディオ': '🎧', 'スマート機器': '📱', 'テレビ・映像': '📺',
+  '生活雑貨': '🧺', '日用品': '🧴', 'チャイルドシート': '🚗',
+  '衣類ケア': '👕', '美容家電': '💇', 'デスク用品': '📝',
+  'バッグ': '👜', '旅行用品': '✈️', '寝具': '🛏️',
+  '収納用品': '📦', 'キッチン・ごみ箱収納': '🗑️',
+};
 ---
 
 <BaseLayout
   title="くらべる商品メモ｜商品比較"
   description="商品やサービスを、公式情報と確認状況を分けて比べるサイトです。確認できない数値や体験談は掲載しません。"
 >
-  <section class="wrap section section-intro">
+  <section class="wrap section section-intro hero-section">
     <p class="eyebrow">くらべる商品メモ</p>
-    <h1>くらべて、選ぶ。</h1>
-    <p class="lead">似ていて迷う2商品を、違いと「どっち向き？」で比較します。メーカー公式情報を中心に確認しています。</p>
+    <h1 class="hero-heading">くらべて、<br class="hero-br" />選ぶ。</h1>
+    <p class="lead">似ていて迷う2商品を、違いと「<strong>どっち向き？</strong>」で比較します。<br />メーカー公式情報を中心に確認しています。</p>
     <form class="top-search" role="search" aria-label="比較記事を検索" data-top-search action="/articles/" method="get">
       <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索（例: 電気ケトル、軽い）" aria-label="商品名・用途・悩みで検索" />
       <button type="submit" class="secondary-button">検索</button>
@@ -79,7 +89,7 @@ const categories = [...categoryCounts.entries()]
       {categories.map(([category, count]) => (
         <li>
           <a class="card-link" href={`/articles/category/${encodeURIComponent(category)}/`}>
-            <span class="category-list__name">{category}</span>
+            <span class="category-list__name">{categoryEmoji[category] || "📦"} {category}</span>
             <span class="category-list__count">{count}件</span>
           </a>
         </li>
@@ -122,6 +132,40 @@ const categories = [...categoryCounts.entries()]
 </BaseLayout>
 
 <style is:global>
+  /* ヒーローセクション */
+  .hero-section {
+    background: var(--hero-gradient);
+    margin-inline: -100vw;
+    padding-inline: 100vw;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(176, 76, 59, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-heading {
+    font-size: clamp(3rem, 8vw, 5.5rem) !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.06em !important;
+    margin-bottom: 1rem !important;
+  }
+  .hero-heading strong {
+    color: var(--accent);
+  }
+  .hero-br {
+    display: none;
+  }
+  @media (min-width: 560px) {
+    .hero-br { display: block; }
+  }
+
   /* ヒーロー直下の診断CTA（迷ったら…） */
   .diagnosis-hero-cta {
     display: flex;
@@ -148,9 +192,10 @@ const categories = [...categoryCounts.entries()]
   .section-diagnosis {
     margin-top: clamp(1rem, 2.5vw, 1.75rem);
     padding: clamp(1.25rem, 3vw, 2rem);
-    border: 1px solid var(--line);
+    border: 1px solid rgba(176, 76, 59, 0.15);
     border-radius: var(--radius-lg);
     background: linear-gradient(180deg, #f3f6f4, #fbfcfb);
+    box-shadow: 0 2px 16px rgba(176, 76, 59, 0.05);
   }
   .section-diagnosis .lead {
     margin-bottom: 1rem;
@@ -164,16 +209,18 @@ const categories = [...categoryCounts.entries()]
     display: flex;
     flex-direction: column;
     gap: 0.35rem;
-    padding: 0.95rem 1rem;
+    padding: 1rem 1.1rem;
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     background: var(--paper);
     text-decoration: none;
     color: inherit;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   }
   .diagnosis-card:hover {
     border-color: var(--accent);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
+    box-shadow: 0 4px 16px rgba(176, 76, 59, 0.1);
+    transform: translateY(-2px);
   }
   .diagnosis-card__title {
     font-weight: 800;
@@ -187,7 +234,7 @@ const categories = [...categoryCounts.entries()]
   }
   .diagnosis-card__cta {
     margin-top: auto;
-    padding-top: 0.4rem;
+    padding-top: 0.5rem;
     font-size: 0.85rem;
     font-weight: 800;
     color: var(--accent);
