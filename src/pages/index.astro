@@ -321,6 +321,8 @@ const categoryEmoji: Record<string, string> = {
     color: #704f49;
   }
   .home-page .top-search {
+    box-sizing: border-box;
+    width: min(100%, 32rem);
     max-width: 32rem;
     margin: 1.5rem auto 0;
     padding: 0.25rem;
@@ -397,6 +399,15 @@ const categoryEmoji: Record<string, string> = {
     .home-page .top-search {
       display: flex;
       align-items: center;
+    }
+    .home-page .stitch-diagnosis .subsection-heading {
+      display: block;
+    }
+    .home-page .stitch-diagnosis .subsection-heading h2 {
+      margin-top: 0.45rem;
+    }
+    .home-page .stitch-diagnosis > .lead {
+      overflow-wrap: anywhere;
     }
     .home-page .top-search input {
       width: 100%;
