@@ -1,54 +1,70 @@
 ---
 import { articlePurchaseLinks } from '../../../lib/products';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
-import RelatedArticles from '../../../components/RelatedArticles.astro';
-import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
-import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
 import {panasonicHairDryerArticle as articleMetadata} from '../../../content/articles';
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
 
 const premiumOfficial = 'https://panasonic.jp/hair/products/EH-NE7M-W.html';
 const standardOfficial = 'https://panasonic.jp/hair/products/EH-NE5M-W.html';
-const premium = {brand: 'パナソニック', line: 'EH-NE7M', image: '/products/panasonic-eh-ne7m.png', imageAlt: 'パナソニック イオニティ EH-NE7M ドライヤー', audience: 'Wミネラルと低温ケアモードを重視する人の候補', official: premiumOfficial};
-const standard = {brand: 'パナソニック', line: 'EH-NE5M', image: '/products/panasonic-eh-ne5m.png', imageAlt: 'パナソニック イオニティ EH-NE5M ドライヤー', audience: '大風量と基本的なヘアケア機能を選びたい人の候補', official: standardOfficial};
+
+const leftModel = {
+  brand: 'パナソニック', line: 'EH-NE7M', tagline: 'Wミネラルなら',
+  image: '/products/panasonic-eh-ne7m.png', imageAlt: 'パナソニック イオニティ EH-NE7M ドライヤー',
+  officialHref: premiumOfficial, guidePoints: ['Wミネラルと低温ケアモードを重視する人の候補'],
+  purchaseHref: articlePurchaseLinks['panasonic-eh-ne7m-vs-eh-ne5m:left'].purchaseUrl,
+};
+const rightModel = {
+  brand: 'パナソニック', line: 'EH-NE5M', tagline: '大風量・基本機能なら',
+  image: '/products/panasonic-eh-ne5m.png', imageAlt: 'パナソニック イオニティ EH-NE5M ドライヤー',
+  officialHref: standardOfficial, guidePoints: ['大風量と基本的なヘアケア機能を選びたい人の候補'],
+  purchaseHref: articlePurchaseLinks['panasonic-eh-ne7m-vs-eh-ne5m:right'].purchaseUrl,
+};
+
 const faqEntries = [
   {question: 'パナソニック EH-NE7M と EH-NE5M の違いは？', answer: '公式ページで確認できる主な違いは、EH-NE7MがWミネラル＆マイナスイオンと低温ケアモードを案内しているのに対し、EH-NE5Mはマイナスイオンと低温ケアモードを案内していることです。'},
   {question: 'Wミネラルが搭載されているのはどっち？', answer: 'パナソニック公式ページでは、EH-NE7MにWミネラル＆マイナスイオンが案内されています。EH-NE5Mはマイナスイオンが案内されています。'},
   {question: 'どちらも大風量ですか？', answer: '両モデルとも、公式ページで大風量・速乾に関する案内があります。風量の具体的な数値や測定条件は、購入時点の各公式仕様ページで確認してください。'},
   {question: '価格は比較できますか？', answer: '両モデルとも公式ページではオープン価格として扱われています。価格の優劣は推測せず、Wミネラル、マイナスイオン、低温ケアモードなど公式に確認できる機能で比較しています。'},
 ];
+
 const keyDiffRows: KeyDiffRow[] = [
-  {label: 'ミネラル機能', left: 'Wミネラル＆マイナスイオン', right: 'マイナスイオン', highlight: 'left', highlightNote: 'Wミネラル',},
+  {label: 'ミネラル機能', left: 'Wミネラル＆マイナスイオン', right: 'マイナスイオン', highlight: 'left', highlightNote: 'Wミネラル'},
+  {label: '低温ケアモード', left: '公式ページで案内あり', right: '公式ページで案内あり'},
+  {label: '大風量・速乾', left: '公式ページで案内あり', right: '公式ページで案内あり'},
+  {label: '価格', left: 'オープン価格', right: 'オープン価格'},
+];
+
+const specRows = [
+  {label: 'ミネラル機能', left: 'Wミネラル＆マイナスイオン', right: 'マイナスイオン', sourceLeftHref: premiumOfficial, sourceLeftLabel: 'EH-NE7M公式', sourceRightHref: standardOfficial, sourceRightLabel: 'EH-NE5M公式'},
   {label: '低温ケアモード', left: '公式ページで案内あり', right: '公式ページで案内あり'},
   {label: '大風量・速乾', left: '公式ページで案内あり', right: '公式ページで案内あり'},
   {label: '価格', left: 'オープン価格', right: 'オープン価格'},
 ];
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
-  <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / 美容家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
-    <h1>{articleMetadata.headline}</h1>
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">パナソニックのイオニティ EH-NE7MとEH-NE5Mを、公式ページで確認できるミネラル機能、マイナスイオン、低温ケアモード、大風量・速乾の案内に分けて比較します。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2 left={{brand: premium.brand, line: premium.line, tagline: 'Wミネラルなら', image: premium.image, imageAlt: premium.imageAlt, officialHref: premium.official, guidePoints: [premium.audience], purchaseHref: articlePurchaseLinks['panasonic-eh-ne7m-vs-eh-ne5m:left'].purchaseUrl}} right={{brand: standard.brand, line: standard.line, tagline: '大風量・基本機能なら', image: standard.image, imageAlt: standard.imageAlt, officialHref: standard.official, guidePoints: [standard.audience], purchaseHref: articlePurchaseLinks['panasonic-eh-ne7m-vs-eh-ne5m:right'].purchaseUrl}} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} />
-    <p>EH-NE7MはWミネラル＆マイナスイオン、EH-NE5Mはマイナスイオンを公式ページで確認できます。低温ケアモードと大風量・速乾は両モデルで案内されています。価格はどちらもオープン価格です。</p>
 
-    <details class="fold-section" id="specs"><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">EH-NE7M</th><th scope="col">EH-NE5M</th><th scope="col">根拠</th></tr></thead><tbody><tr><th scope="row">ミネラル機能</th><td data-label="EH-NE7M">Wミネラル＆マイナスイオン</td><td data-label="EH-NE5M">マイナスイオン</td><td data-label="根拠"><a href={premiumOfficial} target="_blank" rel="noopener noreferrer">EH-NE7M公式</a> / <a href={standardOfficial} target="_blank" rel="noopener noreferrer">EH-NE5M公式</a></td></tr><tr><th scope="row">低温ケアモード</th><td data-label="EH-NE7M">公式ページで案内あり</td><td data-label="EH-NE5M">公式ページで案内あり</td><td data-label="根拠">各公式商品ページ</td></tr><tr><th scope="row">大風量・速乾</th><td data-label="EH-NE7M">公式ページで案内あり</td><td data-label="EH-NE5M">公式ページで案内あり</td><td data-label="根拠">各公式商品ページ</td></tr><tr><th scope="row">価格</th><td data-label="EH-NE7M">オープン価格</td><td data-label="EH-NE5M">オープン価格</td><td data-label="根拠">各公式商品ページ</td></tr></tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
-    <h2 id="official">公式情報</h2><p>パナソニック公式ページでは、EH-NE7MにWミネラル＆マイナスイオン、低温ケアモード、大風量速乾が案内されています。EH-NE5Mにもマイナスイオン、低温ケアモード、大風量・速乾の案内があります。</p><div class="source-links"><a class="card-link" href={premiumOfficial} target="_blank" rel="noopener noreferrer">EH-NE7M 公式商品ページ →</a><a class="card-link" href={standardOfficial} target="_blank" rel="noopener noreferrer">EH-NE5M 公式商品ページ →</a></div>
-    <ArticleSocialProof query="パナソニック EH-NE7M EH-NE5M ドライヤー" checkedAt="2026-08-13" hasPosts={false} />
-    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <h2>購入時の注意</h2><p>ドライヤーは、温度・風量・モードの測定条件や使用方法で体感が変わります。価格・在庫・付属品は購入時点の公式ページと販売先で確認してください。</p>
-
-    <div class="purchase-cards">
-      <PurchaseCard name="パナソニック イオニティ EH-NE7M" audience={premium.audience} href={articlePurchaseLinks['panasonic-eh-ne7m-vs-eh-ne5m:left'].purchaseUrl} imagePath={premium.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="パナソニック イオニティ EH-NE5M" audience={standard.audience} href={articlePurchaseLinks['panasonic-eh-ne7m-vs-eh-ne5m:right'].purchaseUrl} imagePath={standard.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-    </div>
-    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
-    <h2>情報源一覧</h2><ul class="source-list"><li><a href={premiumOfficial} target="_blank" rel="noopener noreferrer">パナソニック EH-NE7M 公式商品ページ</a>（2026-08-13確認）</li><li><a href={standardOfficial} target="_blank" rel="noopener noreferrer">パナソニック EH-NE5M 公式商品ページ</a>（2026-08-13確認）</li></ul>
-    <h2>調査方法・免責事項</h2><p>この比較は、パナソニック公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。</p>
-  </article>
-  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
-</BaseLayout>
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={leftModel}
+  right={rightModel}
+  keyDiffRows={keyDiffRows}
+  lead="パナソニックのイオニティ EH-NE7MとEH-NE5Mを、公式ページで確認できるミネラル機能、マイナスイオン、低温ケアモード、大風量・速乾の案内に分けて比較します。"
+  summaryParagraph="EH-NE7MはWミネラル＆マイナスイオン、EH-NE5Mはマイナスイオンを公式ページで確認できます。低温ケアモードと大風量・速乾は両モデルで案内されています。価格はどちらもオープン価格です。"
+  officialDescription="パナソニック公式ページでは、EH-NE7MにWミネラル＆マイナスイオン、低温ケアモード、大風量速乾が案内されています。EH-NE5Mにもマイナスイオン、低温ケアモード、大風量・速乾の案内があります。"
+  officialLinks={[
+    {label: 'EH-NE7M 公式商品ページ', href: premiumOfficial},
+    {label: 'EH-NE5M 公式商品ページ', href: standardOfficial},
+  ]}
+  specRows={specRows}
+  socialProofQuery="パナソニック EH-NE7M EH-NE5M ドライヤー"
+  socialProofCheckedAt="2026-08-13"
+  faqEntries={faqEntries}
+  leftPurchaseName="パナソニック イオニティ EH-NE7M"
+  leftPurchaseAudience={leftModel.guidePoints[0]}
+  rightPurchaseName="パナソニック イオニティ EH-NE5M"
+  rightPurchaseAudience={rightModel.guidePoints[0]}
+  sourceLinks={[
+    {label: 'パナソニック EH-NE7M 公式商品ページ', href: premiumOfficial, checkedAt: '2026-08-13'},
+    {label: 'パナソニック EH-NE5M 公式商品ページ', href: standardOfficial, checkedAt: '2026-08-13'},
+  ]}
+  disclaimer="この比較は、パナソニック公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。"
+/>

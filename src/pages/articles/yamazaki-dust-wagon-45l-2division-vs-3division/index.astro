@@ -1,25 +1,28 @@
 ---
-import { articlePurchaseLinks } from '../../../lib/products';
-import BaseLayout from '../../../layouts/BaseLayout.astro'
-import RelatedArticles from '../../../components/RelatedArticles.astro'
-import PurchaseCard from '../../../components/PurchaseCard.astro'
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
-import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
-import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
-import {yamazakiDustWagonArticle as articleMetadata} from '../../../content/articles'
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+import { articlePurchaseLinks} from '../../../lib/products';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
+import {yamazakiDustWagonArticle as articleMetadata} from '../../../content/articles';
+
 const twoDivisionOfficial = 'https://www.yamajitsu.co.jp/products/240712'
+
 const threeDivisionOfficial = 'https://www.yamajitsu.co.jp/products/240713'
+
 const twoDivisionImage = '/products/yamazaki-dust-wagon-45l-2division.jpg'
+
 const threeDivisionImage = '/products/yamazaki-dust-wagon-45l-3division.jpg'
+
 const twoDivisionAudience = '分別数を抑え、設置幅を小さくしたい人向け'
+
 const threeDivisionAudience = '45L袋を3つに分け、分別数を優先したい人向け'
+
 const faqEntries = [
   {question: '2分別と3分別の違いは？', answer: '公式仕様では、分別数が2分別と3分別で異なります。商品サイズは2分別が幅52×奥行44×高さ60cm、3分別が幅76×奥行44×高さ60cmです。'},
   {question: '設置幅が小さいのはどちら？', answer: '公式記載の幅は2分別が52cm、3分別が76cmです。設置場所の幅を先に測ってから選んでください。'},
   {question: 'どちらも45Lのゴミ袋に対応しますか？', answer: '公式ページでは、2分別・3分別のどちらもゴミ袋45L対応と案内されています。'},
   {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、型番検索ページで購入時点の表示を確認してください。'},
 ] as const
+
 const keyDiffRows: KeyDiffRow[] = [
   {label: '分別数', left: '2分別', right: '3分別', highlight: 'right', highlightNote: '分別数が多い'},
   {label: 'サイズ（幅×奥行×高さ）', left: '52×44×60cm', right: '76×44×60cm', highlight: 'left', highlightNote: '幅24cm小さい'},
@@ -27,21 +30,29 @@ const keyDiffRows: KeyDiffRow[] = [
   {label: '対応ゴミ袋', left: '45L', right: '45L', highlight: null},
   {label: '耐荷重', left: '5kg', right: '7.5kg', highlight: null},
 ]
+
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
-  <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン・ごみ箱収納 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
-    <h1>{articleMetadata.headline}</h1>
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">山崎実業の蓋付き目隠し分別ダストワゴン45Lを、2分別と3分別で比較します。メーカー公式ページで確認できる分別数・設置幅・重量・耐荷重をもとに、置き場所と分別数のどちらを優先するか整理します。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2 left={{brand: '山崎実業', line: '45L 2分別', tagline: '設置幅を抑えるなら', image: twoDivisionImage, imageAlt: '山崎実業 蓋付き目隠し分別ダストワゴン 45L 2分別', officialHref: twoDivisionOfficial, guidePoints: [twoDivisionAudience], purchaseHref: articlePurchaseLinks['yamazaki-dust-wagon-45l-2division-vs-3division:left'].purchaseUrl}} right={{brand: '山崎実業', line: '45L 3分別', tagline: '分別数を優先するなら', image: threeDivisionImage, imageAlt: '山崎実業 蓋付き目隠し分別ダストワゴン 45L 3分別', officialHref: threeDivisionOfficial, guidePoints: [threeDivisionAudience], purchaseHref: articlePurchaseLinks['yamazaki-dust-wagon-45l-2division-vs-3division:right'].purchaseUrl}} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} />
-    <p>2分別は3分別より幅と重量を抑えやすく、3分別は同じ45L対応でも分別数を増やせます。ごみ箱を置く場所の幅と、必要な分別数を先に確認してください。</p>
-    <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">45L 2分別</th><th scope="col">45L 3分別</th><th scope="col">根拠</th></tr></thead><tbody><tr><th scope="row">型番</th><td data-label="45L 2分別">1820 / 1821</td><td data-label="45L 3分別">1822 / 1823</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">商品サイズ</th><td data-label="45L 2分別">幅52×奥行44×高さ60cm</td><td data-label="45L 3分別">幅76×奥行44×高さ60cm</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">商品重量</th><td data-label="45L 2分別">約7.7kg</td><td data-label="45L 3分別">約10.35kg</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">対応サイズ</th><td data-label="45L 2分別">ゴミ袋45L</td><td data-label="45L 3分別">ゴミ袋45L</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">耐荷重</th><td data-label="45L 2分別">5kg</td><td data-label="45L 3分別">7.5kg</td><td data-label="根拠">各公式ページ</td></tr></tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
-    <h2 id="official">公式情報</h2><p>仕様の根拠は、山崎実業公式の商品ページで2026年8月15日に確認しました。この記事では公式に記載された分別数・サイズ・重量・対応サイズ・耐荷重だけを比較しています。</p><div class="source-links"><a class="card-link" href={twoDivisionOfficial} target="_blank" rel="noopener noreferrer">45L 2分別 公式商品ページ →</a><a class="card-link" href={threeDivisionOfficial} target="_blank" rel="noopener noreferrer">45L 3分別 公式商品ページ →</a></div>
-    <ArticleSocialProof query="山崎実業 蓋付き目隠し分別ダストワゴン 45L" checkedAt="2026-08-15" hasPosts={false} />
-    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <div class="purchase-cards"><PurchaseCard name="蓋付き目隠し分別ダストワゴン 45L 2分別" audience={twoDivisionAudience} href={articlePurchaseLinks['yamazaki-dust-wagon-45l-2division-vs-3division:left'].purchaseUrl} imagePath={twoDivisionImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="蓋付き目隠し分別ダストワゴン 45L 3分別" audience={threeDivisionAudience} href={articlePurchaseLinks['yamazaki-dust-wagon-45l-2division-vs-3division:right'].purchaseUrl} imagePath={threeDivisionImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
-    <h2>情報源一覧</h2><ul class="source-list"><li><a href={twoDivisionOfficial} target="_blank" rel="noopener noreferrer">山崎実業公式：蓋付き目隠し分別ダストワゴン 45L 2分別</a>（2026-08-15確認）</li><li><a href={threeDivisionOfficial} target="_blank" rel="noopener noreferrer">山崎実業公式：蓋付き目隠し分別ダストワゴン 45L 3分別</a>（2026-08-15確認）</li></ul>
-  </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
-</BaseLayout>
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: '山崎実業', line: '45L 2分別', tagline: '設置幅を抑えるなら', image: twoDivisionImage, imageAlt: '山崎実業 蓋付き目隠し分別ダストワゴン 45L 2分別', officialHref: twoDivisionOfficial, guidePoints: [twoDivisionAudience], purchaseHref: articlePurchaseLinks['yamazaki-dust-wagon-45l-2division-vs-3division:left'].purchaseUrl}}
+  right={{brand: '山崎実業', line: '45L 3分別', tagline: '分別数を優先するなら', image: threeDivisionImage, imageAlt: '山崎実業 蓋付き目隠し分別ダストワゴン 45L 3分別', officialHref: threeDivisionOfficial, guidePoints: [threeDivisionAudience], purchaseHref: articlePurchaseLinks['yamazaki-dust-wagon-45l-2division-vs-3division:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={"山崎実業の蓋付き目隠し分別ダストワゴン45Lを、2分別と3分別で比較します。メーカー公式ページで確認できる分別数・設置幅・重量・耐荷重をもとに、置き場所と分別数のどちらを優先するか整理します。"}
+  summaryParagraph={"2分別は3分別より幅と重量を抑えやすく、3分別は同じ45L対応でも分別数を増やせます。ごみ箱を置く場所の幅と、必要な分別数を先に確認してください。"}
+  officialDescription={"仕様の根拠は、山崎実業公式の商品ページで2026年8月15日に確認しました。この記事では公式に記載された分別数・サイズ・重量・対応サイズ・耐荷重だけを比較しています。"}
+  officialLinks={[
+    { label: "45L 2分別 公式商品ページ", href: twoDivisionOfficial },
+    { label: "45L 3分別 公式商品ページ", href: threeDivisionOfficial },
+  ]}
+  socialProofQuery={"山崎実業 蓋付き目隠し分別ダストワゴン 45L"}
+  faqEntries={faqEntries}
+  leftPurchaseName={"蓋付き目隠し分別ダストワゴン 45L 2分別"}
+  leftPurchaseAudience={twoDivisionAudience}
+  rightPurchaseName={"蓋付き目隠し分別ダストワゴン 45L 3分別"}
+  rightPurchaseAudience={threeDivisionAudience}
+  sourceLinks={[
+    { label:"山崎実業公式：蓋付き目隠し分別ダストワゴン 45L 2分別", href:twoDivisionOfficial, checkedAt:"2026-08-15" },
+    { label:"山崎実業公式：蓋付き目隠し分別ダストワゴン 45L 3分別", href:threeDivisionOfficial, checkedAt:"2026-08-15" },
+  ]}
+/>

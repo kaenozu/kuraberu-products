@@ -8,18 +8,29 @@ import {
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
 
-// 記事 astro から <PurchaseCard ... /> のブロックを抽出する。
-// コンポーネントの import 行（<PurchaseCard を含まない）は対象外。
 function purchaseCardBlocks(source: string): string[] {
   return [...source.matchAll(/<PurchaseCard\b[\s\S]*?\/>/g)].map(
     ([block]) => block,
   );
 }
 
-const commercialArticleTemplate = readFileSync(
-  "src/components/CommercialArticlePage.astro",
-  "utf8",
-);
+const templates: Record<string, string> = {
+  CommercialArticlePage: readFileSync(
+    "src/components/CommercialArticlePage.astro",
+    "utf8",
+  ),
+  ArticleComparisonPage: readFileSync(
+    "src/components/ArticleComparisonPage.astro",
+    "utf8",
+  ),
+};
+
+function templateFor(source: string): string {
+  for (const [key, tmpl] of Object.entries(templates)) {
+    if (source.includes(key)) return tmpl;
+  }
+  return source;
+}
 
 describe("article CTA layout vs metadata productCount", () => {
   it("keeps per-placement PurchaseCard counts consistent with productCount", () => {
@@ -28,13 +39,7 @@ describe("article CTA layout vs metadata productCount", () => {
         join("src/pages/articles", article.id, "index.astro"),
         "utf8",
       );
-      const blocks = purchaseCardBlocks(
-        source.includes("CommercialArticlePage")
-          ? commercialArticleTemplate
-          : source,
-      );
-      // 結論直後の next-step ブロックの購入ボタン数（レンダリング済み HTML から）。
-      // comparisonOnly セットの照合と総数チェックの両方で使う。
+      const blocks = purchaseCardBlocks(templateFor(source));
       const renderedHtml = readFileSync(
         join("dist/articles", article.id, "index.html"),
         "utf8",
@@ -47,7 +52,6 @@ describe("article CTA layout vs metadata productCount", () => {
 
       const counts = new Map<string, number>();
       for (const block of blocks) {
-        // placement 未指定は config の defaultPlacement（article-end）として扱う
         const placement =
           block.match(/\bplacement="([^"]+)"/)?.[1] ??
           ARTICLE_LAYOUT.defaultPlacement;
@@ -58,10 +62,6 @@ describe("article CTA layout vs metadata productCount", () => {
         counts.set(placement, (counts.get(placement) ?? 0) + 1);
       }
 
-      // v3: 末尾セットは常に商品数分。
-      // next-step（comparisonOnly）は PurchaseCard ではなく NextStepBlock が描画する
-      // （比較記事の結論直後ブロック）ため、レンダリング済み HTML の
-      // next-step__buy ボタン数を照合する。
       for (const set of ARTICLE_LAYOUT.ctaSets) {
         const isComparison =
           contentTypeFor(article.productCount) === "comparison";
@@ -82,8 +82,6 @@ describe("article CTA layout vs metadata productCount", () => {
         }
       }
 
-      // 総枚数 = PurchaseCard 数 + next-step ボタン数 = 期待 CTA 総数
-      // （productCount から導出）
       expect(
         blocks.length + nextStepBuyCount,
         `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout)`,
@@ -100,11 +98,7 @@ describe("article CTA layout vs metadata productCount", () => {
         "utf8",
       );
       expect(
-        purchaseCardBlocks(
-          source.includes("CommercialArticlePage")
-            ? commercialArticleTemplate
-            : source,
-        ).length,
+        purchaseCardBlocks(templateFor(source)).length,
         `${article.id}: must render at least one PurchaseCard`,
       ).toBeGreaterThan(0);
     }

@@ -1,17 +1,17 @@
 ---
-import { articlePurchaseLinks } from '../../../lib/products';
-import BaseLayout from '../../../layouts/BaseLayout.astro'
-import RelatedArticles from '../../../components/RelatedArticles.astro'
-import PurchaseCard from '../../../components/PurchaseCard.astro'
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
-import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
-import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
-import {yamazakiTowerDeskPanelArticle as articleMetadata} from '../../../content/articles'
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+import { articlePurchaseLinks} from '../../../lib/products';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
+import {yamazakiTowerDeskPanelArticle as articleMetadata} from '../../../content/articles';
+
 const panelOfficial = 'https://www.yamajitsu.co.jp/products/240034'
+
 const penStandOfficial = 'https://www.yamajitsu.co.jp/products/240051'
+
 const panelImage = '/products/yamazaki-tower-desk-panel.jpg'
+
 const penStandImage = '/products/yamazaki-tower-magnetic-pen-stand.jpg'
+
 const panel = {
   brand: '山崎実業 tower',
   line: 'デスク横トレー付きスチールパネル（10066 / 10067）',
@@ -19,6 +19,7 @@ const panel = {
   imageAlt: '山崎実業 tower デスク横トレー付きスチールパネル',
   audience: 'デスク横にトレーとマグネット収納をまとめたい人向け',
 }
+
 const penStand = {
   brand: '山崎実業 tower',
   line: 'マグネットペンスタンド（10096 / 10097）',
@@ -26,41 +27,37 @@ const penStand = {
   imageAlt: '山崎実業 tower マグネットペンスタンド',
   audience: 'ペンを立てて省スペースに収納したい人向け',
 }
+
 const faqEntries = [
   {question: 'パネルはどのデスクにも取り付けられる？', answer: '公式ページでは、天板の厚さ1.2〜5cm、幅60cm以上、奥行4.6cm以上などの条件が案内されています。購入前に使うデスクの寸法を確認してください。'},
   {question: 'ペンスタンドはどこに取り付けられる？', answer: 'マグネットがつく平らな面やスチール面に取り付ける商品です。パネルに組み合わせるほか、条件に合う別の場所でも使えます。'},
   {question: '2商品は組み合わせて使える？', answer: '公式ページでは、パネルにマグネット小物を追加する使い方と、ペンスタンドをパネルに取り付ける使い方が案内されています。デスク横に収納面を作るか、単体で小物を立てるかで選ぶと整理しやすいです。'},
 ] as const
+
 const keyDiffRows: KeyDiffRow[] = [
   {label: '向いている使い方', left: 'デスク横に収納面とトレーを作る', right: 'ペンや小物を立てて置く', highlight: null},
   {label: '設置条件', left: '天板厚1.2〜5cm・幅60cm以上など', right: 'マグネットがつく平らな面・スチール面', highlight: null},
   {label: '組み合わせ', left: 'マグネット小物を追加できる', right: 'パネルに取り付けて使える', highlight: null},
   {label: 'サイズ', left: 'W58×D4.8×H41.7〜45.5cm', right: 'W6.2×D6.2×H20.8cm', highlight: null},
 ]
+
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
-  <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / 収納用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
-    <h1>{articleMetadata.headline}</h1>
-    <ComparisonMemoButton articleId={articleMetadata.id} />
-    <p class="lead">山崎実業 towerのデスク横トレー付きスチールパネルとマグネットペンスタンドを、買って使えるかに直結する設置条件・用途・組み合わせ方を中心に比較します。重量や耐荷重などの数値は詳細仕様にまとめます。</p>
-    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2
-      left={{brand: panel.brand, line: panel.line, tagline: 'デスク横の面を使ってまとめるなら', image: panel.image, imageAlt: panel.imageAlt, officialHref: panelOfficial, guidePoints: [panel.audience], purchaseHref: articlePurchaseLinks['yamazaki-tower-desk-panel-vs-pen-stand:left'].purchaseUrl, productId: 'yamazaki-tower-desk-panel'}}
-      right={{brand: penStand.brand, line: penStand.line, tagline: 'ペンを立てて省スペースに置くなら', image: penStand.image, imageAlt: penStand.imageAlt, officialHref: penStandOfficial, guidePoints: [penStand.audience], purchaseHref: articlePurchaseLinks['yamazaki-tower-desk-panel-vs-pen-stand:right'].purchaseUrl, productId: 'yamazaki-tower-magnetic-pen-stand'}}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-    />
-    <details class="fold-section" id="specs"><summary>詳細仕様（公式ページで確認した項目）</summary><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">デスク横トレー付きスチールパネル</th><th scope="col">マグネットペンスタンド</th></tr></thead><tbody>
-      <tr><th scope="row">品番</th><td data-label="デスク横トレー付きスチールパネル">10066 / 10067</td><td data-label="マグネットペンスタンド">10096 / 10097</td></tr><tr><th scope="row">サイズ</th><td data-label="デスク横トレー付きスチールパネル">W58×D4.8×H41.7〜45.5cm</td><td data-label="マグネットペンスタンド">W6.2×D6.2×H20.8cm</td></tr><tr><th scope="row">重量</th><td data-label="デスク横トレー付きスチールパネル">2250g</td><td data-label="マグネットペンスタンド">495g</td></tr><tr><th scope="row">耐荷重</th><td data-label="デスク横トレー付きスチールパネル">1.5kg（静止荷重）</td><td data-label="マグネットペンスタンド">500g</td></tr><tr><th scope="row">設置方法</th><td data-label="デスク横トレー付きスチールパネル">デスクに差し込んで固定</td><td data-label="マグネットペンスタンド">マグネットで貼り付け</td></tr><tr><th scope="row">材質</th><td data-label="デスク横トレー付きスチールパネル">スチール（粉体塗装）など</td><td data-label="マグネットペンスタンド">スチール（粉体塗装）など</td></tr>
-    </tbody></table></div></details>
-    <h2 id="official">公式確認済みの内容</h2><p>上の比較は、山崎実業公式の商品ページ（240034・240051）で2026年8月13日に確認した内容です。カラー別品番、仕様、設置条件は購入前に公式ページで再確認してください。</p>
-    <ArticleSocialProof query="山崎実業 tower 10066 10067 10096 10097" checkedAt="2026-08-13" />
-    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
-    <div class="purchase-cards">
-      <PurchaseCard name={panel.line} audience={panel.audience} href={articlePurchaseLinks['yamazaki-tower-desk-panel-vs-pen-stand:left'].purchaseUrl} productId="yamazaki-tower-desk-panel" imagePath={panel.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name={penStand.line} audience={penStand.audience} href={articlePurchaseLinks['yamazaki-tower-desk-panel-vs-pen-stand:right'].purchaseUrl} productId="yamazaki-tower-magnetic-pen-stand" imagePath={penStand.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-    </div>
-    <h2>情報源一覧</h2><ul class="source-list"><li><a href={panelOfficial} target="_blank" rel="noopener noreferrer">山崎実業公式：デスク横トレー付きスチールパネル</a>（2026-08-13確認）</li><li><a href={penStandOfficial} target="_blank" rel="noopener noreferrer">山崎実業公式：マグネットペンスタンド</a>（2026-08-13確認）</li></ul>
-  </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
-</BaseLayout>
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: panel.brand, line: panel.line, tagline: 'デスク横の面を使ってまとめるなら', image: panel.image, imageAlt: panel.imageAlt, officialHref: panelOfficial, guidePoints: [panel.audience], purchaseHref: articlePurchaseLinks['yamazaki-tower-desk-panel-vs-pen-stand:left'].purchaseUrl, productId: 'yamazaki-tower-desk-panel'}}
+  right={{brand: penStand.brand, line: penStand.line, tagline: 'ペンを立てて省スペースに置くなら', image: penStand.image, imageAlt: penStand.imageAlt, officialHref: penStandOfficial, guidePoints: [penStand.audience], purchaseHref: articlePurchaseLinks['yamazaki-tower-desk-panel-vs-pen-stand:right'].purchaseUrl, productId: 'yamazaki-tower-magnetic-pen-stand'}}
+  keyDiffRows={keyDiffRows}
+  lead={"山崎実業 towerのデスク横トレー付きスチールパネルとマグネットペンスタンドを、買って使えるかに直結する設置条件・用途・組み合わせ方を中心に比較します。重量や耐荷重などの数値は詳細仕様にまとめます。"}
+  officialDescription={"上の比較は、山崎実業公式の商品ページ（240034・240051）で2026年8月13日に確認した内容です。カラー別品番、仕様、設置条件は購入前に公式ページで再確認してください。"}
+  socialProofQuery={"山崎実業 tower 10066 10067 10096 10097"}
+  faqEntries={faqEntries}
+  leftPurchaseName={panel.line}
+  leftPurchaseAudience={panel.audience}
+  rightPurchaseName={penStand.line}
+  rightPurchaseAudience={penStand.audience}
+  sourceLinks={[
+    { label:"山崎実業公式：デスク横トレー付きスチールパネル", href:panelOfficial, checkedAt:"2026-08-13" },
+    { label:"山崎実業公式：マグネットペンスタンド", href:penStandOfficial, checkedAt:"2026-08-13" },
+  ]}
+/>
