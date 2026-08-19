@@ -148,7 +148,7 @@ const breadcrumbStructuredData = article
     {faqStructuredData && <script is:inline type="application/ld+json" set:html={faqStructuredData} />}
     {breadcrumbStructuredData && <script is:inline type="application/ld+json" set:html={breadcrumbStructuredData} />}
   </head>
-  <body>
+  <body class={currentPath === '/' ? 'home-page' : undefined}>
     <a class="skip-link" href="#main-content">本文へ移動</a>
     <header class="site-header">
       <div class="wrap nav">
