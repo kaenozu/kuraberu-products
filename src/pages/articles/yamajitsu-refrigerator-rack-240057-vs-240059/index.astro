@@ -1,0 +1,47 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { yamajitsuRefrigeratorRackArticle as articleMetadata } from '../../../content/articles'
+
+const smallOfficial = 'https://www.yamajitsu.co.jp/products/240057'
+const largeOfficial = 'https://www.yamajitsu.co.jp/products/240059'
+const smallImage = '/products/yamajitsu-refrigerator-rack-240057.jpg'
+const largeImage = '/products/yamajitsu-refrigerator-rack-240059.jpg'
+const smallAudience = '冷蔵庫内の限られた幅に収めやすいラックを選びたい人向け'
+const largeAudience = '引き出しの幅と耐荷重を優先して収納量を確保したい人向け'
+
+const faqEntries = [
+  { question: '山崎実業の冷蔵庫中棚下ラック SとLの違いは？', answer: 'S（240057）は幅14.5cm・重量450g・耐荷重1kg、L（240059）は幅26.5cm・重量660g・耐荷重2kgです。奥行と高さは両方とも34.4×6.5cmです。' },
+  { question: '冷蔵庫中棚下高さ調節ラックの引き出し内寸は？', answer: 'S（240057）は幅12×奥行28×高さ4cm、L（240059）は幅24×奥行28×高さ4cmです。' },
+  { question: 'SとLの耐熱・耐冷温度は？', answer: '公式ページでは、S・Lとも耐熱70℃、耐冷−40℃と記載されています。' },
+  { question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。' },
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: '商品名', left: '冷蔵庫中棚下高さ調節ラック タワー S', right: '冷蔵庫中棚下高さ調節ラック タワー L', highlight: null },
+  { label: '商品サイズ（幅×奥行×高さ）', left: 'W14.5×D34.4×H6.5cm', right: 'W26.5×D34.4×H6.5cm', highlight: 'right', highlightNote: '幅が12cm広い' },
+  { label: '引き出し内寸（幅×奥行×高さ）', left: 'W12×D28×H4cm', right: 'W24×D28×H4cm', highlight: 'right', highlightNote: '幅が2倍' },
+  { label: '商品重量', left: '450g', right: '660g', highlight: 'left', highlightNote: '210g軽い' },
+  { label: '耐荷重（静止荷重）', left: '1kg', right: '2kg', highlight: 'right', highlightNote: '2倍' },
+  { label: '耐熱・耐冷温度', left: '70℃・−40℃', right: '70℃・−40℃', highlight: null },
+]
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{ brand: '山崎実業 tower', line: '240057', tagline: '幅を抑えて置くなら', image: smallImage, imageAlt: '山崎実業 冷蔵庫中棚下高さ調節ラック タワー S 240057', officialHref: smallOfficial, guidePoints: [smallAudience], purchaseHref: articlePurchaseLinks['yamajitsu-refrigerator-rack-240057-vs-240059:left'].purchaseUrl }}
+  right={{ brand: '山崎実業 tower', line: '240059', tagline: '収納幅と耐荷重なら', image: largeImage, imageAlt: '山崎実業 冷蔵庫中棚下高さ調節ラック タワー L 240059', officialHref: largeOfficial, guidePoints: [largeAudience], purchaseHref: articlePurchaseLinks['yamajitsu-refrigerator-rack-240057-vs-240059:right'].purchaseUrl }}
+  keyDiffRows={keyDiffRows}
+  lead={'山崎実業公式ページで確認できるサイズ・引き出し内寸・重量・耐荷重・温度の範囲で、冷蔵庫中棚下高さ調節ラック SとLを比較します。'}
+  summaryParagraph={'240057は幅14.5cm・耐荷重1kgで、限られた幅に収めやすいサイズです。240059は幅26.5cm・耐荷重2kgで、引き出し内寸の幅も24cmあります。設置幅と収納量を先に確認してください。'}
+  officialDescription={'仕様の根拠は、山崎実業公式の商品ページで2026年8月20日に確認しました。価格・在庫・使用感は公式仕様の比較対象に含めていません。'}
+  officialLinks={[{ label: '240057 公式商品ページ', href: smallOfficial }, { label: '240059 公式商品ページ', href: largeOfficial }]}
+  socialProofQuery={'山崎実業 冷蔵庫中棚下高さ調節ラック 240057 240059'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'山崎実業 冷蔵庫中棚下高さ調節ラック タワー S 240057'}
+  leftPurchaseAudience={smallAudience}
+  rightPurchaseName={'山崎実業 冷蔵庫中棚下高さ調節ラック タワー L 240059'}
+  rightPurchaseAudience={largeAudience}
+  sourceLinks={[{ label: '山崎実業公式：冷蔵庫中棚下高さ調節ラック タワー S 240057', href: smallOfficial, checkedAt: '2026-08-19' }, { label: '山崎実業公式：冷蔵庫中棚下高さ調節ラック タワー L 240059', href: largeOfficial, checkedAt: '2026-08-19' }]}
+/>

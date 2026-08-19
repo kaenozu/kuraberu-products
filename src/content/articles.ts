@@ -3987,6 +3987,37 @@ export const tigerKettlePcjVsPcmArticle = defineArticleMetadata({
   ],
 });
 
+export const yamajitsuRefrigeratorRackArticle = defineArticleMetadata({
+  id: "yamajitsu-refrigerator-rack-240057-vs-240059",
+  productCount: 2,
+  path: "/articles/yamajitsu-refrigerator-rack-240057-vs-240059/",
+  title: "山崎実業 冷蔵庫中棚下ラック、どっち？｜くらべる商品メモ",
+  headline: "山崎実業の冷蔵庫中棚下高さ調節ラック、SとLを比較",
+  description:
+    "山崎実業の冷蔵庫中棚下高さ調節ラック タワー SとLを、公式のサイズ・引き出し内寸・重量・耐荷重で比較",
+  category: "キッチン収納",
+  tags: ["山崎実業", "冷蔵庫収納", "キッチン収納"],
+  audiences: [
+    "冷蔵庫内の収納幅を確認したい人",
+    "引き出し付きラックのサイズを比較したい人",
+  ],
+  uses: ["冷蔵庫内を整理する", "棚下に収納する", "設置幅を確認する"],
+  summary:
+    "山崎実業公式ページで確認できるサイズ・引き出し内寸・重量・耐荷重をもとに、SとLを比べます。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamajitsu-refrigerator-rack-240057.jpg",
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary: "初回公開。山崎実業公式の商品ページで2製品の仕様を確認。",
+    },
+  ],
+});
+
 export const additionalCommercialArticles = Object.freeze(
   commercialArticleSeeds.map(createCommercialArticle),
 );
@@ -4022,6 +4053,7 @@ export const articleMetadata = Object.freeze([
   yamazakiCondorWagonArticle,
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
+  yamajitsuRefrigeratorRackArticle,
   zojirushiElectricKettleArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,

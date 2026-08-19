@@ -42,6 +42,7 @@
 | `thermos-tiger-bottle`                           | 公開済み |
 | `tiger-mta-j050-guide`                           | 公開済み |
 | `tiger-jpv-l100-vs-jpv-m100`                     | 公開済み |
+| `yamajitsu-refrigerator-rack-240057-vs-240059`   | 実装中   |
 | `yamazaki-condor-wagon-vs-self-wagon`            | 公開済み |
 | `yamazaki-dust-wagon-45l-2division-vs-3division` | 公開済み |
 | `yamazaki-free-broom-32-vs-45`                   | 公開済み |

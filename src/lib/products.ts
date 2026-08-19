@@ -439,4 +439,12 @@ export const articlePurchaseLinks = {
     name: "象印 EC-MA60",
     purchaseUrl: "https://a.r10.to/h5Ob79",
   },
+  "yamajitsu-refrigerator-rack-240057-vs-240059:left": {
+    name: "山崎実業 冷蔵庫中棚下高さ調節ラック タワー S 240057",
+    purchaseUrl: "https://a.r10.to/h5kMrT",
+  },
+  "yamajitsu-refrigerator-rack-240057-vs-240059:right": {
+    name: "山崎実業 冷蔵庫中棚下高さ調節ラック タワー L 240059",
+    purchaseUrl: "https://a.r10.to/hPiT2H",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
