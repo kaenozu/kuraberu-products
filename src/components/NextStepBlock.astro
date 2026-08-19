@@ -96,8 +96,9 @@ const buyRel = (affiliate: boolean) =>
     margin-block: 1.5rem 2.5rem;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
-    background: var(--paper, #fff);
-    padding: 1.25rem 1.25rem 1rem;
+    background: linear-gradient(180deg, var(--paper, #fff) 0%, #f9faf8 100%);
+    padding: 1.5rem 1.5rem 1.25rem;
+    box-shadow: 0 2px 12px rgba(26, 47, 35, 0.04);
   }
   .next-step .section-label {
     margin-bottom: 0.3rem;
@@ -123,6 +124,7 @@ const buyRel = (affiliate: boolean) =>
     background: var(--surface, #fff);
     color: var(--ink);
     text-decoration: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
   }
   .next-step__buy--right {
     --product-color: var(--product-right);
@@ -130,16 +132,20 @@ const buyRel = (affiliate: boolean) =>
   .next-step__buy:hover,
   .next-step__buy:focus-visible {
     border-color: var(--product-color);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+    transform: translateY(-1px);
   }
   .next-step__buy-name {
     font-weight: 800;
-    font-size: 0.95rem;
+    font-size: 1.0rem;
     line-height: 1.4;
   }
   .next-step__buy-action {
     font-size: 0.82rem;
     color: var(--ink-soft, #555);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
   }
   .next-step__buy--missing {
     color: var(--muted);

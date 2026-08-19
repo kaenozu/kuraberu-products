@@ -115,11 +115,16 @@ const {
     border: 1px solid var(--line);
     border-top: 5px solid var(--product-color, var(--ink));
     border-radius: var(--radius-lg);
-    background: var(--paper);
-    padding: 1rem;
+    background: linear-gradient(180deg, var(--paper) 0%, rgba(255,255,255,0.8) 100%);
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.6rem;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .hero-product:hover {
+    box-shadow: var(--card-shadow-md, 0 4px 16px rgba(26, 47, 35, 0.08));
+    transform: translateY(-2px);
   }
   .hero-product:first-child {
     --product-color: var(--product-left);
@@ -131,7 +136,8 @@ const {
     display: block;
     border-radius: var(--radius-md);
     overflow: hidden;
-    background: #f4f2ec;
+    background: linear-gradient(135deg, #f4f2ec, #f9f7f3);
+    padding: 0.75rem;
   }
   .hero-product-img img {
     display: block;
@@ -146,8 +152,9 @@ const {
   }
   .hero-product-name {
     margin: 0.25rem 0 0;
-    font-size: 1.05rem;
+    font-size: 1.15rem;
     line-height: 1.3;
+    letter-spacing: -0.01em;
   }
   .hero-product-name span {
     font-weight: 400;
