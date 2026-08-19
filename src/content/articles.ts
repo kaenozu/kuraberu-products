@@ -2379,19 +2379,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NT-T501）",
         url: "https://panasonic.jp/toaster/products/NT-T501.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NT-T501）",
         url: "https://panasonic.jp/toaster/products/NT-T501/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NT-D700）",
         url: "https://panasonic.jp/toaster/products/NT-D700.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NT-D700）",
         url: "https://panasonic.jp/toaster/products/NT-D700/spec.html",
       },
     ],
@@ -2440,19 +2440,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NE-BS9C）",
         url: "https://panasonic.jp/range/products/NE-BS9C.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NE-BS9C）",
         url: "https://panasonic.jp/range/products/NE-BS9C/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NE-UBS10C）",
         url: "https://panasonic.jp/range/products/NE-UBS10C.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NE-UBS10C）",
         url: "https://panasonic.jp/range/products/NE-UBS10C/spec.html",
       },
     ],
@@ -2501,19 +2501,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-JP860K）",
         url: "https://panasonic.jp/soji/products/MC-JP860K.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-JP860K）",
         url: "https://panasonic.jp/soji/products/MC-JP860K/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-SB70KM）",
         url: "https://panasonic.jp/soji/products/MC-SB70KM.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-SB70KM）",
         url: "https://panasonic.jp/soji/products/MC-SB70KM/spec.html",
       },
     ],
@@ -2566,19 +2566,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（SQ-LD560）",
         url: "https://panasonic.jp/light/products/SQ-LD560.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（SQ-LD560）",
         url: "https://panasonic.jp/light/products/SQ-LD560/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（SQ-LD540）",
         url: "https://panasonic.jp/light/products/SQ-LD540.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（SQ-LD540）",
         url: "https://panasonic.jp/light/products/SQ-LD540/spec.html",
       },
     ],
@@ -2627,19 +2627,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NI-FS70A）",
         url: "https://panasonic.jp/iron/products/NI-FS70A.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NI-FS70A）",
         url: "https://panasonic.jp/iron/products/NI-FS70A/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NI-FS60B）",
         url: "https://panasonic.jp/iron/products/NI-FS60B.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NI-FS60B）",
         url: "https://panasonic.jp/iron/products/NI-FS60B/spec.html",
       },
     ],
@@ -2684,19 +2684,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NA0J）",
         url: "https://panasonic.jp/hair/products/EH-NA0J.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NA0J）",
         url: "https://panasonic.jp/hair/products/EH-NA0J/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NA0G）",
         url: "https://panasonic.jp/hair/products/EH-NA0G.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NA0G）",
         url: "https://panasonic.jp/hair/products/EH-NA0G/spec.html",
       },
     ],
@@ -2745,19 +2745,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-SB53K）",
         url: "https://panasonic.jp/soji/products/MC-SB53K.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-SB53K）",
         url: "https://panasonic.jp/soji/products/MC-SB53K/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-SB33J）",
         url: "https://panasonic.jp/soji/products/MC-SB33J.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-SB33J）",
         url: "https://panasonic.jp/soji/products/MC-SB33J/spec.html",
       },
     ],
@@ -2806,19 +2806,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DP57）",
         url: "https://panasonic.jp/teeth/products/EW-DP57.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DP57）",
         url: "https://panasonic.jp/teeth/products/EW-DP57/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DT73）",
         url: "https://panasonic.jp/teeth/products/EW-DT73.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DT73）",
         url: "https://panasonic.jp/teeth/products/EW-DT73/spec.html",
       },
     ],
@@ -2871,19 +2871,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DA19）",
         url: "https://panasonic.jp/teeth/products/EW-DA19.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DA19）",
         url: "https://panasonic.jp/teeth/products/EW-DA19/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DA49）",
         url: "https://panasonic.jp/teeth/products/EW-DA49.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DA49）",
         url: "https://panasonic.jp/teeth/products/EW-DA49/spec.html",
       },
     ],
@@ -2933,19 +2933,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（ES-LV9W）",
         url: "https://panasonic.jp/shaver/products/ES-LV9W.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（ES-LV9W）",
         url: "https://panasonic.jp/shaver/products/ES-LV9W/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（ES-LV7W）",
         url: "https://panasonic.jp/shaver/products/ES-LV7W.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（ES-LV7W）",
         url: "https://panasonic.jp/shaver/products/ES-LV7W/spec.html",
       },
     ],
@@ -2990,19 +2990,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NC80）",
         url: "https://panasonic.jp/hair/products/EH-NC80.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NC80）",
         url: "https://panasonic.jp/hair/products/EH-NC80/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NC50）",
         url: "https://panasonic.jp/hair/products/EH-NC50.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NC50）",
         url: "https://panasonic.jp/hair/products/EH-NC50/spec.html",
       },
     ],
@@ -3059,19 +3059,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NA0K）",
         url: "https://panasonic.jp/hair/products/EH-NA0K.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NA0K）",
         url: "https://panasonic.jp/hair/products/EH-NA0K/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NE9N）",
         url: "https://panasonic.jp/hair/products/EH-NE9N.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NE9N）",
         url: "https://panasonic.jp/hair/products/EH-NE9N/spec.html",
       },
     ],
@@ -3729,7 +3729,7 @@ const createCommercialArticle = (
       {
         date: "2026-08-17",
         summary:
-          "売れ筋カテゴリの比較候補として初稿を追加。購入前に公式仕様と販売ページを確認する構成。",
+          "公式仕様の比較表を更新。購入前に公式仕様と販売ページを確認する構成。",
       },
     ],
   });
