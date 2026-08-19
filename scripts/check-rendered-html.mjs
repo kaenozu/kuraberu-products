@@ -173,7 +173,11 @@ export function validateRenderedExternalEmbedCounts(
 
 function internalTarget(href, distDirectory) {
   let pathname = href.split("#")[0].split("?")[0];
-  try { pathname = decodeURIComponent(pathname); } catch { /* ignore malformed URIs */ }
+  try {
+    pathname = decodeURIComponent(pathname);
+  } catch {
+    /* ignore malformed URIs */
+  }
   if (!pathname || !pathname.startsWith("/")) return null;
   if (pathname === "/") return path.join(distDirectory, "index.html");
   if (path.extname(pathname)) return path.join(distDirectory, pathname);
@@ -185,18 +189,18 @@ const ARTICLE_PAGE_PATTERN = /^articles\/[^/]+\/index\.html$/;
 // 実ビルド済み HTML からセクションマーカーの出現位置を抽出し、
 // 定義された順序と照合する。順序違反は error として報告する。
 const SECTION_MARKERS = {
-  meta:          /<p class="meta">/,
-  h1:            /<h1[^>]*>/,
-  lead:          /<p class="lead">/,
-  "jump-nav":    /<nav class="jump-nav"/,
+  meta: /<p class="meta">/,
+  h1: /<h1[^>]*>/,
+  lead: /<p class="lead">/,
+  "jump-nav": /<nav class="jump-nav"/,
   "comparison-v2": /<section[^>]*class="[^"]*\barticle-comparison-v2/,
-  specs:         /<details[^>]*id="specs"/,
-  official:      /<h2 id="official">/,
-  "trust-line":  /<p class="trust-line">/,
-  "next-step":   /<section[^>]*data-next-step/,
-  faq:           /<h2 id="faq">/,
-  "purchase-cards":/<div class="purchase-cards">/,
-  "change-log":  /<ol class="change-log">/,
+  specs: /<details[^>]*id="specs"/,
+  official: /<h2 id="official">/,
+  "trust-line": /<p class="trust-line">/,
+  "next-step": /<section[^>]*data-next-step/,
+  faq: /<h2 id="faq">/,
+  "purchase-cards": /<div class="purchase-cards">/,
+  "change-log": /<ol class="change-log">/,
   "source-list": /<ul class="source-list">/,
 };
 
@@ -204,8 +208,9 @@ export function validateArticleSectionOrder(relative, html) {
   if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
   const errors = [];
   const contentType =
-    html.match(/<meta name="article:content-type" content="(guide|comparison)">/i)
-      ?.[1] ?? null;
+    html.match(
+      /<meta name="article:content-type" content="(guide|comparison)">/i,
+    )?.[1] ?? null;
   if (contentType !== "comparison") return [];
 
   const hasComparisonV2 = /class="[^"]*\barticle-comparison-v2\b/.test(html);
@@ -239,16 +244,22 @@ export function validateArticleSectionOrder(relative, html) {
     const currIndex = order.findIndex((s) => s.id === curr.id);
     if (prevIndex > currIndex) {
       errors.push(
-        relative + ": section " + JSON.stringify(curr.id) +
-        " appears before " + JSON.stringify(prev.id) +
-        " (expected order: " + prev.id + " → " + curr.id + ")",
+        relative +
+          ": section " +
+          JSON.stringify(curr.id) +
+          " appears before " +
+          JSON.stringify(prev.id) +
+          " (expected order: " +
+          prev.id +
+          " → " +
+          curr.id +
+          ")",
       );
     }
   }
 
   return errors;
 }
-
 
 // 記事ページの商品数を、BaseLayout が出力する
 // <meta name="article:product-count" content="N"> から読み取る。

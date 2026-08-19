@@ -1387,26 +1387,30 @@ describe("article section order (validateArticleSectionOrder)", () => {
     return '<meta name="article:content-type" content="guide"><meta name="article:product-count" content="1">';
   }
   function comparisonPageBody() {
-    return '<p class="meta">breadcrumb</p>'
-      + '<h1>headline</h1>'
-      + '<p class="lead">lead text</p>'
-      + '<nav class="jump-nav">links</nav>'
-      + '<section class="article-comparison-v2">comparison</section>'
-      + '<details id="specs">specs</details>'
-      + '<h2 id="official">official</h2>'
-      + '<h2 id="faq">FAQ</h2>'
-      + '<div class="purchase-cards">cards</div>'
-      + '<ol class="change-log">log</ol>'
-      + '<ul class="source-list">sources</ul>';
+    return (
+      '<p class="meta">breadcrumb</p>' +
+      "<h1>headline</h1>" +
+      '<p class="lead">lead text</p>' +
+      '<nav class="jump-nav">links</nav>' +
+      '<section class="article-comparison-v2">comparison</section>' +
+      '<details id="specs">specs</details>' +
+      '<h2 id="official">official</h2>' +
+      '<h2 id="faq">FAQ</h2>' +
+      '<div class="purchase-cards">cards</div>' +
+      '<ol class="change-log">log</ol>' +
+      '<ul class="source-list">sources</ul>'
+    );
   }
   function commercialPageBody() {
-    return '<p class="meta">breadcrumb</p>'
-      + '<h1>headline</h1>'
-      + '<p class="trust-line">trust</p>'
-      + '<section class="next-step" data-next-step>next</section>'
-      + '<h2 id="faq">FAQ</h2>'
-      + '<div class="purchase-cards">cards</div>'
-      + '<ol class="change-log">log</ol>';
+    return (
+      '<p class="meta">breadcrumb</p>' +
+      "<h1>headline</h1>" +
+      '<p class="trust-line">trust</p>' +
+      '<section class="next-step" data-next-step>next</section>' +
+      '<h2 id="faq">FAQ</h2>' +
+      '<div class="purchase-cards">cards</div>' +
+      '<ol class="change-log">log</ol>'
+    );
   }
 
   it("accepts correct order for comparison page articles", () => {
@@ -1428,19 +1432,18 @@ describe("article section order (validateArticleSectionOrder)", () => {
   });
 
   it("rejects reversed sections in comparison page", () => {
-    const bad = '<p class="meta">breadcrumb</p>'
-      + '<section class="article-comparison-v2">comparison</section>'
-      + '<h1>headline</h1>'
-      + '<p class="lead">lead text</p>';
+    const bad =
+      '<p class="meta">breadcrumb</p>' +
+      '<section class="article-comparison-v2">comparison</section>' +
+      "<h1>headline</h1>" +
+      '<p class="lead">lead text</p>';
     expect(
       validateArticleSectionOrder(
         "articles/test-reversed/index.html",
         comparisonMeta() + bad,
       ),
     ).toEqual(
-      expect.arrayContaining([
-        expect.stringContaining("appears before"),
-      ]),
+      expect.arrayContaining([expect.stringContaining("appears before")]),
     );
   });
 
@@ -1455,7 +1458,10 @@ describe("article section order (validateArticleSectionOrder)", () => {
 
   it("skips non-article pages", () => {
     expect(
-      validateArticleSectionOrder("index.html", comparisonMeta() + comparisonPageBody()),
+      validateArticleSectionOrder(
+        "index.html",
+        comparisonMeta() + comparisonPageBody(),
+      ),
     ).toEqual([]);
   });
 
@@ -1469,14 +1475,15 @@ describe("article section order (validateArticleSectionOrder)", () => {
   });
 
   it("skips trust-line appearing inside nested comparison-v2", () => {
-    const nested = '<p class="meta">breadcrumb</p>'
-      + '<h1>headline</h1>'
-      + '<p class="lead">lead</p>'
-      + '<nav class="jump-nav">links</nav>'
-      + '<section class="article-comparison-v2">comparison'
-      + '<p class="trust-line">trust inside v2</p>'
-      + '</section>'
-      + '<details id="specs">specs</details>';
+    const nested =
+      '<p class="meta">breadcrumb</p>' +
+      "<h1>headline</h1>" +
+      '<p class="lead">lead</p>' +
+      '<nav class="jump-nav">links</nav>' +
+      '<section class="article-comparison-v2">comparison' +
+      '<p class="trust-line">trust inside v2</p>' +
+      "</section>" +
+      '<details id="specs">specs</details>';
     expect(
       validateArticleSectionOrder(
         "articles/nested/index.html",
