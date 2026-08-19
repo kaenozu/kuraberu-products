@@ -318,6 +318,14 @@ export const articlePurchaseLinks = {
     name: "パナソニック F-PX70C",
     purchaseUrl: "https://a.r10.to/h5bABV",
   },
+  "panasonic-es-lt4b-vs-es-lv7j:left": {
+    name: "パナソニック ES-LT4B",
+    purchaseUrl: "https://a.r10.to/heFGiH",
+  },
+  "panasonic-es-lt4b-vs-es-lv7j:right": {
+    name: "パナソニック ES-LV7J",
+    purchaseUrl: "https://a.r10.to/hg2U2Z",
+  },
   "shupot:left": {
     name: "ピジョン 電動鼻吸い器 シュポット 電動 シュポット",
     purchaseUrl: "https://a.r10.to/hglrVW",
