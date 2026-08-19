@@ -35,6 +35,7 @@ import {
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
@@ -59,7 +60,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(66);
+    expect(publicArticleMetadata).toHaveLength(67);
     const newlyPublishedIds = [
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
@@ -69,6 +70,7 @@ describe("article metadata", () => {
       "panasonic-f-px60c-vs-f-px70c",
       "panasonic-es-lt4b-vs-es-lv7j",
       "yamajitsu-film-holder-242286-vs-242287",
+      "zojirushi-eq-aa22-vs-eq-sa22",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -162,6 +164,7 @@ describe("article metadata", () => {
       yamazakiFreeBroomArticle,
       yamazakiDustWagonArticle,
       zojirushiElectricKettleArticle,
+      zojirushiToasterArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
       panasonicFyhvx120VsFyhvx90Article,
@@ -201,7 +204,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(78);
+    ).toHaveLength(79);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
