@@ -25,7 +25,9 @@ function extractStringArray(body, key) {
   const re = new RegExp(key + ":\\s*\\[([^\\]]*)\\]");
   const m = body.match(re);
   if (!m) return [];
-  return [...m[1].matchAll(/["\u0027]([^"\u0027]+)["\u0027]/g)].map((x) => x[1]);
+  return [...m[1].matchAll(/["\u0027]([^"\u0027]+)["\u0027]/g)].map(
+    (x) => x[1],
+  );
 }
 
 function extractKeywords(name) {
@@ -47,8 +49,7 @@ function readDiagnosisProducts() {
   const products = [];
   for (const file of files) {
     const src = readFileSync(path.join(PRODUCTS_DIR, file), "utf8");
-    const re =
-      /export\s+const\s+(\w+):\s*Product\s*=\s*\{([\s\S]*?)\n\};/g;
+    const re = /export\s+const\s+(\w+):\s*Product\s*=\s*\{([\s\S]*?)\n\};/g;
     for (const match of src.matchAll(re)) {
       const b = match[2];
       const id = extractString(b, "id");
@@ -148,7 +149,9 @@ function generateDraft(pair) {
   return [
     'import { defineArticleMetadata } from "../types";',
     "",
-    "export const " + id.replace(/-/g, "") + "Article = defineArticleMetadata({",
+    "export const " +
+      id.replace(/-/g, "") +
+      "Article = defineArticleMetadata({",
     '  id: "' + id + '",',
     "  productCount: 2,",
     '  path: "' + dp + '",',

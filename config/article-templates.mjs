@@ -17,7 +17,10 @@ export const COMPARISON_MANUAL_TEMPLATE = {
     { marker: "class:purchase-cards", description: "購入カード" },
   ],
   optional: [
-    { marker: "id:official|id:specs|公式情報", description: "公式情報セクション" },
+    {
+      marker: "id:official|id:specs|公式情報",
+      description: "公式情報セクション",
+    },
     { marker: "class:lead", description: "リード文" },
     { marker: "class:jump-nav", description: "ページ内ジャンプ" },
     { marker: "class:sns-embeds|ArticleSocialProof", description: "SNS投稿" },
@@ -26,8 +29,14 @@ export const COMPARISON_MANUAL_TEMPLATE = {
     { marker: "情報源一覧", description: "情報源一覧セクション" },
   ],
   forbidden: [
-    { pattern: "class:quick-verdict", reason: "ArticleQuickVerdict は統合済み" },
-    { pattern: "class:thirty-second", reason: "ArticleThirtySecondComparison は統合済み" },
+    {
+      pattern: "class:quick-verdict",
+      reason: "ArticleQuickVerdict は統合済み",
+    },
+    {
+      pattern: "class:thirty-second",
+      reason: "ArticleThirtySecondComparison は統合済み",
+    },
   ],
 };
 
@@ -37,16 +46,29 @@ export const COMPARISON_COMMERCIAL_TEMPLATE = {
   required: [
     { marker: "class:meta", description: "バックリンク・日付" },
     { marker: "h1", description: "記事見出し" },
-    { marker: "id:key-differences|id:conclusion|違いを確認|比較テーブル|conclusion", description: "違い・結論セクション" },
+    {
+      marker:
+        "id:key-differences|id:conclusion|違いを確認|比較テーブル|conclusion",
+      description: "違い・結論セクション",
+    },
     { marker: "id:faq|よくある質問", description: "FAQセクション" },
     { marker: "class:purchase-cards", description: "購入カード" },
   ],
   optional: [
-    { marker: "id:official|公式の確認先|公式情報", description: "公式情報セクション" },
-    { marker: "id:decision-guide|選ぶときの確認順", description: "選び方セクション" },
+    {
+      marker: "id:official|公式の確認先|公式情報",
+      description: "公式情報セクション",
+    },
+    {
+      marker: "id:decision-guide|選ぶときの確認順",
+      description: "選び方セクション",
+    },
   ],
   forbidden: [
-    { pattern: "class:article-comparison-v2", reason: "自動記事に ArticleComparisonV2 は不要" },
+    {
+      pattern: "class:article-comparison-v2",
+      reason: "自動記事に ArticleComparisonV2 は不要",
+    },
   ],
 };
 
@@ -56,15 +78,25 @@ export const GUIDE_TEMPLATE = {
   required: [
     { marker: "class:meta", description: "バックリンク・日付" },
     { marker: "h1", description: "記事見出し" },
-    { marker: "id:key-differences|id:conclusion|違いを確認|比較テーブル|conclusion", description: "違い・結論セクション" },
+    {
+      marker:
+        "id:key-differences|id:conclusion|違いを確認|比較テーブル|conclusion",
+      description: "違い・結論セクション",
+    },
   ],
   optional: [
-    { marker: "id:official|公式の確認先|公式情報", description: "公式情報セクション" },
+    {
+      marker: "id:official|公式の確認先|公式情報",
+      description: "公式情報セクション",
+    },
     { marker: "id:faq|よくある質問", description: "FAQセクション" },
     { marker: "class:purchase-cards", description: "購入カード" },
   ],
   forbidden: [
-    { pattern: "class:article-comparison-v2", reason: "商品ガイドに ArticleComparisonV2 は不要" },
+    {
+      pattern: "class:article-comparison-v2",
+      reason: "商品ガイドに ArticleComparisonV2 は不要",
+    },
   ],
 };
 
@@ -112,12 +144,19 @@ function htmlMatchesMarker(html, marker) {
     // Check if class attribute contains the class name
     // Handles: class="foo", class="foo bar", class="bar foo"
     const dq1 = html.indexOf('class="' + cls + '"');
-    const dq2 = html.indexOf('class="' + cls + ' ');
-    const dq3 = html.indexOf(' ' + cls + '"');
+    const dq2 = html.indexOf('class="' + cls + " ");
+    const dq3 = html.indexOf(" " + cls + '"');
     const sq1 = html.indexOf("class='" + cls + "'");
-    const sq2 = html.indexOf("class='" + cls + ' ');
+    const sq2 = html.indexOf("class='" + cls + " ");
     const sq3 = html.indexOf(" '" + cls + "'");
-    return dq1 !== -1 || dq2 !== -1 || dq3 !== -1 || sq1 !== -1 || sq2 !== -1 || sq3 !== -1;
+    return (
+      dq1 !== -1 ||
+      dq2 !== -1 ||
+      dq3 !== -1 ||
+      sq1 !== -1 ||
+      sq2 !== -1 ||
+      sq3 !== -1
+    );
   }
   if (marker.startsWith("id:")) {
     const id = marker.slice(3);
@@ -145,8 +184,8 @@ function findSingleMarkerPosition(html, marker) {
     let minPos = Infinity;
     const positions = [
       html.indexOf('class="' + cls + '"'),
-      html.indexOf('class="' + cls + ' '),
-      html.indexOf(' ' + cls + '"'),
+      html.indexOf('class="' + cls + " "),
+      html.indexOf(" " + cls + '"'),
     ];
     for (const pos of positions) {
       if (pos !== -1 && pos < minPos) minPos = pos;

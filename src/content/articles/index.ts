@@ -39,4 +39,10 @@ export { tigerMtaJ050GuideArticle } from "./tiger-mta-j050-guide";
 export { panasonicEhNa9mVsEhNa7mArticle } from "./panasonic-eh-na9m-vs-eh-na7m";
 export { tigerKettlePcjVsPcmArticle } from "./tiger-kettle-pcj-vs-pcm";
 
-export { commercialArticleImages, additionalCommercialArticles, additionalCommercialArticleSeeds, articleMetadata, publicArticleMetadata } from "./commercial";
+export {
+  commercialArticleImages,
+  additionalCommercialArticles,
+  additionalCommercialArticleSeeds,
+  articleMetadata,
+  publicArticleMetadata,
+} from "./commercial";
