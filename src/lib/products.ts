@@ -431,6 +431,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 tower マグネットペンスタンド（10096 / 10097）",
     purchaseUrl: "https://a.r10.to/hkdB9e",
   },
+  "panasonic-nt-t501-vs-nt-d700:left": {
+    name: "パナソニック NT-T501",
+    purchaseUrl: "https://a.r10.to/hF1vxG",
+  },
+  "panasonic-nt-t501-vs-nt-d700:right": {
+    name: "パナソニック NT-D700",
+    purchaseUrl: "https://a.r10.to/hg4iM4",
+  },
   "zojirushi-ck-pa08-vs-ck-dc08:left": {
     name: "象印 CK-PA08",
     purchaseUrl: "https://a.r10.to/hPwhA2",
