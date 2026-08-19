@@ -103,7 +103,8 @@ for (const file of htmlFiles) {
   const isArticle =
     pathname.startsWith("/articles/") &&
     pathname !== "/articles/" &&
-    !pathname.startsWith("/articles/page/");
+    !pathname.startsWith("/articles/page/") &&
+    !pathname.startsWith("/articles/category/");
   const isPrivateMemo = pathname === "/memo/";
   const expectedRobots =
     is404 || isPrivateMemo ? "noindex,nofollow" : expectedDefaultRobots;

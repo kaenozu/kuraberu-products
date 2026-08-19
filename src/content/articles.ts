@@ -3470,11 +3470,11 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     officialSources: [
       {
         label: "Logicool MX Keys S 公式商品ページ",
-        url: "https://www.logicool.co.jp MX Keys S",
+        url: "https://www.logicool.co.jp/ja-jp/shop/p/mx-keys-s",
       },
       {
         label: "Logicool MX Keys Mini 公式商品ページ",
-        url: "https://www.logicool.co.jp MX Keys Mini",
+        url: "https://www.logicool.co.jp/ja-jp/shop/p/mx-keys-mini",
       },
     ],
     verifiedRows: [
