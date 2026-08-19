@@ -70,8 +70,8 @@ describe("top page (rendered dist)", () => {
     );
     expect(section).not.toBeNull();
     const links = [
-      ...section![1].matchAll(/href="\/articles\/\?category=([^"]+)"/g),
-    ].map((match) => decodeURIComponent(match[1]));
+      ...section![1].matchAll(/href="\/articles\/category\/([^"]+)"/g),
+    ].map((match) => decodeURIComponent(match[1]).replace(/\/$/,  ""));
     expect(links).toEqual(expectedCategories.map(([name]) => name));
 
     // 各カテゴリの件数ラベルが publicArticleMetadata の実数と一致する

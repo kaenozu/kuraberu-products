@@ -44,7 +44,7 @@ describe("content freshness", () => {
     const articlesDir = "dist/articles";
     const articleDirs = readdirSync(articlesDir, { withFileTypes: true })
       .filter((entry) => entry.isDirectory())
-      .filter((entry) => entry.name !== "page")
+      .filter((entry) => !"page category".includes(entry.name))
       .map((entry) => entry.name);
     const bottleOnlyTerms = ["容量0.5L", "保温効力68℃以上"];
 

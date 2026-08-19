@@ -16,6 +16,7 @@ import {
   validateArticleCardThumbnails,
   validateArticleTrustLine,
   validateArticleNextStep,
+  validateArticleSectionOrder,
   validateTopSearch,
   validateHeaderNav,
   validateComparisonCardLabels,
@@ -1375,5 +1376,112 @@ describe("article next-step block (conclusion → 次にすること: A/B購入 
 
   it("ignores non-article pages", () => {
     expect(validateArticleNextStep("index.html", nextStep())).toEqual([]);
+  });
+});
+
+describe("article section order (validateArticleSectionOrder)", () => {
+  function comparisonMeta() {
+    return '<meta name="article:content-type" content="comparison"><meta name="article:product-count" content="2">';
+  }
+  function guideMeta() {
+    return '<meta name="article:content-type" content="guide"><meta name="article:product-count" content="1">';
+  }
+  function comparisonPageBody() {
+    return '<p class="meta">breadcrumb</p>'
+      + '<h1>headline</h1>'
+      + '<p class="lead">lead text</p>'
+      + '<nav class="jump-nav">links</nav>'
+      + '<section class="article-comparison-v2">comparison</section>'
+      + '<details id="specs">specs</details>'
+      + '<h2 id="official">official</h2>'
+      + '<h2 id="faq">FAQ</h2>'
+      + '<div class="purchase-cards">cards</div>'
+      + '<ol class="change-log">log</ol>'
+      + '<ul class="source-list">sources</ul>';
+  }
+  function commercialPageBody() {
+    return '<p class="meta">breadcrumb</p>'
+      + '<h1>headline</h1>'
+      + '<p class="trust-line">trust</p>'
+      + '<section class="next-step" data-next-step>next</section>'
+      + '<h2 id="faq">FAQ</h2>'
+      + '<div class="purchase-cards">cards</div>'
+      + '<ol class="change-log">log</ol>';
+  }
+
+  it("accepts correct order for comparison page articles", () => {
+    expect(
+      validateArticleSectionOrder(
+        "articles/sharp-kc-s50-vs-fu-s50/index.html",
+        comparisonMeta() + comparisonPageBody(),
+      ),
+    ).toEqual([]);
+  });
+
+  it("accepts correct order for commercial page articles", () => {
+    expect(
+      validateArticleSectionOrder(
+        "articles/anessa/index.html",
+        comparisonMeta() + commercialPageBody(),
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects reversed sections in comparison page", () => {
+    const bad = '<p class="meta">breadcrumb</p>'
+      + '<section class="article-comparison-v2">comparison</section>'
+      + '<h1>headline</h1>'
+      + '<p class="lead">lead text</p>';
+    expect(
+      validateArticleSectionOrder(
+        "articles/test-reversed/index.html",
+        comparisonMeta() + bad,
+      ),
+    ).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("appears before"),
+      ]),
+    );
+  });
+
+  it("skips guide articles", () => {
+    expect(
+      validateArticleSectionOrder(
+        "articles/guide/index.html",
+        guideMeta() + "<main>guide</main>",
+      ),
+    ).toEqual([]);
+  });
+
+  it("skips non-article pages", () => {
+    expect(
+      validateArticleSectionOrder("index.html", comparisonMeta() + comparisonPageBody()),
+    ).toEqual([]);
+  });
+
+  it("skips articles without comparison-v2 or next-step (manual articles)", () => {
+    expect(
+      validateArticleSectionOrder(
+        "articles/manual/index.html",
+        comparisonMeta() + "<main>manual</main>",
+      ),
+    ).toEqual([]);
+  });
+
+  it("skips trust-line appearing inside nested comparison-v2", () => {
+    const nested = '<p class="meta">breadcrumb</p>'
+      + '<h1>headline</h1>'
+      + '<p class="lead">lead</p>'
+      + '<nav class="jump-nav">links</nav>'
+      + '<section class="article-comparison-v2">comparison'
+      + '<p class="trust-line">trust inside v2</p>'
+      + '</section>'
+      + '<details id="specs">specs</details>';
+    expect(
+      validateArticleSectionOrder(
+        "articles/nested/index.html",
+        comparisonMeta() + nested,
+      ),
+    ).toEqual([]);
   });
 });
