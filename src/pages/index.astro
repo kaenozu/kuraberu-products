@@ -43,7 +43,7 @@ const categoryEmoji: Record<string, string> = {
   title="くらべる商品メモ｜商品比較"
   description="商品やサービスを、公式情報と確認状況を分けて比べるサイトです。確認できない数値や体験談は掲載しません。"
 >
-  <section class="wrap section section-intro hero-section">
+  <section class="wrap section section-intro hero-section stitch-hero">
     <p class="eyebrow">くらべる商品メモ</p>
     <h1 class="hero-heading">くらべて、<br class="hero-br" />選ぶ。</h1>
     <p class="lead">似ていて迷う2商品を、違いと「<strong>どっち向き？</strong>」で比較します。<br />メーカー公式情報を中心に確認しています。</p>
@@ -57,7 +57,7 @@ const categoryEmoji: Record<string, string> = {
     </p>
   </section>
 
-  <section class="wrap section section-diagnosis" data-top-diagnosis>
+  <section class="wrap section section-diagnosis stitch-diagnosis" data-top-diagnosis>
     <div class="subsection-heading">
       <p class="section-label">商品選択診断</p>
       <h2>迷ったら、30秒で診断</h2>
@@ -254,6 +254,156 @@ const categoryEmoji: Record<string, string> = {
   @media (max-width: 480px) {
     .diagnosis-grid {
       grid-template-columns: 1fr;
+    }
+  }
+
+  /* Google Stitch の Product Comparison Redesign を反映したトップ専用テーマ。 */
+  .home-page {
+    background: #fffaf8;
+  }
+  .home-page main > section.wrap:not(.stitch-hero):not(.stitch-diagnosis) {
+    box-sizing: border-box;
+    width: calc(100% - 2rem);
+    max-width: 1120px;
+    margin-inline: auto;
+    padding-inline: 0;
+  }
+  .home-page main > section.section-rule {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    padding-inline: max(1rem, calc((100% - 1120px) / 2));
+  }
+  .home-page .footer {
+    width: 100%;
+    margin-inline: 0;
+    padding-inline: max(1rem, calc((100% - 1120px) / 2));
+  }
+  .home-page .site-header {
+    background: #fffaf8;
+    border-bottom-color: #f0ded8;
+  }
+  .home-page .site-header .nav {
+    position: relative;
+    justify-content: center;
+  }
+  .home-page .site-header .brand {
+    color: #a52a1e;
+    font-weight: 800;
+  }
+  .home-page .site-header .nav-toggle {
+    position: absolute;
+    left: 0;
+  }
+  .home-page .hero-section.stitch-hero {
+    max-width: none;
+    margin-inline: 0;
+    padding: clamp(1.5rem, 5vw, 3.2rem) 1rem clamp(1.75rem, 5vw, 3rem);
+    background: #fff7f4;
+    border-bottom: 1px solid #f0ded8;
+    text-align: center;
+  }
+  .home-page .hero-section.stitch-hero::before {
+    display: none;
+  }
+  .home-page .stitch-hero .eyebrow {
+    color: #a52a1e;
+    margin-bottom: 0.55rem;
+  }
+  .home-page .stitch-hero .hero-heading {
+    margin-bottom: 0.75rem !important;
+    font-size: clamp(2.15rem, 8vw, 4.25rem) !important;
+    letter-spacing: -0.045em !important;
+  }
+  .home-page .stitch-hero .lead {
+    max-width: 36rem;
+    margin-inline: auto;
+    color: #704f49;
+  }
+  .home-page .top-search {
+    max-width: 32rem;
+    margin: 1.5rem auto 0;
+    padding: 0.25rem;
+    border: 1px solid #8b827d;
+    border-radius: var(--radius-md);
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(93, 55, 46, 0.06);
+  }
+  .home-page .top-search input {
+    min-width: 0;
+    border: 0;
+    background: transparent;
+  }
+  .home-page .top-search input:focus {
+    outline: 2px solid #d9a49b;
+    outline-offset: -2px;
+  }
+  .home-page .top-search .secondary-button {
+    border-radius: var(--radius-sm);
+    background: #a52a1e;
+    color: #fff;
+    border-color: #a52a1e;
+  }
+  .home-page .diagnosis-hero-cta {
+    justify-content: center;
+    margin-bottom: 0;
+  }
+  .home-page .diagnosis-hero-cta__button {
+    background: #a52a1e;
+  }
+  .home-page .section-diagnosis.stitch-diagnosis {
+    max-width: 56rem;
+    width: auto;
+    margin: 0 auto;
+    border: 0;
+    border-radius: var(--radius-lg);
+    padding-inline: clamp(1.25rem, 3vw, 2rem);
+    background: #f4f0e7;
+    box-shadow: none;
+  }
+  .home-page .stitch-diagnosis .subsection-heading,
+  .home-page .stitch-diagnosis > .lead {
+    max-width: 42rem;
+    margin-inline: auto;
+  }
+  .home-page .stitch-diagnosis .section-label {
+    color: #a52a1e;
+  }
+  .home-page .diagnosis-card {
+    border-color: #e8e1d8;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(93, 55, 46, 0.05);
+  }
+  .home-page .diagnosis-card:hover {
+    border-color: #c77a6f;
+    box-shadow: 0 5px 14px rgba(93, 55, 46, 0.1);
+  }
+  .home-page .diagnosis-card__cta,
+  .home-page .diagnosis-actions a {
+    color: #a52a1e;
+  }
+  .home-page .diagnosis-actions .primary-button {
+    background: #a52a1e;
+    border-color: #a52a1e;
+    color: #fff;
+  }
+  @media (max-width: 559px) {
+    .home-page .site-header .nav {
+      min-height: 3.75rem;
+    }
+    .home-page .site-header .nav-toggle {
+      left: 0.25rem;
+    }
+    .home-page .top-search {
+      display: flex;
+      align-items: center;
+    }
+    .home-page .top-search input {
+      width: 100%;
+      padding-inline: 0.6rem;
+    }
+    .home-page .top-search .secondary-button {
+      flex: 0 0 auto;
     }
   }
 </style>
