@@ -439,4 +439,12 @@ export const articlePurchaseLinks = {
     name: "象印 EC-MA60",
     purchaseUrl: "https://a.r10.to/h5Ob79",
   },
+  "yamajitsu-film-holder-242286-vs-242287:left": {
+    name: "山崎実業 フィルムフックまな板ホルダー タワー 242286",
+    purchaseUrl: "https://a.r10.to/h5iqky",
+  },
+  "yamajitsu-film-holder-242286-vs-242287:right": {
+    name: "山崎実業 フィルムフック鍋蓋ホルダー タワー 242287",
+    purchaseUrl: "https://a.r10.to/hgDVKy",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
