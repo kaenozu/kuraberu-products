@@ -1,0 +1,47 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { yamajitsuBathStoolArticle as articleMetadata } from '../../../content/articles'
+
+const kidsOfficial = 'https://www.yamajitsu.co.jp/products/240679'
+const standardOfficial = 'https://www.yamajitsu.co.jp/products/241958'
+const kidsImage = '/products/yamajitsu-bath-stool-240679.jpg'
+const standardImage = '/products/yamajitsu-bath-stool-241958.jpg'
+const kidsAudience = '3歳以上の子ども用として、座面の低い風呂イスを選びたい人向け'
+const standardAudience = '大人用の座面高さと広めのサイズを優先する人向け'
+
+const faqEntries = [
+  { question: '山崎実業のバスチェア 240679と241958の違いは？', answer: '240679はキッズ用で、商品サイズは幅25.5×奥行23.5×高さ16cm、座面高13cm、重量420g、対象年齢3歳以上です。241958は商品サイズ幅34×奥行32×高さ29cm、座面高25cm、重量1,000gです。' },
+  { question: '子ども用なのはどちら？', answer: '公式ページに「対象年齢 3歳以上を対象」と記載されているのは240679です。241958について、この記事では対象年齢を確認できていないため断定していません。' },
+  { question: 'どちらも浴室のフックに掛けられますか？', answer: '両方の公式ページに、パイプの直径3cm以下・シャワーフックの直径2.5cm以上という対応サイズが記載されています。' },
+  { question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。' },
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: '商品名', left: '引っ掛け風呂イス タワー キッズ用', right: '引っ掛け風呂イス タワー', highlight: null },
+  { label: 'サイズ（幅×奥行×高さ）', left: 'W25.5×D23.5×H16cm', right: 'W34×D32×H29cm', highlight: null },
+  { label: '座面の高さ', left: 'H13cm', right: 'H25cm', highlight: 'left', highlightNote: '低い座面' },
+  { label: '商品重量', left: '420g', right: '1,000g', highlight: 'left', highlightNote: '580g軽い' },
+  { label: '対象年齢', left: '3歳以上', right: '公式ページで確認不可', highlight: null },
+  { label: '耐荷重', left: '100kg', right: '100kg', highlight: null },
+]
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{ brand: '山崎実業 tower', line: '240679', tagline: '子ども用・低い座面なら', image: kidsImage, imageAlt: '山崎実業 引っ掛け風呂イス タワー キッズ用 240679', officialHref: kidsOfficial, guidePoints: [kidsAudience], purchaseHref: articlePurchaseLinks['yamajitsu-bath-stool-240679-vs-241958:left'].purchaseUrl }}
+  right={{ brand: '山崎実業 tower', line: '241958', tagline: '大人用の座面高さなら', image: standardImage, imageAlt: '山崎実業 引っ掛け風呂イス タワー 241958', officialHref: standardOfficial, guidePoints: [standardAudience], purchaseHref: articlePurchaseLinks['yamajitsu-bath-stool-240679-vs-241958:right'].purchaseUrl }}
+  keyDiffRows={keyDiffRows}
+  lead={'山崎実業公式ページで確認できるサイズ・重量・対応サイズ・耐荷重・対象年齢の範囲で、キッズ用240679と通常タイプ241958を比較します。'}
+  summaryParagraph={'240679は座面高13cm・重量420gで、公式ページに3歳以上対象と記載されています。241958は座面高25cm・重量1,000gです。浴室で必要な座面高さと対象を先に確認してください。'}
+  officialDescription={'仕様の根拠は、山崎実業公式の商品ページで2026年8月20日に確認しました。価格・在庫・使用感は公式仕様の比較対象に含めていません。'}
+  officialLinks={[{ label: '240679 公式商品ページ', href: kidsOfficial }, { label: '241958 公式商品ページ', href: standardOfficial }]}
+  socialProofQuery={'山崎実業 引っ掛け風呂イス タワー 240679 241958'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'山崎実業 引っ掛け風呂イス タワー キッズ用 240679'}
+  leftPurchaseAudience={kidsAudience}
+  rightPurchaseName={'山崎実業 引っ掛け風呂イス タワー 241958'}
+  rightPurchaseAudience={standardAudience}
+  sourceLinks={[{ label: '山崎実業公式：引っ掛け風呂イス タワー キッズ用 240679', href: kidsOfficial, checkedAt: '2026-08-19' }, { label: '山崎実業公式：引っ掛け風呂イス タワー 241958', href: standardOfficial, checkedAt: '2026-08-19' }]}
+/>

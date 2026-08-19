@@ -1320,6 +1320,37 @@ export const yamazakiCondorWagonArticle = defineArticleMetadata({
   ],
 });
 
+export const yamajitsuBathStoolArticle = defineArticleMetadata({
+  id: "yamajitsu-bath-stool-240679-vs-241958",
+  productCount: 2,
+  path: "/articles/yamajitsu-bath-stool-240679-vs-241958/",
+  title: "山崎実業 バスチェア、どっち？｜くらべる商品メモ",
+  headline: "山崎実業の引っ掛け風呂イス、キッズ用と通常タイプを比較",
+  description:
+    "山崎実業の引っ掛け風呂イス タワー キッズ用と通常タイプを、公式のサイズ・重量・対象年齢・耐荷重で比較",
+  category: "生活雑貨",
+  tags: ["山崎実業", "バスチェア", "風呂イス"],
+  audiences: [
+    "子ども用のバスチェアを探している人",
+    "浴室で掛けて収納できる風呂イスを比較したい人",
+  ],
+  uses: ["入浴", "浴室収納", "子ども用バスチェア選び"],
+  summary:
+    "山崎実業公式ページで確認できるサイズ・重量・対応サイズ・耐荷重・対象年齢をもとに、キッズ用と通常タイプを比べます。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamajitsu-bath-stool-240679.jpg",
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary: "初回公開。山崎実業公式の商品ページで2製品の仕様を確認。",
+    },
+  ],
+});
+
 export const yamazakiDustWagonArticle = defineArticleMetadata({
   id: "yamazaki-dust-wagon-45l-2division-vs-3division",
   productCount: 2,
@@ -4020,6 +4051,7 @@ export const articleMetadata = Object.freeze([
   thermosTigerBottleArticle,
   yamazakiTowerDeskPanelArticle,
   yamazakiCondorWagonArticle,
+  yamajitsuBathStoolArticle,
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,

@@ -399,6 +399,14 @@ export const articlePurchaseLinks = {
     name: "山崎産業 コンドル FU944-000X-MB",
     purchaseUrl: "https://a.r10.to/hgTHoJ",
   },
+  "yamajitsu-bath-stool-240679-vs-241958:left": {
+    name: "山崎実業 引っ掛け風呂イス タワー キッズ用 240679",
+    purchaseUrl: "https://a.r10.to/hg6xLA",
+  },
+  "yamajitsu-bath-stool-240679-vs-241958:right": {
+    name: "山崎実業 引っ掛け風呂イス タワー 241958",
+    purchaseUrl: "https://a.r10.to/hPipKR",
+  },
   "yamazaki-dust-wagon-45l-2division-vs-3division:left": {
     name: "山崎実業 45L 2分別",
     purchaseUrl: "https://a.r10.to/h5XDqK",
