@@ -463,6 +463,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 フィルムフック鍋蓋ホルダー タワー 242287",
     purchaseUrl: "https://a.r10.to/hgDVKy",
   },
+  "zojirushi-eq-sb22-vs-eq-ah22:left": {
+    name: "象印 EQ-SB22",
+    purchaseUrl: "https://a.r10.to/hkSuEP",
+  },
+  "zojirushi-eq-sb22-vs-eq-ah22:right": {
+    name: "象印 EQ-AH22",
+    purchaseUrl: "https://a.r10.to/h5VdYE",
+  },
   "zojirushi-eq-aa22-vs-eq-sa22:left": {
     name: "象印 EQ-AA22",
     purchaseUrl: "https://a.r10.to/hFR6ju",

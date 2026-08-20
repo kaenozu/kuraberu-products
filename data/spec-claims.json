@@ -326,6 +326,16 @@
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sa/"
       ],
       "note": ""
+    },
+    {
+      "articleId": "zojirushi-eq-sb22-vs-eq-ah22",
+      "checkedAt": "2026-08-20",
+      "claimsFingerprint": "sha256:2874fecd384b27e2eda62bf3fdf4f1b06a6ffbbc1c6e935a5bb523869be83493",
+      "officialUrls": [
+        "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-ah/",
+        "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sb/"
+      ],
+      "note": ""
     }
   ]
 }

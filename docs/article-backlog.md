@@ -93,6 +93,12 @@
 
 - `tiger-pcj-a080-vs-pcm-a080` は記事実装済み（専用PRで検証中）。
 
+### 象印 EQ-SB22 vs EQ-AH22（今回実装・PR作成前）
+
+- 記事slug: `zojirushi-eq-sb22-vs-eq-ah22`
+- 状態: clean専用worktreeで実装中。公式個別ページ・仕様・画像・楽天公式短縮URL2本を確認済み。
+- 比較軸: 外形寸法、庫内寸法、本体質量、タイマー、消費電力、焼ける枚数。
+
 ### パナソニック F-PX60C vs F-PX70C（PR #279 でレビュー中）
 
 - 記事slug: `panasonic-f-px60c-vs-f-px70c`
