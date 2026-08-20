@@ -1526,7 +1526,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "ロボット掃除機の候補を、吸引力・段差対応・モップ・障害物回避の仕様で比べます。",
     leftProduct: "Roborock Qrevo Curv",
     rightProduct: "Dreame X50 Ultra",
-    leftPoint: "毛络まりゼロ・75℃温水ドック・モップリフト20mmを重視する人向け",
+    leftPoint: "毛絡まりゼロ・75℃温水ドック・モップリフト20mmを重視する人向け",
     rightPoint:
       "最大6cm段差対応・100日ゴミ収集・200種障害物回避を重視する人向け",
     productInfoCheckedAt: "2026-08-18",
@@ -1597,9 +1597,9 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
           "Dreame X50 Ultraは最大6cmの段差対応（ProLeapシステム）を公式に謳っています。Roborock Qrevo Curvは最大4cmです。引き戸のレールや二重の敷居がある場合はX50 Ultraの方が適しています。",
       },
       {
-        question: "毛络まりが気になるのはどっち？",
+        question: "毛絡まりが気になるのはどっち？",
         answer:
-          "両機種ともデュアルブラシで毛络まり低減を謳っています。Roborockは第三者認証機関テュフラインランドで毛络まり度0%の認証を取得しています。",
+          "両機種ともデュアルブラシで毛絡まり低減を謳っています。Roborockは第三者認証機関テュフラインランドで毛絡まり度0%の認証を取得しています。",
       },
       {
         question: "ドックの手入れはどっちが楽？",
@@ -1614,7 +1614,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     ],
     decisionGuideSteps: [
       "住まいの段差高さを確認する（4cm以下なら両機種、6cm以上ならX50 Ultra）",
-      "毛络まりの頻度を考慮する（ペット・長髪の場合はブラシ確認）",
+      "毛絡まりの頻度を考慮する（ペット・長髪の場合はブラシ確認）",
       "ステーションの自動化レベルを比較する（ゴミ収集日数・自動給水の有無）",
       "価格・在庫を販売ページで確認する。",
     ],
@@ -1660,7 +1660,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       {
         label: "集じん方式",
         left: "紙パック式（0.3L）",
-        right: "タービン.setBackgroundResource式（0.65L）",
+        right: "公式ページで確認不可（集じん方式・容量は要再確認）",
       },
       {
         label: "最大吸引力",
@@ -1674,8 +1674,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "バッテリー",
-        left: "10.8V Li-ion（BL1815B / BL1830B）",
-        right: "18V Li-ion（BL1815B / BL1830B / BL1850B）",
+        left: "公式ページで確認不可（電圧・型番は要再確認）",
+        right: "公式ページで確認不可（電圧・型番は要再確認）",
       },
       {
         label: "充電時間",
@@ -1708,7 +1708,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       {
         question: "バッテリーは共通？",
         answer:
-          "CL107FDSHWは10.8V、CL286FDは18Vです。バッテリー番号はBL1815B/BL1830Bが共通ですが、電圧が異なるため互換性はありません。",
+          "現行の公式ページで両モデルの電圧・バッテリー型番を確認できないため、互換性は購入前にメーカー資料で確認してください。",
       },
     ],
     decisionGuideSteps: [
