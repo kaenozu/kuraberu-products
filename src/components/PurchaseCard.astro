@@ -32,6 +32,11 @@ const {
   requiredTerms,
   imageUrl,
 } = Astro.props;
+
+const amazonAssociateTag = import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim();
+const amazonSearchUrl = amazonAssociateTag
+  ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(name)}&tag=${encodeURIComponent(amazonAssociateTag)}`
+  : undefined;
 ---
 <article class="purchase-card">
   <div class="purchase-card__main">
@@ -53,5 +58,16 @@ const {
     searchQuery={searchQuery}
     requiredTerms={requiredTerms}
   />
+  {amazonSearchUrl && (
+    <a
+      class="cta cta-card amazon-purchase-link"
+      href={amazonSearchUrl}
+      target="_blank"
+      rel="sponsored nofollow noopener noreferrer"
+      data-amazon-cta="purchase"
+    >
+      Amazonで商品を確認 → <span class="ad-note">（広告）</span>
+    </a>
+  )}
   {note && <p class="purchase-card__note">{note}</p>}
 </article>
