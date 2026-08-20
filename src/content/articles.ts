@@ -1687,6 +1687,96 @@ type CommercialArticleSeed = {
 
 const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   {
+    id: "panasonic-washer-na-lx127cl-vs-na-lx125cl",
+    title: "パナソニック NA-LX127CLとNA-LX125CL、どっち？｜くらべる商品メモ",
+    headline:
+      "パナソニックのドラム式洗濯乾燥機、NA-LX127CLとNA-LX125CLを公式仕様で比較",
+    description:
+      "パナソニック NA-LX127CLとNA-LX125CLを、公式の容量・寸法・質量・運転音・消費電力から比較します。",
+    category: "生活家電",
+    tags: ["ドラム式洗濯乾燥機", "洗濯機", "パナソニック"],
+    audiences: [
+      "ドラム式洗濯乾燥機を公式仕様で選びたい人",
+      "設置寸法や乾燥時の仕様を比べたい人",
+    ],
+    uses: ["毎日の洗濯", "洗濯乾燥", "設置前の仕様確認"],
+    summary:
+      "NA-LX127CLとNA-LX125CLを、パナソニック公式の容量・寸法・質量・運転音・消費電力に分けて比較します。",
+    leftProduct: "パナソニック NA-LX127CL",
+    rightProduct: "パナソニック NA-LX125CL",
+    leftPoint: "温水機能と乾燥時の消費電力を公式仕様で確認したい人向け",
+    rightPoint: "本体質量を抑えたモデルを公式仕様で確認したい人向け",
+    productInfoCheckedAt: "2026-08-20",
+    modifiedAt: "2026-08-20",
+    purchaseLinksCheckedAt: "2026-08-20",
+    purchaseLinkStatus: "verified",
+    officialSources: [
+      {
+        label: "パナソニック NA-LX127CL 公式商品ページ",
+        url: "https://panasonic.jp/wash/products/NA-LX127CL.html",
+      },
+      {
+        label: "パナソニック NA-LX125CL 公式商品ページ",
+        url: "https://panasonic.jp/wash/products/NA-LX125CL.html",
+      },
+      {
+        label: "パナソニック NA-LX127CL 公式仕様ページ",
+        url: "https://panasonic.jp/wash/products/NA-LX127CL/spec.html",
+      },
+      {
+        label: "パナソニック NA-LX125CL 公式仕様ページ",
+        url: "https://panasonic.jp/wash/products/NA-LX125CL/spec.html",
+      },
+    ],
+    verifiedRows: [
+      { label: "乾燥容量", left: "6kg", right: "6kg" },
+      {
+        label: "本体寸法（幅×高さ×奥行）",
+        left: "604×1011×722mm",
+        right: "604×1011×722mm",
+      },
+      { label: "本体質量（約）", left: "82kg", right: "80kg" },
+      {
+        label: "運転音（約）",
+        left: "洗濯32dB・脱水41dB・乾燥46dB",
+        right: "洗濯32dB・脱水41dB・乾燥46dB",
+      },
+      {
+        label: "定格洗濯乾燥時の消費電力量（標準乾燥モード）",
+        left: "890Wh",
+        right: "890Wh",
+      },
+      {
+        label: "電熱装置の消費電力",
+        left: "1000W",
+        right: "公式仕様で確認できず",
+      },
+    ],
+    faqEntries: [
+      {
+        question: "NA-LX127CLとNA-LX125CLの違いは？",
+        answer:
+          "公式仕様で確認できる本体質量はNA-LX127CLが約82kg、NA-LX125CLが約80kgです。電熱装置の消費電力はNA-LX127CLが1000W、NA-LX125CLはこの比較で確認した公式仕様ページでは確認できませんでした。",
+      },
+      {
+        question: "NA-LX127CLとNA-LX125CLの乾燥容量は？",
+        answer: "両モデルとも公式仕様ページで乾燥容量6kgと確認できます。",
+      },
+      {
+        question: "設置前に何を確認すればいい？",
+        answer:
+          "本体寸法604×1011×722mmに加え、給排水ホースを含む寸法、搬入経路、防水フロアーの条件を公式情報と設置場所で確認してください。",
+      },
+    ],
+    lead: "パナソニックのNA-LX127CLとNA-LX125CLを比較します。公式仕様で確認できた容量・寸法・質量・運転音・消費電力を分けて整理し、確認できない項目は補いません。",
+    decisionGuideSteps: [
+      "設置場所の幅・高さ・奥行と搬入経路を確認する",
+      "乾燥容量6kgが洗濯物の量に合うか確認する",
+      "本体質量と給排水ホースを含む設置条件を確認する",
+      "価格・在庫・設置サービスは販売ページで確認する",
+    ],
+  },
+  {
     id: "roborock-qrevo-curv-vs-dreame-x50",
     title:
       "ロボロック Qrevo CurvとDreame X50 Ultra、どっち？｜くらべる商品メモ",
@@ -3516,6 +3606,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
 export const commercialArticleImages: Readonly<
   Record<string, { left?: `/${string}`; right?: `/${string}` }>
 > = {
+  "panasonic-washer-na-lx127cl-vs-na-lx125cl": {
+    left: "/products/panasonic-washer-na-lx127cl-vs-na-lx125cl-left.jpg",
+    right: "/products/panasonic-washer-na-lx127cl-vs-na-lx125cl-right.jpg",
+  },
   "roborock-qrevo-curv-vs-dreame-x50": {
     left: "/products/roborock-qrevo-curv-vs-dreame-x50-left.jpg",
     right: "/products/roborock-qrevo-curv-vs-dreame-x50-right.jpg",

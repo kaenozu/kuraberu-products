@@ -423,6 +423,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 tower マグネットペンスタンド（10096 / 10097）",
     purchaseUrl: "https://a.r10.to/hkdB9e",
   },
+  "panasonic-washer-na-lx127cl-vs-na-lx125cl:left": {
+    name: "パナソニック NA-LX127CL",
+    purchaseUrl: "https://a.r10.to/hPA7YB",
+  },
+  "panasonic-washer-na-lx127cl-vs-na-lx125cl:right": {
+    name: "パナソニック NA-LX125CL",
+    purchaseUrl: "https://a.r10.to/h5PK66",
+  },
   "zojirushi-ck-pa08-vs-ck-dc08:left": {
     name: "象印 CK-PA08",
     purchaseUrl: "https://a.r10.to/hPwhA2",

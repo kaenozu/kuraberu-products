@@ -82,6 +82,15 @@
 
 ## 次の候補
 
+### パナソニック NA-LX127CL vs NA-LX125CL（実装済み・PR作成待ち）
+
+- 記事slug: `panasonic-washer-na-lx127cl-vs-na-lx125cl`
+- 状態: 専用worktreeで実装。公式商品/仕様ページHTTP 200、公式画像2点、楽天短縮URL2本、`DEPLOYMENT_ENV=preview pnpm verify` PASS。
+- 比較軸: 乾燥容量、本体寸法、本体質量、運転音、消費電力量、電熱装置の消費電力。
+- 公式ページ: [NA-LX127CL](https://panasonic.jp/wash/products/NA-LX127CL.html) / [NA-LX125CL](https://panasonic.jp/wash/products/NA-LX125CL.html)
+- 購入導線: `https://a.r10.to/hPA7YB` / `https://a.r10.to/h5PK66`（楽天公式UIで画面表示確認済み）。
+- 次工程: Draft PR作成後、CI結果を確認する。merge・Production deployはこのワーカーでは実行しない。
+
 ### 日立 BD-SX130K vs BD-STX130K（実装済み・PR作成待ち）
 
 - 記事slug: `hitachi-bd-sx130k-vs-bd-stx130k`

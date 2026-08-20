@@ -57,7 +57,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(64);
+    expect(publicArticleMetadata).toHaveLength(65);
     const newlyPublishedIds = [
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
@@ -65,6 +65,7 @@ describe("article metadata", () => {
       "sharp-kc-s50-vs-panasonic-f-vxw55",
       "panasonic-eh-na9m-vs-refa-beautech",
       "panasonic-f-px60c-vs-f-px70c",
+      "panasonic-washer-na-lx127cl-vs-na-lx125cl",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -195,7 +196,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(76);
+    ).toHaveLength(77);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
