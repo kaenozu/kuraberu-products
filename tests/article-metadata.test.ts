@@ -48,6 +48,7 @@ import {
   tigerKettlePcjVsPcmArticle,
   additionalCommercialArticles,
   yamajitsuFilmHolderArticle,
+  tigerJpwJ100VsJpwK100Article,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -60,7 +61,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(67);
+    expect(publicArticleMetadata).toHaveLength(68);
     const newlyPublishedIds = [
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
@@ -71,6 +72,7 @@ describe("article metadata", () => {
       "panasonic-es-lt4b-vs-es-lv7j",
       "yamajitsu-film-holder-242286-vs-242287",
       "zojirushi-eq-aa22-vs-eq-sa22",
+      "tiger-jpw-j100-vs-jpw-k100",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -175,6 +177,7 @@ describe("article metadata", () => {
       panasonicEhNa9mVsEhNa7mArticle,
       tigerKettlePcjVsPcmArticle,
       yamajitsuFilmHolderArticle,
+      tigerJpwJ100VsJpwK100Article,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
@@ -204,7 +207,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(79);
+    ).toHaveLength(80);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);

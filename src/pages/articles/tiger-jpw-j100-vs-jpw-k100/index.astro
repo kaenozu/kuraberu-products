@@ -1,0 +1,87 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products';
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro';
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro';
+import { tigerJpwJ100VsJpwK100Article as articleMetadata } from '../../../content/articles';
+
+const jOfficial = 'https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpw-j/';
+const kOfficial = 'https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpw-k/';
+
+const faqEntries = [
+  {
+    question: 'タイガー JPW-J100 と JPW-K100 の違いは？',
+    answer: 'どちらも5.5合の極うま強火IH炊飯器ですが、JPW-J100は遠赤3層土鍋コート釜、JPW-K100は遠赤黒厚釜です。公式仕様では、JPW-J100の質量は約3.8kg、JPW-K100は約3.6kgです。',
+  },
+  {
+    question: '炊飯容量とサイズは同じ？',
+    answer: '5.5合モデルの白米の炊飯及び保温米飯容量は、どちらも0.5〜5.5合です。サイズはJPW-J100が幅26×奥行35.4×高さ20cm、JPW-K100が幅26×奥行35.4×高さ20cmです。',
+  },
+  {
+    question: '軽いのはどっち？',
+    answer: '公式仕様の質量は、JPW-J100が約3.8kg、JPW-K100が約3.6kgです。記載値だけで比べると、JPW-K100が約0.2kg軽いです。',
+  },
+  {
+    question: '内なべの違いは？',
+    answer: 'JPW-J100は遠赤3層土鍋コート釜、JPW-K100は遠赤黒厚釜です。どちらも公式ページで遠赤コーティングと極うま強火IHが案内されています。',
+  },
+] as const;
+
+const keyDiffRows: KeyDiffRow[] = [
+  {
+    label: '内なべ',
+    left: '遠赤3層土鍋コート釜',
+    right: '遠赤黒厚釜',
+  },
+  {
+    label: '質量',
+    left: '約3.8kg',
+    right: '約3.6kg',
+    highlight: 'right',
+    highlightNote: '約0.2kg軽い',
+    bar: { left: 3.8, right: 3.6 },
+    direction: 'lower-is-better',
+  },
+  {
+    label: '白米の炊飯及び保温米飯容量',
+    left: '0.5〜5.5合',
+    right: '0.5〜5.5合',
+  },
+  {
+    label: 'サイズ（幅×奥行×高さ）',
+    left: '26×35.4×20cm',
+    right: '26×35.4×20cm',
+  },
+  {
+    label: '定格消費電力',
+    left: '1,225W',
+    right: '1,225W',
+  },
+];
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'タイガー', line: 'JPW-J100', tagline: '内なべの構造を確認するなら', image: '/products/tiger-jpw-j100.jpg', imageAlt: 'タイガー JPW-J100 炊飯器', officialHref: jOfficial, guidePoints: ['遠赤3層土鍋コート釜を確認したい', '5.5合・幅26cmの仕様で選びたい'], purchaseHref: articlePurchaseLinks['tiger-jpw-j100-vs-jpw-k100:left'].purchaseUrl}}
+  right={{brand: 'タイガー', line: 'JPW-K100', tagline: '軽さと基本仕様で選ぶなら', image: '/products/tiger-jpw-k100.jpg', imageAlt: 'タイガー JPW-K100 炊飯器', officialHref: kOfficial, guidePoints: ['約3.6kgの軽さを優先したい', '遠赤黒厚釜を確認したい'], purchaseHref: articlePurchaseLinks['tiger-jpw-j100-vs-jpw-k100:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'タイガーの5.5合炊き「JPW-J100」と「JPW-K100」を比較します。公式ページで確認できる内なべ、質量、容量、サイズ、消費電力を分けて整理します。'}
+  summaryParagraph={'JPW-J100とJPW-K100は、どちらも0.5〜5.5合・幅26×奥行35.4×高さ20cm・1,225Wのモデルです。内なべの名称と質量に違いがあり、公式記載の質量はJPW-K100が約0.2kg軽くなっています。'}
+  officialDescription={'タイガー公式の商品ページでは、JPW-J100は遠赤3層土鍋コート釜、JPW-K100は遠赤黒厚釜を採用したモデルとして案内されています。比較した100サイズは、どちらも5.5合炊きです。'}
+  officialLinks={[
+    {label: 'JPW-J100 公式商品ページ', href: jOfficial},
+    {label: 'JPW-K100 公式商品ページ', href: kOfficial},
+  ]}
+  socialProofQuery={'タイガー JPW-J100 JPW-K100 炊飯器'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'タイガー JPW-J100'}
+  leftPurchaseAudience={'遠赤3層土鍋コート釜を確認して選びたい人向け'}
+  rightPurchaseName={'タイガー JPW-K100'}
+  rightPurchaseAudience={'約3.6kgの軽さと遠赤黒厚釜を確認したい人向け'}
+  sourceLinks={[
+    {label: 'タイガー JPW-J100 公式商品ページ', href: jOfficial, checkedAt: '2026-08-20'},
+    {label: 'タイガー JPW-K100 公式商品ページ', href: kOfficial, checkedAt: '2026-08-20'},
+  ]}
+  purchaseWarning={'炊飯器は、炊飯容量、設置スペース、ふたを開けたときの高さ、内なべの仕様を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。'}
+  disclaimer={'この比較は、タイガー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。'}
+/>

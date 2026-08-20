@@ -119,6 +119,13 @@
 - 公式個別ページ、比較仕様、公式画像、楽天公式短縮URL2本を確認済み。
 - 調査メモ: `C:\\Users\\neoen\\kuraberu-notes\\zojirushi-ec-kv50-ec-ma60-research-2026-08-17.md`
 
+### タイガー JPW-J100 vs JPW-K100（実装済み・PR作成前）
+
+- slug: `tiger-jpw-j100-vs-jpw-k100`
+- 公式商品ページ、比較仕様、公式画像、楽天公式短縮URL2本を確認済み。
+- 比較軸: 内なべ、白米の炊飯及び保温米飯容量、サイズ、質量、定格消費電力。
+- 公式ページ: [JPW-J100](https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpw-j/) / [JPW-K100](https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpw-k/)
+
 ## 追加確認・保留
 
 ### パナソニック ナノケア EH-NA9M vs EH-NA7M（公開済み・購入リンク未検証）

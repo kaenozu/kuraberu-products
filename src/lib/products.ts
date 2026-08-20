@@ -399,6 +399,14 @@ export const articlePurchaseLinks = {
     name: "タイガー PCT-A150",
     purchaseUrl: "https://a.r10.to/hPWaUo",
   },
+  "tiger-jpw-j100-vs-jpw-k100:left": {
+    name: "タイガー JPW-J100",
+    purchaseUrl: "https://a.r10.to/hgmgnb",
+  },
+  "tiger-jpw-j100-vs-jpw-k100:right": {
+    name: "タイガー JPW-K100",
+    purchaseUrl: "https://a.r10.to/hgR7If",
+  },
   "yamazaki-condor-wagon-vs-self-wagon:left": {
     name: "山崎産業 コンドル FU943-000X-MB",
     purchaseUrl: "https://a.r10.to/heE5GH",

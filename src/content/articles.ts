@@ -3872,6 +3872,39 @@ export const yamajitsuFilmHolderArticle = defineArticleMetadata({
   ],
 });
 
+export const tigerJpwJ100VsJpwK100Article = defineArticleMetadata({
+  id: "tiger-jpw-j100-vs-jpw-k100",
+  productCount: 2,
+  path: "/articles/tiger-jpw-j100-vs-jpw-k100/",
+  title: "タイガー JPW-J100 と JPW-K100、どっち？｜くらべる商品メモ",
+  headline: "タイガーの炊飯器、どっち？「JPW-J100」と「JPW-K100」を比較",
+  description:
+    "タイガー JPW-J100とJPW-K100を、公式の内なべ・容量・サイズ・質量・消費電力で比較",
+  category: "キッチン家電",
+  tags: ["炊飯器", "タイガー", "IH"],
+  audiences: [
+    "5.5合炊きの炊飯器を選びたい人",
+    "内なべと質量を公式仕様で比べたい人",
+  ],
+  uses: ["毎日の炊飯", "設置スペースで選ぶ", "本体の軽さで選ぶ"],
+  summary:
+    "JPW-J100とJPW-K100を、タイガー公式の商品ページで確認できる内なべ・容量・サイズ・質量・消費電力に分けて比較します。",
+  publishedAt: "2026-08-20",
+  modifiedAt: "2026-08-20",
+  productInfoCheckedAt: "2026-08-20",
+  purchaseLinksCheckedAt: "2026-08-20",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/tiger-jpw-j100.jpg",
+  aboutProductNames: ["タイガー JPW-J100", "タイガー JPW-K100"],
+  changeLog: [
+    {
+      date: "2026-08-20",
+      summary:
+        "タイガー公式の商品ページで仕様・画像を確認し、楽天公式UIで短縮URLを生成して初稿を追加。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -3914,6 +3947,7 @@ export const articleMetadata = Object.freeze([
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
   yamajitsuFilmHolderArticle,
+  tigerJpwJ100VsJpwK100Article,
   ...additionalCommercialArticles,
 ]);
 
