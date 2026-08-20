@@ -176,7 +176,7 @@ function Invoke-VerificationAttempt {
 
     # Stale artifact detection: all articles must have the same build-sha
     if ($articleBuildShas.Count -gt 1) {
-        $uniqueShas = $articleBuildShas | Sort-Object -Unique
+        $uniqueShas = @($articleBuildShas | Sort-Object -Unique)
         Check 'Build-sha consistency across articles' ($uniqueShas.Count -eq 1) "unique SHAs=$($uniqueShas.Count) values=$($uniqueShas -join ', ')"
     } elseif ($articleBuildShas.Count -eq 1) {
         Check 'Build-sha consistency across articles' $true "all $($articleBuildShas.Count) articles share SHA $($articleBuildShas[0])"
