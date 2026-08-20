@@ -318,6 +318,14 @@ export const articlePurchaseLinks = {
     name: "パナソニック F-PX70C",
     purchaseUrl: "https://a.r10.to/h5bABV",
   },
+  "panasonic-es-lt4b-vs-es-lv7j:left": {
+    name: "パナソニック ES-LT4B",
+    purchaseUrl: "https://a.r10.to/heFGiH",
+  },
+  "panasonic-es-lt4b-vs-es-lv7j:right": {
+    name: "パナソニック ES-LV7J",
+    purchaseUrl: "https://a.r10.to/hg2U2Z",
+  },
   "shupot:left": {
     name: "ピジョン 電動鼻吸い器 シュポット 電動 シュポット",
     purchaseUrl: "https://a.r10.to/hglrVW",
@@ -438,5 +446,21 @@ export const articlePurchaseLinks = {
   "zojirushi-ec-kv50-vs-ec-ma60:right": {
     name: "象印 EC-MA60",
     purchaseUrl: "https://a.r10.to/h5Ob79",
+  },
+  "yamajitsu-film-holder-242286-vs-242287:left": {
+    name: "山崎実業 フィルムフックまな板ホルダー タワー 242286",
+    purchaseUrl: "https://a.r10.to/h5iqky",
+  },
+  "yamajitsu-film-holder-242286-vs-242287:right": {
+    name: "山崎実業 フィルムフック鍋蓋ホルダー タワー 242287",
+    purchaseUrl: "https://a.r10.to/hgDVKy",
+  },
+  "zojirushi-eq-aa22-vs-eq-sa22:left": {
+    name: "象印 EQ-AA22",
+    purchaseUrl: "https://a.r10.to/hFR6ju",
+  },
+  "zojirushi-eq-aa22-vs-eq-sa22:right": {
+    name: "象印 EQ-SA22",
+    purchaseUrl: "https://a.r10.to/h5DVzd",
   },
 } as const satisfies Record<string, ArticlePurchaseLink>;

@@ -923,6 +923,39 @@ export const zojirushiCoffeeArticle = defineArticleMetadata({
   ],
 });
 
+export const zojirushiToasterArticle = defineArticleMetadata({
+  id: "zojirushi-eq-aa22-vs-eq-sa22",
+  productCount: 2,
+  path: "/articles/zojirushi-eq-aa22-vs-eq-sa22/",
+  title: "象印 EQ-AA22 と EQ-SA22、どっち？｜くらべる商品メモ",
+  headline: "象印のオーブントースター、どっち？「EQ-AA22」と「EQ-SA22」を比較",
+  description:
+    "象印 EQ-AA22とEQ-SA22を、公式のタイマー・外形寸法・庫内寸法・質量で比較",
+  category: "キッチン家電",
+  tags: ["オーブントースター", "象印", "キッチン家電"],
+  audiences: [
+    "オーブントースターを選びたい人",
+    "設置寸法とタイマーで比べたい人",
+  ],
+  uses: ["パンを焼く", "設置場所で選ぶ", "タイマーで選ぶ"],
+  summary:
+    "EQ-AA22とEQ-SA22を、象印公式の商品ページで確認できるタイマー・サイズ・庫内寸法・質量に分けて比較します。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/zojirushi-eq-aa22.png",
+  aboutProductNames: ["象印 EQ-AA22", "象印 EQ-SA22"],
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary:
+        "初回公開。象印公式の商品ページ・画像と楽天公式生成画面の短縮URLを確認。",
+    },
+  ],
+});
+
 export const panasonicVacuumArticle = defineArticleMetadata({
   id: "panasonic-mc-sb55k-vs-mc-sb35k",
   productCount: 2,
@@ -1180,6 +1213,37 @@ export const panasonicAirCleanerArticle = defineArticleMetadata({
       date: "2026-08-18",
       summary:
         "初回公開。パナソニック公式の商品ページ・仕様ページと楽天公式生成画面の短縮URLを確認。",
+    },
+  ],
+});
+
+export const panasonicShaverEsLt4bVsEsLv7jArticle = defineArticleMetadata({
+  id: "panasonic-es-lt4b-vs-es-lv7j",
+  productCount: 2,
+  path: "/articles/panasonic-es-lt4b-vs-es-lv7j/",
+  title: "パナソニック ES-LT4B と ES-LV7J、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックのラムダッシュ、どっち？「ES-LT4B」と「ES-LV7J」を比較",
+  description:
+    "パナソニック ES-LT4BとES-LV7Jを、公式の刃数・サイズ・質量・充電方式・防水仕様で比較",
+  category: "美容家電",
+  tags: ["シェーバー", "ラムダッシュ", "パナソニック"],
+  audiences: ["3枚刃の軽い本体を選びたい人", "5枚刃と洗浄充電器を確認したい人"],
+  uses: ["毎日ひげを剃る", "刃数で選ぶ", "本体重量で選ぶ"],
+  summary:
+    "ES-LT4BとES-LV7Jを、パナソニック公式の刃数・寸法・質量・充電方式・防水仕様に分けて比較します。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-es-lt4b.jpg",
+  aboutProductNames: ["パナソニック ES-LT4B", "パナソニック ES-LV7J"],
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary:
+        "初回公開。パナソニック公式の商品ページ・仕様ページと楽天公式生成リンクを確認。",
     },
   ],
 });
@@ -3770,6 +3834,44 @@ export const additionalCommercialArticles = Object.freeze(
 
 export const additionalCommercialArticleSeeds = commercialArticleSeeds;
 
+export const yamajitsuFilmHolderArticle = defineArticleMetadata({
+  id: "yamajitsu-film-holder-242286-vs-242287",
+  productCount: 2,
+  path: "/articles/yamajitsu-film-holder-242286-vs-242287/",
+  title:
+    "山崎実業 フィルムフックまな板ホルダーと鍋蓋ホルダー、どっち？｜くらべる商品メモ",
+  headline:
+    "山崎実業のフィルムフック収納、どっち？まな板ホルダーと鍋蓋ホルダーを比較",
+  description:
+    "山崎実業の242286と242287を、公式の収納対象・対応サイズ・寸法・重量・耐荷重で比較",
+  category: "キッチン用品",
+  tags: ["山崎実業", "tower", "キッチン収納"],
+  audiences: [
+    "まな板や鍋蓋の収納を見直したい人",
+    "フィルムフック収納を公式仕様で比べたい人",
+  ],
+  uses: ["まな板を収納する", "鍋蓋を収納する", "壁面収納を選ぶ"],
+  summary:
+    "山崎実業のフィルムフックまな板ホルダー242286とフィルムフック鍋蓋ホルダー242287を、収納対象・対応サイズ・寸法・重量・耐荷重で比較します。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamazaki-film-holder-242286.jpg",
+  aboutProductNames: [
+    "山崎実業 フィルムフックまな板ホルダー タワー 242286",
+    "山崎実業 フィルムフック鍋蓋ホルダー タワー 242287",
+  ],
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary:
+        "山崎実業公式の商品ページで仕様・画像を確認し、楽天公式UIで短縮URLを生成して初稿を追加。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -3793,6 +3895,7 @@ export const articleMetadata = Object.freeze([
   tefalKettleArticle,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
+  panasonicShaverEsLt4bVsEsLv7jArticle,
   sharpKcS50VsFuS50Article,
   thermosTigerBottleArticle,
   yamazakiTowerDeskPanelArticle,
@@ -3800,6 +3903,7 @@ export const articleMetadata = Object.freeze([
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
@@ -3809,6 +3913,7 @@ export const articleMetadata = Object.freeze([
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
+  yamajitsuFilmHolderArticle,
   ...additionalCommercialArticles,
 ]);
 
