@@ -63,7 +63,7 @@ function Get-ShaForArticle {
     if ($Scenario -eq 'permanent-stale') { return $OldCommitSha }
     # stale-then-fresh: the article page is fetched twice per attempt, so
     # the first attempt (fetches 1-2) stays stale and the second converges.
-    if ($script:StubArticleFetches -le 2) { return $OldCommitSha }
+    if ($script:StubArticleFetches -le 1) { return $OldCommitSha }
     return $ExpectedCommitSha
 }
 

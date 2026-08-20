@@ -182,6 +182,14 @@ function Invoke-VerificationAttempt {
         Check 'Build-sha consistency across articles' $true "all $($articleBuildShas.Count) articles share SHA $($articleBuildShas[0])"
     }
 
+    # The aggregate check makes the deployment SHA contract explicit in the report,
+    # rather than relying only on individual article checks.
+    if ($ExpectedCommitSha) {
+        $unexpectedBuildShas = @($articleBuildShas | Where-Object { $_ -ne $ExpectedCommitSha })
+        $deployedShaMatches = $articleBuildShas.Count -gt 0 -and $unexpectedBuildShas.Count -eq 0
+        Check 'Deployed commit matches expected SHA' $deployedShaMatches "expected=$ExpectedCommitSha unexpected=$($unexpectedBuildShas -join ', ')"
+    }
+
     # Article validation summary
     Check "Article validation summary" ($articleFailures -eq 0) "$articleChecks checks, $articleFailures failures across $(@($ArticlePaths).Count) articles"
 
