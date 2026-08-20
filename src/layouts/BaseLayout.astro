@@ -122,6 +122,7 @@ const breadcrumbStructuredData = article
     {/* 商品数（品質ゲートが CTA 期待枚数を記事ごとに導出するための内部メタ） */}
     {article && <meta name="article:product-count" content={String(article.productCount)} />}
     {article && <meta name="article:content-type" content={contentTypeFor(article.productCount)} />}
+    {article?.purchaseLinkStatus && <meta name="article:purchase-link-status" content={article.purchaseLinkStatus} />}
     {article?.productInfoCheckedAt && (
       <meta name="article:product-info-checked-at" content={article.productInfoCheckedAt} />
     )}

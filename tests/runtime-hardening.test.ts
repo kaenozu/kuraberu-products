@@ -38,6 +38,7 @@ describe("static asset security headers", () => {
     }
     expect(csp).not.toContain("unsafe-eval");
     expect(csp).not.toMatch(/(?:^|;)\s*script-src[^;]*\*/);
+    expect(csp).toContain("*.image.rakuten.co.jp");
     expect(headers).toContain("X-Content-Type-Options: nosniff");
   });
 });

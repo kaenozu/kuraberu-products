@@ -19,6 +19,8 @@ export default [
       "node_modules/**",
       ".wrangler/**",
       "public/contact.js",
+      "test-results/**",
+      "playwright-report/**",
     ],
   },
   {

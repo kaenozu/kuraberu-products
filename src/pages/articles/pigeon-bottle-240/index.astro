@@ -110,6 +110,7 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: ppsuCandidate.product, line: ppsuCandidate.line, tagline: ppsuCandidate.audience, image: '/products/pigeon-bottle-ppsu240.jpg', imageAlt: `${ppsuCandidate.product} ${ppsuCandidate.line}`, officialHref: ppsu, guidePoints: [ppsuCandidate.audience], purchaseHref: articlePurchaseLinks['pigeon-bottle-240:right'].purchaseUrl, productId: 'pigeon-ppsu-240'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       diagnosisHref="/tools/product-finder/baby-bottle/"
     />
 

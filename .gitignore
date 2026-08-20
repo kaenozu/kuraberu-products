@@ -13,3 +13,7 @@ acceptance-results/
 .dev.vars
 .wrangler-state/
 .wrangler/
+
+# Playwright
+test-results/
+playwright-report/

@@ -102,6 +102,7 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: shudoCandidate.product, line: shudoCandidate.line, tagline: shudoCandidate.audience, image: '/products/shupot-shudo.jpg', imageAlt: `${shudoCandidate.product} ${shudoCandidate.line}`, officialHref: shudoOfficial, guidePoints: [shudoCandidate.audience], purchaseHref: articlePurchaseLinks['shupot:right'].purchaseUrl, productId: 'shupot-shudo'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       diagnosisHref="/tools/product-finder/diaper/"
     />
 

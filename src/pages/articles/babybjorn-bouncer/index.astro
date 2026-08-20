@@ -129,6 +129,7 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, officialHref: balanceOfficialProductUrl, guidePoints: [balanceCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-bouncer:right'].purchaseUrl, productId: 'babybjorn-bouncer-balance'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
     />
 
 

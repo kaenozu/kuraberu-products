@@ -1,6 +1,9 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import { pampersNewbornArticle } from "../src/content/articles";
+import {
+  publicArticleMetadata,
+  pampersNewbornArticle,
+} from "../src/content/articles";
 import {
   discoverySearchParams,
   matchesArticle,
@@ -74,5 +77,35 @@ describe("article discovery", () => {
     expect(
       (firstPage.match(/data-article-card/g) ?? []).length,
     ).toBeLessThanOrEqual(12);
+  });
+
+  it("SSR count and discovery index both reflect total articles, not page-1 card count", () => {
+    const firstPage = readFileSync("dist/articles/index.html", "utf8");
+
+    // SSR count element: <p ... data-discovery-count>{N}件の記事</p>
+    const countMatch = firstPage.match(
+      /data-discovery-count[^>]*>(\d+)件の記事/,
+    );
+    expect(countMatch).not.toBeNull();
+    const ssrCount = Number(countMatch?.[1]);
+
+    // The discovery index JSON contains ALL public articles (not just page 1).
+    const indexMatch = firstPage.match(
+      /<script[^>]*data-discovery-index[^>]*>([\s\S]*?)<\/script>/,
+    );
+    expect(indexMatch).not.toBeNull();
+    const indexArticles = JSON.parse(indexMatch?.[1] ?? "[]");
+
+    // Both must equal the full publicArticleMetadata length,
+    // which is strictly greater than the 12-per-page card limit.
+    expect(ssrCount).toBe(publicArticleMetadata.length);
+    expect(indexArticles.length).toBe(publicArticleMetadata.length);
+    expect(publicArticleMetadata.length).toBeGreaterThan(12);
+
+    // The DOM card count on page 1 must be capped at 12,
+    // confirming SSR does NOT render all articles inline.
+    const cardCount = (firstPage.match(/data-article-card/g) ?? []).length;
+    expect(cardCount).toBeLessThanOrEqual(12);
+    expect(cardCount).toBeLessThan(publicArticleMetadata.length);
   });
 });

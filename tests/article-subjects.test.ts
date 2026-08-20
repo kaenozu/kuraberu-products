@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { publicArticleMetadata } from "../src/content/articles";
+import type { ArticleMetadata } from "../src/content/articles";
 import { comparisonSubjects } from "../src/lib/article-subjects";
 
 const article = (overrides: {
@@ -7,12 +8,25 @@ const article = (overrides: {
   headline?: string;
   title?: string;
   aboutProductNames?: readonly string[];
-}) => ({
-  productCount: 2,
-  headline: "見出し",
-  title: "タイトル｜くらべる商品メモ",
-  ...overrides,
-});
+}): ArticleMetadata =>
+  ({
+    productCount: 2,
+    id: "test",
+    path: "/articles/test/" as const,
+    description: "テスト",
+    category: "テスト",
+    tags: [] as readonly string[],
+    audiences: [] as readonly string[],
+    uses: [] as readonly string[],
+    summary: "テスト",
+    publishedAt: "2026-01-01",
+    modifiedAt: "2026-01-01",
+    purchaseLinkStatus: "unverified" as const,
+    changeLog: [{ date: "2026-01-01", summary: "テスト" }],
+    headline: "見出し",
+    title: "タイトル｜くらべる商品メモ",
+    ...overrides,
+  }) as ArticleMetadata;
 
 describe("comparisonSubjects", () => {
   it("uses aboutProductNames when declared", () => {

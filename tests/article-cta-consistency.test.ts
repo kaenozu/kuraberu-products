@@ -62,6 +62,11 @@ describe("article CTA layout vs metadata productCount", () => {
         counts.set(placement, (counts.get(placement) ?? 0) + 1);
       }
 
+      // unverified 記事では購入 CTA が非表示になるため、検証をスキップ
+      const isUnverified =
+        article.purchaseLinkStatus === "unverified" ||
+        article.purchaseLinkStatus === "unavailable";
+
       for (const set of ARTICLE_LAYOUT.ctaSets) {
         const isComparison =
           contentTypeFor(article.productCount) === "comparison";
@@ -70,24 +75,36 @@ describe("article CTA layout vs metadata productCount", () => {
             ? 0
             : set.cardsPerProduct * article.productCount;
         if (set.comparisonOnly) {
-          expect(
-            nextStepBuyCount,
-            `${article.id}: ${set.placement} should have ${expected} buy buttons (NextStepBlock)`,
-          ).toBe(expected);
+          if (isUnverified) {
+            // unverified では購入ボタンが0件（テキスト表示）
+            expect(
+              nextStepBuyCount,
+              `${article.id}: unverified article should have 0 buy buttons`,
+            ).toBe(0);
+          } else {
+            expect(
+              nextStepBuyCount,
+              `${article.id}: ${set.placement} should have ${expected} buy buttons (NextStepBlock)`,
+            ).toBe(expected);
+          }
         } else {
-          expect(
-            counts.get(set.placement) ?? 0,
-            `${article.id}: ${set.placement} should have ${expected} cards`,
-          ).toBe(expected);
+          if (!isUnverified) {
+            expect(
+              counts.get(set.placement) ?? 0,
+              `${article.id}: ${set.placement} should have ${expected} cards`,
+            ).toBe(expected);
+          }
         }
       }
 
-      expect(
-        blocks.length + nextStepBuyCount,
-        `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout)`,
-      ).toBe(
-        expectedPurchaseCtasPerArticle(article.productCount, ARTICLE_LAYOUT),
-      );
+      if (!isUnverified) {
+        expect(
+          blocks.length + nextStepBuyCount,
+          `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout)`,
+        ).toBe(
+          expectedPurchaseCtasPerArticle(article.productCount, ARTICLE_LAYOUT),
+        );
+      }
     }
   });
 

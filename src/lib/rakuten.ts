@@ -1,4 +1,8 @@
-import { isAllowedRakutenUrl } from "../../config/runtime-env.mjs";
+import {
+  isAllowedRakutenUrl,
+  isAffiliateRakutenUrl,
+  toAffiliateRakutenUrl,
+} from "../../config/runtime-env.mjs";
 
 export type RakutenProduct = {
   id: string;
@@ -266,6 +270,63 @@ export async function fetchRakutenProducts(
   );
 
   return request;
+}
+
+export type ResolvePurchaseHrefOptions = {
+  /** Rakuten search keyword */
+  keyword: string;
+  /** Terms that must appear in the product name for selection */
+  requiredTerms: readonly string[];
+  /** Rakuten selection options (excluded terms, exact identifiers, etc.) */
+  selection?: RakutenSelectionOptions;
+  /**
+   * Fallback URL when no product is selected.
+   * Typically a Rakuten search URL that toAffiliateRakutenUrl will convert
+   * to an hb.afl affiliate redirect.
+   */
+  fallbackUrl?: string;
+};
+
+export type ResolvedPurchaseHref = {
+  /** The resolved URL (affiliate > product URL > fallback, normalized) */
+  href: string;
+  /** Whether the resolved URL is an affiliate link (for ad disclosure) */
+  isAffiliate: boolean;
+  /** The selected Rakuten product, if any */
+  product?: RakutenProduct;
+};
+
+/**
+ * 統一購入リンクリゾルバー。
+ *
+ * 楽天APIで商品を検索 → selectRakutenProduct で最適な候補を選択 →
+ * affiliate URL > product URL > fallback URL の順で解決する。
+ *
+ * AffiliateButton と CommercialArticlePage の両方が使う。
+ * articlePurchaseLinks レジストリは静的でAPI呼び出し不要のため、
+ * この関数の外で直接参照する。
+ */
+export async function resolvePurchaseHref(
+  options: ResolvePurchaseHrefOptions,
+  fetchOptions?: RequestRakutenOptions,
+): Promise<ResolvedPurchaseHref> {
+  const products = await fetchRakutenProducts(
+    options.keyword,
+    10,
+    fetchOptions,
+  );
+  const selected = selectRakutenProduct(
+    products,
+    options.requiredTerms,
+    options.selection ?? {},
+  );
+
+  const rawHref =
+    selected?.affiliateUrl ?? selected?.url ?? options.fallbackUrl;
+  const href = toAffiliateRakutenUrl(rawHref) ?? rawHref ?? "";
+  const isAffiliate = isAffiliateRakutenUrl(href);
+
+  return { href, isAffiliate, product: selected };
 }
 
 async function fetchRakutenProductsUncached(
