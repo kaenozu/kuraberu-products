@@ -57,11 +57,12 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(63);
+    expect(publicArticleMetadata).toHaveLength(64);
     const newlyPublishedIds = [
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+      "sharp-kc-s50-vs-panasonic-f-vxw55",
       "panasonic-eh-na9m-vs-refa-beautech",
       "panasonic-f-px60c-vs-f-px70c",
     ];
@@ -488,6 +489,7 @@ describe("public commercial article quality gate", () => {
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+      "sharp-kc-s50-vs-panasonic-f-vxw55",
       "panasonic-eh-na9m-vs-refa-beautech",
     ];
     for (const slug of articleSlugs) {
