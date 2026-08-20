@@ -4,12 +4,8 @@ import ArticleCard from '../components/ArticleCard.astro';
 import { publicArticleMetadata } from '../content/articles';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 
-const latest = [...publicArticleMetadata]
-  .sort((a, b) => (a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0))
-  .slice(0, 4);
-
-// 「よく比較される商品」：config/article-layout.mjs の topPage.featuredPaths が
-// 唯一の情報源（3〜6件）。パスは publicArticleMetadata に必ず存在する（ゲートが検証）。
+// 「注目の比較」：config/article-layout.mjs の topPage.featuredPaths が
+// 唯一の情報源。実績データではなく編集部の手動選定なので、人気とは表現しない。
 const featured = ARTICLE_LAYOUT.topPage.featuredPaths
   .map((path) => publicArticleMetadata.find((article) => article.path === path))
   .filter((article) => article !== undefined);
@@ -25,17 +21,10 @@ const categories = [...categoryCounts.entries()]
   .filter(([, count]) => count >= ARTICLE_LAYOUT.topPage.categoryMinArticles)
   .sort(([aName, aCount], [bName, bCount]) =>
     bCount - aCount || (aName < bName ? -1 : aName > bName ? 1 : 0),
-  );
+  )
+  .slice(0, 6);
 
-const categoryEmoji: Record<string, string> = {
-  '育児用品': '👶', 'キッチン家電': '🍳', '美容・健康': '✨',
-  '生活家電': '🏠', 'PC周辺機器': '💻', 'キッチン用品': '🍽️',
-  'オーディオ': '🎧', 'スマート機器': '📱', 'テレビ・映像': '📺',
-  '生活雑貨': '🧺', '日用品': '🧴', 'チャイルドシート': '🚗',
-  '衣類ケア': '👕', '美容家電': '💇', 'デスク用品': '📝',
-  'バッグ': '👜', '旅行用品': '✈️', '寝具': '🛏️',
-  '収納用品': '📦', 'キッチン・ごみ箱収納': '🗑️',
-};
+
 ---
 
 <BaseLayout
@@ -54,10 +43,10 @@ const categoryEmoji: Record<string, string> = {
 
   <section class="wrap section" data-top-featured>
     <div class="subsection-heading">
-      <p class="section-label">よく比較される商品</p>
-      <h2>よく比較される商品</h2>
+      <p class="section-label">ピックアップ</p>
+      <h2>注目の比較</h2>
     </div>
-    <p class="lead">よく選ばれている比較を、公式情報の確認状況と合わせてまとめています。</p>
+    <p class="lead">編集部が選んだ比較を、公式情報の確認状況と合わせて紹介します。</p>
     <div class="article-list top-article-list">
       {featured.map((article) => (
         <ArticleCard article={article} />
@@ -68,15 +57,15 @@ const categoryEmoji: Record<string, string> = {
 
   <section class="wrap section" data-top-categories>
     <div class="subsection-heading">
-      <p class="section-label">カテゴリから探す</p>
-      <h2>カテゴリで探す</h2>
+      <p class="section-label">カテゴリ</p>
+      <h2>カテゴリから探す</h2>
     </div>
     <p class="lead">比較したいジャンルから記事を探せます。</p>
     <ul class="category-list">
       {categories.map(([category, count]) => (
         <li>
           <a class="card-link" href={`/articles/category/${encodeURIComponent(category)}/`}>
-            <span class="category-list__name">{categoryEmoji[category] || "📦"} {category}</span>
+            <span class="category-list__name">{category}</span>
             <span class="category-list__count">{count}件</span>
           </a>
         </li>
@@ -87,27 +76,11 @@ const categoryEmoji: Record<string, string> = {
 
   <section class="wrap section section-diagnosis" data-top-diagnosis>
     <div class="subsection-heading">
-      <p class="section-label">商品選択診断</p>
+      <p class="section-label">商品診断</p>
       <h2>迷っているなら、30秒で診断</h2>
     </div>
     <p class="lead">使い方に合う商品が分からない人向け。メーカー公式情報に基づいて、選び方を整理します。</p>
     <p class="diagnosis-actions"><a class="primary-button" href="/tools/product-finder/">商品選択診断を始める →</a></p>
-  </section>
-
-  <section class="section wrap article-index" data-top-latest>
-    <div class="subsection-heading">
-      <p class="section-label">最近の比較</p>
-      <h2>最近追加・更新した比較</h2>
-    </div>
-    <p class="lead">新しく追加・更新した比較からチェックできます。</p>
-    <div class="article-list top-article-list">
-      {latest.length > 0 ? latest.map((article) => (
-        <ArticleCard article={article} />
-      )) : (
-        <p>比較記事は準備中です。</p>
-      )}
-    </div>
-    <p class="meta"><a href="/articles/">もっと見る →</a></p>
   </section>
 
   <section class="section section-rule"><div class="wrap editor-note"><p class="section-label">このサイトの見方</p><h2>判断材料を、盛らない。</h2><p>メーカー公式の商品ページ・公式Q&Aで確認できる情報だけを分けて整理し、確認できない数字や体験談は掲載しません。</p><a class="text-link" href="/about/">運営方針を見る →</a></div></section>
