@@ -1733,12 +1733,12 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     uses: ["スープ作り", "煮込み料理", "平日の作り置き"],
     summary:
       "自動調理家電の候補を、容量・メニュー・予約機能・洗浄性で整理します。",
-    leftProduct: "レコルト 自動調理ポット",
+    leftProduct: "レコルト 自動調理ポット RSY-2",
     rightProduct: "パナソニック NF-PC400",
     leftPoint: "少量調理と置き場所を優先する人向け",
     rightPoint: "家族分の調理容量と多機能さを確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
+    productInfoCheckedAt: "2026-08-20",
+    modifiedAt: "2026-08-20",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
@@ -1747,34 +1747,44 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "パナソニック NF-PC400 公式仕様ページ",
-        url: "https://panasonic.jp/cook/products/NF-PC400/spec.html",
+        url: "https://panasonic.jp/cook/products/NF-PC400.html",
       },
     ],
     verifiedRows: [
       {
-        label: "電源",
-        left: "AC100V 50/60Hz",
-        right: "公式仕様ページで確認できず",
+        label: "容量",
+        left: "約600mL",
+        right: "調理容量2.6L・最大6人分",
       },
       {
         label: "消費電力",
-        left: "600W／55W（JUICE＆CLEAN）",
-        right: "約800W",
+        left: "600W（JUICE&CLEANは55W）",
+        right: "公式ページ本文で確認できず",
       },
       {
-        label: "容量",
-        left: "約600mL",
-        right: "満水3.9L／調理2.6L",
-      },
-      {
-        label: "外形寸法",
+        label: "サイズ",
         left: "約幅16.5×奥行12.0×高さ23.3cm",
-        right: "約幅34.0×奥行27.4×高さ26.2cm",
+        right: "公式ページ本文で確認できず",
       },
       {
-        label: "質量",
-        left: "約970g",
-        right: "約4.2kg",
+        label: "温度",
+        left: "WARM：約75℃前後",
+        right: "数値は公式ページで確認できず",
+      },
+      {
+        label: "調理モード",
+        left: "5種類（SOYMILKなど）",
+        right: "20種類の自動メニュー。圧力・無水・低温・蒸し・煮込み",
+      },
+      {
+        label: "予約",
+        left: "公式ページで確認できず",
+        right: "3〜15時間後（一部自動調理のみ）",
+      },
+      {
+        label: "手入れ",
+        left: "JUICE&CLEAN約3分。本体外側・電源コードは水洗い不可",
+        right: "ふた・内ふた・内なべの3点。蒸し板使用時は蒸し板も洗浄",
       },
     ],
   },
