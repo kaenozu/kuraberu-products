@@ -3629,6 +3629,37 @@ export const yamajitsuFilmHolderArticle = defineArticleMetadata({
   ],
 });
 
+export const panasonicNeMs4cVsNeBs5cArticle = defineArticleMetadata({
+  id: "panasonic-ne-ms4c-vs-ne-bs5c",
+  productCount: 2,
+  path: "/articles/panasonic-ne-ms4c-vs-ne-bs5c/",
+  title: "パナソニック NE-MS4CとNE-BS5C、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックのオーブンレンジ、どっち？「NE-MS4C」と「NE-BS5C」を比較",
+  description:
+    "パナソニック NE-MS4CとNE-BS5Cを、公式の庫内寸法・質量・グリル方式・自動メニュー数で比較",
+  category: "キッチン家電",
+  tags: ["オーブンレンジ", "パナソニック", "電子レンジ"],
+  audiences: ["オーブンレンジを選びたい人", "庫内サイズと調理機能で比べたい人"],
+  uses: ["レンジ調理する", "オーブンを使う", "設置場所で選ぶ"],
+  summary:
+    "NE-MS4CとNE-BS5Cを、パナソニック公式の庫内寸法・質量・グリル方式・自動メニュー数に分けて比較します。",
+  publishedAt: "2026-08-20",
+  modifiedAt: "2026-08-20",
+  productInfoCheckedAt: "2026-08-20",
+  purchaseLinksCheckedAt: "2026-08-20",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-ne-ms4c.png",
+  aboutProductNames: ["パナソニック NE-MS4C", "パナソニック NE-BS5C"],
+  changeLog: [
+    {
+      date: "2026-08-20",
+      summary:
+        "パナソニック公式の商品・仕様ページと画像、楽天公式UIの短縮URLを確認して初稿を追加。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -3661,6 +3692,7 @@ export const articleMetadata = Object.freeze([
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
   zojirushiToasterArticle,
+  panasonicNeMs4cVsNeBs5cArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,

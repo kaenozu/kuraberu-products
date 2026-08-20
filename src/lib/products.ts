@@ -471,4 +471,12 @@ export const articlePurchaseLinks = {
     name: "象印 EQ-SA22",
     purchaseUrl: "https://a.r10.to/h5DVzd",
   },
+  "panasonic-ne-ms4c-vs-ne-bs5c:left": {
+    name: "パナソニック NE-MS4C",
+    purchaseUrl: "https://a.r10.to/hgP5Lv",
+  },
+  "panasonic-ne-ms4c-vs-ne-bs5c:right": {
+    name: "パナソニック NE-BS5C",
+    purchaseUrl: "https://a.r10.to/hgwi1d",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;

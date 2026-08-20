@@ -41,6 +41,7 @@ import {
   panasonicFyhvx120VsFyhvx90Article,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
+  panasonicNeMs4cVsNeBs5cArticle,
   panasonicShaverEsLt4bVsEsLv7jArticle,
   thermosKfm020VsKfi020Article,
   tigerMtaJ050GuideArticle,
@@ -60,7 +61,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(67);
+    expect(publicArticleMetadata).toHaveLength(68);
     const newlyPublishedIds = [
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
@@ -68,6 +69,7 @@ describe("article metadata", () => {
       "sharp-kc-s50-vs-panasonic-f-vxw55",
       "panasonic-eh-na9m-vs-refa-beautech",
       "panasonic-f-px60c-vs-f-px70c",
+      "panasonic-ne-ms4c-vs-ne-bs5c",
       "panasonic-es-lt4b-vs-es-lv7j",
       "yamajitsu-film-holder-242286-vs-242287",
       "zojirushi-eq-aa22-vs-eq-sa22",
@@ -165,6 +167,7 @@ describe("article metadata", () => {
       yamazakiDustWagonArticle,
       zojirushiElectricKettleArticle,
       zojirushiToasterArticle,
+      panasonicNeMs4cVsNeBs5cArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
       panasonicFyhvx120VsFyhvx90Article,
@@ -204,7 +207,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(79);
+    ).toHaveLength(80);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
