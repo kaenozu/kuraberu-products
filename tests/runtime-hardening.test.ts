@@ -43,6 +43,19 @@ describe("static asset security headers", () => {
   });
 });
 
+describe("CSP-compatible comparison table fallback", () => {
+  it("loads the fallback from an external script instead of inline JavaScript", () => {
+    const layout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+    expect(layout).toContain(
+      '<script is:inline src="/comparison-table-labels.js" defer></script>',
+    );
+    expect(layout).not.toContain("<script is:inline>\n");
+    expect(readFileSync("public/comparison-table-labels.js", "utf8")).toContain(
+      "labelComparisonTables",
+    );
+  });
+});
+
 describe("Rakuten API request", () => {
   it("matches exact product identifiers embedded in Rakuten item URLs", () => {
     expect(
