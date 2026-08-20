@@ -3,6 +3,7 @@ import { runDiagnosis } from "../src/domain/diagnosis/engine";
 import { matchesCondition } from "../src/domain/diagnosis/filter";
 import { reasonMessages } from "../src/domain/diagnosis/reasons";
 import { tieBreakCompare } from "../src/domain/diagnosis/rank";
+import { selectedOptionIds } from "../src/domain/diagnosis/score";
 import type {
   DiagnosisConfig,
   DiagnosisQuestion,
@@ -532,5 +533,132 @@ describe("rice-cooker regression fixtures", () => {
     const resultB = runDiagnosis(riceCookerDiagnosis, riceCookerProducts, {});
     expect(resultA.rankedProducts).toEqual(resultB.rankedProducts);
     expect(resultA.rankedProducts[0].productId).toBe("tiger-jpv-m100");
+  });
+});
+
+// ---- optional (required:false) question tests ----
+// Regression: UI の nextBtn.disabled ロジック変更
+//   before: !question.required || !hasAnswer(question.id)  → optional は常に disabled
+//   after:  question.required && !hasAnswer(question.id)   → optional は回答なしでも enabled
+//
+// エンジンは質問の required フィールドを参照しないため、UI 側の修正を
+// 回帰テストで補完する。以下は「optional をスキップしても結果が出ること」
+// および「optional に回答した場合のスコア影響」を検証する。
+
+describe("optional (required:false) questions", () => {
+  // ---- UI レベルの hasAnswer パターン検証 ----
+
+  it("selectedOptionIds: undefined は空配列を返す（未回答）", () => {
+    expect(selectedOptionIds(undefined)).toEqual([]);
+  });
+
+  it("selectedOptionIds: 回答ありの場合は選択肢IDを返す", () => {
+    expect(selectedOptionIds("yes")).toEqual(["yes"]);
+  });
+
+  // ---- ボタン disabled ロジックの数学的検証 ----
+
+  describe("button disabled logic (mirrors UI fix)", () => {
+    // UI の `nextBtn.disabled = question.required && !hasAnswer(question.id)`
+    // を純粋関数として再現し、全パターンを検証する。
+    const buttonDisabled = (required: boolean, hasAnswer: boolean): boolean =>
+      required && !hasAnswer;
+
+    it("required + no answer → disabled", () => {
+      expect(buttonDisabled(true, false)).toBe(true);
+    });
+
+    it("required + has answer → enabled", () => {
+      expect(buttonDisabled(true, true)).toBe(false);
+    });
+
+    it("optional + no answer → enabled (was disabled before fix)", () => {
+      expect(buttonDisabled(false, false)).toBe(false);
+    });
+
+    it("optional + has answer → enabled", () => {
+      expect(buttonDisabled(false, true)).toBe(false);
+    });
+  });
+
+  // ---- エンジン: optional をスキップして診断が完了すること ----
+
+  it("baby-bottle: optional を全部スキップしても候補が返る", () => {
+    // clean-important (required:false) と outdoor-use (required:false) を
+    // スキップし、only the required questions are answered.
+    const result = runDiagnosis(testConfig, babyBottleProducts, {
+      "long-term-use": "yes",
+      // lightweight: skipped (optional)
+      // glass-ok: skipped (optional)
+    });
+    expect(result.rankedProducts.length).toBe(4);
+    expect(result.answeredQuestionCount).toBe(1);
+  });
+
+  it("baby-bottle: 全optionalスキップは required のみで順序が決まる", () => {
+    const result = runDiagnosis(testConfig, babyBottleProducts, {
+      "long-term-use": "yes",
+    });
+    // 長期使用希望: 240ml が上位（スコア +3）
+    const ids = result.rankedProducts.map((entry) => entry.productId);
+    expect(ids[0].startsWith("bo240")).toBe(true);
+    expect(ids[1].startsWith("bo240")).toBe(true);
+  });
+
+  it("baby-bottle: optional に回答するとスコアが反映される", () => {
+    const withoutOptional = runDiagnosis(testConfig, babyBottleProducts, {
+      "long-term-use": "yes",
+    });
+    const withOptional = runDiagnosis(testConfig, babyBottleProducts, {
+      "long-term-use": "yes",
+      lightweight: "yes",
+    });
+    // 軽さ重視を追加すると PPSU のスコアが上がり、ガラスとの差が広がる
+    const ppsuWithout = withoutOptional.rankedProducts
+      .filter((e) => e.productId.includes("ppsu"))
+      .map((e) => e.score);
+    const ppsuWith = withOptional.rankedProducts
+      .filter((e) => e.productId.includes("ppsu"))
+      .map((e) => e.score);
+    expect(Math.max(...ppsuWith)).toBeGreaterThan(Math.max(...ppsuWithout));
+  });
+
+  it("baby-bottle: optional の exclude ルールも回答時のみ発動", () => {
+    // glass-ok: "no" (optional) → ガラス製品を除外
+    const withoutOptional = runDiagnosis(testConfig, babyBottleProducts, {});
+    const withGlassExcluded = runDiagnosis(testConfig, babyBottleProducts, {
+      "glass-ok": "no",
+    });
+    // スキップ時は全4商品が候補
+    expect(withoutOptional.rankedProducts.length).toBe(4);
+    // 回答時はガラスが除外されてPPSUのみ
+    expect(withGlassExcluded.rankedProducts.length).toBe(2);
+    expect(
+      withGlassExcluded.excludedProducts.map((e) => e.productId).sort(),
+    ).toEqual(["bo160-glass", "bo240-glass"]);
+  });
+
+  // ---- 実データ: おむつ診断の optional 回帰 ----
+
+  it('diaper: optional "count-important" をスキップしても診断結果が出る', () => {
+    const result = runDiagnosis(diaperDiagnosis, diaperProducts, {
+      priority: "poop-measures",
+      "unadditive-important": "no",
+      // count-important (optional) skipped
+    });
+    expect(result.rankedProducts.length).toBeGreaterThan(0);
+  });
+
+  // ---- 実データ: 水筒診断の optional 回帰 ----
+
+  it('water-bottle: optional "color-important" をスキップしても診断結果が出る', () => {
+    const result = runDiagnosis(waterBottleDiagnosis, waterBottleProducts, {
+      priority: "light",
+      // dishwasher-important and handle-important are required
+      "dishwasher-important": "no",
+      "handle-important": "no",
+      // color-important (optional) skipped
+    });
+    expect(result.rankedProducts.length).toBeGreaterThan(0);
   });
 });

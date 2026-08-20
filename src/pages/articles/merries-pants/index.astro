@@ -94,6 +94,7 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience], purchaseHref: articlePurchaseLinks['merries-pants:right'].purchaseUrl, productId: 'merries-airsle-pants'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       diagnosisHref="/tools/product-finder/diaper/"
     />
 

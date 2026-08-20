@@ -129,6 +129,7 @@ const keyDiffRows: KeyDiffRow[] = [
       }}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       commonNote="どちらも同じ：総庫内容量22L・フラット庫内・最高出力1000W（最大1分30秒）・外形寸法 幅488mm×奥行380mm×高さ298mm。"
     />
 
@@ -160,7 +161,8 @@ const keyDiffRows: KeyDiffRow[] = [
       </p>
     </details>
 
-    <ArticleSocialProof query="パナソニック NE-FL1A NE-FL1C 電子レンジ" checkedAt={articleMetadata.productInfoCheckedAt} />
+    <ArticleSocialProof query="パナソニック NE-FL1A NE-FL1C 電子レンジ" checkedAt={articleMetadata.productInfoCheckedAt}
+      />
 
     <section id="faq" class="faq-section">
       <h2>FAQ</h2>

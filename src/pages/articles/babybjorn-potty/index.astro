@@ -110,6 +110,7 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairOfficialProductUrl, guidePoints: [pottyChairCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-potty:right'].purchaseUrl, productId: 'babybjorn-potty-chair'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
     />
 
 

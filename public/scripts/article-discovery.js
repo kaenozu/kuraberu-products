@@ -124,7 +124,8 @@
       if (pagination instanceof HTMLElement) pagination.hidden = true;
     } else {
       results.innerHTML = initialMarkup;
-      visible = results.querySelectorAll("[data-article-card]").length;
+      visible =
+        index.length || results.querySelectorAll("[data-article-card]").length;
       if (pagination instanceof HTMLElement) pagination.hidden = false;
     }
     if (count) count.textContent = visible + "件の記事";

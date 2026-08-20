@@ -215,6 +215,33 @@ export function checkPurchaseLinkConsistency({ srcDirectory = "src" } = {}) {
   return errors;
 }
 
+/** purchaseLinkStatus の集計。 */
+export function countPurchaseLinkStatuses(srcDirectory = "src") {
+  // articles.ts に定義された purchaseLinkStatus を集計
+  const articlesFile = path.join(srcDirectory, "content", "articles.ts");
+  const content = fs.readFileSync(articlesFile, "utf8");
+  const matches = [...content.matchAll(/purchaseLinkStatus:\s*"([^"]+)"/g)];
+  const counts = { verified: 0, unverified: 0, unavailable: 0 };
+  for (const m of matches) {
+    const key = m[1];
+    if (key in counts) counts[key] += 1;
+  }
+  // articles/*.ts のモジュール記事も集計
+  const modularDir = path.join(srcDirectory, "content", "articles");
+  if (fs.existsSync(modularDir)) {
+    for (const entry of fs.readdirSync(modularDir, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.endsWith(".ts")) continue;
+      const file = path.join(modularDir, entry.name);
+      const text = fs.readFileSync(file, "utf8");
+      for (const m of text.matchAll(/purchaseLinkStatus:\s*"([^"]+)"/g)) {
+        const key = m[1];
+        if (key in counts) counts[key] += 1;
+      }
+    }
+  }
+  return counts;
+}
+
 if (
   path.resolve(process.argv[1] ?? "") ===
   path.resolve(fileURLToPath(import.meta.url))
@@ -224,4 +251,6 @@ if (
   console.log(
     "purchase link consistency ok: all purchase links reference the articlePurchaseLinks registry; block keys match article-end PurchaseCards in every comparison article",
   );
+  const counts = countPurchaseLinkStatuses();
+  console.log(`purchase link status audit: ${JSON.stringify(counts)}`);
 }

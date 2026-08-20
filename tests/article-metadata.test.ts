@@ -234,13 +234,13 @@ describe("article metadata", () => {
       defineArticleMetadata({
         ...panasonicBabyMonitorArticle,
         aboutProductNames: ["商品A", "商品B"],
-      }),
+      } as never),
     ).toThrow("aboutProductNames must have exactly 1 non-empty entries");
     expect(() =>
       defineArticleMetadata({
         ...panasonicBabyMonitorArticle,
         aboutProductNames: undefined,
-      }),
+      } as never),
     ).toThrow(
       "aboutProductNames must be declared for single-product (guide) articles",
     );
@@ -251,13 +251,13 @@ describe("article metadata", () => {
       defineArticleMetadata({
         ...pampersNewbornArticle,
         productCount: 0,
-      }),
+      } as never),
     ).toThrow("productCount must be a positive integer");
     expect(() =>
       defineArticleMetadata({
         ...pampersNewbornArticle,
         productCount: 1.5,
-      }),
+      } as never),
     ).toThrow("productCount must be a positive integer");
   });
 
@@ -523,13 +523,27 @@ describe("article diagnosis CTA (rendered dist)", () => {
       expect(html).toMatch(
         /<a class="next-step__diagnosis-link" href="\/tools\/product-finder\//,
       );
+      const purchaseLinkStatus =
+        html.match(
+          /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
+        )?.[1] ?? null;
+      const isUnverified =
+        purchaseLinkStatus === "unverified" ||
+        purchaseLinkStatus === "unavailable";
       const buyLinks = html.match(
         /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
       );
-      expect(
-        buyLinks?.length,
-        `${slug}: next-step has 2 purchase buttons`,
-      ).toBe(2);
+      if (isUnverified) {
+        expect(
+          buyLinks?.length ?? 0,
+          `${slug}: unverified article should have 0 purchase buttons`,
+        ).toBe(0);
+      } else {
+        expect(
+          buyLinks?.length,
+          `${slug}: next-step has 2 purchase buttons`,
+        ).toBe(2);
+      }
       const specsIndex = html.indexOf('id="specs"');
       const blockIndex = html.indexOf('class="next-step"');
       if (specsIndex !== -1) {

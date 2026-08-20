@@ -112,14 +112,19 @@ describe("product search parsing", () => {
   });
 
   it("passes typed fail-closed selection criteria from each CTA query", () => {
-    const button = read("src/components/AffiliateButton.astro");
-    expect(button).toContain("type ProductQuery");
-    expect(button).toContain(
+    const queries = read("src/lib/purchase-queries.ts");
+    expect(queries).toContain("type ProductQuery");
+    expect(queries).toContain(
       "const productQueries: Record<ProductId, ProductQuery>",
     );
-    expect(button).toContain("selection:");
-    expect(button).toMatch(
-      /selectRakutenProduct\(await fetchRakutenProducts\(query\.keyword\), query\.requiredTerms, query\.selection\)/,
-    );
+    expect(queries).toContain("selection:");
+    // The unified resolver handles the API call + selection
+    const rakuten = read("src/lib/rakuten.ts");
+    expect(rakuten).toContain("resolvePurchaseHref");
+    expect(rakuten).toContain("selectRakutenProduct");
+    // AffiliateButton uses the shared resolver
+    const button = read("src/components/AffiliateButton.astro");
+    expect(button).toContain("resolvePurchaseHref");
+    expect(button).toContain("productQueries");
   });
 });

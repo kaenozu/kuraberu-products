@@ -151,8 +151,15 @@ const clientData = {
 
 <script>
   import { runDiagnosis } from '../../../domain/diagnosis/engine';
-  import { reasonMessages } from '../../../domain/diagnosis/reasons';
   import type { DiagnosisConfig, Product } from '../../../domain/diagnosis/types';
+  import {
+    buttonDisabled,
+    hasAnswer,
+    buildProgressText,
+    buildNextButtonText,
+    computeVisibleProducts,
+    buildResultCardData,
+  } from '../../../lib/diagnosis-ui';
 
   interface ClientDiagnosisData {
     diagnosis: DiagnosisConfig;
@@ -262,13 +269,13 @@ const clientData = {
 
       function renderQuestion() {
         const question = data.diagnosis.questions[currentIndex];
-        progressEl.textContent = `${currentIndex + 1} / ${data.diagnosis.questions.length} 問目`;
+        progressEl.textContent = buildProgressText(currentIndex, data.diagnosis.questions.length);
         labelEl.textContent = question.label;
         descriptionEl.textContent = question.description ?? '';
         optionsEl.textContent = '';
         prevBtn.hidden = currentIndex === 0;
-        nextBtn.textContent = currentIndex === data.diagnosis.questions.length - 1 ? '結果を見る' : '次へ';
-        nextBtn.disabled = !question.required || !hasAnswer(question.id);
+        nextBtn.textContent = buildNextButtonText(currentIndex, data.diagnosis.questions.length);
+        nextBtn.disabled = buttonDisabled(question.required, hasAnswer(answers[question.id]));
 
         for (const option of question.options ?? []) {
           const label = document.createElement('label');
@@ -289,11 +296,6 @@ const clientData = {
         }
       }
 
-      function hasAnswer(questionId: string): boolean {
-        const answer = answers[questionId];
-        if (Array.isArray(answer)) return answer.length > 0;
-        return answer !== undefined && answer !== null && String(answer).trim().length > 0;
-      }
 
       function renderResult() {
         const result = runDiagnosis(
@@ -315,37 +317,50 @@ const clientData = {
 
         const ranking = root.querySelector('[data-diagnosis-ranking]') as HTMLElement;
         ranking.textContent = '';
-        // 表示件数: 1位 + 2位以下最大3件（計4件まで）。理由は重複を除いて最大3点。
-        const visible = result.rankedProducts.slice(0, 4);
+        const visible = computeVisibleProducts(result);
         for (const [index, entry] of visible.entries()) {
           const product = data.products.find((p) => p.id === entry.productId);
           if (!product) continue;
+          const cardData = buildResultCardData(product, entry, index, data.reasons);
           const card = document.createElement('article');
-          card.className = index === 0 ? 'diagnosis-card diagnosis-card--top' : 'diagnosis-card';
-          const rankLabel = index === 0 ? 'おすすめ' : `${index + 1}位`;
-          const reasons = reasonMessages(entry.positiveReasons, data.reasons).slice(0, 3);
-          const cautions = reasonMessages(entry.cautions, data.reasons).slice(0, 3);
+          card.className = cardData.cardClass;
           card.innerHTML = `
-            <p class="diagnosis-card__rank">${rankLabel}</p>
-            <h3>${product.name}</h3>
+            <p class="diagnosis-card__rank">${cardData.rankLabel}</p>
+            <h3>${cardData.product.name}</h3>
             <ul class="diagnosis-card__reasons">
-              ${reasons.map((message: string) => `<li>✓ ${message}</li>`).join('')}
+              ${cardData.reasons.map((message) => `<li>✓ ${message}</li>`).join('')}
             </ul>
-            ${
-              index === 0
-                ? cautions.length > 0
-                  ? `<p class="diagnosis-card__note-label">気になる点</p><ul class="diagnosis-card__cautions">${cautions.map((message: string) => `<li>・${message}</li>`).join('')}</ul>`
-                  : ''
-                : `<p class="diagnosis-card__note-label">こちらが向くケース</p><p class="diagnosis-card__case">${cautions.length > 0 ? cautions.join('。') : '条件によってはこちらも候補になります。'}</p>`
-            }
-            <div class="diagnosis-card__links">
-              ${product.articleUrls.map((url: string) => `<a href="${url}" data-diagnosis-article-link data-product-id="${product.id}" data-rank="${index + 1}">詳しい比較を見る</a>`).join('')}
-              ${product.purchaseLinks.map((link: { provider: string; url: string; affiliate: boolean }) => `<a href="${link.url}" rel="noopener noreferrer" target="_blank" data-cta-event="purchase" data-product-id="${product.id}" data-placement="diagnosis-result" data-rank="${index + 1}">楽天で商品を見る</a>`).join('')}
-            </div>
+            ${cardData.topCautionHtml || (index > 0 ? `<p class="diagnosis-card__note-label">こちらが向くケース</p><p class="diagnosis-card__case">${cardData.caseText}</p>` : '')}
+            <div class="diagnosis-card__links"></div>
           `;
           ranking.append(card);
+
+          const linksContainer = card.querySelector('.diagnosis-card__links') as HTMLElement;
+          for (const linkData of cardData.articleLinks) {
+            const a = document.createElement('a');
+            a.href = linkData.href;
+            a.textContent = linkData.label;
+            for (const [key, value] of Object.entries(linkData.dataset)) {
+              if (value === '') {
+                a.dataset[key] = '';
+              } else {
+                a.dataset[key] = value;
+              }
+            }
+            linksContainer.append(a);
+          }
+          for (const linkData of cardData.purchaseLinks) {
+            const a = document.createElement('a');
+            a.href = linkData.href;
+            a.target = linkData.target;
+            a.rel = linkData.rel;
+            a.textContent = linkData.label;
+            for (const [key, value] of Object.entries(linkData.dataset)) {
+              a.dataset[key] = value;
+            }
+            linksContainer.append(a);
+          }
         }
-        // 診断完了イベント
         trackDiagnosisEvent('diagnosis_complete');
       }
 
