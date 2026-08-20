@@ -7,6 +7,7 @@ import NextStepBlock from './NextStepBlock.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
 import { fetchRakutenProducts, selectRakutenProduct } from '../lib/rakuten';
+import { articlePurchaseLinks } from '../lib/products';
 
 interface Props {
   articleId: string;
@@ -22,6 +23,18 @@ if (!article || !seed) {
 
 const leftSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
 const rightSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
+const leftPurchaseHref =
+  articlePurchaseLinks[
+    `${articleId}:left` as keyof typeof articlePurchaseLinks
+  ]?.purchaseUrl ??
+  seed.leftPurchaseUrl ??
+  leftSearch;
+const rightPurchaseHref =
+  articlePurchaseLinks[
+    `${articleId}:right` as keyof typeof articlePurchaseLinks
+  ]?.purchaseUrl ??
+  seed.rightPurchaseUrl ??
+  rightSearch;
 const images = commercialArticleImages[articleId] ?? {};
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
@@ -110,8 +123,8 @@ const faq = seed.faqEntries?.length
     </ol>
 
     <NextStepBlock
-      left={{ label: seed.leftProduct, href: leftSearch }}
-      right={{ label: seed.rightProduct, href: rightSearch }}
+      left={{ label: seed.leftProduct, href: leftPurchaseHref }}
+      right={{ label: seed.rightProduct, href: rightPurchaseHref }}
     />
 
     <h2 id="faq">よくある質問</h2>
@@ -122,8 +135,8 @@ const faq = seed.faqEntries?.length
     <h2>購入前の注意</h2>
     <p>ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。</p>
     <div class="purchase-cards">
-      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imagePath={images.left} imageUrl={leftRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
-      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imagePath={images.right} imageUrl={rightRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftPurchaseHref} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imagePath={images.left} imageUrl={leftRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightPurchaseHref} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imagePath={images.right} imageUrl={rightRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
     </div>
 
     <h2>更新履歴</h2>

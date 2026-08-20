@@ -82,6 +82,14 @@
 
 ## 次の候補
 
+### ソニー WH-CH720N vs WH-CH520（実装済み・PR作成前）
+
+- 記事slug: `sony-wh-ch720n-vs-wh-ch520`
+- 状態: 専用worktreeで実装。公式個別ページ・画像・楽天公式短縮URL2本を確認。`DEPLOYMENT_ENV=preview pnpm verify` PASS。PR作成前。
+- 比較軸: ノイズキャンセリング、連続音声再生、充電時間、Bluetooth標準規格、接続機能、対応コーデック。
+- 公式ページ: [WH-CH720N](https://www.sony.jp/headphone/products/WH-CH720N/) / [WH-CH520](https://www.sony.jp/headphone/products/WH-CH520/)
+- 購入導線: 楽天公式UIで画面表示された短縮URLを記事の購入リンク台帳へ登録済み。
+
 ### 日立 BD-SX130K vs BD-STX130K（実装済み・PR作成待ち）
 
 - 記事slug: `hitachi-bd-sx130k-vs-bd-stx130k`

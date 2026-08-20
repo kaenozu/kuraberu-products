@@ -1668,6 +1668,8 @@ type CommercialArticleSeed = {
   modifiedAt?: string;
   purchaseLinksCheckedAt?: string;
   purchaseLinkStatus?: "verified" | "unverified";
+  leftPurchaseUrl?: `https://${string}`;
+  rightPurchaseUrl?: `https://${string}`;
   officialSources?: readonly {
     label: string;
     url: `https://${string}`;
@@ -1686,6 +1688,81 @@ type CommercialArticleSeed = {
 };
 
 const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
+  {
+    id: "sony-wh-ch720n-vs-wh-ch520",
+    title: "ソニー WH-CH720NとWH-CH520、どっち？｜くらべる商品メモ",
+    headline:
+      "ソニーのワイヤレスヘッドホンを比較。ノイズキャンセリング・電池・接続機能で選ぶ",
+    description:
+      "ソニー WH-CH720NとWH-CH520を、メーカー公式ページで確認できるノイズキャンセリング・電池持続時間・充電時間・Bluetooth仕様から比較します。",
+    category: "オーディオ",
+    tags: ["ワイヤレスヘッドホン", "ソニー", "ノイズキャンセリング"],
+    audiences: [
+      "ノイズキャンセリングの有無で選びたい人",
+      "長時間再生と接続機能を比べたい人",
+    ],
+    uses: ["音楽再生", "通勤・通学", "オンライン通話"],
+    summary:
+      "WH-CH720NとWH-CH520を、ノイズキャンセリング、電池持続時間、充電時間、Bluetooth仕様、接続機能の公式記載で比べます。",
+    leftProduct: "ソニー WH-CH720N",
+    rightProduct: "ソニー WH-CH520",
+    leftPoint: "ノイズキャンセリングとマルチポイント接続を重視する人向け",
+    rightPoint:
+      "ノイズキャンセリングの記載がないモデルで、長時間再生を確認したい人向け",
+    productInfoCheckedAt: "2026-08-20",
+    modifiedAt: "2026-08-20",
+    purchaseLinkStatus: "verified",
+    purchaseLinksCheckedAt: "2026-08-20",
+    leftPurchaseUrl: "https://a.r10.to/hgbkhA",
+    rightPurchaseUrl: "https://a.r10.to/h5UYRh",
+    officialSources: [
+      {
+        label: "ソニー WH-CH720N 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WH-CH720N/",
+      },
+      {
+        label: "ソニー WH-CH520 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WH-CH520/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "ノイズキャンセリング",
+        left: "公式ページに機能の記載あり",
+        right: "公式ページで確認できず",
+      },
+      {
+        label: "連続音声再生",
+        left: "最大35時間（NC ON時）／最大50時間（NC OFF時）",
+        right: "最大50時間",
+      },
+      { label: "充電時間", left: "約3.5時間", right: "約3時間" },
+      { label: "Bluetooth標準規格", left: "Ver.5.2", right: "Ver.5.2" },
+      {
+        label: "接続機能",
+        left: "マルチポイント接続対応",
+        right: "マルチペアリング対応",
+      },
+      { label: "対応コーデック", left: "SBC、AAC", right: "SBC、AAC" },
+    ],
+    faqEntries: [
+      {
+        question: "WH-CH720NとWH-CH520の違いは？",
+        answer:
+          "公式ページで確認できる主な違いは、WH-CH720Nにはノイズキャンセリング機能とマルチポイント接続の記載があり、WH-CH520にはマルチペアリングの記載があることです。連続音声再生はWH-CH720NがNC ON時最大35時間・NC OFF時最大50時間、WH-CH520が最大50時間です。",
+      },
+      {
+        question: "長時間再生できるのはどちら？",
+        answer:
+          "公式記載の最大値では、WH-CH720NはノイズキャンセリングON時最大35時間、OFF時最大50時間、WH-CH520は最大50時間です。",
+      },
+      {
+        question: "Bluetoothの仕様は同じ？",
+        answer:
+          "両モデルとも公式ページでBluetooth標準規格Ver.5.2、対応コーデックSBC・AACを確認できます。",
+      },
+    ],
+  },
   {
     id: "roborock-qrevo-curv-vs-dreame-x50",
     title:
@@ -3739,6 +3816,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
 export const commercialArticleImages: Readonly<
   Record<string, { left?: `/${string}`; right?: `/${string}` }>
 > = {
+  "sony-wh-ch720n-vs-wh-ch520": {
+    left: "/products/sony-wh-ch720n.jpg",
+    right: "/products/sony-wh-ch520.jpg",
+  },
   "roborock-qrevo-curv-vs-dreame-x50": {
     left: "/products/roborock-qrevo-curv-vs-dreame-x50-left.jpg",
     right: "/products/roborock-qrevo-curv-vs-dreame-x50-right.jpg",

@@ -423,6 +423,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 tower マグネットペンスタンド（10096 / 10097）",
     purchaseUrl: "https://a.r10.to/hkdB9e",
   },
+  "sony-wh-ch720n-vs-wh-ch520:left": {
+    name: "ソニー WH-CH720N",
+    purchaseUrl: "https://a.r10.to/hgbkhA",
+  },
+  "sony-wh-ch720n-vs-wh-ch520:right": {
+    name: "ソニー WH-CH520",
+    purchaseUrl: "https://a.r10.to/h5UYRh",
+  },
   "zojirushi-ck-pa08-vs-ck-dc08:left": {
     name: "象印 CK-PA08",
     purchaseUrl: "https://a.r10.to/hPwhA2",
