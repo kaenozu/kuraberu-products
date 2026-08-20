@@ -36,7 +36,7 @@ function New-HtmlPage {
     $canonical = "$StubBaseUrl$Path"
     $robots = if ($Path -eq '/memo/') { 'noindex, follow' } else { 'index, follow' }
     $jsonLd = ''
-    if ($Path -eq '/articles/pampers-newborn/') {
+    if ($Path -like '/articles/*') {
         $jsonLd = @"
 <script type="application/ld+json">{"@type":"Article","headline":"Stub article","url":"$canonical","datePublished":"2026-08-01T00:00:00Z","dateModified":"2026-08-02T00:00:00Z"}</script>
 "@
