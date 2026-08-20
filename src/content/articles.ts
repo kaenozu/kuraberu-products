@@ -3629,6 +3629,40 @@ export const yamajitsuFilmHolderArticle = defineArticleMetadata({
   ],
 });
 
+export const sonyWfC500VsWfC700nArticle = defineArticleMetadata({
+  id: "sony-wf-c500-vs-wf-c700n",
+  productCount: 2,
+  path: "/articles/sony-wf-c500-vs-wf-c700n/",
+  title: "ソニー WF-C500 と WF-C700N、どっち？｜くらべる商品メモ",
+  headline:
+    "ソニーの完全ワイヤレスイヤホン、どっち？「WF-C500」と「WF-C700N」を比較",
+  description:
+    "ソニー WF-C500とWF-C700Nを、公式の連続再生時間・Bluetooth規格・防滴仕様で比較",
+  category: "オーディオ",
+  tags: ["ソニー", "完全ワイヤレスイヤホン", "ノイズキャンセリング"],
+  audiences: [
+    "完全ワイヤレスイヤホンを公式仕様で比べたい人",
+    "ノイズキャンセリングの有無で選びたい人",
+  ],
+  uses: ["音楽を聴く", "通話する", "防滴仕様で選ぶ"],
+  summary:
+    "WF-C500とWF-C700Nを、ソニー公式のノイズキャンセリング・連続再生時間・Bluetooth規格・防滴仕様に分けて比較します。",
+  publishedAt: "2026-08-20",
+  modifiedAt: "2026-08-20",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-20",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/sony-wf-c500.jpg",
+  aboutProductNames: ["ソニー WF-C500", "ソニー WF-C700N"],
+  changeLog: [
+    {
+      date: "2026-08-20",
+      summary:
+        "ソニー公式の商品ページで仕様・画像を確認し、楽天公式生成画面で短縮URLを確認して初稿を追加。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -3671,6 +3705,7 @@ export const articleMetadata = Object.freeze([
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
   yamajitsuFilmHolderArticle,
+  sonyWfC500VsWfC700nArticle,
   ...additionalCommercialArticles,
 ]);
 

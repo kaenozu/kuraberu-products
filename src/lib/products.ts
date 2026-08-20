@@ -471,4 +471,12 @@ export const articlePurchaseLinks = {
     name: "象印 EQ-SA22",
     purchaseUrl: "https://a.r10.to/h5DVzd",
   },
+  "sony-wf-c500-vs-wf-c700n:left": {
+    name: "ソニー WF-C500",
+    purchaseUrl: "https://a.r10.to/h5I4Vd",
+  },
+  "sony-wf-c500-vs-wf-c700n:right": {
+    name: "ソニー WF-C700N",
+    purchaseUrl: "https://a.r10.to/h5iXOC",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
