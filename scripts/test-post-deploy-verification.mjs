@@ -41,11 +41,11 @@ function fileExists(filePath) {
 // ─── Representative articles ────────────────────────────────────────────────
 // These cover different content types and features:
 const ARTICLES = [
-  "articles/pampers-newborn/index.html",           // verified purchase, comparison
-  "articles/thermos-tiger-bottle/index.html",      // comparison, verified purchase
-  "articles/babybjorn/index.html",                 // comparison, autoload X embed
-  "articles/tiger-mta-j050-guide/index.html",      // guide article
-  "articles/shupot/index.html",                    // multiple autoload X embeds
+  "articles/pampers-newborn/index.html", // verified purchase, comparison
+  "articles/thermos-tiger-bottle/index.html", // comparison, verified purchase
+  "articles/babybjorn/index.html", // comparison, autoload X embed
+  "articles/tiger-mta-j050-guide/index.html", // guide article
+  "articles/shupot/index.html", // multiple autoload X embeds
   "articles/zojirushi-ec-kv50-vs-ec-ma60/index.html", // comparison
 ];
 
@@ -143,11 +143,7 @@ for (const article of ARTICLES) {
           !!data.dateModified,
           data.dateModified,
         );
-        check(
-          `  url in ${article}`,
-          !!data.url,
-          data.url,
-        );
+        check(`  url in ${article}`, !!data.url, data.url);
         break;
       }
     } catch {
@@ -210,24 +206,15 @@ for (const article of ARTICLES) {
   const html = readHtml(article);
   const match = html.match(purchaseStatusRegex);
   if (match) {
-    check(
-      `Purchase status in ${article}`,
-      true,
-      match[1],
-    );
+    check(`Purchase status in ${article}`, true, match[1]);
   } else {
-    check(
-      `Purchase status in ${article}`,
-      false,
-      "missing",
-    );
+    check(`Purchase status in ${article}`, false, "missing");
   }
 }
 console.log();
 
 // ─── 9. Consent banner readiness ────────────────────────────────────────────
 console.log("9. Consent banner readiness");
-const consentBannerRegex = /data-embed-consent-banner/i;
 const embedConsentModule = fs.existsSync("src/lib/embed-consent.ts");
 check("Embed consent module exists", embedConsentModule);
 
