@@ -44,11 +44,18 @@ const rows: readonly DifferenceRow[] = seed.verifiedRows?.length
       { label: '公式情報で確認する項目', left: '仕様・サイズ・対応機能', right: '仕様・サイズ・対応機能' },
       { label: '価格・在庫', left: '販売ページで確認', right: '販売ページで確認' },
     ];
+const comparisonValues = (seed.verifiedRows ?? []).flatMap((row) => [
+  row.label,
+  row.left,
+  row.right,
+]);
 if (
   seed.productInfoCheckedAt &&
-  (!seed.verifiedRows?.length ||
-    seed.verifiedRows.some((row) =>
-      /公式仕様で確認する項目|公式情報で確認する項目/.test(`${row.label}${row.left}${row.right}`),
+  ((seed.verifiedRows?.length ?? 0) < 2 ||
+    comparisonValues.some((value) =>
+      /公式(?:仕様|情報)?確認項目|公式(?:仕様|情報)で確認する項目|選定の観点|確認項目|仕様・サイズ・対応機能/.test(
+        value,
+      ),
     ))
 ) {
   throw new Error(

@@ -441,9 +441,9 @@ export function validateArticleNextStep(relative, html) {
     section.match(
       /<a\b[^>]*class="[^"]*\bnext-step__diagnosis-link\b[^"]*"[^>]*href="([^"]+)"/i,
     )?.[1] ?? null;
-  if (!diagnosisHref || !diagnosisHref.startsWith("/tools/product-finder/")) {
+  if (diagnosisHref && !diagnosisHref.startsWith("/tools/product-finder/")) {
     errors.push(
-      `${relative}: next-step block must link the diagnosis to /tools/product-finder/…, found ${JSON.stringify(diagnosisHref)}`,
+      `${relative}: next-step diagnosis link must target /tools/product-finder/…, found ${JSON.stringify(diagnosisHref)}`,
     );
   }
 

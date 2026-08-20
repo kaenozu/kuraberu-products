@@ -1310,7 +1310,7 @@ describe("article next-step block (conclusion → 次にすること: A/B購入 
     );
     expect(errors).toHaveLength(1);
     expect(errors[0]).toContain(
-      "next-step block must link the diagnosis to /tools/product-finder/…",
+      "next-step diagnosis link must target /tools/product-finder/…",
     );
   });
 
