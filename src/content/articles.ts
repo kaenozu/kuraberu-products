@@ -1690,7 +1690,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     id: "roborock-qrevo-curv-vs-dreame-x50",
     title:
       "ロボロック Qrevo CurvとDreame X50 Ultra、どっち？｜くらべる商品メモ",
-    headline: "ロボット掃除機の人気モデルを比較。段差・モップ・自動化で選ぶ",
+    headline:
+      "Roborock Qrevo CurvとDreame X50 Ultraを比較。段差・モップ・自動化で選ぶ",
     description:
       "ロボット掃除機を、公式仕様で確認できる吸引力・段差対応・モップ・ステーション機能から比較します。",
     category: "生活家電",
@@ -1900,7 +1901,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     id: "iris-airfryer-fvx-d3-vs-tefal-ey201",
     title:
       "アイリスオーヤマ FVX-D3とティファール EY201、どっち？｜くらべる商品メモ",
-    headline: "ノンフライヤーを比較。容量・温度設定・調理のしやすさで選ぶ",
+    headline:
+      "アイリスオーヤマ FVX-D3とティファール EY201を比較。容量・温度設定・調理のしやすさで選ぶ",
     description:
       "ノンフライヤーの候補を、容量・温度設定・タイマー・お手入れの確認項目で比較します。",
     category: "キッチン家電",
@@ -1913,7 +1915,6 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ティファール EY201",
     leftPoint: "容量と操作方法を確認して選びたい人向け",
     rightPoint: "調理モードやブランドの使い勝手を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
@@ -1972,7 +1973,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     id: "recolte-automatic-cooker-vs-panasonic-nf-pc400",
     title:
       "レコルト自動調理ポットとパナソニック NF-PC400、どっち？｜くらべる商品メモ",
-    headline: "自動調理鍋を比較。容量・メニュー・洗いやすさで選ぶ",
+    headline:
+      "レコルト自動調理ポットとパナソニック NF-PC400を比較。容量・メニュー・洗いやすさで選ぶ",
     description:
       "自動調理家電を、容量・調理モード・予約・お手入れの確認項目で比較します。",
     category: "キッチン家電",
@@ -1994,32 +1996,43 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
         url: "https://recolte-jp.com/products/auto-cooking-pot/",
       },
       {
-        label: "パナソニック NF-PC400 公式商品情報",
-        url: "https://panasonic.jp/cook/products/NF-PC400.html",
+        label: "パナソニック NF-PC400 公式仕様ページ",
+        url: "https://panasonic.jp/cook/products/NF-PC400/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "récolte 自動調理ポット",
-        right: "パナソニック NF-PC400",
+        label: "電源",
+        left: "AC100V 50/60Hz",
+        right: "公式仕様ページで確認できず",
       },
       {
-        label: "公式確認項目",
-        left: "容量・調理モード・サイズ",
-        right: "容量・調理モード・サイズ",
+        label: "消費電力",
+        left: "600W／55W（JUICE＆CLEAN）",
+        right: "約800W",
       },
       {
-        label: "選定の観点",
-        left: "少量調理と置き場所",
-        right: "調理容量と多機能さ",
+        label: "容量",
+        left: "約600mL",
+        right: "満水3.9L／調理2.6L",
+      },
+      {
+        label: "外形寸法",
+        left: "約幅16.5×奥行12.0×高さ23.3cm",
+        right: "約幅34.0×奥行27.4×高さ26.2cm",
+      },
+      {
+        label: "質量",
+        left: "約970g",
+        right: "約4.2kg",
       },
     ],
   },
   {
     id: "brita-marella-vs-zero-water",
     title: "ブリタ マレーラとゼロウォーター、どっち？｜くらべる商品メモ",
-    headline: "ポット型浄水器を比較。容量・カートリッジ・交換コストで選ぶ",
+    headline:
+      "ブリタ マレーラとZeroWater 10カップを比較。容量・ろ過方式・交換で選ぶ",
     description:
       "ポット型浄水器を、容量・ろ過方式・交換目安・注水方法で比較します。",
     category: "キッチン用品",
@@ -2029,9 +2042,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     summary: "ポット型浄水器を、容量・ろ過・交換・冷蔵庫収納の観点で比べます。",
     leftProduct: "ブリタ マレーラ",
     rightProduct: "ゼロウォーター 10カップ",
-    leftPoint: "入手しやすい交換カートリッジを重視する人向け",
+    leftPoint: "交換カートリッジの入手性を重視する人向け",
     rightPoint: "ろ過性能の確認を優先したい人向け",
-    productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
@@ -2065,7 +2077,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   {
     id: "tiger-jpv-l100-vs-zojirushi-nw-fc10",
     title: "タイガー JPV-L100と象印 NW-FC10、どっち？｜くらべる商品メモ",
-    headline: "5.5合炊き炊飯器を比較。炊飯方式・メニュー・手入れで選ぶ",
+    headline:
+      "タイガー JPV-L100と象印 NW-FC10を比較。炊飯方式・メニュー・手入れで選ぶ",
     description:
       "5.5合炊き炊飯器を、炊飯方式・メニュー・内釜・お手入れで比較します。",
     category: "キッチン家電",
@@ -2078,7 +2091,6 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "象印 NW-FC10",
     leftPoint: "土鍋系の炊き上がりと操作を確認したい人向け",
     rightPoint: "圧力・メニュー数と保温仕様を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
@@ -2112,7 +2124,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   {
     id: "sharp-kc-s50-vs-panasonic-f-vxw55",
     title: "シャープ KC-S50とパナソニック F-VXW55、どっち？｜くらべる商品メモ",
-    headline: "加湿空気清浄機を比較。適用床面積・加湿・フィルターで選ぶ",
+    headline:
+      "シャープ KC-S50とパナソニック F-VXW55を比較。適用床面積・加湿・フィルターで選ぶ",
     description:
       "加湿空気清浄機を、適用床面積・加湿量・フィルター・お手入れで比較します。",
     category: "生活家電",
@@ -2127,35 +2140,45 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     leftProduct: "シャープ KC-S50",
     rightProduct: "パナソニック F-VXW55",
     leftPoint: "プラズマクラスターと基本性能を確認したい人向け",
-    rightPoint: "ナノイーや加湿運転の仕様を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
+    rightPoint: "ナノイーと加湿運転の仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-20",
+    modifiedAt: "2026-08-20",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "シャープ KC-S50 公式商品ページ",
-        url: "https://jp.sharp/kuusei/products/kcs50/",
+        label: "シャープ KC-S50 公式仕様ページ",
+        url: "https://jp.sharp/kuusei/products/kcs50/spec/",
       },
       {
-        label: "パナソニック F-VXW55 公式商品ページ",
-        url: "https://panasonic.jp/airrich/products/F-VXW55.html",
+        label: "パナソニック F-VXW55 公式仕様ページ",
+        url: "https://panasonic.jp/airrich/products/F-VXW55/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "シャープ KC-S50",
-        right: "パナソニック F-VXW55",
+        label: "空気清浄適用床面積",
+        left: "～23畳（38㎡）",
+        right: "25畳（41㎡）",
       },
       {
-        label: "公式確認項目",
-        left: "適用床面積・加湿・フィルター",
-        right: "適用床面積・加湿・フィルター",
+        label: "最大加湿量",
+        left: "500mL/h",
+        right: "500mL/h（強）",
       },
       {
-        label: "選定の観点",
-        left: "プラズマクラスターと基本性能",
-        right: "ナノイーと加湿運転の仕様",
+        label: "給水タンク容量",
+        left: "約2.5L",
+        right: "約2.3L",
+      },
+      {
+        label: "外形寸法",
+        left: "幅399×奥行230×高さ613mm",
+        right: "高さ562×幅360×奥行238mm",
+      },
+      {
+        label: "質量",
+        left: "約7.5kg",
+        right: "8.0kg",
       },
     ],
   },
@@ -2163,7 +2186,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     id: "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
     title:
       "Soundcore Liberty 4 NCとソニー WF-C710N、どっち？｜くらべる商品メモ",
-    headline: "ノイズキャンセリングイヤホンを比較。機能・電池・装着感で選ぶ",
+    headline:
+      "Soundcore Liberty 4 NCとソニー WF-C710Nを比較。機能・電池・装着感で選ぶ",
     description:
       "完全ワイヤレスイヤホンを、ノイズキャンセリング・連続再生・防水・アプリで比較します。",
     category: "オーディオ",
@@ -2176,7 +2200,6 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "ソニー WF-C710N",
     leftPoint: "機能数と長時間再生を確認したい人向け",
     rightPoint: "軽さとソニーの音質・装着設計を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
@@ -2185,32 +2208,43 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
         url: "https://www.soundcore.com/products/liberty-4-nc-a3947z11",
       },
       {
-        label: "ソニー WF-C710N 公式商品ページ",
-        url: "https://www.sony.jp/headphone/products/WF-C710N/",
+        label: "ソニー WF-C710N 公式ヘルプガイド（仕様）",
+        url: "https://helpguide.sony.net/mdr/2986/v1/en/contents/TP1001829716.html",
       },
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "soundcore Liberty 4 NC（A3947Z11）",
-        right: "ソニー WF-C710N",
+        label: "質量（片耳）",
+        left: "5.2g",
+        right: "約5.2g×2（イヤーチップ含む）",
       },
       {
-        label: "公式確認項目",
-        left: "ノイズキャンセリング・再生時間・防水",
-        right: "ノイズキャンセリング・再生時間・防水",
+        label: "連続再生時間",
+        left: "10時間／ケース込み50時間",
+        right: "ANCオン最大8.5時間（AAC）／オフ最大12時間",
       },
       {
-        label: "選定の観点",
-        left: "機能数と長時間再生",
-        right: "軽さと装着設計",
+        label: "Bluetooth",
+        left: "5.3",
+        right: "5.3",
+      },
+      {
+        label: "充電時間",
+        left: "約1.5時間（イヤホン）",
+        right: "約1.5時間（イヤホン）／約3.5時間（ケース）",
+      },
+      {
+        label: "ドライバー",
+        left: "11mm",
+        right: "公式ヘルプガイドでは確認できず",
       },
     ],
   },
   {
     id: "xiaomi-redmi-watch-5-vs-huawei-band-10",
     title: "Redmi Watch 5とHUAWEI Band 10、どっち？｜くらべる商品メモ",
-    headline: "スマートウォッチ・活動量計を比較。画面・電池・健康記録で選ぶ",
+    headline:
+      "Xiaomi Redmi Watch 5とHUAWEI Band 10を比較。画面・電池・健康記録で選ぶ",
     description:
       "手頃なウェアラブル端末を、画面・バッテリー・通知・健康記録で比較します。",
     category: "スマート機器",
@@ -2223,7 +2257,6 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "HUAWEI Band 10",
     leftPoint: "大きな画面と時計らしい操作を優先する人向け",
     rightPoint: "軽さとバンド型の装着感を優先する人向け",
-    productInfoCheckedAt: "2026-08-18",
     modifiedAt: "2026-08-18",
     purchaseLinkStatus: "unverified",
     officialSources: [
@@ -2257,7 +2290,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   {
     id: "panasonic-eh-na9m-vs-refa-beautech",
     title: "パナソニック EH-NA9MとReFa BEAUTECH、どっち？｜くらべる商品メモ",
-    headline: "高機能ドライヤーを比較。ケア機能・風量・重さで選ぶ",
+    headline:
+      "パナソニック EH-NA9MとReFa BEAUTECH DRYERを比較。ケア機能・風量・重さで選ぶ",
     description:
       "高機能ドライヤーを、搭載モード・風量・重量・収納性の公式情報で比較します。",
     category: "美容家電",
@@ -2278,8 +2312,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック EH-NA9M 公式商品ページ",
-        url: "https://panasonic.jp/hair/products/EH-NA9M.html",
+        label: "パナソニック EH-NA9M 公式仕様ページ",
+        url: "https://panasonic.jp/hair/p-db/EH-NA9M_spec.html",
       },
       {
         label: "ReFa BEAUTECH DRYER 公式商品ページ",
@@ -2288,19 +2322,29 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "パナソニック ナノケア EH-NA9M",
-        right: "ReFa BEAUTECH DRYER",
+        label: "電源",
+        left: "AC100V 50-60Hz",
+        right: "AC100V 50/60Hz",
       },
       {
-        label: "公式確認項目",
-        left: "ケア機能・モード・風量・質量",
-        right: "温度管理・モード・風量・質量",
+        label: "消費電力",
+        left: "1200W",
+        right: "1200W（HIGH時）",
       },
       {
-        label: "選定の観点",
-        left: "複数のケアモードと風量",
-        right: "温度管理やサロン系の機能",
+        label: "質量",
+        left: "約580g（セットノズル含まず）",
+        right: "約695g（電源コード含む・セット用ノズル含まず）",
+      },
+      {
+        label: "本体寸法",
+        left: "高さ22.1×幅16.1×奥行7.4cm",
+        right: "約246×81×232mm（コード・ノズル含まず）",
+      },
+      {
+        label: "電源コード長さ",
+        left: "約1.7m",
+        right: "約2.5m",
       },
     ],
   },
