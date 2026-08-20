@@ -429,8 +429,8 @@ a {
 }
 .section:nth-of-type(even) {
   background: var(--section-alt);
-  margin-inline: -100vw;
-  padding-inline: 100vw;
+  margin-inline: calc(50% - 50vw);
+  padding-inline: calc(50vw - 50%);
 }
 .section h2 {
   font-size: clamp(1.7rem, 3vw, 2.5rem);
@@ -634,8 +634,8 @@ a {
   color: var(--muted);
   font-size: 0.88rem;
   background: var(--section-alt);
-  margin-inline: -100vw;
-  padding-inline: 100vw;
+  margin-inline: 0;
+  padding-inline: 0;
 }
 .source-list {
   padding-left: 1.2rem;
