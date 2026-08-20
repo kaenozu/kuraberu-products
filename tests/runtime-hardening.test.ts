@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it, vi } from "vitest";
 import { isAllowedRakutenUrl } from "../config/runtime-env.mjs";
 import {
@@ -40,6 +40,60 @@ describe("static asset security headers", () => {
     expect(csp).not.toMatch(/(?:^|;)\s*script-src[^;]*\*/);
     expect(csp).toContain("*.image.rakuten.co.jp");
     expect(headers).toContain("X-Content-Type-Options: nosniff");
+  });
+
+  it("allows same-origin scripts without 'unsafe-inline' in script-src", () => {
+    const headers = readFileSync("public/_headers", "utf8");
+    const csp = headers.match(/Content-Security-Policy:\s*(.+)/)?.[1] ?? "";
+    const scriptSrc = csp.match(/script-src\s+([^;]+)/)?.[1] ?? "";
+    expect(scriptSrc).toContain("'self'");
+    expect(scriptSrc).not.toContain("'unsafe-inline'");
+  });
+});
+
+describe("CSP-compatible comparison table fallback", () => {
+  it("loads the fallback from an external script instead of inline JavaScript", () => {
+    const layout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+    expect(layout).toContain(
+      '<script is:inline src="/comparison-table-labels.js" defer></script>',
+    );
+    expect(layout).not.toContain("labelComparisonTables");
+    expect(
+      readFileSync("public/comparison-table-labels.js", "utf8"),
+    ).toContain("labelComparisonTables");
+  });
+
+  it("provides the comparison-table-labels.js build artifact", () => {
+    expect(existsSync("public/comparison-table-labels.js")).toBe(true);
+    const content = readFileSync("public/comparison-table-labels.js", "utf8");
+    expect(content).toContain("labelComparisonTables");
+    expect(content).toContain("data-label");
+    expect(content).toContain("DOMContentLoaded");
+  });
+
+  it("retains the defer attribute on the external script tag", () => {
+    const layout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+    expect(layout).toMatch(
+      /<script[^>]*\ssrc="\/comparison-table-labels\.js"[^>]*\sdefer[^>]*>/,
+    );
+  });
+
+  it("does not depend on inline JavaScript body in BaseLayout", () => {
+    const layout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+    const markerIdx = layout.indexOf("marker: comparison-card-labels");
+    expect(markerIdx).toBeGreaterThan(-1);
+    const afterMarker = layout.substring(markerIdx);
+    expect(afterMarker).not.toMatch(/<script is:inline>\s*\(/);
+    expect(afterMarker).toContain(
+      '<script is:inline src="/comparison-table-labels.js" defer></script>',
+    );
+  });
+
+  it("generates HTML that references the external script when build output exists", () => {
+    if (!existsSync("dist")) return;
+    const html = readFileSync("dist/index.html", "utf8");
+    expect(html).toContain("comparison-table-labels.js");
+    expect(html).toMatch(/<script[^>]*\ssrc="[^"]*comparison-table-labels\.js"/);
   });
 });
 
