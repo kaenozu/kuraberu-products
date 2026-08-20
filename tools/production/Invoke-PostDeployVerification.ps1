@@ -183,7 +183,7 @@ function Invoke-VerificationAttempt {
     }
 
     # Article validation summary
-    Check "Article validation summary" ($articleFailures -eq 0) "$articleChecks checks, $articleFailures failures across $($ArticlePaths.Count) articles"
+    Check "Article validation summary" ($articleFailures -eq 0) "$articleChecks checks, $articleFailures failures across $(@($ArticlePaths).Count) articles"
 
     $notFoundPath = "/__acceptance_missing_$([guid]::NewGuid().ToString('N')).html"
     $notFound = Fetch ([uri]::new($BaseUrl, $notFoundPath))
