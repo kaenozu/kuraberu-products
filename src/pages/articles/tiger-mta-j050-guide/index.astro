@@ -24,7 +24,7 @@ const keyDiffRows: KeyDiffRow[] = [
   {label: '本体寸法', left: '幅7.5×奥行8.6×高さ23.3cm', right: '幅7.5×奥行8.6×高さ31.4cm'},
 ];
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活雑貨 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>

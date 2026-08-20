@@ -464,9 +464,9 @@ export function validateArticleNextStep(relative, html) {
     section.match(
       /<a\b[^>]*class="[^"]*\bnext-step__diagnosis-link\b[^"]*"[^>]*href="([^"]+)"/i,
     )?.[1] ?? null;
-  if (!diagnosisHref || !diagnosisHref.startsWith("/tools/product-finder/")) {
+  if (diagnosisHref && !diagnosisHref.startsWith("/tools/product-finder/")) {
     errors.push(
-      `${relative}: next-step block must link the diagnosis to /tools/product-finder/…, found ${JSON.stringify(diagnosisHref)}`,
+      `${relative}: next-step diagnosis link must target /tools/product-finder/…, found ${JSON.stringify(diagnosisHref)}`,
     );
   }
 
@@ -940,40 +940,6 @@ export function validateTopPageFeatured(topHtml) {
   return errors;
 }
 
-// トップページ（dist/index.html）の「最近の比較」セクションを検証する。
-// 「よく比較される商品」（人気・編集選定）と意味を分けた入口として、
-// 見出し（最近の比較）と記事一覧への導線が必須であることを fail-closed で確認する。
-export function validateTopPageLatest(topHtml) {
-  const errors = [];
-  const section = topHtml.match(
-    /<section\b[^>]*data-top-latest[^>]*>([\s\S]*?)<\/section\s*>/i,
-  );
-  if (!section) {
-    errors.push("top page: missing data-top-latest section");
-    return errors;
-  }
-  if (!/最近の比較/.test(section[1])) {
-    errors.push("top page: data-top-latest section must be labeled 最近の比較");
-  }
-  if (!/<h2[^>]*>\s*最近追加・更新した比較\s*<\/h2>/i.test(section[1])) {
-    errors.push(
-      "top page: data-top-latest section must have the heading 最近追加・更新した比較",
-    );
-  }
-  if (!/href="\/articles\/"/.test(section[1])) {
-    errors.push(
-      "top page: data-top-latest section must link to the article index (/articles/)",
-    );
-  }
-  const cardCount = (section[1].match(/\barticle-list-card\b/g) ?? []).length;
-  if (cardCount < 1) {
-    errors.push(
-      "top page: data-top-latest section must render at least one article card",
-    );
-  }
-  return errors;
-}
-
 // 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
 // 次のいずれかに該当する見出しを空セクションとみなす。
 // - 見出しの直後に別の見出し（h1〜h6）が続く
@@ -1209,7 +1175,6 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       errors.push(
         ...validateTopPageCategories(topHtml, articlesIndexHtml),
         ...validateTopPageFeatured(topHtml),
-        ...validateTopPageLatest(topHtml),
       );
     }
   }

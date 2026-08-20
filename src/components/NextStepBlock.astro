@@ -25,13 +25,13 @@ export interface NextStepProduct {
 interface Props {
   left: NextStepProduct;
   right: NextStepProduct;
-  /** 診断カテゴリページURL（省略時は診断一覧） */
+  /** 対応する診断カテゴリページURL。未対応カテゴリでは省略する。 */
   diagnosisHref?: string;
   /** 購入リンクの検証状態。unverified 以上の CTA を非表示にする。 */
   purchaseLinkStatus?: "verified" | "unverified" | "unavailable";
 }
 
-const {left, right, diagnosisHref = '/tools/product-finder/', purchaseLinkStatus} = Astro.props;
+const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
 const leftHref = toAffiliateRakutenUrl(left.href);
 const rightHref = toAffiliateRakutenUrl(right.href);
 const leftAffiliate = isAffiliateRakutenUrl(leftHref);
@@ -93,12 +93,14 @@ const buyRel = (affiliate: boolean) =>
       </span>
     )}
   </div>
-  <p class="next-step__diagnosis">
-    まだ迷っている？
-    <a class="next-step__diagnosis-link" href={diagnosisHref}>
-      30秒で診断する →
-    </a>
-  </p>
+  {diagnosisHref ? (
+    <p class="next-step__diagnosis">
+      まだ迷っている？
+      <a class="next-step__diagnosis-link" href={diagnosisHref}>
+        30秒で診断する →
+      </a>
+    </p>
+  ) : null}
 </section>
 
 <style>

@@ -35,16 +35,19 @@ import {
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
+  panasonicShaverEsLt4bVsEsLv7jArticle,
   thermosKfm020VsKfi020Article,
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
   additionalCommercialArticles,
+  yamajitsuFilmHolderArticle,
 } from "../src/content/articles";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
@@ -57,19 +60,17 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(69);
+    expect(publicArticleMetadata).toHaveLength(67);
     const newlyPublishedIds = [
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
-      "iris-airfryer-fvx-d3-vs-tefal-ey201",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
-      "brita-marella-vs-zero-water",
-      "tiger-jpv-l100-vs-zojirushi-nw-fc10",
       "sharp-kc-s50-vs-panasonic-f-vxw55",
-      "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
-      "xiaomi-redmi-watch-5-vs-huawei-band-10",
       "panasonic-eh-na9m-vs-refa-beautech",
       "panasonic-f-px60c-vs-f-px70c",
+      "panasonic-es-lt4b-vs-es-lv7j",
+      "yamajitsu-film-holder-242286-vs-242287",
+      "zojirushi-eq-aa22-vs-eq-sa22",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -155,6 +156,7 @@ describe("article metadata", () => {
       tefalKettleArticle,
       panasonicNeFl1aVsNeFl1cArticle,
       panasonicAirCleanerArticle,
+      panasonicShaverEsLt4bVsEsLv7jArticle,
       sharpKcS50VsFuS50Article,
       thermosTigerBottleArticle,
       yamazakiTowerDeskPanelArticle,
@@ -162,6 +164,7 @@ describe("article metadata", () => {
       yamazakiFreeBroomArticle,
       yamazakiDustWagonArticle,
       zojirushiElectricKettleArticle,
+      zojirushiToasterArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
       panasonicFyhvx120VsFyhvx90Article,
@@ -171,6 +174,7 @@ describe("article metadata", () => {
       tigerMtaJ050GuideArticle,
       panasonicEhNa9mVsEhNa7mArticle,
       tigerKettlePcjVsPcmArticle,
+      yamajitsuFilmHolderArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
@@ -200,7 +204,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(81);
+    ).toHaveLength(79);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
@@ -488,6 +492,29 @@ describe("article trust line (rendered dist)", () => {
   });
 });
 
+describe("public commercial article quality gate", () => {
+  it("renders concrete comparison rows without placeholder wording", () => {
+    const articleSlugs = [
+      "roborock-qrevo-curv-vs-dreame-x50",
+      "makita-cl107-vs-cl286",
+      "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+      "sharp-kc-s50-vs-panasonic-f-vxw55",
+      "panasonic-eh-na9m-vs-refa-beautech",
+    ];
+    for (const slug of articleSlugs) {
+      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+      const rows = html.match(/<tr\b[\s\S]*?<\/tr>/gi) ?? [];
+      if (!rows.length) continue;
+      const tableText = rows.join(" ");
+      if (!html.includes('class="comparison"')) continue;
+      expect(tableText, `${slug}: placeholder comparison rows`).not.toMatch(
+        /公式(?:仕様|情報)?確認項目|公式(?:仕様|情報)で確認する項目|選定の観点|確認項目|仕様・サイズ・対応機能/,
+      );
+      expect(rows.length, `${slug}: comparison rows`).toBeGreaterThanOrEqual(2);
+    }
+  });
+});
+
 describe("article diagnosis CTA (rendered dist)", () => {
   const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
     .filter(
@@ -520,8 +547,8 @@ describe("article diagnosis CTA (rendered dist)", () => {
         blockCount,
         `${slug}: comparison must render one next-step block`,
       ).toBe(1);
-      expect(html).toMatch(
-        /<a class="next-step__diagnosis-link" href="\/tools\/product-finder\//,
+      const diagnosisLink = html.match(
+        /<a class="next-step__diagnosis-link" href="([^"]+)"/,
       );
       const purchaseLinkStatus =
         html.match(
@@ -530,6 +557,24 @@ describe("article diagnosis CTA (rendered dist)", () => {
       const isUnverified =
         purchaseLinkStatus === "unverified" ||
         purchaseLinkStatus === "unavailable";
+      const supportedDiagnosis = new Set([
+        "pigeon-bottle-160-240",
+        "pigeon-bottle-240",
+        "pigeon-slim-240",
+        "moony-m",
+        "merries-newborn",
+        "merries-pants",
+        "pampers-newborn",
+        "shupot",
+      ]);
+      if (supportedDiagnosis.has(slug)) {
+        expect(
+          diagnosisLink,
+          `${slug}: supported diagnosis CTA`,
+        ).not.toBeNull();
+      } else {
+        expect(diagnosisLink, `${slug}: unsupported diagnosis CTA`).toBeNull();
+      }
       const buyLinks = html.match(
         /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
       );

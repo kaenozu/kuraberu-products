@@ -28,6 +28,28 @@
       .replace(/\s+/g, " ");
   const allowed = (select, value) =>
     [...select.options].some((option) => option.value === value) ? value : "";
+
+  // 同義語辞書 — src/lib/article-discovery.ts と同一の内容に保つこと。
+  const SYNONYMS = new Map([
+    ["軽い", ["軽量", "重量"]],
+    ["重い", ["重量"]],
+    ["静か", ["静音", "騒音"]],
+    ["うるさい", ["騒音"]],
+    ["小さい", ["コンパクト", "幅", "奥行"]],
+    ["大きい", ["容量"]],
+    ["手入れ", ["洗浄", "掃除", "お手入れ"]],
+    ["きれい", ["洗浄"]],
+    ["暖かい", ["保温"]],
+    ["冷たい", ["保冷"]],
+    ["安全", ["耐熱"]],
+    ["丈夫", ["耐久"]],
+    ["便利", ["便利"]],
+    ["安い", ["価格"]],
+    ["高い", ["価格"]],
+    ["広い", ["容量", "幅"]],
+    ["狭い", ["寸法"]],
+    ["片付け", ["収納"]],
+  ]);
   const initialMarkup = results.innerHTML;
   let index = [];
   try {
@@ -48,6 +70,15 @@
         ...(Array.isArray(article.subjects) ? article.subjects : []),
       ].join(" "),
     );
+
+  const articleSearchTextExpanded = (article) => {
+    const base = articleSearchText(article);
+    const synonyms = [];
+    for (const [key, syns] of SYNONYMS) {
+      if (base.includes(key)) synonyms.push(...syns);
+    }
+    return synonyms.length ? base + " " + synonyms.join(" ") : base;
+  };
 
   const createCard = (article) => {
     const card = document.createElement("article");
@@ -81,6 +112,12 @@
     link.textContent = article.headline;
     heading.append(link);
     body.append(heading);
+    // コンテンツタイプタグ（静的表示の ArticleCard と統一）
+    const contentType = document.createElement("span");
+    contentType.className = "tag";
+    contentType.textContent =
+      article.productCount > 1 ? "比較記事" : "商品ガイド";
+    tagRow.append(contentType);
     if (
       Array.isArray(article.subjects) &&
       article.subjects.length >= 2 &&
@@ -97,6 +134,13 @@
       audiences.className = "card-audiences";
       audiences.textContent = `向き: ${article.audiences.join("・")}`;
       body.append(audiences);
+    }
+    // 更新日表示
+    if (article.modifiedAt) {
+      const updated = document.createElement("p");
+      updated.className = "card-date";
+      updated.textContent = `更新日: ${article.modifiedAt}`;
+      body.append(updated);
     }
     card.append(body);
     return card;
@@ -117,7 +161,9 @@
         (article) =>
           (!category.value || article.category === category.value) &&
           (!tag.value || (article.tags || []).includes(tag.value)) &&
-          terms.every((term) => articleSearchText(article).includes(term)),
+          terms.every((term) =>
+            articleSearchTextExpanded(article).includes(term),
+          ),
       );
       results.replaceChildren(...matches.map(createCard));
       visible = matches.length;

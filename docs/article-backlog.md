@@ -47,6 +47,7 @@
 | `yamazaki-free-broom-32-vs-45`                   | 公開済み |
 | `yamazaki-tower-desk-panel-vs-pen-stand`         | 公開済み |
 | `zojirushi-ck-pa08-vs-ck-dc08`                   | 公開済み |
+| `zojirushi-eq-aa22-vs-eq-sa22`                   | 実装中   |
 | `panasonic-nt-t501-vs-nt-d700`                   | 公開済み |
 | `panasonic-ne-bs9c-vs-ne-ubs10c`                 | 公開済み |
 | `panasonic-mc-jp860k-vs-mc-sb70km`               | 公開済み |

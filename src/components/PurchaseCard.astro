@@ -37,6 +37,10 @@ const {
 } = Astro.props;
 
 const isVerified = purchaseLinkStatus === "verified" || purchaseLinkStatus === undefined;
+const amazonAssociateTag = import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim();
+const amazonSearchUrl = amazonAssociateTag
+  ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(name)}&tag=${encodeURIComponent(amazonAssociateTag)}`
+  : undefined;
 ---
 
 <article class="purchase-card">
@@ -50,16 +54,29 @@ const isVerified = purchaseLinkStatus === "verified" || purchaseLinkStatus === u
     </div>
   </div>
   {isVerified ? (
-    <AffiliateButton
-      href={href}
-      productId={productId}
-      label="楽天市場で型番を確認"
-      subLabel="商品ページを確認する"
-      imagePath={undefined}
-      placement={placement}
-      searchQuery={searchQuery}
-      requiredTerms={requiredTerms}
-    />
+    <>
+      <AffiliateButton
+        href={href}
+        productId={productId}
+        label="楽天市場で型番を確認"
+        subLabel="商品ページを確認する"
+        imagePath={undefined}
+        placement={placement}
+        searchQuery={searchQuery}
+        requiredTerms={requiredTerms}
+      />
+      {amazonSearchUrl && (
+        <a
+          class="cta cta-card amazon-purchase-link"
+          href={amazonSearchUrl}
+          target="_blank"
+          rel="sponsored nofollow noopener noreferrer"
+          data-amazon-cta="purchase"
+        >
+          Amazonで商品を確認 → <span class="ad-note">（広告）</span>
+        </a>
+      )}
+    </>
   ) : (
     <p class="purchase-card__pending">
       購入先の確認中です。公開後に販売先リンクが表示されます。

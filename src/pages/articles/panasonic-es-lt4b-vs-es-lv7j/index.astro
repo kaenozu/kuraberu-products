@@ -1,0 +1,69 @@
+---
+import { articlePurchaseLinks } from "../../../lib/products";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import RelatedArticles from "../../../components/RelatedArticles.astro";
+import PurchaseCard from "../../../components/PurchaseCard.astro";
+import ComparisonMemoButton from "../../../components/ComparisonMemoButton.astro";
+import ArticleComparisonV2 from "../../../components/ArticleComparisonV2.astro";
+import ArticleSocialProof from "../../../components/ArticleSocialProof.astro";
+import { panasonicShaverEsLt4bVsEsLv7jArticle as articleMetadata } from "../../../content/articles";
+import type { KeyDiffRow } from "../../../components/VisualKeyDifferences.astro";
+
+const leftOfficial = "https://panasonic.jp/shaver/products/ES-LT4B.html";
+const leftSpec = "https://panasonic.jp/shaver/products/ES-LT4B/spec.html";
+const rightOfficial = "https://panasonic.jp/shaver/products/ES-LV7J.html";
+const rightSpec = "https://panasonic.jp/shaver/products/ES-LV7J/spec.html";
+const leftImage = "/products/panasonic-es-lt4b.jpg";
+const rightImage = "/products/panasonic-es-lv7j.jpg";
+const leftAudience = "軽さと3枚刃、本体のコンパクトさを確認したい人向け";
+const rightAudience = "5枚刃と全自動洗浄充電器を確認したい人向け";
+const faqEntries = [
+  { question: "ES-LT4BとES-LV7Jの大きな違いは？", answer: "公式ページでは、刃数・本体寸法・質量・充電方式が異なります。ES-LV7Jは5枚刃で全自動洗浄充電器が付属し、ES-LT4Bは3枚刃で約155gです。" },
+  { question: "軽いのはどちら？", answer: "公式仕様では、ES-LT4Bが約155g、ES-LV7Jが約210gです。どちらもキャップを除く質量です。" },
+  { question: "使用日数と防水仕様は同じ？", answer: "公式仕様では、どちらもフル充電から1日1回約3分間の使用で約14日間、防水はIPX7基準です。" },
+  { question: "楽天市場の価格は比較できる？", answer: "価格・在庫・ポイント・送料は変動するため、型番検索ページで購入時点の表示を確認してください。" },
+];
+const keyDiffRows: KeyDiffRow[] = [
+  { label: "刃数", left: "3枚刃", right: "5枚刃", highlight: "right" },
+  { label: "本体質量（キャップ除く）", left: "約155g", right: "約210g", highlight: "left", highlightNote: "約55g軽い" },
+  { label: "本体寸法（高さ×幅×奥行）", left: "15.5×6.4×5.0cm", right: "16.7×7.2×5.9cm" },
+  { label: "充電・付属品", left: "ACアダプター充電", right: "全自動洗浄充電器・ACアダプター充電", highlight: "right" },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 美容家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">パナソニックのES-LT4BとES-LV7Jを、公式ページで確認できる刃数・本体サイズ・質量・充電方式・防水仕様で比較します。価格は販売先でご確認ください。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{ brand: "パナソニック", line: "ES-LT4B", tagline: "軽さと3枚刃なら", image: leftImage, imageAlt: "パナソニック ラムダッシュ ES-LT4B", officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-es-lt4b-vs-es-lv7j:left'].purchaseUrl }}
+      right={{ brand: "パナソニック", line: "ES-LV7J", tagline: "5枚刃と洗浄充電器なら", image: rightImage, imageAlt: "パナソニック ラムダッシュPRO ES-LV7J", officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-es-lt4b-vs-es-lv7j:right'].purchaseUrl }}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+
+    <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">ES-LT4B</th><th scope="col">ES-LV7J</th><th scope="col">根拠</th></tr></thead><tbody>
+      <tr><th scope="row">刃数</th><td data-label="ES-LT4B">3枚刃</td><td data-label="ES-LV7J">5枚刃</td><td data-label="根拠"><a href={leftOfficial} target="_blank" rel="noopener noreferrer">ES-LT4B公式</a> / <a href={rightOfficial} target="_blank" rel="noopener noreferrer">ES-LV7J公式</a></td></tr>
+      <tr><th scope="row">本体寸法（高さ×幅×奥行）</th><td data-label="ES-LT4B">15.5×6.4×5.0cm</td><td data-label="ES-LV7J">16.7×7.2×5.9cm（キャップ除く）</td><td data-label="根拠">各公式仕様ページ</td></tr>
+      <tr><th scope="row">質量</th><td data-label="ES-LT4B">約155g（キャップ除く）</td><td data-label="ES-LV7J">約210g（キャップ除く）</td><td data-label="根拠">各公式仕様ページ</td></tr>
+      <tr><th scope="row">使用日数</th><td data-label="ES-LT4B">約14日間（1日1回約3分間）</td><td data-label="ES-LV7J">約14日間（1日1回約3分間）</td><td data-label="根拠">各公式仕様ページ</td></tr>
+      <tr><th scope="row">防水</th><td data-label="ES-LT4B">IPX7基準</td><td data-label="ES-LV7J">IPX7基準</td><td data-label="根拠">各公式仕様ページ</td></tr>
+      <tr><th scope="row">充電・付属品</th><td data-label="ES-LT4B">ACアダプター充電</td><td data-label="ES-LV7J">全自動洗浄充電器・ACアダプター充電</td><td data-label="根拠">各公式仕様ページ</td></tr>
+    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した情報です。公式情報確認済み：{articleMetadata.productInfoCheckedAt}。</p>
+    <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">ES-LT4B 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">ES-LV7J 公式商品ページ →</a></div>
+    <ArticleSocialProof query="パナソニック ES-LT4B ES-LV7J" checkedAt="2026-08-19" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2>購入時の注意</h2><p>刃数、質量、本体寸法、充電方式、洗浄充電器の有無を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name="パナソニック ES-LT4B" audience={leftAudience} href={articlePurchaseLinks['panasonic-es-lt4b-vs-es-lv7j:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="パナソニック ES-LV7J" audience={rightAudience} href={articlePurchaseLinks['panasonic-es-lt4b-vs-es-lv7j:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">パナソニック ES-LT4B 公式商品ページ</a> / <a href={leftSpec} target="_blank" rel="noopener noreferrer">仕様</a>（2026-08-19確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">パナソニック ES-LV7J 公式商品ページ</a> / <a href={rightSpec} target="_blank" rel="noopener noreferrer">仕様</a>（2026-08-19確認）</li></ul>
+    <h2>調査方法・免責事項</h2><p>この比較は、パナソニック公式の商品ページと仕様ページで確認できる情報を根拠にしています。SNSの感想は比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

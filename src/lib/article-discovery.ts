@@ -18,6 +18,42 @@ export interface ArticleDiscoveryState {
   tag?: string;
 }
 
+/**
+ * 同義語辞書。ユーザーが使う一般的な語を記事の専門用語に展開する。
+ * クライアント側 (article-discovery.js) と同一の内容に保つこと。
+ */
+const SYNONYMS: ReadonlyMap<string, readonly string[]> = new Map([
+  ["軽い", ["軽量", "重量"]],
+  ["重い", ["重量"]],
+  ["静か", ["静音", "騒音"]],
+  ["うるさい", ["騒音"]],
+  ["小さい", ["コンパクト", "幅", "奥行"]],
+  ["大きい", ["容量"]],
+  ["手入れ", ["洗浄", "掃除", "お手入れ"]],
+  ["きれい", ["洗浄"]],
+  ["暖かい", ["保温"]],
+  ["冷たい", ["保冷"]],
+  ["安全", ["耐熱"]],
+  ["丈夫", ["耐久"]],
+  ["便利", ["便利"]],
+  ["安い", ["価格"]],
+  ["高い", ["価格"]],
+  ["広い", ["容量", "幅"]],
+  ["狭い", ["寸法"]],
+  ["片付け", ["収納"]],
+]);
+
+export function expandWithSynonyms(text: string): string {
+  const normalized = normalizeDiscoveryText(text);
+  const expanded: string[] = [normalized];
+  for (const [key, synonyms] of SYNONYMS) {
+    if (normalized.includes(key)) {
+      expanded.push(...synonyms);
+    }
+  }
+  return expanded.join(" ");
+}
+
 export function normalizeDiscoveryText(value: string): string {
   return value
     .normalize("NFKC")
@@ -51,7 +87,8 @@ export function matchesArticle(
       ...subjects,
     ].join(" "),
   );
-  return query.split(" ").every((term) => haystack.includes(term));
+  const expandedQuery = expandWithSynonyms(query);
+  return expandedQuery.split(" ").every((term) => haystack.includes(term));
 }
 
 export function parseDiscoveryState(

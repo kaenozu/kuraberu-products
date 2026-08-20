@@ -680,6 +680,39 @@ export const zojirushiCoffeeArticle = defineArticleMetadata({
   ],
 });
 
+export const zojirushiToasterArticle = defineArticleMetadata({
+  id: "zojirushi-eq-aa22-vs-eq-sa22",
+  productCount: 2,
+  path: "/articles/zojirushi-eq-aa22-vs-eq-sa22/",
+  title: "象印 EQ-AA22 と EQ-SA22、どっち？｜くらべる商品メモ",
+  headline: "象印のオーブントースター、どっち？「EQ-AA22」と「EQ-SA22」を比較",
+  description:
+    "象印 EQ-AA22とEQ-SA22を、公式のタイマー・外形寸法・庫内寸法・質量で比較",
+  category: "キッチン家電",
+  tags: ["オーブントースター", "象印", "キッチン家電"],
+  audiences: [
+    "オーブントースターを選びたい人",
+    "設置寸法とタイマーで比べたい人",
+  ],
+  uses: ["パンを焼く", "設置場所で選ぶ", "タイマーで選ぶ"],
+  summary:
+    "EQ-AA22とEQ-SA22を、象印公式の商品ページで確認できるタイマー・サイズ・庫内寸法・質量に分けて比較します。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/zojirushi-eq-aa22.png",
+  aboutProductNames: ["象印 EQ-AA22", "象印 EQ-SA22"],
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary:
+        "初回公開。象印公式の商品ページ・画像と楽天公式生成画面の短縮URLを確認。",
+    },
+  ],
+});
+
 export const panasonicVacuumArticle = defineArticleMetadata({
   id: "panasonic-mc-sb55k-vs-mc-sb35k",
   productCount: 2,
@@ -937,6 +970,37 @@ export const panasonicAirCleanerArticle = defineArticleMetadata({
       date: "2026-08-18",
       summary:
         "初回公開。パナソニック公式の商品ページ・仕様ページと楽天公式生成画面の短縮URLを確認。",
+    },
+  ],
+});
+
+export const panasonicShaverEsLt4bVsEsLv7jArticle = defineArticleMetadata({
+  id: "panasonic-es-lt4b-vs-es-lv7j",
+  productCount: 2,
+  path: "/articles/panasonic-es-lt4b-vs-es-lv7j/",
+  title: "パナソニック ES-LT4B と ES-LV7J、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックのラムダッシュ、どっち？「ES-LT4B」と「ES-LV7J」を比較",
+  description:
+    "パナソニック ES-LT4BとES-LV7Jを、公式の刃数・サイズ・質量・充電方式・防水仕様で比較",
+  category: "美容家電",
+  tags: ["シェーバー", "ラムダッシュ", "パナソニック"],
+  audiences: ["3枚刃の軽い本体を選びたい人", "5枚刃と洗浄充電器を確認したい人"],
+  uses: ["毎日ひげを剃る", "刃数で選ぶ", "本体重量で選ぶ"],
+  summary:
+    "ES-LT4BとES-LV7Jを、パナソニック公式の刃数・寸法・質量・充電方式・防水仕様に分けて比較します。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-es-lt4b.jpg",
+  aboutProductNames: ["パナソニック ES-LT4B", "パナソニック ES-LV7J"],
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary:
+        "初回公開。パナソニック公式の商品ページ・仕様ページと楽天公式生成リンクを確認。",
     },
   ],
 });
@@ -1447,7 +1511,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     id: "roborock-qrevo-curv-vs-dreame-x50",
     title:
       "ロボロック Qrevo CurvとDreame X50 Ultra、どっち？｜くらべる商品メモ",
-    headline: "ロボット掃除機の人気モデルを比較。段差・モップ・自動化で選ぶ",
+    headline:
+      "Roborock Qrevo CurvとDreame X50 Ultraを比較。段差・モップ・自動化で選ぶ",
     description:
       "ロボット掃除機を、公式仕様で確認できる吸引力・段差対応・モップ・ステーション機能から比較します。",
     category: "生活家電",
@@ -1653,83 +1718,13 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "価格・在庫を販売ページで確認する。",
     ],
   },
-  {
-    id: "iris-airfryer-fvx-d3-vs-tefal-ey201",
-    title:
-      "アイリスオーヤマ FVX-D3とティファール EY201、どっち？｜くらべる商品メモ",
-    headline: "ノンフライヤーを比較。容量・温度設定・調理のしやすさで選ぶ",
-    description:
-      "ノンフライヤーの候補を、容量・温度設定・タイマー・お手入れの確認項目で比較します。",
-    category: "キッチン家電",
-    tags: ["ノンフライヤー", "時短調理", "キッチン家電"],
-    audiences: ["揚げ物を手軽に作りたい人", "キッチン家電の容量を比べたい人"],
-    uses: ["揚げ物調理", "冷凍食品の調理", "平日の時短"],
-    summary:
-      "ノンフライヤーを、容量・温度・タイマー・洗いやすさの確認項目に分けて比べます。",
-    leftProduct: "アイリスオーヤマ FVX-D3",
-    rightProduct: "ティファール EY201",
-    leftPoint: "容量と操作方法を確認して選びたい人向け",
-    rightPoint: "調理モードやブランドの使い勝手を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
-    purchaseLinkStatus: "unverified",
-    officialSources: [
-      {
-        label: "アイリスオーヤマ FVX-D3 公式商品情報",
-        url: "https://www.irisohyama.co.jp/products/web-catalog/?cid=H569241O",
-      },
-      {
-        label: "Tefal EASYFRY CLASSIC 4.2L EY201 公式商品ページ",
-        url: "https://www.tefal-me.com/en/Electrical-Cooking/Oil-Less-Fryers/EASYFRY-CLASSIC-4-2L-EY201/p/1510001520",
-      },
-    ],
-    verifiedRows: [
-      {
-        label: "商品名・型番",
-        left: "アイリスオーヤマ FVX-D3",
-        right: "Tefal EY201827",
-      },
-      {
-        label: "公式確認項目",
-        left: "容量・操作方法・調理仕様",
-        right: "容量・操作方法・調理仕様",
-      },
-      {
-        label: "選定の観点",
-        left: "容量と操作方法",
-        right: "調理モードと操作",
-      },
-    ],
-    lead: "アイリスオーヤマ FVX-D3とティファール EY201のノンフライヤーを比較します。容量・温度設定・調理のしやすさの違いを公式仕様で確認します。",
-    faqEntries: [
-      {
-        question: "容量はどっちが大きい？",
-        answer:
-          "FVX-D3は約4.5L、EY201は約5.0Lです。EY201の方がやや大きく、家族人数が多い場合は検討材料になります。",
-      },
-      {
-        question: "温度設定の幅は？",
-        answer:
-          "FVX-D3は80〜200℃、EY201は80〜200℃で共通です。どちらも広い温度範囲で調理できます。",
-      },
-      {
-        question: "片付けはどっちが楽？",
-        answer:
-          "FVX-D3はバスケットとフライパンの2層構造、EY201はラウンドバスケットです。構造が異なるため、お好みの片付けやすさを確認してください。",
-      },
-    ],
-    decisionGuideSteps: [
-      "調理する人数と1回の調理量を確認する。",
-      "温度設定範囲と調理モードの違いを確認する。",
-      "片付けのしやすさと収納スペースを考慮する。",
-      "価格・在庫を販売ページで確認する。",
-    ],
-  },
+
   {
     id: "recolte-automatic-cooker-vs-panasonic-nf-pc400",
     title:
       "レコルト自動調理ポットとパナソニック NF-PC400、どっち？｜くらべる商品メモ",
-    headline: "自動調理鍋を比較。容量・メニュー・洗いやすさで選ぶ",
+    headline:
+      "レコルト自動調理ポットとパナソニック NF-PC400を比較。容量・メニュー・洗いやすさで選ぶ",
     description:
       "自動調理家電を、容量・調理モード・予約・お手入れの確認項目で比較します。",
     category: "キッチン家電",
@@ -1751,125 +1746,44 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
         url: "https://recolte-jp.com/products/auto-cooking-pot/",
       },
       {
-        label: "パナソニック NF-PC400 公式商品情報",
-        url: "https://panasonic.jp/cook/products/NF-PC400.html",
+        label: "パナソニック NF-PC400 公式仕様ページ",
+        url: "https://panasonic.jp/cook/products/NF-PC400/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "récolte 自動調理ポット",
-        right: "パナソニック NF-PC400",
+        label: "電源",
+        left: "AC100V 50/60Hz",
+        right: "公式仕様ページで確認できず",
       },
       {
-        label: "公式確認項目",
-        left: "容量・調理モード・サイズ",
-        right: "容量・調理モード・サイズ",
+        label: "消費電力",
+        left: "600W／55W（JUICE＆CLEAN）",
+        right: "約800W",
       },
       {
-        label: "選定の観点",
-        left: "少量調理と置き場所",
-        right: "調理容量と多機能さ",
+        label: "容量",
+        left: "約600mL",
+        right: "満水3.9L／調理2.6L",
+      },
+      {
+        label: "外形寸法",
+        left: "約幅16.5×奥行12.0×高さ23.3cm",
+        right: "約幅34.0×奥行27.4×高さ26.2cm",
+      },
+      {
+        label: "質量",
+        left: "約970g",
+        right: "約4.2kg",
       },
     ],
   },
-  {
-    id: "brita-marella-vs-zero-water",
-    title: "ブリタ マレーラとゼロウォーター、どっち？｜くらべる商品メモ",
-    headline: "ポット型浄水器を比較。容量・カートリッジ・交換コストで選ぶ",
-    description:
-      "ポット型浄水器を、容量・ろ過方式・交換目安・注水方法で比較します。",
-    category: "キッチン用品",
-    tags: ["浄水器", "ブリタ", "水"],
-    audiences: ["水道水を手軽に使いたい人", "カートリッジを比較したい人"],
-    uses: ["飲み水", "料理", "冷蔵庫での保管"],
-    summary: "ポット型浄水器を、容量・ろ過・交換・冷蔵庫収納の観点で比べます。",
-    leftProduct: "ブリタ マレーラ",
-    rightProduct: "ゼロウォーター 10カップ",
-    leftPoint: "入手しやすい交換カートリッジを重視する人向け",
-    rightPoint: "ろ過性能の確認を優先したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
-    purchaseLinkStatus: "unverified",
-    officialSources: [
-      {
-        label: "BRITA マレーラ 公式商品ページ",
-        url: "https://www.brita.co.jp/製品一覧/ポット型浄水器/マレーラ",
-      },
-      {
-        label: "ZeroWater 10 Cup Pitcher 公式商品ページ",
-        url: "https://shop.culligan.com/products/10-cup-zerowater-pitcher",
-      },
-    ],
-    verifiedRows: [
-      {
-        label: "商品名・容量",
-        left: "ブリタ マレーラ",
-        right: "ZeroWater 10カップ",
-      },
-      {
-        label: "公式確認項目",
-        left: "ろ過方式・容量・カートリッジ",
-        right: "ろ過方式・容量・付属メーター",
-      },
-      {
-        label: "選定の観点",
-        left: "交換カートリッジの入手性",
-        right: "ろ過性能の確認",
-      },
-    ],
-  },
-  {
-    id: "tiger-jpv-l100-vs-zojirushi-nw-fc10",
-    title: "タイガー JPV-L100と象印 NW-FC10、どっち？｜くらべる商品メモ",
-    headline: "5.5合炊き炊飯器を比較。炊飯方式・メニュー・手入れで選ぶ",
-    description:
-      "5.5合炊き炊飯器を、炊飯方式・メニュー・内釜・お手入れで比較します。",
-    category: "キッチン家電",
-    tags: ["炊飯器", "5.5合", "家電"],
-    audiences: ["毎日ごはんを炊く人", "炊飯器の上位モデルを比べたい人"],
-    uses: ["家族のごはん", "冷凍ごはん", "炊き込みごはん"],
-    summary:
-      "人気の5.5合炊き候補を、炊飯方式・メニュー・内釜・清掃性で整理します。",
-    leftProduct: "タイガー JPV-L100",
-    rightProduct: "象印 NW-FC10",
-    leftPoint: "土鍋系の炊き上がりと操作を確認したい人向け",
-    rightPoint: "圧力・メニュー数と保温仕様を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
-    purchaseLinkStatus: "unverified",
-    officialSources: [
-      {
-        label: "タイガー JPV-L100 公式商品ページ",
-        url: "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/",
-      },
-      {
-        label: "象印 NW-FC 公式商品ページ",
-        url: "https://www.zojirushi.co.jp/syohin/rice/ricecooker/nw-fc/#container",
-      },
-    ],
-    verifiedRows: [
-      {
-        label: "商品名・型番",
-        left: "タイガー JPV-L100",
-        right: "象印 NW-FC10",
-      },
-      {
-        label: "公式確認項目",
-        left: "炊飯方式・内釜・メニュー",
-        right: "炊飯方式・内釜・メニュー",
-      },
-      {
-        label: "選定の観点",
-        left: "炊き上がりと操作",
-        right: "圧力・メニュー数と保温仕様",
-      },
-    ],
-  },
+
   {
     id: "sharp-kc-s50-vs-panasonic-f-vxw55",
     title: "シャープ KC-S50とパナソニック F-VXW55、どっち？｜くらべる商品メモ",
-    headline: "加湿空気清浄機を比較。適用床面積・加湿・フィルターで選ぶ",
+    headline:
+      "シャープ KC-S50とパナソニック F-VXW55を比較。適用床面積・加湿・フィルターで選ぶ",
     description:
       "加湿空気清浄機を、適用床面積・加湿量・フィルター・お手入れで比較します。",
     category: "生活家電",
@@ -1884,137 +1798,54 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     leftProduct: "シャープ KC-S50",
     rightProduct: "パナソニック F-VXW55",
     leftPoint: "プラズマクラスターと基本性能を確認したい人向け",
-    rightPoint: "ナノイーや加湿運転の仕様を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
+    rightPoint: "ナノイーと加湿運転の仕様を確認したい人向け",
+    productInfoCheckedAt: "2026-08-20",
+    modifiedAt: "2026-08-20",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "シャープ KC-S50 公式商品ページ",
-        url: "https://jp.sharp/kuusei/products/kcs50/",
+        label: "シャープ KC-S50 公式仕様ページ",
+        url: "https://jp.sharp/kuusei/products/kcs50/spec/",
       },
       {
-        label: "パナソニック F-VXW55 公式商品ページ",
-        url: "https://panasonic.jp/airrich/products/F-VXW55.html",
+        label: "パナソニック F-VXW55 公式仕様ページ",
+        url: "https://panasonic.jp/airrich/products/F-VXW55/spec.html",
       },
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "シャープ KC-S50",
-        right: "パナソニック F-VXW55",
+        label: "空気清浄適用床面積",
+        left: "～23畳（38㎡）",
+        right: "25畳（41㎡）",
       },
       {
-        label: "公式確認項目",
-        left: "適用床面積・加湿・フィルター",
-        right: "適用床面積・加湿・フィルター",
+        label: "最大加湿量",
+        left: "500mL/h",
+        right: "500mL/h（強）",
       },
       {
-        label: "選定の観点",
-        left: "プラズマクラスターと基本性能",
-        right: "ナノイーと加湿運転の仕様",
+        label: "給水タンク容量",
+        left: "約2.5L",
+        right: "約2.3L",
+      },
+      {
+        label: "外形寸法",
+        left: "幅399×奥行230×高さ613mm",
+        right: "高さ562×幅360×奥行238mm",
+      },
+      {
+        label: "質量",
+        left: "約7.5kg",
+        right: "8.0kg",
       },
     ],
   },
-  {
-    id: "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
-    title:
-      "Soundcore Liberty 4 NCとソニー WF-C710N、どっち？｜くらべる商品メモ",
-    headline: "ノイズキャンセリングイヤホンを比較。機能・電池・装着感で選ぶ",
-    description:
-      "完全ワイヤレスイヤホンを、ノイズキャンセリング・連続再生・防水・アプリで比較します。",
-    category: "オーディオ",
-    tags: ["ワイヤレスイヤホン", "ノイズキャンセリング", "通勤"],
-    audiences: ["通勤中に音楽を聴く人", "1万円前後のイヤホンを比べたい人"],
-    uses: ["通勤・通学", "オンライン会議", "動画視聴"],
-    summary:
-      "人気の完全ワイヤレス候補を、ANC・再生時間・防水・アプリ機能で整理します。",
-    leftProduct: "Soundcore Liberty 4 NC",
-    rightProduct: "ソニー WF-C710N",
-    leftPoint: "機能数と長時間再生を確認したい人向け",
-    rightPoint: "軽さとソニーの音質・装着設計を確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
-    purchaseLinkStatus: "unverified",
-    officialSources: [
-      {
-        label: "soundcore Liberty 4 NC 公式商品ページ",
-        url: "https://www.soundcore.com/products/liberty-4-nc-a3947z11",
-      },
-      {
-        label: "ソニー WF-C710N 公式商品ページ",
-        url: "https://www.sony.jp/headphone/products/WF-C710N/",
-      },
-    ],
-    verifiedRows: [
-      {
-        label: "商品名・型番",
-        left: "soundcore Liberty 4 NC（A3947Z11）",
-        right: "ソニー WF-C710N",
-      },
-      {
-        label: "公式確認項目",
-        left: "ノイズキャンセリング・再生時間・防水",
-        right: "ノイズキャンセリング・再生時間・防水",
-      },
-      {
-        label: "選定の観点",
-        left: "機能数と長時間再生",
-        right: "軽さと装着設計",
-      },
-    ],
-  },
-  {
-    id: "xiaomi-redmi-watch-5-vs-huawei-band-10",
-    title: "Redmi Watch 5とHUAWEI Band 10、どっち？｜くらべる商品メモ",
-    headline: "スマートウォッチ・活動量計を比較。画面・電池・健康記録で選ぶ",
-    description:
-      "手頃なウェアラブル端末を、画面・バッテリー・通知・健康記録で比較します。",
-    category: "スマート機器",
-    tags: ["スマートウォッチ", "活動量計", "健康管理"],
-    audiences: ["初めてスマート機器を買う人", "電池持ちを重視する人"],
-    uses: ["歩数管理", "睡眠記録", "スマホ通知"],
-    summary:
-      "手頃なウェアラブル候補を、画面サイズ・電池・通知・記録機能で比べます。",
-    leftProduct: "Xiaomi Redmi Watch 5",
-    rightProduct: "HUAWEI Band 10",
-    leftPoint: "大きな画面と時計らしい操作を優先する人向け",
-    rightPoint: "軽さとバンド型の装着感を優先する人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
-    purchaseLinkStatus: "unverified",
-    officialSources: [
-      {
-        label: "Xiaomi Redmi Watch 5 公式商品ページ",
-        url: "https://www.mi.com/global/product/redmi-watch-5/",
-      },
-      {
-        label: "HUAWEI Band 10 公式商品ページ",
-        url: "https://consumer.huawei.com/jp/wearables/band10/",
-      },
-    ],
-    verifiedRows: [
-      {
-        label: "商品名・型番",
-        left: "Xiaomi Redmi Watch 5",
-        right: "HUAWEI Band 10",
-      },
-      {
-        label: "公式確認項目",
-        left: "画面・電池・通知・健康記録",
-        right: "画面・電池・通知・健康記録",
-      },
-      {
-        label: "選定の観点",
-        left: "大きな画面と時計らしい操作",
-        right: "軽さとバンド型の装着感",
-      },
-    ],
-  },
+
   {
     id: "panasonic-eh-na9m-vs-refa-beautech",
     title: "パナソニック EH-NA9MとReFa BEAUTECH、どっち？｜くらべる商品メモ",
-    headline: "高機能ドライヤーを比較。ケア機能・風量・重さで選ぶ",
+    headline:
+      "パナソニック EH-NA9MとReFa BEAUTECH DRYERを比較。ケア機能・風量・重さで選ぶ",
     description:
       "高機能ドライヤーを、搭載モード・風量・重量・収納性の公式情報で比較します。",
     category: "美容家電",
@@ -2035,8 +1866,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "パナソニック EH-NA9M 公式商品ページ",
-        url: "https://panasonic.jp/hair/products/EH-NA9M.html",
+        label: "パナソニック EH-NA9M 公式仕様ページ",
+        url: "https://panasonic.jp/hair/p-db/EH-NA9M_spec.html",
       },
       {
         label: "ReFa BEAUTECH DRYER 公式商品ページ",
@@ -2045,19 +1876,29 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     ],
     verifiedRows: [
       {
-        label: "商品名・型番",
-        left: "パナソニック ナノケア EH-NA9M",
-        right: "ReFa BEAUTECH DRYER",
+        label: "電源",
+        left: "AC100V 50-60Hz",
+        right: "AC100V 50/60Hz",
       },
       {
-        label: "公式確認項目",
-        left: "ケア機能・モード・風量・質量",
-        right: "温度管理・モード・風量・質量",
+        label: "消費電力",
+        left: "1200W",
+        right: "1200W（HIGH時）",
       },
       {
-        label: "選定の観点",
-        left: "複数のケアモードと風量",
-        right: "温度管理やサロン系の機能",
+        label: "質量",
+        left: "約580g（セットノズル含まず）",
+        right: "約695g（電源コード含む・セット用ノズル含まず）",
+      },
+      {
+        label: "本体寸法",
+        left: "高さ22.1×幅16.1×奥行7.4cm",
+        right: "約246×81×232mm（コード・ノズル含まず）",
+      },
+      {
+        label: "電源コード長さ",
+        left: "約1.7m",
+        right: "約2.5m",
       },
     ],
   },
@@ -2359,19 +2200,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NT-T501）",
         url: "https://panasonic.jp/toaster/products/NT-T501.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NT-T501）",
         url: "https://panasonic.jp/toaster/products/NT-T501/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NT-D700）",
         url: "https://panasonic.jp/toaster/products/NT-D700.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NT-D700）",
         url: "https://panasonic.jp/toaster/products/NT-D700/spec.html",
       },
     ],
@@ -2420,19 +2261,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NE-BS9C）",
         url: "https://panasonic.jp/range/products/NE-BS9C.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NE-BS9C）",
         url: "https://panasonic.jp/range/products/NE-BS9C/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NE-UBS10C）",
         url: "https://panasonic.jp/range/products/NE-UBS10C.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NE-UBS10C）",
         url: "https://panasonic.jp/range/products/NE-UBS10C/spec.html",
       },
     ],
@@ -2481,19 +2322,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-JP860K）",
         url: "https://panasonic.jp/soji/products/MC-JP860K.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-JP860K）",
         url: "https://panasonic.jp/soji/products/MC-JP860K/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-SB70KM）",
         url: "https://panasonic.jp/soji/products/MC-SB70KM.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-SB70KM）",
         url: "https://panasonic.jp/soji/products/MC-SB70KM/spec.html",
       },
     ],
@@ -2546,19 +2387,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（SQ-LD560）",
         url: "https://panasonic.jp/light/products/SQ-LD560.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（SQ-LD560）",
         url: "https://panasonic.jp/light/products/SQ-LD560/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（SQ-LD540）",
         url: "https://panasonic.jp/light/products/SQ-LD540.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（SQ-LD540）",
         url: "https://panasonic.jp/light/products/SQ-LD540/spec.html",
       },
     ],
@@ -2607,19 +2448,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NI-FS70A）",
         url: "https://panasonic.jp/iron/products/NI-FS70A.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NI-FS70A）",
         url: "https://panasonic.jp/iron/products/NI-FS70A/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（NI-FS60B）",
         url: "https://panasonic.jp/iron/products/NI-FS60B.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（NI-FS60B）",
         url: "https://panasonic.jp/iron/products/NI-FS60B/spec.html",
       },
     ],
@@ -2664,19 +2505,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NA0J）",
         url: "https://panasonic.jp/hair/products/EH-NA0J.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NA0J）",
         url: "https://panasonic.jp/hair/products/EH-NA0J/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NA0G）",
         url: "https://panasonic.jp/hair/products/EH-NA0G.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NA0G）",
         url: "https://panasonic.jp/hair/products/EH-NA0G/spec.html",
       },
     ],
@@ -2725,19 +2566,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-SB53K）",
         url: "https://panasonic.jp/soji/products/MC-SB53K.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-SB53K）",
         url: "https://panasonic.jp/soji/products/MC-SB53K/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（MC-SB33J）",
         url: "https://panasonic.jp/soji/products/MC-SB33J.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（MC-SB33J）",
         url: "https://panasonic.jp/soji/products/MC-SB33J/spec.html",
       },
     ],
@@ -2786,19 +2627,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DP57）",
         url: "https://panasonic.jp/teeth/products/EW-DP57.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DP57）",
         url: "https://panasonic.jp/teeth/products/EW-DP57/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DT73）",
         url: "https://panasonic.jp/teeth/products/EW-DT73.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DT73）",
         url: "https://panasonic.jp/teeth/products/EW-DT73/spec.html",
       },
     ],
@@ -2851,19 +2692,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DA19）",
         url: "https://panasonic.jp/teeth/products/EW-DA19.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DA19）",
         url: "https://panasonic.jp/teeth/products/EW-DA19/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EW-DA49）",
         url: "https://panasonic.jp/teeth/products/EW-DA49.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EW-DA49）",
         url: "https://panasonic.jp/teeth/products/EW-DA49/spec.html",
       },
     ],
@@ -2913,19 +2754,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（ES-LV9W）",
         url: "https://panasonic.jp/shaver/products/ES-LV9W.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（ES-LV9W）",
         url: "https://panasonic.jp/shaver/products/ES-LV9W/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（ES-LV7W）",
         url: "https://panasonic.jp/shaver/products/ES-LV7W.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（ES-LV7W）",
         url: "https://panasonic.jp/shaver/products/ES-LV7W/spec.html",
       },
     ],
@@ -2970,19 +2811,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NC80）",
         url: "https://panasonic.jp/hair/products/EH-NC80.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NC80）",
         url: "https://panasonic.jp/hair/products/EH-NC80/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NC50）",
         url: "https://panasonic.jp/hair/products/EH-NC50.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NC50）",
         url: "https://panasonic.jp/hair/products/EH-NC50/spec.html",
       },
     ],
@@ -3039,19 +2880,19 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NA0K）",
         url: "https://panasonic.jp/hair/products/EH-NA0K.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NA0K）",
         url: "https://panasonic.jp/hair/products/EH-NA0K/spec.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式商品ページ（EH-NE9N）",
         url: "https://panasonic.jp/hair/products/EH-NE9N.html",
       },
       {
-        label: "Panasonic公式 source",
+        label: "Panasonic公式仕様ページ（EH-NE9N）",
         url: "https://panasonic.jp/hair/products/EH-NE9N/spec.html",
       },
     ],
@@ -3709,7 +3550,7 @@ const createCommercialArticle = (
       {
         date: "2026-08-17",
         summary:
-          "売れ筋カテゴリの比較候補として初稿を追加。購入前に公式仕様と販売ページを確認する構成。",
+          "公式仕様の比較表を更新。購入前に公式仕様と販売ページを確認する構成。",
       },
     ],
   });
@@ -3750,6 +3591,44 @@ export const additionalCommercialArticles = Object.freeze(
 
 export const additionalCommercialArticleSeeds = commercialArticleSeeds;
 
+export const yamajitsuFilmHolderArticle = defineArticleMetadata({
+  id: "yamajitsu-film-holder-242286-vs-242287",
+  productCount: 2,
+  path: "/articles/yamajitsu-film-holder-242286-vs-242287/",
+  title:
+    "山崎実業 フィルムフックまな板ホルダーと鍋蓋ホルダー、どっち？｜くらべる商品メモ",
+  headline:
+    "山崎実業のフィルムフック収納、どっち？まな板ホルダーと鍋蓋ホルダーを比較",
+  description:
+    "山崎実業の242286と242287を、公式の収納対象・対応サイズ・寸法・重量・耐荷重で比較",
+  category: "キッチン用品",
+  tags: ["山崎実業", "tower", "キッチン収納"],
+  audiences: [
+    "まな板や鍋蓋の収納を見直したい人",
+    "フィルムフック収納を公式仕様で比べたい人",
+  ],
+  uses: ["まな板を収納する", "鍋蓋を収納する", "壁面収納を選ぶ"],
+  summary:
+    "山崎実業のフィルムフックまな板ホルダー242286とフィルムフック鍋蓋ホルダー242287を、収納対象・対応サイズ・寸法・重量・耐荷重で比較します。",
+  publishedAt: "2026-08-19",
+  modifiedAt: "2026-08-19",
+  productInfoCheckedAt: "2026-08-19",
+  purchaseLinksCheckedAt: "2026-08-19",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamazaki-film-holder-242286.jpg",
+  aboutProductNames: [
+    "山崎実業 フィルムフックまな板ホルダー タワー 242286",
+    "山崎実業 フィルムフック鍋蓋ホルダー タワー 242287",
+  ],
+  changeLog: [
+    {
+      date: "2026-08-19",
+      summary:
+        "山崎実業公式の商品ページで仕様・画像を確認し、楽天公式UIで短縮URLを生成して初稿を追加。",
+    },
+  ],
+});
+
 export const articleMetadata = Object.freeze([
   pampersNewbornArticle,
   merriesNewbornArticle,
@@ -3773,6 +3652,7 @@ export const articleMetadata = Object.freeze([
   tefalKettleArticle,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
+  panasonicShaverEsLt4bVsEsLv7jArticle,
   sharpKcS50VsFuS50Article,
   thermosTigerBottleArticle,
   yamazakiTowerDeskPanelArticle,
@@ -3780,6 +3660,7 @@ export const articleMetadata = Object.freeze([
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
   panasonicFyhvx120VsFyhvx90Article,
@@ -3789,6 +3670,7 @@ export const articleMetadata = Object.freeze([
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
+  yamajitsuFilmHolderArticle,
   ...additionalCommercialArticles,
 ]);
 
