@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-ni-fs60c-vs-ni-fs70c:left": {
+    name: "パナソニック NI-FS60C",
+    purchaseUrl: "https://a.r10.to/hPgnIf",
+  },
+  "panasonic-ni-fs60c-vs-ni-fs70c:right": {
+    name: "パナソニック NI-FS70C",
+    purchaseUrl: "https://a.r10.to/hPJlgC",
+  },
   "babybjorn-bouncer:left": {
     name: "ベビービョルン Bliss",
     purchaseUrl: "https://a.r10.to/h5dRLC",

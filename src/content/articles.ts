@@ -3987,6 +3987,39 @@ export const tigerKettlePcjVsPcmArticle = defineArticleMetadata({
   ],
 });
 
+export const panasonicNiFs60cVsNiFs70cArticle = defineArticleMetadata({
+  id: "panasonic-ni-fs60c-vs-ni-fs70c",
+  productCount: 2,
+  path: "/articles/panasonic-ni-fs60c-vs-ni-fs70c/",
+  title: "パナソニック NI-FS60CとNI-FS70C、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックの衣類スチーマー、どっち？「NI-FS60C」と「NI-FS70C」を比較",
+  description:
+    "パナソニック NI-FS60CとNI-FS70Cを、公式の本体質量・タンク容量・スチーム量・連続使用時間で比較",
+  category: "衣類ケア",
+  tags: ["衣類スチーマー", "パナソニック", "衣類ケア"],
+  audiences: [
+    "衣類スチーマーを選びたい人",
+    "本体の軽さやタンク容量で比べたい人",
+  ],
+  uses: ["衣類のシワ伸ばし", "出かける前の衣類ケア"],
+  summary:
+    "NI-FS60CとNI-FS70Cを、パナソニック公式の商品ページで確認できる本体質量・タンク容量・スチーム量・連続使用時間に分けて比較します。",
+  publishedAt: "2026-08-20",
+  modifiedAt: "2026-08-20",
+  productInfoCheckedAt: "2026-08-20",
+  purchaseLinksCheckedAt: "2026-08-20",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-ni-fs60c.png",
+  changeLog: [
+    {
+      date: "2026-08-20",
+      summary:
+        "初回公開。パナソニック公式の商品ページで仕様を確認し、楽天公式UIで成果リンクを生成。",
+    },
+  ],
+});
+
 export const additionalCommercialArticles = Object.freeze(
   commercialArticleSeeds.map(createCommercialArticle),
 );
@@ -4032,6 +4065,7 @@ export const articleMetadata = Object.freeze([
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
+  panasonicNiFs60cVsNiFs70cArticle,
   ...additionalCommercialArticles,
 ]);
 

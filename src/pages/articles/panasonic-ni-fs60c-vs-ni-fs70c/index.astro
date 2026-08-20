@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import RelatedArticles from '../../../components/RelatedArticles.astro'
+import PurchaseCard from '../../../components/PurchaseCard.astro'
+import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
+import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
+import {panasonicNiFs60cVsNiFs70cArticle as articleMetadata} from '../../../content/articles'
+import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+import {articlePurchaseLinks} from '../../../lib/products'
+
+const leftOfficial = 'https://panasonic.jp/iron/products/NI-FS60C.html'
+const rightOfficial = 'https://panasonic.jp/iron/products/NI-FS70C.html'
+const leftImage = '/products/panasonic-ni-fs60c.png'
+const rightImage = '/products/panasonic-ni-fs70c.png'
+const leftAudience = 'タンク容量とHIGH時の連続使用時間を優先する人向け'
+const rightAudience = '本体の軽さとタンク容量を優先する人向け'
+
+const faqEntries = [
+  {question: 'NI-FS60CとNI-FS70Cの違いは？', answer: '公式記載では、NI-FS60Cは本体質量約690g・タンク容量約115mL、NI-FS70Cは本体質量約630g・タンク容量約130mLです。'},
+  {question: '軽い衣類スチーマーはどちら？', answer: '公式記載の本体質量はNI-FS70Cが約630g、NI-FS60Cが約690gです。'},
+  {question: 'どちらもスチーム量は同じですか？', answer: '公式比較表では、NI-FS60CとNI-FS70CはいずれもHIGH時・パワフルで平均約15g/分、MED時で約9g/分です。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '本体質量', left: '約690g', right: '約630g', highlight: 'right', highlightNote: '約60g軽い'},
+  {label: 'タンク容量', left: '約115mL', right: '約130mL', highlight: 'right', highlightNote: '15mL多い'},
+  {label: 'HIGH時の連続使用時間', left: '約8分', right: '約7分', highlight: 'left', highlightNote: '約1分長い'},
+  {label: 'HIGH時のスチーム量', left: '平均約15g/分', right: '平均約15g/分', highlight: null},
+  {label: '立ち上がり時間', left: '約19秒', right: '約15秒', highlight: null},
+]
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 衣類ケア · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">パナソニックの衣類スチーマーNI-FS60CとNI-FS70Cを比較します。メーカー公式ページで確認できる本体質量・タンク容量・スチーム量・立ち上がり時間をもとに、軽さと連続使用時間の違いを整理します。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2 left={{brand: 'パナソニック', line: 'NI-FS60C', tagline: '連続使用時間を優先するなら', image: leftImage, imageAlt: 'パナソニック NI-FS60C', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-ni-fs60c-vs-ni-fs70c:left'].purchaseUrl}} right={{brand: 'パナソニック', line: 'NI-FS70C', tagline: '軽さとタンク容量なら', image: rightImage, imageAlt: 'パナソニック NI-FS70C', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-ni-fs60c-vs-ni-fs70c:right'].purchaseUrl}} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} />
+    <p>NI-FS70Cは公式記載の本体質量が約630gで、NI-FS60Cより約60g軽く、タンク容量は約15mL多いモデルです。HIGH時の連続使用時間はNI-FS60Cが約8分、NI-FS70Cが約7分なので、持ちやすさとタンク容量、連続使用時間のどれを優先するかで選び方が変わります。</p>
+
+    <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">NI-FS60C</th><th scope="col">NI-FS70C</th><th scope="col">根拠</th></tr></thead><tbody><tr><th scope="row">本体質量</th><td data-label="NI-FS60C">約690g</td><td data-label="NI-FS70C">約630g</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">タンク容量</th><td data-label="NI-FS60C">約115mL</td><td data-label="NI-FS70C">約130mL</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">HIGH時の連続使用時間</th><td data-label="NI-FS60C">約8分</td><td data-label="NI-FS70C">約7分</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">HIGH時のスチーム量</th><td data-label="NI-FS60C">平均約15g/分</td><td data-label="NI-FS70C">平均約15g/分</td><td data-label="根拠">各公式ページ</td></tr><tr><th scope="row">立ち上がり時間</th><td data-label="NI-FS60C">約19秒</td><td data-label="NI-FS70C">約15秒</td><td data-label="根拠">各公式ページ</td></tr></tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>仕様の根拠は、パナソニック公式の商品ページで2026年8月20日に確認しました。この記事では公式に記載された本体質量・タンク容量・スチーム量・連続使用時間・立ち上がり時間だけを比較しています。</p><div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">NI-FS60C 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">NI-FS70C 公式商品ページ →</a></div>
+    <ArticleSocialProof query="パナソニック NI-FS60C NI-FS70C" checkedAt="2026-08-20" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <div class="purchase-cards"><PurchaseCard name="パナソニック NI-FS60C" audience={leftAudience} href={articlePurchaseLinks['panasonic-ni-fs60c-vs-ni-fs70c:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /><PurchaseCard name="パナソニック NI-FS70C" audience={rightAudience} href={articlePurchaseLinks['panasonic-ni-fs60c-vs-ni-fs70c:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" /></div>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">パナソニック公式：NI-FS60C</a>（2026-08-20確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">パナソニック公式：NI-FS70C</a>（2026-08-20確認）</li></ul>
+    <h2>調査方法・免責</h2><p>このサイトの比較は、メーカー公式の商品ページで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+    <p class="notice">この記事には広告リンクを含みます。価格・在庫は販売先で、仕様は公式ページで確認してください。</p><div class="verification-summary" aria-label="記事情報の確認状況"><p>公式商品情報確認済み：<time datetime={articleMetadata.productInfoCheckedAt}>{articleMetadata.productInfoCheckedAt}</time></p></div>
+  </article><RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>
