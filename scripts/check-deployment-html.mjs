@@ -170,7 +170,7 @@ for (const file of htmlFiles) {
       }
     }
     for (const block of structuredBlocks) {
-      const allowedTypes = ["Article", "WebPage", "FAQPage", "BreadcrumbList"];
+      const allowedTypes = ["Article", "WebPage", "BreadcrumbList"];
       if (!allowedTypes.includes(block["@type"])) {
         errors.push(`${file}: unsupported JSON-LD type ${block["@type"]}`);
       }
@@ -182,13 +182,6 @@ for (const file of htmlFiles) {
         if (serialized.includes(`"${unsupportedClaim}"`)) {
           errors.push(`${file}: unsupported JSON-LD claim ${unsupportedClaim}`);
         }
-      }
-    }
-    if (structuredBlocks.some((b) => b["@type"] === "FAQPage")) {
-      const faq = structuredBlocks.find((b) => b["@type"] === "FAQPage");
-      const entities = faq.mainEntity;
-      if (!Array.isArray(entities) || entities.length === 0) {
-        errors.push(`${file}: FAQPage JSON-LD requires mainEntity array`);
       }
     }
   }

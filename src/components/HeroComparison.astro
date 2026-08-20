@@ -62,7 +62,7 @@ const {
             <a class="hero-product-img" href={product.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${product.brand} ${product.line} の公式商品ページを見る`}>
               <img src={product.image} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" />
             </a>
-            <h2 class="hero-product-name"><span>{product.brand}</span> {product.line}</h2>
+            <h3 class="hero-product-name"><span>{product.brand}</span> {product.line}</h3>
             {points ? (
               <>
                 <p class="hero-product-tagline">{product.tagline}</p>
