@@ -156,13 +156,13 @@ function Invoke-VerificationAttempt {
 
         # Purchase link validation (Rakuten CTA must be present for articles with purchase CTAs)
         $allArticleLinks = [regex]::Matches($articleHtml, '(?i)href=["''](?<href>https://[^"'']+)["'']') | ForEach-Object { $_.Groups['href'].Value }
-        $rakutenLinks = @($allArticleLinks | Where-Object { ([uri]$_).Host -match '(^|\.)rakuten\.co\.jp$|(^|\.)r10\.to$' })
+        $rakutenLinks = @($allArticleLinks | Where-Object { ([uri]$_).Host -match '(^|\.)rakuten\.(co\.jp|ne\.jp)$|(^|\.)r10\.to$' })
         # Some articles (unverified purchase status) may not have Rakuten CTAs, so this is informational
         $hasRakutenCta = $rakutenLinks.Count -ge 1
         if ($hasRakutenCta) {
             Check "Rakuten CTA $articlePath" $true "links=$($rakutenLinks.Count)"
             $articleChecks++
-            $disallowedRakuten = @($allArticleLinks | Where-Object { $_ -match '(?i)rakuten' -and ([uri]$_).Host -notmatch '(^|\.)rakuten\.co\.jp$|(^|\.)r10\.to$' })
+            $disallowedRakuten = @($allArticleLinks | Where-Object { $_ -match '(?i)rakuten' -and ([uri]$_).Host -notmatch '(^|\.)rakuten\.(co\.jp|ne\.jp)$|(^|\.)r10\.to$' })
             Check "Rakuten host allowlist $articlePath" ($disallowedRakuten.Count -eq 0) "disallowed=$($disallowedRakuten.Count)"
             $articleChecks++
         }
