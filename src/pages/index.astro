@@ -3,11 +3,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import { publicArticleMetadata } from '../content/articles';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
-import {diagnosisCategories} from '../data/diagnoses';
 
 const latest = [...publicArticleMetadata]
   .sort((a, b) => (a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0))
-  .slice(0, 6);
+  .slice(0, 4);
 
 // 「よく比較される商品」：config/article-layout.mjs の topPage.featuredPaths が
 // 唯一の情報源（3〜6件）。パスは publicArticleMetadata に必ず存在する（ゲートが検証）。
@@ -43,7 +42,7 @@ const categoryEmoji: Record<string, string> = {
   title="くらべる商品メモ｜商品比較"
   description="商品やサービスを、公式情報と確認状況を分けて比べるサイトです。確認できない数値や体験談は掲載しません。"
 >
-  <section class="wrap section section-intro hero-section stitch-hero">
+  <section class="wrap section section-intro hero-section">
     <p class="eyebrow">くらべる商品メモ</p>
     <h1 class="hero-heading">くらべて、<br class="hero-br" />選ぶ。</h1>
     <p class="lead">似ていて迷う2商品を、違いと「<strong>どっち向き？</strong>」で比較します。<br />メーカー公式情報を中心に確認しています。</p>
@@ -51,33 +50,21 @@ const categoryEmoji: Record<string, string> = {
       <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索（例: 電気ケトル、軽い）" aria-label="商品名・用途・悩みで検索" />
       <button type="submit" class="secondary-button">検索</button>
     </form>
-    <p class="meta diagnosis-hero-cta">
-      迷ったら
-      <a class="diagnosis-hero-cta__button" href="/tools/product-finder/">30秒で診断する →</a>
-    </p>
   </section>
 
-  <section class="wrap section section-diagnosis stitch-diagnosis" data-top-diagnosis>
+  <section class="wrap section" data-top-featured>
     <div class="subsection-heading">
-      <p class="section-label">商品選択診断</p>
-      <h2>迷ったら、30秒で診断</h2>
+      <p class="section-label">よく比較される商品</p>
+      <h2>よく比較される商品</h2>
     </div>
-    <p class="lead">「どちらも良さそうで決められない」とき、あなたの使い方に合う商品を診断します。判定はメーカー公式情報に基づくスコアリング方式です。</p>
-    <div class="diagnosis-grid">
-      {diagnosisCategories.map((category) => (
-        <a class="diagnosis-card" href={`/tools/product-finder/${category.slug}/`}>
-          <span class="tag">{category.config.categoryLabel}</span>
-          <span class="diagnosis-card__title">{category.config.title}</span>
-          <span class="diagnosis-card__desc">{category.config.description}</span>
-          <span class="diagnosis-card__cta">診断する →</span>
-        </a>
+    <p class="lead">よく選ばれている比較を、公式情報の確認状況と合わせてまとめています。</p>
+    <div class="article-list top-article-list">
+      {featured.map((article) => (
+        <ArticleCard article={article} />
       ))}
     </div>
-    <p class="diagnosis-actions">
-      <a class="primary-button" href="/tools/product-finder/">30秒で診断する →</a>
-      <a class="secondary-button" href="/tools/product-finder/">商品選択診断の一覧を見る</a>
-    </p>
   </section>
+  <p class="meta wrap"><a href="/articles/">もっと見る →</a></p>
 
   <section class="wrap section" data-top-categories>
     <div class="subsection-heading">
@@ -98,19 +85,14 @@ const categoryEmoji: Record<string, string> = {
     <p class="meta">全カテゴリは <a href="/articles/">比較記事一覧</a> から探せます。</p>
   </section>
 
-  <section class="wrap section" data-top-featured>
+  <section class="wrap section section-diagnosis" data-top-diagnosis>
     <div class="subsection-heading">
-      <p class="section-label">よく比較される商品</p>
-      <h2>よく比較される商品</h2>
+      <p class="section-label">商品選択診断</p>
+      <h2>迷っているなら、30秒で診断</h2>
     </div>
-    <p class="lead">よく選ばれている比較を、公式情報の確認状況と合わせてまとめています。</p>
-    <div class="article-list">
-      {featured.map((article) => (
-        <ArticleCard article={article} />
-      ))}
-    </div>
+    <p class="lead">使い方に合う商品が分からない人向け。メーカー公式情報に基づいて、選び方を整理します。</p>
+    <p class="diagnosis-actions"><a class="primary-button" href="/tools/product-finder/">商品選択診断を始める →</a></p>
   </section>
-  <p class="meta wrap"><a href="/articles/">もっと見る →</a></p>
 
   <section class="section wrap article-index" data-top-latest>
     <div class="subsection-heading">
@@ -118,7 +100,7 @@ const categoryEmoji: Record<string, string> = {
       <h2>最近追加・更新した比較</h2>
     </div>
     <p class="lead">新しく追加・更新した比較からチェックできます。</p>
-    <div class="article-list">
+    <div class="article-list top-article-list">
       {latest.length > 0 ? latest.map((article) => (
         <ArticleCard article={article} />
       )) : (
@@ -132,297 +114,72 @@ const categoryEmoji: Record<string, string> = {
 </BaseLayout>
 
 <style is:global>
-  /* ヒーローセクション */
-  .hero-section {
-    background: var(--hero-gradient);
-    margin-inline: -100vw;
-    padding-inline: 100vw;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-section::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -20%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(176, 76, 59, 0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
   .hero-heading {
-    font-size: clamp(3rem, 8vw, 5.5rem) !important;
-    line-height: 1.05 !important;
-    letter-spacing: -0.06em !important;
-    margin-bottom: 1rem !important;
-  }
-  .hero-heading strong {
-    color: var(--accent);
-  }
-  .hero-br {
-    display: none;
-  }
-  @media (min-width: 560px) {
-    .hero-br { display: block; }
-  }
-
-  /* ヒーロー直下の診断CTA（迷ったら…） */
-  .diagnosis-hero-cta {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 0.9rem;
-  }
-  .diagnosis-hero-cta__button {
-    display: inline-block;
-    background: var(--accent);
-    color: #fff;
-    font-weight: 800;
-    font-size: 0.88rem;
-    text-decoration: none;
-    padding: 0.4rem 0.85rem;
-    border-radius: 999px;
-    white-space: nowrap;
-  }
-  .diagnosis-hero-cta__button:hover {
-    filter: brightness(1.05);
-  }
-
-  /* 商品選択診断セクション（ヒーロー直後・カテゴリより前に配置） */
-  .section-diagnosis {
-    margin-top: clamp(1rem, 2.5vw, 1.75rem);
-    padding: clamp(1.25rem, 3vw, 2rem);
-    border: 1px solid rgba(176, 76, 59, 0.15);
-    border-radius: var(--radius-lg);
-    background: linear-gradient(180deg, #f3f6f4, #fbfcfb);
-    box-shadow: 0 2px 16px rgba(176, 76, 59, 0.05);
-  }
-  .section-diagnosis .lead {
+    max-width: 14ch;
     margin-bottom: 1rem;
+    font-size: clamp(2.4rem, 7vw, 4.5rem);
+    line-height: 1.08;
+    letter-spacing: -0.05em;
   }
-  .diagnosis-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    gap: 0.8rem;
+
+  .hero-br { display: none; }
+  @media (min-width: 560px) { .hero-br { display: block; } }
+
+  .section-diagnosis {
+    border-block: 1px solid var(--line);
+    background: var(--section-alt);
   }
-  .diagnosis-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.35rem;
-    padding: 1rem 1.1rem;
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    background: var(--paper);
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
-  }
-  .diagnosis-card:hover {
-    border-color: var(--accent);
-    box-shadow: 0 4px 16px rgba(176, 76, 59, 0.1);
-    transform: translateY(-2px);
-  }
-  .diagnosis-card__title {
-    font-weight: 800;
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-  .diagnosis-card__desc {
-    font-size: 0.82rem;
-    color: var(--muted);
-    line-height: 1.55;
-  }
-  .diagnosis-card__cta {
-    margin-top: auto;
-    padding-top: 0.5rem;
-    font-size: 0.85rem;
-    font-weight: 800;
-    color: var(--accent);
-  }
-  .diagnosis-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    align-items: center;
-    margin: 1.1rem 0 0;
-  }
-  .diagnosis-actions .primary-button,
-  .diagnosis-actions .secondary-button {
+
+  .diagnosis-actions { margin: 1rem 0 0; }
+  .diagnosis-actions .primary-button {
     display: inline-block;
     text-decoration: none;
   }
-  @media (max-width: 480px) {
-    .diagnosis-grid {
-      grid-template-columns: 1fr;
-    }
+
+  .top-article-list {
+    gap: 0.75rem;
   }
 
-  /* Google Stitch の Product Comparison Redesign を反映したトップ専用テーマ。 */
-  .home-page {
-    background: #fffaf8;
+  .top-article-list .article-list-card {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 0.85rem;
+    padding: 0.65rem;
   }
-  .home-page main > section.wrap:not(.stitch-hero):not(.stitch-diagnosis) {
-    box-sizing: border-box;
-    width: calc(100% - 2rem);
-    max-width: 1120px;
-    margin-inline: auto;
-    padding-inline: 0;
+
+  .top-article-list .article-list-card .card-thumb,
+  .top-article-list .article-list-card .card-tile {
+    width: 88px;
+    height: 88px;
   }
-  .home-page main > section.section-rule {
-    width: 100%;
-    max-width: none;
-    margin-inline: 0;
-    padding-inline: max(1rem, calc((100% - 1120px) / 2));
+
+  .top-article-list .article-list-card h2 {
+    margin: 0.15rem 0 0.35rem;
+    font-size: clamp(1.05rem, 2vw, 1.35rem);
+    line-height: 1.35;
   }
-  .home-page .footer {
-    width: 100%;
-    margin-inline: 0;
-    padding-inline: max(1rem, calc((100% - 1120px) / 2));
-  }
-  .home-page .site-header {
-    background: #fffaf8;
-    border-bottom-color: #f0ded8;
-  }
-  .home-page .site-header .nav {
-    position: relative;
-    justify-content: center;
-  }
-  .home-page .site-header .brand {
-    color: #a52a1e;
-    font-weight: 800;
-  }
-  .home-page .site-header .nav-toggle {
-    position: absolute;
-    left: 0;
-  }
-  .home-page .hero-section.stitch-hero {
-    max-width: none;
-    margin-inline: 0;
-    padding: clamp(1.5rem, 5vw, 3.2rem) 1rem clamp(1.75rem, 5vw, 3rem);
-    background: #fff7f4;
-    border-bottom: 1px solid #f0ded8;
-    text-align: center;
-  }
-  .home-page .hero-section.stitch-hero::before {
+
+  .top-article-list .article-list-card .card-tag-row {
     display: none;
   }
-  .home-page .stitch-hero .eyebrow {
-    color: #a52a1e;
-    margin-bottom: 0.55rem;
+
+  .top-article-list .article-list-card .card-subjects {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.45;
   }
-  .home-page .stitch-hero .hero-heading {
-    margin-bottom: 0.75rem !important;
-    font-size: clamp(2.15rem, 8vw, 4.25rem) !important;
-    letter-spacing: -0.045em !important;
+
+  .top-article-list .article-list-card .card-audiences {
+    display: none;
   }
-  .home-page .stitch-hero .lead {
-    box-sizing: border-box;
-    width: min(100%, 36rem);
-    max-width: 36rem;
-    margin-inline: auto;
-    color: #704f49;
-    overflow-wrap: anywhere;
-  }
-  .home-page .top-search {
-    box-sizing: border-box;
-    width: min(100%, 32rem);
-    max-width: 32rem;
-    margin: 1.5rem auto 0;
-    padding: 0.25rem;
-    border: 1px solid #8b827d;
-    border-radius: var(--radius-md);
-    background: #fff;
-    box-shadow: 0 3px 10px rgba(93, 55, 46, 0.06);
-    overflow: hidden;
-  }
-  .home-page .top-search input {
-    flex: 1 1 0;
-    min-width: 0;
-    border: 0;
-    background: transparent;
-  }
-  .home-page .top-search input:focus {
-    outline: 2px solid #d9a49b;
-    outline-offset: -2px;
-  }
-  .home-page .top-search .secondary-button {
-    border-radius: var(--radius-sm);
-    background: #a52a1e;
-    color: #fff;
-    border-color: #a52a1e;
-  }
-  .home-page .diagnosis-hero-cta {
-    justify-content: center;
-    margin-bottom: 0;
-  }
-  .home-page .diagnosis-hero-cta__button {
-    background: #a52a1e;
-  }
-  .home-page .section-diagnosis.stitch-diagnosis {
-    max-width: 56rem;
-    width: auto;
-    margin: 0 auto;
-    border: 0;
-    border-radius: var(--radius-lg);
-    padding-inline: clamp(1.25rem, 3vw, 2rem);
-    background: #f4f0e7;
-    box-shadow: none;
-  }
-  .home-page .stitch-diagnosis .subsection-heading,
-  .home-page .stitch-diagnosis > .lead {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 42rem;
-    margin-inline: auto;
-    white-space: normal;
-  }
-  .home-page .stitch-diagnosis .section-label {
-    color: #a52a1e;
-  }
-  .home-page .diagnosis-card {
-    border-color: #e8e1d8;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(93, 55, 46, 0.05);
-  }
-  .home-page .diagnosis-card:hover {
-    border-color: #c77a6f;
-    box-shadow: 0 5px 14px rgba(93, 55, 46, 0.1);
-  }
-  .home-page .diagnosis-card__cta,
-  .home-page .diagnosis-actions a {
-    color: #a52a1e;
-  }
-  .home-page .diagnosis-actions .primary-button {
-    background: #a52a1e;
-    border-color: #a52a1e;
-    color: #fff;
-  }
-  @media (max-width: 559px) {
-    .home-page .site-header .nav {
-      min-height: 3.75rem;
+
+  @media (max-width: 480px) {
+    .top-article-list .article-list-card {
+      grid-template-columns: 72px minmax(0, 1fr);
     }
-    .home-page .site-header .nav-toggle {
-      left: 0.25rem;
-    }
-    .home-page .top-search {
-      display: flex;
-      align-items: center;
-    }
-    .home-page .stitch-diagnosis .subsection-heading {
-      display: block;
-    }
-    .home-page .stitch-diagnosis .subsection-heading h2 {
-      margin-top: 0.45rem;
-    }
-    .home-page .stitch-diagnosis > .lead {
-      overflow-wrap: anywhere;
-    }
-    .home-page .top-search input {
-      width: 100%;
-      padding-inline: 0.6rem;
-    }
-    .home-page .top-search .secondary-button {
-      flex: 0 0 auto;
+    .top-article-list .article-list-card .card-thumb,
+    .top-article-list .article-list-card .card-tile {
+      width: 72px;
+      height: 72px;
     }
   }
 </style>
