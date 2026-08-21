@@ -58,9 +58,9 @@ describe("CSP-compatible comparison table fallback", () => {
       '<script is:inline src="/comparison-table-labels.js" defer></script>',
     );
     expect(layout).not.toContain("labelComparisonTables");
-    expect(
-      readFileSync("public/comparison-table-labels.js", "utf8"),
-    ).toContain("labelComparisonTables");
+    expect(readFileSync("public/comparison-table-labels.js", "utf8")).toContain(
+      "labelComparisonTables",
+    );
   });
 
   it("provides the comparison-table-labels.js build artifact", () => {
@@ -93,7 +93,9 @@ describe("CSP-compatible comparison table fallback", () => {
     if (!existsSync("dist")) return;
     const html = readFileSync("dist/index.html", "utf8");
     expect(html).toContain("comparison-table-labels.js");
-    expect(html).toMatch(/<script[^>]*\ssrc="[^"]*comparison-table-labels\.js"/);
+    expect(html).toMatch(
+      /<script[^>]*\ssrc="[^"]*comparison-table-labels\.js"/,
+    );
   });
 });
 
