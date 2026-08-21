@@ -20,3 +20,14 @@ test("full-bleed section layout stays centered", () => {
   const accessAt = base.indexOf("../styles/accessibility.css");
   expect(accessAt).toBeGreaterThan(globalAt);
 });
+
+test("top section headings align with the featured card column", () => {
+  const page = read("src/pages/index.astro");
+
+  expect(page).toContain("[data-top-featured] .subsection-heading");
+  expect(page).toContain("[data-top-categories] .subsection-heading");
+  expect(page).toContain("[data-top-diagnosis] .subsection-heading");
+  expect(page).toContain("max-width: 900px;");
+  expect(page).toContain("align-items: flex-start;");
+  expect(page).toContain("flex-direction: column;");
+});
