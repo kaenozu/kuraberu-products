@@ -49,6 +49,7 @@ import {
   additionalCommercialArticles,
   yamajitsuFilmHolderArticle,
 } from "../src/content/articles";
+import { _setBuildReferenceDate } from "../src/content/articles/types";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
   return [
@@ -664,5 +665,190 @@ describe("article card audiences 向き line (rendered dist)", () => {
       }
     }
     expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);
+  });
+});
+
+describe("future date validation in Asia/Tokyo", () => {
+  it("accepts a date that is 'today' in JST but 'tomorrow' in UTC", () => {
+    // Simulate JST 01:00 on 2026-08-22 (= UTC 16:00 on 2026-08-21)
+    // JST date = 2026-08-22, but if we used UTC toISOString it would be 2026-08-21
+    // With JST-based validation, 2026-08-22 should be accepted when reference is 2026-08-22
+    _setBuildReferenceDate("2026-08-22");
+    expect(() =>
+      defineArticleMetadata({
+        id: "test-jst-today",
+        path: "/articles/test-jst-today/",
+        title: "テスト",
+        headline: "テスト",
+        description: "テスト",
+        category: "美容家電",
+        publishedAt: "2026-08-22",
+        modifiedAt: "2026-08-22",
+        productCount: 2,
+        leftModel: {
+          brand: "A",
+          line: "A",
+          tagline: "A",
+          image: "/products/test-a.jpg",
+          imageAlt: "A",
+          officialHref: "https://example.com/a",
+          guidePoints: ["テスト"],
+        },
+        rightModel: {
+          brand: "B",
+          line: "B",
+          tagline: "B",
+          image: "/products/test-b.jpg",
+          imageAlt: "B",
+          officialHref: "https://example.com/b",
+          guidePoints: ["テスト"],
+        },
+        summary: "テスト記事",
+        tags: ["テスト"],
+        audiences: ["テスト"],
+        uses: ["テスト"],
+        purchaseLinkStatus: "unverified",
+        keyDiffRows: [{ label: "テスト", left: "A", right: "B" }],
+        faqEntries: [{ question: "Q", answer: "A" }],
+        lead: "テスト",
+        changeLog: [{ date: "2026-08-22", summary: "テスト公開" }],
+      }),
+    ).not.toThrow();
+    _setBuildReferenceDate(null);
+  });
+
+  it("rejects a date that is tomorrow in JST", () => {
+    _setBuildReferenceDate("2026-08-21");
+    expect(() =>
+      defineArticleMetadata({
+        id: "test-jst-future",
+        path: "/articles/test-jst-future/",
+        title: "テスト",
+        headline: "テスト",
+        description: "テスト",
+        category: "美容家電",
+        publishedAt: "2026-08-22",
+        modifiedAt: "2026-08-22",
+        productCount: 2,
+        leftModel: {
+          brand: "A",
+          line: "A",
+          tagline: "A",
+          image: "/products/test-a.jpg",
+          imageAlt: "A",
+          officialHref: "https://example.com/a",
+          guidePoints: ["テスト"],
+        },
+        rightModel: {
+          brand: "B",
+          line: "B",
+          tagline: "B",
+          image: "/products/test-b.jpg",
+          imageAlt: "B",
+          officialHref: "https://example.com/b",
+          guidePoints: ["テスト"],
+        },
+        summary: "テスト記事",
+        tags: ["テスト"],
+        audiences: ["テスト"],
+        uses: ["テスト"],
+        purchaseLinkStatus: "unverified",
+        keyDiffRows: [{ label: "テスト", left: "A", right: "B" }],
+        faqEntries: [{ question: "Q", answer: "A" }],
+        lead: "テスト",
+        changeLog: [{ date: "2026-08-21", summary: "テスト公開" }],
+      }),
+    ).toThrow(/must not be a future date/);
+    _setBuildReferenceDate(null);
+  });
+
+  it("rejects a date that is two days ahead in JST", () => {
+    _setBuildReferenceDate("2026-08-21");
+    expect(() =>
+      defineArticleMetadata({
+        id: "test-jst-2days",
+        path: "/articles/test-jst-2days/",
+        title: "テスト",
+        headline: "テスト",
+        description: "テスト",
+        category: "美容家電",
+        publishedAt: "2026-08-23",
+        modifiedAt: "2026-08-23",
+        productCount: 2,
+        leftModel: {
+          brand: "A",
+          line: "A",
+          tagline: "A",
+          image: "/products/test-a.jpg",
+          imageAlt: "A",
+          officialHref: "https://example.com/a",
+          guidePoints: ["テスト"],
+        },
+        rightModel: {
+          brand: "B",
+          line: "B",
+          tagline: "B",
+          image: "/products/test-b.jpg",
+          imageAlt: "B",
+          officialHref: "https://example.com/b",
+          guidePoints: ["テスト"],
+        },
+        summary: "テスト記事",
+        tags: ["テスト"],
+        audiences: ["テスト"],
+        uses: ["テスト"],
+        purchaseLinkStatus: "unverified",
+        keyDiffRows: [{ label: "テスト", left: "A", right: "B" }],
+        faqEntries: [{ question: "Q", answer: "A" }],
+        lead: "テスト",
+        changeLog: [{ date: "2026-08-21", summary: "テスト公開" }],
+      }),
+    ).toThrow(/must not be a future date/);
+    _setBuildReferenceDate(null);
+  });
+
+  it("rejects a changelog date that is tomorrow in JST", () => {
+    _setBuildReferenceDate("2026-08-21");
+    expect(() =>
+      defineArticleMetadata({
+        id: "test-jst-changelog",
+        path: "/articles/test-jst-changelog/",
+        title: "テスト",
+        headline: "テスト",
+        description: "テスト",
+        category: "美容家電",
+        publishedAt: "2026-08-20",
+        modifiedAt: "2026-08-21",
+        productCount: 2,
+        leftModel: {
+          brand: "A",
+          line: "A",
+          tagline: "A",
+          image: "/products/test-a.jpg",
+          imageAlt: "A",
+          officialHref: "https://example.com/a",
+          guidePoints: ["テスト"],
+        },
+        rightModel: {
+          brand: "B",
+          line: "B",
+          tagline: "B",
+          image: "/products/test-b.jpg",
+          imageAlt: "B",
+          officialHref: "https://example.com/b",
+          guidePoints: ["テスト"],
+        },
+        summary: "テスト記事",
+        tags: ["テスト"],
+        audiences: ["テスト"],
+        uses: ["テスト"],
+        purchaseLinkStatus: "unverified",
+        keyDiffRows: [{ label: "テスト", left: "A", right: "B" }],
+        faqEntries: [{ question: "Q", answer: "A" }],
+        lead: "テスト",
+        changeLog: [{ date: "2026-08-22", summary: "テスト更新" }],
+      }),
+    ).toThrow(/changeLog\.date.*must not be a future date/);
+    _setBuildReferenceDate(null);
   });
 });
