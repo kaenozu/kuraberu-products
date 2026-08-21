@@ -246,5 +246,9 @@ jobs:
               --expected-sha "$EXPECTED_SHA" \
               --site-url "$PUBLIC_SITE_URL"
           else
-            echo "::warning::No post-deploy report.json found; skipping evidence issue creation"
+            echo "::warning::No post-deploy report.json found; creating evidence issue with UNKNOWN status"
+            node scripts/create-deploy-evidence-issue.mjs \
+              --run-id "${{ github.run_id }}" \
+              --expected-sha "${{ inputs.expected_sha }}" \
+              --site-url "${{ vars.PUBLIC_SITE_URL }}"
           fi

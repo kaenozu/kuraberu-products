@@ -126,6 +126,12 @@ export function buildIssueBody({
     (report.checks ?? []).length > 0 &&
     report.checks.every((check) => check.status === "PASS");
   const lines = [
+    ...(report.result === "UNKNOWN"
+      ? [
+          "> **⚠️ report.json が見つかりませんでした。** run log を確認してください。",
+          "",
+        ]
+      : []),
     "## 使い方",
     "",
     "- この issue は本番デプロイ workflow が自動起票したものです。",
@@ -217,14 +223,27 @@ function parseArg(name) {
 }
 
 function main() {
-  const reportPath = parseArg("--report");
+  const ri = process.argv.indexOf("--report");
+  const reportPath =
+    ri !== -1 && process.argv[ri + 1] ? process.argv[ri + 1] : null;
   const runId = parseArg("--run-id");
   const expectedSha = parseArg("--expected-sha");
   const siteUrl = parseArg("--site-url");
   const dryRun = process.argv.includes("--dry-run");
   const repo = process.env.GITHUB_REPOSITORY ?? "kaenozu/kuraberu-products";
 
-  const report = JSON.parse(readFileSync(reportPath, "utf8"));
+  const report = reportPath
+    ? JSON.parse(readFileSync(reportPath, "utf8"))
+    : {
+        result: "UNKNOWN",
+        attempts: 0,
+        resultsPerAttempt: [],
+        expectedCommitSha: expectedSha,
+        baseUrl: null,
+        checks: [],
+        secretsIncluded: false,
+        generatedAt: null,
+      };
 
   const run = ghJson([`repos/${repo}/actions/runs/${runId}`]);
   const deployedAt = run.created_at ?? null;
