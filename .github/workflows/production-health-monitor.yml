@@ -1,0 +1,76 @@
+name: Production health monitor
+
+on:
+  schedule:
+    # 毎日 UTC 03:30 (JST 12:30) — deploy の 30 分後
+    - cron: "30 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE_URL: "https://kuraberu-products.pages.dev"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run health checks
+        id: health
+        run: |
+          node scripts/production-health-check.mjs 2>&1 | tee health-output.txt
+          echo "exit_code=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Create issue on failure
+        if: steps.health.outputs.exit_code != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Check if an open health-monitor issue already exists
+          existing=$(gh issue list --label health-monitor --state open --json number \
+            --jq '.[0].number // empty' 2>/dev/null)
+
+          if [ -n "$existing" ]; then
+            echo "Issue #$existing already open; adding comment"
+            gh issue comment "$existing" \
+              --body "Health check failed at $(date -u +%Y-%m-%dT%H:%M:%SZ):
+
+          $(cat health-output.txt)"
+          else
+            echo "Creating new health-monitor issue"
+            gh issue create \
+              --title "[health-monitor] Production health check failed $(date -u +%Y-%m-%d)" \
+              --label health-monitor \
+              --body "## Production health check failed
+
+          **Time**: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+          **Site**: ${{ env.SITE_URL }}
+
+          \`\`\`
+          $(cat health-output.txt)
+          \`\`\`
+
+          Please investigate and fix, then close this issue."
+          fi
+
+      - name: Comment on success (daily summary)
+        if: steps.health.outputs.exit_code == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Close any open health-monitor issues (resolved)
+          open_issues=$(gh issue list --label health-monitor --state open --json number \
+            --jq '.[].number' 2>/dev/null)
+          for issue in $open_issues; do
+            gh issue close "$issue" \
+              --comment "Health check passed. Auto-closing." 2>/dev/null || true
+          done
+          echo "Health check passed; ${open_issues:-0} issues resolved"
