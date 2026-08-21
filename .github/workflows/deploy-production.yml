@@ -221,3 +221,33 @@ jobs:
           else
             echo "::warning::No post-deploy report.json found; skipping evidence issue creation"
           fi
+
+      - name: Auto-close deploy verification issue if PASS
+        # 検証結果が PASS なら自動で issue を Close する。
+        # BLOCKER の場合は手動確認を維持する。
+        if: always()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -uo pipefail
+          report=$(find .acceptance -path '*/post-deploy-*/report.json' -type f 2>/dev/null | sort | tail -n 1)
+          if [ -z "$report" ]; then
+            echo "No report found; skipping auto-close"
+            exit 0
+          fi
+          result=$(jq -r '.result' "$report")
+          if [ "$result" != "PASS" ]; then
+            echo "Result is $result (not PASS); issue stays OPEN for manual review"
+            exit 0
+          fi
+          # Find the evidence issue for this run ID
+          issue_number=$(gh issue list --label deploy-verification --state open --json number,title \
+            --jq ".[] | select(.title | contains(\"${{ github.run_id }}\")) | .number" 2>/dev/null | head -1)
+          if [ -z "$issue_number" ]; then
+            echo "No open deploy-verification issue found for run ${{ github.run_id }}"
+            exit 0
+          fi
+          echo "Auto-closing issue #$issue_number (result=PASS)"
+          gh issue close "$issue_number" \
+            --comment "Auto-closed: post-deploy verification PASS (run ${{ github.run_id }})" 2>&1
