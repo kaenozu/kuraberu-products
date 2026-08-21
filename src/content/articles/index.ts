@@ -7,7 +7,7 @@ export type {
   GuideArticleMetadata,
   ComparisonArticleMetadata,
 } from "./types";
-export { defineArticleMetadata } from "./types";
+export { defineArticleMetadata, _setBuildReferenceDate } from "./types";
 
 export { pampersNewbornArticle } from "./pampers-newborn";
 export { merriesNewbornArticle } from "./merries-newborn";

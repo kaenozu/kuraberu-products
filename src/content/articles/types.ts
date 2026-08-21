@@ -117,8 +117,17 @@ export type ArticleMetadata = GuideArticleMetadata | ComparisonArticleMetadata;
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
-// Build-time reference date to prevent future dates
-const buildReferenceDate = new Date().toISOString().slice(0, 10);
+// Build-time reference date in Asia/Tokyo to prevent future dates.
+// UTC-based toISOString() causes false rejects between JST 00:00–08:59.
+let buildReferenceDate = new Date().toLocaleDateString("en-CA", {
+  timeZone: "Asia/Tokyo",
+});
+
+/** Override the build reference date for testing. Pass null to reset. */
+export function _setBuildReferenceDate(date: string | null): void {
+  buildReferenceDate =
+    date ?? new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Tokyo" });
+}
 
 export function defineArticleMetadata(
   metadata: ArticleMetadata,
