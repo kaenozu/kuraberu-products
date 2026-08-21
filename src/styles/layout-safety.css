@@ -1,0 +1,13 @@
+/*
+ * Full-bleed section backgrounds must not replace the centering contract from
+ * `.wrap { margin-inline: auto; }`.
+ *
+ * Keep the section box centered and extend only its painted background. The
+ * clipping prevents the oversized shadow from increasing document scrollWidth.
+ */
+.section:nth-of-type(even) {
+  margin-inline: auto;
+  padding-inline: 0;
+  box-shadow: 0 0 0 100vmax var(--section-alt);
+  clip-path: inset(0 -100vmax);
+}
