@@ -36,7 +36,7 @@ const {
   purchaseLinkStatus,
 } = Astro.props;
 
-const isVerified = purchaseLinkStatus === "verified" || purchaseLinkStatus === undefined;
+const isVerified = purchaseLinkStatus === "verified";
 const amazonAssociateTag = import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim();
 const amazonSearchUrl = amazonAssociateTag
   ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(name)}&tag=${encodeURIComponent(amazonAssociateTag)}`

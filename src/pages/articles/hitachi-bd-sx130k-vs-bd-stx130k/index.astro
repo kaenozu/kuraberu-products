@@ -106,8 +106,8 @@ const rows: KeyDiffRow[] = [
       {faqEntries.map((entry) => <details class="faq-item"><summary>{entry.question}</summary><p>{entry.answer}</p></details>)}
     </section>
     <div class="purchase-cards article-end-purchase-cards">
-      <PurchaseCard name={left.name} audience="プッシュボタン式操作パネルを確認して選びたい人向け" href={articlePurchaseLinks['hitachi-bd-sx130k-vs-bd-stx130k:left'].purchaseUrl} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name={right.name} audience="温水・タッチ操作・スチームアイロンコースを確認したい人向け" href={articlePurchaseLinks['hitachi-bd-sx130k-vs-bd-stx130k:right'].purchaseUrl} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name={left.name} audience="プッシュボタン式操作パネルを確認して選びたい人向け" href={articlePurchaseLinks['hitachi-bd-sx130k-vs-bd-stx130k:left'].purchaseUrl} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus}/>
+      <PurchaseCard name={right.name} audience="温水・タッチ操作・スチームアイロンコースを確認したい人向け" href={articlePurchaseLinks['hitachi-bd-sx130k-vs-bd-stx130k:right'].purchaseUrl} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus}/>
     </div>
     <h2>情報源一覧</h2>
     <ul class="source-list"><li><a href={left.official} target="_blank" rel="noopener noreferrer">日立 BD-SX130K 公式商品ページ</a>（2026-08-17確認）</li><li><a href={left.spec} target="_blank" rel="noopener noreferrer">日立 BD-SX130K 仕様ページ</a>（2026-08-17確認）</li><li><a href={right.official} target="_blank" rel="noopener noreferrer">日立 BD-STX130K 公式商品ページ</a>（2026-08-17確認）</li><li><a href={right.spec} target="_blank" rel="noopener noreferrer">日立 BD-STX130K 仕様ページ</a>（2026-08-17確認）</li></ul>

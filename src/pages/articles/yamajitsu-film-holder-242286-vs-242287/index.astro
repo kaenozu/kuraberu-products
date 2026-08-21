@@ -43,6 +43,7 @@ const keyDiffRows: KeyDiffRow[] = [
       right={{brand: '山崎実業 tower', line: 'フィルムフック鍋蓋ホルダー 242287', tagline: '鍋蓋を浮かせて収納するなら', image: rightImage, imageAlt: '山崎実業 フィルムフック鍋蓋ホルダー タワー 242287', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['yamajitsu-film-holder-242286-vs-242287:right'].purchaseUrl}}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
     />
     <p>まな板を2枚収納したいなら242286、直径14〜30cmの鍋蓋を収納したいなら242287を確認してください。どちらもフィルムフックで取り付け、耐荷重は2kgです。</p>
 
@@ -60,8 +61,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
     <h2>購入時の注意</h2><p>収納したいものの種類・サイズと、取り付け場所の材質を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
     <div class="purchase-cards">
-      <PurchaseCard name="山崎実業 フィルムフックまな板ホルダー タワー 242286" audience={leftAudience} href={articlePurchaseLinks['yamajitsu-film-holder-242286-vs-242287:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="山崎実業 フィルムフック鍋蓋ホルダー タワー 242287" audience={rightAudience} href={articlePurchaseLinks['yamajitsu-film-holder-242286-vs-242287:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="山崎実業 フィルムフックまな板ホルダー タワー 242286" audience={leftAudience} href={articlePurchaseLinks['yamajitsu-film-holder-242286-vs-242287:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus}/>
+      <PurchaseCard name="山崎実業 フィルムフック鍋蓋ホルダー タワー 242287" audience={rightAudience} href={articlePurchaseLinks['yamajitsu-film-holder-242286-vs-242287:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus}/>
     </div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">山崎実業 242286 公式商品ページ</a>（2026-08-19確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">山崎実業 242287 公式商品ページ</a>（2026-08-19確認）</li></ul>

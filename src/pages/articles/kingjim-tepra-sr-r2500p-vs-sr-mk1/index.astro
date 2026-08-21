@@ -65,8 +65,8 @@ const keyDiffRows: KeyDiffRow[] = [
     <h2>購入時の注意</h2><p>使いたいラベル幅、電源方式、持ち運びやすさを購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
 
     <div class="purchase-cards">
-      <PurchaseCard name="キングジム テプラ PRO SR-R2500P" audience={leftAudience} href={articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
-      <PurchaseCard name="キングジム テプラ PRO SR-MK1" audience={rightAudience} href={articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="キングジム テプラ PRO SR-R2500P" audience={leftAudience} href={articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus}/>
+      <PurchaseCard name="キングジム テプラ PRO SR-MK1" audience={rightAudience} href={articlePurchaseLinks['kingjim-tepra-sr-r2500p-vs-sr-mk1:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus}/>
     </div>
     <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
     <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">キングジム テプラ PRO SR-R2500P 公式商品ページ</a>（2026-08-14確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">キングジム テプラ PRO SR-MK1 公式商品ページ</a>（2026-08-14確認）</li></ul>

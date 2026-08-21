@@ -16,6 +16,7 @@ describe("PurchaseCard", () => {
         imagePath: "/products/thermos-jnl-s500.jpg",
         placement: "article-end",
         note: "価格・在庫は販売先でご確認ください。",
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -37,6 +38,7 @@ describe("PurchaseCard", () => {
         audience: "肌へのやさしさを優先する人向け",
         href: "https://hb.afl.rakuten.co.jp/ichiba/affiliate-example",
         productId: "pampers-premium-newborn",
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -54,6 +56,7 @@ describe("PurchaseCard", () => {
         audience: "公式商品ページを確認したい人向け",
         href: "https://a.r10.to/h5dAQI",
         productId: "babybjorn-bouncer-bliss",
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -70,6 +73,7 @@ describe("PurchaseCard", () => {
         audience: "保冷力を優先する人向け",
         href: validRakutenUrl,
         imagePath: "/products/tiger-mta-j050.jpg",
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -86,9 +90,39 @@ describe("PurchaseCard", () => {
         audience: "保冷力を優先する人向け",
         href: validRakutenUrl,
         placement: "article-end",
+        purchaseLinkStatus: "verified",
       },
     });
 
     expect(html).toContain('data-placement="article-end"');
+  });
+
+  it("hides CTA when purchaseLinkStatus is undefined (fail-closed)", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(PurchaseCard, {
+      props: {
+        name: "サーモス JNL-S500",
+        audience: "軽さを優先する人向け",
+        href: validRakutenUrl,
+      },
+    });
+
+    expect(html).not.toContain("楽天市場で型番を確認");
+    expect(html).toContain("購入先の確認中です");
+  });
+
+  it("hides CTA when purchaseLinkStatus is unverified", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(PurchaseCard, {
+      props: {
+        name: "サーモス JNL-S500",
+        audience: "軽さを優先する人向け",
+        href: validRakutenUrl,
+        purchaseLinkStatus: "unverified",
+      },
+    });
+
+    expect(html).not.toContain("楽天市場で型番を確認");
+    expect(html).toContain("購入先の確認中です");
   });
 });

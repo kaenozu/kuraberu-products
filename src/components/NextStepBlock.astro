@@ -46,7 +46,7 @@ const buyRel = (affiliate: boolean) =>
     <h2 id="next-step">迷ったら、ここから決める</h2>
   </div>
   <div class="next-step__grid">
-    {purchaseLinkStatus !== 'unverified' && purchaseLinkStatus !== 'unavailable' && leftHref ? (
+    {purchaseLinkStatus === 'verified' && leftHref ? (
       <a
         class="next-step__buy next-step__buy--left"
         href={leftHref}
@@ -69,7 +69,7 @@ const buyRel = (affiliate: boolean) =>
           : '左の商品情報が未設定です'}
       </span>
     )}
-    {purchaseLinkStatus !== 'unverified' && purchaseLinkStatus !== 'unavailable' && rightHref ? (
+    {purchaseLinkStatus === 'verified' && rightHref ? (
       <a
         class="next-step__buy next-step__buy--right"
         href={rightHref}
