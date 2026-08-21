@@ -6,6 +6,7 @@ import TrustLine from './TrustLine.astro';
 import NextStepBlock from './NextStepBlock.astro';
 import ArticleComparisonV2 from './ArticleComparisonV2.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
+import { articlePurchaseLinks } from '../lib/products';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
 
@@ -26,18 +27,33 @@ const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
 const leftSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
 const rightSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
+const staticPurchaseLinks = articlePurchaseLinks as Record<string, { purchaseUrl: string }>;
+const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchaseUrl;
+const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
-  resolvePurchaseHref({
-    keyword: seed.leftProduct,
-    requiredTerms: leftTerms,
-    fallbackUrl: leftSearchUrl,
-  }),
-  resolvePurchaseHref({
-    keyword: seed.rightProduct,
-    requiredTerms: rightTerms,
-    fallbackUrl: rightSearchUrl,
-  }),
+  leftStaticPurchaseUrl
+    ? Promise.resolve({
+        href: leftStaticPurchaseUrl,
+        isAffiliate: true,
+        product: undefined,
+      })
+    : resolvePurchaseHref({
+        keyword: seed.leftProduct,
+        requiredTerms: leftTerms,
+        fallbackUrl: leftSearchUrl,
+      }),
+  rightStaticPurchaseUrl
+    ? Promise.resolve({
+        href: rightStaticPurchaseUrl,
+        isAffiliate: true,
+        product: undefined,
+      })
+    : resolvePurchaseHref({
+        keyword: seed.rightProduct,
+        requiredTerms: rightTerms,
+        fallbackUrl: rightSearchUrl,
+      }),
 ]);
 const leftProductHref = leftResolved.href;
 const rightProductHref = rightResolved.href;
