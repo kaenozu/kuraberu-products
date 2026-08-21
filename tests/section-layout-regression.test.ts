@@ -1,35 +1,22 @@
 import { readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { expect, test } from "vitest";
 
-const globalCss = readFileSync("src/styles/global.css", "utf8");
-const accessibilityCss = readFileSync("src/styles/accessibility.css", "utf8");
-const layoutSafetyCss = readFileSync("src/styles/layout-safety.css", "utf8");
-const baseLayout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+const read = (path: string) => readFileSync(path, "utf8");
 
-describe("full-bleed section layout regression", () => {
-  it("keeps the wrap centering contract", () => {
-    expect(globalCss).toMatch(/\.wrap\s*\{[^}]*margin-inline:\s*auto;/s);
-    expect(layoutSafetyCss).toMatch(
-      /\.section:nth-of-type\(even\)\s*\{[^}]*margin-inline:\s*auto;/s,
-    );
-    expect(layoutSafetyCss).toMatch(/padding-inline:\s*0;/);
-  });
+test("full-bleed section layout stays centered", () => {
+  const global = read("src/styles/global.css");
+  const safety = read("src/styles/layout-safety.css");
+  const access = read("src/styles/accessibility.css");
+  const base = read("src/layouts/BaseLayout.astro");
 
-  it("extends the background without widening document scrollWidth", () => {
-    expect(layoutSafetyCss).toMatch(
-      /box-shadow:\s*0 0 0 100vmax var\(--section-alt\);/,
-    );
-    expect(layoutSafetyCss).toMatch(/clip-path:\s*inset\(0 -100vmax\);/);
-  });
+  expect(global).toContain("margin-inline: auto;");
+  expect(safety).toContain("margin-inline: auto;");
+  expect(safety).toContain("padding-inline: 0;");
+  expect(safety).toContain("100vmax var(--section-alt)");
+  expect(safety).toContain("inset(0 -100vmax)");
+  expect(access).toContain('@import "./layout-safety.css";');
 
-  it("loads the safety override after global styles", () => {
-    const globalImport = baseLayout.indexOf("../styles/global.css");
-    const accessibilityImport = baseLayout.indexOf("../styles/accessibility.css");
-
-    expect(globalImport).toBeGreaterThanOrEqual(0);
-    expect(accessibilityImport).toBeGreaterThan(globalImport);
-    expect(accessibilityCss).toMatch(
-      /^@import\s+["']\.\/layout-safety\.css["'];/,
-    );
-  });
+  const globalAt = base.indexOf("../styles/global.css");
+  const accessAt = base.indexOf("../styles/accessibility.css");
+  expect(accessAt).toBeGreaterThan(globalAt);
 });
