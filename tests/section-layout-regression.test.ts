@@ -8,9 +8,7 @@ const baseLayout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
 
 describe("full-bleed section layout regression", () => {
   it("keeps the wrap centering contract", () => {
-    expect(globalCss).toMatch(
-      /\.wrap\s*\{[^}]*margin-inline:\s*auto;/s,
-    );
+    expect(globalCss).toMatch(/\.wrap\s*\{[^}]*margin-inline:\s*auto;/s);
     expect(layoutSafetyCss).toMatch(
       /\.section:nth-of-type\(even\)\s*\{[^}]*margin-inline:\s*auto;/s,
     );
