@@ -1,0 +1,2352 @@
+{
+  "schemaVersion": 1,
+  "exportedAt": "2026-08-21T03:37:17.566Z",
+  "count": 81,
+  "articles": [
+    {
+      "id": "pampers-newborn",
+      "productCount": 2,
+      "path": "/articles/pampers-newborn/",
+      "title": "パンパースの新生児用、どっち？｜くらべる商品メモ",
+      "headline": "パンパースの新生児用、どっち？「肌へのいちばん」と「さらさらケア」を比較",
+      "description": "パンパース肌へのいちばんとさらさらケアの新生児用テープを、公式の商品機能と確認状況で比較",
+      "category": "育児用品",
+      "tags": [
+        "紙おむつ",
+        "新生児",
+        "パンパース"
+      ],
+      "audiences": [
+        "新生児の保護者",
+        "出産準備中の人"
+      ],
+      "uses": [
+        "毎日使う",
+        "肌への配慮を比較"
+      ],
+      "summary": "「肌へのいちばん」と「さらさらケア」を、公式情報・販売ページ・口コミの確認状況に分けて比較します。",
+      "publishedAt": "2026-07-31",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-07-31",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/pampers-premium-newborn.jpg"
+    },
+    {
+      "id": "merries-newborn",
+      "productCount": 2,
+      "path": "/articles/merries-newborn/",
+      "title": "メリーズの新生児用、どっち？｜くらべる商品メモ",
+      "headline": "メリーズの新生児用、どっち？「ファーストプレミアム」と「ずっと肌さらエアスルー」を比較",
+      "description": "メリーズ・ファーストプレミアムとずっと肌さらエアスルーの新生児用テープを、公式の商品機能と確認状況で比較",
+      "category": "育児用品",
+      "tags": [
+        "紙おむつ",
+        "新生児",
+        "メリーズ"
+      ],
+      "audiences": [
+        "新生児の保護者",
+        "出産準備中の人"
+      ],
+      "uses": [
+        "毎日使う",
+        "肌への配慮を比較"
+      ],
+      "summary": "「ファーストプレミアム」と「ずっと肌さらエアスルー」を、公式情報・販売ページ・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-08",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-08",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/merries-fp-newborn.jpg"
+    },
+    {
+      "id": "pigeon-bottle-240",
+      "productCount": 2,
+      "path": "/articles/pigeon-bottle-240/",
+      "title": "ピジョン母乳実感240ml、どっち？｜くらべる商品メモ",
+      "headline": "ピジョン「母乳実感」240ml、どっち？「耐熱ガラス製」と「プラスチック製（PPSU）」を比較",
+      "description": "ピジョン母乳実感240mlの耐熱ガラス製とプラスチック製（PPSU）を、公式の商品情報と素材の特徴で比較",
+      "category": "育児用品",
+      "tags": [
+        "哺乳びん",
+        "240ml",
+        "ピジョン"
+      ],
+      "audiences": [
+        "出産準備中の人",
+        "新生児の保護者"
+      ],
+      "uses": [
+        "授乳の準備",
+        "素材で選ぶ"
+      ],
+      "summary": "「耐熱ガラス製」と「プラスチック製（PPSU）」を、公式情報・素材の特長・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-09",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-09",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/pigeon-bottle-glass240.jpg"
+    },
+    {
+      "id": "pigeon-slim-240",
+      "productCount": 2,
+      "path": "/articles/pigeon-slim-240/",
+      "title": "ピジョン母乳実感 vs スリムタイプ、どっち？｜くらべる商品メモ",
+      "headline": "ピジョンの哺乳びん、どっち？「母乳実感240ml」と「スリムタイプ240ml」を比較",
+      "description": "ピジョン母乳実感240mlとスリムタイプ240mlを、公式の商品情報・乳首体系・形状で比較",
+      "category": "育児用品",
+      "tags": [
+        "哺乳びん",
+        "240ml",
+        "ピジョン"
+      ],
+      "audiences": [
+        "出産準備中の人",
+        "新生児の保護者"
+      ],
+      "uses": [
+        "授乳の準備",
+        "シリーズで選ぶ"
+      ],
+      "summary": "「母乳実感」と「スリムタイプ」の240mlを、公式情報・乳首体系・形状・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-09",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-09",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/pigeon-bottle-glass240.jpg"
+    },
+    {
+      "id": "moony-m",
+      "productCount": 2,
+      "path": "/articles/moony-m/",
+      "title": "ムーニーのテープ、どっち？｜くらべる商品メモ",
+      "headline": "ムーニーのテープ、どっち？「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を比較",
+      "description": "ムーニーのテープタイプ2ライン、「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式の商品情報とサイズ別仕様で比較",
+      "category": "育児用品",
+      "tags": [
+        "紙おむつ",
+        "テープタイプ",
+        "ムーニー"
+      ],
+      "audiences": [
+        "乳児の保護者",
+        "どのおむつを買うか迷っている人"
+      ],
+      "uses": [
+        "毎日使う",
+        "サイズで選ぶ",
+        "機能で選ぶ"
+      ],
+      "summary": "「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式情報・サイズ別仕様・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-09",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-09",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/moony-teishigeki-m.jpg"
+    },
+    {
+      "id": "merries-pants",
+      "productCount": 2,
+      "path": "/articles/merries-pants/",
+      "title": "メリーズのパンツ、どっち？｜くらべる商品メモ",
+      "headline": "メリーズのパンツ、どっち？「ファーストプレミアム」と「ずっと肌さらエアスルー」を比較",
+      "description": "メリーズ・ファーストプレミアムとずっと肌さらエアスルーのパンツタイプを、公式の商品機能とサイズ展開で比較",
+      "category": "育児用品",
+      "tags": [
+        "紙おむつ",
+        "パンツタイプ",
+        "メリーズ"
+      ],
+      "audiences": [
+        "パンツタイプへの切り替えを検討中の保護者"
+      ],
+      "uses": [
+        "毎日使う",
+        "肌への配慮を比較"
+      ],
+      "summary": "「ファーストプレミアム」と「ずっと肌さらエアスルー」のパンツタイプを、公式情報・販売ページ・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-10",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-10",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/merries-fp-newborn.jpg"
+    },
+    {
+      "id": "shupot",
+      "productCount": 2,
+      "path": "/articles/shupot/",
+      "title": "ピジョンの鼻吸い器、どっち？｜くらべる商品メモ",
+      "headline": "ピジョンの鼻吸い器、どっち？「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を比較",
+      "description": "ピジョン電動鼻吸い器シュポットと手動鼻吸い器シュポットポンプを、公式情報・電源・お手入れ・価格で比較",
+      "category": "育児用品",
+      "tags": [
+        "鼻吸い器",
+        "ピジョン",
+        "シュポット"
+      ],
+      "audiences": [
+        "乳児の保護者",
+        "鼻吸い器の購入を検討中の人"
+      ],
+      "uses": [
+        "鼻水の吸引",
+        "電源・価格で選ぶ"
+      ],
+      "summary": "「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を、公式情報・お手入れ・価格・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-10",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-10",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/shupot-dendo.jpg"
+    },
+    {
+      "id": "babybjorn",
+      "productCount": 2,
+      "path": "/articles/babybjorn/",
+      "title": "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
+      "headline": "ベビービョルンの抱っこひも、どっち？「HARMONY」と「MINI」を比較",
+      "description": "ベビービョルン HARMONY（新生児〜36ヶ月・4WAY）と MINI（新生児〜12ヶ月・2WAY）を、公式の比較表・対象月齢・抱っこの種類・価格で比較",
+      "category": "育児用品",
+      "tags": [
+        "抱っこひも",
+        "ベビービョルン",
+        "新生児"
+      ],
+      "audiences": [
+        "新生児の保護者",
+        "出産準備中の人",
+        "抱っこひもの購入を検討中の人"
+      ],
+      "uses": [
+        "毎日使う",
+        "使える期間で選ぶ",
+        "抱っこの種類で選ぶ"
+      ],
+      "summary": "「HARMONY」と「MINI」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-10",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-10",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/babybjorn-harmony.jpg"
+    },
+    {
+      "id": "babybjorn-onekai",
+      "productCount": 2,
+      "path": "/articles/babybjorn-onekai/",
+      "title": "ベビービョルンの抱っこひも、どっち？｜くらべる商品メモ",
+      "headline": "ベビービョルンの抱っこひも、どっち？「ONE KAI」と「MOVE」を比較",
+      "description": "ベビービョルン ONE KAI（新生児〜36ヶ月・4WAY）と MOVE（新生児〜15ヶ月・2WAY・フルメッシュ）を、公式の比較表・対象月齢・抱っこの種類・価格で比較",
+      "category": "育児用品",
+      "tags": [
+        "抱っこひも",
+        "ベビービョルン",
+        "新生児"
+      ],
+      "audiences": [
+        "新生児の保護者",
+        "出産準備中の人",
+        "抱っこひもの購入を検討中の人"
+      ],
+      "uses": [
+        "毎日使う",
+        "使える期間で選ぶ",
+        "抱っこの種類で選ぶ"
+      ],
+      "summary": "「ONE KAI」と「MOVE」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-10",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-10",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/babybjorn-onekai.jpg"
+    },
+    {
+      "id": "babybjorn-bouncer",
+      "productCount": 2,
+      "path": "/articles/babybjorn-bouncer/",
+      "title": "ベビービョルンのバウンサー、どっち？｜くらべる商品メモ",
+      "headline": "ベビービョルンのバウンサー、どっち？「Bliss」と「バランスソフト」を比較",
+      "description": "ベビービョルン バウンサー Bliss（最新モデル・20種類以上のバリエーション）と バランスソフト（2トーン生地）を、公式のガイド・対象月齢・シート素材・価格で比較",
+      "category": "育児用品",
+      "tags": [
+        "バウンサー",
+        "ベビービョルン",
+        "新生児"
+      ],
+      "audiences": [
+        "新生児の保護者",
+        "出産準備中の人",
+        "バウンサーの購入を検討中の人"
+      ],
+      "uses": [
+        "毎日使う",
+        "デザインで選ぶ",
+        "長く使う"
+      ],
+      "summary": "「Bliss」と「バランスソフト」を、ベビービョルン公式のガイド・対象月齢・シート素材・価格・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-10",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-10",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/babybjorn-bouncer-bliss.jpg"
+    },
+    {
+      "id": "babybjorn-cradle",
+      "productCount": 2,
+      "path": "/articles/babybjorn-cradle/",
+      "title": "ゆりかご型ベビーベッド、どっち？｜くらべる商品メモ",
+      "headline": "「ベビービョルン クレードル」と「アップリカ ココネルエアー」を比較",
+      "description": "ベビービョルン クレードル（新生児〜6か月・手動ゆりかご・49,500円）と アップリカ ココネルエアー AB（新生児〜24カ月・折りたたみ・サークル兼用・29,700円）を、公式の案内・対象期間・サイズ・価格で比較",
+      "category": "育児用品",
+      "tags": [
+        "ベビーベッド",
+        "ゆりかご",
+        "ベビービョルン",
+        "アップリカ",
+        "新生児"
+      ],
+      "audiences": [
+        "新生児の保護者",
+        "出産準備中の人",
+        "ベビーベッドの購入を検討中の人"
+      ],
+      "uses": [
+        "毎日使う",
+        "長く使う",
+        "持ち運ぶ"
+      ],
+      "summary": "「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、各メーカー公式の案内・対象期間・サイズ・価格・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-10",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-10",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/babybjorn-cradle.jpg"
+    },
+    {
+      "id": "babybjorn-potty",
+      "productCount": 2,
+      "path": "/articles/babybjorn-potty/",
+      "title": "トイレトレーニング、どっち？｜くらべる商品メモ",
+      "headline": "ベビービョルンのポッティ、どっち？「スマートポッティ」と「ポッティチェア」を比較",
+      "description": "ベビービョルン スマートポッティ（収納式・3,080円）と ポッティチェア（イス型・中桶付き・4,180円）を、公式の案内・形状・サイズ・価格で比較",
+      "category": "育児用品",
+      "tags": [
+        "トイレトレーニング",
+        "おまる",
+        "ベビービョルン",
+        "1歳",
+        "2歳"
+      ],
+      "audiences": [
+        "1〜2歳の保護者",
+        "トイレトレーニングを始める人",
+        "おまるの購入を検討中の人"
+      ],
+      "uses": [
+        "毎日使う",
+        "場所を取らない",
+        "長く使う"
+      ],
+      "summary": "「スマートポッティ」と「ポッティチェア」を、ベビービョルン公式の商品ページ・形状・サイズ・価格・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-10",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/babybjorn-smart-potty.jpg"
+    },
+    {
+      "id": "pigeon-bottle-160-240",
+      "productCount": 2,
+      "path": "/articles/pigeon-bottle-160-240/",
+      "title": "ピジョン母乳実感160ml vs 240ml、どっち？｜くらべる商品メモ",
+      "headline": "ピジョンの哺乳びん、どっち？「母乳実感160ml」と「240ml」を比較",
+      "description": "ピジョン母乳実感160mlと240mlを、公式の商品情報・付属乳首・対象月齢目安・価格で比較",
+      "category": "育児用品",
+      "tags": [
+        "哺乳びん",
+        "160ml",
+        "240ml",
+        "ピジョン"
+      ],
+      "audiences": [
+        "出産準備中の人",
+        "新生児の保護者"
+      ],
+      "uses": [
+        "授乳の準備",
+        "容量で選ぶ"
+      ],
+      "summary": "「160ml」と「240ml」を、公式情報・付属乳首・対象月齢目安・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-11",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-11",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/pigeon-bottle-160-240-160ml.jpg"
+    },
+    {
+      "id": "combi-the-s-plus-vs-premium",
+      "productCount": 2,
+      "path": "/articles/combi-the-s-plus-vs-premium/",
+      "title": "コンビ THE S plus と THE S premium、どっち？｜くらべる商品メモ",
+      "headline": "コンビのチャイルドシート、どっち？「THE S plus」と「THE S premium」を比較",
+      "description": "コンビ THE S plus と THE S premiumを、公式の対象身長・使用期間・回転・固定方法・重量・価格で比較",
+      "category": "チャイルドシート",
+      "tags": [
+        "チャイルドシート",
+        "コンビ",
+        "新生児",
+        "ISOFIX"
+      ],
+      "audiences": [
+        "出産準備中の人",
+        "チャイルドシートを買い替えたい人"
+      ],
+      "uses": [
+        "新生児から使う",
+        "長く使う",
+        "車への乗せ降ろし"
+      ],
+      "summary": "THE S plusとTHE S premiumを、公式の対象身長・使用期間・回転・固定方法・重量・価格に分けて比較します。",
+      "publishedAt": "2026-08-12",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-12",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/the-s-plus.jpg"
+    },
+    {
+      "id": "tiger-jpv-l100-vs-jpv-m100",
+      "productCount": 2,
+      "path": "/articles/tiger-jpv-l100-vs-jpv-m100/",
+      "title": "タイガー JPV-L100 と JPV-M100、どっち？｜くらべる商品メモ",
+      "headline": "タイガーの炊飯器、どっち？「JPV-L100」と「JPV-M100」を比較",
+      "description": "タイガー JPV-L100とJPV-M100を、公式の加熱方式・容量・サイズ・質量・価格で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "炊飯器",
+        "タイガー",
+        "圧力IH"
+      ],
+      "audiences": [
+        "炊飯器を買い替えたい人",
+        "毎日の炊飯を見直したい人"
+      ],
+      "uses": [
+        "毎日炊飯する",
+        "価格と機能で選ぶ",
+        "お手入れの負担を比べる"
+      ],
+      "summary": "JPV-L100とJPV-M100を、タイガー公式の加熱方式・容量・サイズ・質量・価格に分けて比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/tiger-jpv-l100.jpg"
+    },
+    {
+      "id": "tiger-pct-a120-vs-pct-a150",
+      "productCount": 2,
+      "path": "/articles/tiger-pct-a120-vs-pct-a150/",
+      "title": "タイガー PCT-A120 と PCT-A150、どっち？｜くらべる商品メモ",
+      "headline": "タイガーの電気ケトル、どっち？「PCT-A120」と「PCT-A150」を比較",
+      "description": "タイガー PCT-A120とPCT-A150を、公式の容量・質量・消費電力・沸とう時間で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "電気ケトル",
+        "タイガー",
+        "容量比較"
+      ],
+      "audiences": [
+        "大容量の電気ケトルを選びたい人",
+        "本体の軽さを比べたい人"
+      ],
+      "uses": [
+        "朝の湯沸かし",
+        "家族分の湯沸かし",
+        "来客時"
+      ],
+      "summary": "PCT-A120とPCT-A150を、タイガー公式の商品ページで確認できる容量・質量・消費電力・沸とう時間に分けて比較します。",
+      "publishedAt": "2026-08-17",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-17",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/tiger-pct-a120.jpg"
+    },
+    {
+      "id": "zojirushi-ec-kv50-vs-ec-ma60",
+      "productCount": 2,
+      "path": "/articles/zojirushi-ec-kv50-vs-ec-ma60/",
+      "title": "象印 EC-KV50 と EC-MA60、どっち？｜くらべる商品メモ",
+      "headline": "象印のコーヒーメーカー、どっち？「EC-KV50」と「EC-MA60」を比較",
+      "description": "象印 EC-KV50とEC-MA60を、公式の容量・抽出先・濃度調節・サイズ・質量で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "コーヒーメーカー",
+        "象印",
+        "キッチン家電"
+      ],
+      "audiences": [
+        "コーヒーメーカーを選びたい人",
+        "抽出先や濃さで選びたい人"
+      ],
+      "uses": [
+        "自宅でコーヒーを淹れる",
+        "抽出先を選ぶ",
+        "置き場所で選ぶ"
+      ],
+      "summary": "EC-KV50とEC-MA60を、象印公式の容量・抽出先・濃度調節・サイズ・質量に分けて比較します。",
+      "publishedAt": "2026-08-17",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-17",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/zojirushi-ec-kv50.png"
+    },
+    {
+      "id": "zojirushi-eq-aa22-vs-eq-sa22",
+      "productCount": 2,
+      "path": "/articles/zojirushi-eq-aa22-vs-eq-sa22/",
+      "title": "象印 EQ-AA22 と EQ-SA22、どっち？｜くらべる商品メモ",
+      "headline": "象印のオーブントースター、どっち？「EQ-AA22」と「EQ-SA22」を比較",
+      "description": "象印 EQ-AA22とEQ-SA22を、公式のタイマー・外形寸法・庫内寸法・質量で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "オーブントースター",
+        "象印",
+        "キッチン家電"
+      ],
+      "audiences": [
+        "オーブントースターを選びたい人",
+        "設置寸法とタイマーで比べたい人"
+      ],
+      "uses": [
+        "パンを焼く",
+        "設置場所で選ぶ",
+        "タイマーで選ぶ"
+      ],
+      "summary": "EQ-AA22とEQ-SA22を、象印公式の商品ページで確認できるタイマー・サイズ・庫内寸法・質量に分けて比較します。",
+      "publishedAt": "2026-08-19",
+      "modifiedAt": "2026-08-19",
+      "productInfoCheckedAt": "2026-08-19",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/zojirushi-eq-aa22.png"
+    },
+    {
+      "id": "panasonic-mc-sb55k-vs-mc-sb35k",
+      "productCount": 2,
+      "path": "/articles/panasonic-mc-sb55k-vs-mc-sb35k/",
+      "title": "パナソニック MC-SB55K と MC-SB35K、どっち？｜くらべる商品メモ",
+      "headline": "パナソニックの掃除機、どっち？「MC-SB55K」と「MC-SB35K」を比較",
+      "description": "パナソニック MC-SB55KとMC-SB35Kを、公式の質量・センサー・充電スタンド・ブラシで比較",
+      "category": "生活家電",
+      "tags": [
+        "掃除機",
+        "パナソニック",
+        "コードレス"
+      ],
+      "audiences": [
+        "掃除機を買い替えたい人",
+        "コードレス掃除機を選びたい人"
+      ],
+      "uses": [
+        "毎日掃除する",
+        "軽さで選ぶ",
+        "収納方法で選ぶ"
+      ],
+      "summary": "MC-SB55KとMC-SB35Kを、パナソニック公式の質量・センサー・充電スタンド・ブラシに分けて比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/panasonic-mc-sb55k.png"
+    },
+    {
+      "id": "panasonic-eh-ne7m-vs-eh-ne5m",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-ne7m-vs-eh-ne5m/",
+      "title": "パナソニック EH-NE7M と EH-NE5M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニックのドライヤー、どっち？「EH-NE7M」と「EH-NE5M」を比較",
+      "description": "パナソニック イオニティ EH-NE7MとEH-NE5Mを、公式のミネラル機能・イオン・低温ケア・速乾で比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ヘアケア"
+      ],
+      "audiences": [
+        "ドライヤーを買い替えたい人",
+        "公式情報で機能差を確認したい人"
+      ],
+      "uses": [
+        "毎日のヘアドライ",
+        "低温ケアを使う",
+        "大風量で乾かす"
+      ],
+      "summary": "EH-NE7MとEH-NE5Mを、パナソニック公式のミネラル機能・マイナスイオン・低温ケアモード・大風量の案内で比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/panasonic-eh-ne7m.png"
+    },
+    {
+      "id": "tefal-ko5901jp-vs-ko8601j0",
+      "productCount": 2,
+      "path": "/articles/tefal-ko5901jp-vs-ko8601j0/",
+      "title": "ティファール ジャスティン ロックとアプレシア ロック コントロール、どっち？｜くらべる商品メモ",
+      "headline": "ティファールの電気ケトル、どっち？「KO5901JP」と「KO8601J0」を比較",
+      "description": "ティファール ジャスティン ロック KO5901JPとアプレシア ロック コントロール KO8601J0を、公式の容量・重量・温度調節・保温機能で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "電気ケトル",
+        "ティファール",
+        "温度調節"
+      ],
+      "audiences": [
+        "電気ケトルを買い替えたい人",
+        "容量と温度調節機能で選びたい人"
+      ],
+      "uses": [
+        "毎日使う",
+        "大容量で沸かす",
+        "温度を使い分ける"
+      ],
+      "summary": "KO5901JPとKO8601J0を、ティファール公式の容量・重量・温度調節・保温などの仕様に分けて比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/tefal-ko5901jp.jpg"
+    },
+    {
+      "id": "sharp-kc-s50-vs-fu-s50",
+      "productCount": 2,
+      "path": "/articles/sharp-kc-s50-vs-fu-s50/",
+      "title": "シャープ KC-S50とFU-S50、どっち？｜くらべる商品メモ",
+      "headline": "シャープの空気清浄機、どっち？「KC-S50」と「FU-S50」を比較",
+      "description": "シャープ KC-S50とFU-S50を、公式の加湿・サイズ・重量・適用畳数・運転音・センサーで比較",
+      "category": "生活家電",
+      "tags": [
+        "空気清浄機",
+        "加湿空気清浄機",
+        "シャープ"
+      ],
+      "audiences": [
+        "空気清浄機を選びたい人",
+        "加湿機能の有無で比較したい人"
+      ],
+      "uses": [
+        "リビングで使う",
+        "空気清浄と加湿を比較"
+      ],
+      "summary": "KC-S50とFU-S50を、シャープ公式の加湿機能・サイズ・重量・適用畳数・運転音・センサーに分けて比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/sharp-kc-s50.jpg"
+    },
+    {
+      "id": "panasonic-ne-fl1a-vs-ne-fl1c",
+      "productCount": 2,
+      "path": "/articles/panasonic-ne-fl1a-vs-ne-fl1c/",
+      "title": "パナソニック NE-FL1A と NE-FL1C、どっち？｜くらべる商品メモ",
+      "headline": "パナソニックの単機能レンジ、どっち？「NE-FL1A」と「NE-FL1C」を比較",
+      "description": "パナソニック NE-FL1AとNE-FL1Cを、公式の容量・庫内寸法・質量・自動メニュー数で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "電子レンジ",
+        "単機能レンジ",
+        "パナソニック"
+      ],
+      "audiences": [
+        "単機能レンジを選びたい人",
+        "公式仕様で機種を比較したい人"
+      ],
+      "uses": [
+        "毎日使う",
+        "軽さで選ぶ",
+        "庫内幅で選ぶ"
+      ],
+      "summary": "NE-FL1AとNE-FL1Cを、パナソニック公式の容量・庫内寸法・質量・自動メニュー数・確認状況に分けて比較します。",
+      "publishedAt": "2026-08-15",
+      "modifiedAt": "2026-08-15",
+      "productInfoCheckedAt": "2026-08-15",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-ne-fl1a.jpg"
+    },
+    {
+      "id": "panasonic-f-px60c-vs-f-px70c",
+      "productCount": 2,
+      "path": "/articles/panasonic-f-px60c-vs-f-px70c/",
+      "title": "パナソニック F-PX60C と F-PX70C、どっち？｜くらべる商品メモ",
+      "headline": "パナソニックの空気清浄機、どっち？「F-PX60C」と「F-PX70C」を比較",
+      "description": "パナソニック F-PX60CとF-PX70Cを、公式の適用床面積・清浄時間・寸法・重量・運転音・消費電力で比較",
+      "category": "生活家電",
+      "tags": [
+        "空気清浄機",
+        "パナソニック",
+        "ナノイー"
+      ],
+      "audiences": [
+        "空気清浄機を選びたい人",
+        "設置幅と清浄性能を比べたい人"
+      ],
+      "uses": [
+        "リビングで使う",
+        "設置場所で選ぶ",
+        "空気清浄の仕様を比べる"
+      ],
+      "summary": "F-PX60CとF-PX70Cを、パナソニック公式の適用床面積・清浄時間・寸法・重量・運転音・消費電力に分けて比較します。",
+      "publishedAt": "2026-08-18",
+      "modifiedAt": "2026-08-18",
+      "productInfoCheckedAt": "2026-08-18",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-f-px60c.png"
+    },
+    {
+      "id": "panasonic-es-lt4b-vs-es-lv7j",
+      "productCount": 2,
+      "path": "/articles/panasonic-es-lt4b-vs-es-lv7j/",
+      "title": "パナソニック ES-LT4B と ES-LV7J、どっち？｜くらべる商品メモ",
+      "headline": "パナソニックのラムダッシュ、どっち？「ES-LT4B」と「ES-LV7J」を比較",
+      "description": "パナソニック ES-LT4BとES-LV7Jを、公式の刃数・サイズ・質量・充電方式・防水仕様で比較",
+      "category": "美容家電",
+      "tags": [
+        "シェーバー",
+        "ラムダッシュ",
+        "パナソニック"
+      ],
+      "audiences": [
+        "3枚刃の軽い本体を選びたい人",
+        "5枚刃と洗浄充電器を確認したい人"
+      ],
+      "uses": [
+        "毎日ひげを剃る",
+        "刃数で選ぶ",
+        "本体重量で選ぶ"
+      ],
+      "summary": "ES-LT4BとES-LV7Jを、パナソニック公式の刃数・寸法・質量・充電方式・防水仕様に分けて比較します。",
+      "publishedAt": "2026-08-19",
+      "modifiedAt": "2026-08-19",
+      "productInfoCheckedAt": "2026-08-19",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-es-lt4b.jpg"
+    },
+    {
+      "id": "thermos-tiger-bottle",
+      "productCount": 2,
+      "path": "/articles/thermos-tiger-bottle/",
+      "title": "サーモスとタイガーの水筒、どっち？｜くらべる商品メモ",
+      "headline": "サーモスとタイガーの水筒、どっち？「JNL-S500」と「MTA-J050」を比較",
+      "description": "サーモスJNL-S500とタイガーMTA-J050の0.5L水筒を、公式の保温・保冷効力・サイズ・お手入れ方法で比較",
+      "category": "生活雑貨",
+      "tags": [
+        "水筒",
+        "ステンレスボトル",
+        "サーモス",
+        "タイガー"
+      ],
+      "audiences": [
+        "水筒を買い替えたい人",
+        "夏の保冷を重視する人"
+      ],
+      "uses": [
+        "毎日使う",
+        "保温・保冷を比較"
+      ],
+      "summary": "「JNL-S500」と「MTA-J050」を、公式の保温・保冷効力とサイズ・お手入れ方法に分けて比較します。",
+      "publishedAt": "2026-08-12",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-12",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/thermos-jnl-s500.jpg"
+    },
+    {
+      "id": "yamazaki-tower-desk-panel-vs-pen-stand",
+      "productCount": 2,
+      "path": "/articles/yamazaki-tower-desk-panel-vs-pen-stand/",
+      "title": "山崎実業 tower デスク横パネルとペンスタンド、どっち？｜くらべる商品メモ",
+      "headline": "山崎実業 towerの収納、どっち？「デスク横トレー付きスチールパネル」と「マグネットペンスタンド」を比較",
+      "description": "山崎実業 towerのデスク横トレー付きスチールパネルとマグネットペンスタンドを、公式のサイズ・重量・耐荷重・設置方法で比較",
+      "category": "収納用品",
+      "tags": [
+        "山崎実業",
+        "tower",
+        "デスク収納"
+      ],
+      "audiences": [
+        "デスク周りを整理したい人",
+        "towerの収納用品を比較したい人"
+      ],
+      "uses": [
+        "デスク横に収納",
+        "ペンを立てて収納"
+      ],
+      "summary": "デスク横トレー付きスチールパネルとマグネットペンスタンドを、公式情報・確認状況・型番検索に分けて比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/yamazaki-tower-desk-panel.jpg"
+    },
+    {
+      "id": "yamazaki-free-broom-32-vs-45",
+      "productCount": 2,
+      "path": "/articles/yamazaki-free-broom-32-vs-45/",
+      "title": "山崎産業 JS自由箒32 と 45、どっち？｜くらべる商品メモ",
+      "headline": "山崎産業のJS自由箒、32と45を比較",
+      "description": "山崎産業 JS自由箒32と45を、公式の使用サイズ・重量・材質・個装ケースサイズで比較",
+      "category": "生活雑貨",
+      "tags": [
+        "山崎産業",
+        "ほうき",
+        "清掃用品"
+      ],
+      "audiences": [
+        "ほうきを選びたい人",
+        "掃く幅と重量を比べたい人"
+      ],
+      "uses": [
+        "床を掃く",
+        "清掃用品を比較する"
+      ],
+      "summary": "JS自由箒32と45を、山崎産業公式の仕様と確認状況に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/yamazaki-free-broom-32.jpg"
+    },
+    {
+      "id": "yamazaki-condor-wagon-vs-self-wagon",
+      "productCount": 2,
+      "path": "/articles/yamazaki-condor-wagon-vs-self-wagon/",
+      "title": "山崎産業 コンドル ワゴン、どっち？｜くらべる商品メモ",
+      "headline": "山崎産業 コンドルのワゴン、どっち？「サイドメッシュワゴンII」と「セルフワゴンII」を比較",
+      "description": "山崎産業 コンドル FU943-000X-MBとFU944-000X-MBを、公式のサイズ・重量・材質・商品説明で比較",
+      "category": "収納用品",
+      "tags": [
+        "山崎産業",
+        "コンドル",
+        "ワゴン"
+      ],
+      "audiences": [
+        "荷物置きワゴンを選びたい人",
+        "店舗や施設の収納用品を比較したい人"
+      ],
+      "uses": [
+        "荷物を置く",
+        "ワゴンを比較する"
+      ],
+      "summary": "コンドル サイドメッシュワゴンIIとセルフワゴンIIを、山崎産業公式の仕様と確認状況に分けて比較します。",
+      "publishedAt": "2026-08-14",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-14",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/yamazaki-condor-fu943-000x-mb.jpg"
+    },
+    {
+      "id": "yamazaki-dust-wagon-45l-2division-vs-3division",
+      "productCount": 2,
+      "path": "/articles/yamazaki-dust-wagon-45l-2division-vs-3division/",
+      "title": "山崎実業 45L分別ダストワゴン、どっち？｜くらべる商品メモ",
+      "headline": "山崎実業の45L分別ダストワゴン、2分別と3分別を比較",
+      "description": "山崎実業の蓋付き目隠し分別ダストワゴン45Lを、公式の分別数・設置幅・重量・耐荷重で比較",
+      "category": "キッチン・ごみ箱収納",
+      "tags": [
+        "山崎実業",
+        "ダストワゴン",
+        "ごみ箱"
+      ],
+      "audiences": [
+        "ごみ箱の設置幅を抑えたい人",
+        "45L袋を複数に分別したい人"
+      ],
+      "uses": [
+        "ごみを分別する",
+        "キッチン周りに置く",
+        "設置幅を確認する"
+      ],
+      "summary": "山崎実業の45L分別ダストワゴン2分別・3分別を、公式の仕様と確認状況に分けて比較します。",
+      "publishedAt": "2026-08-15",
+      "modifiedAt": "2026-08-15",
+      "productInfoCheckedAt": "2026-08-15",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/yamazaki-dust-wagon-45l-2division.jpg"
+    },
+    {
+      "id": "zojirushi-ck-pa08-vs-ck-dc08",
+      "productCount": 2,
+      "path": "/articles/zojirushi-ck-pa08-vs-ck-dc08/",
+      "title": "象印 CK-PA08 と CK-DC08、どっち？｜くらべる商品メモ",
+      "headline": "象印の電気ケトル、どっち？「CK-PA08」と「CK-DC08」を比較",
+      "description": "象印 CK-PA08とCK-DC08を、公式の容量・沸とう時間・安全設計・ほこり対策・手入れ方法で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "電気ケトル",
+        "象印",
+        "キッチン家電"
+      ],
+      "audiences": [
+        "電気ケトルを選びたい人",
+        "安全設計や手入れ方法を比べたい人"
+      ],
+      "uses": [
+        "毎日のお湯沸かし",
+        "キッチンで使う",
+        "安全設計を確認する"
+      ],
+      "summary": "CK-PA08とCK-DC08を、象印公式の商品ページで確認できる仕様・安全設計・手入れ方法に分けて比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/zojirushi-ck-pa08.webp"
+    },
+    {
+      "id": "tefal-dv4030j0-vs-dv8070j0",
+      "productCount": 2,
+      "path": "/articles/tefal-dv4030j0-vs-dv8070j0/",
+      "title": "ティファール DV4030J0 と DV8070J0、どっち？｜くらべる商品メモ",
+      "headline": "ティファールの衣類スチーマー、どっち？「DV4030J0」と「DV8070J0」を比較",
+      "description": "ティファール DV4030J0とDV8070J0を、公式のスチーム量・立ち上がり・連続運転・水タンク容量・かけ面で比較",
+      "category": "衣類ケア",
+      "tags": [
+        "衣類スチーマー",
+        "ティファール",
+        "衣類ケア"
+      ],
+      "audiences": [
+        "衣類スチーマーを選びたい人",
+        "スチーム量や準備時間を比べたい人"
+      ],
+      "uses": [
+        "衣類のシワ伸ばし",
+        "出かける前の衣類ケア",
+        "アイロンとして使う"
+      ],
+      "summary": "DV4030J0とDV8070J0を、ティファール公式の商品ページで確認できるスチーム量・立ち上がり・連続運転・かけ面に分けて比較します。",
+      "publishedAt": "2026-08-13",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-13",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/tefal-dv4030j0.jpg"
+    },
+    {
+      "id": "kingjim-tepra-sr-r2500p-vs-sr-mk1",
+      "productCount": 2,
+      "path": "/articles/kingjim-tepra-sr-r2500p-vs-sr-mk1/",
+      "title": "キングジム テプラ PRO SR-R2500P と SR-MK1、どっち？｜くらべる商品メモ",
+      "headline": "キングジム「テプラ」PRO、どっち？「SR-R2500P」と「SR-MK1」を比較",
+      "description": "キングジム テプラ PRO SR-R2500PとSR-MK1を、公式の対応テープ幅・電源・寸法・質量・印刷幅で比較",
+      "category": "デスク用品",
+      "tags": [
+        "テプラ",
+        "ラベルライター",
+        "キングジム",
+        "デスク用品"
+      ],
+      "audiences": [
+        "ラベルライターを選びたい人",
+        "対応テープ幅や電源方式で比べたい人"
+      ],
+      "uses": [
+        "収納ラベルを作る",
+        "仕事用品を整理する",
+        "スマホからラベルを作る"
+      ],
+      "summary": "SR-R2500PとSR-MK1を、キングジム公式の商品ページで確認できる対応テープ幅・電源・寸法・質量・印刷幅に分けて比較します。",
+      "publishedAt": "2026-08-14",
+      "modifiedAt": "2026-08-14",
+      "productInfoCheckedAt": "2026-08-14",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/kingjim-sr-r2500p.jpg"
+    },
+    {
+      "id": "panasonic-f-yhvx120-vs-f-yhvx90",
+      "productCount": 2,
+      "path": "/articles/panasonic-f-yhvx120-vs-f-yhvx90/",
+      "title": "パナソニック F-YHVX120とF-YHVX90、どっち？｜くらべる商品メモ",
+      "headline": "パナソニックの衣類乾燥除湿機、どっち？「F-YHVX120」と「F-YHVX90」を比較",
+      "description": "パナソニック F-YHVX120とF-YHVX90を、公式のタンク容量・木造対応畳数・重量・寸法・強運転音で比較",
+      "category": "生活家電",
+      "tags": [
+        "衣類乾燥除湿機",
+        "除湿機",
+        "パナソニック"
+      ],
+      "audiences": [
+        "衣類乾燥除湿機を選びたい人",
+        "タンク容量や設置サイズで比較したい人"
+      ],
+      "uses": [
+        "部屋干し",
+        "衣類を乾燥する",
+        "除湿機を比較する"
+      ],
+      "summary": "F-YHVX120とF-YHVX90を、パナソニック公式のタンク容量・木造対応畳数・重量・寸法・強運転音に分けて比較します。",
+      "publishedAt": "2026-08-15",
+      "modifiedAt": "2026-08-15",
+      "productInfoCheckedAt": "2026-08-15",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/f-yhvx120.jpg"
+    },
+    {
+      "id": "panasonic-baby-monitor-kx-hc705",
+      "productCount": 1,
+      "path": "/articles/panasonic-baby-monitor-kx-hc705/",
+      "title": "パナソニック ベビーモニター KX-HC705、向いている人｜くらべる商品メモ",
+      "headline": "パナソニック ベビーモニター KX-HC705はどんな人向け？公式情報から整理",
+      "description": "パナソニック ベビーモニター KX-HC705の機能を、公式ページで確認できる情報から単品で整理",
+      "category": "育児用品",
+      "tags": [
+        "ベビーモニター",
+        "見守り",
+        "パナソニック"
+      ],
+      "audiences": [
+        "乳幼児の保護者",
+        "別室で家事をしながら見守りたい人"
+      ],
+      "uses": [
+        "赤ちゃんの見守り"
+      ],
+      "summary": "KX-HC705はDECT方式で接続設定が不要・音/動作/温度の3センサーを搭載した単品ベビーモニター。公式情報を確認して整理します。",
+      "publishedAt": "2026-08-14",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-14",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-kx-hc705.jpg"
+    },
+    {
+      "id": "panasonic-eh-na9m-guide",
+      "productCount": 1,
+      "path": "/articles/panasonic-eh-na9m-guide/",
+      "title": "パナソニック ナノケア EH-NA9M、向いている人｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9Mはどんな人向け？公式情報から整理",
+      "description": "パナソニック ナノケア EH-NA9Mの機能・モード・風量・質量を、公式ページで確認できる情報から単品で整理",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "ナノケア",
+        "パナソニック"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "複数のモードを使い分けたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア"
+      ],
+      "summary": "EH-NA9Mはミネラル・UVケア・複数モードを搭載したパナソニック ナノケアの上位モデル。公式情報を確認して整理します。",
+      "publishedAt": "2026-08-17",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "thermos-kfm-020-vs-kfi-020",
+      "productCount": 2,
+      "path": "/articles/thermos-kfm-020-vs-kfi-020/",
+      "title": "サーモス KFM-020 と KFI-020、どっち？｜くらべる商品メモ",
+      "headline": "サーモスのフライパン、どっち？「KFM-020」と「KFI-020」を比較",
+      "description": "サーモス KFM-020とKFI-020を、公式の対応熱源・内径・寸法・重量・価格で比較",
+      "category": "キッチン用品",
+      "tags": [
+        "フライパン",
+        "サーモス",
+        "キッチン用品"
+      ],
+      "audiences": [
+        "20cmのフライパンを選びたい人",
+        "IH対応か軽さを比べたい人"
+      ],
+      "uses": [
+        "毎日の調理",
+        "フライパンを比較する",
+        "熱源を確認する"
+      ],
+      "summary": "サーモス KFM-020とKFI-020を、公式ページで確認できる対応熱源・重量・寸法・価格に分けて比較します。",
+      "publishedAt": "2026-08-15",
+      "modifiedAt": "2026-08-15",
+      "productInfoCheckedAt": "2026-08-15",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/thermos-kfm-020.jpg"
+    },
+    {
+      "id": "tiger-mta-j050-guide",
+      "productCount": 2,
+      "path": "/articles/tiger-mta-j050-guide/",
+      "title": "タイガー MTA-J050とMTA-J080、どっち？｜くらべる商品メモ",
+      "headline": "タイガー MTA-J050とMTA-J080を比較。容量・重さ・保温保冷の違い",
+      "description": "タイガー MTA-J050とMTA-J080を、公式ページで確認できる容量・重量・保温保冷効力・寸法などから比較",
+      "category": "生活雑貨",
+      "tags": [
+        "水筒",
+        "タイガー",
+        "保冷ボトル"
+      ],
+      "audiences": [
+        "0.5Lと0.8Lの水筒で迷っている人",
+        "容量と持ち運びやすさを比較したい人"
+      ],
+      "uses": [
+        "通勤・通学",
+        "外出時の水分補給",
+        "水筒の容量比較"
+      ],
+      "summary": "タイガー MTA-J050とMTA-J080は同じシリーズの真空断熱ボトル。容量・重量・保温保冷効力・寸法の違いを公式情報から整理します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "unverified",
+      "imagePath": "/products/tiger-mta-j050.jpg"
+    },
+    {
+      "id": "panasonic-eh-na9m-vs-eh-na7m",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "roborock-qrevo-curv-vs-dreame-x50",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "makita-cl107-vs-cl286",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "sharp-kc-s50-vs-panasonic-f-vxw55",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-eh-na9m-vs-refa-beautech",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "philips-s9000-vs-braun-series9pro",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "anessa-perfect-uv-vs-biore-aqua-rich",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "tempur-original-vs-nishikawa-air-pillow",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "samsonite-c-lite-vs-proteca-maxpass",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "montbell-tri-pack-vs-anello-backpack",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "thermos-jdp-501-vs-zojirushi-sm-za48",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "sharp-heater-hv-r55-vs-iris-uhk500",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "dyson-v12-detect-slim-vs-shark-evo-power",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "t-fal-ko5901jp-vs-zoujirushi-ck-pa08",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "re-fa-straight-iron-vs-panasonic-eh-hs0e",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "nitori-n-sleep-vs-nishikawa-air-mattress",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "apple-watch-se-vs-xiaomi-redmi-watch-5",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "sony-bravia-55-xr80-vs-regza-55z870n",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "hitachi-bd-sx130k-vs-bd-stx130k",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-nt-t501-vs-nt-d700",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-ne-bs9c-vs-ne-ubs10c",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-mc-jp860k-vs-mc-sb70km",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-sq-ld560-vs-sq-ld540",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-ni-fs70a-vs-ni-fs60b",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-eh-na0j-vs-eh-na0g",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-mc-sb53k-vs-mc-sb33j",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-ew-dp57-vs-ew-dt73",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-ew-da19-vs-ew-da49",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-es-lv9w-vs-es-lv7w",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-eh-nc80-vs-eh-nc50",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-eh-na0k-vs-eh-ne9n",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-ep-ma110-vs-ep-ma121",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "panasonic-es-wp9b-vs-es-wg0b",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "logicool-mx-keys-s-vs-mx-keys-mini",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "logicool-mx-keys-s-for-mac-vs-k780",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "logicool-k650-vs-k580",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "logicool-mx-master-3s-vs-m650",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "logicool-lift-vs-m550",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "logicool-zone-vibe-100-vs-zone-300",
+      "productCount": 2,
+      "path": "/articles/panasonic-eh-na9m-vs-eh-na7m/",
+      "title": "パナソニック ナノケア EH-NA9MとEH-NA7M、どっち？｜くらべる商品メモ",
+      "headline": "パナソニック ナノケア EH-NA9MとEH-NA7Mを比較。機能・重さ・収納性の違い",
+      "description": "パナソニック ナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・質量・収納性から比較",
+      "category": "美容家電",
+      "tags": [
+        "ドライヤー",
+        "パナソニック",
+        "ナノケア"
+      ],
+      "audiences": [
+        "髪のケア機能を重視する人",
+        "持ち運びやすいドライヤーを選びたい人"
+      ],
+      "uses": [
+        "毎日のヘアケア",
+        "ドライヤーを比較する",
+        "収納性で選ぶ"
+      ],
+      "summary": "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
+      "publishedAt": "2026-08-16",
+      "modifiedAt": "2026-08-16",
+      "productInfoCheckedAt": "2026-08-16",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/panasonic-eh-na9m.jpg"
+    },
+    {
+      "id": "tiger-pcj-a080-vs-pcm-a080",
+      "productCount": 2,
+      "path": "/articles/tiger-pcj-a080-vs-pcm-a080/",
+      "title": "タイガー PCJ-A080 と PCM-A080、どっち？｜くらべる商品メモ",
+      "headline": "タイガーの電気ケトル、どっち？「PCJ-A080」と「PCM-A080」を比較",
+      "description": "タイガー PCJ-A080とPCM-A080を、公式の容量・沸とう時間・サイズ・質量・安全設計で比較",
+      "category": "キッチン家電",
+      "tags": [
+        "電気ケトル",
+        "タイガー",
+        "蒸気レス"
+      ],
+      "audiences": [
+        "電気ケトルを買い替えたい人",
+        "蒸気レスと本体形状で選びたい人"
+      ],
+      "uses": [
+        "毎日使う",
+        "カップ1杯をすばやく沸かす",
+        "安全設計で選ぶ"
+      ],
+      "summary": "PCJ-A080とPCM-A080を、タイガー公式の商品ページで確認できる容量・沸とう時間・サイズ・質量・安全設計に分けて比較します。",
+      "publishedAt": "2026-08-17",
+      "modifiedAt": "2026-08-17",
+      "productInfoCheckedAt": "2026-08-17",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/tiger-pcj-a080.jpg"
+    },
+    {
+      "id": "yamajitsu-film-holder-242286-vs-242287",
+      "productCount": 2,
+      "path": "/articles/yamajitsu-film-holder-242286-vs-242287/",
+      "title": "山崎実業 フィルムフックまな板ホルダーと鍋蓋ホルダー、どっち？｜くらべる商品メモ",
+      "headline": "山崎実業のフィルムフック収納、どっち？まな板ホルダーと鍋蓋ホルダーを比較",
+      "description": "山崎実業の242286と242287を、公式の収納対象・対応サイズ・寸法・重量・耐荷重で比較",
+      "category": "キッチン用品",
+      "tags": [
+        "山崎実業",
+        "tower",
+        "キッチン収納"
+      ],
+      "audiences": [
+        "まな板や鍋蓋の収納を見直したい人",
+        "フィルムフック収納を公式仕様で比べたい人"
+      ],
+      "uses": [
+        "まな板を収納する",
+        "鍋蓋を収納する",
+        "壁面収納を選ぶ"
+      ],
+      "summary": "山崎実業のフィルムフックまな板ホルダー242286とフィルムフック鍋蓋ホルダー242287を、収納対象・対応サイズ・寸法・重量・耐荷重で比較します。",
+      "publishedAt": "2026-08-19",
+      "modifiedAt": "2026-08-19",
+      "productInfoCheckedAt": "2026-08-19",
+      "purchaseLinkStatus": "verified",
+      "imagePath": "/products/yamazaki-film-holder-242286.jpg"
+    }
+  ]
+}
