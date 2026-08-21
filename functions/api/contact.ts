@@ -44,7 +44,7 @@ export function isSameSiteOrigin(
 
 /**
  * 同一IPからの連続送信を制限する（例: 1分あたり5件）。
- * バインディング未設定・エラー時は制限なしで続行する。
+ * バインディング未設定・エラー時は 503 を返す（fail-closed）。
  */
 export async function enforceContactRateLimit(
   limiter: ContactRateLimiter | undefined,
@@ -54,6 +54,7 @@ export async function enforceContactRateLimit(
     limiter,
     `kuraberu-contact:${ip}`,
     "お問い合わせレート制限",
+    { failClosed: true },
   );
 }
 
@@ -71,6 +72,9 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     clientIp(request),
   );
   if (!rate.allowed) {
+    if (rate.reason === "unavailable") {
+      return json({ ok: false, error: "rate limiter unavailable" }, 503);
+    }
     return json({ ok: false, error: "too many requests" }, 429, {
       "Retry-After": String(rate.retryAfterSeconds),
     });
@@ -92,16 +96,16 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const form = await request.formData();
+  const rawMessage = String(form.get("message") ?? "").trim();
+  const rawName = String(form.get("name") ?? "").trim();
+  const rawEmail = String(form.get("email") ?? "").trim();
+  if (rawMessage.length + rawName.length + rawEmail.length > 10_000) {
+    return json({ ok: false, error: "payload too large" }, 413);
+  }
   const body: ContactBody = {
-    name: String(form.get("name") ?? "")
-      .trim()
-      .slice(0, 80),
-    email: String(form.get("email") ?? "")
-      .trim()
-      .slice(0, 120),
-    message: String(form.get("message") ?? "")
-      .trim()
-      .slice(0, 4000),
+    name: rawName.slice(0, 80),
+    email: rawEmail.slice(0, 120),
+    message: rawMessage.slice(0, 4000),
   };
 
   if (!body.message || !body.email) {

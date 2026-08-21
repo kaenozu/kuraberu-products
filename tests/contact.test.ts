@@ -50,11 +50,16 @@ function makeLimiter(
 }
 
 function baseEnv(limiter?: ContactRateLimiter): Env {
+  const defaultLimiter: ContactRateLimiter = {
+    async limit() {
+      return { success: true };
+    },
+  };
   return {
     TELEGRAM_BOT_TOKEN: "123:token",
     TELEGRAM_CHAT_ID: "-100123",
     PUBLIC_SITE_URL: SITE_URL,
-    ...(limiter ? { CONTACT_RATE_LIMITER: limiter } : {}),
+    CONTACT_RATE_LIMITER: limiter ?? defaultLimiter,
   };
 }
 
@@ -146,36 +151,32 @@ describe("enforceContactRateLimit", () => {
 
   it("denies with the reported reset time", async () => {
     const { limiter } = makeLimiter({ success: false, reset_after: 37 });
-    await expect(
-      enforceContactRateLimit(limiter, "203.0.113.5"),
-    ).resolves.toEqual({
-      allowed: false,
-      retryAfterSeconds: 37,
-    });
+    const result = await enforceContactRateLimit(limiter, "203.0.113.5");
+    expect(result).toMatchObject({ allowed: false, retryAfterSeconds: 37 });
   });
 
   it("falls back to the configured window when reset time is absent", async () => {
     const { limiter } = makeLimiter({ success: false });
-    await expect(
-      enforceContactRateLimit(limiter, "203.0.113.5"),
-    ).resolves.toEqual({
+    const result = await enforceContactRateLimit(limiter, "203.0.113.5");
+    expect(result).toMatchObject({ allowed: false, retryAfterSeconds: 60 });
+  });
+
+  it("denies when the binding is not configured (fail-closed)", async () => {
+    const result = await enforceContactRateLimit(undefined, "203.0.113.5");
+    expect(result).toMatchObject({
       allowed: false,
       retryAfterSeconds: 60,
+      reason: "unavailable",
     });
   });
 
-  it("allows when the binding is not configured", async () => {
-    await expect(
-      enforceContactRateLimit(undefined, "203.0.113.5"),
-    ).resolves.toEqual({ allowed: true });
-  });
-
-  it("allows when the limiter throws", async () => {
+  it("denies when the limiter throws (fail-closed)", async () => {
     const { limiter } = makeLimiter({ error: true });
-    await expect(
-      enforceContactRateLimit(limiter, "203.0.113.5"),
-    ).resolves.toEqual({
-      allowed: true,
+    const result = await enforceContactRateLimit(limiter, "203.0.113.5");
+    expect(result).toMatchObject({
+      allowed: false,
+      retryAfterSeconds: 60,
+      reason: "unavailable",
     });
   });
 
@@ -256,20 +257,20 @@ describe("onRequestPost", () => {
     expect(telegram).not.toHaveBeenCalled();
   });
 
-  it("still accepts requests when the rate limiter binding is absent", async () => {
+  it("returns 503 when the rate limiter binding is absent", async () => {
     const telegram = telegramOk();
     const response = await onRequestPost({
       request: postRequest(validForm()),
-      env: baseEnv(),
+      env: { PUBLIC_SITE_URL: SITE_URL } as unknown as Env,
       params: {},
       data: {},
     });
 
-    expect(response.status).toBe(200);
-    expect(telegram).toHaveBeenCalledTimes(1);
+    expect(response.status).toBe(503);
+    expect(telegram).not.toHaveBeenCalled();
   });
 
-  it("still accepts requests when the rate limiter fails", async () => {
+  it("returns 503 when the rate limiter fails", async () => {
     const telegram = telegramOk();
     const { limiter } = makeLimiter({ error: true });
     const response = await onRequestPost({
@@ -279,8 +280,8 @@ describe("onRequestPost", () => {
       data: {},
     });
 
-    expect(response.status).toBe(200);
-    expect(telegram).toHaveBeenCalledTimes(1);
+    expect(response.status).toBe(503);
+    expect(telegram).not.toHaveBeenCalled();
   });
 
   it("rejects a submission without message and email", async () => {
@@ -338,9 +339,13 @@ describe("onRequestPost", () => {
 
   it("returns 500 when Telegram is not configured", async () => {
     const telegram = telegramOk();
+    const { limiter } = makeLimiter({ success: true });
     const response = await onRequestPost({
       request: postRequest(validForm()),
-      env: { PUBLIC_SITE_URL: SITE_URL },
+      env: {
+        PUBLIC_SITE_URL: SITE_URL,
+        CONTACT_RATE_LIMITER: limiter,
+      } as unknown as Env,
       params: {},
       data: {},
     });
@@ -428,6 +433,53 @@ describe("onRequestPost", () => {
 
     expect(response.status).toBe(200);
     expect(telegram).toHaveBeenCalledTimes(1);
+  });
+
+  // ---- Body size guard (post-formData) ----
+
+  it("rejects oversized payload even when Content-Length is absent", async () => {
+    const telegram = telegramOk();
+    const longMessage = "a".repeat(12_000);
+    const response = await onRequestPost({
+      request: new Request(`${SITE_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          email: "test@example.com",
+          message: longMessage,
+        }).toString(),
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(413);
+    expect(telegram).not.toHaveBeenCalled();
+  });
+
+  it("rejects oversized payload when Content-Length is understated", async () => {
+    const telegram = telegramOk();
+    const longMessage = "a".repeat(12_000);
+    const response = await onRequestPost({
+      request: new Request(`${SITE_URL}/api/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Length": "100",
+        },
+        body: new URLSearchParams({
+          email: "test@example.com",
+          message: longMessage,
+        }).toString(),
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(413);
+    expect(telegram).not.toHaveBeenCalled();
   });
 
   // ---- Telegram fetch timeout ----

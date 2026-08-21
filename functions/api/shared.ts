@@ -4,7 +4,12 @@
 const RATE_LIMIT_FALLBACK_RETRY_SECONDS = 60;
 
 export type RateLimitResult =
-  { allowed: true } | { allowed: false; retryAfterSeconds: number };
+  | { allowed: true }
+  | {
+      allowed: false;
+      retryAfterSeconds: number;
+      reason?: "rate-limited" | "unavailable";
+    };
 
 /**
  * クライアントIPを取り出す。Cloudflare 経由の CF-Connecting-IP を優先し、
@@ -39,8 +44,16 @@ export async function enforceRateLimit(
   limiter: ContactRateLimiter | undefined,
   key: string,
   label: string,
+  options: { failClosed?: boolean } = {},
 ): Promise<RateLimitResult> {
+  const failClosed = options.failClosed ?? false;
   if (!limiter) {
+    if (failClosed) {
+      console.error(
+        `${label}: レート制限バインディング未設定。fail-closed で 503 を返します`,
+      );
+      return { allowed: false, retryAfterSeconds: 60, reason: "unavailable" };
+    }
     console.warn(
       `${label}: レート制限バインディング未設定のため制限なしで続行します`,
     );
@@ -53,8 +66,15 @@ export async function enforceRateLimit(
       typeof result.reset_after === "number" && result.reset_after > 0
         ? result.reset_after
         : RATE_LIMIT_FALLBACK_RETRY_SECONDS;
-    return { allowed: false, retryAfterSeconds };
+    return { allowed: false, retryAfterSeconds, reason: "rate-limited" };
   } catch (error) {
+    if (failClosed) {
+      console.error(
+        `${label}: レート制限API エラー。fail-closed で 503 を返します`,
+        error,
+      );
+      return { allowed: false, retryAfterSeconds: 60, reason: "unavailable" };
+    }
     console.warn(`${label}: エラーのため制限なしで続行します`, error);
     return { allowed: true };
   }
