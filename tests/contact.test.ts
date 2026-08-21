@@ -380,4 +380,110 @@ describe("onRequestPost", () => {
     expect(response.status).toBe(415);
     expect(telegram).not.toHaveBeenCalled();
   });
+
+  // ---- Content-Length size guard ----
+
+  it("rejects payloads exceeding 10 KB before formData expansion", async () => {
+    const telegram = telegramOk();
+    const response = await onRequestPost({
+      request: postRequest(validForm(), {
+        "Content-Length": String(10_001),
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(413);
+    expect(await response.json()).toEqual({
+      ok: false,
+      error: "payload too large",
+    });
+    expect(telegram).not.toHaveBeenCalled();
+  });
+
+  it("accepts payloads at exactly 10 KB", async () => {
+    const telegram = telegramOk();
+    const response = await onRequestPost({
+      request: postRequest(validForm(), {
+        "Content-Length": String(10_000),
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
+  });
+
+  it("treats missing Content-Length as zero (allows the request)", async () => {
+    const telegram = telegramOk();
+    const response = await onRequestPost({
+      request: postRequest(validForm()),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
+  });
+
+  // ---- Telegram fetch timeout ----
+
+  it("returns 504 when Telegram fetch hangs and the abort signal fires", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    // Mock fetch to hang forever until the AbortController signal fires,
+    // then reject with an AbortError (mimicking real fetch behavior).
+    const fetchMock = vi.fn(
+      (_input: RequestInfo | URL, init?: RequestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          init?.signal?.addEventListener(
+            "abort",
+            () =>
+              reject(
+                new DOMException("The operation was aborted.", "AbortError"),
+              ),
+            { once: true },
+          );
+        }),
+    );
+    vi.stubGlobal("fetch", fetchMock);
+
+    const responsePromise = onRequestPost({
+      request: postRequest(validForm()),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    // Advance time past the 5 000 ms timeout to trigger AbortController.abort()
+    await vi.advanceTimersByTimeAsync(5_000);
+
+    const response = await responsePromise;
+    expect(response.status).toBe(504);
+    expect(await response.json()).toEqual({
+      ok: false,
+      error: "delivery timeout",
+    });
+
+    vi.useRealTimers();
+  });
+
+  it("clears the timeout after a successful Telegram response", async () => {
+    const clearTimeoutSpy = vi.spyOn(globalThis, "clearTimeout");
+    telegramOk();
+
+    const response = await onRequestPost({
+      request: postRequest(validForm()),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(200);
+    expect(clearTimeoutSpy).toHaveBeenCalled();
+    clearTimeoutSpy.mockRestore();
+  });
 });

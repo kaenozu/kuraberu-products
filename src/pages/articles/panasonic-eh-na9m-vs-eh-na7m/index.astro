@@ -42,7 +42,7 @@ const keyDiffRows: KeyDiffRow[] = [
   keyDiffRows={keyDiffRows}
   lead={"パナソニックのナノケア EH-NA9MとEH-NA7Mを、公式ページで確認できる搭載機能・モード・風量・重さ・収納性から比較します。"}
   summaryParagraph={"EH-NA9Mはミネラル・UVケア・複数モードなどの機能を重視する人向け、EH-NA7Mは折りたたみやすさと軽さを重視する人向けです。風量は両モデルとも公式仕様で1.5㎥/分と確認できます。"}
-  officialDescription={"比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した情報です。公式情報確認日：{articleMetadata.productInfoCheckedAt}。"}
+  officialDescription={`比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した情報です。公式情報確認日：${articleMetadata.productInfoCheckedAt}。`}
   officialLinks={[
     { label: "EH-NA9M 公式商品ページ", href: leftOfficial },
     { label: "EH-NA7M 公式商品ページ", href: rightOfficial },
@@ -54,8 +54,8 @@ const keyDiffRows: KeyDiffRow[] = [
   rightPurchaseName={"パナソニック ナノケア EH-NA7M"}
   rightPurchaseAudience={rightAudience}
   sourceLinks={[
-    { label:"パナソニック EH-NA9M 公式商品ページ", href:leftOfficial, checkedAt:"{articleMetadata.productInfoCheckedAt}" },
-    { label:"パナソニック EH-NA7M 公式商品ページ", href:rightOfficial, checkedAt:"{articleMetadata.productInfoCheckedAt}" },
+    { label:"パナソニック EH-NA9M 公式商品ページ", href:leftOfficial, checkedAt:articleMetadata.productInfoCheckedAt },
+    { label:"パナソニック EH-NA7M 公式商品ページ", href:rightOfficial, checkedAt:articleMetadata.productInfoCheckedAt },
   ]}
   purchaseWarning={"ドライヤーは機能の名称だけで使用感を断定できません。価格・在庫・付属品は購入時点の公式ページと販売先で確認してください。"}
   disclaimer={"この比較は、パナソニック公式の商品ページと仕様ページで確認できる情報を根拠にしています。口コミや未確認の販売情報は比較の根拠にしていません。"}

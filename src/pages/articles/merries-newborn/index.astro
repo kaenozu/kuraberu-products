@@ -69,7 +69,7 @@ const differenceRows: DifferenceRow[] = [
   },
 ];
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / おむつ · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
@@ -87,6 +87,7 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/merries-airsle-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: airsle, guidePoints: [standardCandidate.audience], purchaseHref: articlePurchaseLinks['merries-newborn:right'].purchaseUrl, productId: 'merries-airsle-newborn'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       diagnosisHref="/tools/product-finder/diaper/"
     />
 

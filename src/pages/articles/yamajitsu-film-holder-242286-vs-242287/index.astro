@@ -31,7 +31,7 @@ const keyDiffRows: KeyDiffRow[] = [
   {label: '耐荷重', left: '2kg', right: '2kg', highlight: null},
 ]
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>

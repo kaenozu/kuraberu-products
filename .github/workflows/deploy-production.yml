@@ -48,6 +48,29 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      - name: Verify SHA matches default branch HEAD
+        shell: bash
+        run: |
+          if [ "${{ inputs.expected_sha }}" != "${{ github.sha }}" ]; then
+            echo "::error::Input SHA does not match the default branch HEAD (${{ github.sha }}). Only the latest default-branch commit may be deployed."
+            exit 1
+          fi
+
+      - name: Verify SHA is reachable from default branch (ancestry check)
+        shell: bash
+        run: |
+          # Defense-in-depth: confirm the input SHA is an ancestor of the
+          # default branch HEAD.  The preceding step already enforces exact
+          # HEAD equality, but this check catches any future relaxation of
+          # that guard and provides a specific error for feature-branch SHAs.
+          git fetch origin "${{ github.ref }}" --depth=1
+          DEFAULT_HEAD=$(git rev-parse "origin/${{ github.ref_name }}")
+          if ! git merge-base --is-ancestor "${{ inputs.expected_sha }}" "$DEFAULT_HEAD"; then
+            echo "::error::Input SHA (${{ inputs.expected_sha }}) is not an ancestor of the default branch HEAD ($DEFAULT_HEAD). Only default-branch-reachable commits may be deployed."
+            exit 1
+          fi
+          echo "Ancestry verified: ${{ inputs.expected_sha }} is reachable from $DEFAULT_HEAD"
+
       - name: Verify exact checkout
         shell: bash
         run: test "$(git rev-parse HEAD)" = "${{ inputs.expected_sha }}"
@@ -116,7 +139,7 @@ jobs:
         # upload-artifact の既定（include-hidden-files: false）では対象外になり
         # 「No files were found」で 0 件アップロードになる。必ず true にする。
         if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: acceptance-reports-${{ github.run_id }}
           path: |

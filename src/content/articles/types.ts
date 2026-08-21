@@ -3,7 +3,39 @@ export interface ArticleChangeLogEntry {
   summary: string;
 }
 
-export interface ArticleMetadata {
+/**
+ * 比較記事の片側商品情報。
+ * purchaseHref は articlePurchaseLinks から自動解決するため不要。
+ */
+export interface ComparisonSide {
+  brand: string;
+  line: string;
+  tagline: string;
+  image: string;
+  imageAlt: string;
+  officialHref: string;
+  guidePoints: readonly string[];
+}
+
+/** 比較行（ verifiedRows / keyDiffRows 共通） */
+export type ComparisonRow = {
+  label: string;
+  left: string;
+  right: string;
+  highlight?: "left" | "right" | null;
+  highlightNote?: string;
+  bar?: { left: number; right: number };
+  direction?: "higher-is-better" | "lower-is-better";
+};
+
+/**
+ * 全記事タイプに共通するフィールド。
+ *
+ * 比較記事固有のフィールドもこの型に含める（Component 側で productCount による
+ * narrow 不要のため）。guide 固有の {@link GuideArticleMetadata.aboutProductNames}
+ * はこの型ではオプション。
+ */
+export type ArticleMetadataBase = {
   id: string;
   productCount: number;
   path: `/articles/${string}/`;
@@ -24,7 +56,6 @@ export interface ArticleMetadata {
   imagePath?: `/${string}`;
   /**
    * JSON-LD の about（schema.org Product）に出す商品名。
-   * 件数は productCount と一致させる（商品ガイド = 1、比較記事 = 2）。
    * 商品ガイド（productCount = 1）は必須。比較記事は未宣言なら about を出力しない。
    */
   aboutProductNames?: readonly string[];
@@ -32,12 +63,57 @@ export interface ArticleMetadata {
     label: string;
     url: `https://${string}`;
   }[];
-  verifiedRows?: readonly {
-    label: string;
-    left: string;
-    right: string;
-  }[];
-}
+  verifiedRows?: readonly ComparisonRow[];
+  /** 比較記事: 左側商品のモデル情報。 */
+  leftModel?: ComparisonSide;
+  /** 比較記事: 右側商品のモデル情報。 */
+  rightModel?: ComparisonSide;
+  /** 比較記事: ハイライト比較行。 */
+  keyDiffRows?: readonly ComparisonRow[];
+  /** 比較記事: FAQ エントリ。 */
+  faqEntries?: readonly { question: string; answer: string }[];
+  /** 比較記事: リード文。 */
+  lead?: string;
+  /** 比較記事: まとめ段落。 */
+  summaryParagraph?: string;
+  /** 比較記事: 公式情報セクションの説明文。 */
+  officialDescription?: string;
+  /** 比較記事: 公式リンク。 */
+  officialLinks?: readonly { label: string; href: string }[];
+  /** 比較記事: SNS ソーシャルプルーフ検索クエリ。 */
+  socialProofQuery?: string;
+  /** 比較記事: ソーシャルプルーフ確認日。 */
+  socialProofCheckedAt?: string;
+  /** 比較記事: 購入時の注意テキスト。 */
+  purchaseWarning?: string;
+  /** 比較記事: 免責事項テキスト。 */
+  disclaimer?: string;
+};
+
+/**
+ * 商品ガイド記事（productCount = 1）。
+ * aboutProductNames は必須（JSON-LD の about に出力するため）。
+ */
+export type GuideArticleMetadata = ArticleMetadataBase & {
+  productCount: 1;
+  aboutProductNames: readonly string[];
+};
+
+/**
+ * 比較記事（productCount = 2）。
+ * leftModel/rightModel はオプション（宣言すると1行記事になる）。
+ */
+export type ComparisonArticleMetadata = ArticleMetadataBase & {
+  productCount: 2;
+};
+
+/**
+ * 記事メタデータの区分型共用体。
+ *
+ * productCount で分岐し、ガイド記事と比較記事で型安全性を確保する。
+ * Component 側では比較フィールドに直接アクセスできる（ArticleMetadataBase に含まれるため）。
+ */
+export type ArticleMetadata = GuideArticleMetadata | ComparisonArticleMetadata;
 
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
@@ -64,6 +140,30 @@ export function defineArticleMetadata(
       `aboutProductNames must have exactly ${metadata.productCount} non-empty entries (one per product)`,
     );
   }
+  // 比較記事の1行化: leftModel/rightModel は keyDiffRows/faqEntries とセットで宣言する必要がある
+  if (metadata.leftModel || metadata.rightModel) {
+    if (!metadata.leftModel || !metadata.rightModel) {
+      throw new TypeError(
+        "leftModel and rightModel must both be declared together",
+      );
+    }
+    if (!metadata.keyDiffRows || metadata.keyDiffRows.length === 0) {
+      throw new TypeError(
+        "keyDiffRows is required when leftModel/rightModel are declared",
+      );
+    }
+    if (!metadata.faqEntries || metadata.faqEntries.length === 0) {
+      throw new TypeError(
+        "faqEntries is required when leftModel/rightModel are declared",
+      );
+    }
+    if (!metadata.lead) {
+      throw new TypeError(
+        "lead is required when leftModel/rightModel are declared",
+      );
+    }
+  }
+
   for (const [label, value] of [
     ["publishedAt", metadata.publishedAt],
     ["modifiedAt", metadata.modifiedAt],
@@ -157,5 +257,5 @@ export function defineArticleMetadata(
   if (metadata.imagePath && !metadata.imagePath.startsWith("/")) {
     throw new TypeError("imagePath must be root-relative");
   }
-  return Object.freeze({ ...metadata });
+  return Object.freeze({ ...metadata }) as ArticleMetadata;
 }

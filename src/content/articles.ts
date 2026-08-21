@@ -1,260 +1,17 @@
-export interface ArticleChangeLogEntry {
-  date: string;
-  summary: string;
-}
+export type {
+  ArticleChangeLogEntry,
+  ArticleMetadata,
+  ArticleMetadataBase,
+  ComparisonSide,
+  ComparisonRow,
+  GuideArticleMetadata,
+  ComparisonArticleMetadata,
+} from "./articles/types";
+export { defineArticleMetadata } from "./articles/types";
 
-/**
- * 比較記事の片側商品情報。
- * purchaseHref は articlePurchaseLinks から自動解決するため不要。
- */
-export interface ComparisonSide {
-  brand: string;
-  line: string;
-  tagline: string;
-  image: string;
-  imageAlt: string;
-  officialHref: string;
-  guidePoints: readonly string[];
-}
-
-export interface ArticleMetadata {
-  id: string;
-  productCount: number;
-  path: `/articles/${string}/`;
-  title: string;
-  headline: string;
-  description: string;
-  category: string;
-  tags: readonly string[];
-  audiences: readonly string[];
-  uses: readonly string[];
-  summary: string;
-  publishedAt: string;
-  modifiedAt: string;
-  productInfoCheckedAt?: string;
-  purchaseLinksCheckedAt?: string;
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
-  changeLog: readonly ArticleChangeLogEntry[];
-  imagePath?: `/${string}`;
-  /**
-   * JSON-LD の about（schema.org Product）に出す商品名。
-   * 件数は productCount と一致させる（商品ガイド = 1、比較記事 = 2）。
-   * 商品ガイド（productCount = 1）は必須。比較記事は未宣言なら about を出力しない。
-   */
-  aboutProductNames?: readonly string[];
-  officialSources?: readonly {
-    label: string;
-    url: `https://${string}`;
-  }[];
-  verifiedRows?: readonly {
-    label: string;
-    left: string;
-    right: string;
-  }[];
-  /**
-   * 比較記事: 左側商品のモデル情報。
-   * 未宣言なら従来の HTML ベース記事として扱う。
-   */
-  leftModel?: ComparisonSide;
-  /**
-   * 比較記事: 右側商品のモデル情報。
-   */
-  rightModel?: ComparisonSide;
-  /**
-   * 比較記事: ハイライト比較行。
-   * leftModel/rightModel と合わせて宣言すると1行記事になる。
-   */
-  keyDiffRows?: readonly {
-    label: string;
-    left: string;
-    right: string;
-    highlight?: "left" | "right" | null;
-    highlightNote?: string;
-    bar?: { left: number; right: number };
-    direction?: "higher-is-better" | "lower-is-better";
-  }[];
-  /**
-   * 比較記事: FAQ エントリ。
-   */
-  faqEntries?: readonly { question: string; answer: string }[];
-  /**
-   * 比較記事: リード文。
-   */
-  lead?: string;
-  /**
-   * 比較記事: まとめ段落。
-   */
-  summaryParagraph?: string;
-  /**
-   * 比較記事: 公式情報セクションの説明文。
-   */
-  officialDescription?: string;
-  /**
-   * 比較記事: 公式リンク。
-   */
-  officialLinks?: readonly { label: string; href: string }[];
-  /**
-   * 比較記事: SNS ソーシャルプルーフ検索クエリ。
-   */
-  socialProofQuery?: string;
-  /**
-   * 比較記事: ソーシャルプルーフ確認日。
-   */
-  socialProofCheckedAt?: string;
-  /**
-   * 比較記事: 購入時の注意テキスト。
-   */
-  purchaseWarning?: string;
-  /**
-   * 比較記事: 免責事項テキスト。
-   */
-  disclaimer?: string;
-}
-
-const isoDate = /^\d{4}-\d{2}-\d{2}$/;
-
-// Build-time reference date to prevent future dates
-const buildReferenceDate = new Date().toISOString().slice(0, 10);
-
-export function defineArticleMetadata(
-  metadata: ArticleMetadata,
-): ArticleMetadata {
-  if (!Number.isInteger(metadata.productCount) || metadata.productCount < 1) {
-    throw new TypeError("productCount must be a positive integer");
-  }
-  if (metadata.productCount === 1 && !metadata.aboutProductNames) {
-    throw new TypeError(
-      "aboutProductNames must be declared for single-product (guide) articles",
-    );
-  }
-  if (
-    metadata.aboutProductNames !== undefined &&
-    (metadata.aboutProductNames.length !== metadata.productCount ||
-      metadata.aboutProductNames.some((name) => name.trim().length === 0))
-  ) {
-    throw new TypeError(
-      `aboutProductNames must have exactly ${metadata.productCount} non-empty entries (one per product)`,
-    );
-  }
-  // 比較記事の1行化: leftModel/rightModel は keyDiffRows/faqEntries とセットで宣言する必要がある
-  if (metadata.leftModel || metadata.rightModel) {
-    if (!metadata.leftModel || !metadata.rightModel) {
-      throw new TypeError(
-        "leftModel and rightModel must both be declared together",
-      );
-    }
-    if (!metadata.keyDiffRows || metadata.keyDiffRows.length === 0) {
-      throw new TypeError(
-        "keyDiffRows is required when leftModel/rightModel are declared",
-      );
-    }
-    if (!metadata.faqEntries || metadata.faqEntries.length === 0) {
-      throw new TypeError(
-        "faqEntries is required when leftModel/rightModel are declared",
-      );
-    }
-    if (!metadata.lead) {
-      throw new TypeError(
-        "lead is required when leftModel/rightModel are declared",
-      );
-    }
-  }
-
-  for (const [label, value] of [
-    ["publishedAt", metadata.publishedAt],
-    ["modifiedAt", metadata.modifiedAt],
-    ...(metadata.productInfoCheckedAt
-      ? [["productInfoCheckedAt", metadata.productInfoCheckedAt] as const]
-      : []),
-    ...(metadata.purchaseLinksCheckedAt
-      ? [["purchaseLinksCheckedAt", metadata.purchaseLinksCheckedAt] as const]
-      : []),
-    ...metadata.changeLog.map(
-      (entry) => ["changeLog.date", entry.date] as const,
-    ),
-  ] as const) {
-    const parsed = new Date(`${value}T00:00:00Z`);
-    if (
-      !isoDate.test(value) ||
-      Number.isNaN(parsed.getTime()) ||
-      parsed.toISOString().slice(0, 10) !== value
-    ) {
-      throw new TypeError(`${label} must be an ISO 8601 calendar date`);
-    }
-  }
-  if (metadata.modifiedAt < metadata.publishedAt) {
-    throw new TypeError("modifiedAt must not precede publishedAt");
-  }
-  if (
-    metadata.productInfoCheckedAt &&
-    metadata.productInfoCheckedAt > metadata.modifiedAt
-  ) {
-    throw new TypeError("productInfoCheckedAt must not exceed modifiedAt");
-  }
-  if (
-    metadata.purchaseLinksCheckedAt &&
-    metadata.purchaseLinksCheckedAt > metadata.modifiedAt
-  ) {
-    throw new TypeError("purchaseLinksCheckedAt must not exceed modifiedAt");
-  }
-  if (
-    metadata.purchaseLinkStatus === "verified" &&
-    !metadata.purchaseLinksCheckedAt
-  ) {
-    throw new TypeError("verified purchase links require a checked date");
-  }
-  // Prevent future dates relative to build time
-  for (const [label, value] of [
-    ["publishedAt", metadata.publishedAt],
-    ["modifiedAt", metadata.modifiedAt],
-    ...(metadata.productInfoCheckedAt
-      ? [["productInfoCheckedAt", metadata.productInfoCheckedAt] as const]
-      : []),
-    ...(metadata.purchaseLinksCheckedAt
-      ? [["purchaseLinksCheckedAt", metadata.purchaseLinksCheckedAt] as const]
-      : []),
-    ...metadata.changeLog.map(
-      (entry) => ["changeLog.date", entry.date] as const,
-    ),
-  ] as const) {
-    if (value > buildReferenceDate) {
-      throw new TypeError(
-        `${label} (${value}) must not be a future date relative to build (${buildReferenceDate})`,
-      );
-    }
-  }
-  for (const [label, values] of [
-    ["tags", metadata.tags],
-    ["audiences", metadata.audiences],
-    ["uses", metadata.uses],
-  ] as const) {
-    if (values.length === 0) {
-      throw new TypeError(`${label} must contain at least one value`);
-    }
-    const normalized = values.map((value) => value.normalize("NFKC").trim());
-    if (normalized.some((value) => value.length === 0)) {
-      throw new TypeError(`${label} must not contain empty values`);
-    }
-    if (new Set(normalized).size !== normalized.length) {
-      throw new TypeError(`${label} must not contain duplicate values`);
-    }
-  }
-  if (metadata.changeLog.length === 0) {
-    throw new TypeError("changeLog must contain at least one factual entry");
-  }
-  for (const entry of metadata.changeLog) {
-    if (!entry.summary.trim()) {
-      throw new TypeError("changeLog summary must not be empty");
-    }
-  }
-  if (!metadata.path.endsWith("/") || !metadata.path.startsWith("/articles/")) {
-    throw new TypeError("article path must be a canonical /articles/.../ path");
-  }
-  if (metadata.imagePath && !metadata.imagePath.startsWith("/")) {
-    throw new TypeError("imagePath must be root-relative");
-  }
-  return Object.freeze({ ...metadata });
-}
+// Re-import for use in this file's data definitions.
+import type { ArticleMetadata } from "./articles/types";
+import { defineArticleMetadata } from "./articles/types";
 
 export const pampersNewbornArticle = defineArticleMetadata({
   id: "pampers-newborn",
@@ -1769,7 +1526,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "ロボット掃除機の候補を、吸引力・段差対応・モップ・障害物回避の仕様で比べます。",
     leftProduct: "Roborock Qrevo Curv",
     rightProduct: "Dreame X50 Ultra",
-    leftPoint: "毛络まりゼロ・75℃温水ドック・モップリフト20mmを重視する人向け",
+    leftPoint: "毛絡まりゼロ・75℃温水ドック・モップリフト20mmを重視する人向け",
     rightPoint:
       "最大6cm段差対応・100日ゴミ収集・200種障害物回避を重視する人向け",
     productInfoCheckedAt: "2026-08-18",
@@ -1840,9 +1597,9 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
           "Dreame X50 Ultraは最大6cmの段差対応（ProLeapシステム）を公式に謳っています。Roborock Qrevo Curvは最大4cmです。引き戸のレールや二重の敷居がある場合はX50 Ultraの方が適しています。",
       },
       {
-        question: "毛络まりが気になるのはどっち？",
+        question: "毛絡まりが気になるのはどっち？",
         answer:
-          "両機種ともデュアルブラシで毛络まり低減を謳っています。Roborockは第三者認証機関テュフラインランドで毛络まり度0%の認証を取得しています。",
+          "両機種ともデュアルブラシで毛絡まり低減を謳っています。Roborockは第三者認証機関テュフラインランドで毛絡まり度0%の認証を取得しています。",
       },
       {
         question: "ドックの手入れはどっちが楽？",
@@ -1857,7 +1614,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     ],
     decisionGuideSteps: [
       "住まいの段差高さを確認する（4cm以下なら両機種、6cm以上ならX50 Ultra）",
-      "毛络まりの頻度を考慮する（ペット・長髪の場合はブラシ確認）",
+      "毛絡まりの頻度を考慮する（ペット・長髪の場合はブラシ確認）",
       "ステーションの自動化レベルを比較する（ゴミ収集日数・自動給水の有無）",
       "価格・在庫を販売ページで確認する。",
     ],
@@ -1903,7 +1660,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       {
         label: "集じん方式",
         left: "紙パック式（0.3L）",
-        right: "タービン.setBackgroundResource式（0.65L）",
+        right: "公式ページで確認不可（集じん方式・容量は要再確認）",
       },
       {
         label: "最大吸引力",
@@ -1917,8 +1674,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "バッテリー",
-        left: "10.8V Li-ion（BL1815B / BL1830B）",
-        right: "18V Li-ion（BL1815B / BL1830B / BL1850B）",
+        left: "公式ページで確認不可（電圧・型番は要再確認）",
+        right: "公式ページで確認不可（電圧・型番は要再確認）",
       },
       {
         label: "充電時間",
@@ -1951,7 +1708,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       {
         question: "バッテリーは共通？",
         answer:
-          "CL107FDSHWは10.8V、CL286FDは18Vです。バッテリー番号はBL1815B/BL1830Bが共通ですが、電圧が異なるため互換性はありません。",
+          "現行の公式ページで両モデルの電圧・バッテリー型番を確認できないため、互換性は購入前にメーカー資料で確認してください。",
       },
     ],
     decisionGuideSteps: [
@@ -1976,12 +1733,12 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     uses: ["スープ作り", "煮込み料理", "平日の作り置き"],
     summary:
       "自動調理家電の候補を、容量・メニュー・予約機能・洗浄性で整理します。",
-    leftProduct: "レコルト 自動調理ポット",
+    leftProduct: "レコルト 自動調理ポット RSY-2",
     rightProduct: "パナソニック NF-PC400",
     leftPoint: "少量調理と置き場所を優先する人向け",
     rightPoint: "家族分の調理容量と多機能さを確認したい人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
+    productInfoCheckedAt: "2026-08-20",
+    modifiedAt: "2026-08-20",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
@@ -1990,34 +1747,44 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "パナソニック NF-PC400 公式仕様ページ",
-        url: "https://panasonic.jp/cook/products/NF-PC400/spec.html",
+        url: "https://panasonic.jp/cook/products/NF-PC400.html",
       },
     ],
     verifiedRows: [
       {
-        label: "電源",
-        left: "AC100V 50/60Hz",
-        right: "公式仕様ページで確認できず",
+        label: "容量",
+        left: "約600mL",
+        right: "調理容量2.6L・最大6人分",
       },
       {
         label: "消費電力",
-        left: "600W／55W（JUICE＆CLEAN）",
-        right: "約800W",
+        left: "600W（JUICE&CLEANは55W）",
+        right: "公式ページ本文で確認できず",
       },
       {
-        label: "容量",
-        left: "約600mL",
-        right: "満水3.9L／調理2.6L",
-      },
-      {
-        label: "外形寸法",
+        label: "サイズ",
         left: "約幅16.5×奥行12.0×高さ23.3cm",
-        right: "約幅34.0×奥行27.4×高さ26.2cm",
+        right: "公式ページ本文で確認できず",
       },
       {
-        label: "質量",
-        left: "約970g",
-        right: "約4.2kg",
+        label: "温度",
+        left: "WARM：約75℃前後",
+        right: "数値は公式ページで確認できず",
+      },
+      {
+        label: "調理モード",
+        left: "5種類（SOYMILKなど）",
+        right: "20種類の自動メニュー。圧力・無水・低温・蒸し・煮込み",
+      },
+      {
+        label: "予約",
+        left: "公式ページで確認できず",
+        right: "3〜15時間後（一部自動調理のみ）",
+      },
+      {
+        label: "手入れ",
+        left: "JUICE&CLEAN約3分。本体外側・電源コードは水洗い不可",
+        right: "ふた・内ふた・内なべの3点。蒸し板使用時は蒸し板も洗浄",
       },
     ],
   },

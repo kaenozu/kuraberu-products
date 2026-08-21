@@ -85,6 +85,12 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid content type" }, 415);
   }
 
+  // 本文サイズの事前チェック（formData展開前に確認）。
+  const contentLength = Number(request.headers.get("Content-Length") ?? 0);
+  if (contentLength > 10_000) {
+    return json({ ok: false, error: "payload too large" }, 413);
+  }
+
   const form = await request.formData();
   const body: ContactBody = {
     name: String(form.get("name") ?? "")
@@ -129,9 +135,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     body.message,
   ].join("\n");
 
-  const tgRes = await fetch(
-    `https://api.telegram.org/bot${token}/sendMessage`,
-    {
+  const tgController = new AbortController();
+  const tgTimeout = setTimeout(() => tgController.abort(), 5_000);
+  let tgRes: Response;
+  try {
+    tgRes = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -139,8 +147,13 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
         text,
         disable_web_page_preview: true,
       }),
-    },
-  );
+      signal: tgController.signal,
+    });
+  } catch {
+    return json({ ok: false, error: "delivery timeout" }, 504);
+  } finally {
+    clearTimeout(tgTimeout);
+  }
 
   if (!tgRes.ok) {
     const detail = await tgRes.text().catch(() => "");

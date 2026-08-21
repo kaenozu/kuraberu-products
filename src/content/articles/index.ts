@@ -1,4 +1,12 @@
-export type { ArticleChangeLogEntry, ArticleMetadata } from "./types";
+export type {
+  ArticleChangeLogEntry,
+  ArticleMetadata,
+  ArticleMetadataBase,
+  ComparisonSide,
+  ComparisonRow,
+  GuideArticleMetadata,
+  ComparisonArticleMetadata,
+} from "./types";
 export { defineArticleMetadata } from "./types";
 
 export { pampersNewbornArticle } from "./pampers-newborn";

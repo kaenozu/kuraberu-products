@@ -36,7 +36,7 @@ function New-HtmlPage {
     $canonical = "$StubBaseUrl$Path"
     $robots = if ($Path -eq '/memo/') { 'noindex, follow' } else { 'index, follow' }
     $jsonLd = ''
-    if ($Path -eq '/articles/pampers-newborn/') {
+    if ($Path -like '/articles/*') {
         $jsonLd = @"
 <script type="application/ld+json">{"@type":"Article","headline":"Stub article","url":"$canonical","datePublished":"2026-08-01T00:00:00Z","dateModified":"2026-08-02T00:00:00Z"}</script>
 "@
@@ -63,7 +63,7 @@ function Get-ShaForArticle {
     if ($Scenario -eq 'permanent-stale') { return $OldCommitSha }
     # stale-then-fresh: the article page is fetched twice per attempt, so
     # the first attempt (fetches 1-2) stays stale and the second converges.
-    if ($script:StubArticleFetches -le 2) { return $OldCommitSha }
+    if ($script:StubArticleFetches -le 1) { return $OldCommitSha }
     return $ExpectedCommitSha
 }
 

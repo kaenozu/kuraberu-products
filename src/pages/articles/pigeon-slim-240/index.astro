@@ -111,7 +111,7 @@ const differenceRows: DifferenceRow[] = [
   },
 ];
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 授乳用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
@@ -129,6 +129,7 @@ const differenceRows: DifferenceRow[] = [
       right={{ brand: slimCandidate.product, line: slimCandidate.line, tagline: slimCandidate.audience, image: '/products/pigeon-slim-pp240.jpg', imageAlt: `${slimCandidate.product} ${slimCandidate.line}`, officialHref: slim, guidePoints: [slimCandidate.audience], purchaseHref: articlePurchaseLinks['pigeon-slim-240:right'].purchaseUrl, productId: 'pigeon-slim-240'}}
       rows={differenceRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       diagnosisHref="/tools/product-finder/baby-bottle/"
     />
 

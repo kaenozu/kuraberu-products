@@ -11,7 +11,6 @@ interface Props {
   robots?: 'index,follow' | 'noindex,nofollow';
   ogType?: 'website' | 'article';
   article?: ArticleMetadata;
-  faq?: readonly {question: string; answer: string}[];
 }
 
 const {
@@ -20,7 +19,6 @@ const {
   robots,
   ogType,
   article,
-  faq,
 } = Astro.props;
 const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
 // 本番デプロイ時のみ tools/production が注入するビルド元コミットSHA（PostDeploy検証で照合）。未設定時は出力しない。
@@ -74,21 +72,6 @@ const structuredData = resolvedOgType === 'article'
     };
 const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u003c');
 
-const faqStructuredData = faq && faq.length > 0
-  ? JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'FAQPage',
-      mainEntity: faq.map((entry) => ({
-        '@type': 'Question',
-        name: entry.question,
-        acceptedAnswer: {
-          '@type': 'Answer',
-          text: entry.answer,
-        },
-      })),
-    }).replaceAll('<', '\\u003c')
-  : undefined;
-
 const breadcrumbStructuredData = article
   ? JSON.stringify({
       '@context': 'https://schema.org',
@@ -139,13 +122,13 @@ const breadcrumbStructuredData = article
     {/* 商品数（品質ゲートが CTA 期待枚数を記事ごとに導出するための内部メタ） */}
     {article && <meta name="article:product-count" content={String(article.productCount)} />}
     {article && <meta name="article:content-type" content={contentTypeFor(article.productCount)} />}
+    {article?.purchaseLinkStatus && <meta name="article:purchase-link-status" content={article.purchaseLinkStatus} />}
     {article?.productInfoCheckedAt && (
       <meta name="article:product-info-checked-at" content={article.productInfoCheckedAt} />
     )}
     <meta name="twitter:card" content={articleImage ? 'summary_large_image' : 'summary'} />
     {articleImage && <meta name="twitter:image" content={articleImage} />}
     <script is:inline type="application/ld+json" set:html={structuredDataJson} />
-    {faqStructuredData && <script is:inline type="application/ld+json" set:html={faqStructuredData} />}
     {breadcrumbStructuredData && <script is:inline type="application/ld+json" set:html={breadcrumbStructuredData} />}
   </head>
   <body class={currentPath === '/' ? 'home-page' : undefined}>

@@ -57,7 +57,7 @@ const rows: KeyDiffRow[] = [
   { label: '洗濯・乾燥容量', left: left.capacity, right: right.capacity },
 ]
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / 生活家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
@@ -69,6 +69,7 @@ const rows: KeyDiffRow[] = [
       right={{brand: right.brand, line: right.model, tagline: '温水・タッチ操作なら', image: right.image, imageAlt: right.name, officialHref: right.official, guidePoints: ['ワイドカラー液晶タッチパネルを使いたい', '温水やスチームアイロンコースを確認したい'], purchaseHref: articlePurchaseLinks['hitachi-bd-sx130k-vs-bd-stx130k:right'].purchaseUrl}}
       rows={rows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
     />
     <p>両機種とも洗濯・脱水容量13kg、洗濯～乾燥・乾燥容量7kgです。公式仕様上の主な差は操作パネルと、温水・シワ伸ばしなどのコース構成です。</p>
 
@@ -98,7 +99,8 @@ const rows: KeyDiffRow[] = [
 
     <h2 id="official">公式情報</h2>
     <p>比較の根拠は、日立公式の商品ページと仕様ページで確認できる情報に限定しています。設置前には、防水パンの内寸や搬入経路など、各公式ページの注意事項も確認してください。</p>
-    <ArticleSocialProof query="日立 BD-SX130K BD-STX130K" checkedAt={articleMetadata.productInfoCheckedAt} hasPosts={false} />
+    <ArticleSocialProof query="日立 BD-SX130K BD-STX130K" checkedAt={articleMetadata.productInfoCheckedAt}
+      hasPosts={false} />
     <section id="faq" class="faq-section">
       <h2>FAQ</h2>
       {faqEntries.map((entry) => <details class="faq-item"><summary>{entry.question}</summary><p>{entry.answer}</p></details>)}

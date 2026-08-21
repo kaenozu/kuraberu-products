@@ -91,7 +91,7 @@ const keyDiffRows: KeyDiffRow[] = [
   },
 ]
 ---
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / キッチン家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
@@ -129,6 +129,7 @@ const keyDiffRows: KeyDiffRow[] = [
       }}
       rows={keyDiffRows}
       checkedAt={articleMetadata.productInfoCheckedAt}
+      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       commonNote="どちらも同じ：総庫内容量22L・フラット庫内・最高出力1000W（最大1分30秒）・外形寸法 幅488mm×奥行380mm×高さ298mm。"
     />
 
@@ -160,7 +161,8 @@ const keyDiffRows: KeyDiffRow[] = [
       </p>
     </details>
 
-    <ArticleSocialProof query="パナソニック NE-FL1A NE-FL1C 電子レンジ" checkedAt={articleMetadata.productInfoCheckedAt} />
+    <ArticleSocialProof query="パナソニック NE-FL1A NE-FL1C 電子レンジ" checkedAt={articleMetadata.productInfoCheckedAt}
+      />
 
     <section id="faq" class="faq-section">
       <h2>FAQ</h2>

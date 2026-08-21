@@ -6,7 +6,7 @@ import TrustLine from './TrustLine.astro';
 import NextStepBlock from './NextStepBlock.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
-import { fetchRakutenProducts, selectRakutenProduct } from '../lib/rakuten';
+import { resolvePurchaseHref } from '../lib/rakuten';
 
 interface Props {
   articleId: string;
@@ -20,23 +20,26 @@ if (!article || !seed) {
   throw new Error(`Unknown commercial article: ${articleId}`);
 }
 
-const leftSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
-const rightSearch = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
 const images = commercialArticleImages[articleId] ?? {};
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
-const resolveRakutenProduct = async (name: string, terms: string[]) => {
-  const products = await fetchRakutenProducts(name);
-  return (
-    selectRakutenProduct(products, terms) ??
-    products.find((product) => product.imageUrl) ??
-    undefined
-  );
-};
-const [leftRakutenProduct, rightRakutenProduct] = await Promise.all([
-  resolveRakutenProduct(seed.leftProduct, leftTerms),
-  resolveRakutenProduct(seed.rightProduct, rightTerms),
+const leftSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
+const rightSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
+// 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
+const [leftResolved, rightResolved] = await Promise.all([
+  resolvePurchaseHref({
+    keyword: seed.leftProduct,
+    requiredTerms: leftTerms,
+    fallbackUrl: leftSearchUrl,
+  }),
+  resolvePurchaseHref({
+    keyword: seed.rightProduct,
+    requiredTerms: rightTerms,
+    fallbackUrl: rightSearchUrl,
+  }),
 ]);
+const leftProductHref = leftResolved.href;
+const rightProductHref = rightResolved.href;
 const rows: readonly DifferenceRow[] = seed.verifiedRows?.length
   ? seed.verifiedRows
   : [
@@ -79,7 +82,7 @@ const faq = seed.faqEntries?.length
       },
     ];
 ---
-<BaseLayout title={article.title} description={article.description} article={article} faq={faq}>
+<BaseLayout title={article.title} description={article.description} article={article}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
     <h1>{article.headline}</h1>
@@ -117,8 +120,9 @@ const faq = seed.faqEntries?.length
     </ol>
 
     <NextStepBlock
-      left={{ label: seed.leftProduct, href: leftSearch }}
-      right={{ label: seed.rightProduct, href: rightSearch }}
+      left={{ label: seed.leftProduct, href: leftProductHref }}
+      right={{ label: seed.rightProduct, href: rightProductHref }}
+      purchaseLinkStatus={article.purchaseLinkStatus}
     />
 
     <h2 id="faq">よくある質問</h2>
@@ -129,8 +133,8 @@ const faq = seed.faqEntries?.length
     <h2>購入前の注意</h2>
     <p>ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。</p>
     <div class="purchase-cards">
-      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftSearch} searchQuery={seed.leftProduct} requiredTerms={leftTerms} imagePath={images.left} imageUrl={leftRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
-      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightSearch} searchQuery={seed.rightProduct} requiredTerms={rightTerms} imagePath={images.right} imageUrl={rightRakutenProduct?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" />
+      <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftProductHref} imagePath={images.left} imageUrl={leftResolved.product?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" purchaseLinkStatus={article.purchaseLinkStatus} />
+      <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightProductHref} imagePath={images.right} imageUrl={rightResolved.product?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" purchaseLinkStatus={article.purchaseLinkStatus} />
     </div>
 
     <h2>更新履歴</h2>

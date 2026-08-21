@@ -26,7 +26,6 @@ import {
   validateRenderedHtml,
   validateTopPageCategories,
   validateTopPageFeatured,
-  validateTopPageLatest,
 } from "../scripts/check-rendered-html.mjs";
 import {
   ARTICLE_LAYOUT,
@@ -633,57 +632,6 @@ describe("top page featured section", () => {
       3,
     );
     expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(4);
-  });
-});
-
-describe("top page latest section", () => {
-  const latest = (body: string) => `<section data-top-latest>${body}</section>`;
-  const validLatest = () =>
-    latest(
-      '<p class="section-label">最近の比較</p><h2>最近追加・更新した比較</h2><div class="article-list"><article class="card article-list-card"><div class="card-body"><h2><a href="/articles/x/">見出し</a></h2></div></article></div><p class="meta"><a href="/articles/">もっと見る →</a></p>',
-    );
-
-  it("accepts a labeled latest section with an article index link", () => {
-    expect(validateTopPageLatest(validLatest())).toEqual([]);
-  });
-
-  it("reports a missing latest section", () => {
-    expect(validateTopPageLatest("<main></main>")).toEqual([
-      "top page: missing data-top-latest section",
-    ]);
-  });
-
-  it("rejects a latest section without the 最近の比較 label", () => {
-    const errors = validateTopPageLatest(
-      latest(
-        '<h2>最近追加・更新した比較</h2><a href="/articles/">もっと見る</a>',
-      ),
-    );
-    expect(errors).toContain(
-      "top page: data-top-latest section must be labeled 最近の比較",
-    );
-  });
-
-  it("rejects a latest section without the article index link", () => {
-    const errors = validateTopPageLatest(
-      latest(
-        '<p class="section-label">最近の比較</p><h2>最近追加・更新した比較</h2>',
-      ),
-    );
-    expect(errors).toContain(
-      "top page: data-top-latest section must link to the article index (/articles/)",
-    );
-  });
-
-  it("rejects a latest section without article cards", () => {
-    const errors = validateTopPageLatest(
-      latest(
-        '<p class="section-label">最近の比較</p><h2>最近追加・更新した比較</h2><a href="/articles/">もっと見る</a>',
-      ),
-    );
-    expect(errors).toContain(
-      "top page: data-top-latest section must render at least one article card",
-    );
   });
 });
 

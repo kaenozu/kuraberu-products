@@ -84,6 +84,7 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
     type PinterestRenderScope,
   } from "../lib/external-embed-runtime";
   import type { ExternalEmbedConfig } from "../lib/external-embeds";
+  import { getCachedConsent, setConsent, onConsentChange, type EmbedConsent } from "../lib/embed-consent";
 
   type EmbedConfig = {
     provider: "x" | "youtube" | "tiktok" | "pinterest";
@@ -430,9 +431,59 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
     button.addEventListener("click", onClick);
 
     if (root.dataset.autoload === "true") {
-      // 初期表示から投稿を表示する: 権限を付与した後、自動で読み込む。
-      // ボタンは読み込み開始時に disabled になり、成功後に削除される。
-      onClick();
+      // autoload: 同意済みなら自動で読み込む。未同意なら同意バナーを表示。
+      const handleConsentChange = (consent: EmbedConsent | undefined) => {
+        if (consent === "granted" && root.dataset.embedState === "idle") {
+          onClick();
+        }
+      };
+      onConsentChange(handleConsentChange);
+
+      const consent = getCachedConsent();
+      if (consent === "granted") {
+        // 同意済み: 即座に読み込む。
+        onClick();
+      } else if (consent === undefined) {
+        // 未同意: 同意バナーを1枚だけ注入し、ユーザーの選択を待つ。
+        if (!document.querySelector("[data-embed-consent-banner]")) {
+          const banner = document.createElement("div");
+          banner.dataset.embedConsentBanner = "true";
+          banner.className = "embed-consent-banner";
+          banner.setAttribute("role", "region");
+          banner.setAttribute("aria-label", "外部コンテンツの表示について");
+          banner.innerHTML = `
+            <div class="embed-consent-banner__text">
+              <p><strong>外部コンテンツの表示</strong></p>
+              <p>この記事にはX・YouTubeなどの外部投稿が含まれています。表示すると、IPアドレスや閲覧環境などの情報が外部サービスに送信される場合があります。</p>
+            </div>
+            <div class="embed-consent-banner__actions">
+              <button type="button" data-embed-consent-accept>すべて表示</button>
+              <button type="button" data-embed-consent-reject>表示しない</button>
+            </div>
+          `;
+          const style = document.createElement("style");
+          style.textContent = `.embed-consent-banner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:.75rem 1rem;margin-bottom:1rem;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);font-size:.88rem}.embed-consent-banner p{margin:0}.embed-consent-banner__text{flex:1 1 20rem;color:var(--ink)}.embed-consent-banner__actions{display:flex;gap:.5rem;flex-shrink:0}.embed-consent-banner button{border:0;border-radius:var(--radius-sm);padding:.5rem .85rem;font:inherit;font-weight:800;cursor:pointer}[data-embed-consent-accept]{background:var(--ink);color:#fff}[data-embed-consent-reject]{background:transparent;border:1px solid var(--line)!important;color:var(--ink)}`;
+          document.head.append(style);
+
+          // 先頭のexternal-embedの前に挿入
+          const firstEmbed = document.querySelector("[data-external-embed]");
+          if (firstEmbed?.parentNode) {
+            firstEmbed.parentNode.insertBefore(banner, firstEmbed);
+          }
+
+          banner.querySelector("[data-embed-consent-accept]")?.addEventListener("click", () => {
+            setConsent("granted");
+            banner.remove();
+            style.remove();
+          });
+          banner.querySelector("[data-embed-consent-reject]")?.addEventListener("click", () => {
+            setConsent("denied");
+            banner.remove();
+            style.remove();
+          });
+        }
+      }
+      // consent === "denied": 何もしない — 手動読み込みボタンのまま。
     }
   }
 </script>
@@ -555,13 +606,14 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
     }
   }
 
-  /* autoload: 投稿をそのまま表示する。ボタン・「直接見る」リンク・
-     プライバシー注記・ステータス・「外部コンテンツ」ラベルは出さない。
-     埋め込み投稿自体がリンクなので、誘導UIは不要。タイトルと説明のみ残す */
-  .external-embed[data-autoload="true"] .external-embed__label,
-  .external-embed[data-autoload="true"] .external-embed__privacy,
-  .external-embed[data-autoload="true"] .external-embed__actions,
-  .external-embed[data-autoload="true"] .external-embed__status {
+  /* autoload + 同意済み: 投稿をそのまま表示する。
+     ボタン・「直接見る」リンク・プライバシー注記・ステータス・
+     「外部コンテンツ」ラベルは出さない。タイトルと説明のみ残す。
+     同意前は通常の手動読み込みUIを表示する。 */
+  .external-embed[data-autoload="true"][data-embed-state="loaded"] .external-embed__label,
+  .external-embed[data-autoload="true"][data-embed-state="loaded"] .external-embed__privacy,
+  .external-embed[data-autoload="true"][data-embed-state="loaded"] .external-embed__actions,
+  .external-embed[data-autoload="true"][data-embed-state="loaded"] .external-embed__status {
     display: none;
   }
 </style>
