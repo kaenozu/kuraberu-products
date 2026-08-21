@@ -162,32 +162,6 @@ const breadcrumbStructuredData = article
          2026-08-18 から全記事の比較表は静的 HTML に data-label を焼き込み済みのため、
          このスクリプトは未付与セルへのフォールバック（ゲートが焼き込みを強制）。
          marker: comparison-card-labels -->
-    <script is:inline>
-      (function () {
-        function labelComparisonTables() {
-          document.querySelectorAll("table.comparison").forEach(function (table) {
-            const thead = table.querySelector("thead");
-            const tbody = table.querySelector("tbody");
-            if (!thead || !tbody) return;
-            const headers = Array.prototype.slice.call(thead.querySelectorAll("th"));
-            if (headers.length < 2) return;
-            Array.prototype.forEach.call(tbody.querySelectorAll("tr"), function (row) {
-              const cells = row.querySelectorAll("td");
-              for (let i = 0; i < cells.length; i++) {
-                const header = headers[i + 1];
-                if (header && !cells[i].hasAttribute("data-label")) {
-                  cells[i].setAttribute("data-label", header.textContent.trim());
-                }
-              }
-            });
-          });
-        }
-        if (document.readyState === "loading") {
-          document.addEventListener("DOMContentLoaded", labelComparisonTables);
-        } else {
-          labelComparisonTables();
-        }
-      })();
-    </script>
+    <script is:inline src="/comparison-table-labels.js" defer></script>
   </body>
 </html>

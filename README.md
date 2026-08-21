@@ -117,7 +117,7 @@ README には変動しやすい記事数、PR番号、dependency更新状態を�
 - Build: `set -a && source .env && set +a && DEPLOYMENT_ENV=production pnpm build`
 - Deploy: `pnpm exec wrangler deploy --config wrangler.jsonc`
 - 確認: `npx wrangler deployments list --config wrangler.jsonc`
-- 本番ブランチラベル: `main`
+- Cloudflare デプロイラベル: `main`（`tools/production/Invoke-ProductionBuildAndDeploy.ps1` の `--branch=main` で指定。GitHub default branch名 `feat/affiliate-site-foundation` とは異なる）
 - 本番URL: `https://kuraberu-products.pages.dev`
 
 デプロイ後はDeployment一覧でEnvironmentがProduction、Branchがmain、Sourceが対象コミットであることを確認し、トップ・記事一覧・全記事詳細のHTTPステータスと生成HTMLを検証します。詳細な新規記事・既存記事・UI改善の管理基準は [`docs/site-management.md`](./docs/site-management.md) を参照してください。
