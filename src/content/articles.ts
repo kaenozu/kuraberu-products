@@ -1613,7 +1613,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
     ],
     decisionGuideSteps: [
-      "住まいの段差高さを確認する（4cm以下なら両機種、6cm以上ならX50 Ultra）",
+      "住まいの段差高さを確認する（4cm以下なら両機種対応。6cm以上の段差対応はX50 UltraのProLeapシステム（公式最大値）。実際の対応可否は段差形状により異なります）",
       "毛絡まりの頻度を考慮する（ペット・長髪の場合はブラシ確認）",
       "ステーションの自動化レベルを比較する（ゴミ収集日数・自動給水の有無）",
       "価格・在庫を販売ページで確認する。",
@@ -2195,7 +2195,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     category: "キッチン家電",
     tags: ["キッチン家電", "比較", "公式仕様"],
     audiences: [
-      "オーブンレンジの機能差を確認したい人",
+      "オーブントースターの機能差を確認したい人",
       "パン焼き・加熱調理で選ぶ人",
     ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],

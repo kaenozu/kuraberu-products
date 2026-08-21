@@ -21,6 +21,7 @@
     "validate:content": "node scripts/validate-content.mjs",
     "check:css-usage": "node scripts/report-css-usage.mjs --fail-on-unused",
     "check:spec-claims": "node scripts/spec-claims.mjs check",
+    "check:factual-integrity": "node scripts/check-article-factual-integrity.mjs check",
     "check:official-links": "node scripts/check-official-links.mjs check",
     "check:rendered": "node scripts/check-rendered-html.mjs",
     "check:deployment": "node scripts/check-deployment-html.mjs",
@@ -29,7 +30,7 @@
     "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
     "check:external-links": "node scripts/check-external-links.mjs",
     "announce:draft": "node scripts/generate-x-announcements.mjs",
-    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run"
+    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/check-article-factual-integrity.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run"
   },
   "dependencies": {
     "astro": "7.2.0",
