@@ -4,6 +4,7 @@ import ComparisonMemoButton from './ComparisonMemoButton.astro';
 import PurchaseCard from './PurchaseCard.astro';
 import TrustLine from './TrustLine.astro';
 import NextStepBlock from './NextStepBlock.astro';
+import ArticleComparisonV2 from './ArticleComparisonV2.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
@@ -65,6 +66,16 @@ if (
     `Commercial article ${articleId} contains placeholder comparison rows; add verified values before publishing`,
   );
 }
+const leftOfficialHref = seed.officialSources?.[0]?.url ?? '';
+const rightOfficialHref = seed.officialSources?.[1]?.url ?? '';
+const hasHeroSources = Boolean(leftOfficialHref && rightOfficialHref);
+const splitProduct = (name: string) => {
+  const [brand, ...rest] = name.split(/\s+/);
+  return { brand, line: rest.join(' ') || brand };
+};
+const leftHero = splitProduct(seed.leftProduct);
+const rightHero = splitProduct(seed.rightProduct);
+const heroRows = rows.map((row) => ({ label: row.label, left: row.left, right: row.right }));
 const faq = seed.faqEntries?.length
   ? seed.faqEntries
   : [
@@ -87,43 +98,45 @@ const faq = seed.faqEntries?.length
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
     <h1>{article.headline}</h1>
     <ComparisonMemoButton articleId={article.id} />
-    <TrustLine checkedAt={article.productInfoCheckedAt} />
+    {!hasHeroSources && <TrustLine checkedAt={article.productInfoCheckedAt} />}
     {seed.officialSources?.length ? (
-      <section class="source-note" aria-labelledby="official-sources">
-        <h2 id="official-sources">公式の確認先</h2>
+      <details class="fold-section source-note" aria-labelledby="official-sources">
+        <summary>公式の確認先</summary>
         <ul>
           {seed.officialSources.map((source) => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a></li>)}
         </ul>
-      </section>
+      </details>
     ) : null}
 
     <p>{seed.lead ?? article.summary} ここでは、メーカー公式ページで確認できる仕様と、販売ページで購入時に確認する項目を分けて整理します。</p>
-    <h2 id="key-differences">違いを確認する</h2>
-    <div class="table-scroll">
-      <table class="comparison">
-        <thead><tr><th scope="col">比較項目</th><th scope="col">{seed.leftProduct}</th><th scope="col">{seed.rightProduct}</th></tr></thead>
-        <tbody>
-          {rows.map((row) => <tr><th scope="row">{row.label}</th><td data-label={seed.leftProduct}>{row.left}</td><td data-label={seed.rightProduct}>{row.right}</td></tr>)}
-        </tbody>
-      </table>
-    </div>
+    {hasHeroSources ? (
+      <ArticleComparisonV2
+        left={{ brand: leftHero.brand, line: leftHero.line, tagline: seed.leftPoint, image: images.left ?? '', imageAlt: seed.leftProduct, officialHref: leftOfficialHref, guidePoints: [seed.leftPoint], purchaseHref: leftProductHref }}
+        right={{ brand: rightHero.brand, line: rightHero.line, tagline: seed.rightPoint, image: images.right ?? '', imageAlt: seed.rightProduct, officialHref: rightOfficialHref, guidePoints: [seed.rightPoint], purchaseHref: rightProductHref }}
+        rows={heroRows}
+        checkedAt={seed.productInfoCheckedAt}
+        purchaseLinkStatus={article.purchaseLinkStatus}
+      />
+    ) : <h2 id="key-differences">違いを確認する</h2>}
+    {!hasHeroSources && (
+      <NextStepBlock
+        left={{ label: seed.leftProduct, href: leftProductHref }}
+        right={{ label: seed.rightProduct, href: rightProductHref }}
+        purchaseLinkStatus={article.purchaseLinkStatus}
+      />
+    )}
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（公式ページで確認した項目）</summary>
+      <div class="table-scroll">
+        <table class="comparison">
+          <thead><tr><th scope="col">比較項目</th><th scope="col">{seed.leftProduct}</th><th scope="col">{seed.rightProduct}</th></tr></thead>
+          <tbody>
+            {rows.map((row) => <tr><th scope="row">{row.label}</th><td data-label={seed.leftProduct}>{row.left}</td><td data-label={seed.rightProduct}>{row.right}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </details>
     <p class="meta">商品仕様・価格・在庫は変更される可能性があります。購入時点の公式ページと販売ページをご確認ください。</p>
-
-    <h2 id="decision-guide">選ぶときの確認順</h2>
-    <ol>
-      {(seed.decisionGuideSteps ?? [
-        "使う場所と目的を決める。",
-        "サイズ、対応機器、容量など変更しにくい条件を確認する。",
-        "手入れ、消耗品、保証、返品条件を確認する。",
-        "最後に価格・送料・ポイントを販売ページで比較する。",
-      ]).map((step) => <li>{step}</li>)}
-    </ol>
-
-    <NextStepBlock
-      left={{ label: seed.leftProduct, href: leftProductHref }}
-      right={{ label: seed.rightProduct, href: rightProductHref }}
-      purchaseLinkStatus={article.purchaseLinkStatus}
-    />
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
