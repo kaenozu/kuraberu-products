@@ -50,21 +50,30 @@ jobs:
 
       - name: Verify SHA matches default branch HEAD
         shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
-          if [ "${{ inputs.expected_sha }}" != "${{ github.sha }}" ]; then
-            echo "::error::Input SHA does not match the default branch HEAD (${{ github.sha }}). Only the latest default-branch commit may be deployed."
+          # Fetch the actual default branch HEAD — github.sha / github.ref
+          # reflect the dispatch ref, not the default branch, so we must
+          # explicitly resolve the default branch to prevent bypass via
+          # feature-branch dispatch.
+          git fetch origin "$DEFAULT_BRANCH" --depth=1
+          REAL_DEFAULT_HEAD=$(git rev-parse "origin/$DEFAULT_BRANCH")
+          if [ "${{ inputs.expected_sha }}" != "$REAL_DEFAULT_HEAD" ]; then
+            echo "::error::Input SHA (${{ inputs.expected_sha }}) does not match the default branch HEAD ($REAL_DEFAULT_HEAD on $DEFAULT_BRANCH). Only the latest default-branch commit may be deployed."
             exit 1
           fi
+          echo "SHA verified: ${{ inputs.expected_sha }} matches default branch HEAD ($REAL_DEFAULT_HEAD)"
 
       - name: Verify SHA is reachable from default branch (ancestry check)
         shell: bash
+        env:
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
         run: |
           # Defense-in-depth: confirm the input SHA is an ancestor of the
-          # default branch HEAD.  The preceding step already enforces exact
-          # HEAD equality, but this check catches any future relaxation of
-          # that guard and provides a specific error for feature-branch SHAs.
-          git fetch origin "${{ github.ref }}" --depth=1
-          DEFAULT_HEAD=$(git rev-parse "origin/${{ github.ref_name }}")
+          # default branch HEAD.  Uses the real default branch (not github.ref
+          # which reflects the dispatch ref and could be a feature branch).
+          DEFAULT_HEAD=$(git rev-parse "origin/$DEFAULT_BRANCH")
           if ! git merge-base --is-ancestor "${{ inputs.expected_sha }}" "$DEFAULT_HEAD"; then
             echo "::error::Input SHA (${{ inputs.expected_sha }}) is not an ancestor of the default branch HEAD ($DEFAULT_HEAD). Only default-branch-reachable commits may be deployed."
             exit 1

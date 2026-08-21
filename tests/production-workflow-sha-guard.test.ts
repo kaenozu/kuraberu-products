@@ -8,9 +8,9 @@ import { describe, expect, it } from "vitest";
  *
  * Prior to the guard, a privileged dispatcher could deploy any reachable
  * commit (e.g. an older release or an un-merged PR head) by supplying its
- * 40-char SHA.  The workflow now checks `inputs.expected_sha != github.sha`
- * *before* checkout so only the very latest default-branch commit can be
- * deployed.
+ * 40-char SHA.  The workflow resolves the real default branch HEAD via
+ * `github.event.repository.default_branch` (not `github.sha` which reflects
+ * the dispatch ref) and rejects mismatches *before* checkout.
  *
  * These tests parse the workflow as structured YAML rather than matching raw
  * text with regex, making them robust against formatting changes, indentation
@@ -133,11 +133,15 @@ describe("production deploy SHA guard", () => {
       expect(guardIdx).toBeLessThan(verifyIdx);
     });
 
-    it("compares inputs.expected_sha against github.sha", () => {
+    it("compares inputs.expected_sha against the real default branch HEAD", () => {
       const step = findStep("Verify SHA matches default branch HEAD");
       const run = String(step?.run ?? "");
       expect(run).toContain("inputs.expected_sha");
-      expect(run).toContain("github.sha");
+      // Must NOT use ${{ github.sha }} as variable reference (reflects dispatch ref)
+      expect(run).not.toContain("${{ github.sha }}");
+      // Must resolve the actual default branch via repository metadata
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
     });
 
     it("exits with code 1 on mismatch", () => {
@@ -160,14 +164,15 @@ describe("production deploy SHA guard", () => {
       expect(step?.shell).toBe("bash");
     });
 
-    it("uses github.sha directly, not an intermediate variable", () => {
+    it("resolves the default branch via env, not github.ref", () => {
       const step = findStep("Verify SHA matches default branch HEAD");
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env).toBeDefined();
+      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
+      // Must NOT use ${{ github.ref }} or ${{ github.sha }} as variable references
       const run = String(step?.run ?? "");
-      // Must compare inputs.expected_sha and github.sha in the same expression
-      // without an intermediate env var that could be overridden.
-      expect(run).toMatch(/inputs\.expected_sha[\s\S]*github\.sha/);
-      // Must NOT use an env block for the comparison
-      expect(step?.env).toBeUndefined();
+      expect(run).not.toContain("${{ github.ref }}");
+      expect(run).not.toContain("${{ github.sha }}");
     });
   });
 
@@ -194,13 +199,16 @@ describe("production deploy SHA guard", () => {
       expect(run).toContain("git merge-base --is-ancestor");
     });
 
-    it("compares inputs.expected_sha against the default branch HEAD", () => {
+    it("compares inputs.expected_sha against the real default branch HEAD", () => {
       const step = findStep(
         "Verify SHA is reachable from default branch (ancestry check)",
       );
       const run = String(step?.run ?? "");
       expect(run).toContain("inputs.expected_sha");
-      expect(run).toContain("github.ref");
+      // Must NOT use ${{ github.ref }} as variable reference
+      expect(run).not.toContain("${{ github.ref }}");
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
     });
 
     it("exits with code 1 when SHA is not an ancestor", () => {
@@ -227,13 +235,15 @@ describe("production deploy SHA guard", () => {
       expect(step?.shell).toBe("bash");
     });
 
-    it("fetches the default branch ref before checking ancestry", () => {
+    it("uses the real default branch (not github.ref) for ancestry check", () => {
       const step = findStep(
         "Verify SHA is reachable from default branch (ancestry check)",
       );
       const run = String(step?.run ?? "");
-      expect(run).toContain("git fetch origin");
-      expect(run).toContain("github.ref");
+      // Must NOT use ${{ github.ref }} as variable reference
+      expect(run).not.toContain("${{ github.ref }}");
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
     });
   });
 
