@@ -113,6 +113,23 @@ const categories = [...categoryCounts.entries()]
     gap: 0.75rem;
   }
 
+  /* セクション見出しを、左寄せのカード列（max-width: 900px）に揃える。 */
+  [data-top-featured] .subsection-heading,
+  [data-top-categories] .subsection-heading,
+  [data-top-diagnosis] .subsection-heading {
+    max-width: 900px;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0.35rem;
+  }
+
+  [data-top-featured] .subsection-heading h2,
+  [data-top-categories] .subsection-heading h2,
+  [data-top-diagnosis] .subsection-heading h2 {
+    margin-bottom: 0.75rem;
+  }
+
   .top-article-list .article-list-card {
     grid-template-columns: 88px minmax(0, 1fr);
     gap: 0.85rem;
