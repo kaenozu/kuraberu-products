@@ -141,7 +141,9 @@ describe("production deploy SHA guard", () => {
       expect(run).not.toContain("${{ github.sha }}");
       // Must resolve the actual default branch via repository metadata
       const env = step?.env as Record<string, string> | undefined;
-      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
+      expect(env?.DEFAULT_BRANCH).toContain(
+        "github.event.repository.default_branch",
+      );
     });
 
     it("exits with code 1 on mismatch", () => {
@@ -168,7 +170,9 @@ describe("production deploy SHA guard", () => {
       const step = findStep("Verify SHA matches default branch HEAD");
       const env = step?.env as Record<string, string> | undefined;
       expect(env).toBeDefined();
-      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
+      expect(env?.DEFAULT_BRANCH).toContain(
+        "github.event.repository.default_branch",
+      );
       // Must NOT use ${{ github.ref }} or ${{ github.sha }} as variable references
       const run = String(step?.run ?? "");
       expect(run).not.toContain("${{ github.ref }}");
@@ -208,7 +212,9 @@ describe("production deploy SHA guard", () => {
       // Must NOT use ${{ github.ref }} as variable reference
       expect(run).not.toContain("${{ github.ref }}");
       const env = step?.env as Record<string, string> | undefined;
-      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
+      expect(env?.DEFAULT_BRANCH).toContain(
+        "github.event.repository.default_branch",
+      );
     });
 
     it("exits with code 1 when SHA is not an ancestor", () => {
@@ -243,7 +249,9 @@ describe("production deploy SHA guard", () => {
       // Must NOT use ${{ github.ref }} as variable reference
       expect(run).not.toContain("${{ github.ref }}");
       const env = step?.env as Record<string, string> | undefined;
-      expect(env?.DEFAULT_BRANCH).toContain("github.event.repository.default_branch");
+      expect(env?.DEFAULT_BRANCH).toContain(
+        "github.event.repository.default_branch",
+      );
     });
   });
 
