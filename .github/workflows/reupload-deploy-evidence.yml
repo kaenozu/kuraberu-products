@@ -17,27 +17,42 @@ on:
 
 permissions:
   contents: read
+  # scripts/reupload-deploy-evidence.mjs が Actions runs API と
+  # Check Runs API を呼ぶための読み取り権限。
+  actions: read
+  checks: read
 
 jobs:
   reupload:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      # inputs を run スクリプトへ直接補間しないための env 経由参照。
+      RUN_ID: ${{ inputs.run_id }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
           persist-credentials: false
 
+      # setup-node の cache: 'pnpm' は pnpm バイナリを必要とするため、
+      # corepack enable を必ず先に置く。
+      - name: Enable Corepack
+        run: corepack enable
+
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
         with:
           node-version-file: .node-version
-
-      - name: Enable Corepack
-        run: corepack enable
+          cache: "pnpm"
 
       - name: Rebuild post-deploy report from the check run
         env:
           GH_TOKEN: ${{ github.token }}
-        run: node scripts/reupload-deploy-evidence.mjs --run-id ${{ inputs.run_id }}
+        run: |
+          if [[ ! "$RUN_ID" =~ ^[0-9]+$ ]]; then
+            echo "::error::Input 'run_id' must be a numeric Actions run ID (got \"${RUN_ID}\")."
+            exit 1
+          fi
+          node scripts/reupload-deploy-evidence.mjs --run-id "$RUN_ID"
 
       - name: Upload rebuilt acceptance reports
         # 再構築した report.json も .acceptance/（隠しディレクトリ）配下に書くため、

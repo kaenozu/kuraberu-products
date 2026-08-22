@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { site } from "../config/site";
 import { publicArticleMetadata } from "../content/articles";
+import { diagnosisCategories } from "../data/diagnoses";
 
 const publicPaths = [
   "/",
@@ -9,11 +10,9 @@ const publicPaths = [
   "/privacy/",
   "/disclaimer/",
   "/tools/product-finder/",
-  "/tools/product-finder/baby-bottle/",
-  "/tools/product-finder/diaper/",
-  "/tools/product-finder/water-bottle/",
-  "/tools/product-finder/hair-dryer/",
-  "/tools/product-finder/rice-cooker/",
+  ...diagnosisCategories.map(
+    (category) => `/tools/product-finder/${category.slug}/`,
+  ),
   ...publicArticleMetadata.map((article) => article.path),
 ] as const;
 

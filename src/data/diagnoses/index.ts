@@ -9,6 +9,8 @@
  */
 
 import type { DiagnosisCategory } from "../../domain/diagnosis/types";
+import { validateDiagnosisData } from "../../domain/diagnosis/validate";
+import { articleMetadata } from "../../content/articles";
 import {
   babyBottleDiagnosis,
   babyBottlePageContent,
@@ -39,6 +41,10 @@ import {
   riceCookerReasonDictionary,
 } from "./rice-cooker";
 import { riceCookerProducts } from "../products/rice-cookers";
+
+// 実在する記事パスの集合（商品の articleUrls と関連記事の検証に使う）。
+// validate.ts を純粋保つため、ここ（呼び出し元）で articleMetadata から渡す。
+const knownArticlePaths = articleMetadata.map((article) => article.path);
 
 export const diagnosisCategories: readonly DiagnosisCategory[] = [
   {
@@ -77,6 +83,15 @@ export const diagnosisCategories: readonly DiagnosisCategory[] = [
     pageContent: riceCookerPageContent,
   },
 ];
+
+// レジストリ読み込み時に全カテゴリを検証する（defineArticleMetadata と同じ
+// ビルド時 fail-fast パターン。データ不整合はビルドを落とす）。
+for (const category of diagnosisCategories) {
+  validateDiagnosisData(category.config, category.products, category.reasons, {
+    knownArticlePaths,
+    pageContent: category.pageContent,
+  });
+}
 
 export function findDiagnosisCategory(
   slug: string,

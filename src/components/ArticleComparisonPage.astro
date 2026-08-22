@@ -11,7 +11,6 @@ import RelatedArticles from './RelatedArticles.astro';
 import PurchaseCard from './PurchaseCard.astro';
 import ComparisonMemoButton from './ComparisonMemoButton.astro';
 import ArticleComparisonV2 from './ArticleComparisonV2.astro';
-import ArticleSocialProof from './ArticleSocialProof.astro';
 import type { KeyDiffRow } from './VisualKeyDifferences.astro';
 import { articleMetadata as allArticles } from '../content/articles';
 import { articlePurchaseLinks } from '../lib/products';
@@ -39,13 +38,16 @@ interface Side {
   tagline: string;
   image: string;
   imageAlt: string;
+  /** 商品画像の実寸。HeroComparison へそのまま渡る(img の width/height)。 */
+  imageWidth?: number;
+  imageHeight?: number;
   officialHref: string;
   guidePoints: string[];
   purchaseHref?: string;
   productId?: string;
 }
 
-interface ArticleComparisonPageProps {
+interface Props {
   /** 1行記事モード: 記事IDを指定するとメタデータから自動解決 */
   articleId?: string;
   /** 明示モード: メタデータ */
@@ -71,7 +73,8 @@ interface ArticleComparisonPageProps {
   disclaimer?: string;
 }
 
-const props = Astro.props as ArticleComparisonPageProps;
+// 型アサーション（as）ではなく Props 注釈で受ける。
+const props: Props = Astro.props;
 
 // --- Resolve data from articleId or explicit props ---
 let resolved: {
@@ -103,6 +106,11 @@ if (props.articleId) {
   if (!article.leftModel || !article.rightModel) {
     throw new Error(`Article ${props.articleId} missing leftModel/rightModel`);
   }
+  // defineArticleMetadata が leftModel/rightModel 宣言時の keyDiffRows / lead / faqEntries
+  // を検証済みであることを前提にしつつ、ここでも明示的にガードする（fail-closed）。
+  if (!article.keyDiffRows) throw new Error(`Article ${props.articleId} missing keyDiffRows`);
+  if (!article.lead) throw new Error(`Article ${props.articleId} missing lead`);
+  if (!article.faqEntries) throw new Error(`Article ${props.articleId} missing faqEntries`);
 
   const lm = article.leftModel;
   const rm = article.rightModel;
@@ -131,15 +139,15 @@ if (props.articleId) {
     articleMetadata: article,
     left: toSide(lm, "left"),
     right: toSide(rm, "right"),
-    keyDiffRows: [...article.keyDiffRows!],
-    lead: article.lead!,
+    keyDiffRows: [...article.keyDiffRows],
+    lead: article.lead,
     summaryParagraph: article.summaryParagraph,
     officialDescription: article.officialDescription ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
     officialLinks,
     specRows: props.specRows,
     socialProofQuery: article.socialProofQuery ?? `${lm.brand} ${lm.line} ${rm.line}`,
     socialProofCheckedAt: article.socialProofCheckedAt,
-    faqEntries: [...article.faqEntries!],
+    faqEntries: [...article.faqEntries],
     leftPurchaseName: `${lm.brand} ${lm.line}`,
     leftPurchaseAudience: leftAudiences,
     rightPurchaseName: `${rm.brand} ${rm.line}`,
@@ -190,7 +198,6 @@ if (props.articleId) {
 const {
   articleMetadata, left, right, keyDiffRows, lead, summaryParagraph,
   officialDescription, officialLinks, specRows: specRowsProp,
-  socialProofQuery, socialProofCheckedAt,
   faqEntries, leftPurchaseName, leftPurchaseAudience,
   rightPurchaseName, rightPurchaseAudience, sourceLinks,
   purchaseWarning, disclaimer,
@@ -251,7 +258,6 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
         )}
       </>
     )}
-    <ArticleSocialProof query={socialProofQuery} checkedAt={socialProofCheckedAt} hasPosts={false} />
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
       {faqEntries.map((entry) => (

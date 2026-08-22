@@ -2,7 +2,22 @@
 import {isAllowedRakutenUrl, isAffiliateRakutenUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {resolvePurchaseHref} from '../lib/rakuten';
-import {productQueries, type ProductId} from '../lib/purchase-queries';
+import {productQueries} from '../lib/purchase-queries';
+
+interface Props {
+  /** 検証済みの楽天URL（許可ホスト以外は無視される） */
+  href?: string;
+  label?: string;
+  /** 計測用の商品ID。productQueries レジストリのキーと一致するときだけ検索クエリに使う */
+  productId?: string;
+  placement?: string;
+  imagePath?: string;
+  subLabel?: string;
+  searchQuery?: string;
+  requiredTerms?: readonly string[];
+}
+
+// interface Props により Astro.props は型付きで受ける。
 const {href,label,productId,placement,imagePath,subLabel,searchQuery,requiredTerms} = Astro.props;
 
 const directHref = typeof href === 'string' && isAllowedRakutenUrl(href) ? href : undefined;
@@ -14,7 +29,22 @@ const genericQuery = typeof searchQuery === 'string' && searchQuery.trim()
         : searchQuery.split(/\s+/).filter(Boolean),
     }
   : undefined;
-const query = productQueries[productId as ProductId] ?? genericQuery;
+
+/**
+ * productId が productQueries レジストリのキーと一致するときだけクエリを返す。
+ * 未指定・未登録のときは undefined（型アサーションなしの安全な参照）。
+ */
+function findRegistryQuery(id: string | undefined) {
+  if (id === undefined) return undefined;
+  for (const [key, value] of Object.entries(productQueries)) {
+    if (key === id) return value;
+  }
+  return undefined;
+}
+
+// productId 未指定のときはレジストリを参照しない。登録済みならレジストリを優先し、
+// 無ければ genericQuery へフォールバックする。
+const query = findRegistryQuery(productId) ?? genericQuery;
 const fallbackHref = toAffiliateRakutenUrl(directHref);
 const resolved = query
   ? await resolvePurchaseHref({

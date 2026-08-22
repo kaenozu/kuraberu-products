@@ -3,6 +3,7 @@ import { describe, expect, it } from "vitest";
 import { format } from "prettier";
 import {
   DEFAULT_THRESHOLD_DAYS,
+  SCHEMA_VERSION,
   addMissingEntries,
   checkCoverage,
   collectArticleClaims,
@@ -189,6 +190,19 @@ describe("checkCoverage", () => {
     expect(checkCoverage(articles, manifest)).toEqual([]);
   });
 
+  it("reports a manifest whose schemaVersion differs from SCHEMA_VERSION", () => {
+    const articles = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    expect(SCHEMA_VERSION).toBe(1);
+    expect(
+      checkCoverage(articles, { ...manifest, schemaVersion: 99 }).some(
+        (issue) => issue.includes("schemaVersion"),
+      ),
+    ).toBe(true);
+  });
+
   it("reports spec-bearing articles without a manifest entry", () => {
     const articles = parseArticles(
       readFileSync("src/content/articles.ts", "utf8"),
@@ -321,6 +335,18 @@ describe("real manifest hygiene", () => {
         entry.claimsFingerprint,
         `${entry.articleId}: missing fingerprint`,
       ).toMatch(/^sha256:[0-9a-f]{64}$/);
+    }
+  });
+
+  it("declares at least one official URL for every entry", () => {
+    // officialUrls: [] のままにすると出典不明の確認記録になるため禁止する。
+    const manifest = loadManifest() as { entries: ManifestEntry[] };
+    expect(manifest.entries.length).toBeGreaterThan(0);
+    for (const entry of manifest.entries) {
+      expect(
+        entry.officialUrls?.length ?? 0,
+        `${entry.articleId}: officialUrls must not be empty`,
+      ).toBeGreaterThan(0);
     }
   });
 

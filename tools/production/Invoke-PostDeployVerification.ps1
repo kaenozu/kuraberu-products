@@ -56,13 +56,19 @@ function Check([string]$Name, [bool]$Passed, [string]$Detail) {
     $checks.Add([ordered]@{ name = $Name; status = $(if ($Passed) { 'PASS' } else { 'FAIL' }); detail = $Detail })
     if (-not $Passed) { $script:hasFailure = $true }
 }
+# 最後に発生した通信例外のメッセージ（FAIL チェックの理由として記録する）。
+$script:lastFetchError = ''
 function Fetch([uri]$Uri, [switch]$AllowHttpError) {
+    # 通信例外をそのまま再throwしない。EAP=Stop のもとで throw すると
+    # リトライループごと中断し report.json が書かれないため、$null を返して
+    # 呼び出し側が FAIL チェック（理由=例外メッセージ）として記録し、
+    # 再試行を継続できるようにする。
     try {
         $response = Invoke-WebRequest -Uri $Uri -MaximumRedirection 5 -TimeoutSec 20 -SkipHttpErrorCheck
         return $response
     } catch {
-        if ($AllowHttpError) { return $null }
-        throw
+        $script:lastFetchError = $_.Exception.Message
+        return $null
     }
 }
 
@@ -80,6 +86,10 @@ function Invoke-VerificationAttempt {
     foreach ($path in $RequiredPaths) {
         $uri = [uri]::new($BaseUrl, $path)
         $response = Fetch $uri
+        if ($null -eq $response) {
+            Check "HTTP $path" $false "Failed to fetch: $($script:lastFetchError)"
+            continue
+        }
         $expected = 200
         $ok = [int]$response.StatusCode -eq $expected
         Check "HTTP $path" $ok "status=$([int]$response.StatusCode) final=$($response.BaseResponse.RequestMessage.RequestUri)"
@@ -112,7 +122,7 @@ function Invoke-VerificationAttempt {
         $uri = [uri]::new($BaseUrl, $articlePath)
         $response = Fetch $uri
         if ($null -eq $response) {
-            Check "Article HTTP $articlePath" $false "Failed to fetch article"
+            Check "Article HTTP $articlePath" $false "Failed to fetch article: $($script:lastFetchError)"
             $articleFailures++
             continue
         }
@@ -195,9 +205,13 @@ function Invoke-VerificationAttempt {
 
     $notFoundPath = "/__acceptance_missing_$([guid]::NewGuid().ToString('N')).html"
     $notFound = Fetch ([uri]::new($BaseUrl, $notFoundPath))
-    Check 'Generated 404 status' ([int]$notFound.StatusCode -eq 404) "status=$([int]$notFound.StatusCode)"
-    $notFoundHtml = [string]$notFound.Content
-    Check 'Generated 404 noindex' ($notFoundHtml -match '(?is)<meta[^>]+name=["'']robots["''][^>]+content=["''][^"'']*noindex') '404 contains robots noindex.'
+    if ($null -eq $notFound) {
+        Check 'Generated 404 status' $false "Failed to fetch 404 probe: $($script:lastFetchError)"
+    } else {
+        Check 'Generated 404 status' ([int]$notFound.StatusCode -eq 404) "status=$([int]$notFound.StatusCode)"
+        $notFoundHtml = [string]$notFound.Content
+        Check 'Generated 404 noindex' ($notFoundHtml -match '(?is)<meta[^>]+name=["'']robots["''][^>]+content=["''][^"'']*noindex') '404 contains robots noindex.'
+    }
 
     # Note: Article-level validation (JSON-LD, build-sha, Rakuten CTA, mixed content)
     # is now performed across all $ArticlePaths in the multi-article validation section above.

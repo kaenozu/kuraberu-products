@@ -1,14 +1,16 @@
 ---
 import ArticleCard from '../../../components/ArticleCard.astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import { publicArticleMetadata, articleMetadata } from '../../../content/articles';
+import { publicArticleMetadata } from '../../../content/articles';
 import { normalizeDiscoveryText } from '../../../lib/article-discovery';
 import { comparisonSubjects } from '../../../lib/article-subjects';
 
-const allCategories = [...new Set(articleMetadata.map((article) => article.category))].sort();
+// カテゴリ一覧は公開記事（publicArticleMetadata）由来に限定する。
+// 非公開記事だけが属するカテゴリで「0件ページ」が生成されるのを防ぐ。
+const allCategories = [...new Set(publicArticleMetadata.map((article) => article.category))].sort();
 
 export function getStaticPaths() {
-  const categories = [...new Set(articleMetadata.map((article) => article.category))].sort();
+  const categories = [...new Set(publicArticleMetadata.map((article) => article.category))].sort();
   return categories.map((category) => ({
     params: { category },
     props: { category },

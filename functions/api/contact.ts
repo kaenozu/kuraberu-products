@@ -97,12 +97,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "payload too large" }, 413);
   }
 
-  // formData() 展開後の実サイズを確認（Content-Length 欠落・過少申告対策）
+  // formData() 展開後の実サイズを確認（Content-Length 欠落・過少申告対策）。
   const form = await request.formData();
   const rawMessage = String(form.get("message") ?? "").trim();
   const rawName = String(form.get("name") ?? "").trim();
   const rawEmail = String(form.get("email") ?? "").trim();
-  const totalSize = rawMessage.length + rawName.length + rawEmail.length + 100; // overhead
+  // UTF-16 の .length ではなく TextEncoder でバイト数を測る。多バイト文字
+  //（日本語など）では .length < 実バイト数になるため、文字数ベースの判定は
+  // 上限を超過許容してしまう。フィールド名も含めて実ペイロードに近い値で比較する。
+  const encoder = new TextEncoder();
+  const formFields: ReadonlyArray<readonly [string, string]> = [
+    ["message", rawMessage],
+    ["name", rawName],
+    ["email", rawEmail],
+  ];
+  let totalSize = 0;
+  for (const [field, value] of formFields) {
+    totalSize += encoder.encode(field).length + encoder.encode(value).length;
+  }
   if (totalSize > MAX_BODY_BYTES) {
     return json({ ok: false, error: "payload too large" }, 413);
   }

@@ -67,6 +67,19 @@ describe("article CTA layout vs metadata productCount", () => {
         article.purchaseLinkStatus === "unverified" ||
         article.purchaseLinkStatus === "unavailable";
 
+      // fail-closed 契約: PurchaseCard は purchaseLinkStatus が明示的に
+      // "verified" のときだけ CTA を出す。検証済み記事なのに status prop を
+      // 渡し忘れると、レンダリング時に CTA が消えてゲートと不整合になるため、
+      // テンプレート側で必ずメタデータの status を渡していることを検査する。
+      if (!isUnverified) {
+        for (const block of blocks) {
+          expect(
+            block,
+            `${article.id}: verified article must pass purchaseLinkStatus to every PurchaseCard`,
+          ).toMatch(/\bpurchaseLinkStatus=/);
+        }
+      }
+
       for (const set of ARTICLE_LAYOUT.ctaSets) {
         const isComparison =
           contentTypeFor(article.productCount) === "comparison";

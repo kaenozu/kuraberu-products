@@ -1,5 +1,5 @@
-import { readdirSync, readFileSync } from "node:fs";
-import { describe, expect, it } from "vitest";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   publicArticleMetadata,
   articleMetadata,
@@ -8,8 +8,23 @@ import { contentTypeFor, ARTICLE_LAYOUT } from "../config/article-layout.mjs";
 
 // 実ビルド（astro build）後の dist を検証する。verify チェーンは build の後に
 // vitest を実行するため、CI では常に dist が存在する。
-const topHtml = readFileSync("dist/index.html", "utf8");
-const articlesIndexHtml = readFileSync("dist/articles/index.html", "utf8");
+// 単体実行で dist が無い場合は、理由をログに出して全テストを明示スキップする。
+// dist の読み込みは各 describe の beforeAll で行う（スキップ時はフックも
+// 実行されないため、コレクション時に読み込んで失敗することがない）。
+const hasDist = existsSync("dist");
+if (!hasDist) {
+  console.warn(
+    "skip: dist/ が存在しないため top-page の実ビルド整合テストをスキップしました（astro build 後に再実行してください）",
+  );
+}
+
+let topHtml: string;
+let articlesIndexHtml: string;
+
+function loadRenderedPages(): void {
+  topHtml = readFileSync("dist/index.html", "utf8");
+  articlesIndexHtml = readFileSync("dist/articles/index.html", "utf8");
+}
 
 // 期待するカテゴリ集合は publicArticleMetadata と config（topPage.categoryMinArticles）
 // から導出する（トップページの実装と同一ロジック）。
@@ -28,7 +43,9 @@ const expectedCategories = [...categoryCounts.entries()]
   )
   .slice(0, 6);
 
-describe("top page (rendered dist)", () => {
+describe.skipIf(!hasDist)("top page (rendered dist)", () => {
+  beforeAll(loadRenderedPages);
+
   it("links every config topPage.featuredPaths article and nothing else", () => {
     expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
       3,
@@ -98,7 +115,9 @@ describe("top page (rendered dist)", () => {
   });
 });
 
-describe("article card content types (rendered dist)", () => {
+describe.skipIf(!hasDist)("article card content types (rendered dist)", () => {
+  beforeAll(loadRenderedPages);
+
   // カード全体（class に article-list-card を含む <article> 要素）を列挙する。
   const cards = (html: string) =>
     [
@@ -169,7 +188,9 @@ describe("article card content types (rendered dist)", () => {
   });
 });
 
-describe("article card thumbnails (rendered dist)", () => {
+describe.skipIf(!hasDist)("article card thumbnails (rendered dist)", () => {
+  beforeAll(loadRenderedPages);
+
   const cards = (html: string) =>
     [
       ...html.matchAll(
@@ -177,7 +198,9 @@ describe("article card thumbnails (rendered dist)", () => {
       ),
     ].map((match) => match[0]);
 
-  const cardPages: ReadonlyArray<readonly [string, string]> = [
+  // dist の読み込みは beforeAll のスキップガード後に行う（コレクション時に
+  // 評価すると dist 無し環境で import 自体が失敗するため遅延させる）。
+  const cardPages = (): ReadonlyArray<readonly [string, string]> => [
     ["dist/index.html", topHtml],
     ["dist/articles/index.html", articlesIndexHtml],
     ...readdirSync("dist/articles/page", { withFileTypes: true })
@@ -197,7 +220,7 @@ describe("article card thumbnails (rendered dist)", () => {
     let total = 0;
     let image = 0;
     let tile = 0;
-    for (const [page, html] of cardPages) {
+    for (const [page, html] of cardPages()) {
       for (const card of cards(html)) {
         if (!isArticleCard(card)) continue;
         total += 1;
@@ -224,7 +247,7 @@ describe("article card thumbnails (rendered dist)", () => {
   });
 
   it("keeps data-thumb consistent with articleMetadata.imagePath", () => {
-    for (const [, html] of cardPages) {
+    for (const [, html] of cardPages()) {
       for (const card of cards(html)) {
         if (!isArticleCard(card)) continue;
         const href = card.match(/<h2><a href="([^"]+)"/)?.[1];

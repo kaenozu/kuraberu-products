@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { pampersNewbornArticle } from "../src/content/articles";
@@ -21,7 +21,18 @@ describe("content freshness", () => {
     expect(pampersNewbornArticle.purchaseLinkStatus).toBe("verified");
     expect(pampersNewbornArticle.purchaseLinksCheckedAt).toBe("2026-08-16");
   });
+});
 
+// 実ビルド（astro build）後の dist を検証する。dist が無い環境では
+// 理由をログに出して明示的にスキップする。
+const hasDist = existsSync("dist");
+if (!hasDist) {
+  console.warn(
+    "skip: dist/ が存在しないため content freshness の実ビルド整合テストをスキップしました（astro build 後に再実行してください）",
+  );
+}
+
+describe.skipIf(!hasDist)("content freshness (rendered dist)", () => {
   it("renders factual check dates and update history", () => {
     const html = readFileSync(
       "dist/articles/pampers-newborn/index.html",

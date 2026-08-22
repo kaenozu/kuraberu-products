@@ -24,7 +24,11 @@ function compareValues(
     return left === right || String(left) === String(right);
   }
   if (operator === "neq") {
-    return left !== right && String(left) !== String(right);
+    // 属性が欠落した商品（left === undefined）は比較不能 = 不一致扱いにする（fail-closed）。
+    // ※validate.ts がルールキーの実在を担保するため、これは防御強化。
+    return (
+      left !== undefined && left !== right && String(left) !== String(right)
+    );
   }
   const leftNumber = toNumber(left as string | number | boolean);
   const rightNumber = toNumber(right);

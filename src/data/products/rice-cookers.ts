@@ -36,10 +36,9 @@ export const tigerJpvL100: Product = {
     priceOfficialYen: 57800,
     weightKg: 5.4,
   },
-  articleUrls: [
-    "/articles/tiger-jpv-l100-vs-jpv-m100/",
-    "/articles/tiger-jpv-l100-vs-zojirushi-nw-fc10/",
-  ],
+  // 実在する比較記事のみを参照する（存在しない記事パスはビルド時検証で
+  // 検出される。tiger-jpv-l100-vs-zojirushi-nw-fc10 は未公開のため参照しない）。
+  articleUrls: ["/articles/tiger-jpv-l100-vs-jpv-m100/"],
   purchaseLinks: [
     {
       provider: "rakuten",

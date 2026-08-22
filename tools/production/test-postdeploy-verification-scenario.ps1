@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [Parameter(Mandatory)][ValidateSet('fresh', 'stale-then-fresh', 'permanent-stale')]
+    [Parameter(Mandatory)][ValidateSet('fresh', 'stale-then-fresh', 'permanent-stale', 'network-error')]
     [string]$Scenario,
     [string]$ExpectedCommitSha = '0123456789abcdef0123456789abcdef01234567',
     [string]$OldCommitSha = 'fedcba9876543210fedcba9876543210fedcba98',
@@ -19,6 +19,10 @@ param(
 #                     attempt 2) - simulates CDN edge convergence
 #   - permanent-stale: every fetch serves the old build-sha (BLOCKER after
 #                     MaxAttempts, exit 1) - the gate must NOT be weakened
+#   - network-error:  every fetch throws (connection failure). The retry
+#                     loop must keep going, record each failure as a FAIL
+#                     check with the exception reason, and still write
+#                     report.json ending BLOCKER after MaxAttempts
 
 $ErrorActionPreference = 'Stop'
 if (-not $OutputRoot) {
@@ -74,6 +78,9 @@ function Invoke-WebRequest {
         [int]$TimeoutSec,
         [switch]$SkipHttpErrorCheck
     )
+    if ($Scenario -eq 'network-error') {
+        throw "Simulated connection failure for $($Uri.AbsolutePath)"
+    }
     $path = $Uri.AbsolutePath
     $statusCode = 200
     $contentType = 'text/html; charset=utf-8'

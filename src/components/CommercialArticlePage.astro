@@ -5,7 +5,7 @@ import PurchaseCard from './PurchaseCard.astro';
 import TrustLine from './TrustLine.astro';
 import NextStepBlock from './NextStepBlock.astro';
 import ArticleComparisonV2 from './ArticleComparisonV2.astro';
-import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages } from '../content/articles';
+import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages, publicArticleMetadata } from '../content/articles';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
 
@@ -22,6 +22,9 @@ if (!article || !seed) {
 }
 
 const images = commercialArticleImages[articleId] ?? {};
+// 公開対象（publicArticleMetadata）に含まれない記事 = 商品情報の確認日が未設定の
+// 自動生成初稿。非公開の意図のため、万一参照された場合に備えてインデックスを拒否する（fail-closed）。
+const isPublicArticle = publicArticleMetadata.some((item) => item.id === article.id);
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
 const leftSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
@@ -93,7 +96,7 @@ const faq = seed.faqEntries?.length
       },
     ];
 ---
-<BaseLayout title={article.title} description={article.description} article={article}>
+<BaseLayout title={article.title} description={article.description} article={article} robots={isPublicArticle ? undefined : 'noindex,nofollow'}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
     <h1>{article.headline}</h1>
@@ -101,7 +104,7 @@ const faq = seed.faqEntries?.length
     {!hasHeroSources && <TrustLine checkedAt={article.productInfoCheckedAt} />}
     {seed.officialSources?.length ? (
       <details class="fold-section source-note" aria-labelledby="official-sources">
-        <summary>公式の確認先</summary>
+        <summary id="official-sources">公式の確認先</summary>
         <ul>
           {seed.officialSources.map((source) => <li><a href={source.url} target="_blank" rel="noopener noreferrer">{source.label}</a></li>)}
         </ul>
