@@ -1,10 +1,21 @@
 ---
+import { publicArticleMetadata } from '../content/articles';
+
 interface Props {
   articleId: string;
 }
 const { articleId } = Astro.props;
+
+// 全記事データ（publicArticleMetadata）をクライアントバンドルへ入れない。
+// 代わりに保存済み ID の検証に必要な記事ID一覧を data 属性としてサーバレンダリングする。
+const knownArticleIds = publicArticleMetadata.map((article) => article.id);
 ---
-<div class="memo-control" data-memo-control data-article-id={articleId}>
+<div
+  class="memo-control"
+  data-memo-control
+  data-article-id={articleId}
+  data-known-article-ids={JSON.stringify(knownArticleIds)}
+>
   <button type="button" class="secondary-button memo-toggle" aria-pressed="false" data-memo-toggle>比較メモに保存</button>
   <span class="meta" role="status" aria-live="polite" data-memo-status></span>
 </div>
@@ -12,9 +23,7 @@ const { articleId } = Astro.props;
 <script>
   import { comparisonMemoStorageKey, encodeComparisonMemo, sanitizeComparisonMemo, toggleComparisonMemo } from '../lib/comparison-memo';
   import type { ComparisonMemoState } from '../lib/comparison-memo';
-  import { publicArticleMetadata } from '../content/articles';
 
-  const knownIds = publicArticleMetadata.map((article) => article.id);
   document.querySelectorAll('[data-memo-control]').forEach((node) => {
     if (!(node instanceof HTMLElement) || node.dataset.memoBound === 'true') return;
     node.dataset.memoBound = 'true';
@@ -22,6 +31,18 @@ const { articleId } = Astro.props;
     const button = node.querySelector('[data-memo-toggle]');
     const status = node.querySelector('[data-memo-status]');
     if (!articleId || !(button instanceof HTMLButtonElement)) return;
+
+    // サーバレンダリングされた data-known-article-ids から既知の記事IDを復元する。
+    // 属性は JSON.stringify の結果なので壊れることはないが、壊れた場合は空扱いにする。
+    let knownIds: readonly string[] = [];
+    try {
+      const parsed: unknown = JSON.parse(node.dataset.knownArticleIds ?? '[]');
+      if (Array.isArray(parsed)) {
+        knownIds = parsed.filter((value): value is string => typeof value === 'string');
+      }
+    } catch {
+      knownIds = [];
+    }
 
     const render = (ids: readonly string[]) => {
       const saved = ids.includes(articleId);

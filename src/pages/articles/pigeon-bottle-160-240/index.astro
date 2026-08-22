@@ -94,7 +94,7 @@ const differenceRows: DifferenceRow[] = [
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
-    <p class="meta"><a href="/articles/">比較記事一覧</a> / 授乳用品 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / {articleMetadata.category} · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">母乳実感（PPSU製）の160mlと240mlを、公式商品ページで確認できる容量・付属乳首・対象月齢目安で比較します。</p>
@@ -178,6 +178,7 @@ const differenceRows: DifferenceRow[] = [
         imagePath="/products/pigeon-bottle-160-240-160ml.jpg"
         placement="article-end"
         note="価格・在庫は販売先でご確認ください。"
+        purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       />
       <PurchaseCard
         name="母乳実感 プラスチック製 240ml"
@@ -187,6 +188,7 @@ const differenceRows: DifferenceRow[] = [
         imagePath="/products/pigeon-bottle-160-240-240ml.jpg"
         placement="article-end"
         note="価格・在庫は販売先でご確認ください。"
+        purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
       />
     </div>
     <h2>更新履歴</h2>

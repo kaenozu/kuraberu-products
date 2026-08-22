@@ -102,7 +102,7 @@ const breadcrumbStructuredData = article
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -115,7 +115,13 @@ const breadcrumbStructuredData = article
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    {articleImage && <meta property="og:image" content={articleImage} />}
+    {articleImage && (
+      <>
+        <meta property="og:image" content={articleImage} />
+        {/* 実寸（og:image:width/height）は不明のため出力しない。alt は記事見出し由来。 */}
+        <meta property="og:image:alt" content={article?.headline ?? title} />
+      </>
+    )}
     {article?.publishedAt && <meta property="article:published_time" content={article.publishedAt} />}
     {article?.modifiedAt && <meta property="article:modified_time" content={article.modifiedAt} />}
     {article?.modifiedAt && <meta property="og:updated_time" content={article.modifiedAt} />}
@@ -137,8 +143,10 @@ const breadcrumbStructuredData = article
       <div class="wrap nav">
         <a class="brand" href="/">{site.name}</a>
         <!-- スマホ（<560px）では ロゴ + ☰ になり、リンクはドロワーパネルに格納される。
-             details/summary のネイティブ開閉を使うため JS 不要。 -->
-        <details class="nav-toggle">
+              details/summary のネイティブ開閉を使うため JS 不要。
+              デスクトップ（≥561px）では summary が display:none のため、閉じた details の
+              中身は描画されない。下のインラインスクリプトが幅に応じて open を同期する。 -->
+        <details class="nav-toggle" data-nav-toggle>
           <summary aria-label="メニューを開く"><span class="nav-toggle-icon" aria-hidden="true"></span></summary>
           <nav class="navlinks" aria-label="主要メニュー">
             <a href="/articles/" aria-current={currentPath.startsWith('/articles/') ? 'page' : undefined}>比較記事</a>
@@ -156,6 +164,37 @@ const breadcrumbStructuredData = article
         <p><a href="/privacy/">プライバシーポリシー</a> · <a href="/disclaimer/">広告・免責事項</a> · <a href="/about/">運営者情報</a></p>
       </div>
     </footer>
+    <!-- グローバルナビの開閉状態をビューポート幅へ同期する。
+          summary はデスクトップで display:none のため、閉じた details の中身
+          （navlinks）は CSS では再表示できない。広い幅では details を open にして
+          ナビを常時表示し、狭い幅では閉じてモバイルのドロワー挙動（ネイティブ開閉）を維持する。
+          marker: nav-toggle-sync -->
+    <script is:inline>
+      (function () {
+        const mq = window.matchMedia('(min-width: 561px)');
+        const details = document.querySelector('[data-nav-toggle]');
+        if (!details) return;
+        const summary = details.querySelector('summary');
+        // 開閉状態に応じて summary のラベルを同期する（ネイティブ開閉にも追従）。
+        // toggle イベントは非同期に発火するため、初期同期より先に登録する。
+        details.addEventListener('toggle', function () {
+          if (summary) {
+            summary.setAttribute('aria-label', details.open ? 'メニューを閉じる' : 'メニューを開く');
+          }
+        });
+        // 幅の変化に追従する（広い=常時表示のため開く / 狭い=ドロワーのため閉じる）。
+        const syncByWidth = function () {
+          details.open = mq.matches;
+        };
+        if (typeof mq.addEventListener === 'function') {
+          mq.addEventListener('change', syncByWidth);
+        } else if (typeof mq.addListener === 'function') {
+          mq.addListener(syncByWidth);
+        }
+        // 初期同期。open 変更は上の toggle リスナー経由でラベルも連動する。
+        syncByWidth();
+      })();
+    </script>
     <!-- クリック計測（プライバシー配慮型・同一オリジン）。詳細: docs/click-analytics.md -->
     <script is:inline src="/click-beacon.js" defer></script>
     <!-- 比較表のスマホ比較カード表示用: 各セルへ列見出し（商品名）を data-label として付与する。
