@@ -95,14 +95,14 @@ Environment の設定が未完了であり、これがないと Production deplo
 
 ## 3. その他のコード改善
 
-| 項目                                     | 状態    |
-| ---------------------------------------- | ------- |
-| `diagnosis-ui.ts` モジュール抽出         | ✅ 実施 |
-| `purchase-queries.ts` 統合購入リンク解決 | ✅ 実施 |
-| `contact.ts` timeout/サイズ制限強化      | ✅ 実施 |
-| `prune-unpublished-articles.mjs` 作成    | ✅ 実施 |
-| `ArticleMetadata` 型改善                 | ✅ 実施 |
-| 診断 optional 質問スキップ修正           | ✅ 実施 |
+| 項目                                     | 状態                                                                                                                                                                                                                                                 |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `diagnosis-ui.ts` モジュール抽出         | ✅ 実施                                                                                                                                                                                                                                              |
+| `purchase-queries.ts` 統合購入リンク解決 | ✅ 実施                                                                                                                                                                                                                                              |
+| `contact.ts` timeout/サイズ制限強化      | ✅ 実施                                                                                                                                                                                                                                              |
+| `prune-unpublished-articles.mjs` 作成    | ✅ 実施（sitemap.xml の `<loc>` 集合を唯一の情報源とし、sitemap に無い `dist/articles/<slug>/` を下書きとして除去。sitemap 欠損時は fail-closed で何も削除しない。旧 meta タグ方式は BaseLayout が `article:published_time` を出すため不一致だった） |
+| `ArticleMetadata` 型改善                 | ✅ 実施                                                                                                                                                                                                                                              |
+| 診断 optional 質問スキップ修正           | ✅ 実施                                                                                                                                                                                                                                              |
 
 ---
 

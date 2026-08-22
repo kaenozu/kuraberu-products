@@ -99,10 +99,11 @@ Cloudflare の正規ビルド経路:
 
 ```text
 Build:  pnpm build（DEPLOYMENT_ENV=production）
-Deploy: pnpm exec wrangler deploy --config wrangler.jsonc
+Deploy: pnpm exec wrangler pages deploy dist --project-name kuraberu-products --branch=main
 Assets: dist
-Config: wrangler.jsonc
 ```
+
+`wrangler.jsonc` は Pages の静的配信設定ではなく、`functions/` 配下の Functions（`/api/contact` の `ratelimits` バインディング等）をバンドルするための設定です。Pages へのデプロイ時に実行ディレクトリの `functions/` と併せて適用されます。
 
 Production反映は PR マージとは別工程で、`.github/workflows/deploy-production.yml` の workflow_dispatch（対象コミットSHAを明示）か、`tools/production/Invoke-ProductionBuildAndDeploy.ps1` で行います。
 
@@ -115,9 +116,9 @@ README には変動しやすい記事数、PR番号、dependency更新状態を�
 このプロジェクトはGit ProviderなしのDirect Upload運用です。GitHubでマージしても本番へ自動反映されるとは限りません。本番反映は `.github/workflows/deploy-production.yml` の workflow_dispatch（`expected_sha` と `confirm: DEPLOY` を入力）か、次の手動コマンドで行います。
 
 - Build: `set -a && source .env && set +a && DEPLOYMENT_ENV=production pnpm build`
-- Deploy: `pnpm exec wrangler deploy --config wrangler.jsonc`
-- 確認: `npx wrangler deployments list --config wrangler.jsonc`
+- Deploy: `pnpm exec wrangler pages deploy dist --project-name kuraberu-products --branch=main`
+- 確認: `pnpm exec wrangler pages deployment list --project-name kuraberu-products`
 - Cloudflare デプロイラベル: `main`（`tools/production/Invoke-ProductionBuildAndDeploy.ps1` の `--branch=main` で指定するCloudflare側の運用値。GitHub default branchも現在は `main` だが、両者は別の契約）
 - 本番URL: `https://kuraberu-products.pages.dev`
 
-デプロイ後はDeployment一覧でEnvironmentがProduction、Branchがmain、Sourceが対象コミットであることを確認し、トップ・記事一覧・全記事詳細のHTTPステータスと生成HTMLを検証します。詳細な新規記事・既存記事・UI改善の管理基準は [`docs/site-management.md`](./docs/site-management.md) を参照してください。
+デプロイ後はPages Deployment一覧でBranchがmain、Sourceが対象コミットであることを確認し、トップ・記事一覧・全記事詳細のHTTPステータスと生成HTMLを検証します。詳細な新規記事・既存記事・UI改善の管理基準は [`docs/site-management.md`](./docs/site-management.md) を参照してください。

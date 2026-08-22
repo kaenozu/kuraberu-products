@@ -40,6 +40,16 @@ $scenarios = @(
         attempts = 4
         results = @('BLOCKER', 'BLOCKER', 'BLOCKER', 'BLOCKER')
         result = 'BLOCKER'
+    },
+    @{
+        # Every fetch throws: the retry loop must survive, record each
+        # failure as a FAIL check (reason = exception message), and still
+        # produce report.json ending BLOCKER.
+        name = 'network-error'
+        exitCode = 1
+        attempts = 4
+        results = @('BLOCKER', 'BLOCKER', 'BLOCKER', 'BLOCKER')
+        result = 'BLOCKER'
     }
 )
 
@@ -93,6 +103,16 @@ foreach ($scenario in $scenarios) {
         if ($passChecks.Count -lt 20) {
             $failures.Add("[permanent-stale] expected the unrelated checks to PASS, got $($passChecks.Count) PASS")
         }
+    } elseif ($name -eq 'network-error') {
+        # Network exceptions must be recorded as FAIL checks carrying the
+        # exception reason, not abort the run before report.json is written.
+        $exceptionChecks = @($report.checks | Where-Object { $_.detail -match 'Simulated connection failure' })
+        if ($exceptionChecks.Count -lt 1) {
+            $failures.Add("[network-error] expected FAIL checks recording the exception reason, found $($exceptionChecks.Count)")
+        }
+        if (@($exceptionChecks | Where-Object { $_.status -ne 'FAIL' }).Count -gt 0) {
+            $failures.Add('[network-error] exception-reason checks must be FAIL')
+        }
     } else {
         $failChecks = @($report.checks | Where-Object { $_.status -eq 'FAIL' })
         if ($failChecks.Count -gt 0) {
@@ -112,5 +132,5 @@ if ($failures.Count -gt 0) {
 }
 
 Write-Host ""
-Write-Host "All 3 post-deploy retry contract scenarios PASS."
+Write-Host "All 4 post-deploy retry contract scenarios PASS."
 exit 0

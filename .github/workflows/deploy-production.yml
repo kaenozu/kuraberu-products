@@ -16,6 +16,9 @@ permissions:
   contents: read
   checks: write
   issues: write
+  # scripts/reupload-deploy-evidence.mjs / scripts/create-deploy-evidence-issue.mjs
+  # が Actions runs API を呼ぶための読み取り権限。
+  actions: read
 
 concurrency:
   group: production-deploy
@@ -23,11 +26,20 @@ concurrency:
 
 jobs:
   deploy:
-    if: inputs.confirm == 'DEPLOY'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: production
     env:
+      # inputs / vars を run スクリプトへ直接補間すると式インジェクションの
+      # 攻撃面になるため、env 経由でのみ参照する。
+      EXPECTED_SHA: ${{ inputs.expected_sha }}
+      DEPLOY_CONFIRM: ${{ inputs.confirm }}
+      PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+      PUBLIC_CONTACT_URL: ${{ vars.PUBLIC_CONTACT_URL }}
+      PUBLIC_RAKUTEN_PREMIUM_URL: ${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}
+      PUBLIC_RAKUTEN_SARASARA_URL: ${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}
+      DEPLOYMENT_ENV_VAR: ${{ vars.DEPLOYMENT_ENV }}
+      PURCHASE_LINK_MODE: ${{ vars.PURCHASE_LINK_MODE }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
@@ -37,10 +49,17 @@ jobs:
       - name: Validate dispatch contract
         shell: bash
         run: |
-          [[ "${{ inputs.expected_sha }}" =~ ^[0-9a-fA-F]{40}$ ]]
-          test -n "${{ vars.PUBLIC_SITE_URL }}"
-          test "${{ vars.DEPLOYMENT_ENV }}" = "production"
-          test "${{ vars.PURCHASE_LINK_MODE }}" = "api" -o "${{ vars.PURCHASE_LINK_MODE }}" = "direct"
+          if [ "$DEPLOY_CONFIRM" != "DEPLOY" ]; then
+            echo "::error::Dispatch input 'confirm' must be exactly \"DEPLOY\" (got \"${DEPLOY_CONFIRM}\"). Deployment aborted."
+            exit 1
+          fi
+          if [[ ! "$EXPECTED_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::Dispatch input 'expected_sha' must be a 40-character lowercase hex commit SHA (got \"${EXPECTED_SHA}\")."
+            exit 1
+          fi
+          test -n "$PUBLIC_SITE_URL"
+          test "$DEPLOYMENT_ENV_VAR" = "production"
+          test "$PURCHASE_LINK_MODE" = "api" -o "$PURCHASE_LINK_MODE" = "direct"
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
@@ -59,11 +78,11 @@ jobs:
           # feature-branch dispatch.
           git fetch origin "$DEFAULT_BRANCH" --depth=1
           REAL_DEFAULT_HEAD=$(git rev-parse "origin/$DEFAULT_BRANCH")
-          if [ "${{ inputs.expected_sha }}" != "$REAL_DEFAULT_HEAD" ]; then
-            echo "::error::Input SHA (${{ inputs.expected_sha }}) does not match the default branch HEAD ($REAL_DEFAULT_HEAD on $DEFAULT_BRANCH). Only the latest default-branch commit may be deployed."
+          if [ "$EXPECTED_SHA" != "$REAL_DEFAULT_HEAD" ]; then
+            echo "::error::Input SHA ($EXPECTED_SHA) does not match the default branch HEAD ($REAL_DEFAULT_HEAD on $DEFAULT_BRANCH). Only the latest default-branch commit may be deployed."
             exit 1
           fi
-          echo "SHA verified: ${{ inputs.expected_sha }} matches default branch HEAD ($REAL_DEFAULT_HEAD)"
+          echo "SHA verified: $EXPECTED_SHA matches default branch HEAD ($REAL_DEFAULT_HEAD)"
 
       - name: Verify SHA is reachable from default branch (ancestry check)
         shell: bash
@@ -74,37 +93,45 @@ jobs:
           # default branch HEAD.  Uses the real default branch (not github.ref
           # which reflects the dispatch ref and could be a feature branch).
           DEFAULT_HEAD=$(git rev-parse "origin/$DEFAULT_BRANCH")
-          if ! git merge-base --is-ancestor "${{ inputs.expected_sha }}" "$DEFAULT_HEAD"; then
-            echo "::error::Input SHA (${{ inputs.expected_sha }}) is not an ancestor of the default branch HEAD ($DEFAULT_HEAD). Only default-branch-reachable commits may be deployed."
+          if ! git merge-base --is-ancestor "$EXPECTED_SHA" "$DEFAULT_HEAD"; then
+            echo "::error::Input SHA ($EXPECTED_SHA) is not an ancestor of the default branch HEAD ($DEFAULT_HEAD). Only default-branch-reachable commits may be deployed."
             exit 1
           fi
-          echo "Ancestry verified: ${{ inputs.expected_sha }} is reachable from $DEFAULT_HEAD"
+          echo "Ancestry verified: $EXPECTED_SHA is reachable from $DEFAULT_HEAD"
 
       - name: Verify exact checkout
         shell: bash
-        run: test "$(git rev-parse HEAD)" = "${{ inputs.expected_sha }}"
+        run: |
+          ACTUAL_HEAD=$(git rev-parse HEAD)
+          if [ "$ACTUAL_HEAD" != "$EXPECTED_SHA" ]; then
+            echo "::error::Checked-out HEAD ($ACTUAL_HEAD) does not match the expected SHA ($EXPECTED_SHA)."
+            exit 1
+          fi
+
+      # setup-node の cache: 'pnpm' は pnpm バイナリを必要とするため、
+      # corepack enable を必ず先に置く。
+      - name: Enable Corepack
+        run: corepack enable
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
         with:
           node-version-file: .node-version
-
-      - name: Enable Corepack
-        run: corepack enable
+          cache: "pnpm"
 
       - name: Build and deploy exact HEAD
         shell: pwsh
         run: |
           $parameters = @{
-            SiteUrl = '${{ vars.PUBLIC_SITE_URL }}'
-            ExpectedHead = '${{ inputs.expected_sha }}'
-            ContactUrl = '${{ vars.PUBLIC_CONTACT_URL }}'
+            SiteUrl = $env:PUBLIC_SITE_URL
+            ExpectedHead = $env:EXPECTED_SHA
+            ContactUrl = $env:PUBLIC_CONTACT_URL
             Apply = $true
           }
-          if ('${{ vars.PURCHASE_LINK_MODE }}' -eq 'api') {
+          if ($env:PURCHASE_LINK_MODE -eq 'api') {
             $parameters.UseRakutenApi = $true
           } else {
-            $parameters.PremiumUrl = '${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}'
-            $parameters.SarasaraUrl = '${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}'
+            $parameters.PremiumUrl = $env:PUBLIC_RAKUTEN_PREMIUM_URL
+            $parameters.SarasaraUrl = $env:PUBLIC_RAKUTEN_SARASARA_URL
           }
           & ./tools/production/Invoke-ProductionBuildAndDeploy.ps1 @parameters
 
@@ -115,8 +142,8 @@ jobs:
         shell: pwsh
         run: |
           & ./tools/production/Invoke-PostDeployVerification.ps1 `
-            -BaseUrl '${{ vars.PUBLIC_SITE_URL }}' `
-            -ExpectedCommitSha '${{ inputs.expected_sha }}' `
+            -BaseUrl $env:PUBLIC_SITE_URL `
+            -ExpectedCommitSha $env:EXPECTED_SHA `
             -MaxAttempts 4 `
             -RetryDelaySeconds 15
 
@@ -124,7 +151,7 @@ jobs:
         shell: bash
         run: |
           node scripts/generate-x-announcements.mjs \
-            --site-url '${{ vars.PUBLIC_SITE_URL }}' \
+            --site-url "$PUBLIC_SITE_URL" \
             --previous-sha 'HEAD^'
 
       - name: Publish privacy-safe summary
@@ -134,9 +161,9 @@ jobs:
           {
             echo '## Production deployment'
             echo
-            echo '- Expected SHA: `${{ inputs.expected_sha }}`'
-            echo '- Site: `${{ vars.PUBLIC_SITE_URL }}`'
-            echo '- Artifact: `acceptance-reports-${{ github.run_id }}`'
+            echo "- Expected SHA: \`$EXPECTED_SHA\`"
+            echo "- Site: \`$PUBLIC_SITE_URL\`"
+            echo "- Artifact: \`acceptance-reports-${{ github.run_id }}\`"
             echo '- Secret values are not printed.'
             find .acceptance -name report.md -type f -print -exec cat {} \; 2>/dev/null || true
           } >> "$GITHUB_STEP_SUMMARY"
@@ -148,7 +175,7 @@ jobs:
         # upload-artifact の既定（include-hidden-files: false）では対象外になり
         # 「No files were found」で 0 件アップロードになる。必ず true にする。
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: acceptance-reports-${{ github.run_id }}
           path: |
@@ -185,7 +212,7 @@ jobs:
               "$result" "$attempts" "$results" "$total_checks" "$failed_checks" "$expected_sha" "$base_url" "${{ github.run_id }}")
             text=$(printf -- '### Final-attempt checks (%s attempts: %s)\n%s' "$attempts" "$results" "$checks_text")
             payload=$(jq -n \
-              --arg head_sha "${{ inputs.expected_sha }}" \
+              --arg head_sha "$EXPECTED_SHA" \
               --arg conclusion "$conclusion" \
               --arg title "Post-deploy verification $result (attempts=$attempts)" \
               --arg summary "$summary" \
@@ -193,7 +220,7 @@ jobs:
               '{name:"production-post-deploy-verification", head_sha:$head_sha, status:"completed", conclusion:$conclusion, output:{title:$title, summary:$summary, text:$text}}')
           else
             payload=$(jq -n \
-              --arg head_sha "${{ inputs.expected_sha }}" \
+              --arg head_sha "$EXPECTED_SHA" \
               '{name:"production-post-deploy-verification", head_sha:$head_sha, status:"completed", conclusion:"failure", output:{title:"Post-deploy verification did not run", summary:"The deploy run did not reach the public verification step (no post-deploy report.json was produced). See the run log for the failing step.", text:""}}')
           fi
           if ! echo "$payload" | gh api --method POST "repos/${{ github.repository }}/check-runs" --input - >/dev/null; then
@@ -216,8 +243,8 @@ jobs:
             node scripts/create-deploy-evidence-issue.mjs \
               --report "$report" \
               --run-id "${{ github.run_id }}" \
-              --expected-sha "${{ inputs.expected_sha }}" \
-              --site-url "${{ vars.PUBLIC_SITE_URL }}"
+              --expected-sha "$EXPECTED_SHA" \
+              --site-url "$PUBLIC_SITE_URL"
           else
             echo "::warning::No post-deploy report.json found; skipping evidence issue creation"
           fi

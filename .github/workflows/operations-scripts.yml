@@ -10,7 +10,7 @@ on:
       - ".github/workflows/operations-scripts.yml"
   push:
     branches:
-      - $default-branch
+      - main
     paths:
       - "tools/production/**"
       - "tools/github/**"

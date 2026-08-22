@@ -23,11 +23,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
           persist-credentials: false
+      - name: Enable Corepack
+        run: corepack enable
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
         with:
           node-version-file: .node-version
-      - name: Enable Corepack
-        run: corepack enable
+          cache: "pnpm"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Check spec-claim freshness
@@ -35,6 +36,7 @@ jobs:
         run: node scripts/spec-claims.mjs freshness
         continue-on-error: true
       - name: Open or update re-verification issue
+        id: notify
         if: steps.check.outcome == 'failure'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -49,6 +51,14 @@ jobs:
               --body-file .acceptance/spec-claims-freshness/report.md
             echo "再照合 issue を新規作成しました"
           fi
+      - name: Fail when freshness expired but notification failed
+        # 通知経路の二重化: 鮮度切れを検知しながら issue 起票/更新だけが
+        # 失敗しても、この workflow が緑のまま検知が握りつぶされないよう、
+        # 明示的に run を失敗させる。
+        if: steps.check.outcome == 'failure' && steps.notify.outcome != 'success'
+        run: |
+          echo "::error::Spec-claim freshness expired, but the re-verification issue could not be created/updated (notify step outcome: ${{ steps.notify.outcome }}). File the issue manually from .acceptance/spec-claims-freshness/report.md."
+          exit 1
       - name: Close re-verification issue when fresh
         if: steps.check.outcome == 'success'
         env:

@@ -9,6 +9,12 @@ updates:
       timezone: Asia/Tokyo
     open-pull-requests-limit: 5
     versioning-strategy: increase-if-necessary
+    groups:
+      # major は影響評価のため個別PR、minor/patch は一括更新でノイズを減らす。
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
     labels:
       - kilo-triaged
     commit-message:
@@ -23,6 +29,12 @@ updates:
       time: "20:30"
       timezone: Asia/Tokyo
     open-pull-requests-limit: 3
+    groups:
+      # major は影響評価のため個別PR、minor/patch は一括更新でノイズを減らす。
+      minor-and-patch:
+        update-types:
+          - "minor"
+          - "patch"
     labels:
       - kilo-triaged
     commit-message:

@@ -50,6 +50,7 @@ function Resolve-SecretValue([string]$Name, [string]$Prompt) {
 $repo = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
 $git = Require-Command 'git'
 $pnpm = Require-Command 'pnpm'
+$node = Require-Command 'node'
 $head = (Run $git @('-C', $repo, 'rev-parse', 'HEAD') '').Text.Trim()
 if ($ExpectedHead -and $head -ne $ExpectedHead) { throw "HEAD changed: actual=$head expected=$ExpectedHead" }
 $dirty = (Run $git @('-C', $repo, 'status', '--porcelain') '').Text
@@ -91,6 +92,9 @@ try {
         Run $pnpm @('check:rendered') (Join-Path $runDirectory 'check-rendered.log') | Out-Null
         Run $pnpm @('check:deployment') (Join-Path $runDirectory 'check-deployment.log') | Out-Null
         Run $pnpm @('check:external-link-syntax') (Join-Path $runDirectory 'check-links.log') | Out-Null
+        # sitemap.xml は公開ページのみ列挙するという生成物の不変条件を利用し、
+        # deploy 前に下書き記事ページを dist から除去する。
+        Run $node @('scripts/prune-unpublished-articles.mjs') (Join-Path $runDirectory 'prune-unpublished.log') | Out-Null
         if ($Apply) {
             if (-not $env:CLOUDFLARE_API_TOKEN) { throw 'CLOUDFLARE_API_TOKEN is required for -Apply.' }
             if (-not $env:CLOUDFLARE_ACCOUNT_ID) { throw 'CLOUDFLARE_ACCOUNT_ID is required for -Apply.' }
