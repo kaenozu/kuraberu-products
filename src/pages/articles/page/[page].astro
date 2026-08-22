@@ -1,9 +1,6 @@
 ---
-import ArticleCard from '../../../components/ArticleCard.astro';
-import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleListPage from '../../../components/ArticleListPage.astro';
 import { publicArticleMetadata } from '../../../content/articles';
-import {normalizeDiscoveryText} from '../../../lib/article-discovery';
-import {comparisonSubjects} from '../../../lib/article-subjects';
 
 const categories = [...new Set(publicArticleMetadata.map((article) => article.category))].sort();
 const tags = [...new Set(publicArticleMetadata.flatMap((article) => article.tags))].sort();
@@ -32,79 +29,18 @@ export function getStaticPaths() {
 
 const {articles, currentPage} = Astro.props;
 const totalPagesForDisplay = Math.ceil(sorted.length / pageSize);
-const discoveryIndex = sorted.map((article) => ({
-  id: article.id,
-  path: article.path,
-  headline: article.headline,
-  summary: article.summary,
-  category: article.category,
-  tags: article.tags,
-  audiences: article.audiences,
-  uses: article.uses,
-  modifiedAt: article.modifiedAt,
-  imagePath: article.imagePath,
-  subjects: comparisonSubjects(article),
-}));
 ---
-<BaseLayout title={`比較記事一覧 ${currentPage}ページ目｜くらべる商品メモ`} description="メーカー公式の情報で商品を比べる記事一覧">
-  <section class="section wrap article-index" data-article-discovery>
-    <p class="eyebrow">Comparison articles</p>
-    <h1>比較記事一覧</h1>
-    <p class="lead">確認できる公式情報と販売ページを起点に、商品を選ぶときの判断材料を整理しています。</p>
 
-    <form class="article-filters" role="search" aria-label="比較記事を検索" data-discovery-form>
-      <label>
-        <span>キーワード</span>
-        <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索" data-discovery-query />
-      </label>
-      <label>
-        <span>カテゴリ</span>
-        <select name="category" data-discovery-category>
-          <option value="">すべて</option>
-          {categories.map((category) => <option value={category}>{category}</option>)}
-        </select>
-      </label>
-      <label>
-        <span>タグ</span>
-        <select name="tag" data-discovery-tag>
-          <option value="">すべて</option>
-          {tags.map((tag) => <option value={tag}>{tag}</option>)}
-        </select>
-      </label>
-      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
-    </form>
-    <p class="meta" aria-live="polite" data-discovery-count>{publicArticleMetadata.length}件の記事（{currentPage}ページ目）</p>
-
-    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex)}></script>
-    <div class="article-list" data-discovery-results>
-      {articles.map((article) => (
-        <ArticleCard
-          article={article}
-          data={{
-            'data-article-card': '',
-            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses, ...(comparisonSubjects(article) ?? [])].join(' ')),
-            'data-category': article.category,
-            'data-tags': JSON.stringify(article.tags),
-          }}
-        />
-      ))}
-    </div>
-    <div class="card discovery-empty" hidden data-discovery-empty>
-      <h2>条件に合う記事がありません</h2>
-      <p>キーワードを短くするか、カテゴリ・タグをクリアしてください。</p>
-      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
-    </div>
-    <nav class="article-pagination" aria-label="比較記事のページ移動">
-      <a href={currentPage === 2 ? '/articles/' : `/articles/page/${currentPage - 1}/`} aria-label="前のページ">‹ 前へ</a>
-      {Array.from({ length: totalPagesForDisplay }, (_, index) => {
-        const page = index + 1;
-        return page === currentPage
-          ? <span class="article-pagination__current" aria-current="page">{page}</span>
-          : <a href={page === 1 ? '/articles/' : `/articles/page/${page}/`}>{page}</a>;
-      })}
-      {currentPage < totalPagesForDisplay && <a href={`/articles/page/${currentPage + 1}/`}>次へ ›</a>}
-    </nav>
-  </section>
-
-  <script src="/scripts/article-discovery.js" defer is:inline></script>
-</BaseLayout>
+<ArticleListPage
+  title={`比較記事一覧 ${currentPage}ページ目｜くらべる商品メモ`}
+  description="メーカー公式の情報で商品を比べる記事一覧"
+  heading="比較記事一覧"
+  lead="確認できる公式情報と販売ページを起点に、商品を選ぶときの判断材料を整理しています。"
+  articles={articles}
+  discoveryArticles={sorted}
+  categories={categories}
+  tags={tags}
+  count={publicArticleMetadata.length}
+  countSuffix={`（${currentPage}ページ目）`}
+  pagination={{ kind: 'numbered', currentPage, totalPages: totalPagesForDisplay }}
+/>

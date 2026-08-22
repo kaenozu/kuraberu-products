@@ -3,113 +3,18 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2Section from '../../../components/ArticleComparisonV2Section.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {babybjornArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
+import {comparisonV2Articles} from '../../../content/articles/comparison-v2';
 
+const comparison = comparisonV2Articles['babybjorn'];
 const harmonyOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
-const harmonyOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/';
-const miniOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/';
 
-const faqEntries = [
-  {
-    "question": "HARMONYとMINI、どっちを選べばいい？",
-    "answer": "ベビービョルン公式の比較表によると、HARMONY は新生児から約36ヶ月まで使える4WAY（対面ハイ・ロー、前向き、おんぶ）のモデルで、幅広なパッド入りショルダーベルトとランバーサポート付きウェストベルトを備えています。MINI は新生児から約12ヶ月までが対象で、ショルダーベルトと本体が別々のシンプル設計でウェストベルトがありません。長く使える機能性を重視するなら HARMONY、新生児期の手軽さと価格を重視するなら MINI という違いがあります。実際の着け心地や赤ちゃんの好みは、公式情報だけでは判断できません。"
-  },
-  {
-    "question": "HARMONYは新生児から使える？",
-    "answer": "公式の比較表では、HARMONY の対象月齢は0カ月〜約36ヶ月、対象体重は3.2〜15kgと案内されています。ベビービョルン公式は「全ての抱っこひもが新生児から抱っこ可能」としています。"
-  },
-  {
-    "question": "MINIはどこまで使える？",
-    "answer": "公式の比較表では、MINI の対象月齢は0カ月〜約12ヶ月、対象体重は3.2〜11kg、対象ヒップサイズは約〜120cmと案内されています。新生児・乳児期中心のモデルです。"
-  },
-  {
-    "question": "HARMONYとMINIの価格はいくら？",
-    "answer": "ベビービョルン公式楽天市場店の表示価格（2026-08-10確認）は、HARMONY が27,280円〜、MINI が9,680円〜です。在庫やキャンペーンにより変動するため、購入時点の販売ページで確認してください。"
-  },
-  {
-    "question": "MINIにウェストベルトはある？",
-    "answer": "ありません。MINI はショルダーベルトと本体が別々のシンプル設計で、公式の比較表でもウェストベルトの項目は「ー」となっています。HARMONY はエルゴノミックランバーサポート付きの幅広ウェストベルトを備え、腰に荷重を分散して肩の負担を軽減すると案内されています。"
-  },
-  {
-    "question": "HARMONYとMINIの保証期間は？",
-    "answer": "ベビービョルン公式は保証期間について「2年（正規保証1年＋ユーザー登録1年）」と案内しています。"
-  }
-];
-
-const harmonyCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'HARMONY',
-  tone: 'premium',
-  audience: '新生児から長く使えて多彩な抱き方をしたい人の候補',
-  note: '新生児〜約36ヶ月・4WAY・幅広クッション付き',
-  status: 'official',
-};
-
-const miniCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'MINI',
-  tone: 'standard',
-  audience: '新生児期の手軽さと価格を優先したい人の候補',
-  note: '新生児〜約12ヶ月・2WAY・シンプル軽量設計',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "対象月齢・対象体重",
-    "left": "0カ月〜約36ヶ月。体重3.2〜15kg、ヒップ約〜160cm。",
-    "right": "0カ月〜約12ヶ月。体重3.2〜11kg、ヒップ約〜120cm。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "抱っこの種類",
-    "left": "4通り：対面抱っこ（ハイポジション）・対面抱っこ（ローポジション）・前向き抱っこ・おんぶ。",
-    "right": "2通り。対面と前向きを中心としたシンプル設計。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "肩と腰のサポート",
-    "left": "幅広なパッド入りショルダーベルト＋エルゴノミックランバーサポート付き幅広ウエストベルト。腰に荷重を分散し肩の負担を軽減。",
-    "right": "パッド入りショルダーベルト。ウエストベルトなし。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "製品重量",
-    "left": "約892g。",
-    "right": "約500g。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "素材",
-    "left": "メッシュ・3Dジャージー。",
-    "right": "コットン・メッシュ。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "保証期間",
-    "left": "2年（正規保証1年＋ユーザー登録1年）。",
-    "right": "2年（正規保証1年＋ユーザー登録1年）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "27,280円〜。",
-    "right": "9,680円〜。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
+const left = comparison.left;
+const right = comparison.right;
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -125,13 +30,7 @@ const differenceRows: DifferenceRow[] = [
     </nav>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: harmonyCandidate.product, line: harmonyCandidate.line, tagline: harmonyCandidate.audience, image: '/products/babybjorn-harmony.jpg', imageAlt: `${harmonyCandidate.product} ${harmonyCandidate.line}`, officialHref: harmonyOfficialProductUrl, guidePoints: [harmonyCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn:left'].purchaseUrl, productId: 'babybjorn-harmony'}}
-      right={{ brand: miniCandidate.product, line: miniCandidate.line, tagline: miniCandidate.audience, image: '/products/babybjorn-mini.jpg', imageAlt: `${miniCandidate.product} ${miniCandidate.line}`, officialHref: miniOfficialProductUrl, guidePoints: [miniCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn:right'].purchaseUrl, productId: 'babybjorn-mini'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2Section articleId="babybjorn" />
 
 
     <details class="fold-section" id="official">
@@ -171,7 +70,7 @@ const differenceRows: DifferenceRow[] = [
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
-      {faqEntries.map((entry) => (
+      {comparison.faqEntries.map((entry) => (
         <details class="faq-item">
           <summary><h3>{entry.question}</h3></summary>
           <p>{entry.answer}</p>
@@ -212,8 +111,8 @@ const differenceRows: DifferenceRow[] = [
     <h2>情報源一覧</h2>
     <ul class="source-list">
       <li><a href={harmonyOfficial} target="_blank" rel="noopener noreferrer">ベビーキャリア比較表（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={harmonyOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア HARMONY（ベビービョルン公式）</a>（2026-08-10確認）</li>
-      <li><a href={miniOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア MINI（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={left.officialHref} target="_blank" rel="noopener noreferrer">ベビーキャリア HARMONY（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={right.officialHref} target="_blank" rel="noopener noreferrer">ベビーキャリア MINI（ベビービョルン公式）</a>（2026-08-10確認）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式の比較表で確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

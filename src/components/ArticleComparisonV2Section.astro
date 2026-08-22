@@ -1,0 +1,67 @@
+---
+/**
+ * ArticleComparisonV2Section — 手書き比較記事から比較シェル（Article Layout v3）
+ * を articleId 1つで構成するための薄いセクション。
+ *
+ * ページ直書きだった ArticleComparisonV2 の props を暗黙契約から型契約へ移す
+ * 統合ポイント。データの単一情報源は次の3系統:
+ *   - 比較データ（左右商品・主な違い・FAQ）:
+ *     content/articles の comparisonV2Articles レジストリ
+ *   - 購入URL: lib/products の articlePurchaseLinks レジストリ
+ *     （"<articleId>:left|right" キーで自動解決。欠落はビルド時エラー）
+ *   - 確認日・購入リンク状態: content/articles の記事メタデータ
+ *
+ * 購入リンクの一貫性ゲート（scripts/check-purchase-link-consistency.mjs）は
+ * ページ直書きの式を検査するため、テンプレート側での一括解決に移行した本セクション
+ * は CommercialArticlePage と同様に対象外となる（レジストリ参照は構造で保証される）。
+ */
+import ArticleComparisonV2 from './ArticleComparisonV2.astro';
+import {
+  articleMetadata,
+  comparisonV2Articles,
+  type ComparisonV2Article,
+  type ComparisonV2Side,
+} from '../content/articles';
+import { articlePurchaseLinks } from '../lib/products';
+
+interface Props {
+  /** 記事ID。comparisonV2Articles レジストリのキーと一致しなければならない。 */
+  articleId: keyof typeof comparisonV2Articles;
+}
+
+const { articleId } = Astro.props;
+// 基底型へアノテートする: 個別エントリの推論型は本文用の追加フィールドを
+// 持ち、共通オプション（commonNote 等）を持たないキーがあるため。
+const spec: ComparisonV2Article = comparisonV2Articles[articleId];
+const article = articleMetadata.find((item) => item.id === articleId);
+
+if (!article) {
+  throw new Error(`Unknown article metadata for comparison section: ${String(articleId)}`);
+}
+
+// 購入URLはレジストリ（lib/products）からの単一解決。キーが欠落していれば
+// 今日のページ直書き（articlePurchaseLinks[...] 直接アクセス）と同じくビルド時に失敗する。
+const purchases = articlePurchaseLinks as Record<string, { purchaseUrl: string }>;
+
+const toSectionSide = (
+  side: ComparisonV2Side,
+  purchaseKey: `${typeof articleId}:left` | `${typeof articleId}:right`,
+) => ({
+  ...side,
+  guidePoints: [...side.guidePoints],
+  purchaseHref: purchases[purchaseKey].purchaseUrl,
+});
+
+const sectionLeft = toSectionSide(spec.left, `${articleId}:left`);
+const sectionRight = toSectionSide(spec.right, `${articleId}:right`);
+---
+
+<ArticleComparisonV2
+  left={sectionLeft}
+  right={sectionRight}
+  rows={[...spec.rows]}
+  commonNote={spec.commonNote}
+  diagnosisHref={spec.diagnosisHref}
+  checkedAt={article.productInfoCheckedAt}
+  purchaseLinkStatus={article.purchaseLinkStatus}
+/>

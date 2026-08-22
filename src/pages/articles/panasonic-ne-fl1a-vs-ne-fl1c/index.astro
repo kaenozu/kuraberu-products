@@ -2,94 +2,15 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro'
 import PurchaseCard from '../../../components/PurchaseCard.astro'
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
-import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import ArticleComparisonV2Section from '../../../components/ArticleComparisonV2Section.astro'
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
 import { panasonicNeFl1aVsNeFl1cArticle as articleMetadata } from '../../../content/articles'
 import { articlePurchaseLinks } from '../../../lib/products';
+import { comparisonV2Articles } from '../../../content/articles/comparison-v2'
 
-const left = {
-  brand: 'パナソニック',
-  model: 'NE-FL1A',
-  fullName: 'パナソニック 単機能レンジ NE-FL1A',
-  officialUrl: 'https://panasonic.jp/range/products/NE-FL1A.html',
-  specUrl: 'https://panasonic.jp/range/products/NE-FL1A/spec.html',
-  image: '/products/panasonic-ne-fl1a.jpg',
-  imageAlt: 'パナソニック NE-FL1A',
-  capacity: '22L',
-  weight: '9.5kg',
-  cavity: '幅321mm×奥行365mm×高さ206mm',
-  output: '最高出力1000W（最大1分30秒）',
-  menus: '自動メニュー数2',
-  care: 'フッ素コート無し、白熱球庫内灯',
-}
-
-const right = {
-  brand: 'パナソニック',
-  model: 'NE-FL1C',
-  fullName: 'パナソニック 単機能レンジ NE-FL1C',
-  officialUrl: 'https://panasonic.jp/range/products/NE-FL1C.html',
-  specUrl: 'https://panasonic.jp/range/products/NE-FL1C/spec.html',
-  image: '/products/panasonic-ne-fl1c.png',
-  imageAlt: 'パナソニック NE-FL1C',
-  capacity: '22L',
-  weight: '8.9kg',
-  cavity: '幅332mm×奥行365mm×高さ206mm',
-  output: '最高出力1000W（最大1分30秒）',
-  menus: '自動メニュー数3',
-  care: 'フッ素コート無し、庫内灯あり',
-}
-
-const faqEntries = [
-  {
-    question: 'パナソニック NE-FL1AとNE-FL1Cはどっちがいい？',
-    answer: 'どちらも22L・フラット庫内・最高出力1000Wの単機能レンジです。公式仕様ではNE-FL1Cの方が本体質量が8.9kgで軽く、自動メニュー数は3です。NE-FL1Aは9.5kgで、自動メニュー数は2です。',
-  },
-  {
-    question: 'NE-FL1AとNE-FL1Cで容量は違う？',
-    answer: '公式仕様では、NE-FL1A・NE-FL1Cとも総庫内容量は22Lです。外形寸法も幅488mm×奥行380mm×高さ298mmで共通ですが、庫内寸法はNE-FL1Cの方が幅332mm、NE-FL1Aは幅321mmです。',
-  },
-  {
-    question: '軽いのはNE-FL1AとNE-FL1Cのどっち？',
-    answer: '公式仕様では、NE-FL1Cが8.9kg、NE-FL1Aが9.5kgです。NE-FL1Cの方が0.6kg軽い仕様です。',
-  },
-  {
-    question: 'NE-FL1AとNE-FL1Cの自動メニュー数は？',
-    answer: '公式仕様では、NE-FL1Aは自動メニュー数2、NE-FL1Cは自動メニュー数3です。',
-  },
-] as const
-
-const keyDiffRows: KeyDiffRow[] = [
-  {
-    label: '本体質量',
-    left: left.weight,
-    right: right.weight,
-    highlight: 'right',
-    highlightNote: '0.6kg軽い',
-    bar: { left: 9.5, right: 8.9 },
-  },
-  {
-    label: '庫内幅',
-    left: '321mm',
-    right: '332mm',
-    highlight: 'right',
-    highlightNote: '11mm広い',
-    bar: { left: 321, right: 332 },
-  },
-  {
-    label: '自動メニュー数',
-    left: left.menus,
-    right: right.menus,
-    highlight: 'right',
-    highlightNote: '1つ多い',
-    bar: { left: 2, right: 3 },
-  },
-  {
-    label: '総庫内容量',
-    left: left.capacity,
-    right: right.capacity,
-  },
-]
+const comparison = comparisonV2Articles['panasonic-ne-fl1a-vs-ne-fl1c']
+const left = comparison.left
+const right = comparison.right
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -106,32 +27,7 @@ const keyDiffRows: KeyDiffRow[] = [
       <a href="#faq">FAQ</a>
     </nav>
 
-    <ArticleComparisonV2
-      left={{
-        brand: left.brand,
-        line: left.model,
-        tagline: 'NE-FL1Aの仕様なら',
-        image: left.image,
-        imageAlt: left.imageAlt,
-        officialHref: left.officialUrl,
-        guidePoints: ['NE-FL1Aの公式仕様を確認して選びたい', `自動メニュー数${left.menus.replace('自動メニュー数', '')}で足りる`, `庫内幅321mmを確認して置きたい`],
-        purchaseHref: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:left'].purchaseUrl,
-      }}
-      right={{
-        brand: right.brand,
-        line: right.model,
-        tagline: '軽さ・庫内幅なら',
-        image: right.image,
-        imageAlt: right.imageAlt,
-        officialHref: right.officialUrl,
-        guidePoints: ['本体を少しでも軽くしたい（8.9kg）', '庫内幅332mmを確認して選びたい', '自動メニュー数3を使いたい'],
-        purchaseHref: articlePurchaseLinks['panasonic-ne-fl1a-vs-ne-fl1c:right'].purchaseUrl,
-      }}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-      commonNote="どちらも同じ：総庫内容量22L・フラット庫内・最高出力1000W（最大1分30秒）・外形寸法 幅488mm×奥行380mm×高さ298mm。"
-    />
+    <ArticleComparisonV2Section articleId="panasonic-ne-fl1a-vs-ne-fl1c" />
 
     <details class="fold-section" id="specs">
       <summary>詳細仕様（全部の数値を見る）</summary>
@@ -154,10 +50,10 @@ const keyDiffRows: KeyDiffRow[] = [
       </div>
       <p class="meta">商品仕様は変更される可能性があります。購入時点の公式商品ページと販売ページを確認してください。</p>
       <p class="source-links">
-        <a class="card-link" href={left.officialUrl} target="_blank" rel="noopener noreferrer">パナソニック NE-FL1A 公式ページ →</a>
-        <a class="card-link" href={right.officialUrl} target="_blank" rel="noopener noreferrer">パナソニック NE-FL1C 公式ページ →</a>
-        <a class="card-link" href={left.specUrl} target="_blank" rel="noopener noreferrer">NE-FL1A 仕様 →</a>
-        <a class="card-link" href={right.specUrl} target="_blank" rel="noopener noreferrer">NE-FL1C 仕様 →</a>
+        <a class="card-link" href={left.officialHref} target="_blank" rel="noopener noreferrer">パナソニック NE-FL1A 公式ページ →</a>
+        <a class="card-link" href={right.officialHref} target="_blank" rel="noopener noreferrer">パナソニック NE-FL1C 公式ページ →</a>
+        <a class="card-link" href={left.specHref} target="_blank" rel="noopener noreferrer">NE-FL1A 仕様 →</a>
+        <a class="card-link" href={right.specHref} target="_blank" rel="noopener noreferrer">NE-FL1C 仕様 →</a>
       </p>
     </details>
 
@@ -166,7 +62,7 @@ const keyDiffRows: KeyDiffRow[] = [
 
     <section id="faq" class="faq-section">
       <h2>FAQ</h2>
-      {faqEntries.map((entry) => (
+      {comparison.faqEntries.map((entry) => (
         <details class="faq-item">
           <summary>{entry.question}</summary>
           <p>{entry.answer}</p>

@@ -194,7 +194,15 @@ describe("checkCoverage", () => {
       readFileSync("src/content/articles.ts", "utf8"),
     );
     const manifest = loadManifest() as { entries: ManifestEntry[] };
-    const missing = manifest.entries[0].articleId;
+    // 公式URLをシード側へ一元化した記事はページからクレームが消えるため、
+    // 現在もページに仕様クレームを持つ記事を対象にする。
+    const missing = manifest.entries
+      .map((entry: ManifestEntry) => entry.articleId)
+      .find((articleId) => collectArticleClaims(articleId).claims.length > 0);
+    expect(
+      missing,
+      "manifest covers at least one spec-bearing article",
+    ).toBeTruthy();
     const withoutEntry = {
       ...manifest,
       entries: manifest.entries.filter(
@@ -202,7 +210,7 @@ describe("checkCoverage", () => {
       ),
     };
     const issues = checkCoverage(articles, withoutEntry);
-    expect(issues.some((issue) => issue.includes(missing))).toBe(true);
+    expect(issues.some((issue) => issue.includes(missing!))).toBe(true);
   });
 
   it("reports an entry referencing an unknown article", () => {
@@ -262,7 +270,9 @@ describe("addMissingEntries / updateEntry", () => {
     expect(manifest.entries.length).toBe(added);
     for (const entry of manifest.entries) {
       expect(entry.claimsFingerprint).toMatch(/^sha256:[0-9a-f]{64}$/);
-      expect(entry.officialUrls.length).toBeGreaterThan(0);
+      // 公式URLはシード（content/articles/comparison-v2.ts 等）へ一元化された記事では
+      // ページに公式リテラルが残らないため、空配列も許容する。
+      expect(Array.isArray(entry.officialUrls)).toBe(true);
     }
   });
 

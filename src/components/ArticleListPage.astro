@@ -1,0 +1,152 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from './ArticleCard.astro';
+import type { ArticleMetadata } from '../content/articles';
+import { normalizeDiscoveryText } from '../lib/article-discovery';
+import { comparisonSubjects } from '../lib/article-subjects';
+
+interface Props {
+  /** BaseLayout の <title> */
+  title: string;
+  /** BaseLayout の meta description */
+  description: string;
+  /** セクション見出し（h1） */
+  heading: string;
+  /** セクションのリード文 */
+  lead: string;
+  /** 記事カードとして表示する記事（ページ・カテゴリで絞り込み済み） */
+  articles: readonly ArticleMetadata[];
+  /** 検索インデックス（data-discovery-index）の元データ。JSON の並び順は出力に影響するため呼び出し側が指定する */
+  discoveryArticles: readonly ArticleMetadata[];
+  /** カテゴリ絞り込み select の選択肢 */
+  categories: readonly string[];
+  /** タグ絞り込み select の選択肢（空配列なら「すべて」のみ表示） */
+  tags: readonly string[];
+  /** 選択中のカテゴリ（指定されたカテゴリ option にのみ selected 属性を出力する） */
+  selectedCategory?: string;
+  /** data-discovery-count に表示する件数 */
+  count: number;
+  /** 件数表示の接尾辞（例: 「（2ページ目）」） */
+  countSuffix?: string;
+  /** 商品診断への導線ノートの表示 */
+  showDiagnosisNote?: boolean;
+  /** ページャー。未指定の場合はページャーを表示しない */
+  pagination?:
+    | { kind: 'first'; totalPages: number }
+    | { kind: 'numbered'; currentPage: number; totalPages: number };
+}
+
+const {
+  title,
+  description,
+  heading,
+  lead,
+  articles,
+  discoveryArticles,
+  categories,
+  tags,
+  selectedCategory,
+  count,
+  countSuffix = '',
+  showDiagnosisNote = false,
+  pagination,
+} = Astro.props;
+
+const discoveryIndex = discoveryArticles.map((article) => ({
+  id: article.id,
+  path: article.path,
+  headline: article.headline,
+  summary: article.summary,
+  category: article.category,
+  tags: article.tags,
+  audiences: article.audiences,
+  uses: article.uses,
+  modifiedAt: article.modifiedAt,
+  imagePath: article.imagePath,
+  subjects: comparisonSubjects(article),
+}));
+
+const cardSearch = (article: ArticleMetadata) =>
+  normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses, ...(comparisonSubjects(article) ?? [])].join(' '));
+
+const pagerFirst = pagination?.kind === 'first' ? pagination : undefined;
+const pagerNumbered = pagination?.kind === 'numbered' ? pagination : undefined;
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section wrap article-index" data-article-discovery>
+    <p class="eyebrow">Comparison articles</p>
+    <h1>{heading}</h1>
+    <p class="lead">{lead}</p>
+{showDiagnosisNote && (
+<div class="diagnosis-index-note">
+<p><strong>「どちらも良さそうで決められない」場合はこちら：</strong><a href="/tools/product-finder/">30秒で自分に合う商品を診断 →</a></p>
+</div>
+)}
+<form class="article-filters" role="search" aria-label="比較記事を検索" data-discovery-form>
+      <label>
+        <span>キーワード</span>
+        <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索" data-discovery-query />
+      </label>
+      <label>
+        <span>カテゴリ</span>
+        <select name="category" data-discovery-category>
+          <option value="">すべて</option>
+          {categories.map((category) => (
+            <option value={category} selected={category === selectedCategory ? true : undefined}>{category}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span>タグ</span>
+        <select name="tag" data-discovery-tag>
+          <option value="">すべて</option>
+          {tags.map((tag) => <option value={tag}>{tag}</option>)}
+        </select>
+      </label>
+      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
+    </form>
+    <p class="meta" aria-live="polite" data-discovery-count>{count}件の記事{countSuffix}</p>
+
+    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex)}></script>
+    <div class="article-list" data-discovery-results>
+      {articles.map((article) => (
+        <ArticleCard
+          article={article}
+          data={{
+            'data-article-card': '',
+            'data-search': cardSearch(article),
+            'data-category': article.category,
+            'data-tags': JSON.stringify(article.tags),
+          }}
+        />
+      ))}
+    </div>
+    <div class="card discovery-empty" hidden data-discovery-empty>
+      <h2>条件に合う記事がありません</h2>
+      <p>キーワードを短くするか、カテゴリ・タグをクリアしてください。</p>
+      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
+    </div>
+{pagerFirst ? (
+<nav class="article-pagination" aria-label="比較記事のページ移動">
+<span class="article-pagination__current" aria-current="page">1</span>
+{Array.from({ length: Math.max(pagerFirst.totalPages - 1, 0) }, (_, index) => (
+<a href={`/articles/page/${index + 2}/`}>{index + 2}</a>
+))}
+</nav>
+) : pagerNumbered ? (
+<nav class="article-pagination" aria-label="比較記事のページ移動">
+<a href={pagerNumbered.currentPage === 2 ? '/articles/' : `/articles/page/${pagerNumbered.currentPage - 1}/`} aria-label="前のページ">‹ 前へ</a>
+{Array.from({ length: pagerNumbered.totalPages }, (_, index) => {
+const page = index + 1;
+return page === pagerNumbered.currentPage
+? <span class="article-pagination__current" aria-current="page">{page}</span>
+: <a href={page === 1 ? '/articles/' : `/articles/page/${page}/`}>{page}</a>;
+})}
+{pagerNumbered.currentPage < pagerNumbered.totalPages && <a href={`/articles/page/${pagerNumbered.currentPage + 1}/`}>次へ ›</a>}
+</nav>
+) : null}
+  </section>
+
+  <script src="/scripts/article-discovery.js" defer is:inline></script>
+</BaseLayout>

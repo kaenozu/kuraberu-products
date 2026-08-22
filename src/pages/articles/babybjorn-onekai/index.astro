@@ -3,119 +3,17 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2Section from '../../../components/ArticleComparisonV2Section.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {babybjornOnekaiArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
+import {comparisonV2Articles} from '../../../content/articles/comparison-v2';
 
+const comparison = comparisonV2Articles['babybjorn-onekai'];
 const chartOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
-const onekaiOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/';
-const moveOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/';
 
-const faqEntries = [
-  {
-    "question": "ONE KAIとMOVE、どっちを選べばいい？",
-    "answer": "ベビービョルン公式の比較表によると、ONE KAI は新生児から約36ヶ月まで使える4WAY（対面ハイ・ロー、前向き、おんぶ）のモデルで、赤ちゃんの身体に沿った3D構造と幅広ウエストベルトを備えています。MOVE は新生児から約15ヶ月までが対象の2WAYモデルで、フルメッシュ素材で通気性を重視しています。長く使えて多彩な抱き方をしたいなら ONE KAI、通気性の良さと軽やかさを重視するなら MOVE という違いがあります。実際の着け心地や赤ちゃんの好みは、公式情報だけでは判断できません。"
-  },
-  {
-    "question": "ONE KAIは新生児から使える？",
-    "answer": "公式の比較表では、ONE KAI の対象月齢は0カ月〜約36ヶ月、対象体重は3.5〜15kgと案内されています。ベビービョルン公式は「全ての抱っこひもが新生児から抱っこ可能」としています。"
-  },
-  {
-    "question": "MOVEはどこまで使える？",
-    "answer": "公式の比較表では、MOVE の対象月齢は0カ月〜約15ヶ月、対象体重は3.2〜12kg、対象ヒップサイズは約〜120cmと案内されています。MINI（約12ヶ月）より長く使えるちょうどよいモデルと位置づけられています。"
-  },
-  {
-    "question": "ONE KAIとMOVEの価格はいくら？",
-    "answer": "ベビービョルン公式楽天市場店の表示価格（2026-08-10確認）は、ONE KAI が27,500円、MOVE が22,000円です。在庫やキャンペーンにより変動するため、購入時点の販売ページで確認してください。"
-  },
-  {
-    "question": "ONE KAIとMOVEの違いで一番大きいのは？",
-    "answer": "公式の比較表では、使える期間（約36ヶ月 vs 約15ヶ月）と抱っこの種類（4WAY vs 2WAY）が大きな違いです。ONE KAI は幅広ウエストベルト付き（おんぶ時にもスマート）で4通りの抱っこができます。MOVE はショルダーパッド・ウェストベルトの項目が「ー」のスッキリ設計で、フルメッシュ素材です。"
-  },
-  {
-    "question": "ONE KAIとMOVEの保証期間は？",
-    "answer": "ベビービョルン公式は保証期間について「2年（正規保証1年＋ユーザー登録1年）」と案内しています。"
-  }
-];
-
-const onekaiCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'ONE KAI',
-  tone: 'premium',
-  audience: '新生児から長く使えて4WAYで多彩な抱き方をしたい人の候補',
-  note: '新生児〜約36ヶ月・4WAY・3D構造・幅広ウエストベルト',
-  status: 'official',
-};
-
-const moveCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'MOVE',
-  tone: 'standard',
-  audience: '通気性を重視して長めに使いたい人の候補',
-  note: '新生児〜約15ヶ月・2WAY・フルメッシュ素材',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "対象月齢・対象体重",
-    "left": "0カ月〜約36ヶ月。体重3.5〜15kg、ヒップ約〜160cm。",
-    "right": "0カ月〜約15ヶ月。体重3.2〜12kg、ヒップ約〜120cm。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "抱っこの種類",
-    "left": "4通り：対面抱っこ（ハイポジション）・対面抱っこ（ローポジション）・前向き抱っこ・おんぶ。",
-    "right": "2通り。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "ショルダーとウエストのサポート",
-    "left": "パッド入りショルダーベルト（スッキリ見え・肩にぴったりフィット）＋幅広ウエストベルト（おんぶ時にもスマート）。",
-    "right": "ショルダーパッド・ウェストベルトの項目は公式比較表で「ー」。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "素材",
-    "left": "メッシュ・コットン。",
-    "right": "メッシュ（フルメッシュ素材で通気性抜群）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "製品重量",
-    "left": "約1000g。",
-    "right": "約860g。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "ヘッドサポート",
-    "left": "○",
-    "right": "○",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "保証期間",
-    "left": "2年（正規保証1年＋ユーザー登録1年）。",
-    "right": "2年（正規保証1年＋ユーザー登録1年）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "27,500円。",
-    "right": "22,000円。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
+const left = comparison.left;
+const right = comparison.right;
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -131,13 +29,7 @@ const differenceRows: DifferenceRow[] = [
     </nav>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiOfficialProductUrl, guidePoints: [onekaiCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-onekai:left'].purchaseUrl, productId: 'babybjorn-onekai'}}
-      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveOfficialProductUrl, guidePoints: [moveCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-onekai:right'].purchaseUrl, productId: 'babybjorn-move'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2Section articleId="babybjorn-onekai" />
 
 
     <details class="fold-section" id="official">
@@ -172,7 +64,7 @@ const differenceRows: DifferenceRow[] = [
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
-      {faqEntries.map((entry) => (
+      {comparison.faqEntries.map((entry) => (
         <details class="faq-item">
           <summary><h3>{entry.question}</h3></summary>
           <p>{entry.answer}</p>
@@ -213,8 +105,8 @@ const differenceRows: DifferenceRow[] = [
     <h2>情報源一覧</h2>
     <ul class="source-list">
       <li><a href={chartOfficial} target="_blank" rel="noopener noreferrer">ベビーキャリア比較表（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={onekaiOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア ONE KAI（ベビービョルン公式）</a>（2026-08-10確認）</li>
-      <li><a href={moveOfficialProductUrl} target="_blank" rel="noopener noreferrer">ベビーキャリア MOVE（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={left.officialHref} target="_blank" rel="noopener noreferrer">ベビーキャリア ONE KAI（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={right.officialHref} target="_blank" rel="noopener noreferrer">ベビーキャリア MOVE（ベビービョルン公式）</a>（2026-08-10確認）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式の比較表で確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>

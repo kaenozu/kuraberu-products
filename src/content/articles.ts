@@ -4,10 +4,16 @@ export type {
   ArticleMetadataBase,
   ComparisonSide,
   ComparisonRow,
+  ComparisonV2Article,
+  ComparisonV2Side,
   GuideArticleMetadata,
   ComparisonArticleMetadata,
 } from "./articles/types";
-export { defineArticleMetadata } from "./articles/types";
+export {
+  defineArticleMetadata,
+  defineComparisonV2Article,
+} from "./articles/types";
+export { comparisonV2Articles } from "./articles/comparison-v2";
 
 // Re-import for use in this file's data definitions.
 import type { ArticleMetadata } from "./articles/types";

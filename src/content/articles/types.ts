@@ -115,6 +115,99 @@ export type ComparisonArticleMetadata = ArticleMetadataBase & {
  */
 export type ArticleMetadata = GuideArticleMetadata | ComparisonArticleMetadata;
 
+/**
+ * 比較シェル（ArticleComparisonV2Section）に渡す片側商品。
+ * purchaseHref / checkedAt / purchaseLinkStatus はセクション側で
+ * articlePurchaseLinks・記事メタデータから自動解決するため宣言しない。
+ */
+export interface ComparisonV2Side {
+  brand: string;
+  line: string;
+  tagline: string;
+  image: string;
+  imageAlt: string;
+  /** メーカー公式ページURL（広告リンクは不可） */
+  officialHref: string;
+  guidePoints: readonly string[];
+  /** クリック計測用の商品ID（任意） */
+  productId?: string;
+}
+
+/**
+ * 手書き比較記事の比較シェル宣言（articleId で引くレジストリの要素）。
+ *
+ * ページ直書きだった ArticleComparisonV2 の props を移設するための契約。
+ * faqEntries は本文側の FAQ リストも参照するためここへ一元する。
+ * 本文が公式仕様（仕様ページURL・寸法など）を参照する記事は、
+ * 片側オブジェクトに追加フィールドを持たせてよい（{@link defineComparisonV2Article} が
+ * 構造的部分型で受け入れる）。
+ */
+export interface ComparisonV2Article {
+  left: ComparisonV2Side;
+  right: ComparisonV2Side;
+  rows: readonly ComparisonRow[];
+  /** VisualKeyDifferences の「この一覧以外は両商品とも同じ」注記 */
+  commonNote?: string;
+  /** 「次にすること」ブロックの診断カテゴリURL */
+  diagnosisHref?: string;
+  /** 本文の FAQ（question/answer はそのまま出力される） */
+  faqEntries: readonly { question: string; answer: string }[];
+}
+
+const comparisonV2RequiredSideFields = [
+  "brand",
+  "line",
+  "tagline",
+  "image",
+  "imageAlt",
+  "officialHref",
+] as const;
+
+/**
+ * {@link defineArticleMetadata} と同じ検証付きヘルパーパターンで
+ * 比較シェル宣言を定義する。ジェネリクスで受け取るため、片側オブジェクトへの
+ * 本文用追加フィールド（specUrl など）は型情報ごと保持される。
+ */
+export function defineComparisonV2Article<T extends ComparisonV2Article>(
+  article: T,
+): T {
+  for (const [label, side] of [
+    ["left", article.left],
+    ["right", article.right],
+  ] as const) {
+    for (const field of comparisonV2RequiredSideFields) {
+      if (!side[field].trim()) {
+        throw new TypeError(`${label}.${field} must be a non-empty string`);
+      }
+    }
+    if (!side.officialHref.startsWith("https://")) {
+      throw new TypeError(
+        `${label}.officialHref must be an absolute https:// manufacturer URL`,
+      );
+    }
+    if (
+      side.guidePoints.length === 0 ||
+      side.guidePoints.some((point) => !point.trim())
+    ) {
+      throw new TypeError(
+        `${label}.guidePoints must contain at least one non-empty entry`,
+      );
+    }
+  }
+  if (article.rows.length === 0) {
+    throw new TypeError("rows must contain at least one comparison row");
+  }
+  if (article.faqEntries.length === 0) {
+    throw new TypeError("faqEntries must contain at least one entry");
+  }
+  for (const entry of article.faqEntries) {
+    if (!entry.question.trim() || !entry.answer.trim()) {
+      throw new TypeError("faqEntries must not contain empty question/answer");
+    }
+  }
+  return Object.freeze({ ...article }) as T;
+}
+
 const isoDate = /^\d{4}-\d{2}-\d{2}$/;
 
 // Build-time reference date in Asia/Tokyo to prevent future dates.

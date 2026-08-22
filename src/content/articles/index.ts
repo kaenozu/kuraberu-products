@@ -4,10 +4,17 @@ export type {
   ArticleMetadataBase,
   ComparisonSide,
   ComparisonRow,
+  ComparisonV2Article,
+  ComparisonV2Side,
   GuideArticleMetadata,
   ComparisonArticleMetadata,
 } from "./types";
-export { defineArticleMetadata, _setBuildReferenceDate } from "./types";
+export {
+  defineArticleMetadata,
+  defineComparisonV2Article,
+  _setBuildReferenceDate,
+} from "./types";
+export { comparisonV2Articles } from "./comparison-v2";
 
 export { pampersNewbornArticle } from "./pampers-newborn";
 export { merriesNewbornArticle } from "./merries-newborn";

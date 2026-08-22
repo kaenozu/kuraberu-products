@@ -3,112 +3,17 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2Section from '../../../components/ArticleComparisonV2Section.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {babybjornBouncerArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
+import {comparisonV2Articles} from '../../../content/articles/comparison-v2';
 
+const comparison = comparisonV2Articles['babybjorn-bouncer'];
 const bouncerGuideUrl = 'https://www.rakuten.ne.jp/gold/babybjorn/topics/bouncer-guide/';
-const blissOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-bouncers/bouncer-bliss/';
-const balanceOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-bouncers/bouncer-balance-soft/sky-blue-white-mesh-light-grey/';
 
-const faqEntries = [
-  {
-    "question": "バウンサー Blissとバランスソフト、どっちを選べばいい？",
-    "answer": "ベビービョルン公式の案内によると、Bliss とバランスソフトはどちらも「セルフバウンシング構造」を備えたバウンサーで、対象は生後約1ヶ月〜2才（バウンサーとしての使用は体重9kgまで）です。主な違いはシートの素材とデザインです。Bliss は最新モデルでシートカバーをより柔らかく仕上げたモデルとされ、20種類以上のバリエーションがあります。バランスソフトは2トーンの生地が特長です。実際の肌触りの好みは、公式情報だけでは判断できません。"
-  },
-  {
-    "question": "バウンサー Blissは新生児から使える？",
-    "answer": "公式の商品ページでは、Bliss の対象は「生後約1ヶ月〜2才くらい（最大体重13kg）」と案内されています。また「バウンサーとしてのご使用は体重9kgまで」と記載されています。対象月齢・体重は購入前に公式ページで確認してください。"
-  },
-  {
-    "question": "バランスソフトはどこまで使える？",
-    "answer": "公式の商品ページでは、バランスソフトの対象は「生後約1ヶ月〜2才くらい（最大体重13kg）」、バウンサーとしての使用は体重9kgまでと案内されています。公式は「1ヶ月から2歳まで使えるロングユースタイプ」と案内しています。"
-  },
-  {
-    "question": "Blissとバランスソフトの価格はいくら？",
-    "answer": "ベビービョルン公式楽天市場店では、カラー限定SALEとして Bliss・バランスソフトとも 17,600円〜19,800円（カラー・素材により変動・2026-08-10確認）で販売されていました。在庫やキャンペーンにより変動するため、購入時点の販売ページで確認してください。"
-  },
-  {
-    "question": "Blissとバランスソフトの違いで一番大きいのは？",
-    "answer": "公式の案内では、機能面（セルフバウンシング構造・3段階リクライニング・対象月齢）に大きな違いはなく、違いは主にシートの素材とデザインです。Bliss は最新モデルでシートカバーをより柔らかく仕上げたモデル、バランスソフトは2トーンの生地が特長です。"
-  },
-  {
-    "question": "Blissとバランスソフトの保証は？",
-    "answer": "ベビービョルン公式楽天市場店の商品ページでは、両モデルとも2年保証（SG認証）と案内されています。"
-  }
-];
-
-const blissCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'Bliss',
-  tone: 'premium',
-  audience: '最新モデルでデザインのバリエーションから選びたい人の候補',
-  note: '最新モデル・シートカバーをより柔らかく・20種類以上のバリエーション',
-  status: 'official',
-};
-
-const balanceCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'バランスソフト',
-  tone: 'standard',
-  audience: '2トーンの落ち着いたデザインを好む人の候補',
-  note: '2トーン生地が特長・直近カラーバリエーション増加中',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "シートの素材とデザイン",
-    "left": "最新モデル。シートカバーをより柔らかく仕上げたモデル。3Dジャージー（放熱効果）・コットン・Air（メッシュ）・ウーブンの素材展開で20種類以上のバリエーション。",
-    "right": "2トーンの生地が特長。コットン・Air（メッシュ）・ウーブン/ジャージーの素材展開。直近カラーバリエーションが増加中。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "対象月齢・対象体重",
-    "left": "生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしての使用は体重9kgまで。",
-    "right": "生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしての使用は体重9kgまで。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "リクライニング",
-    "left": "3段階リクライニング。",
-    "right": "3段階リクライニング。「快適に長く使える」と案内。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "独自機能",
-    "left": "セルフバウンシング構造（赤ちゃん自身の動きでゆらゆら揺れる構造）。",
-    "right": "セルフバウンシング構造。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "製品サイズ・重量",
-    "left": "幅約39×奥行約89×高さ46〜58cm。約2.1kg。",
-    "right": "幅約39×奥行約89×高さ46〜58cm。約2.1kg。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "安全基準・保証",
-    "left": "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
-    "right": "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
-    "right": "カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
+const left = comparison.left;
+const right = comparison.right;
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -124,13 +29,7 @@ const differenceRows: DifferenceRow[] = [
     </nav>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, officialHref: blissOfficialProductUrl, guidePoints: [blissCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-bouncer:left'].purchaseUrl, productId: 'babybjorn-bouncer-bliss'}}
-      right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, officialHref: balanceOfficialProductUrl, guidePoints: [balanceCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-bouncer:right'].purchaseUrl, productId: 'babybjorn-bouncer-balance'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2Section articleId="babybjorn-bouncer" />
 
 
     <details class="fold-section" id="official">
@@ -166,7 +65,7 @@ const differenceRows: DifferenceRow[] = [
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
-      {faqEntries.map((entry) => (
+      {comparison.faqEntries.map((entry) => (
         <details class="faq-item">
           <summary><h3>{entry.question}</h3></summary>
           <p>{entry.answer}</p>
@@ -207,8 +106,8 @@ const differenceRows: DifferenceRow[] = [
     <h2>情報源一覧</h2>
     <ul class="source-list">
       <li><a href={bouncerGuideUrl} target="_blank" rel="noopener noreferrer">バウンサーガイド（ベビービョルン公式楽天市場店）</a>（2026-08-10確認）</li>
-      <li><a href={blissOfficialProductUrl} target="_blank" rel="noopener noreferrer">バウンサー Bliss（ベビービョルン公式）</a>（2026-08-10確認）</li>
-      <li><a href={balanceOfficialProductUrl} target="_blank" rel="noopener noreferrer">バウンサー バランスソフト（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={left.officialHref} target="_blank" rel="noopener noreferrer">バウンサー Bliss（ベビービョルン公式）</a>（2026-08-10確認）</li>
+      <li><a href={right.officialHref} target="_blank" rel="noopener noreferrer">バウンサー バランスソフト（ベビービョルン公式）</a>（2026-08-10確認）</li>
     </ul>
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式のガイドで確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
