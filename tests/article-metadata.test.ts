@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { validateSourceToggle } from "../scripts/check-rendered-html.mjs";
@@ -58,6 +58,26 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
     ),
   ].map((match) => JSON.parse(match[1] ?? "{}") as Record<string, unknown>);
 }
+
+// dist 依存テスト用のガード: astro build 済みの成果物が無い環境
+// （unit-only の CI ジョブ等）では該当テストをスキップする。
+// ※ "(rendered dist)" を名前に持つ describe / it は astro build 後に
+//   実行されることを前提としたレンダリング成果物（dist）の検証テスト。
+const distRenderedHtmlAvailable =
+  existsSync("dist/articles") &&
+  existsSync("dist/articles/pampers-newborn/index.html");
+
+// dist/articles 配下の記事スラッグ一覧を遅延取得する（初回呼び出しでキャッシュ）。
+// describe 本体での即時 readdirSync は collection 時にも実行され、
+// dist 未生成環境でスイートごとクラッシュするため。
+let articleSlugsCached: string[] | undefined;
+const listArticleSlugs = (): readonly string[] =>
+  (articleSlugsCached ??= readdirSync("dist/articles", { withFileTypes: true })
+    .filter(
+      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
+    )
+    .map((entry) => entry.name)
+    .sort());
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
@@ -282,350 +302,377 @@ describe("article metadata", () => {
     ).toThrow();
   });
 
-  it("renders dates consistently in HTML, meta and Article JSON-LD", () => {
-    const html = readFileSync(
-      "dist/articles/pampers-newborn/index.html",
-      "utf8",
-    );
-    const article = extractJsonLd(html).find(
-      (item) => item["@type"] === "Article",
-    );
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "renders dates consistently in HTML, meta and Article JSON-LD",
+    () => {
+      const html = readFileSync(
+        "dist/articles/pampers-newborn/index.html",
+        "utf8",
+      );
+      const article = extractJsonLd(html).find(
+        (item) => item["@type"] === "Article",
+      );
 
-    expect(article).toBeDefined();
-    expect(article?.headline).toBe(pampersNewbornArticle.headline);
-    expect(article?.datePublished).toBe(pampersNewbornArticle.publishedAt);
-    expect(article?.dateModified).toBe(pampersNewbornArticle.modifiedAt);
-    expect(article?.url).toBe(article?.mainEntityOfPage);
-    expect(article?.image).toBe(
-      new URL(
-        pampersNewbornArticle.imagePath!,
-        "https://kuraberu-products.pages.dev/",
-      ).toString(),
-    );
-    expect(html).toContain(
-      `<meta property="article:published_time" content="${pampersNewbornArticle.publishedAt}">`,
-    );
-    expect(html).toContain(
-      `<meta property="article:modified_time" content="${pampersNewbornArticle.modifiedAt}">`,
-    );
-    expect(html).toContain(`datetime="${pampersNewbornArticle.publishedAt}"`);
-    expect(html).toContain(`datetime="${pampersNewbornArticle.modifiedAt}"`);
-  });
+      expect(article).toBeDefined();
+      expect(article?.headline).toBe(pampersNewbornArticle.headline);
+      expect(article?.datePublished).toBe(pampersNewbornArticle.publishedAt);
+      expect(article?.dateModified).toBe(pampersNewbornArticle.modifiedAt);
+      expect(article?.url).toBe(article?.mainEntityOfPage);
+      expect(article?.image).toBe(
+        new URL(
+          pampersNewbornArticle.imagePath!,
+          "https://kuraberu-products.pages.dev/",
+        ).toString(),
+      );
+      expect(html).toContain(
+        `<meta property="article:published_time" content="${pampersNewbornArticle.publishedAt}">`,
+      );
+      expect(html).toContain(
+        `<meta property="article:modified_time" content="${pampersNewbornArticle.modifiedAt}">`,
+      );
+      expect(html).toContain(`datetime="${pampersNewbornArticle.publishedAt}"`);
+      expect(html).toContain(`datetime="${pampersNewbornArticle.modifiedAt}"`);
+    },
+  );
 
-  it("renders the product count meta for article pages", () => {
-    const html = readFileSync(
-      "dist/articles/pampers-newborn/index.html",
-      "utf8",
-    );
-    expect(html).toContain(
-      `<meta name="article:product-count" content="${pampersNewbornArticle.productCount}">`,
-    );
-  });
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "renders the product count meta for article pages",
+    () => {
+      const html = readFileSync(
+        "dist/articles/pampers-newborn/index.html",
+        "utf8",
+      );
+      expect(html).toContain(
+        `<meta name="article:product-count" content="${pampersNewbornArticle.productCount}">`,
+      );
+    },
+  );
 
-  it("renders no mid-cta meta (midArticleCta path removed 2026-08-18)", () => {
-    // v3 短縮後、途中 CTA（after-decision）は長文記事のみ許容だったが、
-    // 宣言する記事がゼロのまま 2026-08-18 に経路ごと削除された。
-    // 将来も mid-cta meta が出力されないことを代表記事で確認する。
-    const pampersHtml = readFileSync(
-      "dist/articles/pampers-newborn/index.html",
-      "utf8",
-    );
-    expect(pampersHtml).not.toContain('name="article:mid-cta"');
-  });
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "renders no mid-cta meta (midArticleCta path removed 2026-08-18)",
+    () => {
+      // v3 短縮後、途中 CTA（after-decision）は長文記事のみ許容だったが、
+      // 宣言する記事がゼロのまま 2026-08-18 に経路ごと削除された。
+      // 将来も mid-cta meta が出力されないことを代表記事で確認する。
+      const pampersHtml = readFileSync(
+        "dist/articles/pampers-newborn/index.html",
+        "utf8",
+      );
+      expect(pampersHtml).not.toContain('name="article:mid-cta"');
+    },
+  );
 
-  it("renders the single-product count for the single-product check article", () => {
-    const html = readFileSync(
-      "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
-      "utf8",
-    );
-    expect(html).toContain(`<meta name="article:product-count" content="1">`);
-    expect(panasonicBabyMonitorArticle.productCount).toBe(1);
-  });
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "renders the single-product count for the single-product check article",
+    () => {
+      const html = readFileSync(
+        "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
+        "utf8",
+      );
+      expect(html).toContain(`<meta name="article:product-count" content="1">`);
+      expect(panasonicBabyMonitorArticle.productCount).toBe(1);
+    },
+  );
 
-  it("marks the single-product article as a guide without a comparison section", () => {
-    const html = readFileSync(
-      "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
-      "utf8",
-    );
-    expect(html).toContain(
-      `<meta name="article:content-type" content="guide">`,
-    );
-    // 商品ガイドは比較セクション（ArticleComparisonV2）を持たない
-    expect(html).not.toContain("article-comparison-v2");
-    // 記事の meta 行にコンテンツタイプが表示される
-    expect(html).toContain("商品ガイド");
-    // 内部メモ（サンプル）と v3 で廃止した表示が残っていない
-    expect(html).not.toContain("サンプル");
-    expect(html).not.toContain("verification-summary");
-  });
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "marks the single-product article as a guide without a comparison section",
+    () => {
+      const html = readFileSync(
+        "dist/articles/panasonic-baby-monitor-kx-hc705/index.html",
+        "utf8",
+      );
+      expect(html).toContain(
+        `<meta name="article:content-type" content="guide">`,
+      );
+      // 商品ガイドは比較セクション（ArticleComparisonV2）を持たない
+      expect(html).not.toContain("article-comparison-v2");
+      // 記事の meta 行にコンテンツタイプが表示される
+      expect(html).toContain("商品ガイド");
+      // 内部メモ（サンプル）と v3 で廃止した表示が残っていない
+      expect(html).not.toContain("サンプル");
+      expect(html).not.toContain("verification-summary");
+    },
+  );
 
-  it("marks a two-product article as a comparison with a comparison section", () => {
-    const html = readFileSync(
-      "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
-      "utf8",
-    );
-    expect(html).toContain(
-      `<meta name="article:content-type" content="comparison">`,
-    );
-    expect(html).toContain("article-comparison-v2");
-  });
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "marks a two-product article as a comparison with a comparison section",
+    () => {
+      const html = readFileSync(
+        "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
+        "utf8",
+      );
+      expect(html).toContain(
+        `<meta name="article:content-type" content="comparison">`,
+      );
+      expect(html).toContain("article-comparison-v2");
+    },
+  );
 
-  it("keeps ordinary pages as WebPage without article dates", () => {
-    const html = readFileSync("dist/about/index.html", "utf8");
-    const data = extractJsonLd(html);
-    expect(data.some((item) => item["@type"] === "WebPage")).toBe(true);
-    expect(html).not.toContain("article:published_time");
-    expect(html).not.toContain("article:product-count");
-  });
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "keeps ordinary pages as WebPage without article dates",
+    () => {
+      const html = readFileSync("dist/about/index.html", "utf8");
+      const data = extractJsonLd(html);
+      expect(data.some((item) => item["@type"] === "WebPage")).toBe(true);
+      expect(html).not.toContain("article:published_time");
+      expect(html).not.toContain("article:product-count");
+    },
+  );
 });
 
-describe("article JSON-LD by content type (rendered dist)", () => {
-  const articleOf = (html: string) =>
-    extractJsonLd(html).find((item) => item["@type"] === "Article") as Record<
-      string,
-      unknown
-    >;
+// 以下の "(rendered dist)" describe 群は astro build 後に実行することを前提とする
+// （dist 未生成環境ではスキップされる）。
+describe.skipIf(!distRenderedHtmlAvailable)(
+  "article JSON-LD by content type (rendered dist)",
+  () => {
+    const articleOf = (html: string) =>
+      extractJsonLd(html).find((item) => item["@type"] === "Article") as Record<
+        string,
+        unknown
+      >;
 
-  it("marks a product guide with a single Product in about", () => {
-    const expectedNames: Record<string, string> = {
-      "panasonic-baby-monitor-kx-hc705":
-        panasonicBabyMonitorArticle.aboutProductNames![0],
-      "panasonic-eh-na9m-guide":
-        panasonicEhNa9mGuideArticle.aboutProductNames![0],
-    };
-    for (const [slug, expectedName] of Object.entries(expectedNames)) {
-      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+    it("marks a product guide with a single Product in about", () => {
+      const expectedNames: Record<string, string> = {
+        "panasonic-baby-monitor-kx-hc705":
+          panasonicBabyMonitorArticle.aboutProductNames![0],
+        "panasonic-eh-na9m-guide":
+          panasonicEhNa9mGuideArticle.aboutProductNames![0],
+      };
+      for (const [slug, expectedName] of Object.entries(expectedNames)) {
+        const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+        const article = articleOf(html);
+        expect(article.about).toEqual([
+          { "@type": "Product", name: expectedName },
+        ]);
+      }
+    });
+
+    it("marks a comparison article with two Products in about when names are declared", () => {
+      const html = readFileSync(
+        "dist/articles/roborock-qrevo-curv-vs-dreame-x50/index.html",
+        "utf8",
+      );
       const article = articleOf(html);
       expect(article.about).toEqual([
-        { "@type": "Product", name: expectedName },
+        { "@type": "Product", name: "Roborock Qrevo Curv" },
+        { "@type": "Product", name: "Dreame X50 Ultra" },
       ]);
-    }
-  });
+    });
 
-  it("marks a comparison article with two Products in about when names are declared", () => {
-    const html = readFileSync(
-      "dist/articles/roborock-qrevo-curv-vs-dreame-x50/index.html",
-      "utf8",
-    );
-    const article = articleOf(html);
-    expect(article.about).toEqual([
-      { "@type": "Product", name: "Roborock Qrevo Curv" },
-      { "@type": "Product", name: "Dreame X50 Ultra" },
-    ]);
-  });
-
-  it("omits about on a comparison article without declared product names", () => {
-    const html = readFileSync(
-      "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
-      "utf8",
-    );
-    const article = articleOf(html);
-    expect(article.about).toBeUndefined();
-  });
-});
-
-describe("source-toggle fold (rendered dist)", () => {
-  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter(
-      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
-    )
-    .map((entry) => entry.name)
-    .sort();
-
-  it("every 根拠・確認先 table article renders the source-toggle and passes the gate", () => {
-    let pagesWithSourceTable = 0;
-    let pagesWithToggle = 0;
-    for (const slug of articleSlugs) {
-      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
-      const relative = `articles/${slug}/index.html`;
-      const errors = validateSourceToggle(relative, html);
-      expect(errors).toEqual([]);
-      if (/根拠・確認先/.test(html)) pagesWithSourceTable += 1;
-      if (/class="source-toggle"/.test(html)) pagesWithToggle += 1;
-    }
-    // 根拠列テーブルを持つ記事とトグルを持つ記事は同数（fold 過不足なし）
-    expect(pagesWithSourceTable).toBeGreaterThan(0);
-    expect(pagesWithToggle).toBe(pagesWithSourceTable);
-  });
-
-  it("renders the toggle immediately before the table on pampers", () => {
-    const html = readFileSync(
-      "dist/articles/pampers-newborn/index.html",
-      "utf8",
-    );
-    const tableIndex = html.indexOf('<div class="table-scroll">');
-    const before = html.slice(tableIndex - 60, tableIndex);
-    expect(before).toMatch(/<\/details>\s*$/);
-    expect(html).toMatch(
-      /<details class="source-toggle">[\s\S]*?<summary>根拠・確認先を表示<\/summary>/,
-    );
-  });
-});
-
-describe("article trust line (rendered dist)", () => {
-  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter(
-      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
-    )
-    .map((entry) => entry.name)
-    .sort();
-
-  it("renders exactly one compressed trust line per article with the checked date", () => {
-    for (const slug of articleSlugs) {
-      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
-      const article = articleMetadata.find(
-        (entry) => entry.path === `/articles/${slug}/`,
+    it("omits about on a comparison article without declared product names", () => {
+      const html = readFileSync(
+        "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
+        "utf8",
       );
-      expect(article, `unknown article ${slug}`).toBeDefined();
-      const trustLines = [
-        ...html.matchAll(/<p class="trust-line">[\s\S]*?<\/p>/g),
+      const article = articleOf(html);
+      expect(article.about).toBeUndefined();
+    });
+  },
+);
+
+describe.skipIf(!distRenderedHtmlAvailable)(
+  "source-toggle fold (rendered dist)",
+  () => {
+    it("every 根拠・確認先 table article renders the source-toggle and passes the gate", () => {
+      const articleSlugs = listArticleSlugs();
+      let pagesWithSourceTable = 0;
+      let pagesWithToggle = 0;
+      for (const slug of articleSlugs) {
+        const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+        const relative = `articles/${slug}/index.html`;
+        const errors = validateSourceToggle(relative, html);
+        expect(errors).toEqual([]);
+        if (/根拠・確認先/.test(html)) pagesWithSourceTable += 1;
+        if (/class="source-toggle"/.test(html)) pagesWithToggle += 1;
+      }
+      // 根拠列テーブルを持つ記事とトグルを持つ記事は同数（fold 過不足なし）
+      expect(pagesWithSourceTable).toBeGreaterThan(0);
+      expect(pagesWithToggle).toBe(pagesWithSourceTable);
+    });
+
+    it("renders the toggle immediately before the table on pampers", () => {
+      const html = readFileSync(
+        "dist/articles/pampers-newborn/index.html",
+        "utf8",
+      );
+      const tableIndex = html.indexOf('<div class="table-scroll">');
+      const before = html.slice(tableIndex - 60, tableIndex);
+      expect(before).toMatch(/<\/details>\s*$/);
+      expect(html).toMatch(
+        /<details class="source-toggle">[\s\S]*?<summary>根拠・確認先を表示<\/summary>/,
+      );
+    });
+  },
+);
+
+describe.skipIf(!distRenderedHtmlAvailable)(
+  "article trust line (rendered dist)",
+  () => {
+    it("renders exactly one compressed trust line per article with the checked date", () => {
+      const articleSlugs = listArticleSlugs();
+      for (const slug of articleSlugs) {
+        const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+        const article = articleMetadata.find(
+          (entry) => entry.path === `/articles/${slug}/`,
+        );
+        expect(article, `unknown article ${slug}`).toBeDefined();
+        const trustLines = [
+          ...html.matchAll(/<p class="trust-line">[\s\S]*?<\/p>/g),
+        ];
+        expect(trustLines.length, `${slug}: trust line count`).toBe(1);
+        const checkedAt = article!.productInfoCheckedAt;
+        const expected = checkedAt
+          ? `<p class="trust-line">✓ 公式確認済み（${checkedAt}）・広告を含みます</p>`
+          : '<p class="trust-line">広告を含みます</p>';
+        expect(trustLines[0][0]).toBe(expected);
+        // 旧形式（ヒーロー信頼行・広告表示 notice）が残っていない
+        expect(html).not.toContain("公式情報確認済み · ");
+        expect(html).not.toContain(
+          "広告表示：この記事には広告リンクを含みます",
+        );
+      }
+    });
+  },
+);
+
+describe.skipIf(!distRenderedHtmlAvailable)(
+  "public commercial article quality gate",
+  () => {
+    it("renders concrete comparison rows without placeholder wording", () => {
+      const articleSlugs = [
+        "roborock-qrevo-curv-vs-dreame-x50",
+        "makita-cl107-vs-cl286",
+        "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+        "sharp-kc-s50-vs-panasonic-f-vxw55",
+        "panasonic-eh-na9m-vs-refa-beautech",
       ];
-      expect(trustLines.length, `${slug}: trust line count`).toBe(1);
-      const checkedAt = article!.productInfoCheckedAt;
-      const expected = checkedAt
-        ? `<p class="trust-line">✓ 公式確認済み（${checkedAt}）・広告を含みます</p>`
-        : '<p class="trust-line">広告を含みます</p>';
-      expect(trustLines[0][0]).toBe(expected);
-      // 旧形式（ヒーロー信頼行・広告表示 notice）が残っていない
-      expect(html).not.toContain("公式情報確認済み · ");
-      expect(html).not.toContain("広告表示：この記事には広告リンクを含みます");
-    }
-  });
-});
+      for (const slug of articleSlugs) {
+        const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+        const rows = html.match(/<tr\b[\s\S]*?<\/tr>/gi) ?? [];
+        if (!rows.length) continue;
+        const tableText = rows.join(" ");
+        if (!html.includes('class="comparison"')) continue;
+        expect(tableText, `${slug}: placeholder comparison rows`).not.toMatch(
+          /公式(?:仕様|情報)?確認項目|公式(?:仕様|情報)で確認する項目|選定の観点|確認項目|仕様・サイズ・対応機能/,
+        );
+        expect(rows.length, `${slug}: comparison rows`).toBeGreaterThanOrEqual(
+          2,
+        );
+      }
+    });
+  },
+);
 
-describe("public commercial article quality gate", () => {
-  it("renders concrete comparison rows without placeholder wording", () => {
-    const articleSlugs = [
-      "roborock-qrevo-curv-vs-dreame-x50",
-      "makita-cl107-vs-cl286",
-      "recolte-automatic-cooker-vs-panasonic-nf-pc400",
-      "sharp-kc-s50-vs-panasonic-f-vxw55",
-      "panasonic-eh-na9m-vs-refa-beautech",
-    ];
-    for (const slug of articleSlugs) {
-      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
-      const rows = html.match(/<tr\b[\s\S]*?<\/tr>/gi) ?? [];
-      if (!rows.length) continue;
-      const tableText = rows.join(" ");
-      if (!html.includes('class="comparison"')) continue;
-      expect(tableText, `${slug}: placeholder comparison rows`).not.toMatch(
-        /公式(?:仕様|情報)?確認項目|公式(?:仕様|情報)で確認する項目|選定の観点|確認項目|仕様・サイズ・対応機能/,
-      );
-      expect(rows.length, `${slug}: comparison rows`).toBeGreaterThanOrEqual(2);
-    }
-  });
-});
-
-describe("article diagnosis CTA (rendered dist)", () => {
-  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter(
-      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
-    )
-    .map((entry) => entry.name)
-    .sort();
-
-  it("renders exactly one next-step block on every comparison article, before #specs", () => {
-    let comparisonPages = 0;
-    for (const slug of articleSlugs) {
-      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
-      const contentType = html.match(
-        /<meta name="article:content-type" content="(guide|comparison)">/i,
-      )?.[1];
-      const blockCount = (
-        html.match(
-          /<section\b[^>]*\bnext-step\b[^>]*\bdata-next-step\b[^>]*>/gi,
-        ) ?? []
-      ).length;
-      if (contentType === "guide") {
+describe.skipIf(!distRenderedHtmlAvailable)(
+  "article diagnosis CTA (rendered dist)",
+  () => {
+    it("renders exactly one next-step block on every comparison article, before #specs", () => {
+      const articleSlugs = listArticleSlugs();
+      let comparisonPages = 0;
+      for (const slug of articleSlugs) {
+        const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+        const contentType = html.match(
+          /<meta name="article:content-type" content="(guide|comparison)">/i,
+        )?.[1];
+        const blockCount = (
+          html.match(
+            /<section\b[^>]*\bnext-step\b[^>]*\bdata-next-step\b[^>]*>/gi,
+          ) ?? []
+        ).length;
+        if (contentType === "guide") {
+          expect(
+            blockCount,
+            `${slug}: guide must not render next-step block`,
+          ).toBe(0);
+          continue;
+        }
+        comparisonPages += 1;
         expect(
           blockCount,
-          `${slug}: guide must not render next-step block`,
-        ).toBe(0);
-        continue;
+          `${slug}: comparison must render one next-step block`,
+        ).toBe(1);
+        const diagnosisLink = html.match(
+          /<a class="next-step__diagnosis-link" href="([^"]+)"/,
+        );
+        const purchaseLinkStatus =
+          html.match(
+            /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
+          )?.[1] ?? null;
+        const isUnverified =
+          purchaseLinkStatus === "unverified" ||
+          purchaseLinkStatus === "unavailable";
+        const supportedDiagnosis = new Set([
+          "pigeon-bottle-160-240",
+          "pigeon-bottle-240",
+          "pigeon-slim-240",
+          "moony-m",
+          "merries-newborn",
+          "merries-pants",
+          "pampers-newborn",
+          "shupot",
+        ]);
+        if (supportedDiagnosis.has(slug)) {
+          expect(
+            diagnosisLink,
+            `${slug}: supported diagnosis CTA`,
+          ).not.toBeNull();
+        } else {
+          expect(
+            diagnosisLink,
+            `${slug}: unsupported diagnosis CTA`,
+          ).toBeNull();
+        }
+        const buyLinks = html.match(
+          /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
+        );
+        if (isUnverified) {
+          expect(
+            buyLinks?.length ?? 0,
+            `${slug}: unverified article should have 0 purchase buttons`,
+          ).toBe(0);
+        } else {
+          expect(
+            buyLinks?.length,
+            `${slug}: next-step has 2 purchase buttons`,
+          ).toBe(2);
+        }
+        const specsIndex = html.indexOf('id="specs"');
+        const blockIndex = html.indexOf('class="next-step"');
+        if (specsIndex !== -1) {
+          expect(
+            blockIndex,
+            `${slug}: next-step block before #specs`,
+          ).toBeGreaterThan(-1);
+          expect(
+            blockIndex,
+            `${slug}: next-step block before #specs`,
+          ).toBeLessThan(specsIndex);
+        }
       }
-      comparisonPages += 1;
-      expect(
-        blockCount,
-        `${slug}: comparison must render one next-step block`,
-      ).toBe(1);
-      const diagnosisLink = html.match(
-        /<a class="next-step__diagnosis-link" href="([^"]+)"/,
-      );
-      const purchaseLinkStatus =
-        html.match(
-          /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
-        )?.[1] ?? null;
-      const isUnverified =
-        purchaseLinkStatus === "unverified" ||
-        purchaseLinkStatus === "unavailable";
-      const supportedDiagnosis = new Set([
-        "pigeon-bottle-160-240",
-        "pigeon-bottle-240",
-        "pigeon-slim-240",
-        "moony-m",
-        "merries-newborn",
-        "merries-pants",
-        "pampers-newborn",
-        "shupot",
-      ]);
-      if (supportedDiagnosis.has(slug)) {
-        expect(
-          diagnosisLink,
-          `${slug}: supported diagnosis CTA`,
-        ).not.toBeNull();
-      } else {
-        expect(diagnosisLink, `${slug}: unsupported diagnosis CTA`).toBeNull();
-      }
-      const buyLinks = html.match(
-        /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
-      );
-      if (isUnverified) {
-        expect(
-          buyLinks?.length ?? 0,
-          `${slug}: unverified article should have 0 purchase buttons`,
-        ).toBe(0);
-      } else {
-        expect(
-          buyLinks?.length,
-          `${slug}: next-step has 2 purchase buttons`,
-        ).toBe(2);
-      }
-      const specsIndex = html.indexOf('id="specs"');
-      const blockIndex = html.indexOf('class="next-step"');
-      if (specsIndex !== -1) {
-        expect(
-          blockIndex,
-          `${slug}: next-step block before #specs`,
-        ).toBeGreaterThan(-1);
-        expect(
-          blockIndex,
-          `${slug}: next-step block before #specs`,
-        ).toBeLessThan(specsIndex);
-      }
-    }
-    expect(comparisonPages).toBeGreaterThan(30);
-  });
+      expect(comparisonPages).toBeGreaterThan(30);
+    });
 
-  it("links bottle/diaper comparisons to their matching diagnosis category", () => {
-    const expectations: Record<string, string> = {
-      "pigeon-bottle-160-240": "/tools/product-finder/baby-bottle/",
-      "pigeon-bottle-240": "/tools/product-finder/baby-bottle/",
-      "pigeon-slim-240": "/tools/product-finder/baby-bottle/",
-      "moony-m": "/tools/product-finder/diaper/",
-      "merries-newborn": "/tools/product-finder/diaper/",
-      "merries-pants": "/tools/product-finder/diaper/",
-      "pampers-newborn": "/tools/product-finder/diaper/",
-      shupot: "/tools/product-finder/diaper/",
-    };
-    for (const [slug, href] of Object.entries(expectations)) {
-      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
-      const match = html.match(
-        /<a class="next-step__diagnosis-link" href="([^"]+)"/,
-      );
-      expect(match?.[1], `${slug} diagnosis href`).toBe(href);
-    }
-  });
-});
+    it("links bottle/diaper comparisons to their matching diagnosis category", () => {
+      const expectations: Record<string, string> = {
+        "pigeon-bottle-160-240": "/tools/product-finder/baby-bottle/",
+        "pigeon-bottle-240": "/tools/product-finder/baby-bottle/",
+        "pigeon-slim-240": "/tools/product-finder/baby-bottle/",
+        "moony-m": "/tools/product-finder/diaper/",
+        "merries-newborn": "/tools/product-finder/diaper/",
+        "merries-pants": "/tools/product-finder/diaper/",
+        "pampers-newborn": "/tools/product-finder/diaper/",
+        shupot: "/tools/product-finder/diaper/",
+      };
+      for (const [slug, href] of Object.entries(expectations)) {
+        const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+        const match = html.match(
+          /<a class="next-step__diagnosis-link" href="([^"]+)"/,
+        );
+        expect(match?.[1], `${slug} diagnosis href`).toBe(href);
+      }
+    });
+  },
+);
 
 describe("article card audiences 向き line (rendered dist)", () => {
   it("declares non-empty audiences for every public article", () => {
@@ -637,35 +684,39 @@ describe("article card audiences 向き line (rendered dist)", () => {
     }
   });
 
-  it("renders the 向き line on every ArticleCard on the top and listing pages", () => {
-    const pages = [
-      "dist/index.html",
-      "dist/articles/index.html",
-      ...readdirSync("dist/articles/page", { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => `dist/articles/page/${entry.name}/index.html`),
-    ];
-    let cardCount = 0;
-    for (const file of pages) {
-      const html = readFileSync(file, "utf8");
-      for (const card of html.matchAll(
-        /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*data-content-type="(?:guide|comparison)"[^>]*>([\s\S]*?)<\/article>/gi,
-      )) {
-        cardCount += 1;
-        expect(
-          /<p class="card-audiences">向き: [^<]+<\/p>/.test(card[1]),
-          `card on ${file} must render the 向き line`,
-        ).toBe(true);
-        if (/data-content-type="comparison"/.test(card[0])) {
+  // dist 未生成環境ではスキップ（レンダリング成果物の検証のため astro build 後に実行）
+  it.skipIf(!distRenderedHtmlAvailable)(
+    "renders the 向き line on every ArticleCard on the top and listing pages",
+    () => {
+      const pages = [
+        "dist/index.html",
+        "dist/articles/index.html",
+        ...readdirSync("dist/articles/page", { withFileTypes: true })
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => `dist/articles/page/${entry.name}/index.html`),
+      ];
+      let cardCount = 0;
+      for (const file of pages) {
+        const html = readFileSync(file, "utf8");
+        for (const card of html.matchAll(
+          /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*data-content-type="(?:guide|comparison)"[^>]*>([\s\S]*?)<\/article>/gi,
+        )) {
+          cardCount += 1;
           expect(
-            /<p class="card-subjects">[^<]+<\/p>/.test(card[1]),
-            `comparison card on ${file} must render the 型番 line`,
+            /<p class="card-audiences">向き: [^<]+<\/p>/.test(card[1]),
+            `card on ${file} must render the 向き line`,
           ).toBe(true);
+          if (/data-content-type="comparison"/.test(card[0])) {
+            expect(
+              /<p class="card-subjects">[^<]+<\/p>/.test(card[1]),
+              `comparison card on ${file} must render the 型番 line`,
+            ).toBe(true);
+          }
         }
       }
-    }
-    expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);
-  });
+      expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);
+    },
+  );
 });
 
 describe("future date validation in Asia/Tokyo", () => {

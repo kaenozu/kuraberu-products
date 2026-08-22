@@ -16,7 +16,8 @@
     "lint": "eslint .",
     "typecheck": "astro check",
     "test": "vitest run",
-    "test:e2e": "astro build && npx playwright test",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "astro build && pnpm exec playwright test",
     "validate:env": "node scripts/validate-build-env.mjs",
     "validate:content": "node scripts/validate-content.mjs",
     "check:css-usage": "node scripts/report-css-usage.mjs --fail-on-unused",
@@ -29,7 +30,7 @@
     "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
     "check:external-links": "node scripts/check-external-links.mjs",
     "announce:draft": "node scripts/generate-x-announcements.mjs",
-    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run"
+    "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && node scripts/check-article-seed-consistency.mjs && vitest run"
   },
   "dependencies": {
     "astro": "7.2.0",
@@ -39,6 +40,7 @@
     "@astrojs/check": "0.9.10",
     "@playwright/test": "^1.62.1",
     "@typescript-eslint/parser": "8.65.0",
+    "@vitest/coverage-v8": "4.1.10",
     "cookie": "2.0.1",
     "eslint": "10.8.0",
     "eslint-plugin-astro": "3.0.1",

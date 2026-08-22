@@ -15,6 +15,7 @@ export default [
   {
     ignores: [
       "dist/**",
+      "dist-baseline/**",
       ".astro/**",
       "node_modules/**",
       ".wrangler/**",
