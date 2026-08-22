@@ -3,6 +3,12 @@ name: verify
 on:
   pull_request:
   push:
+    branches:
+      - main
+
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -15,11 +21,12 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
           persist-credentials: false
+      - name: Enable Corepack
+        run: corepack enable
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
         with:
           node-version-file: .node-version
-      - name: Enable Corepack
-        run: corepack enable
+          cache: pnpm
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Verify preview build
@@ -34,3 +41,25 @@ jobs:
           PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
           PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
         run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
+
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          persist-credentials: false
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+      - name: Run E2E tests
+        env:
+          DEPLOYMENT_ENV: preview
+        run: pnpm test:e2e

@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   check:
@@ -28,4 +29,53 @@ jobs:
           DEPLOYMENT_ENV: preview
         run: pnpm build
       - name: Check external link reachability
-        run: pnpm check:external-link-reachability
+        id: check
+        # spec-claims-freshness.yml と同じ「失敗時に issue を開く/更新する」
+        # 運用に揃えるため、失敗を握りつぶさず後続ステップで分岐する。
+        run: |
+          set -o pipefail
+          pnpm check:external-link-reachability 2>&1 | tee external-link-check.log
+        continue-on-error: true
+      - name: Open or update broken-link issue
+        if: steps.check.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "## 外部リンクの到達性チェックに失敗しました"
+            echo
+            echo "- 実行: ${RUN_URL}"
+            echo "- 判定: 404 / 410 はリンク切れ。403 / 429 / 5xx / timeout は bot 制限や一時障害の可能性あり"
+            echo
+            echo '<details><summary>チェックログ（末尾100行）</summary>'
+            echo
+            echo '```'
+            tail -n 100 external-link-check.log || true
+            echo '```'
+            echo
+            echo '</details>'
+          } > external-link-report.md
+          NUM=$(gh issue list --state open --search "in:title 外部リンクの到達性" --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue edit "$NUM" --body-file external-link-report.md
+            echo "既存の外部リンク issue #$NUM を更新しました"
+          else
+            gh issue create \
+              --title "外部リンクの到達性要確認（external links）" \
+              --body-file external-link-report.md
+            echo "外部リンク issue を新規作成しました"
+          fi
+      - name: Close broken-link issue when reachable
+        if: steps.check.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          NUM=$(gh issue list --state open --search "in:title 外部リンクの到達性" --json number --jq '.[0].number // empty')
+          if [ -n "$NUM" ]; then
+            gh issue comment "$NUM" --body "全外部リンクが到達可能になったため、この issue をクローズします。"
+            gh issue close "$NUM"
+            echo "外部リンク issue #$NUM をクローズしました"
+          else
+            echo "開いている外部リンク issue はありません（クローズ不要）"
+          fi

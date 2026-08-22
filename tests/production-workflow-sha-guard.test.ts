@@ -86,16 +86,24 @@ describe("production deploy SHA guard", () => {
       const step = findStep("Validate dispatch contract");
       const run = String(step?.run ?? "");
       expect(run).toMatch(
-        /\[\[.*inputs\.expected_sha.*=~.*\^?\[0-9a-fA-F\]\{40\}/,
+        /\[\[ "\$EXPECTED_SHA" =~ \^\[0-9a-fA-F\]\{40\}\$ \]\]/,
       );
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env?.EXPECTED_SHA).toBe("${{ inputs.expected_sha }}");
     });
 
     it("validates required environment variables", () => {
       const step = findStep("Validate dispatch contract");
       const run = String(step?.run ?? "");
-      expect(run).toContain("vars.PUBLIC_SITE_URL");
-      expect(run).toContain("vars.DEPLOYMENT_ENV");
-      expect(run).toContain("vars.PURCHASE_LINK_MODE");
+      expect(run).toContain("$SITE_URL");
+      expect(run).toContain("$DEPLOYMENT_ENV_VALUE");
+      expect(run).toContain("$PURCHASE_LINK_MODE_VALUE");
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env?.SITE_URL).toBe("${{ vars.PUBLIC_SITE_URL }}");
+      expect(env?.DEPLOYMENT_ENV_VALUE).toBe("${{ vars.DEPLOYMENT_ENV }}");
+      expect(env?.PURCHASE_LINK_MODE_VALUE).toBe(
+        "${{ vars.PURCHASE_LINK_MODE }}",
+      );
     });
 
     it("validates deployment env is production", () => {
@@ -133,14 +141,15 @@ describe("production deploy SHA guard", () => {
       expect(guardIdx).toBeLessThan(verifyIdx);
     });
 
-    it("compares inputs.expected_sha against the real default branch HEAD", () => {
+    it("compares the input SHA against the real default branch HEAD", () => {
       const step = findStep("Verify SHA matches default branch HEAD");
       const run = String(step?.run ?? "");
-      expect(run).toContain("inputs.expected_sha");
+      expect(run).toContain("$EXPECTED_SHA");
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env?.EXPECTED_SHA).toBe("${{ inputs.expected_sha }}");
       // Must NOT use ${{ github.sha }} as variable reference (reflects dispatch ref)
       expect(run).not.toContain("${{ github.sha }}");
       // Must resolve the actual default branch via repository metadata
-      const env = step?.env as Record<string, string> | undefined;
       expect(env?.DEFAULT_BRANCH).toContain(
         "github.event.repository.default_branch",
       );
@@ -203,15 +212,16 @@ describe("production deploy SHA guard", () => {
       expect(run).toContain("git merge-base --is-ancestor");
     });
 
-    it("compares inputs.expected_sha against the real default branch HEAD", () => {
+    it("compares the input SHA against the real default branch HEAD", () => {
       const step = findStep(
         "Verify SHA is reachable from default branch (ancestry check)",
       );
       const run = String(step?.run ?? "");
-      expect(run).toContain("inputs.expected_sha");
+      expect(run).toContain("$EXPECTED_SHA");
       // Must NOT use ${{ github.ref }} as variable reference
       expect(run).not.toContain("${{ github.ref }}");
       const env = step?.env as Record<string, string> | undefined;
+      expect(env?.EXPECTED_SHA).toBe("${{ inputs.expected_sha }}");
       expect(env?.DEFAULT_BRANCH).toContain(
         "github.event.repository.default_branch",
       );
@@ -270,7 +280,22 @@ describe("production deploy SHA guard", () => {
       const step = findStep("Verify exact checkout");
       const run = String(step?.run ?? "");
       expect(run).toContain("git rev-parse HEAD");
-      expect(run).toContain("inputs.expected_sha");
+      expect(run).toContain("$EXPECTED_SHA");
+      const env = step?.env as Record<string, string> | undefined;
+      expect(env?.EXPECTED_SHA).toBe("${{ inputs.expected_sha }}");
+    });
+
+    it("never expands workflow expressions inside shell scripts", () => {
+      // Injection hardening: inputs/vars must reach scripts only via env:.
+      // github.run_id / github.repository are server-generated trusted
+      // values, so they are exempt.
+      for (const step of stepList) {
+        if (typeof step.run !== "string") continue;
+        const sanitized = String(step.run)
+          .replaceAll("${{ github.run_id }}", "")
+          .replaceAll("${{ github.repository }}", "");
+        expect(sanitized).not.toContain("${{");
+      }
     });
   });
 

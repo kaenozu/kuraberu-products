@@ -9,6 +9,19 @@ updates:
       timezone: Asia/Tokyo
     open-pull-requests-limit: 5
     versioning-strategy: increase-if-necessary
+    groups:
+      # パッチ/マイナーは1本のPRにまとめ、上限5の滞留を防ぐ。
+      # メジャーアップデートは個別PRで検証する。
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
+    # pnpm-workspace.yaml の overrides で推移的依存ごと固定済み。
+    # 更新する場合は override 側を先に見直すこと。
+    ignore:
+      - dependency-name: cookie
+      - dependency-name: js-yaml
+      - dependency-name: sharp
     labels:
       - kilo-triaged
     commit-message:
