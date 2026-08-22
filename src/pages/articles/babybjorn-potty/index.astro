@@ -3,12 +3,11 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {pottyArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
-
+// 公式URLの表記は comparison-v2 レジストリ（officialHref）と一致させること。
 const smartPottyOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/smart-potty/';
 const pottyChairOfficialProductUrl = 'https://www.babybjorn.jp/products/bathroom/potty-chair/';
 
@@ -34,62 +33,6 @@ const faqEntries = [
     "answer": "ベビービョルン公式楽天市場店の案内によると、トイレトレーニングシートは2〜6才くらいまで使える便座直付けの補助便座（幅約29×奥行き約35×高さ約10cm・約400g・壁掛け用フック付き・ダイヤル調節機能）です。スマートポッティ・ポッティチェアは自立するおまるで、シートは大人用便座に取り付けて使うタイプと、使い方が異なります。"
   }
 ];
-
-const smartPottyCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'スマートポッティ',
-  tone: 'standard',
-  audience: 'コンパクトに収納できるおまるを探す人の候補',
-  note: '収納式・幅約25.5×32×17.5cm・約540g・ポリプロピレン',
-  status: 'official',
-};
-
-const pottyChairCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'ポッティチェア',
-  tone: 'premium',
-  audience: '長い時間座れるイス型おまるを探す人の候補',
-  note: 'イス型・中桶付き・幅約32×33×33cm・約870g',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "形状",
-    "left": "収納式のコンパクトなポッティ。公式の案内では「スペースの限られたバスルームに必要なデザインと機能をコンパクトにまとめた」と記載。",
-    "right": "イス型オマル。公式の案内では「お子さまが長い時間オマルに座る場合、イス型オマルが最適」と記載。柔らかいフォルムの人間工学デザイン。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "サイズ",
-    "left": "幅約25.5×奥行き約32×高さ約17.5cm。",
-    "right": "幅約32×奥行き約33×高さ約33cm。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "重量・素材",
-    "left": "約540g。素材はポリプロピレン。",
-    "right": "約870g。素材はポリプロピレン。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "中桶",
-    "left": "収納式の構造（中桶の有無は公式商品ページで確認）。",
-    "right": "中桶付き。中桶を取り外してそのまま流せる。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "3,080円。",
-    "right": "4,180円。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -105,13 +48,7 @@ const differenceRows: DifferenceRow[] = [
     </nav>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: smartPottyCandidate.product, line: smartPottyCandidate.line, tagline: smartPottyCandidate.audience, image: '/products/babybjorn-smart-potty.jpg', imageAlt: `${smartPottyCandidate.product} ${smartPottyCandidate.line}`, officialHref: smartPottyOfficialProductUrl, guidePoints: [smartPottyCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-potty:left'].purchaseUrl, productId: 'babybjorn-smart-potty'}}
-      right={{ brand: pottyChairCandidate.product, line: pottyChairCandidate.line, tagline: pottyChairCandidate.audience, image: '/products/babybjorn-potty-chair.jpg', imageAlt: `${pottyChairCandidate.product} ${pottyChairCandidate.line}`, officialHref: pottyChairOfficialProductUrl, guidePoints: [pottyChairCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-potty:right'].purchaseUrl, productId: 'babybjorn-potty-chair'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2ById articleId="babybjorn-potty" />
 
 
     <details class="fold-section" id="official">

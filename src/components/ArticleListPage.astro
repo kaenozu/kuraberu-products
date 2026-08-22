@@ -1,0 +1,141 @@
+---
+import type { ArticleMetadata } from '../content/articles';
+import ArticleCard from './ArticleCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { normalizeDiscoveryText } from '../lib/article-discovery';
+import { comparisonSubjects } from '../lib/article-subjects';
+
+type ArticleListPagination =
+  | { mode: 'first'; totalPages: number }
+  | { mode: 'paged'; currentPage: number; totalPages: number };
+
+interface Props {
+  title: string;
+  description: string;
+  heading: string;
+  lead: string;
+  showDiagnosisNote?: boolean;
+  articles: readonly ArticleMetadata[];
+  totalCount: number;
+  countNote?: string;
+  categoryOptions: readonly string[];
+  selectedCategory?: string;
+  tagOptions: readonly string[];
+  /**
+   * discoveryIndex JSON の元データ。配列の並び順がそのまま出力に反映されるため
+   * 呼び出し側が責任を持つ（カテゴリ頁は元データ順、一覧系は modifiedAt 降順）。
+   */
+  discoverySource: readonly ArticleMetadata[];
+  pagination?: ArticleListPagination;
+}
+
+const {
+  title,
+  description,
+  heading,
+  lead,
+  showDiagnosisNote = false,
+  articles,
+  totalCount,
+  countNote = '',
+  categoryOptions,
+  selectedCategory,
+  tagOptions,
+  discoverySource,
+  pagination,
+} = Astro.props;
+
+const discoveryIndex = discoverySource.map((article) => ({
+  id: article.id,
+  path: article.path,
+  headline: article.headline,
+  summary: article.summary,
+  category: article.category,
+  tags: article.tags,
+  audiences: article.audiences,
+  uses: article.uses,
+  modifiedAt: article.modifiedAt,
+  imagePath: article.imagePath,
+  subjects: comparisonSubjects(article),
+}));
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section wrap article-index" data-article-discovery>
+    <p class="eyebrow">Comparison articles</p>
+    <h1>{heading}</h1>
+    <p class="lead">{lead}</p>
+    {showDiagnosisNote && (
+      <div class="diagnosis-index-note">
+        <p><strong>「どちらも良さそうで決められない」場合はこちら：</strong><a href="/tools/product-finder/">30秒で自分に合う商品を診断 →</a></p>
+      </div>
+    )}
+
+    <form class="article-filters" role="search" aria-label="比較記事を検索" data-discovery-form>
+      <label>
+        <span>キーワード</span>
+        <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索" data-discovery-query />
+      </label>
+      <label>
+        <span>カテゴリ</span>
+        <select name="category" data-discovery-category>
+          <option value="">すべて</option>
+          {categoryOptions.map((category) => (
+            <option value={category} selected={selectedCategory === category}>{category}</option>
+          ))}
+        </select>
+      </label>
+      <label>
+        <span>タグ</span>
+        <select name="tag" data-discovery-tag>
+          <option value="">すべて</option>
+          {tagOptions.map((tag) => <option value={tag}>{tag}</option>)}
+        </select>
+      </label>
+      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
+    </form>
+    <p class="meta" aria-live="polite" data-discovery-count>{totalCount}件の記事{countNote}</p>
+
+    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex)}></script>
+    <div class="article-list" data-discovery-results>
+      {articles.map((article) => (
+        <ArticleCard
+          article={article}
+          data={{
+            'data-article-card': '',
+            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses, ...(comparisonSubjects(article) ?? [])].join(' ')),
+            'data-category': article.category,
+            'data-tags': JSON.stringify(article.tags),
+          }}
+        />
+      ))}
+    </div>
+    <div class="card discovery-empty" hidden data-discovery-empty>
+      <h2>条件に合う記事がありません</h2>
+      <p>キーワードを短くするか、カテゴリ・タグをクリアしてください。</p>
+      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
+    </div>
+    {pagination?.mode === 'first' && (
+      <nav class="article-pagination" aria-label="比較記事のページ移動">
+        <span class="article-pagination__current" aria-current="page">1</span>
+        {Array.from({ length: Math.max(pagination.totalPages - 1, 0) }, (_, index) => (
+          <a href={`/articles/page/${index + 2}/`}>{index + 2}</a>
+        ))}
+      </nav>
+    )}
+    {pagination?.mode === 'paged' && (
+      <nav class="article-pagination" aria-label="比較記事のページ移動">
+        <a href={pagination.currentPage === 2 ? '/articles/' : `/articles/page/${pagination.currentPage - 1}/`} aria-label="前のページ">‹ 前へ</a>
+        {Array.from({ length: pagination.totalPages }, (_, index) => {
+          const page = index + 1;
+          return page === pagination.currentPage
+            ? <span class="article-pagination__current" aria-current="page">{page}</span>
+            : <a href={page === 1 ? '/articles/' : `/articles/page/${page}/`}>{page}</a>;
+        })}
+        {pagination.currentPage < pagination.totalPages && <a href={`/articles/page/${pagination.currentPage + 1}/`}>次へ ›</a>}
+      </nav>
+    )}
+  </section>
+
+  <script src="/scripts/article-discovery.js" defer is:inline></script>
+</BaseLayout>

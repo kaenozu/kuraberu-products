@@ -1,0 +1,22 @@
+---
+import ArticleComparisonV2 from './ArticleComparisonV2.astro';
+import { getComparisonV2Entry, type ComparisonV2ArticleId } from '../content/articles/comparison-v2';
+
+interface Props {
+  /** comparison-v2.ts レジストリのキー。typo はコンパイルエラーになる。 */
+  articleId: ComparisonV2ArticleId;
+}
+
+const { articleId } = Astro.props;
+const entry = getComparisonV2Entry(articleId);
+---
+
+<ArticleComparisonV2
+  left={{ ...entry.left, guidePoints: [...entry.left.guidePoints], purchaseHref: entry.purchaseHrefs.left }}
+  right={{ ...entry.right, guidePoints: [...entry.right.guidePoints], purchaseHref: entry.purchaseHrefs.right }}
+  rows={[...entry.rows]}
+  checkedAt={entry.checkedAt}
+  diagnosisHref={entry.diagnosisHref}
+  commonNote={entry.commonNote}
+  purchaseLinkStatus={entry.purchaseLinkStatus}
+/>

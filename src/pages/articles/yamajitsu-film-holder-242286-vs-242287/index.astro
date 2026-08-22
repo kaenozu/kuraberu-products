@@ -4,17 +4,19 @@ import BaseLayout from '../../../layouts/BaseLayout.astro'
 import RelatedArticles from '../../../components/RelatedArticles.astro'
 import PurchaseCard from '../../../components/PurchaseCard.astro'
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro'
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro'
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro'
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro'
 import {yamajitsuFilmHolderArticle as articleMetadata} from '../../../content/articles'
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro'
+import { comparisonV2 } from '../../../content/articles/comparison-v2'
 
+const comparison = comparisonV2['yamajitsu-film-holder-242286-vs-242287'];
+// 公式URLの表記は comparison-v2 レジストリ（officialHref）と一致させること。
 const leftOfficial = 'https://www.yamajitsu.co.jp/products/242286'
 const rightOfficial = 'https://www.yamajitsu.co.jp/products/242287'
-const leftImage = '/products/yamazaki-film-holder-242286.jpg'
-const rightImage = '/products/yamazaki-film-holder-242287.jpg'
-const leftAudience = '厚みの異なるまな板を2枚、壁面に浮かせて収納したい人向け'
-const rightAudience = '直径14〜30cmの鍋蓋を壁面に収納したい人向け'
+const leftImage = comparison.left.image;
+const rightImage = comparison.right.image;
+const leftAudience = comparison.left.guidePoints[0];
+const rightAudience = comparison.right.guidePoints[0];
 
 const faqEntries = [
   {question: 'まな板ホルダーと鍋蓋ホルダーの違いは？', answer: 'まな板ホルダーは厚み1.5cmと2.5cm以内のまな板を各1枚、鍋蓋ホルダーは直径14〜30cmの鍋蓋を収納する商品です。'},
@@ -22,14 +24,6 @@ const faqEntries = [
   {question: '取り付けられる壁面は？', answer: 'どちらも光沢のある平らで油染みのない面が対象です。タイル、プラスチック、ステンレス、ガラス、金属塗装面、人工大理石などが例として案内されています。'},
   {question: '価格と在庫は確認できますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、購入時点の販売ページで確認してください。'},
 ] as const
-
-const keyDiffRows: KeyDiffRow[] = [
-  {label: '収納するもの', left: 'まな板2枚', right: '鍋蓋1枚', highlight: null},
-  {label: '対応サイズ', left: '厚み1.5cm・2.5cm以内を各1枚', right: '直径14〜30cm', highlight: null},
-  {label: '商品サイズ', left: 'W12×D5.7×H12cm', right: 'W13.5×D6.2×H14cm', highlight: null},
-  {label: '商品重量', left: '140g', right: '120g', highlight: 'right', highlightNote: '20g軽い'},
-  {label: '耐荷重', left: '2kg', right: '2kg', highlight: null},
-]
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -38,12 +32,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">山崎実業のフィルムフック収納2商品を、公式ページで確認できる収納対象・対応サイズ・寸法・重量・耐荷重に分けて比較します。価格は販売先でご確認ください。</p>
     <p class="jump-nav"><a href="#key-differences">違い</a><a href="#specs">詳細仕様</a><a href="#faq">FAQ</a></p>
-    <ArticleComparisonV2
-      left={{brand: '山崎実業 tower', line: 'フィルムフックまな板ホルダー 242286', tagline: 'まな板2枚を浮かせて収納するなら', image: leftImage, imageAlt: '山崎実業 フィルムフックまな板ホルダー タワー 242286', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['yamajitsu-film-holder-242286-vs-242287:left'].purchaseUrl}}
-      right={{brand: '山崎実業 tower', line: 'フィルムフック鍋蓋ホルダー 242287', tagline: '鍋蓋を浮かせて収納するなら', image: rightImage, imageAlt: '山崎実業 フィルムフック鍋蓋ホルダー タワー 242287', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['yamajitsu-film-holder-242286-vs-242287:right'].purchaseUrl}}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-    />
+    <ArticleComparisonV2ById articleId="yamajitsu-film-holder-242286-vs-242287" />
     <p>まな板を2枚収納したいなら242286、直径14〜30cmの鍋蓋を収納したいなら242287を確認してください。どちらもフィルムフックで取り付け、耐荷重は2kgです。</p>
 
     <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">242286</th><th scope="col">242287</th><th scope="col">根拠</th></tr></thead><tbody>
