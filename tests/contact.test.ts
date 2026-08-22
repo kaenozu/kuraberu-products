@@ -130,15 +130,28 @@ describe("clientIp", () => {
     expect(clientIp(request)).toBe("203.0.113.5");
   });
 
-  it("falls back to the first X-Forwarded-For entry", () => {
+  it("falls back to the last X-Forwarded-For entry added by the nearest proxy", () => {
     const request = new Request("https://example.com/", {
       headers: { "X-Forwarded-For": "198.51.100.7, 10.0.0.1" },
     });
-    expect(clientIp(request)).toBe("198.51.100.7");
+    expect(clientIp(request)).toBe("10.0.0.1");
   });
 
-  it("uses a stable fallback when no IP header exists", () => {
+  it("ignores attacker-injected leading X-Forwarded-For entries", () => {
+    // 先頭への偽値挿入でレート制限キーを無限生成できないこと
+    const request = new Request("https://example.com/", {
+      headers: { "X-Forwarded-For": `spoof ${"x".repeat(20)}, 198.51.100.9` },
+    });
+    expect(clientIp(request)).toBe("198.51.100.9");
+  });
+
+  it("uses a stable fallback when no usable IP header exists", () => {
     expect(clientIp(new Request("https://example.com/"))).toBe("unknown");
+    // 形式検証に通らない値も単一バケットへ倒す
+    const garbage = new Request("https://example.com/", {
+      headers: { "CF-Connecting-IP": "<script>" },
+    });
+    expect(clientIp(garbage)).toBe("unknown");
   });
 });
 
