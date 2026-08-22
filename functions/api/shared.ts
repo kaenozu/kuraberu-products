@@ -37,8 +37,12 @@ export function json(
 /**
  * 同一キー（例: 同一IP）からの連続リクエストを制限する。
  * レート制限カウンタは Cloudflare ロケーション単位・結果整合性（permissive）のため、
- * 厳密な会計ではなくスパム抑止として使う。バインディングが無い・失敗する場合は
- * 制限なしで続行する（可用性優先。楽天APIのフォールバック方針と同じ）。
+ * 厳密な会計ではなくスパム抑止として使う。
+ *
+ * failClosed=false（デフォルト）: バインディング未設定・エラー時は制限なしで続行
+ *   （可用性優先。楽天APIのフォールバック方針と同じ）
+ * failClosed=true: バインディング未設定・エラー時は 503 を返す
+ *   （副作用のあるAPI: 問い合わせ等で使う）
  */
 export async function enforceRateLimit(
   limiter: ContactRateLimiter | undefined,
