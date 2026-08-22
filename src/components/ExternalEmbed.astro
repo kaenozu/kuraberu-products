@@ -84,7 +84,13 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
     type PinterestRenderScope,
   } from "../lib/external-embed-runtime";
   import type { ExternalEmbedConfig } from "../lib/external-embeds";
-  import { getCachedConsent, setConsent, onConsentChange, type EmbedConsent } from "../lib/embed-consent";
+  import {
+    clearConsent,
+    getCachedConsent,
+    setConsent,
+    onConsentChange,
+    type EmbedConsent,
+  } from "../lib/embed-consent";
 
   type EmbedConfig = {
     provider: "x" | "youtube" | "tiktok" | "pinterest";
@@ -360,6 +366,115 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
     return adapter;
   }
 
+  // ---- 同意バナー / 撤回UI（ページに各1枚だけ注入する） --------------------
+  // バナーは非阻断型（モーダルにしない）。表示時に tabindex="-1" を付けて
+  // フォーカスを移動し、キーボード/スクリーンリーダー利用者に選択肢を
+  // 確実に届ける。フォーカストラップは設けない（閲覧を妨げないため）。
+
+  function ensureEmbedConsentStyles(): void {
+    if (document.querySelector("style[data-embed-consent-style]")) return;
+    const style = document.createElement("style");
+    style.dataset.embedConsentStyle = "true";
+    style.textContent = `.embed-consent-banner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:.75rem 1rem;margin-bottom:1rem;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);font-size:.88rem}.embed-consent-banner p{margin:0}.embed-consent-banner__text{flex:1 1 20rem;color:var(--ink)}.embed-consent-banner__actions{display:flex;gap:.5rem;flex-shrink:0}.embed-consent-banner button{border:0;border-radius:var(--radius-sm);padding:.5rem .85rem;font:inherit;font-weight:800;cursor:pointer}[data-embed-consent-accept]{background:var(--ink);color:#fff}[data-embed-consent-reject]{background:transparent;border:1px solid var(--line)!important;color:var(--ink)}.embed-consent-withdraw{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap;padding:.5rem .85rem;margin-bottom:1rem;border:1px dashed var(--line);border-radius:var(--radius-sm);background:transparent;color:var(--muted);font-size:.8rem}.embed-consent-withdraw p{margin:0}.embed-consent-withdraw button{border:1px solid var(--line);border-radius:var(--radius-sm);padding:.35rem .7rem;font:inherit;font-weight:700;background:transparent;color:inherit;cursor:pointer}`;
+    document.head.append(style);
+  }
+
+  function showWithdrawControl(): HTMLElement | undefined {
+    if (document.querySelector("[data-embed-consent-withdraw]")) return undefined;
+    const firstEmbed = document.querySelector("[data-external-embed]");
+    if (!firstEmbed?.parentNode) return undefined;
+    const consent = getCachedConsent();
+    if (!consent) return undefined;
+    ensureEmbedConsentStyles();
+
+    const bar = document.createElement("div");
+    bar.className = "embed-consent-withdraw";
+    bar.dataset.embedConsentWithdraw = "";
+
+    const label = document.createElement("p");
+    label.textContent =
+      consent === "granted"
+        ? "このブラウザでは外部コンテンツの表示を許可しています。"
+        : "このブラウザでは外部コンテンツを表示しない設定になっています。";
+
+    const changeButton = document.createElement("button");
+    changeButton.type = "button";
+    changeButton.dataset.embedConsentChange = "";
+    // 撤回（withdraw）: 同意キーの削除と埋め込みプレースホルダーへの復帰。
+    // 各 autoload 埋め込みは onConsentChange(undefined) で idle 状態へ戻り、
+    // 以降の第三者リクエストは再同意まで発生しない。
+    changeButton.textContent = "設定を変更する";
+    changeButton.addEventListener("click", () => {
+      clearConsent();
+      bar.remove();
+      showConsentBanner();
+    });
+
+    bar.append(label, changeButton);
+    firstEmbed.parentNode.insertBefore(bar, firstEmbed);
+    return bar;
+  }
+
+  function showConsentBanner(): HTMLElement | undefined {
+    if (document.querySelector("[data-embed-consent-banner]")) return undefined;
+    const firstEmbed = document.querySelector("[data-external-embed]");
+    if (!firstEmbed?.parentNode) return undefined;
+    document.querySelector("[data-embed-consent-withdraw]")?.remove();
+    ensureEmbedConsentStyles();
+
+    const text = document.createElement("div");
+    text.className = "embed-consent-banner__text";
+    const title = document.createElement("p");
+    const strong = document.createElement("strong");
+    strong.textContent = "外部コンテンツの表示";
+    title.append(strong);
+    const body = document.createElement("p");
+    body.textContent =
+      "この記事にはX・YouTubeなどの外部投稿が含まれています。表示すると、IPアドレスや閲覧環境などの情報が外部サービスに送信される場合があります。";
+    text.append(title, body);
+
+    const actions = document.createElement("div");
+    actions.className = "embed-consent-banner__actions";
+    const accept = document.createElement("button");
+    accept.type = "button";
+    accept.setAttribute("data-embed-consent-accept", "");
+    accept.textContent = "すべて表示";
+    const reject = document.createElement("button");
+    reject.type = "button";
+    reject.setAttribute("data-embed-consent-reject", "");
+    reject.textContent = "表示しない";
+    actions.append(accept, reject);
+
+    const banner = document.createElement("div");
+    banner.className = "embed-consent-banner";
+    banner.dataset.embedConsentBanner = "";
+    banner.setAttribute("role", "region");
+    banner.setAttribute("aria-label", "外部コンテンツの表示について");
+    banner.tabIndex = -1;
+    banner.append(text, actions);
+
+    accept.addEventListener("click", () => {
+      setConsent("granted");
+      banner.remove();
+      const withdrawBar = showWithdrawControl();
+      // 選択ボタンが消えるため、撤回UIの操作へフォーカスを維持する。
+      withdrawBar?.querySelector("button")?.focus({ preventScroll: true });
+    });
+    reject.addEventListener("click", () => {
+      setConsent("denied");
+      banner.remove();
+      const withdrawBar = showWithdrawControl();
+      withdrawBar?.querySelector("button")?.focus({ preventScroll: true });
+    });
+
+    firstEmbed.parentNode.insertBefore(banner, firstEmbed);
+    // 表示時にバナー自身へフォーカスを移動する。region 名と本文が
+    // スクリーンリーダーで読み上げられ、Tab ですぐにボタンへ届く。
+    banner.focus();
+    return banner;
+  }
+
+
   for (const root of document.querySelectorAll<HTMLElement>("[data-external-embed]")) {
     if (root.dataset.initialized === "true") continue;
     root.dataset.initialized = "true";
@@ -396,9 +511,27 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
       childList: true,
       subtree: true,
     });
+    // 同意の撤回（clearConsent → undefined）でプレースホルダーへ復帰したことを
+    // マーキングする世代カウンタ。進行中の load が後から reject しても、
+    // エラー扱いのUI（フォーカス移動・エラーメッセージ）を上書きさせない。
+    let resetGeneration = 0;
+    const resetToPlaceholder = () => {
+      resetGeneration += 1;
+      targetAdapter.clear();
+      target.hidden = true;
+      root.dataset.embedState = "idle";
+      const actions = root.querySelector(".external-embed__actions");
+      if (!button.isConnected && actions) {
+        actions.prepend(button);
+      }
+      button.disabled = false;
+      button.hidden = false;
+      status.textContent = "";
+    };
     const onClick = () => {
       if (disposed) return;
       if (actionPromise) return;
+      const generationAtStart = resetGeneration;
 
       actionPromise = (async () => {
         button.disabled = true;
@@ -409,13 +542,31 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
 
         try {
           await loadPromise;
-          if (disposed || !root.isConnected) return;
+          if (
+            disposed ||
+            !root.isConnected ||
+            generationAtStart !== resetGeneration
+          ) {
+            return;
+          }
           root.dataset.embedState = runtime.state;
           status.textContent = "外部コンテンツを表示しました。";
           target.focus({ preventScroll: true });
-          button.remove();
+          if (root.dataset.autoload === "true") {
+            // autoload: 撤回時に手動読み込みUIへ戻せるよう、ボタンはDOMに残し
+            // 非表示にする（loaded 状態ではCSSでアクション列ごと隠れる）。
+            button.hidden = true;
+          } else {
+            button.remove();
+          }
         } catch {
-          if (disposed || !root.isConnected) return;
+          if (
+            disposed ||
+            !root.isConnected ||
+            generationAtStart !== resetGeneration
+          ) {
+            return;
+          }
           targetAdapter.clear();
           target.hidden = true;
           root.dataset.embedState = runtime.state;
@@ -435,6 +586,13 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
       const handleConsentChange = (consent: EmbedConsent | undefined) => {
         if (consent === "granted" && root.dataset.embedState === "idle") {
           onClick();
+        } else if (
+          consent === undefined &&
+          root.dataset.embedState !== "idle"
+        ) {
+          // 撤回: localStorage の同意キーを削除し、埋め込みを
+          // 手動読み込みのプレースホルダーへ戻す。
+          resetToPlaceholder();
         }
       };
       onConsentChange(handleConsentChange);
@@ -445,45 +603,11 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
         onClick();
       } else if (consent === undefined) {
         // 未同意: 同意バナーを1枚だけ注入し、ユーザーの選択を待つ。
-        if (!document.querySelector("[data-embed-consent-banner]")) {
-          const banner = document.createElement("div");
-          banner.dataset.embedConsentBanner = "true";
-          banner.className = "embed-consent-banner";
-          banner.setAttribute("role", "region");
-          banner.setAttribute("aria-label", "外部コンテンツの表示について");
-          banner.innerHTML = `
-            <div class="embed-consent-banner__text">
-              <p><strong>外部コンテンツの表示</strong></p>
-              <p>この記事にはX・YouTubeなどの外部投稿が含まれています。表示すると、IPアドレスや閲覧環境などの情報が外部サービスに送信される場合があります。</p>
-            </div>
-            <div class="embed-consent-banner__actions">
-              <button type="button" data-embed-consent-accept>すべて表示</button>
-              <button type="button" data-embed-consent-reject>表示しない</button>
-            </div>
-          `;
-          const style = document.createElement("style");
-          style.textContent = `.embed-consent-banner{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:.75rem 1rem;margin-bottom:1rem;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--paper);font-size:.88rem}.embed-consent-banner p{margin:0}.embed-consent-banner__text{flex:1 1 20rem;color:var(--ink)}.embed-consent-banner__actions{display:flex;gap:.5rem;flex-shrink:0}.embed-consent-banner button{border:0;border-radius:var(--radius-sm);padding:.5rem .85rem;font:inherit;font-weight:800;cursor:pointer}[data-embed-consent-accept]{background:var(--ink);color:#fff}[data-embed-consent-reject]{background:transparent;border:1px solid var(--line)!important;color:var(--ink)}`;
-          document.head.append(style);
-
-          // 先頭のexternal-embedの前に挿入
-          const firstEmbed = document.querySelector("[data-external-embed]");
-          if (firstEmbed?.parentNode) {
-            firstEmbed.parentNode.insertBefore(banner, firstEmbed);
-          }
-
-          banner.querySelector("[data-embed-consent-accept]")?.addEventListener("click", () => {
-            setConsent("granted");
-            banner.remove();
-            style.remove();
-          });
-          banner.querySelector("[data-embed-consent-reject]")?.addEventListener("click", () => {
-            setConsent("denied");
-            banner.remove();
-            style.remove();
-          });
-        }
+        showConsentBanner();
+      } else {
+        // granted / denied 済み: 撤回（設定変更）UIを1枚だけ出す。
+        showWithdrawControl();
       }
-      // consent === "denied": 何もしない — 手動読み込みボタンのまま。
     }
   }
 </script>

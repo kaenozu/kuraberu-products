@@ -76,14 +76,19 @@ const clientData = {
         <fieldset class="diagnosis-options" data-diagnosis-options></fieldset>
         <div class="diagnosis-nav">
           <button type="button" class="secondary-button" data-diagnosis-prev hidden>前の質問へ</button>
-          <button type="button" class="primary-button" data-diagnosis-next disabled>次へ</button>
+          <button type="button" class="primary-button" data-diagnosis-next disabled aria-describedby="diagnosis-nav-hint">次へ</button>
         </div>
+        <!-- 必須質問で未回答のとき「次へ」が無効になる理由を、無効化中だけ表示する -->
+        <p class="diagnosis-nav-hint" id="diagnosis-nav-hint" data-diagnosis-nav-hint hidden aria-live="polite">回答を選ぶと「次へ」から進めます。</p>
       </section>
 
       <!-- 結果画面 -->
-      <section class="diagnosis-result" data-diagnosis-result hidden aria-live="polite">
+      <section class="diagnosis-result" data-diagnosis-result hidden tabindex="-1" aria-live="polite">
         <h2 data-diagnosis-top-heading>診断結果</h2>
         <div data-diagnosis-ranking>回答を集計しています。</div>
+        <!-- 件数は JS で解決後に注入するため初期は空。空要素が見出し直後だと
+             静的HTML検証（empty section）に引っかかるため ranking の後に置く -->
+        <p class="meta" data-diagnosis-result-count></p>
         <p class="diagnosis-disclaimer" data-diagnosis-disclaimer></p>
         <div class="diagnosis-actions">
           <button type="button" class="secondary-button" data-diagnosis-restart>もう一度診断する</button>
@@ -92,7 +97,7 @@ const clientData = {
       </section>
 
       <!-- 候補ゼロ -->
-      <section class="diagnosis-empty" data-diagnosis-empty hidden>
+      <section class="diagnosis-empty" data-diagnosis-empty hidden tabindex="-1">
         <h2>条件に合う商品がありませんでした</h2>
         <p>今回の条件では、診断対象商品の中にすべての条件を満たすものがありません。条件を緩めるか、比較記事をご覧ください。</p>
         <button type="button" class="primary-button" data-diagnosis-restart>条件を変えて診断する</button>
@@ -259,6 +264,8 @@ const clientData = {
       const optionsEl = root.querySelector('[data-diagnosis-options]') as HTMLElement;
       const prevBtn = root.querySelector('[data-diagnosis-prev]') as HTMLButtonElement;
       const nextBtn = root.querySelector('[data-diagnosis-next]') as HTMLButtonElement;
+      const navHint = root.querySelector('[data-diagnosis-nav-hint]') as HTMLElement;
+      const resultCount = root.querySelector('[data-diagnosis-result-count]') as HTMLElement;
 
       function showSection(section: HTMLElement) {
         [startSection, questionSection, resultSection, emptySection].forEach((el) => {
@@ -275,6 +282,9 @@ const clientData = {
         prevBtn.hidden = currentIndex === 0;
         nextBtn.textContent = buildNextButtonText(currentIndex, data.diagnosis.questions.length);
         nextBtn.disabled = buttonDisabled(question.required, hasAnswer(answers[question.id]));
+        // 無効化の理由を伝える（aria-disabled ではなく disabled のまま、
+        // 直後の説明文で理由を提示する）。
+        navHint.hidden = !nextBtn.disabled;
 
         for (const option of question.options ?? []) {
           const label = document.createElement('label');
@@ -295,6 +305,60 @@ const clientData = {
         }
       }
 
+
+      // 結果カードを HTML 文字列ではなく DOM API で組み立てる。
+      // 商品名・理由・注意はすべて textContent で挿入するため、
+      // データ経路のどこで文字が混入しても HTML として解釈されない。
+      function buildResultCard(
+        cardData: ReturnType<typeof buildResultCardData>,
+        index: number,
+      ): { card: HTMLElement; linksContainer: HTMLElement } {
+        const card = document.createElement('article');
+        card.className = cardData.cardClass;
+
+        const rankLabel = document.createElement('p');
+        rankLabel.className = 'diagnosis-card__rank';
+        rankLabel.textContent = cardData.rankLabel;
+
+        const productName = document.createElement('h3');
+        productName.textContent = cardData.product.name;
+
+        const reasonsList = document.createElement('ul');
+        reasonsList.className = 'diagnosis-card__reasons';
+        for (const message of cardData.reasons) {
+          const item = document.createElement('li');
+          item.textContent = `✓ ${message}`;
+          reasonsList.append(item);
+        }
+        card.append(rankLabel, productName, reasonsList);
+
+        if (index === 0 && cardData.cautions.length > 0) {
+          const noteLabel = document.createElement('p');
+          noteLabel.className = 'diagnosis-card__note-label';
+          noteLabel.textContent = '気になる点';
+          const cautionsList = document.createElement('ul');
+          cautionsList.className = 'diagnosis-card__cautions';
+          for (const message of cardData.cautions) {
+            const item = document.createElement('li');
+            item.textContent = `・${message}`;
+            cautionsList.append(item);
+          }
+          card.append(noteLabel, cautionsList);
+        } else if (index > 0) {
+          const caseLabel = document.createElement('p');
+          caseLabel.className = 'diagnosis-card__note-label';
+          caseLabel.textContent = 'こちらが向くケース';
+          const caseText = document.createElement('p');
+          caseText.className = 'diagnosis-card__case';
+          caseText.textContent = cardData.caseText;
+          card.append(caseLabel, caseText);
+        }
+
+        const linksContainer = document.createElement('div');
+        linksContainer.className = 'diagnosis-card__links';
+        card.append(linksContainer);
+        return { card, linksContainer };
+      }
 
       function renderResult() {
         const result = runDiagnosis(
@@ -317,34 +381,19 @@ const clientData = {
         const ranking = root.querySelector('[data-diagnosis-ranking]') as HTMLElement;
         ranking.textContent = '';
         const visible = computeVisibleProducts(result);
+        let renderedCount = 0;
         for (const [index, entry] of visible.entries()) {
           const product = data.products.find((p) => p.id === entry.productId);
           if (!product) continue;
           const cardData = buildResultCardData(product, entry, index, data.reasons);
-          const card = document.createElement('article');
-          card.className = cardData.cardClass;
-          card.innerHTML = `
-            <p class="diagnosis-card__rank">${cardData.rankLabel}</p>
-            <h3>${cardData.product.name}</h3>
-            <ul class="diagnosis-card__reasons">
-              ${cardData.reasons.map((message) => `<li>✓ ${message}</li>`).join('')}
-            </ul>
-            ${cardData.topCautionHtml || (index > 0 ? `<p class="diagnosis-card__note-label">こちらが向くケース</p><p class="diagnosis-card__case">${cardData.caseText}</p>` : '')}
-            <div class="diagnosis-card__links"></div>
-          `;
-          ranking.append(card);
+          const { card, linksContainer } = buildResultCard(cardData, index);
 
-          const linksContainer = card.querySelector('.diagnosis-card__links') as HTMLElement;
           for (const linkData of cardData.articleLinks) {
             const a = document.createElement('a');
             a.href = linkData.href;
             a.textContent = linkData.label;
             for (const [key, value] of Object.entries(linkData.dataset)) {
-              if (value === '') {
-                a.dataset[key] = '';
-              } else {
-                a.dataset[key] = value;
-              }
+              a.dataset[key] = value;
             }
             linksContainer.append(a);
           }
@@ -359,7 +408,11 @@ const clientData = {
             }
             linksContainer.append(a);
           }
+          ranking.append(card);
+          renderedCount += 1;
         }
+        // 件数告知（結果セクション aria-live="polite" 経由で読み上げられる）
+        resultCount.textContent = `${renderedCount}件の商品を表示しています。`;
         trackDiagnosisEvent('diagnosis_complete');
       }
 
@@ -389,9 +442,14 @@ const clientData = {
           );
           if (result.rankedProducts.length === 0) {
             showSection(emptySection);
+            // 結果（候補ゼロ）の切替をキーボード/SR利用者に届ける
+            emptySection.focus({ preventScroll: false });
           } else {
             showSection(resultSection);
             renderResult();
+            // カード描画後に結果領域へフォーカスを移動する
+            // （tabindex="-1" 付き。aria-live="polite" の件数告知と併用）
+            resultSection.focus({ preventScroll: false });
           }
           clearState();
         }

@@ -17,6 +17,13 @@ import { readFileSync } from "node:fs";
 
 const source = readFileSync("src/lib/embed-consent.ts", "utf8");
 
+// The banner / withdraw UI lives in the component script; its contract is
+// verified the same way (source-level assertions).
+const componentSource = readFileSync(
+  "src/components/ExternalEmbed.astro",
+  "utf8",
+);
+
 describe("embed-consent contract", () => {
   it("uses a fixed localStorage key", () => {
     expect(source).toContain('const CONSENT_KEY = "embed-consent"');
@@ -77,5 +84,50 @@ describe("embed-consent contract", () => {
 
   it("clearConsent fires listeners with undefined", () => {
     expect(source).toContain("cb(undefined)");
+  });
+});
+
+describe("consent banner focus management (ExternalEmbed.astro)", () => {
+  it("moves focus to the banner itself when it appears", () => {
+    expect(componentSource).toContain("banner.tabIndex = -1");
+    expect(componentSource).toContain("banner.focus()");
+  });
+
+  it("announces the banner via its region label", () => {
+    expect(componentSource).toContain(
+      'setAttribute("aria-label", "外部コンテンツの表示について")',
+    );
+  });
+
+  it("stays a non-blocking region (not a modal dialog)", () => {
+    expect(componentSource).toContain('setAttribute("role", "region")');
+    expect(componentSource).not.toContain('"dialog"');
+  });
+
+  it("keeps keyboard focus on a control after the choice is made", () => {
+    // 選択ボタンはバナーごと消えるため、撤回UIのボタンへフォーカスを維持する
+    expect(componentSource).toContain(
+      'withdrawBar?.querySelector("button")?.focus({ preventScroll: true })',
+    );
+  });
+});
+
+describe("consent withdraw UI (ExternalEmbed.astro)", () => {
+  it("wires the existing clearConsent API to a visible control", () => {
+    expect(componentSource).toContain("[data-embed-consent-withdraw]");
+    expect(componentSource).toContain("clearConsent()");
+    expect(componentSource).toContain("設定を変更する");
+  });
+
+  it("restores embed placeholders after withdrawal", () => {
+    // 撤回時に各 autoload 埋め込みが手動読み込み（idle）へ戻る
+    expect(componentSource).toContain("const resetToPlaceholder = () => {");
+    expect(componentSource).toContain('root.dataset.embedState = "idle"');
+    expect(componentSource).toContain("resetToPlaceholder()");
+  });
+
+  it("keeps the manual-load button restorable for autoload embeds", () => {
+    // 読み込み成功後も autoload 埋め込みのボタンはDOMに残し、撤回時に復帰できる
+    expect(componentSource).toContain("button.hidden = true;");
   });
 });

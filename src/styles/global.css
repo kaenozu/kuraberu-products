@@ -1196,7 +1196,7 @@ a {
 }
 .ad-note {
   font-size: 0.78rem;
-  color: rgba(0, 0, 0, 0.45);
+  color: rgba(0, 0, 0, 0.62);
 }
 @media (max-width: 520px) {
   .cta.cta-card {
@@ -1282,7 +1282,7 @@ a {
   color: rgba(255, 255, 255, 0.75);
 }
 .purchase-card .ad-note {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* 商品選択診断（/tools/product-finder/） */
@@ -1375,6 +1375,12 @@ a {
   flex-wrap: wrap;
   align-items: center;
   margin-top: 0.5rem;
+}
+/* 「次へ」が必須未回答で無効化されている間だけ表示される理由説明 */
+.diagnosis-nav-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
 }
 .diagnosis-card {
   border: 1px solid var(--line);
