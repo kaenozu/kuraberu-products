@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { validateSourceToggle } from "../scripts/check-rendered-html.mjs";
@@ -57,6 +57,26 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
       /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
     ),
   ].map((match) => JSON.parse(match[1] ?? "{}") as Record<string, unknown>);
+}
+
+// 実ビルド（astro build）後の dist を検証する describe 群の共通ガード。
+// dist が無い環境では理由をログに出して明示的にスキップする。
+const hasDist = existsSync("dist");
+if (!hasDist) {
+  console.warn(
+    "skip: dist/ が存在しないため article metadata の実ビルド整合テストをスキップしました（astro build 後に再実行してください）",
+  );
+}
+
+// dist/articles 配下の記事ディレクトリ（page / category 除く）を遅延取得する。
+// コレクション時に評価すると dist 無し環境で import 自体が失敗するため。
+function articleSlugs(): string[] {
+  return readdirSync("dist/articles", { withFileTypes: true })
+    .filter(
+      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
+    )
+    .map((entry) => entry.name)
+    .sort();
 }
 
 describe("article metadata", () => {
@@ -281,7 +301,10 @@ describe("article metadata", () => {
       }),
     ).toThrow();
   });
+});
 
+// 実ビルド後の HTML を検証する。dist が無い環境ではスキップされる。
+describe.skipIf(!hasDist)("article metadata (rendered dist)", () => {
   it("renders dates consistently in HTML, meta and Article JSON-LD", () => {
     const html = readFileSync(
       "dist/articles/pampers-newborn/index.html",
@@ -379,63 +402,59 @@ describe("article metadata", () => {
   });
 });
 
-describe("article JSON-LD by content type (rendered dist)", () => {
-  const articleOf = (html: string) =>
-    extractJsonLd(html).find((item) => item["@type"] === "Article") as Record<
-      string,
-      unknown
-    >;
+describe.skipIf(!hasDist)(
+  "article JSON-LD by content type (rendered dist)",
+  () => {
+    const articleOf = (html: string) =>
+      extractJsonLd(html).find((item) => item["@type"] === "Article") as Record<
+        string,
+        unknown
+      >;
 
-  it("marks a product guide with a single Product in about", () => {
-    const expectedNames: Record<string, string> = {
-      "panasonic-baby-monitor-kx-hc705":
-        panasonicBabyMonitorArticle.aboutProductNames![0],
-      "panasonic-eh-na9m-guide":
-        panasonicEhNa9mGuideArticle.aboutProductNames![0],
-    };
-    for (const [slug, expectedName] of Object.entries(expectedNames)) {
-      const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+    it("marks a product guide with a single Product in about", () => {
+      const expectedNames: Record<string, string> = {
+        "panasonic-baby-monitor-kx-hc705":
+          panasonicBabyMonitorArticle.aboutProductNames![0],
+        "panasonic-eh-na9m-guide":
+          panasonicEhNa9mGuideArticle.aboutProductNames![0],
+      };
+      for (const [slug, expectedName] of Object.entries(expectedNames)) {
+        const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
+        const article = articleOf(html);
+        expect(article.about).toEqual([
+          { "@type": "Product", name: expectedName },
+        ]);
+      }
+    });
+
+    it("marks a comparison article with two Products in about when names are declared", () => {
+      const html = readFileSync(
+        "dist/articles/roborock-qrevo-curv-vs-dreame-x50/index.html",
+        "utf8",
+      );
       const article = articleOf(html);
       expect(article.about).toEqual([
-        { "@type": "Product", name: expectedName },
+        { "@type": "Product", name: "Roborock Qrevo Curv" },
+        { "@type": "Product", name: "Dreame X50 Ultra" },
       ]);
-    }
-  });
+    });
 
-  it("marks a comparison article with two Products in about when names are declared", () => {
-    const html = readFileSync(
-      "dist/articles/roborock-qrevo-curv-vs-dreame-x50/index.html",
-      "utf8",
-    );
-    const article = articleOf(html);
-    expect(article.about).toEqual([
-      { "@type": "Product", name: "Roborock Qrevo Curv" },
-      { "@type": "Product", name: "Dreame X50 Ultra" },
-    ]);
-  });
+    it("omits about on a comparison article without declared product names", () => {
+      const html = readFileSync(
+        "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
+        "utf8",
+      );
+      const article = articleOf(html);
+      expect(article.about).toBeUndefined();
+    });
+  },
+);
 
-  it("omits about on a comparison article without declared product names", () => {
-    const html = readFileSync(
-      "dist/articles/zojirushi-ck-pa08-vs-ck-dc08/index.html",
-      "utf8",
-    );
-    const article = articleOf(html);
-    expect(article.about).toBeUndefined();
-  });
-});
-
-describe("source-toggle fold (rendered dist)", () => {
-  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter(
-      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
-    )
-    .map((entry) => entry.name)
-    .sort();
-
+describe.skipIf(!hasDist)("source-toggle fold (rendered dist)", () => {
   it("every 根拠・確認先 table article renders the source-toggle and passes the gate", () => {
     let pagesWithSourceTable = 0;
     let pagesWithToggle = 0;
-    for (const slug of articleSlugs) {
+    for (const slug of articleSlugs()) {
       const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
       const relative = `articles/${slug}/index.html`;
       const errors = validateSourceToggle(relative, html);
@@ -462,16 +481,9 @@ describe("source-toggle fold (rendered dist)", () => {
   });
 });
 
-describe("article trust line (rendered dist)", () => {
-  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter(
-      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
-    )
-    .map((entry) => entry.name)
-    .sort();
-
+describe.skipIf(!hasDist)("article trust line (rendered dist)", () => {
   it("renders exactly one compressed trust line per article with the checked date", () => {
-    for (const slug of articleSlugs) {
+    for (const slug of articleSlugs()) {
       const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
       const article = articleMetadata.find(
         (entry) => entry.path === `/articles/${slug}/`,
@@ -493,7 +505,7 @@ describe("article trust line (rendered dist)", () => {
   });
 });
 
-describe("public commercial article quality gate", () => {
+describe.skipIf(!hasDist)("public commercial article quality gate", () => {
   it("renders concrete comparison rows without placeholder wording", () => {
     const articleSlugs = [
       "roborock-qrevo-curv-vs-dreame-x50",
@@ -516,17 +528,10 @@ describe("public commercial article quality gate", () => {
   });
 });
 
-describe("article diagnosis CTA (rendered dist)", () => {
-  const articleSlugs = readdirSync("dist/articles", { withFileTypes: true })
-    .filter(
-      (entry) => entry.isDirectory() && !"page category".includes(entry.name),
-    )
-    .map((entry) => entry.name)
-    .sort();
-
+describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
   it("renders exactly one next-step block on every comparison article, before #specs", () => {
     let comparisonPages = 0;
-    for (const slug of articleSlugs) {
+    for (const slug of articleSlugs()) {
       const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
       const contentType = html.match(
         /<meta name="article:content-type" content="(guide|comparison)">/i,
@@ -627,7 +632,7 @@ describe("article diagnosis CTA (rendered dist)", () => {
   });
 });
 
-describe("article card audiences 向き line (rendered dist)", () => {
+describe("article card audiences 向き line", () => {
   it("declares non-empty audiences for every public article", () => {
     for (const article of publicArticleMetadata) {
       expect(
@@ -637,35 +642,38 @@ describe("article card audiences 向き line (rendered dist)", () => {
     }
   });
 
-  it("renders the 向き line on every ArticleCard on the top and listing pages", () => {
-    const pages = [
-      "dist/index.html",
-      "dist/articles/index.html",
-      ...readdirSync("dist/articles/page", { withFileTypes: true })
-        .filter((entry) => entry.isDirectory())
-        .map((entry) => `dist/articles/page/${entry.name}/index.html`),
-    ];
-    let cardCount = 0;
-    for (const file of pages) {
-      const html = readFileSync(file, "utf8");
-      for (const card of html.matchAll(
-        /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*data-content-type="(?:guide|comparison)"[^>]*>([\s\S]*?)<\/article>/gi,
-      )) {
-        cardCount += 1;
-        expect(
-          /<p class="card-audiences">向き: [^<]+<\/p>/.test(card[1]),
-          `card on ${file} must render the 向き line`,
-        ).toBe(true);
-        if (/data-content-type="comparison"/.test(card[0])) {
+  it.skipIf(!hasDist)(
+    "renders the 向き line on every ArticleCard on the top and listing pages",
+    () => {
+      const pages = [
+        "dist/index.html",
+        "dist/articles/index.html",
+        ...readdirSync("dist/articles/page", { withFileTypes: true })
+          .filter((entry) => entry.isDirectory())
+          .map((entry) => `dist/articles/page/${entry.name}/index.html`),
+      ];
+      let cardCount = 0;
+      for (const file of pages) {
+        const html = readFileSync(file, "utf8");
+        for (const card of html.matchAll(
+          /<article\b[^>]*class="[^"]*\barticle-list-card\b[^"]*"[^>]*data-content-type="(?:guide|comparison)"[^>]*>([\s\S]*?)<\/article>/gi,
+        )) {
+          cardCount += 1;
           expect(
-            /<p class="card-subjects">[^<]+<\/p>/.test(card[1]),
-            `comparison card on ${file} must render the 型番 line`,
+            /<p class="card-audiences">向き: [^<]+<\/p>/.test(card[1]),
+            `card on ${file} must render the 向き line`,
           ).toBe(true);
+          if (/data-content-type="comparison"/.test(card[0])) {
+            expect(
+              /<p class="card-subjects">[^<]+<\/p>/.test(card[1]),
+              `comparison card on ${file} must render the 型番 line`,
+            ).toBe(true);
+          }
         }
       }
-    }
-    expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);
-  });
+      expect(cardCount).toBeGreaterThanOrEqual(publicArticleMetadata.length);
+    },
+  );
 });
 
 describe("future date validation in Asia/Tokyo", () => {

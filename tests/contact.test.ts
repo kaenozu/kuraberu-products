@@ -451,21 +451,52 @@ describe("onRequestPost", () => {
 
   // ---- Post- formData body size guard ----
 
-  it("rejects oversized payload even when Content-Length is absent", async () => {
+  it.each([
+    ["absent", {}],
+    ["understated", { "Content-Length": "100" }],
+  ])(
+    "rejects oversized payload when Content-Length is %s",
+    async (_label, headers) => {
+      const telegram = telegramOk();
+      // Build a form with a very long message (no trustworthy Content-Length)
+      const longMessage = "a".repeat(12_000);
+      const response = await onRequestPost({
+        request: new Request(`${SITE_URL}/api/contact`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+            ...headers,
+          },
+          body: new URLSearchParams({
+            email: "test@example.com",
+            message: longMessage,
+          }).toString(),
+        }),
+        env: baseEnv(),
+        params: {},
+        data: {},
+      });
+
+      expect(response.status).toBe(413);
+      expect(await response.json()).toEqual({
+        ok: false,
+        error: "payload too large",
+      });
+      expect(telegram).not.toHaveBeenCalled();
+    },
+  );
+
+  it("rejects a multibyte payload whose byte size exceeds the limit even when Content-Length understates it", async () => {
+    // 「あ」は UTF-8 で 3 バイト。3334 字 = 10002 バイト + フィールド名 7 バイトで
+    // 上限超過。UTF-16 の .length（3334）ベースの旧判定では見逃されていたケース。
     const telegram = telegramOk();
-    // Build a form with a very long message (no Content-Length header)
-    const longMessage = "a".repeat(12_000);
     const response = await onRequestPost({
-      request: new Request(`${SITE_URL}/api/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+      request: postRequest(
+        new URLSearchParams({ message: "あ".repeat(3334) }).toString(),
+        {
+          "Content-Length": "1", // 過少申告（formData 展開後の再チェックを通す）
         },
-        body: new URLSearchParams({
-          email: "test@example.com",
-          message: longMessage,
-        }).toString(),
-      }),
+      ),
       env: baseEnv(),
       params: {},
       data: {},
@@ -479,28 +510,46 @@ describe("onRequestPost", () => {
     expect(telegram).not.toHaveBeenCalled();
   });
 
-  it("rejects oversized payload when Content-Length is understated", async () => {
+  it("accepts a multibyte payload at exactly the 10_000-byte boundary", async () => {
+    // フィールド名計 16B（message 7 + name 4 + email 5）+ email 値 16B +
+    // message 値 9963B（3バイト文字 × 3321 字）= ちょうど 10000 バイト
+    // （上限ちょうどは許可）。
     const telegram = telegramOk();
-    const longMessage = "a".repeat(12_000);
     const response = await onRequestPost({
-      request: new Request(`${SITE_URL}/api/contact`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-          "Content-Length": "100", // understated
-        },
-        body: new URLSearchParams({
+      request: postRequest(
+        new URLSearchParams({
           email: "test@example.com",
-          message: longMessage,
+          message: "あ".repeat(3321),
         }).toString(),
-      }),
+        { "Content-Length": "1" },
+      ),
       env: baseEnv(),
       params: {},
       data: {},
     });
 
-    expect(response.status).toBe(413);
-    expect(telegram).not.toHaveBeenCalled();
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
+  });
+
+  it("accepts an ASCII payload whose decoded size is exactly 10_000 bytes", async () => {
+    // ASCII では .length とバイト数が一致するため、境界挙動は不変。
+    const telegram = telegramOk();
+    const response = await onRequestPost({
+      request: postRequest(
+        new URLSearchParams({
+          email: "test@example.com",
+          message: "a".repeat(9963),
+        }).toString(),
+        { "Content-Length": "1" },
+      ),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
   });
 
   // ---- Telegram fetch timeout ----

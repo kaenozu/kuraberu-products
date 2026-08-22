@@ -89,8 +89,17 @@ describe("CSP-compatible comparison table fallback", () => {
     );
   });
 
-  it("generates HTML that references the external script when build output exists", () => {
-    if (!existsSync("dist")) return;
+  it("generates HTML that references the external script when build output exists", ({
+    skip,
+  }) => {
+    if (!existsSync("dist")) {
+      // dist が無い環境（単体テスト実行など）では黙って成功させず、
+      // 理由をログに出して明示的にスキップする。
+      console.warn(
+        "skip: dist/ が存在しないため実ビルドHTMLの検証をスキップしました（astro build 後に再実行してください）",
+      );
+      skip();
+    }
     const html = readFileSync("dist/index.html", "utf8");
     expect(html).toContain("comparison-table-labels.js");
     expect(html).toMatch(
@@ -144,6 +153,47 @@ describe("Rakuten API request", () => {
 
     expect(products).toHaveLength(1);
     expect(products[0]?.affiliateUrl).toMatch(/^https:\/\/hb\.afl\.rakuten/);
+  });
+
+  it("drops candidates without a valid itemPrice instead of defaulting to price 0", async () => {
+    const fetchImpl = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            items: [
+              {
+                itemCode: "shop:no-price",
+                itemName: "パンパース 肌へのいちばん 新生児",
+                itemUrl: "https://item.rakuten.co.jp/shop/no-price",
+                // itemPrice 欠損
+              },
+              {
+                itemCode: "shop:null-price",
+                itemName: "パンパース さらさらケア 新生児",
+                itemUrl: "https://item.rakuten.co.jp/shop/null-price",
+                itemPrice: null,
+              },
+              {
+                itemCode: "shop:ok",
+                itemName: "パンパース きれいな水色 新生児",
+                itemUrl: "https://item.rakuten.co.jp/shop/ok",
+                itemPrice: 1980,
+              },
+            ],
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch;
+
+    const products = await requestRakutenProducts(
+      new URL("https://openapi.rakuten.co.jp/example"),
+      "secret-access-key",
+      { fetchImpl, timeoutMs: 100 },
+    );
+
+    // price:0 の候補を生成せず、欠損候補は除外される（fail-closed）
+    expect(products.map((product) => product.id)).toEqual(["shop:ok"]);
+    expect(products[0]?.price).toBe(1980);
   });
 
   it("aborts a stalled request and returns an empty fallback", async () => {

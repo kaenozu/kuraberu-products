@@ -5,7 +5,7 @@ import PurchaseCard from "../src/components/PurchaseCard.astro";
 const validRakutenUrl = "https://www.rakuten.co.jp/search/thermos-jnl-s500";
 
 describe("PurchaseCard", () => {
-  it("renders name, audience, CTA label, and note", async () => {
+  it("renders name, audience, CTA label, and note when verified", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
       props: {
@@ -16,6 +16,8 @@ describe("PurchaseCard", () => {
         imagePath: "/products/thermos-jnl-s500.jpg",
         placement: "article-end",
         note: "価格・在庫は販売先でご確認ください。",
+        // fail-closed 契約: verified を明示したときだけ CTA を出す
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -37,6 +39,7 @@ describe("PurchaseCard", () => {
         audience: "肌へのやさしさを優先する人向け",
         href: "https://hb.afl.rakuten.co.jp/ichiba/affiliate-example",
         productId: "pampers-premium-newborn",
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -54,6 +57,7 @@ describe("PurchaseCard", () => {
         audience: "公式商品ページを確認したい人向け",
         href: "https://a.r10.to/h5dAQI",
         productId: "babybjorn-bouncer-bliss",
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -70,6 +74,7 @@ describe("PurchaseCard", () => {
         audience: "保冷力を優先する人向け",
         href: validRakutenUrl,
         imagePath: "/products/tiger-mta-j050.jpg",
+        purchaseLinkStatus: "verified",
       },
     });
 
@@ -86,9 +91,42 @@ describe("PurchaseCard", () => {
         audience: "保冷力を優先する人向け",
         href: validRakutenUrl,
         placement: "article-end",
+        purchaseLinkStatus: "verified",
       },
     });
 
     expect(html).toContain('data-placement="article-end"');
   });
+
+  // fail-closed 契約: 未指定（undefined）/ unverified / unavailable では
+  // アフィリエイトCTAを出さず、「購入先の確認中です」メッセージを表示する。
+  it.each([
+    ["omitted", undefined],
+    ["unverified", "unverified"],
+    ["unavailable", "unavailable"],
+  ] as const)(
+    "hides CTAs and shows the pending message when the status is %s",
+    async (_label, purchaseLinkStatus) => {
+      const container = await AstroContainer.create();
+      const html = await container.renderToString(PurchaseCard, {
+        props: {
+          name: "サーモス JNL-S500",
+          audience: "軽さ・コンパクト・食洗機対応を優先する人向け",
+          href: validRakutenUrl,
+          productId: "thermos-jnl-s500",
+          purchaseLinkStatus,
+        },
+      });
+
+      expect(html).not.toContain("楽天市場で型番を確認");
+      expect(html).not.toContain("Amazonで商品を確認");
+      expect(html).not.toContain("data-cta-event");
+      expect(html).toContain(
+        "購入先の確認中です。公開後に販売先リンクが表示されます。",
+      );
+      // カード本体（名前・対象読者）は表示を維持する
+      expect(html).toContain("サーモス JNL-S500");
+      expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
+    },
+  );
 });

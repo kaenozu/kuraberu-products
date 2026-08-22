@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { articleMetadata } from "../src/content/articles";
 import {
@@ -48,6 +48,18 @@ describe("comparison memo", () => {
       JSON.stringify({ version: 1, ids: [knownIds[0]] }),
     );
   });
+});
+
+// 実ビルド（astro build）後の dist を検証する。dist が無い環境では
+// 理由をログに出して明示的にスキップする。
+const hasDist = existsSync("dist");
+if (!hasDist) {
+  console.warn(
+    "skip: dist/ が存在しないため comparison memo の実ビルド整合テストをスキップしました（astro build 後に再実行してください）",
+  );
+}
+
+describe.skipIf(!hasDist)("comparison memo (rendered dist)", () => {
   it("renders memo controls while keeping article links without JavaScript", () => {
     const articleHtml = readFileSync(
       "dist/articles/pampers-newborn/index.html",

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   checkArticleSource,
   checkPurchaseLinkConsistency,
+  countPurchaseLinkStatuses,
   extractNextStepHrefs,
   extractPurchaseCardHrefs,
   keyFromRef,
@@ -40,6 +41,20 @@ describe("purchase link consistency gate (registry keys)", () => {
     const source = `
 <PurchaseCard href={articlePurchaseLinks['moony-m:left'].purchaseUrl} name="A" />
 <PurchaseCard href={articlePurchaseLinks['moony-m:right'].purchaseUrl} name="B" />
+`;
+    expect(extractPurchaseCardHrefs(source).map(keyFromRef)).toEqual([
+      "moony-m:left",
+      "moony-m:right",
+    ]);
+  });
+
+  // fail-closed 契約: purchaseLinkStatus prop（CTA の表示/非表示）は
+  // レジストリ参照の抽出と順序検査に影響しない。unverified 記事も
+  // href はレジストリ参照を保持したまま、表示だけが pending 文言に置き換わる。
+  it("keeps extracting hrefs when PurchaseCards declare purchaseLinkStatus", () => {
+    const source = `
+<PurchaseCard href={articlePurchaseLinks['moony-m:left'].purchaseUrl} name="A" purchaseLinkStatus="verified" />
+<PurchaseCard href={articlePurchaseLinks['moony-m:right'].purchaseUrl} name="B" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />
 `;
     expect(extractPurchaseCardHrefs(source).map(keyFromRef)).toEqual([
       "moony-m:left",
@@ -178,6 +193,22 @@ describe("purchase link consistency gate (registry keys)", () => {
       expect(errors.join(" ")).toContain("products.ts");
     } finally {
       rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  // fail-closed 契約の監査用集計。verified / unverified / unavailable の
+  // 3値のみを扱い、未分類のステータス文字列を黙って無視しないことを確認する。
+  it("audits purchaseLinkStatus values from the article metadata", () => {
+    const counts = countPurchaseLinkStatuses();
+    expect(Object.keys(counts).sort()).toEqual([
+      "unavailable",
+      "unverified",
+      "verified",
+    ]);
+    expect(counts.verified).toBeGreaterThan(0);
+    expect(counts.unverified).toBeGreaterThan(0);
+    for (const value of Object.values(counts)) {
+      expect(Number.isInteger(value)).toBe(true);
     }
   });
 });

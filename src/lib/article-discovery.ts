@@ -21,8 +21,9 @@ export interface ArticleDiscoveryState {
 /**
  * 同義語辞書。ユーザーが使う一般的な語を記事の専門用語に展開する。
  * クライアント側 (article-discovery.js) と同一の内容に保つこと。
+ * （同期不変条件は tests/article-discovery-parity.test.ts が検証する）
  */
-const SYNONYMS: ReadonlyMap<string, readonly string[]> = new Map([
+export const SYNONYMS: ReadonlyMap<string, readonly string[]> = new Map([
   ["軽い", ["軽量", "重量"]],
   ["重い", ["重量"]],
   ["静か", ["静音", "騒音"]],

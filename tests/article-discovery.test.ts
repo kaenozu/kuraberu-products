@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   publicArticleMetadata,
@@ -57,6 +57,18 @@ describe("article discovery", () => {
       "q=%E6%96%B0%E7%94%9F%E5%85%90&tag=%E7%B4%99%E3%81%8A%E3%82%80%E3%81%A4",
     );
   });
+});
+
+// 実ビルド（astro build）後の dist を検証する。dist が無い環境では
+// 理由をログに出して明示的にスキップする。
+const hasDist = existsSync("dist");
+if (!hasDist) {
+  console.warn(
+    "skip: dist/ が存在しないため article discovery の実ビルド整合テストをスキップしました（astro build 後に再実行してください）",
+  );
+}
+
+describe.skipIf(!hasDist)("article discovery (rendered dist)", () => {
   it("renders paginated article lists before JavaScript and exposes accessible filters", () => {
     const pageFiles = [
       "dist/articles/index.html",

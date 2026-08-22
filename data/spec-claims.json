@@ -115,8 +115,11 @@
       "articleId": "sharp-kc-s50-vs-fu-s50",
       "checkedAt": "2026-08-16",
       "claimsFingerprint": "sha256:8a55f6796b3bc96f91d8b9376bc15cb1718e37ffc798054fffc41242fefaf6b7",
-      "officialUrls": [],
-      "note": "外形寸法・重量 7.5/4.9kg・適用畳数・運転音を公式仕様ページで確認"
+      "officialUrls": [
+        "https://jp.sharp/kuusei/products/fus50/",
+        "https://jp.sharp/kuusei/products/kcs50/"
+      ],
+      "note": "外形寸法・重量 7.5/4.9kg・適用畳数・運転音を公式仕様ページで確認（出典: 記事の officialHref＝シャープ公式商品ページ KC-S50 / FU-S50。ArticleComparisonPage 経由の記事のため URL リテラル抽出対象外）"
     },
     {
       "articleId": "thermos-tiger-bottle",

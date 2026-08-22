@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { onRequestPost } from "../functions/api/events";
+import { ARTICLE_LAYOUT } from "../config/article-layout.mjs";
 
 const SITE_URL = "https://kuraberu-products.pages.dev";
 
@@ -94,42 +95,26 @@ describe("click analytics endpoint", () => {
     expect(options.expirationTtl).toBe(90 * 24 * 60 * 60);
   });
 
-  it("accepts any placement allowed by the layout config", async () => {
-    const { kv } = makeKv();
-    const response = await onRequestPost(
-      context(
-        postRequest(validPayload({ placement: "article-end" })),
-        baseEnv(undefined, kv),
-      ),
-    );
-    expect(response.status).toBe(204);
-  });
+  // config/article-layout.mjs を唯一の情報源として、purchase イベントに
+  // 許可される placement を網羅検証する（レイアウト変更時は自動追随する）。
+  it.each([...ARTICLE_LAYOUT.placements, ARTICLE_LAYOUT.diagnosisPlacement])(
+    "accepts a purchase click with the %s placement and preserves it in KV",
+    async (placement) => {
+      const { kv, put } = makeKv();
+      const response = await onRequestPost(
+        context(
+          postRequest(validPayload({ placement })),
+          baseEnv(undefined, kv),
+        ),
+      );
 
-  it("persists an article-end placement click to KV with the placement preserved", async () => {
-    const { kv, put } = makeKv();
-    const response = await onRequestPost(
-      context(
-        postRequest(validPayload({ placement: "article-end" })),
-        baseEnv(undefined, kv),
-      ),
-    );
-
-    expect(response.status).toBe(204);
-    expect(put).toHaveBeenCalledTimes(1);
-    const [key, value, options] = put.mock.calls[0] as [
-      string,
-      string,
-      { expirationTtl: number },
-    ];
-    expect(key).toMatch(/^v1:events:\d{4}-\d{2}-\d{2}:[0-9a-f-]{36}$/);
-    const parsed = JSON.parse(value);
-    expect(parsed.event).toBe("purchase");
-    expect(parsed.productId).toBe("moony-teishigeki-m");
-    expect(parsed.placement).toBe("article-end");
-    expect(parsed.path).toBe("/articles/moony-m/");
-    expect(parsed.at).toMatch(/^\d{4}-\d{2}-\d{2}T/);
-    expect(options.expirationTtl).toBe(90 * 24 * 60 * 60);
-  });
+      expect(response.status).toBe(204);
+      expect(put).toHaveBeenCalledTimes(1);
+      const parsed = JSON.parse(put.mock.calls[0][1] as string);
+      expect(parsed.event).toBe("purchase");
+      expect(parsed.placement).toBe(placement);
+    },
+  );
 
   it("rejects an unknown event name", async () => {
     const { kv, put } = makeKv();
@@ -330,13 +315,11 @@ describe("click analytics endpoint", () => {
     expect(value.rank).toBeUndefined();
   });
 
-  it("accepts diagnosis flow events without a placement", async () => {
-    for (const event of [
-      "diagnosis_view",
-      "diagnosis_start",
-      "diagnosis_complete",
-      "diagnosis_restart",
-    ]) {
+  // 診断フローイベントは placement なしで受け付ける。イベント名の許可リストも
+  // config（diagnosisEvents、result_affiliate_click を含む）から導出する。
+  it.each(ARTICLE_LAYOUT.diagnosisEvents)(
+    "accepts the %s diagnosis event without a placement",
+    async (event) => {
       const { kv, put } = makeKv();
       const response = await onRequestPost(
         context(
@@ -354,8 +337,8 @@ describe("click analytics endpoint", () => {
       const value = JSON.parse(put.mock.calls[0][1] as string);
       expect(value.event).toBe(event);
       expect(value.placement).toBeUndefined();
-    }
-  });
+    },
+  );
 
   it("accepts a result_article_click event with productId and rank", async () => {
     const { kv, put } = makeKv();

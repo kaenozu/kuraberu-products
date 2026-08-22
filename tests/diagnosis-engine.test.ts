@@ -541,9 +541,11 @@ describe("rice-cooker regression fixtures", () => {
 //   before: !question.required || !hasAnswer(question.id)  → optional は常に disabled
 //   after:  question.required && !hasAnswer(question.id)   → optional は回答なしでも enabled
 //
-// エンジンは質問の required フィールドを参照しないため、UI 側の修正を
-// 回帰テストで補完する。以下は「optional をスキップしても結果が出ること」
-// および「optional に回答した場合のスコア影響」を検証する。
+// エンジンは質問の required フィールドを参照しないため、UI 側の修正は
+// 実装（src/lib/diagnosis-ui.ts の buttonDisabled）に対するテスト
+// （tests/diagnosis-ui.test.ts）で検証する。このファイルでは「optional を
+// スキップしても結果が出ること」および「optional に回答した場合のスコア影響」
+// を検証する。
 
 describe("optional (required:false) questions", () => {
   // ---- UI レベルの hasAnswer パターン検証 ----
@@ -554,31 +556,6 @@ describe("optional (required:false) questions", () => {
 
   it("selectedOptionIds: 回答ありの場合は選択肢IDを返す", () => {
     expect(selectedOptionIds("yes")).toEqual(["yes"]);
-  });
-
-  // ---- ボタン disabled ロジックの数学的検証 ----
-
-  describe("button disabled logic (mirrors UI fix)", () => {
-    // UI の `nextBtn.disabled = question.required && !hasAnswer(question.id)`
-    // を純粋関数として再現し、全パターンを検証する。
-    const buttonDisabled = (required: boolean, hasAnswer: boolean): boolean =>
-      required && !hasAnswer;
-
-    it("required + no answer → disabled", () => {
-      expect(buttonDisabled(true, false)).toBe(true);
-    });
-
-    it("required + has answer → enabled", () => {
-      expect(buttonDisabled(true, true)).toBe(false);
-    });
-
-    it("optional + no answer → enabled (was disabled before fix)", () => {
-      expect(buttonDisabled(false, false)).toBe(false);
-    });
-
-    it("optional + has answer → enabled", () => {
-      expect(buttonDisabled(false, true)).toBe(false);
-    });
   });
 
   // ---- エンジン: optional をスキップして診断が完了すること ----

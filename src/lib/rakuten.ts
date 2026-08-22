@@ -17,6 +17,15 @@ export const RAKUTEN_API_TIMEOUT_MS = 5_000;
 
 const cache = new Map<string, Promise<RakutenProduct[]>>();
 
+/**
+ * モジュールスコープの検索キャッシュを破棄する。
+ * テスト間でキャッシュが共有されるのを防ぐための専用入口
+ * （tests/rakuten-cache.test.ts の afterEach から呼ぶ）。
+ */
+export function clearRakutenCacheForTests(): void {
+  cache.clear();
+}
+
 type UnknownRecord = Record<string, unknown>;
 type FetchImplementation = typeof fetch;
 
@@ -100,6 +109,8 @@ function stableDuplicateRepresentative(
 
 /**
  * 楽天APIのformatVersion=2形式を優先し、旧ネスト形式も安全に読み取る。
+ * itemPrice が欠損・不正な候補は price:0 の誤表示を避けるため除外する
+ * （fail-closed）。
  */
 export function parseRakutenProducts(data: unknown): RakutenProduct[] {
   const root = asRecord(data);
@@ -128,6 +139,11 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
           ? firstImage
           : String(asRecord(firstImage).imageUrl ?? "");
 
+      // 欠損（undefined / null / 空文字）は NaN にして下段の filter で除外する。
+      const hasPrice =
+        item.itemPrice !== undefined &&
+        item.itemPrice !== null &&
+        item.itemPrice !== "";
       return {
         id: String(item.itemCode ?? ""),
         name: String(item.itemName ?? ""),
@@ -141,10 +157,16 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         )
           ? imageUrl
           : undefined,
-        price: Number(item.itemPrice ?? 0),
+        price: hasPrice ? Number(item.itemPrice) : Number.NaN,
       } satisfies RakutenProduct;
     })
-    .filter((item) => item.id && item.name && isAllowedRakutenUrl(item.url));
+    .filter(
+      (item) =>
+        item.id &&
+        item.name &&
+        Number.isFinite(item.price) &&
+        isAllowedRakutenUrl(item.url),
+    );
 }
 
 /**

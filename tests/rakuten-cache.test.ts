@@ -1,5 +1,8 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
-import { fetchRakutenProducts } from "../src/lib/rakuten";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  clearRakutenCacheForTests,
+  fetchRakutenProducts,
+} from "../src/lib/rakuten";
 
 const product = {
   itemCode: "shop:item-1",
@@ -15,6 +18,11 @@ function response(body: unknown, ok = true, status = 200): Response {
     json: async () => body,
   } as Response;
 }
+
+beforeEach(() => {
+  // モジュールスコープのキャッシュを破棄し、テスト間の共有を防ぐ。
+  clearRakutenCacheForTests();
+});
 
 afterEach(() => {
   vi.unstubAllEnvs();

@@ -256,6 +256,7 @@ async function writeManifest(manifest) {
 
 /**
  * 記事↔マニフェストの乖離を検査する。問題の説明を文字列配列で返す。
+ * - マニフェストの schemaVersion がスクリプトの期待値と一致しない
  * - 仕様クレームがあるのにマニフェスト項目が無い記事
  * - 指紋が一致しない（確認後に内容が変わった）記事
  * - 存在しない記事を参照する項目 / 不正な checkedAt
@@ -265,6 +266,12 @@ export function checkCoverage(articles, manifest) {
   const entries = manifest.entries ?? [];
   const byId = new Map(entries.map((entry) => [entry.articleId, entry]));
   const articleIds = new Set(articles.map((article) => article.id));
+
+  if (manifest.schemaVersion !== SCHEMA_VERSION) {
+    issues.push(
+      `マニフェストの schemaVersion が不正: ${JSON.stringify(manifest.schemaVersion)}（${SCHEMA_VERSION} に更新してください）`,
+    );
+  }
 
   for (const article of articles) {
     const { claims, officialUrls } = collectArticleClaims(article.id);
