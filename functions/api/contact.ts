@@ -89,19 +89,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid content type" }, 415);
   }
 
-  // 本文サイズの事前チェック（formData展開前に確認）。
+  // Content-Length の有無に関わらず、受け入れる body を上限付きで処理する。
+  // Content-Length が無い・不正確な request でも安全に保護する。
+  const MAX_BODY_BYTES = 10_000;
   const contentLength = Number(request.headers.get("Content-Length") ?? 0);
-  if (contentLength > 10_000) {
+  if (contentLength > MAX_BODY_BYTES) {
     return json({ ok: false, error: "payload too large" }, 413);
   }
 
+  // formData() 展開後の実サイズを確認（Content-Length 欠落・過少申告対策）
   const form = await request.formData();
   const rawMessage = String(form.get("message") ?? "").trim();
   const rawName = String(form.get("name") ?? "").trim();
   const rawEmail = String(form.get("email") ?? "").trim();
-  if (rawMessage.length + rawName.length + rawEmail.length > 10_000) {
+  const totalSize = rawMessage.length + rawName.length + rawEmail.length + 100; // overhead
+  if (totalSize > MAX_BODY_BYTES) {
     return json({ ok: false, error: "payload too large" }, 413);
   }
+
   const body: ContactBody = {
     name: rawName.slice(0, 80),
     email: rawEmail.slice(0, 120),
