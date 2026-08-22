@@ -13,7 +13,8 @@ import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 const PRODUCTS_DIR = "src/data/products";
-const ARTICLES_DIR = "src/content/articles";
+// 記事メタデータはモノリス(src/content/articles.ts)が唯一のソース。
+const ARTICLES_FILE = "src/content/articles.ts";
 
 function extractString(body, key) {
   const re = new RegExp(key + ':\\s*["\u0027]([^"\u0027]+)["\u0027]');
@@ -72,25 +73,18 @@ function readDiagnosisProducts() {
 }
 
 function readExistingArticles() {
-  const files = readdirSync(ARTICLES_DIR).filter(
-    (f) =>
-      f.endsWith(".ts") &&
-      f !== "index.ts" &&
-      f !== "types.ts" &&
-      f !== "commercial.ts",
-  );
+  // モノリス内の各 defineArticleMetadata({...}) ブロックから
+  // id / path / title を抽出する。ブロック境界は呼び出し単位で分割する。
+  const src = readFileSync(ARTICLES_FILE, "utf8");
+  const chunks = src.split(/defineArticleMetadata\s*\(\s*\{/).slice(1);
   const articles = [];
-  for (const file of files) {
-    const src = readFileSync(path.join(ARTICLES_DIR, file), "utf8");
-    const m = src.match(
-      /defineArticleMetadata\s*\(\s*\{([\s\S]*?)\n\s*\}\s*\)/,
-    );
-    if (!m) continue;
-    const b = m[1];
+  for (const [i, chunk] of chunks.entries()) {
+    const b = chunk;
     const id = extractString(b, "id");
     const p = extractString(b, "path");
     const title = extractString(b, "title");
-    if (id && p) articles.push({ id, path: p, title, sourceFile: file });
+    if (id && p)
+      articles.push({ id, path: p, title, sourceFile: `articles.ts#${i + 1}` });
   }
   return articles;
 }
