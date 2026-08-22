@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { selectRakutenProduct, type RakutenProduct } from "../src/lib/rakuten";
+import {
+  parseRakutenProducts,
+  selectRakutenProduct,
+  type RakutenProduct,
+} from "../src/lib/rakuten";
 
 const product = (
   id: string,
@@ -46,6 +50,45 @@ describe("selectRakutenProduct", () => {
   it("requires every required term", () => {
     expect(
       selectRakutenProduct([premium66], ["パンパース", "さらさらケア"]),
+    ).toBeUndefined();
+  });
+
+  // tests/issue-2.test.ts（issue番号ファイル）から移設。
+  // 必須語が一意に定まらない場合、アフィリエイトURL付き候補が選ばれて
+  // 収益誘導の偏りになっていないことを守る（fail-closed）。
+  it("does not prefer a tracked URL when required terms do not uniquely match", () => {
+    const products: RakutenProduct[] = [
+      {
+        id: "wrong-line",
+        name: "パンパース さらさらケア 新生児",
+        url: "https://item.rakuten.co.jp/shop/wrong",
+        affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/wrong-ad",
+        price: 1000,
+      },
+      {
+        id: "premium-basic",
+        name: "パンパース 肌へのいちばん 新生児",
+        url: "https://item.rakuten.co.jp/shop/basic",
+        price: 2000,
+      },
+      {
+        id: "premium-tracked",
+        name: "パンパース　肌へのいちばん　新生児 66枚",
+        url: "https://item.rakuten.co.jp/shop/tracked",
+        affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/tracked-ad",
+        price: 2100,
+      },
+    ];
+
+    expect(
+      selectRakutenProduct(products, [
+        "パンパース",
+        "肌へのいちばん",
+        "新生児",
+      ]),
+    ).toBeUndefined();
+    expect(
+      selectRakutenProduct(products, ["パンパース", "おやすみパンツ"]),
     ).toBeUndefined();
   });
 
@@ -182,5 +225,53 @@ describe("selectRakutenProduct", () => {
         exactIdentifiers: ["shop:missing"],
       }),
     ).toBeUndefined();
+  });
+});
+
+// tests/issue-2.test.ts の「product search parsing」describe から移設。
+describe("parseRakutenProducts", () => {
+  it("parses flat and nested item shapes", () => {
+    const flat = parseRakutenProducts({
+      items: [
+        {
+          itemCode: "shop:item-1",
+          itemName: "パンパース 肌へのいちばん 新生児 66枚",
+          itemUrl: "https://item.rakuten.co.jp/shop/item-1",
+          affiliateUrl: "https://hb.afl.rakuten.co.jp/hgc/ad-1",
+          itemPrice: 1980,
+        },
+      ],
+    });
+    const nested = parseRakutenProducts({
+      Items: [
+        {
+          Item: {
+            itemCode: "shop:item-2",
+            itemName: "パンパース さらさらケア 新生児",
+            itemUrl: "https://item.rakuten.co.jp/shop/item-2",
+            itemPrice: "1280",
+          },
+        },
+      ],
+    });
+
+    expect(flat[0]).toMatchObject({ id: "shop:item-1", price: 1980 });
+    expect(nested[0]).toMatchObject({ id: "shop:item-2", price: 1280 });
+  });
+
+  it("drops products and affiliate URLs from unapproved hosts", () => {
+    expect(
+      parseRakutenProducts({
+        items: [
+          {
+            itemCode: "shop:item-1",
+            itemName: "パンパース 肌へのいちばん 新生児",
+            itemUrl: "https://example.test/item-1",
+            affiliateUrl: "https://example.test/ad-1",
+            itemPrice: 1980,
+          },
+        ],
+      }),
+    ).toEqual([]);
   });
 });
