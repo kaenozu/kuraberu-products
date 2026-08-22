@@ -6,6 +6,9 @@
  * banner. This is a network-level regression test — it does not rely on
  * DOM assertions alone, which could miss invisible resource loads.
  *
+ * Also covers the accessibility contract: focus moves to the banner when it
+ * appears, and consent can be withdrawn from the UI afterwards.
+ *
  * Test target: /articles/babybjorn/ (has autoload X embed)
  */
 
@@ -103,8 +106,27 @@ test.describe("consent-before-embed (network level)", () => {
     // Banner should disappear
     await expect(banner).not.toBeVisible({ timeout: 5_000 });
 
-    // Wait a moment to ensure no requests fire after rejection
-    await page.waitForTimeout(2_000);
+    // Verify no requests fire in the seconds after rejection. Instead of a
+    // fixed waitForTimeout, poll until the request count has stayed unchanged
+    // for a full stability window (same expect.poll pattern as below).
+    const STABLE_WINDOW_MS = 2_000;
+    let lastCount = thirdPartyRequests.length;
+    let stableSince = Date.now();
+    await expect
+      .poll(
+        () => {
+          if (thirdPartyRequests.length !== lastCount) {
+            lastCount = thirdPartyRequests.length;
+            stableSince = Date.now();
+          }
+          return Date.now() - stableSince;
+        },
+        {
+          timeout: 10_000,
+          message: `third-party request count kept changing after reject`,
+        },
+      )
+      .toBeGreaterThanOrEqual(STABLE_WINDOW_MS);
 
     // Still no third-party requests should have been made
     const requestsAfterReject = [...thirdPartyRequests];
@@ -171,6 +193,8 @@ test.describe("consent-before-embed (network level)", () => {
   });
 
   test("consent state persists across page navigation", async ({ page }) => {
+    // 低速ネットワークでの autoload 待ちを考慮し規定より長く取る
+    test.setTimeout(60_000);
     // First visit: grant consent
     await page.goto(ARTICLE_PATH, { waitUntil: "networkidle" });
     const banner = page.locator("[data-embed-consent-banner]");
@@ -209,5 +233,121 @@ test.describe("consent-before-embed (network level)", () => {
     await page.goto("/", { waitUntil: "networkidle" });
     const banner = page.locator("[data-embed-consent-banner]");
     await expect(banner).not.toBeVisible({ timeout: 3_000 });
+  });
+
+  test("moves keyboard focus to the banner, then keeps it on the withdraw control", async ({
+    page,
+  }) => {
+    await page.goto(ARTICLE_PATH, { waitUntil: "networkidle" });
+
+    const banner = page.locator("[data-embed-consent-banner]");
+    await expect(banner).toBeVisible({ timeout: 10_000 });
+
+    // 表示時にバナー自身へフォーカスが移動する（キーボード/SRユーザーが
+    // 非阻断バナーの存在に気づけるため）
+    await expect(banner).toBeFocused();
+
+    // 選択するとボタンは消える — フォーカスは撤回UIのボタンへ維持される
+    await banner.locator("[data-embed-consent-reject]").click();
+    const withdrawButton = page.locator("[data-embed-consent-withdraw] button");
+    await expect(withdrawButton).toBeVisible();
+    await expect(withdrawButton).toBeFocused();
+  });
+
+  test("allows withdrawing consent and restores embed placeholders", async ({
+    page,
+  }) => {
+    // 2回のナビゲーションと安定化ウィンドウを含むため、規定より長く取る
+    test.setTimeout(90_000);
+
+    // Collect third-party requests made during the test
+    const thirdPartyRequests: string[] = [];
+    page.on("request", (request) => {
+      const url = request.url();
+      if (isThirdPartyRequest(url)) {
+        thirdPartyRequests.push(url);
+      }
+    });
+
+    await page.goto(ARTICLE_PATH, { waitUntil: "networkidle" });
+
+    const banner = page.locator("[data-embed-consent-banner]");
+    await expect(banner).toBeVisible({ timeout: 10_000 });
+    await banner.locator("[data-embed-consent-accept]").click();
+    await expect(banner).not.toBeVisible({ timeout: 5_000 });
+
+    // Consent granted: embeds start loading
+    await expect
+      .poll(() => thirdPartyRequests.length, {
+        timeout: 15_000,
+        message: `Expected third-party requests after consent, but none were made within 15s`,
+      })
+      .toBeGreaterThan(0);
+
+    // Withdraw via the UI control
+    const withdrawControl = page.locator("[data-embed-consent-withdraw]");
+    await expect(withdrawControl).toBeVisible();
+    await withdrawControl.locator("button").click();
+
+    // The consent banner reappears and receives focus for a new choice
+    await expect(banner).toBeVisible({ timeout: 5_000 });
+    await expect(banner).toBeFocused();
+
+    // The embed is restored to its manual-load placeholder state
+    const embedLoadButton = page.locator("[data-external-embed-load]").first();
+    await expect(embedLoadButton).toBeVisible();
+
+    // Live widgets keep issuing lazy subresource requests for a while, and
+    // withdrawal cannot un-send loads already initiated by the granted
+    // phase — so watching the live counter is inherently flaky. Instead:
+    // (1) let granted-phase stragglers drain with a stability window,
+    let lastSeenCount = thirdPartyRequests.length;
+    let stableSince = Date.now();
+    await expect
+      .poll(
+        () => {
+          if (thirdPartyRequests.length !== lastSeenCount) {
+            lastSeenCount = thirdPartyRequests.length;
+            stableSince = Date.now();
+          }
+          return Date.now() - stableSince;
+        },
+        {
+          timeout: 15_000,
+          message: `request count kept changing after withdrawal; embed teardown did not settle`,
+        },
+      )
+      .toBeGreaterThanOrEqual(2_000);
+
+    // (2) snapshot the settled baseline, then reload the page. With consent
+    // cleared, the fresh load must not add ANY third-party request — an
+    // uncleared-consent regression would fire autoloads immediately.
+    const requestCountBeforeReload = thirdPartyRequests.length;
+    await page.reload({ waitUntil: "networkidle" });
+
+    const bannerAfterReload = page.locator("[data-embed-consent-banner]");
+    await expect(bannerAfterReload).toBeVisible({ timeout: 10_000 });
+
+    stableSince = Date.now();
+    await expect
+      .poll(
+        () => {
+          if (thirdPartyRequests.length !== lastSeenCount) {
+            lastSeenCount = thirdPartyRequests.length;
+            stableSince = Date.now();
+          }
+          return Date.now() - stableSince;
+        },
+        {
+          timeout: 5_000,
+          message: `Expected zero third-party requests on a fresh load after withdrawal (consent cleared), but some were made`,
+        },
+      )
+      .toBeGreaterThanOrEqual(2_000);
+
+    expect(
+      thirdPartyRequests.length,
+      `Expected no third-party requests on a fresh load after withdrawal (baseline ${requestCountBeforeReload}), but found ${thirdPartyRequests.length}`,
+    ).toBe(requestCountBeforeReload);
   });
 });

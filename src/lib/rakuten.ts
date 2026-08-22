@@ -15,7 +15,18 @@ export type RakutenProduct = {
 
 export const RAKUTEN_API_TIMEOUT_MS = 5_000;
 
-const cache = new Map<string, Promise<RakutenProduct[]>>();
+/**
+ * 成功応答キャッシュの TTL。長時間プロセス（wrangler dev 等）で
+ * 古い検索結果を使い続けないための上限。既定は60分。
+ */
+export const RAKUTEN_CACHE_TTL_MS = 60 * 60 * 1000;
+
+type CacheEntry = {
+  promise: Promise<RakutenProduct[]>;
+  expiresAt: number;
+};
+
+const cache = new Map<string, CacheEntry>();
 
 /**
  * モジュールスコープの検索キャッシュを破棄する。
@@ -38,6 +49,11 @@ export type RakutenSelectionOptions = {
 type RequestRakutenOptions = {
   fetchImpl?: FetchImplementation;
   timeoutMs?: number;
+  /**
+   * 現在時刻を返す関数（ミリ秒）。キャッシュ TTL の判定に使う。
+   * 既定は Date.now。テストで決定論的な時計を注入できる。
+   */
+  clock?: () => number;
 };
 
 function asRecord(value: unknown): UnknownRecord {
@@ -272,22 +288,30 @@ export async function fetchRakutenProducts(
   options: RequestRakutenOptions = {},
 ): Promise<RakutenProduct[]> {
   const cacheKey = `${keyword}\u0000${hits}`;
+  const clock = options.clock ?? Date.now;
   const cached = cache.get(cacheKey);
-  if (cached) return cached;
+  if (cached) {
+    if (clock() < cached.expiresAt) return cached.promise;
+    cache.delete(cacheKey);
+  }
   const request = fetchRakutenProductsUncached(keyword, hits, options);
-  cache.set(cacheKey, request);
+  cache.set(cacheKey, {
+    promise: request,
+    expiresAt: clock() + RAKUTEN_CACHE_TTL_MS,
+  });
 
   // Keep only successful, non-empty results. Attach a rejection handler here
   // as well as returning the original promise so an unexpected failure can
-  // evict the entry without creating an unhandled rejection.
+  // evict the entry without creating an unhandled rejection. 失敗・空結果は
+  // TTL を待たず即時失効する（次の呼び出しで再取得）。
   void request.then(
     (products) => {
-      if (products.length === 0 && cache.get(cacheKey) === request) {
+      if (products.length === 0 && cache.get(cacheKey)?.promise === request) {
         cache.delete(cacheKey);
       }
     },
     () => {
-      if (cache.get(cacheKey) === request) cache.delete(cacheKey);
+      if (cache.get(cacheKey)?.promise === request) cache.delete(cacheKey);
     },
   );
 
