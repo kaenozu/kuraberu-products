@@ -50,6 +50,7 @@ function makeLimiter(
 }
 
 function baseEnv(limiter?: ContactRateLimiter): Env {
+  // Default: a permissive limiter that always allows (simulates a working binding).
   const defaultLimiter: ContactRateLimiter = {
     async limit() {
       return { success: true };
@@ -152,13 +153,19 @@ describe("enforceContactRateLimit", () => {
   it("denies with the reported reset time", async () => {
     const { limiter } = makeLimiter({ success: false, reset_after: 37 });
     const result = await enforceContactRateLimit(limiter, "203.0.113.5");
-    expect(result).toMatchObject({ allowed: false, retryAfterSeconds: 37 });
+    expect(result).toMatchObject({
+      allowed: false,
+      retryAfterSeconds: 37,
+    });
   });
 
   it("falls back to the configured window when reset time is absent", async () => {
     const { limiter } = makeLimiter({ success: false });
     const result = await enforceContactRateLimit(limiter, "203.0.113.5");
-    expect(result).toMatchObject({ allowed: false, retryAfterSeconds: 60 });
+    expect(result).toMatchObject({
+      allowed: false,
+      retryAfterSeconds: 60,
+    });
   });
 
   it("denies when the binding is not configured (fail-closed)", async () => {
@@ -257,11 +264,17 @@ describe("onRequestPost", () => {
     expect(telegram).not.toHaveBeenCalled();
   });
 
-  it("returns 503 when the rate limiter binding is absent", async () => {
+  it("returns 503 when the rate limiter binding is absent (fail-closed)", async () => {
     const telegram = telegramOk();
+    // Simulate missing CONTACT_RATE_LIMITER binding by casting to remove it
+    const envWithoutLimiter = {
+      TELEGRAM_BOT_TOKEN: "123:token",
+      TELEGRAM_CHAT_ID: "-100123",
+      PUBLIC_SITE_URL: SITE_URL,
+    } as unknown as Env;
     const response = await onRequestPost({
       request: postRequest(validForm()),
-      env: { PUBLIC_SITE_URL: SITE_URL } as unknown as Env,
+      env: envWithoutLimiter,
       params: {},
       data: {},
     });
@@ -270,7 +283,7 @@ describe("onRequestPost", () => {
     expect(telegram).not.toHaveBeenCalled();
   });
 
-  it("returns 503 when the rate limiter fails", async () => {
+  it("returns 503 when the rate limiter fails (fail-closed)", async () => {
     const telegram = telegramOk();
     const { limiter } = makeLimiter({ error: true });
     const response = await onRequestPost({
@@ -339,6 +352,7 @@ describe("onRequestPost", () => {
 
   it("returns 500 when Telegram is not configured", async () => {
     const telegram = telegramOk();
+    // Env with a working limiter but missing Telegram tokens
     const { limiter } = makeLimiter({ success: true });
     const response = await onRequestPost({
       request: postRequest(validForm()),
@@ -435,15 +449,18 @@ describe("onRequestPost", () => {
     expect(telegram).toHaveBeenCalledTimes(1);
   });
 
-  // ---- Body size guard (post-formData) ----
+  // ---- Post- formData body size guard ----
 
   it("rejects oversized payload even when Content-Length is absent", async () => {
     const telegram = telegramOk();
+    // Build a form with a very long message (no Content-Length header)
     const longMessage = "a".repeat(12_000);
     const response = await onRequestPost({
       request: new Request(`${SITE_URL}/api/contact`, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
         body: new URLSearchParams({
           email: "test@example.com",
           message: longMessage,
@@ -455,6 +472,10 @@ describe("onRequestPost", () => {
     });
 
     expect(response.status).toBe(413);
+    expect(await response.json()).toEqual({
+      ok: false,
+      error: "payload too large",
+    });
     expect(telegram).not.toHaveBeenCalled();
   });
 
@@ -466,7 +487,7 @@ describe("onRequestPost", () => {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
-          "Content-Length": "100",
+          "Content-Length": "100", // understated
         },
         body: new URLSearchParams({
           email: "test@example.com",
