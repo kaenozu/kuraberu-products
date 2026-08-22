@@ -68,7 +68,7 @@ Production では次が必須です。
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
 - `PUBLIC_BUILD_SHA`: デプロイ検証用のビルド元コミットSHA。`tools/production/Invoke-ProductionBuildAndDeploy.ps1` が本番ビルド時に自動注入し、`Invoke-PostDeployVerification.ps1` が配信HTMLの `meta[name=build-sha]` と突合する。通常は手動設定不要。
 
-お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定・エラー時は制限なしで続行します（可用性優先）。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
+お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定またはRate Limiting APIエラー時は **503でfail-closed** とし、レート制限を迂回して送信を継続しません。通常の上限超過は429と`Retry-After`を返します。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
 
 クリック計測（`/api/events`）はプライバシー配慮型で、購入CTAクリックを同一オリジンの Function で受け取ります。Cookie・IP・フィンガープリントは保存しません。永続化は任意の Workers KV（`ANALYTICS_KV`）で、未設定時はイベントを破棄して動作を続けます。詳細は [`docs/click-analytics.md`](./docs/click-analytics.md)。
 
@@ -117,7 +117,7 @@ README には変動しやすい記事数、PR番号、dependency更新状態を�
 - Build: `set -a && source .env && set +a && DEPLOYMENT_ENV=production pnpm build`
 - Deploy: `pnpm exec wrangler deploy --config wrangler.jsonc`
 - 確認: `npx wrangler deployments list --config wrangler.jsonc`
-- Cloudflare デプロイラベル: `main`（`tools/production/Invoke-ProductionBuildAndDeploy.ps1` の `--branch=main` で指定。GitHub default branch名 `feat/affiliate-site-foundation` とは異なる）
+- Cloudflare デプロイラベル: `main`（`tools/production/Invoke-ProductionBuildAndDeploy.ps1` の `--branch=main` で指定するCloudflare側の運用値。GitHub default branchも現在は `main` だが、両者は別の契約）
 - 本番URL: `https://kuraberu-products.pages.dev`
 
 デプロイ後はDeployment一覧でEnvironmentがProduction、Branchがmain、Sourceが対象コミットであることを確認し、トップ・記事一覧・全記事詳細のHTTPステータスと生成HTMLを検証します。詳細な新規記事・既存記事・UI改善の管理基準は [`docs/site-management.md`](./docs/site-management.md) を参照してください。

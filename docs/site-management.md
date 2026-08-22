@@ -76,7 +76,7 @@
 
 - `DEPLOYMENT_ENV=preview pnpm verify` が全PASS
 - production環境変数を読み込んだ `DEPLOYMENT_ENV=production pnpm build` が成功
-- Cloudflare実測に合わせ、`kuraberu-products` Pagesへ `--branch main` でDirect Uploadする（`--branch` はCloudflare のデプロイラベル。GitHub default branchは `feat/affiliate-site-foundation`）
+- Cloudflare実測に合わせ、`kuraberu-products` Pagesへ `--branch main` でDirect Uploadする（`--branch` はCloudflare側のデプロイラベル。GitHub default branchも現在は `main` だが、両者は別の契約）
 - Deployment一覧で `Environment: Production`、`Branch: main`、対象コミットを確認する
 - 本番URLと全記事URLがHTTP 200であることを確認する
 - 生成HTMLに変更内容が反映されていることを確認する
