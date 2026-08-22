@@ -15,7 +15,18 @@ export type RakutenProduct = {
 
 export const RAKUTEN_API_TIMEOUT_MS = 5_000;
 
-const cache = new Map<string, Promise<RakutenProduct[]>>();
+/**
+ * 成功応答キャッシュの TTL。長時間プロセス（wrangler dev 等）で古い検索結果を
+ * 使い続けないための上限。既定は60分。
+ */
+export const RAKUTEN_CACHE_TTL_MS = 60 * 60 * 1000;
+
+type CacheEntry = {
+  promise: Promise<RakutenProduct[]>;
+  expiresAt: number;
+};
+
+const cache = new Map<string, CacheEntry>();
 
 type UnknownRecord = Record<string, unknown>;
 type FetchImplementation = typeof fetch;
@@ -29,6 +40,11 @@ export type RakutenSelectionOptions = {
 type RequestRakutenOptions = {
   fetchImpl?: FetchImplementation;
   timeoutMs?: number;
+  /**
+   * 現在時刻を返す関数（ミリ秒）。キャッシュ TTL の判定に使う。
+   * 既定は Date.now。テストで決定論的な時計を注入できる。
+   */
+  clock?: () => number;
 };
 
 function asRecord(value: unknown): UnknownRecord {
@@ -250,22 +266,35 @@ export async function fetchRakutenProducts(
   options: RequestRakutenOptions = {},
 ): Promise<RakutenProduct[]> {
   const cacheKey = `${keyword}\u0000${hits}`;
+  const now = options.clock ?? Date.now;
   const cached = cache.get(cacheKey);
-  if (cached) return cached;
+  if (cached) {
+    if (now() < cached.expiresAt) return cached.promise;
+    // TTL 失効。同一キーが新しいリクエストに入れ替わっている場合は触らない。
+    if (cache.get(cacheKey) === cached) cache.delete(cacheKey);
+  }
   const request = fetchRakutenProductsUncached(keyword, hits, options);
-  cache.set(cacheKey, request);
+  cache.set(cacheKey, {
+    promise: request,
+    expiresAt: now() + RAKUTEN_CACHE_TTL_MS,
+  });
 
-  // Keep only successful, non-empty results. Attach a rejection handler here
-  // as well as returning the original promise so an unexpected failure can
-  // evict the entry without creating an unhandled rejection.
+  // Keep only successful, non-empty results — failures and empty responses are
+  // evicted immediately (they never benefit from the success TTL), so a
+  // transient API error is retried on the next call instead of being pinned.
+  // Attach a rejection handler here as well as returning the original promise
+  // so an unexpected failure can evict the entry without creating an unhandled
+  // rejection.
   void request.then(
     (products) => {
-      if (products.length === 0 && cache.get(cacheKey) === request) {
+      const entry = cache.get(cacheKey);
+      if (entry?.promise === request && products.length === 0) {
         cache.delete(cacheKey);
       }
     },
     () => {
-      if (cache.get(cacheKey) === request) cache.delete(cacheKey);
+      const entry = cache.get(cacheKey);
+      if (entry?.promise === request) cache.delete(cacheKey);
     },
   );
 
