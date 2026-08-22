@@ -1,15 +1,21 @@
-// 本番ビルドから「下書き」記事のページを除去する。
+// 本番ビルドから「公開対象漏れ」の記事ページを除去する安全網。
 //
 // 情報源は dist/sitemap.xml の <loc> 集合のみ。README「SEO / 生成物の基本契約」
 // の不変条件「sitemap.xml は公開ページのみ列挙」を根拠に、
 // dist/articles/<slug>/index.html が存在するのに slug が sitemap に無いページを
-// 下書きと判定し、そのディレクトリを削除する。
+// 「sitemap 非掲載」と判定する。
+//
+// ただし sitemap 非掲載でも、HTML が robots noindex を宣言しているページは
+// 商品情報確認日まで意図的に保持されている初稿(公開対象外)なので削除しない。
+// 削除対象は「非掲載かつ indexable」= 契約違反の異常ページのみ。
 // （旧実装はレンダ済み HTML の meta[name=article:published] を読んでいたが、
 // 実際に出力されるのは property="article:published_time" で一致せず、
 // 常に何も検出しないデッドゲートだったため置き換えた。）
 //
-// fail-closed: dist/sitemap.xml が欠損している / <loc> を1件も含まない場合は
-// 誤って全記事を消せないよう、何も削除せずエラーで失敗する。
+// - 記事ディレクトリが存在しない場合は何もせず成功で終了する
+//   （ビルドをスタブする契約テスト環境でも安全に呼び出せる）。
+// - fail-closed: 記事ページが存在するのに dist/sitemap.xml が欠損している /
+//   <loc> を1件も含まない場合は、誤って全記事を消せないようエラーで失敗する。
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
@@ -66,15 +72,25 @@ export function collectSitemapArticleSlugs(distDirectory = "dist") {
   return slugs;
 }
 
+/** HTML が robots noindex を宣言しているか（保持対象の初稿ページ）。 */
+function declaresNoindex(html) {
+  const content =
+    html.match(/<meta\s+name="robots"\s+content="([^"]+)"/i)?.[1] ??
+    html.match(/<meta\s+content="([^"]+)"\s+name="robots"/i)?.[1];
+  return Boolean(content && content.split(",").includes("noindex"));
+}
+
 /**
- * 削除対象（下書き）の記事ディレクトリ一覧。
- * sitemap.xml が欠損・無内容の場合は throw する（fail-closed）。
+ * 削除対象（公開対象漏れ）の記事ディレクトリ一覧。
+ * - dist/articles が無ければ何もせず空配列を返す。
+ * - 記事ページが存在するのに sitemap.xml が欠損・無内容の場合は throw する
+ *   （fail-closed）。
  */
 export function collectUnpublishedArticleDirectories(distDirectory = "dist") {
+  const articlesRoot = path.join(distDirectory, "articles");
+  if (!fs.existsSync(articlesRoot)) return [];
   const publishedSlugs = collectSitemapArticleSlugs(distDirectory);
   const targets = [];
-  const articlesRoot = path.join(distDirectory, "articles");
-  if (!fs.existsSync(articlesRoot)) return targets;
   for (const entry of fs.readdirSync(articlesRoot, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const indexHtml = path.join(articlesRoot, entry.name, "index.html");
@@ -84,9 +100,11 @@ export function collectUnpublishedArticleDirectories(distDirectory = "dist") {
       .split(path.sep)
       .join("/");
     if (!ARTICLE_PAGE_PATTERN.test(relative)) continue;
-    if (!publishedSlugs.has(entry.name)) {
-      targets.push(path.join(articlesRoot, entry.name));
-    }
+    if (publishedSlugs.has(entry.name)) continue;
+    // noindex 宣言付きの非掲載ページは意図的な保持(確認日前の初稿)なので残す。
+    const html = fs.readFileSync(indexHtml, "utf8");
+    if (declaresNoindex(html)) continue;
+    targets.push(path.join(articlesRoot, entry.name));
   }
   return targets.sort();
 }

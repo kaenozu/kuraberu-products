@@ -53,6 +53,27 @@ function walk(directory) {
   }
 }
 
+// 「sitemap.xml は公開ページのみ列挙」という契約を基準に、
+// 記事詳細ページの期待 robots を導出するための掲載パス集合。
+function collectSitemapPathnames() {
+  try {
+    const xml = fs.readFileSync(path.join("dist", "sitemap.xml"), "utf8");
+    const pathnames = new Set();
+    for (const match of xml.matchAll(/<loc>([^<]*)<\/loc>/g)) {
+      try {
+        pathnames.add(new URL(match[1]).pathname);
+      } catch {
+        // 相対 URL 等は判定対象外
+      }
+    }
+    return pathnames;
+  } catch {
+    // sitemap 欠損は後段の production 検証が別途エラーにするため、
+    // ここでは従来どおり既定期待値へフォールバックする。
+    return null;
+  }
+}
+
 function pathnameFor(file) {
   const relative = path.relative("dist", file).split(path.sep).join("/");
   if (relative === "index.html") return "/";
@@ -96,6 +117,7 @@ function readStructuredData(html, file, errors) {
 
 walk("dist");
 const errors = [...validateSecurityHeaders()];
+const sitemapPathnames = collectSitemapPathnames();
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
   const pathname = pathnameFor(file);
@@ -106,8 +128,15 @@ for (const file of htmlFiles) {
     !pathname.startsWith("/articles/page/") &&
     !pathname.startsWith("/articles/category/");
   const isPrivateMemo = pathname === "/memo/";
+  // 記事詳細ページは sitemap 掲載状況が公開/保持の正。非掲載記事
+  // （商品情報確認日前の初稿）は noindex でレンダされるのが契約。
+  // sitemap を読めない場合は判定を諦めて既定期待値にフォールバックする。
+  const isHeldArticle =
+    isArticle && sitemapPathnames !== null && !sitemapPathnames.has(pathname);
   const expectedRobots =
-    is404 || isPrivateMemo ? "noindex,nofollow" : expectedDefaultRobots;
+    is404 || isPrivateMemo || isHeldArticle
+      ? "noindex,nofollow"
+      : expectedDefaultRobots;
   const expectedCanonical = new URL(pathname, `${expectedSiteUrl}/`).toString();
 
   const robots = readAttribute(

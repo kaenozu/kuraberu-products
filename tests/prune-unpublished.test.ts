@@ -22,13 +22,19 @@ function fixtureDist() {
   return directory;
 }
 
-function writeArticle(distDirectory: string, slug: string) {
+function writeArticle(distDirectory: string, slug: string, robots?: string) {
   const articleDirectory = path.join(distDirectory, "articles", slug);
   mkdirSync(articleDirectory, { recursive: true });
+  const robotsMeta = robots ? `<meta name="robots" content="${robots}">` : "";
   writeFileSync(
     path.join(articleDirectory, "index.html"),
-    `<!doctype html><html><body><h1>${slug}</h1></body></html>`,
+    `<!doctype html><html><head>${robotsMeta}</head><body><h1>${slug}</h1></body></html>`,
   );
+}
+
+/** 保持対象(確認日前の初稿)の記事: sitemap 非掲載 + noindex 宣言付き。 */
+function writeHeldArticle(distDirectory: string, slug: string) {
+  writeArticle(distDirectory, slug, "noindex,nofollow");
 }
 
 function writeSitemap(
@@ -159,5 +165,38 @@ describe("prune unpublished articles", () => {
     expect(
       existsSync(path.join(directory, "articles", "draft-a", "index.html")),
     ).toBe(true);
+  });
+
+  it("keeps unlisted pages that declare robots noindex (held drafts)", () => {
+    const directory = fixtureDist();
+    writeHeldArticle(directory, "held-draft");
+    writeArticle(directory, "anomaly");
+    writeArticle(directory, "live-b");
+    writeSitemap(directory, ["/articles/live-b/"]);
+
+    // 非掲載でも noindex 宣言があれば保持、宣言のない異常ページのみ削除。
+    expect(
+      collectUnpublishedArticleDirectories(directory).map((item) =>
+        path.basename(item),
+      ),
+    ).toEqual(["anomaly"]);
+
+    pruneUnpublishedArticles({ distDirectory: directory });
+    expect(existsSync(path.join(directory, "articles", "held-draft"))).toBe(
+      true,
+    );
+    expect(existsSync(path.join(directory, "articles", "anomaly"))).toBe(false);
+    expect(existsSync(path.join(directory, "articles", "live-b"))).toBe(true);
+  });
+
+  it("is a no-op when the articles root does not exist (no dist yet)", () => {
+    const directory = fixtureDist();
+
+    // ビルド前・契約テスト環境など dist 自体が無い場合は
+    // sitemap を読みに行かず成功扱いで終わる(安全な no-op)。
+    expect(collectUnpublishedArticleDirectories(directory)).toEqual([]);
+    expect(pruneUnpublishedArticles({ distDirectory: directory })).toEqual({
+      pruned: [],
+    });
   });
 });
