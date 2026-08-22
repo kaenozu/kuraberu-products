@@ -1,9 +1,6 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ArticleCard from '../../components/ArticleCard.astro';
+import ArticleListPage from '../../components/ArticleListPage.astro';
 import { publicArticleMetadata } from '../../content/articles';
-import {normalizeDiscoveryText} from '../../lib/article-discovery';
-import {comparisonSubjects} from '../../lib/article-subjects';
 
 const categories = [...new Set(publicArticleMetadata.map((article) => article.category))].sort();
 const tags = [...new Set(publicArticleMetadata.flatMap((article) => article.tags))].sort();
@@ -13,79 +10,17 @@ const sorted = [...publicArticleMetadata].sort((a, b) =>
 const pageSize = 12;
 const totalPages = Math.ceil(sorted.length / pageSize);
 const visibleArticles = sorted.slice(0, pageSize);
-const discoveryIndex = sorted.map((article) => ({
-  id: article.id,
-  path: article.path,
-  headline: article.headline,
-  summary: article.summary,
-  category: article.category,
-  tags: article.tags,
-  audiences: article.audiences,
-  uses: article.uses,
-  modifiedAt: article.modifiedAt,
-  imagePath: article.imagePath,
-  subjects: comparisonSubjects(article),
-}));
 ---
-<BaseLayout title="比較記事一覧｜くらべる商品メモ" description="メーカー公式の情報で商品を比べる記事一覧">
-  <section class="section wrap article-index" data-article-discovery>
-    <p class="eyebrow">Comparison articles</p>
-    <h1>比較記事一覧</h1>
-    <p class="lead">確認できる公式情報と販売ページを起点に、商品を選ぶときの判断材料を整理しています。</p>
-
-    <div class="diagnosis-index-note">
-      <p><strong>「どちらも良さそうで決められない」場合はこちら：</strong><a href="/tools/product-finder/">30秒で自分に合う商品を診断 →</a></p>
-    </div>
-
-    <form class="article-filters" role="search" aria-label="比較記事を検索" data-discovery-form>
-      <label>
-        <span>キーワード</span>
-        <input type="search" name="q" maxlength="100" autocomplete="off" placeholder="商品名・用途・悩みで検索" data-discovery-query />
-      </label>
-      <label>
-        <span>カテゴリ</span>
-        <select name="category" data-discovery-category>
-          <option value="">すべて</option>
-          {categories.map((category) => <option value={category}>{category}</option>)}
-        </select>
-      </label>
-      <label>
-        <span>タグ</span>
-        <select name="tag" data-discovery-tag>
-          <option value="">すべて</option>
-          {tags.map((tag) => <option value={tag}>{tag}</option>)}
-        </select>
-      </label>
-      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
-    </form>
-    <p class="meta" aria-live="polite" data-discovery-count>{publicArticleMetadata.length}件の記事</p>
-
-    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex)}></script>
-    <div class="article-list" data-discovery-results>
-      {visibleArticles.map((article) => (
-        <ArticleCard
-          article={article}
-          data={{
-            'data-article-card': '',
-            'data-search': normalizeDiscoveryText([article.title, article.headline, article.summary, article.category, ...article.tags, ...article.audiences, ...article.uses, ...(comparisonSubjects(article) ?? [])].join(' ')),
-            'data-category': article.category,
-            'data-tags': JSON.stringify(article.tags),
-          }}
-        />
-      ))}
-    </div>
-    <div class="card discovery-empty" hidden data-discovery-empty>
-      <h2>条件に合う記事がありません</h2>
-      <p>キーワードを短くするか、カテゴリ・タグをクリアしてください。</p>
-      <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
-    </div>
-    <nav class="article-pagination" aria-label="比較記事のページ移動">
-      <span class="article-pagination__current" aria-current="page">1</span>
-      {Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => (
-        <a href={`/articles/page/${index + 2}/`}>{index + 2}</a>
-      ))}
-    </nav>
-  </section>
-
-  <script src="/scripts/article-discovery.js" defer is:inline></script>
-</BaseLayout>
+<ArticleListPage
+  title="比較記事一覧｜くらべる商品メモ"
+  description="メーカー公式の情報で商品を比べる記事一覧"
+  heading="比較記事一覧"
+  lead="確認できる公式情報と販売ページを起点に、商品を選ぶときの判断材料を整理しています。"
+  showDiagnosisNote={true}
+  articles={visibleArticles}
+  totalCount={publicArticleMetadata.length}
+  categoryOptions={categories}
+  tagOptions={tags}
+  discoverySource={sorted}
+  pagination={{ mode: 'first', totalPages }}
+/>

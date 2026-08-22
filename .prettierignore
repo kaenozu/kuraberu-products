@@ -1,4 +1,6 @@
 sketches/
 .wrangler/
 .wrangler-state/
-.dev.vars
+.dev.varscoverage/
+pnpm-lock.yaml
+dist-baseline/

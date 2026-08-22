@@ -3,16 +3,6 @@
   "description": "記事の仕様クレームと公式ソースの突合記録。checkedAt は公式ページで確認した日。",
   "entries": [
     {
-      "articleId": "shupot",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:5d37ee5634698c2a84c236bbecfef370db8ab54952321eb69004b9662adf3deb",
-      "officialUrls": [
-        "https://shop.pigeon.co.jp/products/1032018",
-        "https://shop.pigeon.co.jp/products/2000638s"
-      ],
-      "note": "価格クレーム（電動 13,585円 / 手動 3,762円、2026-08-10時点）をピジョン公式ショップで確認（2026-08-16再確認）"
-    },
-    {
       "articleId": "babybjorn",
       "checkedAt": "2026-08-16",
       "claimsFingerprint": "sha256:5f3296e2ca25173c12289e6cadea085d1e864faa092fd79631d7b2100e3cefbf",
@@ -57,7 +47,7 @@
     {
       "articleId": "babybjorn-potty",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:9709ca96f9b4201691057c812ad73863eff44927afbde934cf72631977b2b900",
+      "claimsFingerprint": "sha256:66aac15d27dfa2caf0dd17bcf22e7c91f74ab331d98170628255e06e13b2ffc9",
       "officialUrls": [
         "https://www.babybjorn.jp/products/bathroom/potty-chair/",
         "https://www.babybjorn.jp/products/bathroom/smart-potty/"
@@ -184,7 +174,7 @@
     {
       "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:8bcd12f8ad9991588d0c9fc5d0ec276e5103da291aefdbc9091710b95b36dc09",
+      "claimsFingerprint": "sha256:6aaa3d10248e36f6ed2b6da9e5f155ab14cdb7a67ca1ad21e09fd8950b9a1dd9",
       "officialUrls": [
         "https://www.kingjim.co.jp/products/tepra/sr-mk1.html",
         "https://www.kingjim.co.jp/products/tepra/sr-r2500p.html"
@@ -214,7 +204,7 @@
     {
       "articleId": "panasonic-ne-fl1a-vs-ne-fl1c",
       "checkedAt": "2026-08-15",
-      "claimsFingerprint": "sha256:5d92b93534da0e7c2950ef5551683a71f7cbfc5f28d77d3cd13ab740a781783f",
+      "claimsFingerprint": "sha256:0521f2127eea2b83160a9cd301f3ce08ed5d1e76826aa2b9e171b0f7df587017",
       "officialUrls": [
         "https://panasonic.jp/range/products/NE-FL1A.html",
         "https://panasonic.jp/range/products/NE-FL1C.html"
@@ -234,7 +224,7 @@
     {
       "articleId": "tiger-mta-j050-guide",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:ca9a908792895d626fb5e597dbea37b2cd817f1cacc7375966b33a062534833a",
+      "claimsFingerprint": "sha256:ecf9db045cb13078c36e4b278103a58bf0c0cf1e67b9155f4ea2f7567e5ba188",
       "officialUrls": [
         "https://www.thermos.jp/product/series/jnl-s00.html",
         "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
@@ -303,7 +293,7 @@
     {
       "articleId": "panasonic-es-lt4b-vs-es-lv7j",
       "checkedAt": "2026-08-19",
-      "claimsFingerprint": "sha256:ed1e6a28975a4e07f224367f37b35267e9ddabd930d32bedf40969c0d73a9d5e",
+      "claimsFingerprint": "sha256:8b6021bae721a6439142dfbc3ff8963129a295abc286cf3f9a28c099c25b19fa",
       "officialUrls": [
         "https://panasonic.jp/shaver/products/ES-LT4B.html",
         "https://panasonic.jp/shaver/products/ES-LV7J.html"
@@ -313,7 +303,7 @@
     {
       "articleId": "yamajitsu-film-holder-242286-vs-242287",
       "checkedAt": "2026-08-19",
-      "claimsFingerprint": "sha256:71f30337bd870454dee7344925a638f58a3d2e570432e6d0a18067b254bd3aa7",
+      "claimsFingerprint": "sha256:99daaedde9fef13f0d3826b0ae9e9def5f643c614a72c716e9412677317a0fa2",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/242286",
         "https://www.yamajitsu.co.jp/products/242287"

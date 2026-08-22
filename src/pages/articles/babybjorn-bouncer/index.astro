@@ -3,13 +3,12 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {babybjornBouncerArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
-
 const bouncerGuideUrl = 'https://www.rakuten.ne.jp/gold/babybjorn/topics/bouncer-guide/';
+// 公式URLの表記は comparison-v2 レジストリ（officialHref）と一致させること。
 const blissOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-bouncers/bouncer-bliss/';
 const balanceOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-bouncers/bouncer-balance-soft/sky-blue-white-mesh-light-grey/';
 
@@ -39,76 +38,6 @@ const faqEntries = [
     "answer": "ベビービョルン公式楽天市場店の商品ページでは、両モデルとも2年保証（SG認証）と案内されています。"
   }
 ];
-
-const blissCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'Bliss',
-  tone: 'premium',
-  audience: '最新モデルでデザインのバリエーションから選びたい人の候補',
-  note: '最新モデル・シートカバーをより柔らかく・20種類以上のバリエーション',
-  status: 'official',
-};
-
-const balanceCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'バランスソフト',
-  tone: 'standard',
-  audience: '2トーンの落ち着いたデザインを好む人の候補',
-  note: '2トーン生地が特長・直近カラーバリエーション増加中',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "シートの素材とデザイン",
-    "left": "最新モデル。シートカバーをより柔らかく仕上げたモデル。3Dジャージー（放熱効果）・コットン・Air（メッシュ）・ウーブンの素材展開で20種類以上のバリエーション。",
-    "right": "2トーンの生地が特長。コットン・Air（メッシュ）・ウーブン/ジャージーの素材展開。直近カラーバリエーションが増加中。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "対象月齢・対象体重",
-    "left": "生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしての使用は体重9kgまで。",
-    "right": "生後約1ヶ月〜2才くらい（最大体重13kg）。バウンサーとしての使用は体重9kgまで。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "リクライニング",
-    "left": "3段階リクライニング。",
-    "right": "3段階リクライニング。「快適に長く使える」と案内。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "独自機能",
-    "left": "セルフバウンシング構造（赤ちゃん自身の動きでゆらゆら揺れる構造）。",
-    "right": "セルフバウンシング構造。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "製品サイズ・重量",
-    "left": "幅約39×奥行約89×高さ46〜58cm。約2.1kg。",
-    "right": "幅約39×奥行約89×高さ46〜58cm。約2.1kg。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "安全基準・保証",
-    "left": "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
-    "right": "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
-    "right": "カラー限定SALE 17,600円〜19,800円（カラー・素材により変動）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -124,13 +53,7 @@ const differenceRows: DifferenceRow[] = [
     </nav>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: blissCandidate.product, line: blissCandidate.line, tagline: blissCandidate.audience, image: '/products/babybjorn-bouncer-bliss.jpg', imageAlt: `${blissCandidate.product} ${blissCandidate.line}`, officialHref: blissOfficialProductUrl, guidePoints: [blissCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-bouncer:left'].purchaseUrl, productId: 'babybjorn-bouncer-bliss'}}
-      right={{ brand: balanceCandidate.product, line: balanceCandidate.line, tagline: balanceCandidate.audience, image: '/products/babybjorn-bouncer-balance.jpg', imageAlt: `${balanceCandidate.product} ${balanceCandidate.line}`, officialHref: balanceOfficialProductUrl, guidePoints: [balanceCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-bouncer:right'].purchaseUrl, productId: 'babybjorn-bouncer-balance'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2ById articleId="babybjorn-bouncer" />
 
 
     <details class="fold-section" id="official">

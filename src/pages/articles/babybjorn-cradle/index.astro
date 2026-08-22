@@ -3,12 +3,11 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {cradleArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
-
+// 公式URLの表記は comparison-v2 レジストリ（officialHref）と一致させること。
 const cradleOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/';
 const cocoNelOfficialProductUrl = 'https://www.aprica.jp/products/home/bed/coconel_air/';
 
@@ -38,76 +37,6 @@ const faqEntries = [
     "answer": "アップリカ公式楽天市場店の案内によると、ココネルエアー AB は PSCマーク取得品・製品安全協会乳幼児用ベッドSG合格品です。マットレス等を組み合わせて使用する場合は、周囲に隙間を生じないミニベッド用（サイズ60×90cm）のものを使用するよう案内されています。"
   }
 ];
-
-const cradleCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'クレードル',
-  tone: 'premium',
-  audience: '新生児期の揺らして寝かしつけを重視する人の候補',
-  note: '手動ゆりかご型・新生児〜6か月（8kg）・メッシュ素材・約6kg',
-  status: 'official',
-};
-
-const cocoNelCandidate: ComparisonCandidate = {
-  product: 'アップリカ',
-  line: 'ココネルエアー AB',
-  tone: 'standard',
-  audience: '長く使えて折りたためるベビーベッドを探す人の候補',
-  note: '新生児〜24カ月（13kg）・折りたたみ式・サークル兼用・収納袋付き',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "使用できる期間",
-    "left": "新生児〜生後6か月（体重8kgまで）。使用期間は短めのゆりかご型。",
-    "right": "新生児（2.5kg）〜24カ月（13kgまで）。上段・下段の2段階で長く使える。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "揺れ（ゆりかご機能）",
-    "left": "両親が手や足で簡単に優しく揺らせることができる。「制御された、やさしい、はずみのある動き」を作り出す構造。",
-    "right": "公式案内に揺れ機能の記載なし（固定式）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "サイズ",
-    "left": "本体 幅約79×奥行約58×高さ約65cm。マットレス 幅約71×奥行き約36×厚さ約3cm。",
-    "right": "開いた状態 幅約1052×奥行約704×高さ約951mm。閉じた状態 幅約260×奥行約260×高さ約951mm。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "重量・持ち運び",
-    "left": "約6kg。「軽量で女性でも簡単に移動させることができます」（公式案内）。",
-    "right": "約14.5kg（収納袋を除く）。キャスター付きで移動できるが、クレードルより大きく重い。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "折りたたみ・収納",
-    "left": "公式案内に折りたたみ・収納袋の記載なし（据え置き型）。",
-    "right": "カンタンに折りたたんで持ち運べる。収納袋付き。帰省・旅行にも使える。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "多用途（サークル兼用など）",
-    "left": "新生児期のベッド用途のみ。キャノピー（天蓋）は別売り。",
-    "right": "大きくなったらベビーサークルとしても使える。おむつ替えやお掃除のときの一時置きにも。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "安全基準・価格（2026-08-10確認）",
-    "left": "49,500円（送料無料）。",
-    "right": "PSCマーク・乳幼児用ベッドSG合格品。29,700円（他店26,000円台〜）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -127,13 +56,7 @@ const differenceRows: DifferenceRow[] = [
     </div>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: cradleCandidate.product, line: cradleCandidate.line, tagline: cradleCandidate.audience, image: '/products/babybjorn-cradle.jpg', imageAlt: `${cradleCandidate.product} ${cradleCandidate.line}`, officialHref: cradleOfficialProductUrl, guidePoints: [cradleCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-cradle:left'].purchaseUrl, productId: 'babybjorn-cradle'}}
-      right={{ brand: cocoNelCandidate.product, line: cocoNelCandidate.line, tagline: cocoNelCandidate.audience, image: '/products/aprica-coconel-air.jpg', imageAlt: `${cocoNelCandidate.product} ${cocoNelCandidate.line}`, officialHref: cocoNelOfficialProductUrl, guidePoints: [cocoNelCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-cradle:right'].purchaseUrl, productId: 'aprica-coconel-air'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2ById articleId="babybjorn-cradle" />
 
 
     <details class="fold-section" id="official">

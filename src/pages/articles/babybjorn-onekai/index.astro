@@ -3,13 +3,12 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {babybjornOnekaiArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
-
 const chartOfficial = 'https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers';
+// 公式URLの表記は comparison-v2 レジストリ（officialHref）と一致させること。
 const onekaiOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/';
 const moveOfficialProductUrl = 'https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/';
 
@@ -39,83 +38,6 @@ const faqEntries = [
     "answer": "ベビービョルン公式は保証期間について「2年（正規保証1年＋ユーザー登録1年）」と案内しています。"
   }
 ];
-
-const onekaiCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'ONE KAI',
-  tone: 'premium',
-  audience: '新生児から長く使えて4WAYで多彩な抱き方をしたい人の候補',
-  note: '新生児〜約36ヶ月・4WAY・3D構造・幅広ウエストベルト',
-  status: 'official',
-};
-
-const moveCandidate: ComparisonCandidate = {
-  product: 'ベビービョルン',
-  line: 'MOVE',
-  tone: 'standard',
-  audience: '通気性を重視して長めに使いたい人の候補',
-  note: '新生児〜約15ヶ月・2WAY・フルメッシュ素材',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "対象月齢・対象体重",
-    "left": "0カ月〜約36ヶ月。体重3.5〜15kg、ヒップ約〜160cm。",
-    "right": "0カ月〜約15ヶ月。体重3.2〜12kg、ヒップ約〜120cm。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "抱っこの種類",
-    "left": "4通り：対面抱っこ（ハイポジション）・対面抱っこ（ローポジション）・前向き抱っこ・おんぶ。",
-    "right": "2通り。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "ショルダーとウエストのサポート",
-    "left": "パッド入りショルダーベルト（スッキリ見え・肩にぴったりフィット）＋幅広ウエストベルト（おんぶ時にもスマート）。",
-    "right": "ショルダーパッド・ウェストベルトの項目は公式比較表で「ー」。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "素材",
-    "left": "メッシュ・コットン。",
-    "right": "メッシュ（フルメッシュ素材で通気性抜群）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "製品重量",
-    "left": "約1000g。",
-    "right": "約860g。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "ヘッドサポート",
-    "left": "○",
-    "right": "○",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "保証期間",
-    "left": "2年（正規保証1年＋ユーザー登録1年）。",
-    "right": "2年（正規保証1年＋ユーザー登録1年）。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "公式ショップ価格（2026-08-10確認）",
-    "left": "27,500円。",
-    "right": "22,000円。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -131,13 +53,7 @@ const differenceRows: DifferenceRow[] = [
     </nav>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: onekaiCandidate.product, line: onekaiCandidate.line, tagline: onekaiCandidate.audience, image: '/products/babybjorn-onekai.jpg', imageAlt: `${onekaiCandidate.product} ${onekaiCandidate.line}`, officialHref: onekaiOfficialProductUrl, guidePoints: [onekaiCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-onekai:left'].purchaseUrl, productId: 'babybjorn-onekai'}}
-      right={{ brand: moveCandidate.product, line: moveCandidate.line, tagline: moveCandidate.audience, image: '/products/babybjorn-move.jpg', imageAlt: `${moveCandidate.product} ${moveCandidate.line}`, officialHref: moveOfficialProductUrl, guidePoints: [moveCandidate.audience], purchaseHref: articlePurchaseLinks['babybjorn-onekai:right'].purchaseUrl, productId: 'babybjorn-move'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2ById articleId="babybjorn-onekai" />
 
 
     <details class="fold-section" id="official">

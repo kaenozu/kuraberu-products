@@ -2,27 +2,21 @@
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {tigerMtaJ050GuideArticle as articleMetadata} from '../../../content/articles';
 import {tigerMtaJ050, articlePurchaseLinks} from '../../../lib/products';
-import type {KeyDiffRow} from '../../../components/VisualKeyDifferences.astro';
-const officialPage = tigerMtaJ050.officialUrl;
-const mtaJ080Image = 'https://www.tiger-corporation.com/wp-content/uploads/2025/07/MTA-J080_750x750-d1adb21a6e79c156ac1d5d974c9b75dd.jpg';
+import { comparisonV2 } from '../../../content/articles/comparison-v2';
+const comparison = comparisonV2['tiger-mta-j050-guide'];
+const officialPage = comparison.left.officialHref;
+const mtaJ080Image = comparison.right.image;
 // 既存サイトで検証済みの楽天アフィリエイト導線に、MTA-J080の検索先を設定。
 const faqEntries = [
   {question: 'MTA-J050とMTA-J080の違いは？', answer: '容量がMTA-J050は0.5L、MTA-J080は0.8Lです。公式仕様では、MTA-J050が約0.26kg、MTA-J080が約0.36kgで、MTA-J080の方が容量と重量が大きくなっています。'},
   {question: '軽いのはどっち？', answer: '公式仕様の本体質量は、MTA-J050が約0.26kg、MTA-J080が約0.36kgです。持ち運び時の軽さを優先するなら、MTA-J050が候補になります。'},
   {question: '保冷力が高いのはどっち？', answer: '公式仕様の保冷効力（6時間）は、MTA-J050が8℃以下、MTA-J080が7℃以下です。数値だけで比較すると、MTA-J080の方が低い温度を保つ案内です。'},
 ] as const;
-const keyDiffRows: KeyDiffRow[] = [
-  {label: '容量', left: '0.5L', right: '0.8L', highlight: 'right', highlightNote: '大容量', bar: {left: 0.5, right: 0.8}},
-  {label: '本体質量', left: '約0.26kg', right: '約0.36kg', highlight: 'left', highlightNote: '約100g軽い', bar: {left: 0.26, right: 0.36}},
-  {label: '保冷効力（6時間）', left: '8℃以下', right: '7℃以下', highlight: 'right', highlightNote: '低い温度を保つ', bar: {left: 8, right: 7}},
-  {label: '保温効力（6時間）', left: '68℃以上', right: '75℃以上', highlight: 'right', highlightNote: '高い温度を保つ', bar: {left: 68, right: 75}},
-  {label: '本体寸法', left: '幅7.5×奥行8.6×高さ23.3cm', right: '幅7.5×奥行8.6×高さ31.4cm'},
-];
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -31,13 +25,7 @@ const keyDiffRows: KeyDiffRow[] = [
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">タイガー MTA-J050とMTA-J080は、ハンドル付きのワンプッシュマグボトルです。この記事では、タイガー公式ページで確認できる容量・重量・保温保冷効力・寸法の違いを比較します。お手入れやハンドルなどシリーズ共通の特徴と、サイズ選びに関わる差分を分けて整理します。</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2
-      left={{brand: 'タイガー', line: 'MTA-J050', tagline: '0.5L・軽さを優先するなら', image: tigerMtaJ050.imagePath, imageAlt: 'タイガー MTA-J050', officialHref: officialPage, guidePoints: ['容量0.5Lで持ち歩きやすい', '本体質量約0.26kgで軽い', '通勤・通学など日常の持ち歩き向け'], purchaseHref: articlePurchaseLinks['tiger-mta-j050-guide:left'].purchaseUrl, productId: 'tiger-mta-j050'}}
-      right={{brand: 'タイガー', line: 'MTA-J080', tagline: '0.8L・容量を優先するなら', image: mtaJ080Image, imageAlt: 'タイガー MTA-J080', officialHref: officialPage, guidePoints: ['容量0.8Lで多めに入れられる', '保冷効力7℃以下の案内', '長時間の外出や水分補給向け'], purchaseHref: articlePurchaseLinks['tiger-mta-j050-guide:right'].purchaseUrl, productId: 'tiger-mta-j080'}}
-      rows={keyDiffRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-    />
+    <ArticleComparisonV2ById articleId="tiger-mta-j050-guide" />
     <h2 id="official">公式情報</h2>
     <p>タイガー公式のMTA-J050/J080商品ページで確認できる内容を整理します。シリーズ共通の仕様と、容量による差を分けて掲載しています。</p>
     <h3>シリーズ共通で公式に確認できること</h3>

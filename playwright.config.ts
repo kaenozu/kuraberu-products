@@ -16,7 +16,7 @@ export default defineConfig({
     locale: "ja-JP",
   },
   webServer: {
-    command: "npx serve dist -l 3456",
+    command: "pnpm exec serve dist -l 3456",
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,

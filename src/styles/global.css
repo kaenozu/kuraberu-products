@@ -1196,7 +1196,7 @@ a {
 }
 .ad-note {
   font-size: 0.78rem;
-  color: rgba(0, 0, 0, 0.45);
+  color: rgba(0, 0, 0, 0.62);
 }
 @media (max-width: 520px) {
   .cta.cta-card {
@@ -1282,7 +1282,7 @@ a {
   color: rgba(255, 255, 255, 0.75);
 }
 .purchase-card .ad-note {
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* 商品選択診断（/tools/product-finder/） */

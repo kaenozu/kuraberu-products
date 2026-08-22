@@ -1,10 +1,24 @@
 import { experimental_AstroContainer as AstroContainer } from "astro/container";
-import { describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import PurchaseCard from "../src/components/PurchaseCard.astro";
 
 const validRakutenUrl = "https://www.rakuten.co.jp/search/thermos-jnl-s500";
 
 describe("PurchaseCard", () => {
+  // 開発者マシンのユーザー環境変数に楽天API資格情報があると、クエリ解決
+  // （resolvePurchaseHref）が実ネットワークへ出て遅くなりタイムアウトの
+  // 元になる。単体テストは常に「資格情報なし」＝fail-closed の空配列
+  // フォールバック経路で実行する（CI と同じ条件）。
+  beforeEach(() => {
+    vi.stubEnv("RAKUTEN_APPLICATION_ID", "");
+    vi.stubEnv("RAKUTEN_ACCESS_KEY", "");
+    vi.stubEnv("RAKUTEN_AFFILIATE_ID", "");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
   it("renders name, audience, CTA label, and note when verified", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {

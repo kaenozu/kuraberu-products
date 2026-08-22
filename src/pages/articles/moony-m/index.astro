@@ -3,14 +3,11 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {moonyMArticle as articleMetadata} from '../../../content/articles';
-import type {ComparisonCandidate, DifferenceRow} from '../../../lib/comparison';
 
-const teishigekiSeries = 'https://jp.moony.com/ja/products/nmn1.html';
-const mashumaroSeries = 'https://jp.moony.com/ja/products/mn.html';
 const teishigekiNbs = 'https://jp.moony.com/ja/products/nmn/nmn-nbs.html';
 const teishigekiM = 'https://jp.moony.com/ja/products/nmn/nmn-m.html';
 const teishigekiLp = 'https://jp.moony.com/ja/products/nmn/nmn-l.html';
@@ -40,48 +37,6 @@ const faqEntries = [
     "answer": "2025年秋にリニューアルされています。現在の新生児〜Mは、うんち水分吸収シートを搭載し、3成分無添加で、オーガニックコットンを含まない仕様として公式に案内されています。"
   }
 ];
-
-const teishigekiCandidate: ComparisonCandidate = {
-  product: 'ムーニー',
-  line: '低刺激であんしん',
-  tone: 'standard',
-  audience: 'うんち水分吸収シートの機能を確認したい人の候補',
-  note: '公式ページでサイズ別仕様を確認',
-  status: 'official',
-};
-
-const mashumaroCandidate: ComparisonCandidate = {
-  product: 'ムーニー',
-  line: 'マシュマロ肌ごこちモレ安心',
-  tone: 'standard',
-  audience: '無添加弱酸性素材とゆるうんちストッパーを確認したい人の候補',
-  note: '公式ページでサイズ別仕様を確認',
-  status: 'official',
-};
-
-const differenceRows: DifferenceRow[] = [
-  {
-    "label": "うんちへの対策",
-    "left": "うんち水分吸収シートで、ゆるうんちの水分を下層へ吸収し、肌への付着を抑える設計。おしりガイドも搭載。",
-    "right": "背中と足回りにゆるうんちストッパーを搭載。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "無添加の内容",
-    "left": "Mを含む新生児〜Mは、香料・ラテックス・合成着色料の3成分無添加。",
-    "right": "全サイズで、石油由来油剤・香料・ラテックス・合成着色料の4成分無添加。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  },
-  {
-    "label": "Mサイズの内容量と主な機能",
-    "left": "Mは6〜11kg、46枚入り。うんち水分吸収シートとおしりガイドが特徴。",
-    "right": "Mは6〜11kg、54枚入り。無添加弱酸性素材、ゆるうんちストッパー、お知らせサイン、最大12時間吸収が案内されている。",
-    "leftStatus": "official",
-    "rightStatus": "official"
-  }
-];
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -97,14 +52,7 @@ const differenceRows: DifferenceRow[] = [
     </nav>
 
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: teishigekiCandidate.product, line: teishigekiCandidate.line, tagline: teishigekiCandidate.audience, image: '/products/moony-teishigeki-m.jpg', imageAlt: `${teishigekiCandidate.product} ${teishigekiCandidate.line}`, officialHref: teishigekiSeries, guidePoints: [teishigekiCandidate.audience], purchaseHref: articlePurchaseLinks['moony-m:left'].purchaseUrl, productId: 'moony-teishigeki-m'}}
-      right={{ brand: mashumaroCandidate.product, line: mashumaroCandidate.line, tagline: mashumaroCandidate.audience, image: '/products/moony-mashumaro-m.jpg', imageAlt: `${mashumaroCandidate.product} ${mashumaroCandidate.line}`, officialHref: mashumaroSeries, guidePoints: [mashumaroCandidate.audience], purchaseHref: articlePurchaseLinks['moony-m:right'].purchaseUrl, productId: 'moony-mashumaro-m'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-      diagnosisHref="/tools/product-finder/diaper/"
-    />
+    <ArticleComparisonV2ById articleId="moony-m" />
 
 
     <h2 id="official">公式情報</h2>

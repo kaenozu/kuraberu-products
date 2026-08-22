@@ -115,6 +115,28 @@ import { publicArticleMetadata } from "../content/articles";
         if (input instanceof HTMLInputElement || input instanceof HTMLTextAreaElement) input.value = value;
       };
       const listValue = (name: string) => fieldValue(name).split("\n").map((value) => value.trim()).filter(Boolean);
+
+      // 削除後にフォーカスが document/body へ落ちるのを防ぐ。
+      // リスト上の次の項目へ、末尾削除なら前の項目へ、リストが空になったら
+      // セクション見出しへフォーカスを移動する。
+      const sectionHeading = root.querySelector("#saved-articles-heading");
+      const moveFocusAfterRemoval = (removedIndex: number) => {
+        const nextId = ids[removedIndex] ?? ids[ids.length - 1];
+        const nextItem =
+          nextId !== undefined && list instanceof HTMLElement
+            ? list.querySelector(
+                `[data-memo-item][data-article-id="${CSS.escape(nextId)}"]`,
+              )
+            : null;
+        if (nextItem instanceof HTMLElement) {
+          nextItem.tabIndex = -1;
+          nextItem.focus();
+        } else if (sectionHeading instanceof HTMLElement) {
+          sectionHeading.tabIndex = -1;
+          sectionHeading.focus();
+        }
+      };
+
       const render = () => {
         if (!(list instanceof HTMLElement)) return;
         list.replaceChildren();
@@ -130,13 +152,17 @@ import { publicArticleMetadata } from "../content/articles";
           if (candidate instanceof HTMLInputElement) candidateInputs.push(candidate);
           const remove = item.querySelector("[data-memo-remove]");
           remove?.addEventListener("click", () => {
-            ids = ids.filter((savedId) => savedId !== item.dataset.articleId);
+            const removedId = item.dataset.articleId ?? "";
+            const removedIndex = ids.indexOf(removedId);
+            ids = ids.filter((savedId) => savedId !== removedId);
             try {
               localStorage.setItem(comparisonMemoStorageKey, encodeComparisonMemo(ids));
               render();
+              moveFocusAfterRemoval(removedIndex);
             } catch {
               storageAvailable = false;
               render();
+              moveFocusAfterRemoval(removedIndex);
             }
           });
         }

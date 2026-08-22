@@ -3,35 +3,14 @@ import { articlePurchaseLinks } from '../../../lib/products';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
-import ArticleComparisonV2 from '../../../components/ArticleComparisonV2.astro';
+import ArticleComparisonV2ById from '../../../components/ArticleComparisonV2ById.astro';
 import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import ExternalEmbed from '../../../components/ExternalEmbed.astro';
 import ComparisonMemoButton from '../../../components/ComparisonMemoButton.astro';
 import {pampersNewbornArticle as articleMetadata} from '../../../content/articles';
-import type {
-  ComparisonCandidate, DifferenceRow,
-} from '../../../lib/comparison';
-
+// 公式URLの表記は comparison-v2 レジストリ（officialHref）と一致させること。
 const premium = 'https://www.jp.pampers.com/products/pampers-premium-line-tape';
 const sarasara = 'https://www.jp.pampers.com/products/pampers-mainline-tape';
-
-const premiumCandidate: ComparisonCandidate = {
-  product: 'パンパース 新生児用',
-  line: '肌へのいちばん',
-  tone: 'premium',
-  audience: '肌へのやさしさに関する機能を確認したい人の候補',
-  note: '公式ページでサイズ・仕様を確認',
-  status: 'official',
-};
-
-const standardCandidate: ComparisonCandidate = {
-  product: 'パンパース 新生児用',
-  line: 'さらさらケア',
-  tone: 'standard',
-  audience: 'モレ・ムレ対策の機能を確認したい人の候補',
-  note: '公式ページでサイズ・仕様を確認',
-  status: 'official',
-};
 
 const faqEntries = [
   {
@@ -51,23 +30,6 @@ const faqEntries = [
     answer: 'このサイトでは価格・在庫を保証していません。楽天市場などの販売ページで、その時点の価格・在庫・送料・セット内容を確認してください。',
   },
 ];
-
-const differenceRows: DifferenceRow[] = [
-  {
-    label: '公式が案内する主な機能',
-    left: 'ゆるうんちを素早く吸収、ワセリン配合シート、ふかふか肌ざわり',
-    right: 'ゆるうんちモレガード、のびのびフィットテープ、進化した吸収体',
-    leftStatus: 'official',
-    rightStatus: 'official',
-  },
-  {
-    label: '新生児サイズ',
-    left: '5kgまで。小さめ新生児3,000gも掲載',
-    right: '5kgまで',
-    leftStatus: 'official',
-    rightStatus: 'official',
-  },
-];
 ---
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
   <article class="wrap section article">
@@ -82,14 +44,7 @@ const differenceRows: DifferenceRow[] = [
       <a href="#faq">FAQ</a>
     </nav>
     <!-- Canonical comparison shell: hero -> key differences -> decision guide. -->
-    <ArticleComparisonV2
-      left={{ brand: premiumCandidate.product, line: premiumCandidate.line, tagline: premiumCandidate.audience, image: '/products/pampers-premium-newborn.jpg', imageAlt: `${premiumCandidate.product} ${premiumCandidate.line}`, officialHref: premium, guidePoints: [premiumCandidate.audience], purchaseHref: articlePurchaseLinks['pampers-newborn:left'].purchaseUrl, productId: 'pampers-premium-newborn'}}
-      right={{ brand: standardCandidate.product, line: standardCandidate.line, tagline: standardCandidate.audience, image: '/products/pampers-sarasara-newborn.jpg', imageAlt: `${standardCandidate.product} ${standardCandidate.line}`, officialHref: sarasara, guidePoints: [standardCandidate.audience], purchaseHref: articlePurchaseLinks['pampers-newborn:right'].purchaseUrl, productId: 'pampers-sarasara-newborn'}}
-      rows={differenceRows}
-      checkedAt={articleMetadata.productInfoCheckedAt}
-      purchaseLinkStatus={articleMetadata.purchaseLinkStatus}
-      diagnosisHref="/tools/product-finder/diaper/"
-    />
+    <ArticleComparisonV2ById articleId="pampers-newborn" />
 
 
     <details class="fold-section" id="specs">
