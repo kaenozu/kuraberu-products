@@ -21,6 +21,15 @@ test("full-bleed section layout stays centered", () => {
   expect(accessAt).toBeGreaterThan(globalAt);
 });
 
+test("subsection headings stack vertically on every page", () => {
+  const global = read("src/styles/global.css");
+
+  const rule = global.match(/\.subsection-heading \{[^}]*\}/s)?.[0] ?? "";
+  expect(rule).not.toBe("");
+  expect(rule).toContain("flex-direction: column;");
+  expect(rule).toContain("align-items: flex-start;");
+});
+
 test("top section headings align with the featured card column", () => {
   const page = read("src/pages/index.astro");
 
@@ -28,6 +37,4 @@ test("top section headings align with the featured card column", () => {
   expect(page).toContain("[data-top-categories] .subsection-heading");
   expect(page).toContain("[data-top-diagnosis] .subsection-heading");
   expect(page).toContain("max-width: 900px;");
-  expect(page).toContain("align-items: flex-start;");
-  expect(page).toContain("flex-direction: column;");
 });

@@ -136,7 +136,7 @@ const buyRel = (affiliate: boolean) =>
     background: var(--surface, #fff);
     color: var(--ink);
     text-decoration: none;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
   }
   .next-step__buy--right {
     --product-color: var(--product-right);
@@ -145,7 +145,6 @@ const buyRel = (affiliate: boolean) =>
   .next-step__buy:focus-visible {
     border-color: var(--product-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
-    transform: translateY(-1px);
   }
   .next-step__buy-name {
     font-weight: 800;
@@ -154,7 +153,7 @@ const buyRel = (affiliate: boolean) =>
   }
   .next-step__buy-action {
     font-size: 0.82rem;
-    color: var(--ink-soft, #555);
+    color: var(--ink-soft);
     display: flex;
     align-items: center;
     gap: 0.3rem;
@@ -169,7 +168,7 @@ const buyRel = (affiliate: boolean) =>
     padding-top: 0.85rem;
     border-top: 1px dashed var(--line);
     font-size: 0.95rem;
-    color: var(--ink-soft, #555);
+    color: var(--ink-soft);
   }
   .next-step__diagnosis-link {
     color: var(--accent);

@@ -120,11 +120,10 @@ const {
     display: flex;
     flex-direction: column;
     gap: 0.6rem;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
+    transition: box-shadow 0.2s ease;
   }
   .hero-product:hover {
     box-shadow: var(--card-shadow-md, 0 4px 16px rgba(26, 47, 35, 0.08));
-    transform: translateY(-2px);
   }
   .hero-product:first-child {
     --product-color: var(--product-left);
@@ -145,10 +144,6 @@ const {
     height: auto;
     aspect-ratio: 1;
     object-fit: contain;
-    transition: transform 0.15s ease;
-  }
-  .hero-product-img:hover img {
-    transform: scale(1.03);
   }
   .hero-product-name {
     margin: 0.25rem 0 0;

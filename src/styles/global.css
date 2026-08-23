@@ -5,11 +5,16 @@
     system-ui,
     -apple-system,
     "Segoe UI",
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    "Noto Sans JP",
     sans-serif;
   color: #1b1c1a;
   background: #faf9f5;
   line-height: 1.75;
   --ink: #1a2f23;
+  --ink-soft: #55605a;
   --muted: #424843;
   --line: #e5e1d8;
   --paper: #fff;
@@ -44,9 +49,12 @@
     #f7f3ed 40%,
     #fdf2ef 100%
   );
-  --card-shadow-sm: 0 1px 3px rgba(26, 47, 35, 0.06);
-  --card-shadow-md: 0 4px 16px rgba(26, 47, 35, 0.08);
-  --card-shadow-lg: 0 8px 32px rgba(26, 47, 35, 0.1);
+  --card-shadow-sm:
+    0 1px 2px rgba(26, 47, 35, 0.04), 0 1px 3px rgba(26, 47, 35, 0.06);
+  --card-shadow-md:
+    0 2px 4px rgba(26, 47, 35, 0.04), 0 8px 24px rgba(26, 47, 35, 0.07);
+  --card-shadow-lg:
+    0 4px 8px rgba(26, 47, 35, 0.04), 0 12px 32px rgba(26, 47, 35, 0.09);
   --section-alt: #f5f7f4;
   --accent-soft: rgba(176, 76, 59, 0.08);
   --accent-glow: rgba(176, 76, 59, 0.15);
@@ -79,8 +87,8 @@ a {
   min-height: 72px;
 }
 .brand {
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   text-decoration: none;
   font-size: 1.2rem;
 }
@@ -161,7 +169,7 @@ a {
 .article-index h1 {
   font-size: clamp(2.4rem, 6vw, 4.8rem);
   line-height: 1.08;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.015em;
   margin: 0 0 1.25rem;
   text-wrap: balance;
 }
@@ -321,10 +329,6 @@ a {
   border: 1px solid var(--line);
   background: #fff;
   display: block;
-  transition: transform 0.2s ease;
-}
-.article-list-card:hover .card-thumb {
-  transform: scale(1.02);
 }
 .article-list-card .card-tile {
   width: 132px;
@@ -421,7 +425,7 @@ a {
 .category-list__count {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--ink-soft, inherit);
+  color: var(--ink-soft);
   white-space: nowrap;
 }
 .section {
@@ -434,7 +438,7 @@ a {
 }
 .section h2 {
   font-size: clamp(1.7rem, 3vw, 2.5rem);
-  letter-spacing: -0.05em;
+  letter-spacing: -0.015em;
   line-height: 1.1;
   margin: 0 0 1.5rem;
   text-wrap: balance;
@@ -442,7 +446,7 @@ a {
 .section-intro h1 {
   font-size: clamp(2.4rem, 6vw, 4.6rem);
   line-height: 1.08;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.015em;
   margin: 0 0 1rem;
   text-wrap: balance;
 }
@@ -453,21 +457,16 @@ a {
   padding: clamp(1.25rem, 3vw, 2rem);
   box-shadow: var(--card-shadow-sm);
   transition:
-    transform 160ms ease,
     border-color 160ms ease,
     box-shadow 160ms ease;
 }
 .card:hover {
-  transform: translateY(-2px);
   box-shadow: var(--card-shadow-lg);
   border-color: #d4cec2;
 }
 @media (prefers-reduced-motion: reduce) {
   .card {
     transition: none;
-  }
-  .card:hover {
-    transform: none;
   }
 }
 .card h3 {
@@ -532,14 +531,14 @@ a {
   z-index: 2;
 }
 .comparison thead th:nth-child(2) {
-  background: linear-gradient(180deg, #ddeae5, #e6efec);
-  color: #1d4a41;
-  font-weight: 800;
+  background: #edf3f0;
+  color: #2a4a41;
+  font-weight: 700;
 }
 .comparison thead th:nth-child(3) {
-  background: linear-gradient(180deg, #f0dfd3, #f6e8de);
-  color: #7c4a2b;
-  font-weight: 800;
+  background: #f5ede7;
+  color: #5d4433;
+  font-weight: 700;
 }
 .comparison tbody td:nth-child(2) {
   background: #f3f8f6;
@@ -593,18 +592,12 @@ a {
   display: inline-flex;
   align-items: center;
   transition:
-    transform 0.2s,
     background 0.2s,
     box-shadow 0.2s;
 }
 .cta:hover {
   background: #16483d;
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(22, 72, 61, 0.3);
-}
-.cta:hover {
-  background: #16483d;
-  transform: translateY(-2px);
 }
 
 .card a.cta {
@@ -682,9 +675,10 @@ a {
 }
 .subsection-heading {
   display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 1rem;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.35rem;
 }
 .difference-highlight-note {
   display: inline-block;
@@ -708,13 +702,13 @@ a {
 }
 /* コンテンツタイプ（商品ガイド / 比較記事）のタグ。カテゴリタグの補助なので控えめにする */
 .tag--type {
-  color: var(--ink-soft, inherit);
+  color: var(--ink-soft);
   font-weight: 700;
 }
 .article h1 {
   font-size: clamp(2rem, 5vw, 3.8rem);
   line-height: 1.2;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 /* 長い日本語商品名でもスマホのファーストビューがタイトルだけにならないよう上限を抑える。
@@ -1192,7 +1186,7 @@ a {
 }
 .cta-card-sub {
   font-size: 0.85rem;
-  color: var(--ink-soft, #666);
+  color: var(--ink-soft);
 }
 .ad-note {
   font-size: 0.78rem;
@@ -1220,13 +1214,10 @@ a {
   background: var(--surface, #fff);
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--radius-lg);
-  transition:
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 .purchase-card:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
 }
 .purchase-card__main {
   display: flex;
@@ -1252,7 +1243,7 @@ a {
 .purchase-card__audience {
   margin: 0;
   font-size: 0.9rem;
-  color: var(--ink-soft, #555);
+  color: var(--ink-soft);
   line-height: 1.5;
 }
 .purchase-card__note {
@@ -1296,16 +1287,10 @@ a {
   font: inherit;
   font-weight: 800;
   cursor: pointer;
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: box-shadow 0.15s ease;
 }
 .primary-button:hover {
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(176, 76, 59, 0.3);
-}
-.primary-button:active {
-  transform: translateY(0);
 }
 .primary-button:disabled {
   opacity: 0.45;
