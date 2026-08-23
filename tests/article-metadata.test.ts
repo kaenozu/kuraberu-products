@@ -642,6 +642,44 @@ describe("article card audiences 向き line", () => {
     }
   });
 
+  it("does not mix unrelated product categories into known comparison cards", () => {
+    const expectations = [
+      {
+        id: "panasonic-nt-t501-vs-nt-d700",
+        forbidden: /オーブンレンジ|冷蔵庫|冷凍室/,
+      },
+      { id: "panasonic-ne-bs9c-vs-ne-ubs10c", forbidden: /冷蔵庫|冷凍室/ },
+      { id: "panasonic-es-wp9b-vs-es-wg0b", forbidden: /レイザー式シェーバー/ },
+      { id: "panasonic-eh-na0k-vs-eh-ne9n", forbidden: /Care/ },
+      { id: "logicool-lift-vs-m550", forbidden: /ロジカルロール/ },
+    ];
+    for (const { id, forbidden } of expectations) {
+      const article = publicArticleMetadata.find(
+        (candidate) => candidate.id === id,
+      );
+      expect(article, `${id}: article metadata must exist`).toBeDefined();
+      expect(
+        article?.audiences.join(" "),
+        `${id}: audiences contain unrelated wording`,
+      ).not.toMatch(forbidden);
+    }
+  });
+
+  it("does not describe Makita CL286FD as a wet/dry vacuum", () => {
+    const article = publicArticleMetadata.find(
+      (candidate) => candidate.id === "makita-cl107-vs-cl286",
+    );
+    expect(article).toBeDefined();
+    const values = [
+      ...(article?.audiences ?? []),
+      article?.summary ?? "",
+      ...(article?.verifiedRows?.flatMap((row) => [row.left, row.right]) ?? []),
+      article?.lead ?? "",
+      ...(article?.faqEntries?.map((entry) => entry.answer) ?? []),
+    ].join(" ");
+    expect(values).not.toMatch(/ウェット|ドライ対応|液体ゴミも吸引/);
+  });
+
   it.skipIf(!hasDist)(
     "renders the 向き line on every ArticleCard on the top and listing pages",
     () => {

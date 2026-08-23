@@ -1613,7 +1613,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
     ],
     decisionGuideSteps: [
-      "住まいの段差高さを確認する（4cm以下なら両機種、6cm以上ならX50 Ultra）",
+      "住まいの段差高さを確認する（4cm以下なら両機種対応。6cm以上の段差対応はX50 UltraのProLeapシステム（公式最大値）。実際の対応可否は段差形状により異なります）",
       "毛絡まりの頻度を考慮する（ペット・長髪の場合はブラシ確認）",
       "ステーションの自動化レベルを比較する（ゴミ収集日数・自動給水の有無）",
       "価格・在庫を販売ページで確認する。",
@@ -1636,10 +1636,10 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       "軽量モデルCL107と上位モデルCL286を、重量・吸引力・集じん容量・バッテリーで比べます。",
     leftProduct: "マキタ CL107FDSHW",
     rightProduct: "マキタ CL286FD",
-    leftPoint: "約1kgの軽量設計で毎日手軽に使いたい人向け",
-    rightPoint: "パワフルな吸引力と大容量集じんを求める人向け",
-    productInfoCheckedAt: "2026-08-18",
-    modifiedAt: "2026-08-18",
+    leftPoint: "10.8V・BL1015・質量1.1kgの軽さと紙パック式を重視する人向け",
+    rightPoint: "18V・サイクロン一体式・質量1.7kgの構成を重視する人向け",
+    productInfoCheckedAt: "2026-08-23",
+    modifiedAt: "2026-08-23",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
@@ -1654,13 +1654,13 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     verifiedRows: [
       {
         label: "質量",
-        left: "約1.0kg",
-        right: "約3.0kg",
+        left: "1.1kg（BL1015装着時）",
+        right: "1.7kg（バッテリー装着時）",
       },
       {
         label: "集じん方式",
         left: "紙パック式（0.3L）",
-        right: "公式ページで確認不可（集じん方式・容量は要再確認）",
+        right: "サイクロン一体式（容量は公式仕様表を確認）",
       },
       {
         label: "最大吸引力",
@@ -1669,51 +1669,51 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "運転時間（強）",
-        left: "約7分（BL1815B使用時）",
-        right: "約8分（BL1850B使用時）",
+        left: "約10〜25分（モードにより異なる）",
+        right: "バッテリー・モードにより異なる（公式仕様表を確認）",
       },
       {
         label: "バッテリー",
-        left: "公式ページで確認不可（電圧・型番は要再確認）",
-        right: "公式ページで確認不可（電圧・型番は要再確認）",
+        left: "10.8V・BL1015",
+        right: "18V・スライド式バッテリー",
       },
       {
         label: "充電時間",
-        left: "約60分（BL1815B使用時）",
-        right: "約60分（BL1815B使用時）",
+        left: "約22分（BL1015）",
+        right: "バッテリーにより異なる",
       },
       {
         label: "取付具",
         left: "ノズル・クリーニングブラシ",
-        right: "ウェット・ドライ対応ノズル・クリーニングブラシ",
+        right: "サイクロンユニット・ノズル・クリーニングブラシ",
       },
       {
         label: "特徴",
         left: "片手で持てる軽量設計。階段や狭い場所に最適",
-        right: "ウェット・ドライ対応。液体ゴミも吸引可能",
+        right: "サイクロン一体式で紙パックを使わずに集じん",
       },
     ],
-    lead: "マキタのコードレス掃除機、軽量・紙パック式のCL107FDSHW（約1.0kg）とウェット・ドライ対応のCL286FD（約3.0kg）を比較します。重量・バッテリー・集じん方式の違いを公式仕様で確認します。",
+    lead: "マキタのコードレス掃除機、10.8V・BL1015採用のCL107FDSHWと、18V・サイクロン一体式のCL286FDを比較します。質量・バッテリー・集じん方式・運転時間は、メーカー公式の仕様表に記載された条件と合わせて確認します。",
     faqEntries: [
       {
         question: "どれくらい軽い？",
         answer:
-          "CL107FDSHWは約1.0kgで片手で持てる軽量設計です。CL286FDは約3.0kgで、ウェット・ドライ対応のため本体が大きめです。",
+          "CL107FDSHWはBL1015装着時1.1kg、CL286FDはバッテリー装着時1.7kgです。質量はバッテリーや付属品の条件をそろえて比較してください。",
       },
       {
-        question: "液体ゴミは吸引できる？",
+        question: "集じん方式はどう違う？",
         answer:
-          "CL286FDはウェット・ドライ対応で、液体ゴミも吸引可能です。CL107FDSHWは紙パック式のため、乾燥したゴミのみが対象です。",
+          "CL107FDSHWは紙パック式、CL286FDはサイクロン一体式です。CL286FDをウェット・ドライ掃除機として扱う公式根拠はないため、液体ゴミには使用しないでください。",
       },
       {
         question: "バッテリーは共通？",
         answer:
-          "現行の公式ページで両モデルの電圧・バッテリー型番を確認できないため、互換性は購入前にメーカー資料で確認してください。",
+          "共通ではありません。CL107FDSHWは10.8V・BL1015、CL286FDは18Vのスライド式バッテリーを使うため、購入前に型番と電圧を確認してください。",
       },
     ],
     decisionGuideSteps: [
-      "毎日手軽に使いたいならCL107（約1.0kg・紙パック式）を選ぶ。",
-      "液体ゴミも吸いたいならCL286（ウェット・ドライ対応）を選ぶ。",
+      "軽さと紙パック式を優先するならCL107（BL1015装着時1.1kg）を選ぶ。",
+      "サイクロン一体式と18Vバッテリーを優先するならCL286（バッテリー装着時1.7kg）を選ぶ。",
       "バッテリーの電圧（10.8V vs 18V）と運転時間を確認する。",
       "価格・在庫を販売ページで確認する。",
     ],
@@ -2195,7 +2195,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     category: "キッチン家電",
     tags: ["キッチン家電", "比較", "公式仕様"],
     audiences: [
-      "オーブンレンジの機能差を確認したい人",
+      "オーブントースターの機能差を確認したい人",
       "パン焼き・加熱調理で選ぶ人",
     ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
@@ -2256,8 +2256,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     category: "キッチン家電",
     tags: ["キッチン家電", "比較", "公式仕様"],
     audiences: [
-      "冷蔵庫の容量とサイズを比較したい人",
-      "冷凍室の使いやすさで選びたい人",
+      "ビストロの容量とサイズを比較したい人",
+      "レンジの使いやすさで選びたい人",
     ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
@@ -2876,7 +2876,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     tags: ["美容・健康", "比較", "公式仕様"],
     audiences: [
       "上位モデルと標準モデルのドライヤー機能差を確認したい人",
-      "Care機能と風量で選びたい人",
+      "ケア機能と風量で選びたい人",
     ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
@@ -2999,7 +2999,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     category: "美容・健康",
     tags: ["美容・健康", "比較", "公式仕様"],
     audiences: [
-      "レイザー式シェーバーの出力とモードを比較したい人",
+      "光美容器の出力とモードを比較したい人",
       "アタッチメント数で選びたい人",
     ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
@@ -3277,7 +3277,7 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     tags: ["PC周辺機器", "比較", "公式仕様"],
     audiences: [
       "中小手向けマウスのサイズと重さを比較したい人",
-      "価格とロジカルロールで選びたい人",
+      "スクロール方式と形状・サイズで選びたい人",
     ],
     uses: ["購入前の比較", "仕様確認", "選び方の整理"],
     summary:
