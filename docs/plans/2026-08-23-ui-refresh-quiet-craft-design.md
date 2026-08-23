@@ -30,13 +30,13 @@
 
 ### 3.1 タイポグラフィ
 
-| 項目 | 現行 | 変更後 |
-| --- | --- | --- |
-| 大型見出しトラッキング（h1/ヒーロー） | -0.05em | -0.01em〜-0.02em |
-| 中見出し（h2/h3） | -0.015em〜-0.03em | -0.005em〜-0.01em |
-| 本文 | 0 | 0（変更なし） |
-| フォントスタック | Inter, system-ui... | Inter + "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", Meiryo を明示 |
-| h1 ウェイト | 900系の乱用 | 800 相当へ統一 |
+| 項目                                  | 現行                | 変更後                                                                              |
+| ------------------------------------- | ------------------- | ----------------------------------------------------------------------------------- |
+| 大型見出しトラッキング（h1/ヒーロー） | -0.05em             | -0.01em〜-0.02em                                                                    |
+| 中見出し（h2/h3）                     | -0.015em〜-0.03em   | -0.005em〜-0.01em                                                                   |
+| 本文                                  | 0                   | 0（変更なし）                                                                       |
+| フォントスタック                      | Inter, system-ui... | Inter + "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Yu Gothic UI", Meiryo を明示 |
+| h1 ウェイト                           | 900系の乱用         | 800 相当へ統一                                                                      |
 
 ### 3.2 カラートークン
 
@@ -66,12 +66,12 @@
 
 ## 4. 実装対象ファイル
 
-| ファイル | 内容 |
-| --- | --- |
-| src/styles/global.css | トークン・タイポ・シャドウ・hover・subsection-heading・比較表 |
-| src/styles/accessibility.css | トークン参照の整合確認 |
-| 各コンポーネント scoped style | フォールバック除去・translateY 廃止の追随 |
-| docs/ui-ux-spec-2026-08.md | §3.1/3.2 へ Quiet Craft 方針を反映 |
+| ファイル                      | 内容                                                          |
+| ----------------------------- | ------------------------------------------------------------- |
+| src/styles/global.css         | トークン・タイポ・シャドウ・hover・subsection-heading・比較表 |
+| src/styles/accessibility.css  | トークン参照の整合確認                                        |
+| 各コンポーネント scoped style | フォールバック除去・translateY 廃止の追随                     |
+| docs/ui-ux-spec-2026-08.md    | §3.1/3.2 へ Quiet Craft 方針を反映                            |
 
 ## 5. 検証
 
