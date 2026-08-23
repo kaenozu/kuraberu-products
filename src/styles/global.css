@@ -329,10 +329,6 @@ a {
   border: 1px solid var(--line);
   background: #fff;
   display: block;
-  transition: transform 0.2s ease;
-}
-.article-list-card:hover .card-thumb {
-  transform: scale(1.02);
 }
 .article-list-card .card-tile {
   width: 132px;
@@ -461,21 +457,16 @@ a {
   padding: clamp(1.25rem, 3vw, 2rem);
   box-shadow: var(--card-shadow-sm);
   transition:
-    transform 160ms ease,
     border-color 160ms ease,
     box-shadow 160ms ease;
 }
 .card:hover {
-  transform: translateY(-2px);
   box-shadow: var(--card-shadow-lg);
   border-color: #d4cec2;
 }
 @media (prefers-reduced-motion: reduce) {
   .card {
     transition: none;
-  }
-  .card:hover {
-    transform: none;
   }
 }
 .card h3 {
@@ -601,18 +592,12 @@ a {
   display: inline-flex;
   align-items: center;
   transition:
-    transform 0.2s,
     background 0.2s,
     box-shadow 0.2s;
 }
 .cta:hover {
   background: #16483d;
-  transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(22, 72, 61, 0.3);
-}
-.cta:hover {
-  background: #16483d;
-  transform: translateY(-2px);
 }
 
 .card a.cta {
@@ -1228,13 +1213,10 @@ a {
   background: var(--surface, #fff);
   border: 1px solid rgba(0, 0, 0, 0.12);
   border-radius: var(--radius-lg);
-  transition:
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 .purchase-card:hover {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  transform: translateY(-2px);
 }
 .purchase-card__main {
   display: flex;
@@ -1304,16 +1286,10 @@ a {
   font: inherit;
   font-weight: 800;
   cursor: pointer;
-  transition:
-    transform 0.15s ease,
-    box-shadow 0.15s ease;
+  transition: box-shadow 0.15s ease;
 }
 .primary-button:hover {
-  transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(176, 76, 59, 0.3);
-}
-.primary-button:active {
-  transform: translateY(0);
 }
 .primary-button:disabled {
   opacity: 0.45;
