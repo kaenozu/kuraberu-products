@@ -1489,6 +1489,8 @@ type CommercialArticleSeed = {
   modifiedAt?: string;
   purchaseLinksCheckedAt?: string;
   purchaseLinkStatus?: "verified" | "unverified";
+  leftPurchaseUrl?: `https://${string}`;
+  rightPurchaseUrl?: `https://${string}`;
   officialSources?: readonly {
     label: string;
     url: `https://${string}`;
@@ -3342,11 +3344,99 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       { label: "重量", left: "185 g", right: "122 g" },
     ],
   },
+  {
+    id: "sony-wf-c500-vs-wf-c700n",
+    title: "ソニー WF-C500とWF-C700N、どっち？｜くらべる商品メモ",
+    headline:
+      "ソニーの完全ワイヤレスイヤホンを比較。ノイズキャンセリング・電池・防滴で選ぶ",
+    description:
+      "ソニー WF-C500とWF-C700Nを、メーカー公式ページで確認できるノイズキャンセリング、連続再生時間、Bluetooth仕様、防滴から比較します。",
+    category: "オーディオ",
+    tags: ["完全ワイヤレスイヤホン", "ソニー", "ノイズキャンセリング"],
+    audiences: [
+      "ノイズキャンセリングの有無で選びたい人",
+      "防滴や電池持続時間を確認したい人",
+    ],
+    uses: ["音楽再生", "通勤・通学", "オンライン通話"],
+    summary:
+      "WF-C500とWF-C700Nを、ノイズキャンセリング、連続再生時間、Bluetooth仕様、防滴の公式記載で比べます。",
+    leftProduct: "ソニー WF-C500",
+    rightProduct: "ソニー WF-C700N",
+    leftPoint:
+      "ノイズキャンセリングを使わず、最大10時間の連続再生を確認したい人向け",
+    rightPoint: "ノイズキャンセリングとIPX4の防滴仕様を重視する人向け",
+    productInfoCheckedAt: "2026-08-23",
+    modifiedAt: "2026-08-23",
+    purchaseLinkStatus: "verified",
+    purchaseLinksCheckedAt: "2026-08-23",
+    leftPurchaseUrl: "https://a.r10.to/h5Tz4y",
+    rightPurchaseUrl: "https://a.r10.to/hkuKk2",
+    officialSources: [
+      {
+        label: "ソニー WF-C500 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WF-C500/",
+      },
+      {
+        label: "ソニー WF-C700N 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WF-C700N/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "ノイズキャンセリング",
+        left: "公式ページに機能の記載なし",
+        right: "搭載",
+      },
+      {
+        label: "連続音声再生時間",
+        left: "最大10時間",
+        right: "最大7.5時間（NCオン）／最大10時間（NCオフ）",
+      },
+      {
+        label: "連続通話時間",
+        left: "最大5.0時間",
+        right: "最大5時間（NCオン）／最大5時間（NCオフ）",
+      },
+      { label: "Bluetooth標準規格", left: "Ver.5.0", right: "Ver.5.2" },
+      {
+        label: "対応プロファイル",
+        left: "A2DP、AVRCP、HFP、HSP",
+        right: "A2DP、AVRCP、HFP、HSP",
+      },
+      { label: "対応コーデック", left: "SBC、AAC", right: "SBC、AAC" },
+      {
+        label: "防滴",
+        left: "今回確認した公式仕様で確認不可",
+        right: "IPX4（ケースを除くヘッドホン本体）",
+      },
+    ],
+    faqEntries: [
+      {
+        question: "WF-C500とWF-C700Nの大きな違いは？",
+        answer:
+          "公式ページで確認できる主な違いは、WF-C700NにノイズキャンセリングとIPX4（ケースを除くヘッドホン本体）の防滴仕様があること、Bluetooth標準規格がWF-C700NはVer.5.2、WF-C500はVer.5.0であることです。",
+      },
+      {
+        question: "連続再生時間が長いのはどっち？",
+        answer:
+          "WF-C500は最大10時間です。WF-C700Nはノイズキャンセリングオン時が最大7.5時間、オフ時が最大10時間です。いずれも公式記載の条件を分けて確認してください。",
+      },
+      {
+        question: "防滴仕様を確認できるのはどっち？",
+        answer:
+          "WF-C700Nは、公式仕様でIPX4（ケースを除くヘッドホン本体）と確認できます。WF-C500の防滴については、今回確認した公式仕様から採用できる値を確認できませんでした。",
+      },
+    ],
+  },
 ];
 
 export const commercialArticleImages: Readonly<
   Record<string, { left?: `/${string}`; right?: `/${string}` }>
 > = {
+  "sony-wf-c500-vs-wf-c700n": {
+    left: "/products/sony-wf-c500.jpg",
+    right: "/products/sony-wf-c700n.jpg",
+  },
   "roborock-qrevo-curv-vs-dreame-x50": {
     left: "/products/roborock-qrevo-curv-vs-dreame-x50-left.jpg",
     right: "/products/roborock-qrevo-curv-vs-dreame-x50-right.jpg",

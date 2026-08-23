@@ -39,8 +39,8 @@ const [leftResolved, rightResolved] = await Promise.all([
     fallbackUrl: rightSearchUrl,
   }),
 ]);
-const leftProductHref = leftResolved.href;
-const rightProductHref = rightResolved.href;
+const leftProductHref = seed.leftPurchaseUrl ?? leftResolved.href;
+const rightProductHref = seed.rightPurchaseUrl ?? rightResolved.href;
 const rows: readonly DifferenceRow[] = seed.verifiedRows?.length
   ? seed.verifiedRows
   : [
@@ -93,7 +93,7 @@ const faq = seed.faqEntries?.length
       },
     ];
 ---
-<BaseLayout title={article.title} description={article.description} article={article}>
+<BaseLayout title={article.title} description={article.description} article={article} faq={faq}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
     <h1>{article.headline}</h1>

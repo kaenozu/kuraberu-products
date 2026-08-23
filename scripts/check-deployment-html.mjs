@@ -170,7 +170,7 @@ for (const file of htmlFiles) {
       }
     }
     for (const block of structuredBlocks) {
-      const allowedTypes = ["Article", "WebPage", "BreadcrumbList"];
+      const allowedTypes = ["Article", "WebPage", "BreadcrumbList", "FAQPage"];
       if (!allowedTypes.includes(block["@type"])) {
         errors.push(`${file}: unsupported JSON-LD type ${block["@type"]}`);
       }

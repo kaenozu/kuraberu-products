@@ -104,6 +104,13 @@
 
 これまで「次の候補」に挙げていたパナソニック衣類乾燥除湿機・ティファール電気ケトル・シャープ空気清浄機・コンビチャイルドシートはすべて公開済みです。次は非育児カテゴリ（生活雑貨・デスク用品・キッチン家電など）から、公式ページで比較軸を裏取りできる2商品ペアを選定する。
 
+### ソニー WF-C500 vs WF-C700N（実装・PR準備中）
+
+- 記事slug: `sony-wf-c500-vs-wf-c700n`
+- 公式ページ: [WF-C500](https://www.sony.jp/headphone/products/WF-C500/) / [WF-C700N](https://www.sony.jp/headphone/products/WF-C700N/)
+- 公式確認日: 2026-08-23
+- 状態: 専用worktreeで実装中。楽天公式UIの画面表示で短縮URL2本を確認済み。
+
 ### パナソニック NE-FL1A vs NE-FL1C（公開済み）
 
 - 記事slug: `panasonic-ne-fl1a-vs-ne-fl1c`
