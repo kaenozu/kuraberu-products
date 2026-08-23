@@ -10,6 +10,7 @@
   background: #faf9f5;
   line-height: 1.75;
   --ink: #1a2f23;
+  --ink-soft: #55605a;
   --muted: #424843;
   --line: #e5e1d8;
   --paper: #fff;
@@ -44,9 +45,12 @@
     #f7f3ed 40%,
     #fdf2ef 100%
   );
-  --card-shadow-sm: 0 1px 3px rgba(26, 47, 35, 0.06);
-  --card-shadow-md: 0 4px 16px rgba(26, 47, 35, 0.08);
-  --card-shadow-lg: 0 8px 32px rgba(26, 47, 35, 0.1);
+  --card-shadow-sm:
+    0 1px 2px rgba(26, 47, 35, 0.04), 0 1px 3px rgba(26, 47, 35, 0.06);
+  --card-shadow-md:
+    0 2px 4px rgba(26, 47, 35, 0.04), 0 8px 24px rgba(26, 47, 35, 0.07);
+  --card-shadow-lg:
+    0 4px 8px rgba(26, 47, 35, 0.04), 0 12px 32px rgba(26, 47, 35, 0.09);
   --section-alt: #f5f7f4;
   --accent-soft: rgba(176, 76, 59, 0.08);
   --accent-glow: rgba(176, 76, 59, 0.15);
@@ -421,7 +425,7 @@ a {
 .category-list__count {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--ink-soft, inherit);
+  color: var(--ink-soft);
   white-space: nowrap;
 }
 .section {
@@ -708,7 +712,7 @@ a {
 }
 /* コンテンツタイプ（商品ガイド / 比較記事）のタグ。カテゴリタグの補助なので控えめにする */
 .tag--type {
-  color: var(--ink-soft, inherit);
+  color: var(--ink-soft);
   font-weight: 700;
 }
 .article h1 {
@@ -1192,7 +1196,7 @@ a {
 }
 .cta-card-sub {
   font-size: 0.85rem;
-  color: var(--ink-soft, #666);
+  color: var(--ink-soft);
 }
 .ad-note {
   font-size: 0.78rem;
@@ -1252,7 +1256,7 @@ a {
 .purchase-card__audience {
   margin: 0;
   font-size: 0.9rem;
-  color: var(--ink-soft, #555);
+  color: var(--ink-soft);
   line-height: 1.5;
 }
 .purchase-card__note {
