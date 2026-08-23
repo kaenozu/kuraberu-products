@@ -38,15 +38,15 @@
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@playwright/test": "^1.62.1",
-    "@typescript-eslint/parser": "8.65.0",
-    "@vitest/coverage-v8": "4.1.10",
+    "@typescript-eslint/parser": "8.67.0",
+    "@vitest/coverage-v8": "4.1.11",
     "cookie": "2.0.1",
-    "eslint": "10.8.0",
-    "eslint-plugin-astro": "3.0.1",
+    "eslint": "10.8.1",
+    "eslint-plugin-astro": "3.1.0",
     "prettier": "3.9.6",
     "serve": "^14.2.6",
-    "typescript-eslint": "8.65.0",
-    "vitest": "4.1.10",
+    "typescript-eslint": "8.67.0",
+    "vitest": "4.1.11",
     "wrangler": "^4.123.0",
     "yaml": "^2.9.0"
   }
