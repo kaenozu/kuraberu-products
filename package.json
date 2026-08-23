@@ -32,21 +32,21 @@
     "verify": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/report-css-usage.mjs --fail-on-unused && astro build && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/check-article-factual-integrity.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run --coverage"
   },
   "dependencies": {
-    "astro": "7.2.0",
+    "astro": "7.2.4",
     "typescript": "5.9.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@playwright/test": "^1.62.1",
-    "@typescript-eslint/parser": "8.65.0",
-    "@vitest/coverage-v8": "4.1.10",
+    "@typescript-eslint/parser": "8.67.0",
+    "@vitest/coverage-v8": "4.1.11",
     "cookie": "2.0.1",
-    "eslint": "10.8.0",
-    "eslint-plugin-astro": "3.0.1",
+    "eslint": "10.8.1",
+    "eslint-plugin-astro": "3.1.0",
     "prettier": "3.9.6",
     "serve": "^14.2.6",
-    "typescript-eslint": "8.65.0",
-    "vitest": "4.1.10",
+    "typescript-eslint": "8.67.0",
+    "vitest": "4.1.11",
     "wrangler": "^4.123.0",
     "yaml": "^2.9.0"
   }
