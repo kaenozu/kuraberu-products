@@ -37,14 +37,19 @@ function extractArticleBlock(content, articleId) {
 function main() {
   const content = readFileSync(ARTICLES_FILE, "utf8");
   const articles = extractArticleIds(content);
-  console.log(`Checking ${articles.length} articles for factual integrity...\n`);
+  console.log(
+    `Checking ${articles.length} articles for factual integrity...\n`,
+  );
 
   const issues = [];
   let checked = 0;
 
   for (const id of articles) {
     const block = extractArticleBlock(content, id);
-    if (!block) { console.warn(`  ⚠ Could not extract: ${id}`); continue; }
+    if (!block) {
+      console.warn(`  ⚠ Could not extract: ${id}`);
+      continue;
+    }
     checked++;
 
     for (const c of MISCLASSIFICATION_CHECKS) {
@@ -57,14 +62,19 @@ function main() {
       const sm = block.match(/summary:\s*"([^"]+)"/);
       for (const f of [am?.[1], sm?.[1]].filter(Boolean)) {
         if (pat.test(f))
-          issues.push({ severity: "BLOCKER", articleId: id, message: `未完成状態の文言が残存: "${pat.source}"` });
+          issues.push({
+            severity: "BLOCKER",
+            articleId: id,
+            message: `未完成状態の文言が残存: "${pat.source}"`,
+          });
       }
     }
   }
 
   console.log(`Checked ${checked} articles.`);
   if (issues.length > 0) {
-    for (const i of issues) console.error(`  ❌ [${i.severity}] ${i.articleId}: ${i.message}`);
+    for (const i of issues)
+      console.error(`  ❌ [${i.severity}] ${i.articleId}: ${i.message}`);
     console.error(`\n${issues.length} issue(s) found.`);
     process.exit(1);
   } else {
