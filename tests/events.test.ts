@@ -212,6 +212,42 @@ describe("click analytics endpoint", () => {
     expect(response.status).toBe(413);
   });
 
+  it("aborts an oversized chunked body without Content-Length (#390)", async () => {
+    // ヘッダー無しの巨大本文でも、フル読込せず累積上限で中断して 413 を返す。
+    const { kv, put } = makeKv();
+    const big = JSON.stringify({
+      event: "purchase",
+      productId: "x".repeat(8000),
+      placement: "article-end",
+    });
+    const response = await onRequestPost(
+      context(postRequest(big), baseEnv(undefined, kv)),
+    );
+    expect(response.status).toBe(413);
+    expect(put).not.toHaveBeenCalled();
+  });
+
+  it("accepts a payload just under the cumulative limit", async () => {
+    const { kv, put } = makeKv();
+    const response = await onRequestPost(
+      context(
+        postRequest(
+          JSON.stringify({
+            event: "purchase",
+            productId: "x".repeat(64),
+            placement: "article-end",
+            path: "/articles/moony-m/",
+            // 未検証の追加フィールドで上限直下まで本文を膨らませる
+            pad: "x".repeat(3900),
+          }),
+        ),
+        baseEnv(undefined, kv),
+      ),
+    );
+    expect(response.status).toBe(204);
+    expect(put).toHaveBeenCalledTimes(1);
+  });
+
   it("returns 429 with Retry-After when rate limited and does not persist", async () => {
     const { limiter } = makeLimiter({ success: false, reset_after: 30 });
     const { kv, put } = makeKv();
