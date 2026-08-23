@@ -96,7 +96,7 @@ const discoveryIndex = discoverySource.map((article) => ({
     </form>
     <p class="meta" aria-live="polite" data-discovery-count>{totalCount}件の記事{countNote}</p>
 
-    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex)}></script>
+    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex).replaceAll('<', '\\u003c')}></script>
     <div class="article-list" data-discovery-results>
       {articles.map((article) => (
         <ArticleCard
