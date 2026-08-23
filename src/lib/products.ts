@@ -326,6 +326,14 @@ export const articlePurchaseLinks = {
     name: "パナソニック ES-LV7J",
     purchaseUrl: "https://a.r10.to/hg2U2Z",
   },
+  "panasonic-es-l690u-vs-es-p690u:left": {
+    name: "パナソニック ES-L690U",
+    purchaseUrl: "https://a.r10.to/hg0evK",
+  },
+  "panasonic-es-l690u-vs-es-p690u:right": {
+    name: "パナソニック ES-P690U",
+    purchaseUrl: "https://a.r10.to/hPUDk7",
+  },
   "shupot:left": {
     name: "ピジョン 電動鼻吸い器 シュポット 電動 シュポット",
     purchaseUrl: "https://a.r10.to/hglrVW",

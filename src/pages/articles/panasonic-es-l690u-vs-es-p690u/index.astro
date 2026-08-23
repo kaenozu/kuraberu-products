@@ -1,0 +1,68 @@
+---
+import { articlePurchaseLinks } from "../../../lib/products";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import RelatedArticles from "../../../components/RelatedArticles.astro";
+import PurchaseCard from "../../../components/PurchaseCard.astro";
+import ComparisonMemoButton from "../../../components/ComparisonMemoButton.astro";
+import ArticleComparisonV2 from "../../../components/ArticleComparisonV2.astro";
+import ArticleSocialProof from "../../../components/ArticleSocialProof.astro";
+import { panasonicShaverEsL690uVsEsP690uArticle as articleMetadata } from "../../../content/articles";
+import type { KeyDiffRow } from "../../../components/VisualKeyDifferences.astro";
+
+const leftOfficial = "https://panasonic.jp/shaver/products/ES-L690U.html";
+const leftSpec = "https://panasonic.jp/shaver/products/ES-L690U/spec.html";
+const rightOfficial = "https://panasonic.jp/shaver/products/ES-P690U.html";
+const rightSpec = "https://panasonic.jp/shaver/products/ES-P690U/spec.html";
+const leftImage = "/products/panasonic-es-l690u.jpg";
+const rightImage = "/products/panasonic-es-p690u.jpg";
+const leftAudience = "大型の本体でも6枚刃と洗浄充電器を確認したい人向け";
+const rightAudience = "手に収まりやすい寸法と軽さを確認したい人向け";
+const faqEntries = [
+  { question: "ES-L690UとES-P690Uの大きな違いは？", answer: "公式仕様では、本体寸法と質量が異なります。ES-L690Uは高さ18.1×幅7.2×奥行5.8cm・約230g、ES-P690Uは高さ5.9×幅7.2×奥行4.9cm・約180gです。" },
+  { question: "軽いのはどちら？", answer: "公式仕様では、ES-P690Uが約180g、ES-L690Uが約230gです。どちらもキャップを除く質量です。" },
+  { question: "防水仕様と使用日数は同じ？", answer: "公式仕様では、どちらも防水設計（IPX7基準）で、フル充電し1日1回約3分間の使用で約14日間使用可能です。" },
+  { question: "楽天市場の価格は比較できる？", answer: "価格・在庫・ポイント・送料は変動するため、型番検索ページで購入時点の表示を確認してください。" },
+];
+const keyDiffRows: KeyDiffRow[] = [
+  { label: "本体質量（キャップ除く）", left: "約230g", right: "約180g", highlight: "right", highlightNote: "約50g軽い" },
+  { label: "本体寸法（高さ×幅×奥行）", left: "18.1×7.2×5.8cm", right: "5.9×7.2×4.9cm" },
+  { label: "防水・使用日数", left: "IPX7基準・約14日間", right: "IPX7基準・約14日間" },
+  { label: "刃数", left: "6枚刃", right: "6枚刃" },
+];
+---
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / 美容家電 · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
+    <h1>{articleMetadata.headline}</h1>
+    <ComparisonMemoButton articleId={articleMetadata.id} />
+    <p class="lead">パナソニックのラムダッシュPRO 6枚刃 ES-L690Uとラムダッシュ パームインPRO 6枚刃 ES-P690Uを、公式ページで確認できる本体寸法・質量・防水仕様・使用日数で比較します。価格は販売先でご確認ください。</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">どっち向き？</a><a href="#faq">FAQ</a></nav>
+    <ArticleComparisonV2
+      left={{ brand: "パナソニック", line: "ES-L690U", tagline: "6枚刃と洗浄充電器なら", image: leftImage, imageAlt: "パナソニック ラムダッシュPRO 6枚刃 ES-L690U", imageWidth: 1200, imageHeight: 630, officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-es-l690u-vs-es-p690u:left'].purchaseUrl }}
+      right={{ brand: "パナソニック", line: "ES-P690U", tagline: "軽さと手に収まりやすい寸法なら", image: rightImage, imageAlt: "パナソニック ラムダッシュ パームインPRO 6枚刃 ES-P690U", imageWidth: 1200, imageHeight: 630, officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-es-l690u-vs-es-p690u:right'].purchaseUrl }}
+      rows={keyDiffRows}
+      checkedAt={articleMetadata.productInfoCheckedAt}
+    />
+
+    <details class="fold-section" id="specs" open><summary>詳細仕様（公式ページで確認した項目）</summary><details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">ES-L690U</th><th scope="col">ES-P690U</th><th scope="col">根拠</th></tr></thead><tbody>
+      <tr><th scope="row">本体寸法（高さ×幅×奥行）</th><td data-label="ES-L690U">18.1×7.2×5.8cm（キャップ除く）</td><td data-label="ES-P690U">5.9×7.2×4.9cm（キャップ除く）</td><td data-label="根拠"><a href={leftSpec} target="_blank" rel="noopener noreferrer">ES-L690U仕様</a> / <a href={rightSpec} target="_blank" rel="noopener noreferrer">ES-P690U仕様</a></td></tr>
+      <tr><th scope="row">質量</th><td data-label="ES-L690U">約230g（キャップ除く）</td><td data-label="ES-P690U">約180g（キャップ除く）</td><td data-label="根拠">各公式仕様ページ</td></tr>
+      <tr><th scope="row">刃数</th><td data-label="ES-L690U">6枚刃</td><td data-label="ES-P690U">6枚刃</td><td data-label="根拠">各公式商品ページ</td></tr>
+      <tr><th scope="row">防水</th><td data-label="ES-L690U">防水設計（IPX7基準）</td><td data-label="ES-P690U">防水設計（IPX7基準）</td><td data-label="根拠">各公式商品ページ</td></tr>
+      <tr><th scope="row">使用日数</th><td data-label="ES-L690U">約14日間（1日1回約3分間）</td><td data-label="ES-P690U">約14日間（1日1回約3分間）</td><td data-label="根拠">各公式仕様ページ</td></tr>
+    </tbody></table></div><p class="meta">価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。</p></details>
+    <h2 id="official">公式情報</h2><p>比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した情報です。公式情報確認済み：{articleMetadata.productInfoCheckedAt}。</p>
+    <div class="source-links"><a class="card-link" href={leftOfficial} target="_blank" rel="noopener noreferrer">ES-L690U 公式商品ページ →</a><a class="card-link" href={rightOfficial} target="_blank" rel="noopener noreferrer">ES-P690U 公式商品ページ →</a></div>
+    <ArticleSocialProof query="パナソニック ES-L690U ES-P690U" checkedAt="2026-08-23" hasPosts={false} />
+    <h2 id="faq">よくある質問</h2><div class="faq-list">{faqEntries.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}</div>
+    <h2>購入時の注意</h2><p>本体寸法、質量、防水仕様、使用日数、付属品を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。</p>
+    <div class="purchase-cards">
+      <PurchaseCard name="パナソニック ES-L690U" audience={leftAudience} href={articlePurchaseLinks['panasonic-es-l690u-vs-es-p690u:left'].purchaseUrl} imagePath={leftImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+      <PurchaseCard name="パナソニック ES-P690U" audience={rightAudience} href={articlePurchaseLinks['panasonic-es-l690u-vs-es-p690u:right'].purchaseUrl} imagePath={rightImage} placement="article-end" note="価格・在庫は販売先でご確認ください。" />
+    </div>
+    <h2>更新履歴</h2><ol class="change-log">{articleMetadata.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}</ol>
+    <h2>情報源一覧</h2><ul class="source-list"><li><a href={leftOfficial} target="_blank" rel="noopener noreferrer">パナソニック ES-L690U 公式商品ページ</a> / <a href={leftSpec} target="_blank" rel="noopener noreferrer">仕様</a>（2026-08-23確認）</li><li><a href={rightOfficial} target="_blank" rel="noopener noreferrer">パナソニック ES-P690U 公式商品ページ</a> / <a href={rightSpec} target="_blank" rel="noopener noreferrer">仕様</a>（2026-08-23確認）</li></ul>
+    <h2>調査方法・免責事項</h2><p>この比較は、パナソニック公式の商品ページと仕様ページで確認できる情報を根拠にしています。SNSの感想は比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={articleMetadata.path} currentCategory={articleMetadata.category} />
+</BaseLayout>

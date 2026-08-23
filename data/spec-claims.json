@@ -326,6 +326,16 @@
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sa/"
       ],
       "note": ""
+    },
+    {
+      "articleId": "panasonic-es-l690u-vs-es-p690u",
+      "checkedAt": "2026-08-23",
+      "claimsFingerprint": "sha256:2ac0edc9a715a54977b0c5e633cfb646f8c11a458d484749e3c6e2aed3dab540",
+      "officialUrls": [
+        "https://panasonic.jp/shaver/products/ES-L690U.html",
+        "https://panasonic.jp/shaver/products/ES-P690U.html"
+      ],
+      "note": ""
     }
   ]
 }

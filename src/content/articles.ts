@@ -1005,6 +1005,40 @@ export const panasonicShaverEsLt4bVsEsLv7jArticle = defineArticleMetadata({
   ],
 });
 
+export const panasonicShaverEsL690uVsEsP690uArticle = defineArticleMetadata({
+  id: "panasonic-es-l690u-vs-es-p690u",
+  productCount: 2,
+  path: "/articles/panasonic-es-l690u-vs-es-p690u/",
+  title: "パナソニック ES-L690U と ES-P690U、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックの6枚刃ラムダッシュ、どっち？「ES-L690U」と「ES-P690U」を比較",
+  description:
+    "パナソニック ES-L690UとES-P690Uを、公式の本体寸法・質量・防水仕様・使用日数で比較",
+  category: "美容家電",
+  tags: ["シェーバー", "ラムダッシュ", "パナソニック"],
+  audiences: ["6枚刃の本体仕様を確認したい人", "軽さと寸法を優先したい人"],
+  uses: ["毎日ひげを剃る", "本体寸法で選ぶ", "本体重量で選ぶ"],
+  summary:
+    "ES-L690UとES-P690Uを、パナソニック公式の本体寸法・質量・防水仕様・使用日数に分けて比較します。",
+  publishedAt: "2026-08-23",
+  modifiedAt: "2026-08-23",
+  productInfoCheckedAt: "2026-08-23",
+  purchaseLinksCheckedAt: "2026-08-23",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-es-l690u.jpg",
+  aboutProductNames: [
+    "パナソニック ラムダッシュPRO 6枚刃 ES-L690U",
+    "パナソニック ラムダッシュ パームインPRO 6枚刃 ES-P690U",
+  ],
+  changeLog: [
+    {
+      date: "2026-08-23",
+      summary:
+        "初回実装。パナソニック公式の商品ページ・仕様ページ、公式画像、楽天公式生成画面の短縮URLを確認。",
+    },
+  ],
+});
+
 export const thermosTigerBottleArticle = defineArticleMetadata({
   id: "thermos-tiger-bottle",
   productCount: 2,
@@ -3663,6 +3697,7 @@ export const articleMetadata = Object.freeze([
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
   panasonicShaverEsLt4bVsEsLv7jArticle,
+  panasonicShaverEsL690uVsEsP690uArticle,
   sharpKcS50VsFuS50Article,
   thermosTigerBottleArticle,
   yamazakiTowerDeskPanelArticle,

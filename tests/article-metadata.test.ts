@@ -42,6 +42,7 @@ import {
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
   panasonicShaverEsLt4bVsEsLv7jArticle,
+  panasonicShaverEsL690uVsEsP690uArticle,
   thermosKfm020VsKfi020Article,
   tigerMtaJ050GuideArticle,
   panasonicEhNa9mVsEhNa7mArticle,
@@ -61,7 +62,7 @@ function extractJsonLd(html: string): Record<string, unknown>[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(67);
+    expect(publicArticleMetadata).toHaveLength(68);
     const newlyPublishedIds = [
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
@@ -158,6 +159,7 @@ describe("article metadata", () => {
       panasonicNeFl1aVsNeFl1cArticle,
       panasonicAirCleanerArticle,
       panasonicShaverEsLt4bVsEsLv7jArticle,
+      panasonicShaverEsL690uVsEsP690uArticle,
       sharpKcS50VsFuS50Article,
       thermosTigerBottleArticle,
       yamazakiTowerDeskPanelArticle,
@@ -205,7 +207,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(79);
+    ).toHaveLength(80);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
