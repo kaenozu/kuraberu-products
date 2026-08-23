@@ -531,14 +531,14 @@ a {
   z-index: 2;
 }
 .comparison thead th:nth-child(2) {
-  background: linear-gradient(180deg, #ddeae5, #e6efec);
-  color: #1d4a41;
-  font-weight: 800;
+  background: #edf3f0;
+  color: #2a4a41;
+  font-weight: 700;
 }
 .comparison thead th:nth-child(3) {
-  background: linear-gradient(180deg, #f0dfd3, #f6e8de);
-  color: #7c4a2b;
-  font-weight: 800;
+  background: #f5ede7;
+  color: #5d4433;
+  font-weight: 700;
 }
 .comparison tbody td:nth-child(2) {
   background: #f3f8f6;
