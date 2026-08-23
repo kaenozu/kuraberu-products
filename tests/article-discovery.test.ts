@@ -57,6 +57,12 @@ describe("article discovery", () => {
       "q=%E6%96%B0%E7%94%9F%E5%85%90&tag=%E7%B4%99%E3%81%8A%E3%82%80%E3%81%A4",
     );
   });
+  it("escapes discovery JSON before embedding it in an application/json script", () => {
+    const source = readFileSync("src/components/ArticleListPage.astro", "utf8");
+    expect(source).toContain(
+      "set:html={JSON.stringify(discoveryIndex).replaceAll('<', '\\\\u003c')}",
+    );
+  });
 });
 
 // 実ビルド（astro build）後の dist を検証する。dist が無い環境では
