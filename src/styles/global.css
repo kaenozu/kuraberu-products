@@ -5,6 +5,10 @@
     system-ui,
     -apple-system,
     "Segoe UI",
+    "Hiragino Kaku Gothic ProN",
+    "Hiragino Sans",
+    "Yu Gothic",
+    "Noto Sans JP",
     sans-serif;
   color: #1b1c1a;
   background: #faf9f5;
@@ -83,8 +87,8 @@ a {
   min-height: 72px;
 }
 .brand {
-  font-weight: 900;
-  letter-spacing: -0.04em;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   text-decoration: none;
   font-size: 1.2rem;
 }
@@ -165,7 +169,7 @@ a {
 .article-index h1 {
   font-size: clamp(2.4rem, 6vw, 4.8rem);
   line-height: 1.08;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.015em;
   margin: 0 0 1.25rem;
   text-wrap: balance;
 }
@@ -438,7 +442,7 @@ a {
 }
 .section h2 {
   font-size: clamp(1.7rem, 3vw, 2.5rem);
-  letter-spacing: -0.05em;
+  letter-spacing: -0.015em;
   line-height: 1.1;
   margin: 0 0 1.5rem;
   text-wrap: balance;
@@ -446,7 +450,7 @@ a {
 .section-intro h1 {
   font-size: clamp(2.4rem, 6vw, 4.6rem);
   line-height: 1.08;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.015em;
   margin: 0 0 1rem;
   text-wrap: balance;
 }
@@ -718,7 +722,7 @@ a {
 .article h1 {
   font-size: clamp(2rem, 5vw, 3.8rem);
   line-height: 1.2;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
   text-wrap: balance;
 }
 /* 長い日本語商品名でもスマホのファーストビューがタイトルだけにならないよう上限を抑える。
