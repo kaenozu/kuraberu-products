@@ -73,7 +73,7 @@ function validPage(body: string) {
   // ヘッダーリンクはアンカー（#）にして broken-internal-link 検知を避ける。
   return `<!doctype html>
 <html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.invalid/"><meta name="comparison-card-labels" content="present"></head>
-<body><header><div class="wrap nav"><a class="brand" href="#">Fixture</a><details class="nav-toggle"><summary></summary><nav class="navlinks"><a href="#menu">比較記事</a></nav></details></div></header><main><h1>Fixture</h1>${body}</main></body></html>`;
+<body><header><div class="wrap nav"><a class="brand" href="#">Fixture</a><details class="nav-toggle"><summary></summary><nav class="navlinks"><a href="#menu">比較記事</a></nav></details></div></header><p class="meta">カテゴリ・2026-01-01</p><main><h1>Fixture</h1>${body}</main></body></html>`;
 }
 
 function sectionsOf(html: string) {
@@ -358,7 +358,7 @@ describe("article product count meta", () => {
     writeFileSync(
       path.join(articlesDir, "index.html"),
       validPage(
-        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><p class="trust-line">広告を含みます</p>${nextStepBlockFixture()}${twoEndCtas}`,
+        `<meta name="article:product-count" content="2"><meta name="article:content-type" content="comparison"><p class="trust-line">広告を含みます</p>${nextStepBlockFixture()}<h2 id="faq">FAQ</h2><div class="purchase-cards">${twoEndCtas}</div><ol class="change-log"><li>更新</li></ol>`,
       ),
     );
 
