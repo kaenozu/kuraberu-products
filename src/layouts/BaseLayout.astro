@@ -4,6 +4,7 @@ import '../styles/accessibility.css';
 import {site} from '../config/site';
 import type {ArticleMetadata} from '../content/articles';
 import {contentTypeFor} from '../../config/article-layout.mjs';
+import {safeJsonForScript} from '../lib/safe-json';
 
 interface Props {
   title?: string;
@@ -70,10 +71,10 @@ const structuredData = resolvedOgType === 'article'
         url: site.url,
       },
     };
-const structuredDataJson = JSON.stringify(structuredData).replaceAll('<', '\\u003c');
+const structuredDataJson = safeJsonForScript(structuredData);
 
 const breadcrumbStructuredData = article
-  ? JSON.stringify({
+  ? safeJsonForScript({
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
@@ -96,7 +97,7 @@ const breadcrumbStructuredData = article
           item: canonical,
         },
       ],
-    }).replaceAll('<', '\\u003c')
+    })
   : undefined;
 ---
 <html lang="ja">

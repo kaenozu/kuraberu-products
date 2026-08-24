@@ -3,6 +3,7 @@ import type { ArticleMetadata } from '../content/articles';
 import ArticleCard from './ArticleCard.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { normalizeDiscoveryText } from '../lib/article-discovery';
+import { safeJsonForScript } from '../lib/safe-json';
 import { comparisonSubjects } from '../lib/article-subjects';
 
 type ArticleListPagination =
@@ -96,7 +97,7 @@ const discoveryIndex = discoverySource.map((article) => ({
     </form>
     <p class="meta" aria-live="polite" data-discovery-count>{totalCount}件の記事{countNote}</p>
 
-    <script is:inline type="application/json" data-discovery-index set:html={JSON.stringify(discoveryIndex).replaceAll('<', '\\u003c')}></script>
+    <script is:inline type="application/json" data-discovery-index set:html={safeJsonForScript(discoveryIndex)}></script>
     <div class="article-list" data-discovery-results>
       {articles.map((article) => (
         <ArticleCard
