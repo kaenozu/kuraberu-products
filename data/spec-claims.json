@@ -319,6 +319,16 @@
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sa/"
       ],
       "note": ""
+    },
+    {
+      "articleId": "panasonic-mc-nx810km-vs-mc-nx700k",
+      "checkedAt": "2026-08-24",
+      "claimsFingerprint": "sha256:4cb14237a097bf61aceadf74478c7dcaf90e837fffbedf23dcb8b82bdf1525ed",
+      "officialUrls": [
+        "https://panasonic.jp/soji/products/MC-NX700K/spec.html",
+        "https://panasonic.jp/soji/products/MC-NX810KM/spec.html"
+      ],
+      "note": ""
     }
   ]
 }
