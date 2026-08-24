@@ -448,6 +448,7 @@ describe("verified CTA destination audit (issue #342)", () => {
     const failing = async () => {
       throw new Error("DNS lookup failed");
     };
+    const failingFetchImpl = failing as unknown as typeof fetch;
     const options = {
       urls: [
         { article: "a", key: "a:left", url: "https://down.example.com/x" },
