@@ -1,12 +1,21 @@
 import { describe, expect, it } from "vitest";
 import {
+  ALLOWED_OUTBOUND_HOSTS,
+  MAX_REDIRECT_HOPS,
+  auditVerifiedCtaDestinations,
   checkArticleSource,
   checkPurchaseLinkConsistency,
+  collectVerifiedCtaUrls,
   countPurchaseLinkStatuses,
   extractNextStepHrefs,
   extractPurchaseCardHrefs,
+  hostnameOf,
   keyFromRef,
+  loadPurchaseLinkStatusesFromSource,
+  loadRegistryEntries,
   loadRegistryKeys,
+  outboundHostAllowlist,
+  resolveFinalUrl,
 } from "../scripts/check-purchase-link-consistency.mjs";
 import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
@@ -212,3 +221,295 @@ describe("purchase link consistency gate (registry keys)", () => {
     }
   });
 });
+
+// Issue #342: verified CTA の最終遷移先検証。
+type StubResponse = {
+  status: number;
+  headers: Map<string, string>;
+  url?: string;
+};
+
+function stubFetch(
+  routes: Record<string, StubResponse>,
+  calls: { url: string; init?: RequestInit }[] = [],
+) {
+  return async (url: string, init?: RequestInit) => {
+    calls.push({ url, init });
+    const route = routes[url];
+    if (!route) throw new Error(`unexpected request: ${url}`);
+    return route;
+  };
+}
+
+const redirect = (location: string): StubResponse => ({
+  status: 302,
+  headers: new Map([["location", location]]),
+});
+
+describe("verified CTA destination audit (issue #342)", () => {
+  it("keeps every registry purchase URL resolvable, including constant references", () => {
+    const entries = loadRegistryEntries("src");
+    expect(entries.size).toBeGreaterThan(40);
+    for (const [key, url] of entries) {
+      expect(key).toMatch(/:(left|right|card)$/);
+      expect(url).toMatch(/^https:\/\//);
+    }
+    // 商品定数参照（thermosJnlS500.rakutenUrl 等）も解決できる
+    expect(entries.get("thermos-tiger-bottle:left")).toMatch(/^https:\/\//);
+    expect(loadRegistryKeys("src").size).toBe(entries.size);
+  });
+
+  it("parses id → purchaseLinkStatus pairs from registry source", () => {
+    const statuses = loadPurchaseLinkStatusesFixture();
+    expect(statuses.get("a")).toBe("verified");
+    expect(statuses.get("b")).toBeUndefined();
+    expect(statuses.get("c")).toBe("unverified");
+  });
+
+  it("collects outbound URLs only from verified articles via registry references", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-dest-"));
+    try {
+      writeSrcTree(directory, [
+        {
+          slug: "sample-vs-other",
+          source: `<ArticleComparisonV2
+  left={{ purchaseHref: articlePurchaseLinks['sample-vs-other:left'].purchaseUrl }}
+  right={{ purchaseHref: articlePurchaseLinks['sample-vs-other:right'].purchaseUrl }}
+/>
+<PurchaseCard href={articlePurchaseLinks['sample-vs-other:left'].purchaseUrl} />
+<PurchaseCard href={articlePurchaseLinks['sample-vs-other:right'].purchaseUrl} />`,
+        },
+        {
+          slug: "draft-vs-other",
+          source: `<PurchaseCard href={articlePurchaseLinks['sample-vs-other:left'].purchaseUrl} />`,
+        },
+      ]);
+      const { ctas } = collectVerifiedCtaUrls({ srcDirectory: directory });
+      // draft-vs-other は unverified のため除外、重複キーは 1 度だけ
+      expect(ctas).toEqual([
+        {
+          article: "sample-vs-other",
+          key: "sample-vs-other:left",
+          url: "https://a.r10.to/AAA",
+        },
+        {
+          article: "sample-vs-other",
+          key: "sample-vs-other:right",
+          url: "https://ext.example.com/go",
+        },
+      ]);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("normalizes hostnames and builds the allowlist from required + registry hosts", () => {
+    expect(hostnameOf("https://Example.com./x")).toBe("example.com");
+    expect(hostnameOf("not a url")).toBeNull();
+    const allowlist = outboundHostAllowlist([
+      "https://hb.afl.rakuten.co.jp/hgc/x",
+      "https://a.r10.to/abc",
+    ]);
+    for (const host of ALLOWED_OUTBOUND_HOSTS)
+      expect(allowlist.has(host)).toBe(true);
+    expect(allowlist.size).toBe(ALLOWED_OUTBOUND_HOSTS.length);
+  });
+
+  it("accepts an allowlisted initial host without touching the network", async () => {
+    const calls: { url: string; init?: RequestInit }[] = [];
+    const fetchImpl = stubFetch({}, calls);
+    const audit = await auditVerifiedCtaDestinations({
+      urls: [{ article: "a", key: "a:left", url: "https://a.r10.to/h58jf3" }],
+      allowlist: outboundHostAllowlist(),
+      fetchImpl,
+    });
+    expect(audit.errors).toEqual([]);
+    expect(audit.warnings).toEqual([]);
+    expect(calls).toHaveLength(0);
+    expect(audit.checked[0].result).toBe("allowlisted-initial");
+  });
+
+  it("follows redirects up to the hop cap and accepts an allowlisted final host", async () => {
+    const calls: { url: string; init?: RequestInit }[] = [];
+    const fetchImpl = stubFetch(
+      {
+        "https://promo.example.com/1": redirect("https://mid.example.com/2"),
+        "https://mid.example.com/2": redirect("/3"),
+        "https://mid.example.com/3": {
+          status: 200,
+          headers: new Map(),
+          url: "https://hb.afl.rakuten.co.jp/landing",
+        },
+      },
+      calls,
+    );
+    const audit = await auditVerifiedCtaDestinations({
+      urls: [
+        { article: "a", key: "a:left", url: "https://promo.example.com/1" },
+      ],
+      allowlist: outboundHostAllowlist(),
+      fetchImpl,
+    });
+    expect(audit.errors).toEqual([]);
+    expect(calls.map((call) => call.init?.method)).toEqual([
+      "HEAD",
+      "HEAD",
+      "HEAD",
+    ]);
+    expect(audit.checked[0]).toMatchObject({
+      result: "resolved",
+      finalHost: "hb.afl.rakuten.co.jp",
+      hops: 2,
+    });
+  });
+
+  it("fails closed when the final host is outside the allowlist", async () => {
+    const fetchImpl = stubFetch({
+      "https://promo.example.com/1": redirect(
+        "https://tracker.example.net/buy",
+      ),
+      "https://tracker.example.net/buy": {
+        status: 200,
+        headers: new Map(),
+      },
+    });
+    const audit = await auditVerifiedCtaDestinations({
+      urls: [
+        { article: "a", key: "a:left", url: "https://promo.example.com/1" },
+      ],
+      allowlist: outboundHostAllowlist(),
+      fetchImpl,
+    });
+    expect(audit.errors).toHaveLength(1);
+    expect(audit.errors[0]).toContain("tracker.example.net");
+    expect(audit.errors[0]).toContain("not in the verified CTA allowlist");
+  });
+
+  it("rejects chains that exceed the redirect hop cap", async () => {
+    let hop = 0;
+    const fetchImpl = async (url: string) =>
+      redirect(`https://hop${++hop}.example.com/${new URL(url).pathname}`);
+    const audit = await auditVerifiedCtaDestinations({
+      urls: [
+        { article: "a", key: "a:left", url: "https://loop.example.com/x" },
+      ],
+      allowlist: outboundHostAllowlist(),
+      fetchImpl,
+      maxHops: MAX_REDIRECT_HOPS,
+    });
+    expect(audit.errors).toHaveLength(1);
+    expect(audit.errors[0]).toContain("redirect hops");
+  });
+
+  it("retries with GET when the server rejects HEAD", async () => {
+    const calls: { url: string; init?: RequestInit }[] = [];
+    const fetchImpl = stubFetch(
+      {
+        "https://promo.example.com/a": {
+          status: 405,
+          headers: new Map(),
+        },
+      },
+      calls,
+    );
+    // GET の結果として非リダイレクトなら、最終ホストは初期ホストのまま → 許可リスト外でエラー
+    await resolveFinalUrl("https://promo.example.com/a", { fetchImpl });
+    expect(calls.map((call) => call.init?.method)).toEqual(["HEAD", "GET"]);
+    // credentials/cookie を送らないこと
+    for (const call of calls) {
+      expect(call.init?.credentials).toBe("omit");
+      expect(new Headers(call.init?.headers).get("cookie")).toBeNull();
+    }
+  });
+
+  it("treats network errors as fatal by default and warn-only with ALLOW_NETWORK_SKIP", async () => {
+    const failing = async () => {
+      throw new Error("DNS lookup failed");
+    };
+    const options = {
+      urls: [
+        { article: "a", key: "a:left", url: "https://down.example.com/x" },
+      ],
+      allowlist: outboundHostAllowlist(),
+      fetchImpl: failing,
+    };
+    const strict = await auditVerifiedCtaDestinations(options);
+    expect(strict.errors).toHaveLength(1);
+    expect(strict.errors[0]).toContain("could not verify final destination");
+    expect(strict.warnings).toEqual([]);
+
+    const skipped = await auditVerifiedCtaDestinations({
+      ...options,
+      allowNetworkSkip: true,
+    });
+    expect(skipped.errors).toEqual([]);
+    expect(skipped.warnings).toHaveLength(1);
+    expect(skipped.warnings[0]).toContain("ALLOW_NETWORK_SKIP=1");
+    expect(skipped.warnings[0]).toContain("DNS lookup failed");
+  });
+
+  it("reports unparseable CTA URLs as errors", async () => {
+    const audit = await auditVerifiedCtaDestinations({
+      urls: [{ article: "a", key: "a:left", url: "::broken::" }],
+      allowlist: outboundHostAllowlist(),
+      fetchImpl: stubFetch({}),
+    });
+    expect(audit.errors).toHaveLength(1);
+    expect(audit.errors[0]).toContain("unparseable URL");
+  });
+
+  it("resolves relative Location headers against the current URL", async () => {
+    const result = await resolveFinalUrl("https://promo.example.com/deep/x", {
+      fetchImpl: stubFetch({
+        "https://promo.example.com/deep/x": redirect("../final?a=1"),
+        "https://promo.example.com/final?a=1": {
+          status: 200,
+          headers: new Map(),
+        },
+      }),
+    });
+    expect(result.finalUrl).toBe("https://promo.example.com/final?a=1");
+    expect(result.hops).toBe(1);
+  });
+});
+
+function loadPurchaseLinkStatusesFixture() {
+  // loadArticleStatuses のコア（ソース解析部）を fixture で検証する
+  return loadPurchaseLinkStatusesFromSource(
+    `
+export const a = defineArticleMetadata({
+  id: "a",
+  purchaseLinkStatus: "verified",
+});
+export const c = defineArticleMetadata({
+  id: "c",
+  purchaseLinkStatus: "unverified",
+});
+`,
+    new Map<string, string>(),
+  );
+}
+
+function writeSrcTree(
+  directory: string,
+  articles: { slug: string; source: string }[],
+) {
+  mkdirSync(join(directory, "lib"), { recursive: true });
+  mkdirSync(join(directory, "content"), { recursive: true });
+  mkdirSync(join(directory, "pages", "articles"), { recursive: true });
+  writeFileSync(
+    join(directory, "lib", "products.ts"),
+    `export interface ArticlePurchaseLink {\n  name: string;\n  purchaseUrl: string;\n}\nexport const sampleProduct: Product = {\n  rakutenUrl: "https://a.r10.to/AAA",\n};\nexport const articlePurchaseLinks = {\n  "sample-vs-other:left": { name: "A", purchaseUrl: sampleProduct.rakutenUrl },\n  "sample-vs-other:right": { name: "B", purchaseUrl: "https://ext.example.com/go" },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
+  );
+  writeFileSync(
+    join(directory, "content", "articles.ts"),
+    `export const sampleVsOther = defineArticleMetadata({\n  id: "sample-vs-other",\n  purchaseLinkStatus: "verified",\n});\nexport const draft = defineArticleMetadata({\n  id: "draft-vs-other",\n  purchaseLinkStatus: "unverified",\n});\n`,
+  );
+  for (const { slug, source } of articles) {
+    mkdirSync(join(directory, "pages", "articles", slug), { recursive: true });
+    writeFileSync(
+      join(directory, "pages", "articles", slug, "index.astro"),
+      source,
+    );
+  }
+}
