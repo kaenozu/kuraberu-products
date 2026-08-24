@@ -252,6 +252,14 @@ export const articlePurchaseLinks = {
     name: "パナソニック EH-NE5M",
     purchaseUrl: "https://a.r10.to/hPEiKo",
   },
+  "panasonic-mc-nx810km-vs-mc-nx700k:left": {
+    name: "パナソニック MC-NX810KM",
+    purchaseUrl: "https://a.r10.to/hPxF2V",
+  },
+  "panasonic-mc-nx810km-vs-mc-nx700k:right": {
+    name: "パナソニック MC-NX700K",
+    purchaseUrl: "https://a.r10.to/hgb52S",
+  },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
     purchaseUrl: "https://a.r10.to/hkSSwB",

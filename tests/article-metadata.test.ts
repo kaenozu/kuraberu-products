@@ -38,6 +38,7 @@ import {
   zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
+  panasonicMcNx810kmVsMcNx700kArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
@@ -81,8 +82,9 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(67);
+    expect(publicArticleMetadata).toHaveLength(68);
     const newlyPublishedIds = [
+      "panasonic-mc-nx810km-vs-mc-nx700k",
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
@@ -187,6 +189,7 @@ describe("article metadata", () => {
       zojirushiToasterArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
+      panasonicMcNx810kmVsMcNx700kArticle,
       panasonicFyhvx120VsFyhvx90Article,
       panasonicBabyMonitorArticle,
       panasonicEhNa9mGuideArticle,
@@ -224,7 +227,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(79);
+    ).toHaveLength(80);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
@@ -507,6 +510,7 @@ describe.skipIf(!hasDist)("article trust line (rendered dist)", () => {
 describe.skipIf(!hasDist)("public commercial article quality gate", () => {
   it("renders concrete comparison rows without placeholder wording", () => {
     const articleSlugs = [
+      "panasonic-mc-nx810km-vs-mc-nx700k",
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
