@@ -254,13 +254,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX120&link_type=text",
+    purchaseUrl: "https://a.r10.to/hkSSwB",
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:right": {
     name: "パナソニック F-YHVX90",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX90&link_type=text",
+    purchaseUrl: "https://a.r10.to/hghANA",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
