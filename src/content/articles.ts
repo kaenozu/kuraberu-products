@@ -1284,7 +1284,7 @@ export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
     "パナソニックの衣類乾燥除湿機、どっち？「F-YHVX120」と「F-YHVX90」を比較",
   description:
     "パナソニック F-YHVX120とF-YHVX90を、公式のタンク容量・木造対応畳数・重量・寸法・強運転音で比較",
-  category: "生活家電",
+  category: "衣類ケア",
   tags: ["衣類乾燥除湿機", "除湿機", "パナソニック"],
   audiences: [
     "衣類乾燥除湿機を選びたい人",
