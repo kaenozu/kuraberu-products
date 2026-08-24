@@ -451,8 +451,7 @@ describe("verified CTA destination audit (issue #342)", () => {
         { article: "a", key: "a:left", url: "https://down.example.com/x" },
       ],
       allowlist: outboundHostAllowlist(),
-      // 構造的に Response 互換のため typeof fetch へ明示キャストする。
-      fetchImpl: failing as unknown as typeof fetch,
+      fetchImpl: failingFetchImpl,
     };
     const strict = await auditVerifiedCtaDestinations(options);
     expect(strict.errors).toHaveLength(1);
