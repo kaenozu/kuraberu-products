@@ -36,6 +36,21 @@ pnpm verify
 
 `pnpm verify` は format、lint、typecheck、環境・コンテンツ検証、build、生成HTML、デプロイ契約、外部URL構文、Vitest をまとめて検証します。
 
+ブラウザとネットワーク境界の契約は、`pnpm verify` とは分離した Playwright E2E で検証します。
+
+```bash
+pnpm test:e2e
+```
+
+E2E はローカルの Astro build を起動し、Chromium で次を確認します。
+
+- 外部 embed は同意前に third-party request を発生させない
+- 診断の required / optional 質問を実ブラウザ操作で進められる
+- 未確認の商品購入リンクでは購入 CTA を表示しない
+- 公開ページの主要な遷移と生成 HTML の browser-level 契約を維持する
+
+PR の必須チェックでは、静的・生成物ゲート（`pnpm verify`）と browser/network ゲート（`pnpm test:e2e`）を別 job として実行します。E2E の失敗は skip、timeout 延長、assertion の弱体化で隠さず、原因を修正します。
+
 外部リンクの実到達性は別ゲートです。
 
 ```bash
