@@ -226,19 +226,21 @@ export const articlePurchaseLinks = {
   },
   "panasonic-baby-monitor-kx-hc705:card": {
     name: "パナソニック ベビーモニター KX-HC705",
-    purchaseUrl: rakutenAffiliateSearchUrl("パナソニック ベビーモニター KX-HC705")",
+    purchaseUrl: rakutenAffiliateSearchUrl(
+      "パナソニック ベビーモニター KX-HC705",
+    ),
   },
   "panasonic-eh-na9m-guide:card": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M")",
+    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
   },
   "panasonic-eh-na9m-vs-eh-na7m:left": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M")",
+    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
   },
   "panasonic-eh-na9m-vs-eh-na7m:right": {
     name: "パナソニック ナノケア EH-NA7M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA7M")",
+    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA7M"),
   },
   "panasonic-eh-ne7m-vs-eh-ne5m:left": {
     name: "パナソニック EH-NE7M",
@@ -374,7 +376,7 @@ export const articlePurchaseLinks = {
   },
   "tiger-mta-j050-guide:right": {
     name: "タイガー MTA-J080",
-    purchaseUrl: rakutenAffiliateSearchUrl("タ イガー MTA-J080")",
+    purchaseUrl: rakutenAffiliateSearchUrl("タ イガー MTA-J080"),
   },
   "tiger-pcj-a080-vs-pcm-a080:left": {
     name: "タイガー 電気ケトル PCJ-A080",
