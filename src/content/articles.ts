@@ -1678,11 +1678,11 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     officialSources: [
       {
         label: "マキタ CL107FDSHW 公式商品ページ",
-        url: "https://www.makita.co.jp/products/details/CL107FDSHW",
+        url: "https://www.makita.co.jp/product/detail/?model=CL107FD",
       },
       {
         label: "マキタ CL286FD 公式商品ページ",
-        url: "https://www.makita.co.jp/products/details/CL286FD",
+        url: "https://www.makita.co.jp/product/detail/?model=CL286FD",
       },
     ],
     verifiedRows: [
@@ -1693,18 +1693,18 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "集じん方式",
-        left: "紙パック式（0.3L）",
-        right: "サイクロン一体式（容量は公式仕様表を確認）",
+        left: "紙パック式（ダストバッグ500mL／紙パック330mL）",
+        right: "サイクロン一体式（集じん容量250mL）",
       },
       {
-        label: "最大吸引力",
-        left: "公式未公表",
-        right: "公式未公表",
+        label: "吸込仕事率",
+        left: "パワフル32W／強20W／標準5W",
+        right: "パワフル100W／強60W／標準35W／エコ15W",
       },
       {
-        label: "運転時間（強）",
-        left: "約10〜25分（モードにより異なる）",
-        right: "バッテリー・モードにより異なる（公式仕様表を確認）",
+        label: "1充電使用量の目安",
+        left: "パワフル約10分／強約12分／標準約25分",
+        right: "パワフル約8分／強約15分／標準約21分／エコ約38分",
       },
       {
         label: "バッテリー",
@@ -1713,8 +1713,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "充電時間",
-        left: "約22分（BL1015）",
-        right: "バッテリーにより異なる",
+        left: "DC10SA：約22分",
+        right: "DC18RF：実用充電約17分／フル充電約22分",
       },
       {
         label: "取付具",
@@ -1771,8 +1771,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "パナソニック NF-PC400",
     leftPoint: "少量調理と置き場所を優先する人向け",
     rightPoint: "家族分の調理容量と多機能さを確認したい人向け",
-    productInfoCheckedAt: "2026-08-20",
-    modifiedAt: "2026-08-20",
+    productInfoCheckedAt: "2026-08-25",
+    modifiedAt: "2026-08-25",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
@@ -1786,39 +1786,30 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     ],
     verifiedRows: [
       {
-        label: "容量",
-        left: "約600mL",
-        right: "調理容量2.6L・最大6人分",
+        label: "容量・人数",
+        left: "約600mL。スープは1回で2〜4人分",
+        right: "調理容量2.6L。最大6人分",
       },
       {
-        label: "消費電力",
-        left: "600W（JUICE&CLEANは55W）",
-        right: "公式ページ本文で確認できず",
+        label: "調理モード・メニュー",
+        left: "5種類（POTAGE&PASTE、SOUP&OKAYU、SOYMILK、JUICE&CLEAN、WARM）",
+        right: "自動メニュー20種類。圧力・無水・低温・蒸し調理にも対応",
       },
       {
-        label: "サイズ",
-        left: "約幅16.5×奥行12.0×高さ23.3cm",
-        right: "公式ページ本文で確認できず",
+        label: "予約・保温",
+        left: "WARMモードで75℃前後をキープ",
+        right:
+          "予約は3〜15時間後（一部自動調理のみ）。保温可能なメニューは調理後3時間まで自動保温",
       },
       {
-        label: "温度",
-        left: "WARM：約75℃前後",
-        right: "数値は公式ページで確認できず",
-      },
-      {
-        label: "調理モード",
-        left: "5種類（SOYMILKなど）",
-        right: "20種類の自動メニュー。圧力・無水・低温・蒸し・煮込み",
-      },
-      {
-        label: "予約",
-        left: "公式ページで確認できず",
-        right: "3〜15時間後（一部自動調理のみ）",
-      },
-      {
-        label: "手入れ",
-        left: "JUICE&CLEAN約3分。本体外側・電源コードは水洗い不可",
+        label: "お手入れ",
+        left: "本体内側はセラミックコーティング。お手入れブラシとプラグカバー付き",
         right: "ふた・内ふた・内なべの3点。蒸し板使用時は蒸し板も洗浄",
+      },
+      {
+        label: "調理できる内容",
+        left: "ポタージュ、食べるスープ、おかゆ、豆乳、スムージーなど",
+        right: "角煮、肉じゃが、カレー、炊飯、無水・低温・蒸し調理など",
       },
     ],
   },
