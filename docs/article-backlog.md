@@ -45,6 +45,7 @@
 | `yamazaki-condor-wagon-vs-self-wagon`            | 公開済み                       |
 | `yamazaki-dust-wagon-45l-2division-vs-3division` | 公開済み                       |
 | `yamazaki-free-broom-32-vs-45`                   | 公開済み                       |
+| `yamazaki-laundry-wire-basket-m-vs-l`            | 実装中                         |
 | `yamazaki-tower-desk-panel-vs-pen-stand`         | 公開済み                       |
 | `zojirushi-ck-pa08-vs-ck-dc08`                   | 公開済み                       |
 | `zojirushi-eq-aa22-vs-eq-sa22`                   | 実装中                         |

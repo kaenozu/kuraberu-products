@@ -49,6 +49,7 @@ import {
   tigerKettlePcjVsPcmArticle,
   additionalCommercialArticles,
   yamajitsuFilmHolderArticle,
+  yamazakiLaundryWireBasketArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
 
@@ -93,6 +94,7 @@ describe("article metadata", () => {
       "panasonic-f-px60c-vs-f-px70c",
       "panasonic-es-lt4b-vs-es-lv7j",
       "yamajitsu-film-holder-242286-vs-242287",
+      "yamazaki-laundry-wire-basket-m-vs-l",
       "zojirushi-eq-aa22-vs-eq-sa22",
     ];
     for (const id of newlyPublishedIds) {
@@ -198,6 +200,7 @@ describe("article metadata", () => {
       panasonicEhNa9mVsEhNa7mArticle,
       tigerKettlePcjVsPcmArticle,
       yamajitsuFilmHolderArticle,
+      yamazakiLaundryWireBasketArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");

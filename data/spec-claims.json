@@ -329,6 +329,26 @@
         "https://panasonic.jp/soji/products/MC-NX810KM/spec.html"
       ],
       "note": ""
+    },
+    {
+      "articleId": "shupot",
+      "checkedAt": "2026-08-16",
+      "claimsFingerprint": "sha256:5d37ee5634698c2a84c236bbecfef370db8ab54952321eb69004b9662adf3deb",
+      "officialUrls": [
+        "https://shop.pigeon.co.jp/products/1032018",
+        "https://shop.pigeon.co.jp/products/2000638s"
+      ],
+      "note": "価格クレーム（電動 13,585円 / 手動 3,762円、2026-08-10時点）をピジョン公式ショップで確認（2026-08-16再確認）"
+    },
+    {
+      "articleId": "yamazaki-laundry-wire-basket-m-vs-l",
+      "checkedAt": "2026-08-25",
+      "claimsFingerprint": "sha256:9256e8018cc9ec64b8789a7309606b02532be8d51f81552455657aa0f2944362",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/240001",
+        "https://www.yamajitsu.co.jp/products/240002"
+      ],
+      "note": ""
     }
   ]
 }
