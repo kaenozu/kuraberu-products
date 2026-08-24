@@ -199,12 +199,31 @@ for (const file of htmlFiles) {
       }
     }
     for (const block of structuredBlocks) {
-      const allowedTypes = ["Article", "WebPage", "BreadcrumbList"];
+      const allowedTypes = ["Article", "WebPage", "BreadcrumbList", "FAQPage"];
       if (!allowedTypes.includes(block["@type"])) {
         errors.push(`${file}: unsupported JSON-LD type ${block["@type"]}`);
       }
       if (block["@context"] !== "https://schema.org") {
         errors.push(`${file}: unexpected JSON-LD context`);
+      }
+      if (block["@type"] === "FAQPage") {
+        if (!Array.isArray(block.mainEntity) || block.mainEntity.length === 0) {
+          errors.push(`${file}: FAQPage mainEntity must be a non-empty array`);
+        }
+        for (const entry of block.mainEntity ?? []) {
+          if (
+            entry?.["@type"] !== "Question" ||
+            typeof entry.name !== "string" ||
+            entry.name.length === 0 ||
+            entry.acceptedAnswer?.["@type"] !== "Answer" ||
+            typeof entry.acceptedAnswer.text !== "string" ||
+            entry.acceptedAnswer.text.length === 0
+          ) {
+            errors.push(
+              `${file}: FAQPage contains an invalid Question/Answer entry`,
+            );
+          }
+        }
       }
       const serialized = JSON.stringify(block);
       for (const unsupportedClaim of ["aggregateRating", "review", "offers"]) {

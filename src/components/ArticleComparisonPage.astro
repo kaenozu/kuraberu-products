@@ -205,7 +205,7 @@ const {
 const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left: r.left, right: r.right }))) as SpecRow[];
 ---
 
-<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata}>
+<BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {articleMetadata.category} · 公開日 <time datetime={articleMetadata.publishedAt}>{articleMetadata.publishedAt}</time> · 更新日 <time datetime={articleMetadata.modifiedAt}>{articleMetadata.modifiedAt}</time></p>
     <h1>{articleMetadata.headline}</h1>

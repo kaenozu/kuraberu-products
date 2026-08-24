@@ -12,6 +12,7 @@ interface Props {
   robots?: 'index,follow' | 'noindex,nofollow';
   ogType?: 'website' | 'article';
   article?: ArticleMetadata;
+  faq?: readonly { question: string; answer: string }[];
 }
 
 const {
@@ -20,6 +21,7 @@ const {
   robots,
   ogType,
   article,
+  faq,
 } = Astro.props;
 const isProduction = import.meta.env.DEPLOYMENT_ENV === 'production';
 // 本番デプロイ時のみ tools/production が注入するビルド元コミットSHA（PostDeploy検証で照合）。未設定時は出力しない。
@@ -99,6 +101,20 @@ const breadcrumbStructuredData = article
       ],
     })
   : undefined;
+const faqStructuredData = faq && faq.length > 0
+  ? safeJsonForScript({
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faq.map((entry) => ({
+        '@type': 'Question',
+        name: entry.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: entry.answer,
+        },
+      })),
+    })
+  : undefined;
 ---
 <html lang="ja">
   <head>
@@ -137,6 +153,7 @@ const breadcrumbStructuredData = article
     {articleImage && <meta name="twitter:image" content={articleImage} />}
     <script is:inline type="application/ld+json" set:html={structuredDataJson} />
     {breadcrumbStructuredData && <script is:inline type="application/ld+json" set:html={breadcrumbStructuredData} />}
+    {faqStructuredData && <script is:inline type="application/ld+json" set:html={faqStructuredData} />}
   </head>
   <body class={currentPath === '/' ? 'home-page' : undefined}>
     <a class="skip-link" href="#main-content">本文へ移動</a>

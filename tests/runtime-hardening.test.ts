@@ -89,6 +89,57 @@ describe("CSP-compatible comparison table fallback", () => {
     );
   });
 
+  it("emits FAQPage JSON-LD for populated FAQ entries and preserves primary data", ({
+    skip,
+  }) => {
+    if (
+      !existsSync("dist/articles/panasonic-mc-nx810km-vs-mc-nx700k/index.html")
+    ) {
+      console.warn("skip: FAQ JSON-LD output requires an Astro build");
+      skip();
+    }
+    const html = readFileSync(
+      "dist/articles/panasonic-mc-nx810km-vs-mc-nx700k/index.html",
+      "utf8",
+    );
+    const blocks = [
+      ...html.matchAll(
+        /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
+      ),
+    ].map((match) => JSON.parse(match[1]));
+    const faq = blocks.find((block) => block["@type"] === "FAQPage");
+    expect(faq).toMatchObject({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      mainEntity: expect.arrayContaining([
+        expect.objectContaining({
+          "@type": "Question",
+          name: "MC-NX810KMとMC-NX700Kの共通点は？",
+          acceptedAnswer: expect.objectContaining({
+            "@type": "Answer",
+            text: expect.any(String),
+          }),
+        }),
+      ]),
+    });
+    expect(blocks.some((block) => block["@type"] === "Article")).toBe(true);
+    expect(blocks.some((block) => block["@type"] === "BreadcrumbList")).toBe(
+      true,
+    );
+  });
+
+  it("does not emit FAQPage JSON-LD when no FAQ entries are passed", ({
+    skip,
+  }) => {
+    if (!existsSync("dist/index.html")) {
+      console.warn("skip: FAQ JSON-LD output requires an Astro build");
+      skip();
+    }
+    const html = readFileSync("dist/index.html", "utf8");
+    expect(html).not.toContain('"@type":"FAQPage"');
+    expect(html).not.toContain('"@type": "FAQPage"');
+  });
+
   it("generates HTML that references the external script when build output exists", ({
     skip,
   }) => {
