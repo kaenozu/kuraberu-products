@@ -668,6 +668,26 @@ describe("article card audiences 向き line", () => {
     }
   });
 
+  it("does not leak unrelated category wording into article audiences", () => {
+    const forbiddenByArticle: ReadonlyArray<readonly [string, RegExp]> = [
+      ["panasonic-nt-t501-vs-nt-d700", /オーブンレンジ|冷蔵庫|冷凍室/],
+      ["panasonic-ne-bs9c-vs-ne-ubs10c", /冷蔵庫|冷凍室/],
+      ["panasonic-eh-na0k-vs-eh-ne9n", /Care機能/],
+      ["panasonic-es-wp9b-vs-es-wg0b", /レイザー式シェーバー/],
+      ["logicool-lift-vs-m550", /ロジカルロール/],
+    ];
+    for (const [id, forbidden] of forbiddenByArticle) {
+      const article = publicArticleMetadata.find(
+        (candidate) => candidate.id === id,
+      );
+      expect(article, `${id}: article metadata must exist`).toBeDefined();
+      expect(
+        article?.audiences.join(" "),
+        `${id}: unrelated wording remains`,
+      ).not.toMatch(forbidden);
+    }
+  });
+
   it("does not describe Makita CL286FD as a wet/dry vacuum", () => {
     const article = publicArticleMetadata.find(
       (candidate) => candidate.id === "makita-cl107-vs-cl286",
