@@ -126,9 +126,8 @@ describe("article metadata", () => {
 
     expect(articleIndex).toContain("publicArticleMetadata");
     expect(memoPage).toContain("publicArticleMetadata");
-    expect(sitemap).toContain(
-      "...publicArticleMetadata.map((article) => article.path)",
-    );
+    expect(sitemap).toContain("publicArticleMetadata.map((article)");
+    expect(sitemap).toContain("article.modifiedAt");
     expect(articleIndex).not.toContain("thermos-tiger-bottle");
     expect(memoPage).not.toContain("thermos-tiger-bottle");
     expect(sitemap).not.toContain("thermos-tiger-bottle");
