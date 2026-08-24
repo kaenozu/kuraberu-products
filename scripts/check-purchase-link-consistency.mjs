@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { toAffiliateRakutenSearchUrl } from "../config/runtime-env.mjs";
 
 // 購入リンクの単一情報源ゲート（購入URL集約の恒久化）。
 //
@@ -185,6 +186,13 @@ export function loadRegistryEntries(srcDirectory) {
     const reference = /\bpurchaseUrl:\s*(\w+)\.rakutenUrl/.exec(body);
     if (reference && productUrls.has(reference[1])) {
       entries.set(key, productUrls.get(reference[1]));
+    }
+    const generated = /\bpurchaseUrl:\s*rakutenAffiliateSearchUrl\(\s*"([^"]+)"\s*,?\s*\)/.exec(
+      body,
+    );
+    if (generated) {
+      const url = toAffiliateRakutenSearchUrl(generated[1]);
+      if (url) entries.set(key, url);
     }
   }
   return entries;
