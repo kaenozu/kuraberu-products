@@ -6,8 +6,6 @@
  * 確認日と参照先は各記事の metadata（productInfoCheckedAt 等）で管理する。
  */
 
-import { rakutenAffiliateSearchUrl } from "./rakuten-affiliate";
-
 export interface ProductSpec {
   /** 容量（例: 0.5L） */
   capacity: string;
@@ -228,21 +226,23 @@ export const articlePurchaseLinks = {
   },
   "panasonic-baby-monitor-kx-hc705:card": {
     name: "パナソニック ベビーモニター KX-HC705",
-    purchaseUrl: rakutenAffiliateSearchUrl(
-      "パナソニック ベビーモニター KX-HC705",
-    ),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2583%2591%25E3%2583%258A%25E3%2582%25BD%25E3%2583%258B%25E3%2583%2583%25E3%2582%25AF%2520%25E3%2583%2599%25E3%2583%2593%25E3%2583%25BC%25E3%2583%25A2%25E3%2583%258B%25E3%2582%25BF%25E3%2583%25BC%2520KX-HC705&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
   },
   "panasonic-eh-na9m-guide:card": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA9M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
   },
   "panasonic-eh-na9m-vs-eh-na7m:left": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA9M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
   },
   "panasonic-eh-na9m-vs-eh-na7m:right": {
     name: "パナソニック ナノケア EH-NA7M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA7M"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA7M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
   },
   "panasonic-eh-ne7m-vs-eh-ne5m:left": {
     name: "パナソニック EH-NE7M",
@@ -254,11 +254,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
-    purchaseUrl: rakutenAffiliateSearchUrl("F-YHVX120"),
+    purchaseUrl: "https://a.r10.to/hkSSwB",
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:right": {
     name: "パナソニック F-YHVX90",
-    purchaseUrl: rakutenAffiliateSearchUrl("F-YHVX90"),
+    purchaseUrl: "https://a.r10.to/hghANA",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
@@ -378,7 +378,8 @@ export const articlePurchaseLinks = {
   },
   "tiger-mta-j050-guide:right": {
     name: "タイガー MTA-J080",
-    purchaseUrl: rakutenAffiliateSearchUrl("タイガー MTA-J080"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2582%25BF%25E3%2582%25A4%25E3%2582%25AC%25E3%2583%25BC%2BMTA-J080%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
   },
   "tiger-pcj-a080-vs-pcm-a080:left": {
     name: "タイガー 電気ケトル PCJ-A080",
