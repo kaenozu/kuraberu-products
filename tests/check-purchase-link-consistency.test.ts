@@ -88,10 +88,13 @@ describe("purchase link consistency gate (registry keys)", () => {
       mkdirSync(join(directory, "lib"), { recursive: true });
       writeFileSync(
         join(directory, "lib", "products.ts"),
-        `export const articlePurchaseLinks = {\n  "a:left": { name: "A", purchaseUrl: "https://a.r10.to/x" },\n  "a:right": { name: "B", purchaseUrl: "https://a.r10.to/y" },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
+        `export const articlePurchaseLinks = {\n  "a:left": { name: "A", purchaseUrl: "https://a.r10.to/x" },\n  "a:right": { name: "B", purchaseUrl: "https://a.r10.to/y" },\n  "a:search": { name: "A search", purchaseUrl: rakutenAffiliateSearchUrl("A search") },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
       );
       expect(loadRegistryKeys(directory)).toEqual(
-        new Set(["a:left", "a:right"]),
+        new Set(["a:left", "a:right", "a:search"]),
+      );
+      expect(loadRegistryEntries(directory).get("a:search")).toBe(
+        "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FA%2520search&link_type=text",
       );
     } finally {
       rmSync(directory, { recursive: true, force: true });
@@ -445,7 +448,6 @@ describe("verified CTA destination audit (issue #342)", () => {
     const failing = async () => {
       throw new Error("DNS lookup failed");
     };
-    const failingFetchImpl = failing as unknown as typeof fetch;
     const options = {
       urls: [
         { article: "a", key: "a:left", url: "https://down.example.com/x" },

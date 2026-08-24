@@ -143,6 +143,21 @@ export function loadRegistryKeys(srcDirectory) {
   return new Set(loadRegistryEntries(srcDirectory).keys());
 }
 
+const DEFAULT_RAKUTEN_AFFILIATE_ID = "34e76967.d5cc3ae1.34e76968.3eade5e6";
+
+function resolveRakutenAffiliateSearchUrl(query) {
+  const encodedSearchUrl = encodeURIComponent(
+    "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent(query),
+  );
+  return (
+    "https://hb.afl.rakuten.co.jp/hgc/" +
+    DEFAULT_RAKUTEN_AFFILIATE_ID +
+    "/?pc=" +
+    encodedSearchUrl +
+    "&link_type=text"
+  );
+}
+
 /**
  * articlePurchaseLinks を「キー → purchaseUrl」マップで読み込む。
  * purchaseUrl の値は文字列リテラルか `thermosJnlS500.rakutenUrl` のような
@@ -185,7 +200,11 @@ export function loadRegistryEntries(srcDirectory) {
     const reference = /\bpurchaseUrl:\s*(\w+)\.rakutenUrl/.exec(body);
     if (reference && productUrls.has(reference[1])) {
       entries.set(key, productUrls.get(reference[1]));
+      continue;
     }
+    const search =
+      /\brakutenAffiliateSearchUrl\(\s*\"([^\"]*)\"\s*,?\s*\)/s.exec(body);
+    if (search) entries.set(key, resolveRakutenAffiliateSearchUrl(search[1]));
   }
   return entries;
 }
