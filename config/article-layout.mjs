@@ -180,3 +180,17 @@ export function expectedPlacementCounts(productCount, layout = ARTICLE_LAYOUT) {
   }
   return counts;
 }
+
+/**
+ * テンプレート種別（comparisonPage / commercialPage）ごとに、
+ * 必須（required: true）のセクション id 配列を返す。
+ * 品質ゲート scripts/check-rendered-html.mjs が全生成記事ページの
+ * 「必須セクション有無」検証に使う（Issue #343）。
+ */
+export function requiredSectionIds(template, layout = ARTICLE_LAYOUT) {
+  const sections = layout.sectionOrder?.[template];
+  if (!Array.isArray(sections)) return [];
+  return sections
+    .filter((section) => section.required)
+    .map((section) => section.id);
+}

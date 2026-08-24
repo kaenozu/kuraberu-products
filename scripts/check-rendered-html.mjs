@@ -7,6 +7,7 @@ import {
   contentTypeFor,
   expectedPlacementCounts,
   expectedPurchaseCtasPerArticle,
+  requiredSectionIds,
 } from "../config/article-layout.mjs";
 
 function walk(directory, htmlFiles) {
@@ -204,27 +205,24 @@ const SECTION_MARKERS = {
   "source-list": /<ul class="source-list">/,
 };
 
-export function validateArticleSectionOrder(relative, html) {
-  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
-  const errors = [];
-  const contentType =
+// 比較記事テンプレート（productCount >= 2）のみがセクション契約の対象。
+// 商品ガイドは別テンプレートのため対象外（既存の順序ゲートと同じスコープ）。
+function readComparisonContentType(html) {
+  return (
     html.match(
       /<meta name="article:content-type" content="(guide|comparison)">/i,
-    )?.[1] ?? null;
-  if (contentType !== "comparison") return [];
+    )?.[1] ?? null
+  );
+}
 
-  const hasComparisonV2 = /class="[^"]*\barticle-comparison-v2\b/.test(html);
-  const hasNextStep = /data-next-step/.test(html);
-
-  let order;
-  if (hasComparisonV2) {
-    order = ARTICLE_LAYOUT.sectionOrder?.comparisonPage;
-  } else if (hasNextStep) {
-    order = ARTICLE_LAYOUT.sectionOrder?.commercialPage;
-  } else {
-    return [];
-  }
+export function validateArticleSectionOrder(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  if (readComparisonContentType(html) !== "comparison") return [];
+  const template = detectArticleTemplate(html);
+  if (template === null) return [];
+  const order = ARTICLE_LAYOUT.sectionOrder?.[template];
   if (!order) return [];
+  const errors = [];
 
   const positions = [];
   for (const { id } of order) {
@@ -237,12 +235,29 @@ export function validateArticleSectionOrder(relative, html) {
   }
 
   positions.sort((a, b) => a.pos - b.pos);
+  // 商用テンプレートは公式ソースの有無で2つの正当な変種がある:
+  // - hero あり（details.fold-section.source-note が存在）:
+  //     TrustLine も NextStepBlock も ArticleComparisonV2 内部に含まれ、
+  //     内部実装上の順序は next-step → trust-line
+  // - hero なし: TrustLine → 独立 NextStepBlock の順（設定どおり）
+  // このため commercialPage の trust-line↔next-step の相対順序は変種依存であり、
+  // 線形な sectionOrder では表現できない。両セクションの「存在」は
+  // validateRequiredSections が別途 fail-closed で保証するため、ここでは
+  // このペアに限って順序照合をスキップする（docs/rendered-gate-allowlist.md 参照）。
+  const flexiblePairs =
+    template === "commercialPage"
+      ? [["trust-line", "next-step"]]
+      : [];
+  const isFlexiblePair = (a, b) =>
+    flexiblePairs.some(
+      ([x, y]) => (a === x && b === y) || (a === y && b === x),
+    );
   for (let i = 1; i < positions.length; i++) {
     const prev = positions[i - 1];
     const curr = positions[i];
     const prevIndex = order.findIndex((s) => s.id === prev.id);
     const currIndex = order.findIndex((s) => s.id === curr.id);
-    if (prevIndex > currIndex) {
+    if (prevIndex > currIndex && !isFlexiblePair(prev.id, curr.id)) {
       errors.push(
         relative +
           ": section " +
@@ -259,6 +274,91 @@ export function validateArticleSectionOrder(relative, html) {
   }
 
   return errors;
+}
+
+/**
+ * 記事ページのテンプレート種別を HTML のマーカーから導出する
+ * （config/article-layout.mjs sectionOrder のキー名）。
+ * - CommercialArticlePage 出力（公式の確認先 details.fold-section.source-note
+ *   を持つ。ArticleComparisonV2 を内包するため v2 マーカーだけでは判別できない）
+ *   → commercialPage（自動生成比較記事）
+ * - 上記以外で ArticleComparisonV2 セクションあり → comparisonPage（手書き比較記事）
+ * - NextStepBlock のみあり → commercialPage
+ * - どちらも無い（商品ガイド等） → null（セクション契約の対象外）
+ */
+export function detectArticleTemplate(html) {
+  const hasCommercialSourceNote =
+    /<details\b[^>]*class="[^"]*\bfold-section\b[^"]*\bsource-note\b/.test(html);
+  if (hasCommercialSourceNote) return "commercialPage";
+  const hasComparisonV2 = /class="[^"]*\barticle-comparison-v2\b/.test(html);
+  const hasNextStep = /data-next-step/.test(html);
+  if (hasComparisonV2) return "comparisonPage";
+  if (hasNextStep) return "commercialPage";
+  return null;
+}
+
+// Issue #343: 全生成記事ページへ拡大した品質ゲート。
+// 「required: true」のセクションが欠落していないことを、テンプレート種別ごとに
+// config/article-layout.mjs の sectionOrder から検証する（順序は既存ゲート、
+// 有無はこのゲートが担う）。エラーには許可リスト照合用のルールタグ
+// [required-section:<id>] を付与する。
+export function validateRequiredSections(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  if (readComparisonContentType(html) !== "comparison") return [];
+  const template = detectArticleTemplate(html);
+  if (template === null) return [];
+  const order = ARTICLE_LAYOUT.sectionOrder?.[template];
+  if (!order) return [];
+  const errors = [];
+  for (const id of requiredSectionIds(template)) {
+    const marker = SECTION_MARKERS[id];
+    // マーカー未定義のセクションは順序ゲート同様に検査できないためスキップ
+    if (!marker) continue;
+    if (!marker.test(html)) {
+      errors.push(
+        `${relative}: [required-section:${id}] required section "${id}" is missing (per config/article-layout.mjs sectionOrder.${template})`,
+      );
+    }
+  }
+  return errors;
+}
+
+// 未解決テンプレートトークンの検出（Issue #343）。
+// {{ ... }} / ${ ... } / %UPPER_SNAKE% / [object Object] がレンダリング済み
+// HTML に残っていることは生成壊れを意味する。inline script/style 内は
+// JS テンプレートリテラルの正当な使用があるため走査対象から除外する。
+// エラーには許可リスト照合用のルールタグ [template-token] を付与する。
+const TEMPLATE_TOKEN_PATTERNS = [
+  { pattern: /\{\{[^{}]{0,200}\}\}/, label: "{{...}}" },
+  { pattern: /\$\{[^}]{0,200}\}/, label: "${...}" },
+  // %TOKEN% は URL エンコード断片（%E3%81…）を誤検知しないよう
+  // 内側 4 文字以上の大文字スネークケースに限定する（エンコードは常に 2 桁）。
+  { pattern: /%[A-Z][A-Z0-9_]{3,}%/, label: "%TOKEN%" },
+  { pattern: /\[object Object\]/, label: "[object Object]" },
+];
+
+function stripScriptAndStyleContents(html) {
+  return html.replace(
+    /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,
+    (match, tagName) => `<${tagName}></${tagName}>`,
+  );
+}
+
+export function findUnresolvedTemplateTokens(html) {
+  const body = stripScriptAndStyleContents(html);
+  const found = [];
+  for (const { pattern, label } of TEMPLATE_TOKEN_PATTERNS) {
+    const match = pattern.exec(body);
+    if (match) found.push({ token: match[0], label });
+  }
+  return found;
+}
+
+export function validateNoUnresolvedTemplateTokens(relative, html) {
+  return findUnresolvedTemplateTokens(html).map(
+    ({ token, label }) =>
+      `${relative}: [template-token] unresolved template token (${label}) remains in rendered HTML: ${JSON.stringify(token.slice(0, 80))}`,
+  );
 }
 
 // 記事ページの商品数を、BaseLayout が出力する
@@ -1130,6 +1230,9 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     errors.push(...validateArticleTrustLine(relative, html));
     errors.push(...validateArticleNextStep(relative, html));
     errors.push(...validateArticleSectionOrder(relative, html));
+    // Issue #343: 全記事ページへ拡大した検証（必須セクション有無・未解決トークン）
+    errors.push(...validateRequiredSections(relative, html));
+    errors.push(...validateNoUnresolvedTemplateTokens(relative, html));
     // unverified 記事では購入 CTA が非表示になるため、CTA 検証をスキップ
     if (isVerified) {
       errors.push(
@@ -1200,11 +1303,75 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
   return { errors, pageCount: htmlFiles.length };
 }
 
+// ---- 許可リスト（docs/rendered-gate-allowlist.md, Issue #343）----
+//
+// 全ページへゲートを拡大した結果、既存データ由来の違反が見つかった場合、
+// ゲートを緩めずに例外だけを docs/rendered-gate-allowlist.md の表で
+// 明示する。形式:
+//   | path | rule | reason |
+//   | `articles/<slug>/index.html` | `required-section:<id>` / `template-token` | 理由 |
+const ALLOWLIST_FILE = "docs/rendered-gate-allowlist.md";
+
+/** 許可リスト markdown の表部分をパースする（行ベース・壊れた行は無視）。 */
+export function parseRenderedGateAllowlist(markdown) {
+  const entries = [];
+  for (const line of markdown.split(/\r?\n/)) {
+    if (!line.trim().startsWith("|")) continue;
+    const cells = line
+      .split("|")
+      .slice(1, -1)
+      .map((cell) => cell.trim().replace(/^`|`$/g, ""));
+    if (cells.length < 3) continue;
+    const [entryPath, rule, reason] = cells;
+    if (!entryPath || !rule || entryPath === "path") continue;
+    entries.push({ path: entryPath, rule, reason: reason ?? "" });
+  }
+  return entries;
+}
+
+/** エラー行の先頭（dist 相対パス）とルールタグで許可リストを適用する。 */
+export function applyRenderedGateAllowlist(errors, entries) {
+  if (entries.length === 0) return [...errors];
+  const byPath = new Map();
+  for (const entry of entries) {
+    const rules = byPath.get(entry.path) ?? new Set();
+    rules.add(entry.rule);
+    byPath.set(entry.path, rules);
+  }
+  return errors.filter((error) => {
+    const separator = error.indexOf(": ");
+    if (separator === -1) return true;
+    const errorPath = error.slice(0, separator).replace(/\\/g, "/");
+    const rules = byPath.get(errorPath);
+    if (!rules) return true;
+    for (const rule of rules) {
+      if (error.includes(`[${rule}]`)) return false;
+    }
+    return true;
+  });
+}
+
+function loadRenderedGateAllowlist() {
+  // リポジトリルート基準で許可リストを読む
+  const candidate = path.join(process.cwd(), ALLOWLIST_FILE);
+  return fs.existsSync(candidate)
+    ? parseRenderedGateAllowlist(fs.readFileSync(candidate, "utf8"))
+    : [];
+}
+
 if (
   path.resolve(process.argv[1] ?? "") ===
   path.resolve(fileURLToPath(import.meta.url))
 ) {
-  const { errors, pageCount } = validateRenderedHtml();
+  let { errors, pageCount } = validateRenderedHtml();
+  const allowlistEntries = loadRenderedGateAllowlist();
+  const before = errors.length;
+  errors = applyRenderedGateAllowlist(errors, allowlistEntries);
+  if (before !== errors.length) {
+    console.log(
+      `rendered gate allowlist: ${before - errors.length} documented exception(s) applied from ${ALLOWLIST_FILE}`,
+    );
+  }
   if (errors.length) throw new Error(errors.join("\n"));
   console.log(`rendered html ok: ${pageCount} pages`);
 }
