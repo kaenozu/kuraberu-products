@@ -8,7 +8,13 @@ import {
   keyFromRef,
   loadRegistryKeys,
 } from "../scripts/check-purchase-link-consistency.mjs";
-import { mkdtempSync, writeFileSync, mkdirSync, rmSync } from "node:fs";
+import {
+  mkdtempSync,
+  writeFileSync,
+  mkdirSync,
+  rmSync,
+  readFileSync,
+} from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 
@@ -198,6 +204,17 @@ describe("purchase link consistency gate (registry keys)", () => {
 
   // fail-closed 契約の監査用集計。verified / unverified / unavailable の
   // 3値のみを扱い、未分類のステータス文字列を黙って無視しないことを確認する。
+  it("keeps NextStepBlock purchase CTA fail-closed when status is omitted", () => {
+    const source = readFileSync("src/components/NextStepBlock.astro", "utf8");
+    expect(source).toContain(
+      'purchaseLinkStatus: "verified" | "unverified" | "unavailable"',
+    );
+    expect(source).toContain("purchaseLinkStatus === 'verified' && leftHref");
+    expect(source).toContain("purchaseLinkStatus === 'verified' && rightHref");
+    expect(source).not.toContain("purchaseLinkStatus !== 'unverified'");
+    expect(source).not.toContain("purchaseLinkStatus !== 'unavailable'");
+  });
+
   it("audits purchaseLinkStatus values from the article metadata", () => {
     const counts = countPurchaseLinkStatuses();
     expect(Object.keys(counts).sort()).toEqual([
