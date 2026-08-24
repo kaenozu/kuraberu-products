@@ -245,9 +245,7 @@ export function validateArticleSectionOrder(relative, html) {
   // validateRequiredSections が別途 fail-closed で保証するため、ここでは
   // このペアに限って順序照合をスキップする（docs/rendered-gate-allowlist.md 参照）。
   const flexiblePairs =
-    template === "commercialPage"
-      ? [["trust-line", "next-step"]]
-      : [];
+    template === "commercialPage" ? [["trust-line", "next-step"]] : [];
   const isFlexiblePair = (a, b) =>
     flexiblePairs.some(
       ([x, y]) => (a === x && b === y) || (a === y && b === x),
@@ -288,7 +286,9 @@ export function validateArticleSectionOrder(relative, html) {
  */
 export function detectArticleTemplate(html) {
   const hasCommercialSourceNote =
-    /<details\b[^>]*class="[^"]*\bfold-section\b[^"]*\bsource-note\b/.test(html);
+    /<details\b[^>]*class="[^"]*\bfold-section\b[^"]*\bsource-note\b/.test(
+      html,
+    );
   if (hasCommercialSourceNote) return "commercialPage";
   const hasComparisonV2 = /class="[^"]*\barticle-comparison-v2\b/.test(html);
   const hasNextStep = /data-next-step/.test(html);
