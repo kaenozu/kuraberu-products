@@ -1,0 +1,53 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { yamazakiLaundryWireBasketArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://www.yamajitsu.co.jp/products/240001'
+const rightOfficial = 'https://www.yamajitsu.co.jp/products/240002'
+const leftImage = '/products/yamazaki-laundry-wire-basket-m.jpg'
+const rightImage = '/products/yamazaki-laundry-wire-basket-l.jpg'
+const leftAudience = '容量を抑え、低い高さで置きたい人向け'
+const rightAudience = '容量を増やし、より多くの洗濯物を入れたい人向け'
+
+const faqEntries = [
+  {question: 'ランドリーワイヤーバスケットのMとLの違いは？', answer: '公式仕様では、Mは容量23L・高さ24.7cm、Lは容量33L・高さ36.7cmです。どちらも幅23cm、奥行53cmです。'},
+  {question: '容量が大きいのはどちら？', answer: '公式記載の容量は、Mが23L、Lが33Lです。洗濯物を多く入れたい場合はLの容量を確認してください。'},
+  {question: '耐荷重は同じですか？', answer: '公式記載の耐荷重は、Mが3kg（静止荷重）、Lが4kg（静止荷重）です。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '商品サイズ（幅×奥行×高さ）', left: '23×53×24.7cm', right: '23×53×36.7cm', highlight: 'left', highlightNote: '高さ12cm低い'},
+  {label: '商品重量', left: '1450g', right: '1650g', highlight: 'left', highlightNote: '200g軽い'},
+  {label: '容量', left: '23L', right: '33L', highlight: 'right', highlightNote: '10L大きい'},
+  {label: '耐荷重', left: '3kg（静止荷重）', right: '4kg（静止荷重）', highlight: 'right', highlightNote: '1kg大きい'},
+  {label: '品質表示', left: '本体：スチール（ユニクロメッキ＋粉体塗装）', right: '本体：スチール（ユニクロメッキ＋粉体塗装）', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: '山崎実業', line: 'ランドリーワイヤーバスケット スリム M', tagline: '低い高さで置くなら', image: leftImage, imageAlt: '山崎実業 ランドリーワイヤーバスケット タワー スリム M', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['yamazaki-laundry-wire-basket-m-vs-l:left'].purchaseUrl}}
+  right={{brand: '山崎実業', line: 'ランドリーワイヤーバスケット スリム L', tagline: '容量を優先するなら', image: rightImage, imageAlt: '山崎実業 ランドリーワイヤーバスケット タワー スリム L', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['yamazaki-laundry-wire-basket-m-vs-l:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'山崎実業のランドリーワイヤーバスケット タワー スリム MとLを比較します。メーカー公式ページで確認できるサイズ・重量・容量・耐荷重をもとに、置き場所の高さと入れられる量のどちらを優先するか整理します。'}
+  summaryParagraph={'MはLより高さと重量を抑えやすく、Lは容量と耐荷重が大きい仕様です。置き場所の高さと洗濯物の量を先に確認してください。'}
+  officialDescription={'仕様の根拠は、山崎実業公式の商品ページで2026年8月25日に確認しました。この記事では公式に記載されたサイズ・重量・容量・品質表示・耐荷重だけを比較しています。'}
+  officialLinks={[
+    {label: 'ランドリーワイヤーバスケット スリム M 公式商品ページ', href: leftOfficial},
+    {label: 'ランドリーワイヤーバスケット スリム L 公式商品ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'山崎実業 ランドリーワイヤーバスケット スリム'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'山崎実業 ランドリーワイヤーバスケット タワー スリム M（240001）'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'山崎実業 ランドリーワイヤーバスケット タワー スリム L（240002）'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: '山崎実業公式：ランドリーワイヤーバスケット タワー スリム M', href: leftOfficial, checkedAt: '2026-08-25'},
+    {label: '山崎実業公式：ランドリーワイヤーバスケット タワー スリム L', href: rightOfficial, checkedAt: '2026-08-25'},
+  ]}
+/>

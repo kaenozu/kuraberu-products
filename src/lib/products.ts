@@ -415,6 +415,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 45L 3分別",
     purchaseUrl: "https://a.r10.to/hPN3m0",
   },
+  "yamazaki-laundry-wire-basket-m-vs-l:left": {
+    name: "山崎実業 ランドリーワイヤーバスケット タワー スリム M（240001）",
+    purchaseUrl: "https://a.r10.to/hgb9Ho",
+  },
+  "yamazaki-laundry-wire-basket-m-vs-l:right": {
+    name: "山崎実業 ランドリーワイヤーバスケット タワー スリム L（240002）",
+    purchaseUrl: "https://a.r10.to/hPyefh",
+  },
   "yamazaki-free-broom-32-vs-45:left": {
     name: "山崎産業 JS自由箒 32（BR952-032J-MB）",
     purchaseUrl: "https://a.r10.to/hP00rN",
