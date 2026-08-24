@@ -60,7 +60,7 @@ describe("article discovery", () => {
   it("escapes discovery JSON before embedding it in an application/json script", () => {
     const source = readFileSync("src/components/ArticleListPage.astro", "utf8");
     expect(source).toContain(
-      "set:html={JSON.stringify(discoveryIndex).replaceAll('<', '\\\\u003c')}",
+      "set:html={safeJsonForScript(discoveryIndex)}",
     );
   });
 });
