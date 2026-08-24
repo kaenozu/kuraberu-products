@@ -481,6 +481,17 @@ export async function resolveFinalUrl(target, options = {}) {
  * - ネットワークエラーは原則 fail-closed。allowNetworkSkip=true のとき warn-only
  * 戻り値: { errors, warnings, checked }
  */
+/**
+ * verified CTA の最終遷移先を許可ホストへ機械検証する。
+ * @param {{
+ *   urls: Array<{ article: string; key: string; url: string }>;
+ *   allowlist: ReadonlySet<string>;
+ *   fetchImpl?: typeof fetch;
+ *   maxHops?: number;
+ *   timeoutMs?: number;
+ *   allowNetworkSkip?: boolean;
+ * }} options
+ */
 export async function auditVerifiedCtaDestinations({
   urls,
   allowlist,

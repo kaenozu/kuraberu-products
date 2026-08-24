@@ -334,7 +334,7 @@ describe("verified CTA destination audit (issue #342)", () => {
 
   it("accepts an allowlisted initial host without touching the network", async () => {
     const calls: { url: string; init?: RequestInit }[] = [];
-    const fetchImpl = stubFetch({}, calls);
+    const fetchImpl = stubFetch({}, calls) as unknown as typeof fetch;
     const audit = await auditVerifiedCtaDestinations({
       urls: [{ article: "a", key: "a:left", url: "https://a.r10.to/h58jf3" }],
       allowlist: outboundHostAllowlist(),
@@ -359,7 +359,7 @@ describe("verified CTA destination audit (issue #342)", () => {
         },
       },
       calls,
-    );
+    ) as unknown as typeof fetch;
     const audit = await auditVerifiedCtaDestinations({
       urls: [
         { article: "a", key: "a:left", url: "https://promo.example.com/1" },
@@ -389,7 +389,7 @@ describe("verified CTA destination audit (issue #342)", () => {
         status: 200,
         headers: new Map(),
       },
-    });
+    }) as unknown as typeof fetch;
     const audit = await auditVerifiedCtaDestinations({
       urls: [
         { article: "a", key: "a:left", url: "https://promo.example.com/1" },
@@ -404,8 +404,10 @@ describe("verified CTA destination audit (issue #342)", () => {
 
   it("rejects chains that exceed the redirect hop cap", async () => {
     let hop = 0;
-    const fetchImpl = async (url: string) =>
-      redirect(`https://hop${++hop}.example.com/${new URL(url).pathname}`);
+    const fetchImpl = (async (url: string) =>
+      redirect(
+        `https://hop${++hop}.example.com/${new URL(url).pathname}`,
+      )) as unknown as typeof fetch;
     const audit = await auditVerifiedCtaDestinations({
       urls: [
         { article: "a", key: "a:left", url: "https://loop.example.com/x" },
@@ -443,12 +445,14 @@ describe("verified CTA destination audit (issue #342)", () => {
     const failing = async () => {
       throw new Error("DNS lookup failed");
     };
+    const failingFetchImpl = failing as unknown as typeof fetch;
     const options = {
       urls: [
         { article: "a", key: "a:left", url: "https://down.example.com/x" },
       ],
       allowlist: outboundHostAllowlist(),
-      fetchImpl: failing,
+      // 構造的に Response 互換のため typeof fetch へ明示キャストする。
+      fetchImpl: failing as unknown as typeof fetch,
     };
     const strict = await auditVerifiedCtaDestinations(options);
     expect(strict.errors).toHaveLength(1);
@@ -469,7 +473,7 @@ describe("verified CTA destination audit (issue #342)", () => {
     const audit = await auditVerifiedCtaDestinations({
       urls: [{ article: "a", key: "a:left", url: "::broken::" }],
       allowlist: outboundHostAllowlist(),
-      fetchImpl: stubFetch({}),
+      fetchImpl: stubFetch({}) as unknown as typeof fetch,
     });
     expect(audit.errors).toHaveLength(1);
     expect(audit.errors[0]).toContain("unparseable URL");
