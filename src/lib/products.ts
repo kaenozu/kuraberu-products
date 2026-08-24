@@ -6,6 +6,8 @@
  * 確認日と参照先は各記事の metadata（productInfoCheckedAt 等）で管理する。
  */
 
+import { rakutenAffiliateSearchUrl } from "./rakuten-affiliate";
+
 export interface ProductSpec {
   /** 容量（例: 0.5L） */
   capacity: string;
