@@ -27,8 +27,8 @@ interface Props {
   right: NextStepProduct;
   /** 対応する診断カテゴリページURL。未対応カテゴリでは省略する。 */
   diagnosisHref?: string;
-  /** 購入リンクの検証状態。unverified 以上の CTA を非表示にする。 */
-  purchaseLinkStatus?: "verified" | "unverified" | "unavailable";
+  /** 購入リンクの検証状態。verified を明示した場合だけ CTA を表示する。 */
+  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
 }
 
 const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
@@ -46,7 +46,7 @@ const buyRel = (affiliate: boolean) =>
     <h2 id="next-step">迷ったら、ここから決める</h2>
   </div>
   <div class="next-step__grid">
-    {purchaseLinkStatus !== 'unverified' && purchaseLinkStatus !== 'unavailable' && leftHref ? (
+    {purchaseLinkStatus === 'verified' && leftHref ? (
       <a
         class="next-step__buy next-step__buy--left"
         href={leftHref}
@@ -64,12 +64,10 @@ const buyRel = (affiliate: boolean) =>
       </a>
     ) : (
       <span class="next-step__buy next-step__buy--missing">
-        {purchaseLinkStatus === 'unverified' || purchaseLinkStatus === 'unavailable'
-          ? '購入先の確認中です'
-          : '左の商品情報が未設定です'}
+        購入先の確認中です
       </span>
     )}
-    {purchaseLinkStatus !== 'unverified' && purchaseLinkStatus !== 'unavailable' && rightHref ? (
+    {purchaseLinkStatus === 'verified' && rightHref ? (
       <a
         class="next-step__buy next-step__buy--right"
         href={rightHref}
@@ -87,9 +85,7 @@ const buyRel = (affiliate: boolean) =>
       </a>
     ) : (
       <span class="next-step__buy next-step__buy--missing">
-        {purchaseLinkStatus === 'unverified' || purchaseLinkStatus === 'unavailable'
-          ? '購入先の確認中です'
-          : '右の商品情報が未設定です'}
+        購入先の確認中です
       </span>
     )}
   </div>

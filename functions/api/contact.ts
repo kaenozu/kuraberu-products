@@ -3,7 +3,12 @@
 // 管理用 Telegram bot に転送する。
 //
 // 共通ヘルパー（clientIp / json / enforceRateLimit）は ./shared を使う。
-import { clientIp, enforceRateLimit, json } from "./shared";
+import {
+  clientIp,
+  enforceRateLimit,
+  json,
+  readBodyTextWithLimit,
+} from "./shared";
 import type { RateLimitResult } from "./shared";
 
 export { clientIp } from "./shared";
@@ -89,22 +94,43 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid content type" }, 415);
   }
 
-  // Content-Length の有無に関わらず、受け入れる body を上限付きで処理する。
-  // Content-Length が無い・不正確な request でも安全に保護する。
+  // Content-Length があれば早期に上限判定し、過大リクエストを本文の
+  // 読み込み前に拒否する。ヘッダー欠落・過少申告は次段の累積上限で担保する。
   const MAX_BODY_BYTES = 10_000;
   const contentLength = Number(request.headers.get("Content-Length") ?? 0);
   if (contentLength > MAX_BODY_BYTES) {
     return json({ ok: false, error: "payload too large" }, 413);
   }
 
-  // formData() 展開後の実サイズを確認（Content-Length 欠落・過少申告対策）。
-  const form = await request.formData();
+  // formData() の展開前に行う累積上限付きの本文読み込み。
+  // urlencoded 形式では 3バイトUTF-8文字が %XX%XX%XX（9バイト）へ膨張するため、
+  // 生バイトの上限はデコード後上限のおよそ9倍を見込む。超過時は読み込みを
+  // 途中で中断するため、巨大リクエストがメモリへフル展開されることはない。
+  const MAX_ENCODED_BODY_BYTES = 90_000;
+  const limitedBody = await readBodyTextWithLimit(
+    request,
+    MAX_ENCODED_BODY_BYTES,
+  );
+  if (!limitedBody.ok) {
+    return json({ ok: false, error: "payload too large" }, 413);
+  }
+
+  // 元ヘッダーの Content-Length は生バイト数であり、ここで組み立てる本文と
+  // 乖離し得るため外して渡す（新しい Request 側で再計算される）。
+  const headers = new Headers(request.headers);
+  headers.delete("Content-Length");
+  const form = await new Request(request.url, {
+    method: "POST",
+    headers,
+    body: limitedBody.text,
+  }).formData();
   const rawMessage = String(form.get("message") ?? "").trim();
   const rawName = String(form.get("name") ?? "").trim();
   const rawEmail = String(form.get("email") ?? "").trim();
   // UTF-16 の .length ではなく TextEncoder でバイト数を測る。多バイト文字
   //（日本語など）では .length < 実バイト数になるため、文字数ベースの判定は
-  // 上限を超過許容してしまう。フィールド名も含めて実ペイロードに近い値で比較する。
+  // 上限を超過許容してしまう。フィールド名も含めて実ペイロードに近い値で比較する
+  // （生バイト段階の上限は過大なので、デコード後の実サイズ検証として残す）。
   const encoder = new TextEncoder();
   const formFields: ReadonlyArray<readonly [string, string]> = [
     ["message", rawMessage],

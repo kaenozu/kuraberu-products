@@ -8,6 +8,7 @@
  */
 
 import type { Product } from "../../domain/diagnosis/types";
+import { rakutenAffiliateSearchUrl } from "../../lib/rakuten-affiliate";
 
 const NA9M_OFFICIAL = "https://panasonic.jp/hair/products/EH-NA9M.html";
 const NA9M_SPEC = "https://panasonic.jp/hair/products/EH-NA9M/spec.html";
@@ -44,7 +45,7 @@ export const panasonicEhNa9m: Product = {
   purchaseLinks: [
     {
       provider: "rakuten",
-      url: "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA9M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
+      url: rakutenAffiliateSearchUrl("EH-NA9M"),
       affiliate: true,
     },
   ],
@@ -73,7 +74,7 @@ export const panasonicEhNa7m: Product = {
   purchaseLinks: [
     {
       provider: "rakuten",
-      url: "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA7M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
+      url: rakutenAffiliateSearchUrl("EH-NA7M"),
       affiliate: true,
     },
   ],

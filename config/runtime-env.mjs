@@ -86,20 +86,52 @@ export function isAllowedRakutenUrl(value) {
 
 // 楽天アフィリエイトリダイレクトの共通プレフィックス（hb.afl 経由）。
 // AffiliateButton と NextStepBlock の両方が購入リンクの変換に使う。
-const RAKUTEN_AFFILIATE_REDIRECT =
-  "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=";
+//
+// リダイレクトIDは RAKUTEN_AFFILIATE_ID 環境変数を優先して組み立て、
+// 未設定・形式不正時は現行値へフォールバックする（CI / ローカルビルドが
+// 環境変数なしでも壊れないため）。商品ソース側に hb.afl を直書きしない。
+const DEFAULT_RAKUTEN_AFFILIATE_ID = "34e76967.d5cc3ae1.34e76968.3eade5e6";
+const RAKUTEN_AFFILIATE_ID_PATTERN =
+  /^[0-9a-f]{16}\.[0-9a-f]{8}\.[0-9a-f]{16}\.[0-9a-f]{8}$/i;
+
+function rakutenAffiliateRedirectPrefix(environment = process.env) {
+  const defaultPrefix = `https://hb.afl.rakuten.co.jp/hgc/${DEFAULT_RAKUTEN_AFFILIATE_ID}/?pc=`;
+  const affiliateId = environment.RAKUTEN_AFFILIATE_ID?.trim();
+  if (!affiliateId) return defaultPrefix;
+  if (!RAKUTEN_AFFILIATE_ID_PATTERN.test(affiliateId)) {
+    console.warn(
+      "RAKUTEN_AFFILIATE_ID の形式が不正なため既定のアフィリエイトIDへフォールバックします",
+    );
+    return defaultPrefix;
+  }
+  return `https://hb.afl.rakuten.co.jp/hgc/${affiliateId}/?pc=`;
+}
 
 // 購入リンクをアフィリエイトURLへ正規化する。
 // - 既にアフィリエイトURL（hb.afl / r10.to / a.r10.to）: そのまま返す
 // - 楽天の検索URL（search.rakuten.co.jp 等）: hb.afl のリダイレクトへ変換
 // - それ以外: そのまま返す（呼び出し側で isAllowedRakutenUrl により弾く）
-export function toAffiliateRakutenUrl(value) {
+export function toAffiliateRakutenUrl(value, environment = process.env) {
   if (!nonEmpty(value)) return undefined;
   if (isAffiliateRakutenUrl(value)) return value;
   if (/^https:\/\/(?:search\.|www\.)?rakuten\.co\.jp\//i.test(value)) {
-    return `${RAKUTEN_AFFILIATE_REDIRECT}${encodeURIComponent(value)}&link_type=text`;
+    return `${rakutenAffiliateRedirectPrefix(environment)}${encodeURIComponent(value)}&link_type=text`;
   }
   return value;
+}
+
+/**
+ * 型番・商品名クエリから楽天市場の検索→アフィリエイトURLを生成する。
+ * 商品レジストリ（src/lib/products.ts など）で hb.afl を直書きしないための
+ * 唯一の生成口。クエリは encodeURIComponent で検索URLへ埋め込んでから変換する。
+ */
+export function toAffiliateRakutenSearchUrl(query, environment = process.env) {
+  const keyword = typeof query === "string" ? query.trim() : "";
+  if (!keyword) return undefined;
+  return toAffiliateRakutenUrl(
+    `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}`,
+    environment,
+  );
 }
 
 // アフィリエイトURL（hb.afl / r10.to / a.r10.to）かどうか。
