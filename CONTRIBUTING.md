@@ -62,6 +62,16 @@ pnpm test
 
 `check:external-link-syntax` はネットワーク到達性を保証しません。公開前のリンク到達性は別の受入確認として実施します。
 
+### Browser / network E2E
+
+静的な `pnpm verify` では検出できない、実ブラウザの操作・表示・ネットワーク契約は Playwright で検証します。
+
+```bash
+pnpm test:e2e
+```
+
+このコマンドは build 後に Chromium を起動し、外部 embed の同意前リクエスト、診断の required / optional 進行、未確認購入 CTA の表示境界などを確認します。CI では `verify` と `e2e` を別 job として実行するため、どちらかが失敗した場合は原因を修正してから Ready 化してください。E2E の失敗を skip や assertion の弱体化で隠してはいけません。
+
 Production設定は本物の秘密値を使わず、次のようなテスト用URLで検証できます。
 
 ```bash
