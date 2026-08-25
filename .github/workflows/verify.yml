@@ -66,6 +66,24 @@ jobs:
           PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
         run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
 
+  # --- ブランチ保護の必須チェック名 "verify" を満たすゲートジョブ ---
+  # lint-and-test / build-and-verify は並列実行され、
+  # 両方が成功した場合にのみこのジョブが通る。
+  verify:
+    if: always()
+    needs: [lint-and-test, build-and-verify]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Check all jobs passed
+        run: |
+          if [ '${{ needs.lint-and-test.result }}' != 'success' ] || [ '${{ needs.build-and-verify.result }}' != 'success' ]; then
+            echo 'lint-and-test: ${{ needs.lint-and-test.result }}'
+            echo 'build-and-verify: ${{ needs.build-and-verify.result }}'
+            exit 1
+          fi
+          echo 'All required jobs passed.'
+
   # --- プライバシー契約の E2E 検証 ---
   e2e:
     # プライバシー契約（同意前のサードパーティリクエストゼロ）など
