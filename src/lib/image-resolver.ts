@@ -10,17 +10,17 @@
  * 最適化された画像参照が得られる。
  */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any -- ImageMetadata は astro:assets から直接エクスポートされないため
-type AnyImageMetadata = any;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// ImageMetadata は astro:assets から直接エクスポートされず、astro/dist/assets/types.js
+// もモジュール解決対象外のため、import.meta.glob の返すオブジェクト型を any で受ける。
+// Image コンポーネントは実行時にプロパティを消費するため、ここでの any は安全。
 
 const imageModules = import.meta.glob<{
-  default: AnyImageMetadata;
+  default: any;
 }>("/src/assets/products/*.{jpg,jpeg,png,webp,avif}", { eager: true });
 
-/** "/products/xxx.jpg" → ImageMetadata | undefined */
-export function resolveImage(
-  path: string | undefined,
-): AnyImageMetadata | undefined {
+/** "/products/xxx.jpg" → ImageMetadata（any）| undefined */
+export function resolveImage(path: string | undefined): any | undefined {
   if (!path) return undefined;
   // "/products/xxx.jpg" → "/src/assets/products/xxx.jpg"
   const normalized = path.replace(/^\/products\//, "/src/assets/products/");
