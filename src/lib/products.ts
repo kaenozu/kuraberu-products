@@ -428,6 +428,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 ランドリーワイヤーバスケット タワー スリム L（240002）",
     purchaseUrl: "https://a.r10.to/hPyefh",
   },
+  "yamazaki-ofuda-stand-rin-vs-single:left": {
+    name: "山崎実業 神札スタンド リン（6141・6142）",
+    purchaseUrl: "https://a.r10.to/hP8BTD",
+  },
+  "yamazaki-ofuda-stand-rin-vs-single:right": {
+    name: "山崎実業 神札スタンド リン シングル（6144）",
+    purchaseUrl: "https://a.r10.to/h59nMJ",
+  },
   "yamazaki-free-broom-32-vs-45:left": {
     name: "山崎産業 JS自由箒 32（BR952-032J-MB）",
     purchaseUrl: "https://a.r10.to/hP00rN",

@@ -50,6 +50,7 @@ import {
   additionalCommercialArticles,
   yamajitsuFilmHolderArticle,
   yamazakiLaundryWireBasketArticle,
+  yamazakiOfudaStandArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
 
@@ -83,7 +84,7 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(69);
+    expect(publicArticleMetadata).toHaveLength(70);
     const newlyPublishedIds = [
       "panasonic-mc-nx810km-vs-mc-nx700k",
       "roborock-qrevo-curv-vs-dreame-x50",
@@ -95,6 +96,7 @@ describe("article metadata", () => {
       "panasonic-es-lt4b-vs-es-lv7j",
       "yamajitsu-film-holder-242286-vs-242287",
       "yamazaki-laundry-wire-basket-m-vs-l",
+      "yamazaki-ofuda-stand-rin-vs-single",
       "zojirushi-eq-aa22-vs-eq-sa22",
     ];
     for (const id of newlyPublishedIds) {
@@ -201,6 +203,7 @@ describe("article metadata", () => {
       tigerKettlePcjVsPcmArticle,
       yamajitsuFilmHolderArticle,
       yamazakiLaundryWireBasketArticle,
+      yamazakiOfudaStandArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
@@ -230,7 +233,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(81);
+    ).toHaveLength(82);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
