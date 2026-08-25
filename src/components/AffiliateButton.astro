@@ -1,8 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import {isAllowedRakutenUrl, isAffiliateRakutenUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {resolvePurchaseHref} from '../lib/rakuten';
 import {productQueries} from '../lib/purchase-queries';
+import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
   /** 検証済みの楽天URL（許可ホスト以外は無視される） */
@@ -45,7 +47,7 @@ function findRegistryQuery(id: string | undefined) {
 // productId 未指定のときはレジストリを参照しない。登録済みならレジストリを優先し、
 // 無ければ genericQuery へフォールバックする。
 const query = findRegistryQuery(productId) ?? genericQuery;
-const fallbackHref = toAffiliateRakutenUrl(directHref);
+const fallbackHref = toAffiliateRakutenUrl(directHref, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
 const resolved = query
   ? await resolvePurchaseHref({
       keyword: query.keyword,
@@ -64,6 +66,7 @@ const ctaLabel = isAffiliateHref ? label : '楽天市場で検索';
 const ctaSubLabel = isAffiliateHref
   ? (subLabel ?? '商品ページを確認する')
   : '検索結果を確認する';
+const resolvedImage = resolveImage(imagePath);
 ---
 {valid ? (
   <a
@@ -75,7 +78,13 @@ const ctaSubLabel = isAffiliateHref
     data-placement={placement}
     data-cta-event={ARTICLE_LAYOUT.ctaEvent}
   >
-    {imagePath && <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />}
+    {imagePath && (
+      resolvedImage ? (
+        <Image class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" />
+      ) : (
+        <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />
+      )
+    )}
     <span class="cta-card-body">
       <span class="cta-card-label">{ctaLabel}</span>
       <span class="cta-card-sub">{ctaSubLabel} →{isAffiliateHref && <span class="ad-note">（広告）</span>}</span>

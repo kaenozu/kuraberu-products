@@ -32,8 +32,8 @@ interface Props {
 }
 
 const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
-const leftHref = toAffiliateRakutenUrl(left.href);
-const rightHref = toAffiliateRakutenUrl(right.href);
+const leftHref = toAffiliateRakutenUrl(left.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
+const rightHref = toAffiliateRakutenUrl(right.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
 const leftAffiliate = isAffiliateRakutenUrl(leftHref);
 const rightAffiliate = isAffiliateRakutenUrl(rightHref);
 const buyRel = (affiliate: boolean) =>

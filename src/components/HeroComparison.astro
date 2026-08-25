@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import { resolveImage } from "../lib/image-resolver";
+
 interface HeroProduct {
   /** ブランド名（例: サーモス） */
   brand: string;
@@ -38,6 +41,9 @@ const {
   leftPoints,
   rightPoints,
 } = Astro.props;
+
+const resolvedLeftImage = resolveImage(left.image);
+const resolvedRightImage = right ? resolveImage(right.image) : undefined;
 ---
 
 <section class="hero-compare" aria-label={eyebrow}>
@@ -53,14 +59,18 @@ const {
     {/* チェックリストは「こんな人に」の1行（tagline）と重複する要素を除いて表示する
         （全記事で tagline === guidePoints[0] のため、二重表示を防ぐ）。 */}
     {(() => {
-      const renderCard = (product: HeroProduct, points?: string[]) => {
+      const renderCard = (product: HeroProduct, points?: string[], resolvedImg?: any) => {
         const visiblePoints = (points ?? []).filter(
           (point) => point !== product.tagline,
         );
         return (
           <article class="hero-product">
             <a class="hero-product-img" href={product.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${product.brand} ${product.line} の公式商品ページを見る`}>
-              <img src={product.image} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" />
+              {resolvedImg ? (
+                <Image src={resolvedImg} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" />
+              ) : (
+                <img src={product.image} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" />
+              )}
             </a>
             <h3 class="hero-product-name"><span>{product.brand}</span> {product.line}</h3>
             {points ? (
@@ -85,8 +95,8 @@ const {
       };
       return (
         <>
-          {renderCard(left, leftPoints)}
-          {right && renderCard(right, rightPoints)}
+          {renderCard(left, leftPoints, resolvedLeftImage)}
+          {right && renderCard(right, rightPoints, resolvedRightImage)}
         </>
       );
     })()}

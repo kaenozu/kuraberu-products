@@ -94,7 +94,8 @@ describe("PurchaseCard", () => {
 
     expect(html).toContain("タイガー MTA-J050");
     expect(html).toContain('data-placement="article-end"');
-    expect(html).toContain('src="/products/tiger-mta-j050.jpg"');
+    // astro:assets で最適化された画像パスまたは元のパスのいずれかを含む
+    expect(html).toMatch(/src="[^"]*tiger-mta-j050/);
   });
 
   it("supports article-end placement", async () => {

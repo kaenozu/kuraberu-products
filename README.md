@@ -80,6 +80,7 @@ Production では次が必須です。
 
 任意:
 
+- `PUBLIC_RAKUTEN_AFFILIATE_REDIRECT`: 楽天アフィリエイトリダイレクトのURLプレフィックス。未設定時はデフォルト値を使用。
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
 - `PUBLIC_BUILD_SHA`: デプロイ検証用のビルド元コミットSHA。`tools/production/Invoke-ProductionBuildAndDeploy.ps1` が本番ビルド時に自動注入し、`Invoke-PostDeployVerification.ps1` が配信HTMLの `meta[name=build-sha]` と突合する。通常は手動設定不要。
 
