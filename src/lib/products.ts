@@ -484,4 +484,12 @@ export const articlePurchaseLinks = {
     name: "象印 EQ-SA22",
     purchaseUrl: "https://a.r10.to/h5DVzd",
   },
+  "sony-wh-1000xm6-vs-wh-1000xm5:left": {
+    name: "ソニー WH-1000XM6",
+    purchaseUrl: "https://a.r10.to/hgj0yu",
+  },
+  "sony-wh-1000xm6-vs-wh-1000xm5:right": {
+    name: "ソニー WH-1000XM5",
+    purchaseUrl: "https://a.r10.to/hPygQu",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
