@@ -52,6 +52,7 @@ import {
   yamajitsuFilmHolderArticle,
   yamazakiLaundryWireBasketArticle,
   yamazakiOfudaStandArticle,
+  yamazakiDishwasherRackArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
 
@@ -85,8 +86,9 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(72);
+    expect(publicArticleMetadata).toHaveLength(73);
     const newlyPublishedIds = [
+      "yamazaki-dishwasher-rack-241925-vs-241926",
       "panasonic-mc-nx810km-vs-mc-nx700k",
       "sony-wh-1000xm6-vs-wh-1000xm5",
       "roborock-qrevo-curv-vs-dreame-x50",
@@ -208,6 +210,7 @@ describe("article metadata", () => {
       yamajitsuFilmHolderArticle,
       yamazakiLaundryWireBasketArticle,
       yamazakiOfudaStandArticle,
+      yamazakiDishwasherRackArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
@@ -237,7 +240,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(84);
+    ).toHaveLength(85);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
