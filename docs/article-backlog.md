@@ -112,9 +112,10 @@
 
 ### 実装中
 
-| slug                                 | 状態                                           |
-| ------------------------------------ | ---------------------------------------------- |
-| `yamazaki-ofuda-stand-rin-vs-single` | 専用branchで実装・verify済み、Draft PR作成予定 |
+| slug                                        | 状態                                           |
+| ------------------------------------------- | ---------------------------------------------- |
+| `yamazaki-ofuda-stand-rin-vs-single`        | 専用branchで実装・verify済み、Draft PR作成予定 |
+| `yamazaki-dishwasher-rack-241925-vs-241926` | 専用branchで実装中、公式4点確認済み            |
 
 ### パナソニック NE-FL1A vs NE-FL1C（公開済み）
 

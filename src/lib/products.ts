@@ -436,6 +436,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 神札スタンド リン シングル（6144）",
     purchaseUrl: "https://a.r10.to/h59nMJ",
   },
+  "yamazaki-dishwasher-rack-241925-vs-241926:left": {
+    name: "山崎実業 食洗機ラック タワー ロータイプ（241925）",
+    purchaseUrl: "https://a.r10.to/T3hEWa",
+  },
+  "yamazaki-dishwasher-rack-241925-vs-241926:right": {
+    name: "山崎実業 食洗機ラック タワー ハイタイプ（241926）",
+    purchaseUrl: "https://a.r10.to/hg9gYo",
+  },
   "yamazaki-free-broom-32-vs-45:left": {
     name: "山崎産業 JS自由箒 32（BR952-032J-MB）",
     purchaseUrl: "https://a.r10.to/hP00rN",
