@@ -139,6 +139,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "server not configured" }, 500);
   }
 
+  // chatId が数値であることを確認。username 形式（"@channel" 等）は
+  // Number() で NaN になり、Telegram API が無視して失敗する。
+  const numericChatId = Number(chatId);
+  if (!Number.isFinite(numericChatId)) {
+    console.error("TELEGRAM_CHAT_ID is not numeric:", chatId);
+    return json({ ok: false, error: "server misconfigured" }, 500);
+  }
+
   // 簡単なスパム防止: メッセージに URL が多すぎる場合は拒否
   const urlCount = (body.message.match(/https?:\/\//g) ?? []).length;
   if (urlCount > 5) {
@@ -163,7 +171,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chat_id: Number(chatId),
+        chat_id: numericChatId,
         text,
         disable_web_page_preview: true,
       }),
