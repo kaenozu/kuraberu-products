@@ -35,6 +35,7 @@ import {
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiEqSb22VsAh22Article,
   zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
@@ -84,9 +85,10 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(70);
+    expect(publicArticleMetadata).toHaveLength(72);
     const newlyPublishedIds = [
       "panasonic-mc-nx810km-vs-mc-nx700k",
+      "sony-wh-1000xm6-vs-wh-1000xm5",
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
@@ -98,6 +100,7 @@ describe("article metadata", () => {
       "yamazaki-laundry-wire-basket-m-vs-l",
       "yamazaki-ofuda-stand-rin-vs-single",
       "zojirushi-eq-aa22-vs-eq-sa22",
+      "zojirushi-eq-sb22-vs-eq-ah22",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -190,6 +193,7 @@ describe("article metadata", () => {
       yamazakiFreeBroomArticle,
       yamazakiDustWagonArticle,
       zojirushiElectricKettleArticle,
+      zojirushiEqSb22VsAh22Article,
       zojirushiToasterArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
@@ -233,7 +237,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(82);
+    ).toHaveLength(84);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);

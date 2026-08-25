@@ -680,6 +680,36 @@ export const zojirushiCoffeeArticle = defineArticleMetadata({
   ],
 });
 
+export const zojirushiEqSb22VsAh22Article = defineArticleMetadata({
+  id: "zojirushi-eq-sb22-vs-eq-ah22",
+  productCount: 2,
+  path: "/articles/zojirushi-eq-sb22-vs-eq-ah22/",
+  title: "象印 EQ-SB22 と EQ-AH22、どっち？｜くらべる商品メモ",
+  headline: "象印のオーブントースター、どっち？「EQ-SB22」と「EQ-AH22」を比較",
+  description:
+    "象印 EQ-SB22とEQ-AH22を、公式のタイマー・外形寸法・庫内寸法・質量で比較",
+  category: "キッチン家電",
+  tags: ["オーブントースター", "象印", "キッチン家電"],
+  audiences: ["オーブントースターを選びたい人", "設置寸法と質量で比べたい人"],
+  uses: ["パンを焼く", "設置場所で選ぶ", "庫内寸法で選ぶ"],
+  summary:
+    "EQ-SB22とEQ-AH22を、象印公式の商品ページで確認できるタイマー・サイズ・庫内寸法・質量に分けて比較します。",
+  publishedAt: "2026-08-20",
+  modifiedAt: "2026-08-20",
+  productInfoCheckedAt: "2026-08-20",
+  purchaseLinksCheckedAt: "2026-08-20",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/zojirushi-eq-sb22.png",
+  aboutProductNames: ["象印 EQ-SB22", "象印 EQ-AH22"],
+  changeLog: [
+    {
+      date: "2026-08-20",
+      summary:
+        "初回公開。象印公式の商品ページ・画像と楽天公式生成画面の短縮URLを確認。",
+    },
+  ],
+});
+
 export const zojirushiToasterArticle = defineArticleMetadata({
   id: "zojirushi-eq-aa22-vs-eq-sa22",
   productCount: 2,
@@ -3433,6 +3463,59 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       { label: "重量", left: "185 g", right: "122 g" },
     ],
   },
+  {
+    id: "sony-wh-1000xm6-vs-wh-1000xm5",
+    title: "ソニー WH-1000XM6とWH-1000XM5、どっち？｜くらべる商品メモ",
+    headline:
+      "ソニーのワイヤレスヘッドホンを比較。電池持続時間・Bluetooth仕様で選ぶ",
+    description:
+      "ソニー WH-1000XM6とWH-1000XM5を、メーカー公式ページで確認できる電池持続時間・充電時間・Bluetooth仕様から比較します。",
+    category: "オーディオ",
+    tags: ["ワイヤレスヘッドホン", "ソニー", "ノイズキャンセリング"],
+    audiences: [
+      "購入前に公式仕様を比べたい人",
+      "WH-1000Xシリーズの違いを確認したい人",
+    ],
+    uses: ["音楽再生", "通話", "外出先での利用"],
+    summary:
+      "WH-1000XM6とWH-1000XM5について、公式ページで確認できる電池持続時間・充電時間・Bluetooth仕様を整理します。",
+    leftProduct: "ソニー WH-1000XM6",
+    rightProduct: "ソニー WH-1000XM5",
+    leftPoint: "Bluetooth 5.3とLE Audio対応を確認したい人向け",
+    rightPoint: "公式仕様と電池持続時間を確認して選びたい人向け",
+    productInfoCheckedAt: "2026-08-22",
+    modifiedAt: "2026-08-22",
+    purchaseLinkStatus: "verified",
+    purchaseLinksCheckedAt: "2026-08-22",
+    officialSources: [
+      {
+        label: "ソニー WH-1000XM6 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WH-1000XM6/",
+      },
+      {
+        label: "ソニー WH-1000XM5 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WH-1000XM5/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "電池持続時間（連続音声再生時間）",
+        left: "最大30時間（NC ON時）、最大40時間（NC OFF時）",
+        right: "最大30時間（NC ON時）、最大40時間（NC OFF時）",
+      },
+      { label: "充電時間", left: "約 3.5 時間", right: "約3.5時間" },
+      {
+        label: "Bluetooth通信方式",
+        left: "Bluetooth標準規格 Version5.3",
+        right: "Bluetooth標準規格 Ver.5.2",
+      },
+      {
+        label: "対応コーデック",
+        left: "SBC, AAC, LDAC, LC3",
+        right: "SBC, AAC, LDAC",
+      },
+    ],
+  },
 ];
 
 export const commercialArticleImages: Readonly<
@@ -3619,6 +3702,10 @@ export const commercialArticleImages: Readonly<
     left: "/products/logicool-zone-vibe-100-vs-zone-300-left.jpg",
     right: "/products/logicool-zone-vibe-100-vs-zone-300-right.jpg",
   },
+  "sony-wh-1000xm6-vs-wh-1000xm5": {
+    left: "/products/sony-wh-1000xm6-vs-wh-1000xm5-left.jpg",
+    right: "/products/sony-wh-1000xm6-vs-wh-1000xm5-right.jpg",
+  },
 };
 
 const createCommercialArticle = (
@@ -3761,6 +3848,7 @@ export const articleMetadata = Object.freeze([
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiEqSb22VsAh22Article,
   zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
