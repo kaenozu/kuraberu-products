@@ -90,7 +90,9 @@ async function main() {
     resized++;
   }
 
-  console.log(`\n結果: ${resized} ファイルリサイズ、${skipped} ファイルスキップ`);
+  console.log(
+    `\n結果: ${resized} ファイルリサイズ、${skipped} ファイルスキップ`,
+  );
   if (resized > 0) {
     const saved = ((totalBefore - totalAfter) / 1024).toFixed(0);
     console.log(
