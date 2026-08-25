@@ -319,6 +319,56 @@
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sa/"
       ],
       "note": ""
+    },
+    {
+      "articleId": "panasonic-mc-nx810km-vs-mc-nx700k",
+      "checkedAt": "2026-08-24",
+      "claimsFingerprint": "sha256:4cb14237a097bf61aceadf74478c7dcaf90e837fffbedf23dcb8b82bdf1525ed",
+      "officialUrls": [
+        "https://panasonic.jp/soji/products/MC-NX700K/spec.html",
+        "https://panasonic.jp/soji/products/MC-NX810KM/spec.html"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "yamazaki-laundry-wire-basket-m-vs-l",
+      "checkedAt": "2026-08-25",
+      "claimsFingerprint": "sha256:9256e8018cc9ec64b8789a7309606b02532be8d51f81552455657aa0f2944362",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/240001",
+        "https://www.yamajitsu.co.jp/products/240002"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "zojirushi-eq-sb22-vs-eq-ah22",
+      "checkedAt": "2026-08-20",
+      "claimsFingerprint": "sha256:2874fecd384b27e2eda62bf3fdf4f1b06a6ffbbc1c6e935a5bb523869be83493",
+      "officialUrls": [
+        "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-ah/",
+        "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sb/"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "yamazaki-ofuda-stand-rin-vs-single",
+      "checkedAt": "2026-08-25",
+      "claimsFingerprint": "sha256:c7bdfac53b42c55091d61fe1cc1f135d9a27f97290a2e8426945c58665363b18",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/242255",
+        "https://www.yamajitsu.co.jp/products/242256"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "yamazaki-dishwasher-rack-241925-vs-241926",
+      "checkedAt": "2026-08-18",
+      "claimsFingerprint": "sha256:4c03f82c8061a0b4d0bfd8abeeff7bf2c7c9f807ebadea4952f87ea75e6b0a33",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/241925",
+        "https://www.yamajitsu.co.jp/products/241926"
+      ],
+      "note": ""
     }
   ]
 }

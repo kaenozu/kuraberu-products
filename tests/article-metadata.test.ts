@@ -35,9 +35,11 @@ import {
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiEqSb22VsAh22Article,
   zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
+  panasonicMcNx810kmVsMcNx700kArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicAirCleanerArticle,
@@ -48,6 +50,9 @@ import {
   tigerKettlePcjVsPcmArticle,
   additionalCommercialArticles,
   yamajitsuFilmHolderArticle,
+  yamazakiLaundryWireBasketArticle,
+  yamazakiOfudaStandArticle,
+  yamazakiDishwasherRackArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
 
@@ -81,8 +86,11 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(67);
+    expect(publicArticleMetadata).toHaveLength(73);
     const newlyPublishedIds = [
+      "yamazaki-dishwasher-rack-241925-vs-241926",
+      "panasonic-mc-nx810km-vs-mc-nx700k",
+      "sony-wh-1000xm6-vs-wh-1000xm5",
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
@@ -91,7 +99,10 @@ describe("article metadata", () => {
       "panasonic-f-px60c-vs-f-px70c",
       "panasonic-es-lt4b-vs-es-lv7j",
       "yamajitsu-film-holder-242286-vs-242287",
+      "yamazaki-laundry-wire-basket-m-vs-l",
+      "yamazaki-ofuda-stand-rin-vs-single",
       "zojirushi-eq-aa22-vs-eq-sa22",
+      "zojirushi-eq-sb22-vs-eq-ah22",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -126,9 +137,8 @@ describe("article metadata", () => {
 
     expect(articleIndex).toContain("publicArticleMetadata");
     expect(memoPage).toContain("publicArticleMetadata");
-    expect(sitemap).toContain(
-      "...publicArticleMetadata.map((article) => article.path)",
-    );
+    expect(sitemap).toContain("publicArticleMetadata.map((article)");
+    expect(sitemap).toContain("article.modifiedAt");
     expect(articleIndex).not.toContain("thermos-tiger-bottle");
     expect(memoPage).not.toContain("thermos-tiger-bottle");
     expect(sitemap).not.toContain("thermos-tiger-bottle");
@@ -185,9 +195,11 @@ describe("article metadata", () => {
       yamazakiFreeBroomArticle,
       yamazakiDustWagonArticle,
       zojirushiElectricKettleArticle,
+      zojirushiEqSb22VsAh22Article,
       zojirushiToasterArticle,
       tefalGarmentSteamerArticle,
       kingjimTepraArticle,
+      panasonicMcNx810kmVsMcNx700kArticle,
       panasonicFyhvx120VsFyhvx90Article,
       panasonicBabyMonitorArticle,
       panasonicEhNa9mGuideArticle,
@@ -196,6 +208,9 @@ describe("article metadata", () => {
       panasonicEhNa9mVsEhNa7mArticle,
       tigerKettlePcjVsPcmArticle,
       yamajitsuFilmHolderArticle,
+      yamazakiLaundryWireBasketArticle,
+      yamazakiOfudaStandArticle,
+      yamazakiDishwasherRackArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
@@ -225,7 +240,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(79);
+    ).toHaveLength(85);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
@@ -508,6 +523,7 @@ describe.skipIf(!hasDist)("article trust line (rendered dist)", () => {
 describe.skipIf(!hasDist)("public commercial article quality gate", () => {
   it("renders concrete comparison rows without placeholder wording", () => {
     const articleSlugs = [
+      "panasonic-mc-nx810km-vs-mc-nx700k",
       "roborock-qrevo-curv-vs-dreame-x50",
       "makita-cl107-vs-cl286",
       "recolte-automatic-cooker-vs-panasonic-nf-pc400",
@@ -661,6 +677,26 @@ describe("article card audiences 向き line", () => {
       expect(
         article?.audiences.join(" "),
         `${id}: audiences contain unrelated wording`,
+      ).not.toMatch(forbidden);
+    }
+  });
+
+  it("does not leak unrelated category wording into article audiences", () => {
+    const forbiddenByArticle: ReadonlyArray<readonly [string, RegExp]> = [
+      ["panasonic-nt-t501-vs-nt-d700", /オーブンレンジ|冷蔵庫|冷凍室/],
+      ["panasonic-ne-bs9c-vs-ne-ubs10c", /冷蔵庫|冷凍室/],
+      ["panasonic-eh-na0k-vs-eh-ne9n", /Care機能/],
+      ["panasonic-es-wp9b-vs-es-wg0b", /レイザー式シェーバー/],
+      ["logicool-lift-vs-m550", /ロジカルロール/],
+    ];
+    for (const [id, forbidden] of forbiddenByArticle) {
+      const article = publicArticleMetadata.find(
+        (candidate) => candidate.id === id,
+      );
+      expect(article, `${id}: article metadata must exist`).toBeDefined();
+      expect(
+        article?.audiences.join(" "),
+        `${id}: unrelated wording remains`,
       ).not.toMatch(forbidden);
     }
   });

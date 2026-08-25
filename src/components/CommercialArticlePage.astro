@@ -6,6 +6,7 @@ import TrustLine from './TrustLine.astro';
 import NextStepBlock from './NextStepBlock.astro';
 import ArticleComparisonV2 from './ArticleComparisonV2.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages, publicArticleMetadata } from '../content/articles';
+import { articlePurchaseLinks } from '../lib/products';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
 
@@ -29,18 +30,33 @@ const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
 const leftSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
 const rightSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
+const staticPurchaseLinks = articlePurchaseLinks as Record<string, { purchaseUrl: string }>;
+const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchaseUrl;
+const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
-  resolvePurchaseHref({
-    keyword: seed.leftProduct,
-    requiredTerms: leftTerms,
-    fallbackUrl: leftSearchUrl,
-  }),
-  resolvePurchaseHref({
-    keyword: seed.rightProduct,
-    requiredTerms: rightTerms,
-    fallbackUrl: rightSearchUrl,
-  }),
+  leftStaticPurchaseUrl
+    ? Promise.resolve({
+        href: leftStaticPurchaseUrl,
+        isAffiliate: true,
+        product: undefined,
+      })
+    : resolvePurchaseHref({
+        keyword: seed.leftProduct,
+        requiredTerms: leftTerms,
+        fallbackUrl: leftSearchUrl,
+      }),
+  rightStaticPurchaseUrl
+    ? Promise.resolve({
+        href: rightStaticPurchaseUrl,
+        isAffiliate: true,
+        product: undefined,
+      })
+    : resolvePurchaseHref({
+        keyword: seed.rightProduct,
+        requiredTerms: rightTerms,
+        fallbackUrl: rightSearchUrl,
+      }),
 ]);
 const leftProductHref = leftResolved.href;
 const rightProductHref = rightResolved.href;
@@ -96,7 +112,7 @@ const faq = seed.faqEntries?.length
       },
     ];
 ---
-<BaseLayout title={article.title} description={article.description} article={article} robots={isPublicArticle ? undefined : 'noindex,nofollow'}>
+<BaseLayout title={article.title} description={article.description} article={article} faq={faq} robots={isPublicArticle ? undefined : 'noindex,nofollow'}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
     <h1>{article.headline}</h1>

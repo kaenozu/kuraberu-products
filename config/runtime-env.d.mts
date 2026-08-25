@@ -23,6 +23,11 @@ export function isAllowedRakutenUrl(value: unknown): boolean;
 export function toAffiliateRakutenUrl(
   value: string | undefined,
   redirectPrefix?: string,
+  environment?: EnvironmentValues,
+): string | undefined;
+export function toAffiliateRakutenSearchUrl(
+  query: unknown,
+  environment?: EnvironmentValues,
 ): string | undefined;
 export function isAffiliateRakutenUrl(value: string | undefined): boolean;
 export function normalizeOptionalRakutenUrl(

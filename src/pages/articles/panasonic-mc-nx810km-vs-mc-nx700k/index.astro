@@ -1,0 +1,49 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { panasonicMcNx810kmVsMcNx700kArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://panasonic.jp/soji/products/MC-NX810KM/spec.html'
+const rightOfficial = 'https://panasonic.jp/soji/products/MC-NX700K/spec.html'
+const leftImage = '/products/panasonic-mc-nx810km.jpg'
+const rightImage = '/products/panasonic-mc-nx700k.jpg'
+const leftAudience = 'マイクロミストやからまないブラシPlusなどの付加機能を重視する人向け'
+const rightAudience = '本体幅を抑え、アイドリングオフ機能やイオンプレートを確認したい人向け'
+
+const faqEntries = [
+  { question: 'MC-NX810KMとMC-NX700Kの共通点は？', answer: 'どちらもスティックがフィルターレスサイクロン式、クリーンドックが紙パック式のコードレス掃除機です。スティックの集じん容積は0.15L、クリーンドックは0.9L、使用時間の目安と充電時間も公式仕様では共通です。' },
+  { question: 'MC-NX810KMとMC-NX700Kの主な違いは？', answer: 'MC-NX810KMはマイクロミスト、菌までふき掃除、LEDライト、からまないブラシPlusを搭載。MC-NX700Kはアイドリングオフ機能とイオンプレートを搭載しています。寸法と質量も異なります。' },
+  { question: '本体が軽いのはどちら？', answer: 'スティック時の質量はMC-NX810KMが1.9kg、MC-NX700Kが2.0kgです。数値上はMC-NX810KMが0.1kg軽いですが、持ち方や付属ノズル使用時など条件を含めて公式仕様を確認してください。' },
+  { question: '本体幅を抑えやすいのはどちら？', answer: 'スティック時の幅はMC-NX810KMが220mm、MC-NX700Kが253mmです。設置や収納場所は奥行き・高さも含めて確認してください。' },
+  { question: '楽天市場の価格や在庫は比較できる？', answer: '購入リンクは2026年8月24日に確認した楽天市場の導線です。価格・在庫・ポイント・送料は購入時点の販売先表示をご確認ください。' },
+]
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: 'スティック時の質量', left: '1.9kg', right: '2.0kg', highlight: 'left', highlightNote: '0.1kg軽い' },
+  { label: 'スティック時の寸法（幅×奥行×高さ）', left: '220×202×1,127mm', right: '253×193×1,130mm', highlight: 'left', highlightNote: '幅が33mm小さい' },
+  { label: 'スティックの集じん方式', left: 'フィルターレスサイクロン式', right: 'フィルターレスサイクロン式' },
+  { label: '使用時間の目安（HIGH/AUTO/LONG）', left: '約10分/約16～28分/約35分・約70分', right: '約10分/約16～28分/約35分・約70分' },
+  { label: 'ノズル・付加機能', left: 'からまないブラシPlus、マイクロミスト、LEDライト', right: 'からまないブラシ、イオンプレート、アイドリングオフ' },
+]
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{ brand: 'パナソニック', line: 'MC-NX810KM', tagline: '付加機能・軽さなら', image: leftImage, imageAlt: 'パナソニック MC-NX810KM', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-mc-nx810km-vs-mc-nx700k:left'].purchaseUrl }}
+  right={{ brand: 'パナソニック', line: 'MC-NX700K', tagline: '幅・搭載機能なら', image: rightImage, imageAlt: 'パナソニック MC-NX700K', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-mc-nx810km-vs-mc-nx700k:right'].purchaseUrl }}
+  keyDiffRows={keyDiffRows}
+  lead={'パナソニックのセパレート型コードレススティック掃除機 MC-NX810KMとMC-NX700Kを、公式仕様の集じん方式・使用時間・質量・寸法・ノズル機能で比較します。価格・在庫は販売先でご確認ください。'}
+  summaryParagraph={'からまないブラシPlusやマイクロミストなどの付加機能を確認したいならMC-NX810KM、本体幅やアイドリングオフ機能などを比較したいならMC-NX700Kが候補です。どちらも設置場所と付属品を公式仕様で確認してください。'}
+  officialDescription={'比較の根拠は、パナソニック公式の各仕様ページで確認した情報です。公式情報確認日：{articleMetadata.productInfoCheckedAt}。'}
+  officialLinks={[{ label: 'MC-NX810KM 公式仕様ページ', href: leftOfficial }, { label: 'MC-NX700K 公式仕様ページ', href: rightOfficial }]}
+  socialProofQuery={'パナソニック MC-NX810KM MC-NX700K'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'パナソニック MC-NX810KM'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'パナソニック MC-NX700K'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[{ label: 'パナソニック MC-NX810KM 公式仕様ページ', href: leftOfficial, checkedAt: articleMetadata.productInfoCheckedAt }, { label: 'パナソニック MC-NX700K 公式仕様ページ', href: rightOfficial, checkedAt: articleMetadata.productInfoCheckedAt }]}
+  purchaseWarning={'掃除機は本体寸法、クリーンドックの設置スペース、使用時間、付属品を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。'}
+  disclaimer={'この比較は、パナソニック公式の仕様ページで確認できる情報を根拠にしています。SNSの感想や未確認の販売情報は比較の根拠にしていません。'}
+/>

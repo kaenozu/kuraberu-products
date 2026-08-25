@@ -680,6 +680,36 @@ export const zojirushiCoffeeArticle = defineArticleMetadata({
   ],
 });
 
+export const zojirushiEqSb22VsAh22Article = defineArticleMetadata({
+  id: "zojirushi-eq-sb22-vs-eq-ah22",
+  productCount: 2,
+  path: "/articles/zojirushi-eq-sb22-vs-eq-ah22/",
+  title: "象印 EQ-SB22 と EQ-AH22、どっち？｜くらべる商品メモ",
+  headline: "象印のオーブントースター、どっち？「EQ-SB22」と「EQ-AH22」を比較",
+  description:
+    "象印 EQ-SB22とEQ-AH22を、公式のタイマー・外形寸法・庫内寸法・質量で比較",
+  category: "キッチン家電",
+  tags: ["オーブントースター", "象印", "キッチン家電"],
+  audiences: ["オーブントースターを選びたい人", "設置寸法と質量で比べたい人"],
+  uses: ["パンを焼く", "設置場所で選ぶ", "庫内寸法で選ぶ"],
+  summary:
+    "EQ-SB22とEQ-AH22を、象印公式の商品ページで確認できるタイマー・サイズ・庫内寸法・質量に分けて比較します。",
+  publishedAt: "2026-08-20",
+  modifiedAt: "2026-08-20",
+  productInfoCheckedAt: "2026-08-20",
+  purchaseLinksCheckedAt: "2026-08-20",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/zojirushi-eq-sb22.png",
+  aboutProductNames: ["象印 EQ-SB22", "象印 EQ-AH22"],
+  changeLog: [
+    {
+      date: "2026-08-20",
+      summary:
+        "初回公開。象印公式の商品ページ・画像と楽天公式生成画面の短縮URLを確認。",
+    },
+  ],
+});
+
 export const zojirushiToasterArticle = defineArticleMetadata({
   id: "zojirushi-eq-aa22-vs-eq-sa22",
   productCount: 2,
@@ -1169,6 +1199,112 @@ export const yamazakiDustWagonArticle = defineArticleMetadata({
   ],
 });
 
+export const yamazakiLaundryWireBasketArticle = defineArticleMetadata({
+  id: "yamazaki-laundry-wire-basket-m-vs-l",
+  productCount: 2,
+  path: "/articles/yamazaki-laundry-wire-basket-m-vs-l/",
+  title: "山崎実業 ランドリーワイヤーバスケット、どっち？｜くらべる商品メモ",
+  headline: "山崎実業のランドリーワイヤーバスケット、スリムMとLを比較",
+  description:
+    "山崎実業のランドリーワイヤーバスケット タワー スリム MとLを、公式のサイズ・重量・容量・耐荷重で比較",
+  category: "ランドリー用品",
+  tags: ["山崎実業", "ランドリー", "収納"],
+  audiences: ["洗濯物の容量で選びたい人", "ランドリー収納の高さを比べたい人"],
+  uses: ["洗濯物を入れる", "ランドリー周りに置く", "容量を比較する"],
+  summary:
+    "ランドリーワイヤーバスケット タワー スリム MとLを、山崎実業公式の商品ページで確認できるサイズ・重量・容量・耐荷重に分けて比較します。",
+  publishedAt: "2026-08-25",
+  modifiedAt: "2026-08-25",
+  productInfoCheckedAt: "2026-08-25",
+  purchaseLinksCheckedAt: "2026-08-25",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamazaki-laundry-wire-basket-m.jpg",
+  aboutProductNames: [
+    "山崎実業 ランドリーワイヤーバスケット タワー スリム M（240001）",
+    "山崎実業 ランドリーワイヤーバスケット タワー スリム L（240002）",
+  ],
+  changeLog: [
+    {
+      date: "2026-08-25",
+      summary:
+        "山崎実業公式の商品ページ・画像と楽天公式生成画面の短縮URLを確認して初稿を追加。",
+    },
+  ],
+});
+
+export const yamazakiOfudaStandArticle = defineArticleMetadata({
+  id: "yamazaki-ofuda-stand-rin-vs-single",
+  productCount: 2,
+  path: "/articles/yamazaki-ofuda-stand-rin-vs-single/",
+  title: "山崎実業 神札スタンド リン、どっち？｜くらべる商品メモ",
+  headline: "山崎実業の神札スタンド、通常幅のリンとシングルを比較",
+  description:
+    "山崎実業の神札スタンド リンとリン シングルを、公式のサイズ・重量・内寸・材質で比較",
+  category: "インテリア・収納",
+  tags: ["山崎実業", "神札スタンド", "収納"],
+  audiences: ["神札を複数置く幅を確保したい人", "設置幅を抑えたい人"],
+  uses: ["神札を置く", "棚や家具の上に設置する", "設置幅を比較する"],
+  summary:
+    "神札スタンド リンとリン シングルを、山崎実業公式の商品ページで確認できるサイズ・重量・内寸・材質に分けて比較します。",
+  publishedAt: "2026-08-25",
+  modifiedAt: "2026-08-25",
+  productInfoCheckedAt: "2026-08-25",
+  purchaseLinksCheckedAt: "2026-08-25",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamazaki-ofuda-stand-rin.jpg",
+  aboutProductNames: [
+    "山崎実業 神札スタンド リン（6141・6142）",
+    "山崎実業 神札スタンド リン シングル（6144）",
+  ],
+  changeLog: [
+    {
+      date: "2026-08-25",
+      summary:
+        "山崎実業公式の商品ページ・画像と楽天公式生成画面の短縮URLを確認して初稿を追加。",
+    },
+  ],
+});
+
+export const yamazakiDishwasherRackArticle = defineArticleMetadata({
+  id: "yamazaki-dishwasher-rack-241925-vs-241926",
+  productCount: 2,
+  path: "/articles/yamazaki-dishwasher-rack-241925-vs-241926/",
+  title: "山崎実業 食洗機ラック、どっち？｜くらべる商品メモ",
+  headline: "山崎実業の伸縮食洗機ラック、ロータイプとハイタイプを比較",
+  description:
+    "山崎実業の食洗機ラック タワー ロータイプとハイタイプを、公式のサイズ・重量・耐荷重・設置条件で比較",
+  category: "キッチン収納",
+  tags: ["山崎実業", "食洗機ラック", "キッチン収納"],
+  audiences: [
+    "食洗機ラックの設置高さを比べたい人",
+    "カウンター下の空間に合うラックを選びたい人",
+  ],
+  uses: [
+    "食洗機を載せる",
+    "キッチンカウンターに設置する",
+    "設置高さを確認する",
+  ],
+  summary:
+    "食洗機ラック タワー ロータイプとハイタイプを、山崎実業公式の商品ページで確認できるサイズ・重量・耐荷重・設置条件に分けて比較します。",
+  publishedAt: "2026-08-25",
+  modifiedAt: "2026-08-25",
+  productInfoCheckedAt: "2026-08-18",
+  purchaseLinksCheckedAt: "2026-08-25",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/yamazaki-dishwasher-rack-low.jpg",
+  aboutProductNames: [
+    "山崎実業 食洗機ラック タワー ロータイプ（241925）",
+    "山崎実業 食洗機ラック タワー ハイタイプ（241926）",
+  ],
+  changeLog: [
+    {
+      date: "2026-08-25",
+      summary:
+        "山崎実業公式の商品ページ・画像と楽天公式生成画面の短縮URLを確認して初稿を追加。",
+    },
+  ],
+});
+
 export const zojirushiElectricKettleArticle = defineArticleMetadata({
   id: "zojirushi-ck-pa08-vs-ck-dc08",
   productCount: 2,
@@ -1275,6 +1411,40 @@ export const kingjimTepraArticle = defineArticleMetadata({
   ],
 });
 
+export const panasonicMcNx810kmVsMcNx700kArticle = defineArticleMetadata({
+  id: "panasonic-mc-nx810km-vs-mc-nx700k",
+  productCount: 2,
+  path: "/articles/panasonic-mc-nx810km-vs-mc-nx700k/",
+  title: "パナソニック MC-NX810KMとMC-NX700K、どっち？｜くらべる商品メモ",
+  headline:
+    "パナソニックのセパレート型コードレススティック掃除機、どっち？「MC-NX810KM」と「MC-NX700K」を比較",
+  description:
+    "パナソニック MC-NX810KMとMC-NX700Kを、公式の集じん容量・使用時間・質量・寸法・付属機能で比較",
+  category: "掃除・収納",
+  tags: ["掃除機", "コードレス掃除機", "パナソニック"],
+  audiences: [
+    "コードレス掃除機を選びたい人",
+    "クリーンドック付き掃除機を公式仕様で比較したい人",
+  ],
+  uses: ["日常の掃除", "クリーンドックで収納する", "床の掃除をする"],
+  summary:
+    "MC-NX810KMとMC-NX700Kを、パナソニック公式の集じん方式・使用時間・質量・寸法・ノズル機能に分けて比較します。",
+  publishedAt: "2026-08-24",
+  modifiedAt: "2026-08-24",
+  productInfoCheckedAt: "2026-08-24",
+  purchaseLinksCheckedAt: "2026-08-24",
+  purchaseLinkStatus: "verified",
+  imagePath: "/products/panasonic-mc-nx810km.jpg",
+  aboutProductNames: ["パナソニック MC-NX810KM", "パナソニック MC-NX700K"],
+  changeLog: [
+    {
+      date: "2026-08-24",
+      summary:
+        "パナソニック公式の仕様ページで両機種の仕様・画像を確認し、楽天公式UIで生成した短縮リンクを追加。",
+    },
+  ],
+});
+
 export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
   id: "panasonic-f-yhvx120-vs-f-yhvx90",
   productCount: 2,
@@ -1284,7 +1454,7 @@ export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
     "パナソニックの衣類乾燥除湿機、どっち？「F-YHVX120」と「F-YHVX90」を比較",
   description:
     "パナソニック F-YHVX120とF-YHVX90を、公式のタンク容量・木造対応畳数・重量・寸法・強運転音で比較",
-  category: "生活家電",
+  category: "衣類ケア",
   tags: ["衣類乾燥除湿機", "除湿機", "パナソニック"],
   audiences: [
     "衣類乾燥除湿機を選びたい人",
@@ -1644,11 +1814,11 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     officialSources: [
       {
         label: "マキタ CL107FDSHW 公式商品ページ",
-        url: "https://www.makita.co.jp/products/details/CL107FDSHW",
+        url: "https://www.makita.co.jp/product/detail/?model=CL107FD",
       },
       {
         label: "マキタ CL286FD 公式商品ページ",
-        url: "https://www.makita.co.jp/products/details/CL286FD",
+        url: "https://www.makita.co.jp/product/detail/?model=CL286FD",
       },
     ],
     verifiedRows: [
@@ -1659,18 +1829,18 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "集じん方式",
-        left: "紙パック式（0.3L）",
-        right: "サイクロン一体式（容量は公式仕様表を確認）",
+        left: "紙パック式（ダストバッグ500mL／紙パック330mL）",
+        right: "サイクロン一体式（集じん容量250mL）",
       },
       {
-        label: "最大吸引力",
-        left: "公式未公表",
-        right: "公式未公表",
+        label: "吸込仕事率",
+        left: "パワフル32W／強20W／標準5W",
+        right: "パワフル100W／強60W／標準35W／エコ15W",
       },
       {
-        label: "運転時間（強）",
-        left: "約10〜25分（モードにより異なる）",
-        right: "バッテリー・モードにより異なる（公式仕様表を確認）",
+        label: "1充電使用量の目安",
+        left: "パワフル約10分／強約12分／標準約25分",
+        right: "パワフル約8分／強約15分／標準約21分／エコ約38分",
       },
       {
         label: "バッテリー",
@@ -1679,8 +1849,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       },
       {
         label: "充電時間",
-        left: "約22分（BL1015）",
-        right: "バッテリーにより異なる",
+        left: "DC10SA：約22分",
+        right: "DC18RF：実用充電約17分／フル充電約22分",
       },
       {
         label: "取付具",
@@ -1737,8 +1907,8 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     rightProduct: "パナソニック NF-PC400",
     leftPoint: "少量調理と置き場所を優先する人向け",
     rightPoint: "家族分の調理容量と多機能さを確認したい人向け",
-    productInfoCheckedAt: "2026-08-20",
-    modifiedAt: "2026-08-20",
+    productInfoCheckedAt: "2026-08-25",
+    modifiedAt: "2026-08-25",
     purchaseLinkStatus: "unverified",
     officialSources: [
       {
@@ -1752,39 +1922,30 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
     ],
     verifiedRows: [
       {
-        label: "容量",
-        left: "約600mL",
-        right: "調理容量2.6L・最大6人分",
+        label: "容量・人数",
+        left: "約600mL。スープは1回で2〜4人分",
+        right: "調理容量2.6L。最大6人分",
       },
       {
-        label: "消費電力",
-        left: "600W（JUICE&CLEANは55W）",
-        right: "公式ページ本文で確認できず",
+        label: "調理モード・メニュー",
+        left: "5種類（POTAGE&PASTE、SOUP&OKAYU、SOYMILK、JUICE&CLEAN、WARM）",
+        right: "自動メニュー20種類。圧力・無水・低温・蒸し調理にも対応",
       },
       {
-        label: "サイズ",
-        left: "約幅16.5×奥行12.0×高さ23.3cm",
-        right: "公式ページ本文で確認できず",
+        label: "予約・保温",
+        left: "WARMモードで75℃前後をキープ",
+        right:
+          "予約は3〜15時間後（一部自動調理のみ）。保温可能なメニューは調理後3時間まで自動保温",
       },
       {
-        label: "温度",
-        left: "WARM：約75℃前後",
-        right: "数値は公式ページで確認できず",
-      },
-      {
-        label: "調理モード",
-        left: "5種類（SOYMILKなど）",
-        right: "20種類の自動メニュー。圧力・無水・低温・蒸し・煮込み",
-      },
-      {
-        label: "予約",
-        left: "公式ページで確認できず",
-        right: "3〜15時間後（一部自動調理のみ）",
-      },
-      {
-        label: "手入れ",
-        left: "JUICE&CLEAN約3分。本体外側・電源コードは水洗い不可",
+        label: "お手入れ",
+        left: "本体内側はセラミックコーティング。お手入れブラシとプラグカバー付き",
         right: "ふた・内ふた・内なべの3点。蒸し板使用時は蒸し板も洗浄",
+      },
+      {
+        label: "調理できる内容",
+        left: "ポタージュ、食べるスープ、おかゆ、豆乳、スムージーなど",
+        right: "角煮、肉じゃが、カレー、炊飯、無水・低温・蒸し調理など",
       },
     ],
   },
@@ -3342,6 +3503,59 @@ const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
       { label: "重量", left: "185 g", right: "122 g" },
     ],
   },
+  {
+    id: "sony-wh-1000xm6-vs-wh-1000xm5",
+    title: "ソニー WH-1000XM6とWH-1000XM5、どっち？｜くらべる商品メモ",
+    headline:
+      "ソニーのワイヤレスヘッドホンを比較。電池持続時間・Bluetooth仕様で選ぶ",
+    description:
+      "ソニー WH-1000XM6とWH-1000XM5を、メーカー公式ページで確認できる電池持続時間・充電時間・Bluetooth仕様から比較します。",
+    category: "オーディオ",
+    tags: ["ワイヤレスヘッドホン", "ソニー", "ノイズキャンセリング"],
+    audiences: [
+      "購入前に公式仕様を比べたい人",
+      "WH-1000Xシリーズの違いを確認したい人",
+    ],
+    uses: ["音楽再生", "通話", "外出先での利用"],
+    summary:
+      "WH-1000XM6とWH-1000XM5について、公式ページで確認できる電池持続時間・充電時間・Bluetooth仕様を整理します。",
+    leftProduct: "ソニー WH-1000XM6",
+    rightProduct: "ソニー WH-1000XM5",
+    leftPoint: "Bluetooth 5.3とLE Audio対応を確認したい人向け",
+    rightPoint: "公式仕様と電池持続時間を確認して選びたい人向け",
+    productInfoCheckedAt: "2026-08-22",
+    modifiedAt: "2026-08-22",
+    purchaseLinkStatus: "verified",
+    purchaseLinksCheckedAt: "2026-08-22",
+    officialSources: [
+      {
+        label: "ソニー WH-1000XM6 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WH-1000XM6/",
+      },
+      {
+        label: "ソニー WH-1000XM5 公式商品ページ",
+        url: "https://www.sony.jp/headphone/products/WH-1000XM5/",
+      },
+    ],
+    verifiedRows: [
+      {
+        label: "電池持続時間（連続音声再生時間）",
+        left: "最大30時間（NC ON時）、最大40時間（NC OFF時）",
+        right: "最大30時間（NC ON時）、最大40時間（NC OFF時）",
+      },
+      { label: "充電時間", left: "約 3.5 時間", right: "約3.5時間" },
+      {
+        label: "Bluetooth通信方式",
+        left: "Bluetooth標準規格 Version5.3",
+        right: "Bluetooth標準規格 Ver.5.2",
+      },
+      {
+        label: "対応コーデック",
+        left: "SBC, AAC, LDAC, LC3",
+        right: "SBC, AAC, LDAC",
+      },
+    ],
+  },
 ];
 
 export const commercialArticleImages: Readonly<
@@ -3528,6 +3742,10 @@ export const commercialArticleImages: Readonly<
     left: "/products/logicool-zone-vibe-100-vs-zone-300-left.jpg",
     right: "/products/logicool-zone-vibe-100-vs-zone-300-right.jpg",
   },
+  "sony-wh-1000xm6-vs-wh-1000xm5": {
+    left: "/products/sony-wh-1000xm6-vs-wh-1000xm5-left.jpg",
+    right: "/products/sony-wh-1000xm6-vs-wh-1000xm5-right.jpg",
+  },
 };
 
 const createCommercialArticle = (
@@ -3670,9 +3888,11 @@ export const articleMetadata = Object.freeze([
   yamazakiFreeBroomArticle,
   yamazakiDustWagonArticle,
   zojirushiElectricKettleArticle,
+  zojirushiEqSb22VsAh22Article,
   zojirushiToasterArticle,
   tefalGarmentSteamerArticle,
   kingjimTepraArticle,
+  panasonicMcNx810kmVsMcNx700kArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicBabyMonitorArticle,
   panasonicEhNa9mGuideArticle,
@@ -3681,6 +3901,9 @@ export const articleMetadata = Object.freeze([
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
   yamajitsuFilmHolderArticle,
+  yamazakiLaundryWireBasketArticle,
+  yamazakiOfudaStandArticle,
+  yamazakiDishwasherRackArticle,
   ...additionalCommercialArticles,
 ]);
 

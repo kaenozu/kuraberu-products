@@ -1,19 +1,16 @@
 ---
 import ArticleListPage from '../../../components/ArticleListPage.astro';
 import { publicArticleMetadata } from '../../../content/articles';
+import { ARTICLE_LIST_PAGE_SIZE, sortByModifiedAtDesc } from '../../../lib/article-list';
 
 const categories = [...new Set(publicArticleMetadata.map((article) => article.category))].sort();
 const tags = [...new Set(publicArticleMetadata.flatMap((article) => article.tags))].sort();
-const sorted = [...publicArticleMetadata].sort((a, b) =>
-  a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0,
-);
-const pageSize = 12;
+const sorted = sortByModifiedAtDesc(publicArticleMetadata);
+const pageSize = ARTICLE_LIST_PAGE_SIZE;
 
 export function getStaticPaths() {
-  const pageSize = 12;
-  const sortedArticles = [...publicArticleMetadata].sort((a, b) =>
-    a.modifiedAt < b.modifiedAt ? 1 : a.modifiedAt > b.modifiedAt ? -1 : 0,
-  );
+  const pageSize = ARTICLE_LIST_PAGE_SIZE;
+  const sortedArticles = sortByModifiedAtDesc(publicArticleMetadata);
   const totalPages = Math.ceil(sortedArticles.length / pageSize);
   return Array.from({ length: Math.max(totalPages - 1, 0) }, (_, index) => {
     const currentPage = index + 2;

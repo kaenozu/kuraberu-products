@@ -6,7 +6,13 @@
 // - Cookie・フィンガープリント・IP は収集・保存しない（IP はレート制限の判定に一時使用するだけ）
 // - 第三者ドメインへの送信は一切行わない（すべて同一オリジン）
 // - KV 未設定・障害時はイベントを破棄して 204 を返し続ける（計測はサイト体験の可用性より劣後）
-import { clientIp, enforceRateLimit, isSameSiteOrigin, json } from "./shared";
+import {
+  clientIp,
+  enforceRateLimit,
+  isSameSiteOrigin,
+  json,
+  readBodyTextWithLimit,
+} from "./shared";
 import { ARTICLE_LAYOUT } from "../../config/article-layout.mjs";
 
 const MAX_BODY_BYTES = 4096;
@@ -50,11 +56,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     });
   }
 
-  // サイズ上限と JSON パース
-  const raw = await request.text();
-  if (new TextEncoder().encode(raw).length > MAX_BODY_BYTES) {
+  // サイズ上限（累積バイト数、超過時は読み込みを中断）と JSON パース。
+  // request.text() のフル読込後判定ではなく、チャンク単位で上限を検査するため
+  // Content-Length を偽装・省略した巨大リクエストもメモリへ展開されない。
+  const limitedBody = await readBodyTextWithLimit(request, MAX_BODY_BYTES);
+  if (!limitedBody.ok) {
     return json({ ok: false, error: "payload too large" }, 413);
   }
+  const raw = limitedBody.text;
   let body: AnalyticsEvent;
   try {
     body = JSON.parse(raw);

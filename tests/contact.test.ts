@@ -462,6 +462,32 @@ describe("onRequestPost", () => {
     expect(telegram).toHaveBeenCalledTimes(1);
   });
 
+  it("aborts an oversized chunked body without a trustworthy Content-Length (#390)", async () => {
+    // 累積上限（90KB）を超える生バイトは formData 展開前に読み込みを中断する。
+    const telegram = telegramOk();
+    const longMessage = "a".repeat(120_000);
+    const response = await onRequestPost({
+      request: new Request(`${SITE_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          email: "test@example.com",
+          message: longMessage,
+        }).toString(),
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(response.status).toBe(413);
+    expect(await response.json()).toEqual({
+      ok: false,
+      error: "payload too large",
+    });
+    expect(telegram).not.toHaveBeenCalled();
+  });
+
   // ---- Post- formData body size guard ----
 
   it.each([

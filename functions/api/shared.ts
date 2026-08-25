@@ -82,6 +82,49 @@ export function json(
   });
 }
 
+export type LimitedBodyResult = { ok: true; text: string } | { ok: false };
+
+/**
+ * 本文を累積上限付きで読み取る。
+ *
+ * request.text() / formData() は本文をフルバッファリングした後でないと
+ * サイズ判定できないため、Content-Length を省略・過少申告した巨大リクエストが
+ * 一度にメモリへ展開されてしまう。この関数はチャンクごとに累積バイト数を
+ * 数え、上限を超えた時点で読み込みを中断して拒否する（fail-closed）。
+ * Content-Length ヘッダーは偽装可能なため当てにせず、実バイト列で判定する。
+ */
+export async function readBodyTextWithLimit(
+  request: Request,
+  maxBytes: number,
+): Promise<LimitedBodyResult> {
+  const body = request.body;
+  if (!body) return { ok: true, text: "" };
+  const reader = body.getReader();
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > maxBytes) {
+        void reader.cancel().catch(() => {});
+        return { ok: false };
+      }
+      chunks.push(value);
+    }
+  } catch {
+    return { ok: false };
+  }
+  const merged = new Uint8Array(totalBytes);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return { ok: true, text: new TextDecoder("utf-8").decode(merged) };
+}
+
 /**
  * 同一キー（例: 同一IP）からの連続リクエストを制限する。
  * レート制限カウンタは Cloudflare ロケーション単位・結果整合性（permissive）のため、

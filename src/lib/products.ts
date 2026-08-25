@@ -6,6 +6,8 @@
  * 確認日と参照先は各記事の metadata（productInfoCheckedAt 等）で管理する。
  */
 
+import { rakutenAffiliateSearchUrl } from "./rakuten-affiliate";
+
 export interface ProductSpec {
   /** 容量（例: 0.5L） */
   capacity: string;
@@ -226,23 +228,21 @@ export const articlePurchaseLinks = {
   },
   "panasonic-baby-monitor-kx-hc705:card": {
     name: "パナソニック ベビーモニター KX-HC705",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2583%2591%25E3%2583%258A%25E3%2582%25BD%25E3%2583%258B%25E3%2583%2583%25E3%2582%25AF%2520%25E3%2583%2599%25E3%2583%2593%25E3%2583%25BC%25E3%2583%25A2%25E3%2583%258B%25E3%2582%25BF%25E3%2583%25BC%2520KX-HC705&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
+    purchaseUrl: rakutenAffiliateSearchUrl(
+      "パナソニック ベビーモニター KX-HC705",
+    ),
   },
   "panasonic-eh-na9m-guide:card": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA9M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
+    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
   },
   "panasonic-eh-na9m-vs-eh-na7m:left": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA9M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
+    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
   },
   "panasonic-eh-na9m-vs-eh-na7m:right": {
     name: "パナソニック ナノケア EH-NA7M",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FEH-NA7M%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
+    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA7M"),
   },
   "panasonic-eh-ne7m-vs-eh-ne5m:left": {
     name: "パナソニック EH-NE7M",
@@ -252,15 +252,21 @@ export const articlePurchaseLinks = {
     name: "パナソニック EH-NE5M",
     purchaseUrl: "https://a.r10.to/hPEiKo",
   },
+  "panasonic-mc-nx810km-vs-mc-nx700k:left": {
+    name: "パナソニック MC-NX810KM",
+    purchaseUrl: "https://a.r10.to/hPxF2V",
+  },
+  "panasonic-mc-nx810km-vs-mc-nx700k:right": {
+    name: "パナソニック MC-NX700K",
+    purchaseUrl: "https://a.r10.to/hgb52S",
+  },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX120&link_type=text",
+    purchaseUrl: "https://a.r10.to/hkSSwB",
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:right": {
     name: "パナソニック F-YHVX90",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FF-YHVX90&link_type=text",
+    purchaseUrl: "https://a.r10.to/hghANA",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
@@ -380,8 +386,7 @@ export const articlePurchaseLinks = {
   },
   "tiger-mta-j050-guide:right": {
     name: "タイガー MTA-J080",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2F%25E3%2582%25BF%25E3%2582%25A4%25E3%2582%25AC%25E3%2583%25BC%2BMTA-J080%2F&link_type=text&ut=eyJwYWdlIjoidXJsIiwidHlwZSI6InRleHQiLCJjb2wiOjF9",
+    purchaseUrl: rakutenAffiliateSearchUrl("タ イガー MTA-J080"),
   },
   "tiger-pcj-a080-vs-pcm-a080:left": {
     name: "タイガー 電気ケトル PCJ-A080",
@@ -414,6 +419,30 @@ export const articlePurchaseLinks = {
   "yamazaki-dust-wagon-45l-2division-vs-3division:right": {
     name: "山崎実業 45L 3分別",
     purchaseUrl: "https://a.r10.to/hPN3m0",
+  },
+  "yamazaki-laundry-wire-basket-m-vs-l:left": {
+    name: "山崎実業 ランドリーワイヤーバスケット タワー スリム M（240001）",
+    purchaseUrl: "https://a.r10.to/hgb9Ho",
+  },
+  "yamazaki-laundry-wire-basket-m-vs-l:right": {
+    name: "山崎実業 ランドリーワイヤーバスケット タワー スリム L（240002）",
+    purchaseUrl: "https://a.r10.to/hPyefh",
+  },
+  "yamazaki-ofuda-stand-rin-vs-single:left": {
+    name: "山崎実業 神札スタンド リン（6141・6142）",
+    purchaseUrl: "https://a.r10.to/hP8BTD",
+  },
+  "yamazaki-ofuda-stand-rin-vs-single:right": {
+    name: "山崎実業 神札スタンド リン シングル（6144）",
+    purchaseUrl: "https://a.r10.to/h59nMJ",
+  },
+  "yamazaki-dishwasher-rack-241925-vs-241926:left": {
+    name: "山崎実業 食洗機ラック タワー ロータイプ（241925）",
+    purchaseUrl: "https://a.r10.to/T3hEWa",
+  },
+  "yamazaki-dishwasher-rack-241925-vs-241926:right": {
+    name: "山崎実業 食洗機ラック タワー ハイタイプ（241926）",
+    purchaseUrl: "https://a.r10.to/hg9gYo",
   },
   "yamazaki-free-broom-32-vs-45:left": {
     name: "山崎産業 JS自由箒 32（BR952-032J-MB）",
@@ -463,6 +492,14 @@ export const articlePurchaseLinks = {
     name: "山崎実業 フィルムフック鍋蓋ホルダー タワー 242287",
     purchaseUrl: "https://a.r10.to/hgDVKy",
   },
+  "zojirushi-eq-sb22-vs-eq-ah22:left": {
+    name: "象印 EQ-SB22",
+    purchaseUrl: "https://a.r10.to/hkSuEP",
+  },
+  "zojirushi-eq-sb22-vs-eq-ah22:right": {
+    name: "象印 EQ-AH22",
+    purchaseUrl: "https://a.r10.to/h5VdYE",
+  },
   "zojirushi-eq-aa22-vs-eq-sa22:left": {
     name: "象印 EQ-AA22",
     purchaseUrl: "https://a.r10.to/hFR6ju",
@@ -470,5 +507,13 @@ export const articlePurchaseLinks = {
   "zojirushi-eq-aa22-vs-eq-sa22:right": {
     name: "象印 EQ-SA22",
     purchaseUrl: "https://a.r10.to/h5DVzd",
+  },
+  "sony-wh-1000xm6-vs-wh-1000xm5:left": {
+    name: "ソニー WH-1000XM6",
+    purchaseUrl: "https://a.r10.to/hgj0yu",
+  },
+  "sony-wh-1000xm6-vs-wh-1000xm5:right": {
+    name: "ソニー WH-1000XM5",
+    purchaseUrl: "https://a.r10.to/hPygQu",
   },
 } as const satisfies Record<string, ArticlePurchaseLink>;
