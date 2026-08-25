@@ -1,0 +1,62 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { zojirushiEqSb22VsAh22Article as articleMetadata } from '../../../content/articles'
+
+const sbOfficial = 'https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sb/'
+const ahOfficial = 'https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-ah/'
+
+const faqEntries = [
+  {
+    question: '象印 EQ-SB22 と EQ-AH22 はどっち？',
+    answer: '公式仕様では、EQ-SB22は外形寸法約幅33.5×奥行29×高さ26cm、約4.3kg、EQ-AH22は約幅38.5×奥行27×高さ23cm、約4.0kgです。EQ-SB22は高さと奥行、EQ-AH22は幅と軽さを設置条件と合わせて確認してください。',
+  },
+  {
+    question: 'EQ-SB22とEQ-AH22のタイマーは？',
+    answer: 'EQ-SB22、EQ-AH22はいずれも30分タイマーです。消費電力はいずれも1000W、2枚焼きです。',
+  },
+  {
+    question: '本体が軽いのはどっち？',
+    answer: '公式仕様では、EQ-SB22が約4.3kg、EQ-AH22が約4.0kgです。EQ-AH22の方が約0.3kg軽い仕様です。',
+  },
+  {
+    question: '設置幅を抑えたいならどっち？',
+    answer: '外形寸法の幅は、EQ-SB22が約33.5cm、EQ-AH22が約38.5cmです。横幅だけで選ばず、奥行・高さも設置場所と照合してください。',
+  },
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: '外形寸法', left: '約幅33.5×奥行29×高さ26cm', right: '約幅38.5×奥行27×高さ23cm', highlight: 'left', highlightNote: '幅が約5cm小さい' },
+  { label: '本体質量', left: '約4.3kg', right: '約4.0kg', highlight: 'right', highlightNote: '約0.3kg軽い', bar: { left: 4.3, right: 4.0 }, direction: 'lower-is-better' },
+  { label: '庫内寸法', left: '約幅27×奥行23.5×高さ11cm', right: '約幅26×奥行22×高さ10.5cm' },
+  { label: 'タイマー・消費電力', left: '30分・1000W', right: '30分・1000W' },
+  { label: 'トレー内寸・焼ける枚数', left: '約幅22.7×奥行20cm・2枚', right: '約幅22.7×奥行20cm・2枚' },
+]
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: '象印', line: 'EQ-SB22', tagline: '幅を抑えて置くなら', image: '/products/zojirushi-eq-sb22.png', imageAlt: '象印 オーブントースター EQ-SB22', officialHref: sbOfficial, guidePoints: ['外形幅約33.5cmを確認したい', '庫内の高さ約11cmを重視したい', '30分タイマー・2枚焼きで選びたい'], purchaseHref: articlePurchaseLinks['zojirushi-eq-sb22-vs-eq-ah22:left'].purchaseUrl}}
+  right={{brand: '象印', line: 'EQ-AH22', tagline: '軽さと低い高さなら', image: '/products/zojirushi-eq-ah22.png', imageAlt: '象印 オーブントースター EQ-AH22', officialHref: ahOfficial, guidePoints: ['本体約4.0kgを確認したい', '高さ約23cmを設置場所と照合したい', '30分タイマー・2枚焼きで選びたい'], purchaseHref: articlePurchaseLinks['zojirushi-eq-sb22-vs-eq-ah22:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'象印のオーブントースター「EQ-SB22」と「EQ-AH22」を比較します。どちらも1000W・30分タイマー・2枚焼きですが、外形寸法、庫内寸法、本体質量が異なります。'}
+  summaryParagraph={'幅を抑えて置きたい場合はEQ-SB22、約4.0kgの軽さや高さ約23cmを確認したい場合はEQ-AH22が候補です。設置場所の幅・奥行・高さと、庫内寸法を公式値で照合してください。'}
+  officialDescription={'象印公式ページでは、EQ-SB22とEQ-AH22の消費電力、タイマー、外形寸法、庫内寸法、本体質量、トレー内寸、焼ける枚数などが案内されています。'}
+  officialLinks={[
+    { label: 'EQ-SB22 公式商品ページ', href: sbOfficial },
+    { label: 'EQ-AH22 公式商品ページ', href: ahOfficial },
+  ]}
+  socialProofQuery={'象印 EQ-SB22 EQ-AH22 オーブントースター'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'象印 EQ-SB22'}
+  leftPurchaseAudience={'外形幅と庫内の高さを確認して置きたい人向け'}
+  rightPurchaseName={'象印 EQ-AH22'}
+  rightPurchaseAudience={'本体の軽さと高さを確認して選びたい人向け'}
+  sourceLinks={[
+    { label: '象印 EQ-SB22 公式商品ページ', href: sbOfficial, checkedAt: '2026-08-20' },
+    { label: '象印 EQ-AH22 公式商品ページ', href: ahOfficial, checkedAt: '2026-08-20' },
+  ]}
+  purchaseWarning={'オーブントースターは、設置スペース、庫内寸法、タイマー、焼ける枚数を購入前に公式ページで確認してください。価格や在庫は販売先で変わります。'}
+  disclaimer={'この比較は、象印公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。'}
+/>
