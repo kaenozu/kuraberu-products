@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import {isAllowedRakutenUrl, isAffiliateRakutenUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {resolvePurchaseHref} from '../lib/rakuten';
@@ -80,7 +80,7 @@ const resolvedImage = resolveImage(imagePath);
   >
     {imagePath && (
       resolvedImage ? (
-        <Image class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" />
+        <Picture class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
       ) : (
         <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />
       )

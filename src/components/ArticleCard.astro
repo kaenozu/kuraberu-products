@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Picture } from 'astro:assets';
 import type {ArticleMetadata} from '../content/articles';
 import {contentTypeFor} from '../../config/article-layout.mjs';
 import {contentTypeLabel} from '../lib/content-types';
@@ -28,7 +28,7 @@ const resolvedImage = resolveImage(article.imagePath);
 >
   {article.imagePath ? (
     resolvedImage ? (
-      <Image class="card-thumb" src={resolvedImage} alt={article.headline} width={132} height={132} loading="lazy" />
+      <Picture class="card-thumb" src={resolvedImage} alt={article.headline} width={132} height={132} loading="lazy" formats={["avif", "webp"]} />
     ) : (
       <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
     )
