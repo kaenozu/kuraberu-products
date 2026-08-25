@@ -1,5 +1,5 @@
 ---
-import { Image } from "astro:assets";
+import { Picture } from "astro:assets";
 import { resolveImage } from "../lib/image-resolver";
 
 interface HeroProduct {
@@ -67,7 +67,7 @@ const resolvedRightImage = right ? resolveImage(right.image) : undefined;
           <article class="hero-product">
             <a class="hero-product-img" href={product.officialHref} target="_blank" rel="noopener noreferrer" aria-label={`${product.brand} ${product.line} の公式商品ページを見る`}>
               {resolvedImg ? (
-                <Image src={resolvedImg} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" />
+                <Picture src={resolvedImg} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" formats={["avif", "webp"]} />
               ) : (
                 <img src={product.image} alt={product.imageAlt} width={product.imageWidth ?? 500} height={product.imageHeight ?? 500} loading="eager" />
               )}
