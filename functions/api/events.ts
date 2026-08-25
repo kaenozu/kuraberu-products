@@ -6,8 +6,7 @@
 // - Cookie・フィンガープリント・IP は収集・保存しない（IP はレート制限の判定に一時使用するだけ）
 // - 第三者ドメインへの送信は一切行わない（すべて同一オリジン）
 // - KV 未設定・障害時はイベントを破棄して 204 を返し続ける（計測はサイト体験の可用性より劣後）
-import { clientIp, enforceRateLimit, json } from "./shared";
-import { isSameSiteOrigin } from "./contact";
+import { clientIp, enforceRateLimit, isSameSiteOrigin, json } from "./shared";
 import { ARTICLE_LAYOUT } from "../../config/article-layout.mjs";
 
 const MAX_BODY_BYTES = 4096;

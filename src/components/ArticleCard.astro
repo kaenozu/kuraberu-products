@@ -1,8 +1,10 @@
 ---
+import { Image } from 'astro:assets';
 import type {ArticleMetadata} from '../content/articles';
 import {contentTypeFor} from '../../config/article-layout.mjs';
 import {contentTypeLabel} from '../lib/content-types';
 import {comparisonSubjects} from '../lib/article-subjects';
+import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
   article: ArticleMetadata;
@@ -15,6 +17,7 @@ interface Props {
 
 const {article, data} = Astro.props;
 const subjects = comparisonSubjects(article);
+const resolvedImage = resolveImage(article.imagePath);
 ---
 
 <article
@@ -24,7 +27,11 @@ const subjects = comparisonSubjects(article);
   {...data}
 >
   {article.imagePath ? (
-    <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
+    resolvedImage ? (
+      <Image class="card-thumb" src={resolvedImage} alt={article.headline} width={132} height={132} loading="lazy" />
+    ) : (
+      <img class="card-thumb" src={article.imagePath} alt={article.headline} width="132" height="132" loading="lazy" />
+    )
   ) : (
     <div class="card-tile" role="img" aria-label={`商品比較：${article.category}`}>
       <span class="card-tile-label">{article.category}</span>

@@ -4,8 +4,10 @@
 // 配置: 記事末尾（article-end）。比較記事の結論直後は NextStepBlock が担当。
 // 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 販売先確認CTA / 価格・在庫の注意書き
 // 配置・枚数の機械的契約は config/article-layout.mjs が唯一の定義。
+import { Image } from 'astro:assets';
 import AffiliateButton from './AffiliateButton.astro';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
+import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
   name: string;
@@ -46,12 +48,17 @@ const amazonAssociateTag = import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim();
 const amazonSearchUrl = amazonAssociateTag
   ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(name)}&tag=${encodeURIComponent(amazonAssociateTag)}`
   : undefined;
+const resolvedImage = resolveImage(imagePath);
 ---
 
 <article class="purchase-card">
   <div class="purchase-card__main">
     {(imagePath || imageUrl) && (
-      <img class="purchase-card__image" src={imagePath ?? imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
+      resolvedImage ? (
+        <Image class="purchase-card__image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" />
+      ) : (
+        <img class="purchase-card__image" src={imagePath ?? imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
+      )
     )}
     <div class="purchase-card__body">
       <h3 class="purchase-card__name">{name}</h3>

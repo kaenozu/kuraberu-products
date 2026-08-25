@@ -22,6 +22,7 @@ export function normalizeOptionalPublicUrl(
 export function isAllowedRakutenUrl(value: unknown): boolean;
 export function toAffiliateRakutenUrl(
   value: string | undefined,
+  redirectPrefix?: string,
 ): string | undefined;
 export function isAffiliateRakutenUrl(value: string | undefined): boolean;
 export function normalizeOptionalRakutenUrl(

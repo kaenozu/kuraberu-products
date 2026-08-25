@@ -369,7 +369,7 @@ export async function resolvePurchaseHref(
 
   const rawHref =
     selected?.affiliateUrl ?? selected?.url ?? options.fallbackUrl;
-  const href = toAffiliateRakutenUrl(rawHref) ?? rawHref ?? "";
+  const href = toAffiliateRakutenUrl(rawHref, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT) ?? rawHref ?? "";
   const isAffiliate = isAffiliateRakutenUrl(href);
 
   return { href, isAffiliate, product: selected };

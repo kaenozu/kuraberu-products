@@ -1,5 +1,5 @@
 {
-  "name": "kuraberu-ikuji",
+  "name": "kuraberu-products",
   "private": true,
   "type": "module",
   "packageManager": "pnpm@10.34.5",
@@ -45,6 +45,7 @@
     "eslint-plugin-astro": "3.1.0",
     "prettier": "3.9.6",
     "serve": "^14.2.6",
+    "sharp": "0.35.3",
     "typescript-eslint": "8.67.0",
     "vitest": "4.1.11",
     "wrangler": "^4.123.0",

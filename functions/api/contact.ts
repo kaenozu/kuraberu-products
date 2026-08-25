@@ -3,43 +3,15 @@
 // 管理用 Telegram bot に転送する。
 //
 // 共通ヘルパー（clientIp / json / enforceRateLimit）は ./shared を使う。
-import { clientIp, enforceRateLimit, json } from "./shared";
+import { clientIp, enforceRateLimit, isSameSiteOrigin, json } from "./shared";
 import type { RateLimitResult } from "./shared";
 
-export { clientIp } from "./shared";
+export { clientIp, isSameSiteOrigin } from "./shared";
 
 interface ContactBody {
   name?: string;
   email?: string;
   message?: string;
-}
-
-/**
- * Origin ヘッダーが許可されたサイトのオリジンと完全一致するかを判定する。
- * 前方一致ではなく origin（scheme + host + port）の完全比較を行うため、
- * `https://kuraberu-products.pages.dev.evil.com` のような偽装オリジンは
- * 許可しない。
- *
- * 注意: これはCSRF対策の完全な代替ではない。Origin が無いリクエスト
- * （curl・サーバー間呼び出し・一部の旧クライアント）は意図的に許可する
- * ため、非ブラウザクライアントからの偽装は防げない。ブラウザ由来の
- * クロスサイト送信は Origin を必ず付けるため、実質的にはブラウザ経由の
- * 不正送信を拒否する役割を担う。
- */
-export function isSameSiteOrigin(
-  originHeader: string | null,
-  siteUrl: string,
-): boolean {
-  if (!originHeader) return true;
-  let origin: URL;
-  let expected: URL;
-  try {
-    origin = new URL(originHeader);
-    expected = new URL(siteUrl);
-  } catch {
-    return false;
-  }
-  return origin.origin === expected.origin;
 }
 
 /**

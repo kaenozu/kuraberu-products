@@ -14,6 +14,7 @@ export const CONFIGURED_ENVIRONMENT_VARIABLES = Object.freeze([
   "RAKUTEN_APPLICATION_ID",
   "RAKUTEN_ACCESS_KEY",
   "RAKUTEN_AFFILIATE_ID",
+  "PUBLIC_RAKUTEN_AFFILIATE_REDIRECT",
   "PUBLIC_CONTACT_URL",
 ]);
 
@@ -86,18 +87,20 @@ export function isAllowedRakutenUrl(value) {
 
 // 楽天アフィリエイトリダイレクトの共通プレフィックス（hb.afl 経由）。
 // AffiliateButton と NextStepBlock の両方が購入リンクの変換に使う。
-const RAKUTEN_AFFILIATE_REDIRECT =
+// 環境変数 PUBLIC_RAKUTEN_AFFILIATE_REDIRECT で上書き可能。
+const RAKUTEN_AFFILIATE_REDIRECT_DEFAULT =
   "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=";
 
 // 購入リンクをアフィリエイトURLへ正規化する。
 // - 既にアフィリエイトURL（hb.afl / r10.to / a.r10.to）: そのまま返す
 // - 楽天の検索URL（search.rakuten.co.jp 等）: hb.afl のリダイレクトへ変換
 // - それ以外: そのまま返す（呼び出し側で isAllowedRakutenUrl により弾く）
-export function toAffiliateRakutenUrl(value) {
+export function toAffiliateRakutenUrl(value, redirectPrefix) {
   if (!nonEmpty(value)) return undefined;
   if (isAffiliateRakutenUrl(value)) return value;
   if (/^https:\/\/(?:search\.|www\.)?rakuten\.co\.jp\//i.test(value)) {
-    return `${RAKUTEN_AFFILIATE_REDIRECT}${encodeURIComponent(value)}&link_type=text`;
+    const prefix = redirectPrefix || RAKUTEN_AFFILIATE_REDIRECT_DEFAULT;
+    return `${prefix}${encodeURIComponent(value)}&link_type=text`;
   }
   return value;
 }
