@@ -1,0 +1,53 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { yamazakiOfudaStandArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://www.yamajitsu.co.jp/products/242255'
+const rightOfficial = 'https://www.yamajitsu.co.jp/products/242256'
+const leftImage = '/products/yamazaki-ofuda-stand-rin.jpg'
+const rightImage = '/products/yamazaki-ofuda-stand-rin-single.jpg'
+const leftAudience = '幅25cmの神札置き場を確保し、複数の神札をまとめて置きたい人向け'
+const rightAudience = '幅を抑え、神札を1枚置く場所を選びたい人向け'
+
+const faqEntries = [
+  {question: '神札スタンド リンとリン シングルの違いは？', answer: '公式仕様では、リンは幅25cm・重量250g・内寸幅25cm、リン シングルは幅10.5cm・重量95g・内寸幅10.5cmです。'},
+  {question: '神札を複数置けるのはどちら？', answer: '公式ページでは、リンの内寸は幅25cm、リン シングルの内寸は幅10.5cmです。置く神札の幅を測って確認してください。'},
+  {question: 'どちらも壁に取り付ける商品ですか？', answer: 'どちらも公式ページに記載された商品サイズ・内寸・材質などを確認して選ぶ置き型の神札スタンドです。設置場所の幅と神札のサイズを先に確認してください。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '商品サイズ（幅×奥行×高さ）', left: '25×5×11cm', right: '10.5×5×11cm', highlight: 'right', highlightNote: '幅14.5cm小さい'},
+  {label: '商品重量', left: '250g', right: '95g', highlight: 'right', highlightNote: '155g軽い'},
+  {label: '内寸（幅×奥行）', left: '25×3cm', right: '10.5×3cm', highlight: 'left', highlightNote: '幅14.5cm広い'},
+  {label: '品質表示', left: 'スチール・天然木積層合板', right: 'スチール・天然木積層合板', highlight: null},
+  {label: '生産国', left: '中国', right: '中国', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: '山崎実業', line: '神札スタンド リン', tagline: '幅を確保できるなら', image: leftImage, imageAlt: '山崎実業 神札スタンド リン', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['yamazaki-ofuda-stand-rin-vs-single:left'].purchaseUrl}}
+  right={{brand: '山崎実業', line: '神札スタンド リン シングル', tagline: '省スペースなら', image: rightImage, imageAlt: '山崎実業 神札スタンド リン シングル', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['yamazaki-ofuda-stand-rin-vs-single:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'山崎実業の神札スタンド リンとリン シングルを比較します。メーカー公式ページで確認できる幅・重量・内寸・材質をもとに、置き場所の幅と神札を置くスペースのどちらを優先するか整理します。'}
+  summaryParagraph={'リンは幅25cmで内寸も広く、リン シングルは幅10.5cmで置き場所を抑えやすい仕様です。神札の幅と設置場所を先に確認してください。'}
+  officialDescription={'仕様の根拠は、山崎実業公式の商品ページで2026年8月25日に確認しました。この記事では公式に記載されたサイズ・重量・内寸・品質表示・生産国だけを比較しています。'}
+  officialLinks={[
+    {label: '神札スタンド リン 公式商品ページ', href: leftOfficial},
+    {label: '神札スタンド リン シングル 公式商品ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'山崎実業 神札スタンド リン'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'山崎実業 神札スタンド リン（6141・6142）'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'山崎実業 神札スタンド リン シングル（6144）'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: '山崎実業公式：神札スタンド リン', href: leftOfficial, checkedAt: '2026-08-25'},
+    {label: '山崎実業公式：神札スタンド リン シングル', href: rightOfficial, checkedAt: '2026-08-25'},
+  ]}
+/>
