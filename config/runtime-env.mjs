@@ -111,11 +111,16 @@ function rakutenAffiliateRedirectPrefix(environment = process.env) {
 // - 既にアフィリエイトURL（hb.afl / r10.to / a.r10.to）: そのまま返す
 // - 楽天の検索URL（search.rakuten.co.jp 等）: hb.afl のリダイレクトへ変換
 // - それ以外: そのまま返す（呼び出し側で isAllowedRakutenUrl により弾く）
-export function toAffiliateRakutenUrl(value, redirectPrefix, environment = process.env) {
+export function toAffiliateRakutenUrl(
+  value,
+  redirectPrefix,
+  environment = process.env,
+) {
   if (!nonEmpty(value)) return undefined;
   if (isAffiliateRakutenUrl(value)) return value;
   if (/^https:\/\/(?:search\.|www\.)?rakuten\.co\.jp\//i.test(value)) {
-    const prefix = redirectPrefix || rakutenAffiliateRedirectPrefix(environment);
+    const prefix =
+      redirectPrefix || rakutenAffiliateRedirectPrefix(environment);
     return `${prefix}${encodeURIComponent(value)}&link_type=text`;
   }
   return value;

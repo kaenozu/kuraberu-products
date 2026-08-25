@@ -110,7 +110,9 @@ export function defineComparisonV2(
       `comparisonV2: articleId "${articleId}" must be a kebab-case slug`,
     );
   }
-  const metadata = articleMetadata.find((article: { id: string }) => article.id === articleId);
+  const metadata = articleMetadata.find(
+    (article: { id: string }) => article.id === articleId,
+  );
   if (!metadata) {
     throw new TypeError(
       `comparisonV2: unknown articleId "${articleId}" (not found in content/articles metadata)`,
