@@ -90,6 +90,8 @@ Production では次が必須です。
 
 `.env.example` を基準にしてください。`.env` と `.env.*` は `.env.example` を除いて Git 管理対象外です。秘密値をログ、Issue、PRへ記録しないでください。
 
+ビルド時の楽天 API と固定 URL の違い、再現可能な Production ビルド手順、生成物の証跡は [`docs/build-reproducibility.md`](./docs/build-reproducibility.md) を参照してください。
+
 ## SEO / 生成物の基本契約
 
 - Production の通常ページ: `index,follow`
