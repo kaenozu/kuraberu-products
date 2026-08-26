@@ -117,7 +117,10 @@ export function validateExternalEmbedDirectory(directory = "src/pages") {
   const errors = validateExternalEmbedSources(sources);
   const componentSources = astroFiles("src/components")
     .filter((filePath) => !filePath.endsWith(`${path.sep}ExternalEmbed.astro`))
-    .filter((filePath) => !filePath.endsWith(`${path.sep}CommercialArticlePage.astro`))
+    .filter(
+      (filePath) =>
+        !filePath.endsWith(`${path.sep}CommercialArticlePage.astro`),
+    )
     .map((filePath) => ({
       filePath,
       source: fs.readFileSync(filePath, "utf8"),
