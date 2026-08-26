@@ -1,20 +1,25 @@
 ---
 /**
- * ArticleComparisonPage.astro — 手動比較記事の標準レイアウト（Article Layout v3）。
+ * ArticleComparisonPage.astro — 比較記事の標準レイアウト（Article Layout v3）。
  *
- * 2つのモード:
- * 1. articleId モード: メタデータから自動解決（1行記事）
- * 2. 明示モード: 全プロップを直接渡す（後方互換）
+ * 3つのモード:
+ * 1. articleId モード: メタデータの leftModel/rightModel から自動解決
+ * 2. compV2 モード: comparison-v2 レジストリ + manual seeds から自動解決
+ * 3. 明示モード: 全プロップを直接渡す（後方互換）
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import RelatedArticles from './RelatedArticles.astro';
 import PurchaseCard from './PurchaseCard.astro';
 import ComparisonMemoButton from './ComparisonMemoButton.astro';
 import ArticleComparisonV2 from './ArticleComparisonV2.astro';
+import ArticleSocialProof from './ArticleSocialProof.astro';
+import ExternalEmbed from './ExternalEmbed.astro';
 import type { KeyDiffRow } from './VisualKeyDifferences.astro';
 import { articleMetadata as allArticles } from '../content/articles';
 import { articlePurchaseLinks } from '../lib/products';
 import type { ArticleMetadata, ComparisonSide } from '../content/articles';
+import { getComparisonV2Entry } from '../content/articles/comparison-v2';
+import { manualArticleSeeds } from '../content/articles/manual-seeds';
 
 interface SpecRow {
   label: string;
@@ -71,6 +76,7 @@ interface Props {
   sourceLinks?: readonly SourceLink[];
   purchaseWarning?: string;
   disclaimer?: string;
+  diagnosisHref?: string;
 }
 
 // 型アサーション（as）ではなく Props 注釈で受ける。
@@ -89,6 +95,9 @@ let resolved: {
   specRows?: readonly SpecRow[];
   socialProofQuery: string;
   socialProofCheckedAt?: string;
+  socialProofHasPosts?: boolean;
+  socialProofBestMatch?: string;
+  embeds?: readonly { provider: string; url: string; title: string; match: string; purpose?: string; tone?: string; autoload?: boolean; compact?: boolean }[];
   faqEntries: readonly { question: string; answer: string }[];
   leftPurchaseName: string;
   leftPurchaseAudience: string;
@@ -97,80 +106,147 @@ let resolved: {
   sourceLinks: readonly SourceLink[];
   purchaseWarning: string;
   disclaimer: string;
+  diagnosisHref?: string;
 };
 
 if (props.articleId) {
-  // --- articleId モード: メタデータから自動解決 ---
+  // --- articleId モード: メタデータまたは comparison-v2 + manual seeds から自動解決 ---
   const article = allArticles.find((a) => a.id === props.articleId);
   if (!article) throw new Error(`Unknown article: ${props.articleId}`);
-  if (!article.leftModel || !article.rightModel) {
-    throw new Error(`Article ${props.articleId} missing leftModel/rightModel`);
-  }
-  // defineArticleMetadata が leftModel/rightModel 宣言時の keyDiffRows / lead / faqEntries
-  // を検証済みであることを前提にしつつ、ここでも明示的にガードする（fail-closed）。
-  if (!article.keyDiffRows) throw new Error(`Article ${props.articleId} missing keyDiffRows`);
-  if (!article.lead) throw new Error(`Article ${props.articleId} missing lead`);
-  if (!article.faqEntries) throw new Error(`Article ${props.articleId} missing faqEntries`);
-
-  const lm = article.leftModel;
-  const rm = article.rightModel;
   const purchaseKey = article.id;
 
-  const toSide = (m: ComparisonSide, side: "left" | "right"): Side => ({
-    ...m,
-    guidePoints: [...m.guidePoints],
-    purchaseHref: (articlePurchaseLinks as Record<string, { purchaseUrl: string }>)[`${purchaseKey}:${side}`]?.purchaseUrl,
-  });
+  // Try article metadata first (leftModel/rightModel mode)
+  if (article.leftModel && article.rightModel && article.keyDiffRows && article.lead && article.faqEntries) {
+    const lm = article.leftModel;
+    const rm = article.rightModel;
 
-  const leftAudiences = lm.guidePoints.length > 0 ? lm.guidePoints[0] : `${lm.line}を選ぶ人向け`;
-  const rightAudiences = rm.guidePoints.length > 0 ? rm.guidePoints[0] : `${rm.line}を選ぶ人向け`;
+    const toSide = (m: ComparisonSide, side: "left" | "right"): Side => ({
+      ...m,
+      guidePoints: [...m.guidePoints],
+      purchaseHref: (articlePurchaseLinks as Record<string, { purchaseUrl: string }>)[`${purchaseKey}:${side}`]?.purchaseUrl,
+    });
 
-  const officialLinks = [
-    { label: `${lm.line} 公式商品ページ`, href: lm.officialHref },
-    { label: `${rm.line} 公式商品ページ`, href: rm.officialHref },
-  ];
+    const leftAudiences = lm.guidePoints.length > 0 ? lm.guidePoints[0] : `${lm.line}を選ぶ人向け`;
+    const rightAudiences = rm.guidePoints.length > 0 ? rm.guidePoints[0] : `${rm.line}を選ぶ人向け`;
 
-  const sourceLinks: SourceLink[] = [
-    { label: `${lm.line} 公式商品ページ`, href: lm.officialHref, checkedAt: article.productInfoCheckedAt },
-    { label: `${rm.line} 公式商品ページ`, href: rm.officialHref, checkedAt: article.productInfoCheckedAt },
-  ];
+    const officialLinks = [
+      { label: `${lm.line} 公式商品ページ`, href: lm.officialHref },
+      { label: `${rm.line} 公式商品ページ`, href: rm.officialHref },
+    ];
 
-  resolved = {
-    articleMetadata: article,
-    left: toSide(lm, "left"),
-    right: toSide(rm, "right"),
-    keyDiffRows: [...article.keyDiffRows],
-    lead: article.lead,
-    summaryParagraph: article.summaryParagraph,
-    officialDescription: article.officialDescription ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
-    officialLinks,
-    specRows: props.specRows,
-    socialProofQuery: article.socialProofQuery ?? `${lm.brand} ${lm.line} ${rm.line}`,
-    socialProofCheckedAt: article.socialProofCheckedAt,
-    faqEntries: [...article.faqEntries],
-    leftPurchaseName: `${lm.brand} ${lm.line}`,
-    leftPurchaseAudience: leftAudiences,
-    rightPurchaseName: `${rm.brand} ${rm.line}`,
-    rightPurchaseAudience: rightAudiences,
-    sourceLinks: article.officialSources
-      ? article.officialSources.map((s) => ({ label: s.label, href: s.url, checkedAt: article.productInfoCheckedAt }))
-      : sourceLinks,
-    purchaseWarning: props.purchaseWarning ?? '価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。',
-    disclaimer: props.disclaimer ?? 'この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。',
-  };
-} else {
-  // --- 明示モード: 全プロップを直接渡す ---
-  if (!props.articleMetadata) throw new Error("articleMetadata is required in explicit mode");
-  if (!props.left || !props.right) throw new Error("left/right are required in explicit mode");
-  if (!props.keyDiffRows) throw new Error("keyDiffRows is required in explicit mode");
-  if (!props.lead) throw new Error("lead is required in explicit mode");
-  if (!props.faqEntries) throw new Error("faqEntries is required in explicit mode");
-  // socialProofQuery is optional in explicit mode
-  if (!props.leftPurchaseName) throw new Error("leftPurchaseName is required in explicit mode");
-  if (!props.leftPurchaseAudience) throw new Error("leftPurchaseAudience is required in explicit mode");
-  if (!props.rightPurchaseName) throw new Error("rightPurchaseName is required in explicit mode");
-  if (!props.rightPurchaseAudience) throw new Error("rightPurchaseAudience is required in explicit mode");
-  if (!props.sourceLinks) throw new Error("sourceLinks is required in explicit mode");
+    const sourceLinks: SourceLink[] = [
+      { label: `${lm.line} 公式商品ページ`, href: lm.officialHref, checkedAt: article.productInfoCheckedAt },
+      { label: `${rm.line} 公式商品ページ`, href: rm.officialHref, checkedAt: article.productInfoCheckedAt },
+    ];
+
+    resolved = {
+      articleMetadata: article,
+      left: toSide(lm, "left"),
+      right: toSide(rm, "right"),
+      keyDiffRows: [...article.keyDiffRows],
+      lead: article.lead,
+      summaryParagraph: article.summaryParagraph,
+      officialDescription: article.officialDescription ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
+      officialLinks,
+      specRows: props.specRows,
+      socialProofQuery: article.socialProofQuery ?? `${lm.brand} ${lm.line} ${rm.line}`,
+      socialProofCheckedAt: article.socialProofCheckedAt,
+      faqEntries: [...article.faqEntries],
+      leftPurchaseName: `${lm.brand} ${lm.line}`,
+      leftPurchaseAudience: leftAudiences,
+      rightPurchaseName: `${rm.brand} ${rm.line}`,
+      rightPurchaseAudience: rightAudiences,
+      sourceLinks: article.officialSources
+        ? article.officialSources.map((s) => ({ label: s.label, href: s.url, checkedAt: article.productInfoCheckedAt }))
+        : sourceLinks,
+      purchaseWarning: props.purchaseWarning ?? '価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。',
+      disclaimer: props.disclaimer ?? 'この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。',
+      diagnosisHref: props.diagnosisHref,
+    };
+  } else {
+    // Fallback: comparison-v2 + manual seeds mode
+    let compEntry;
+    try {
+      compEntry = getComparisonV2Entry(props.articleId as any);
+    } catch {
+      throw new Error(`Article ${props.articleId} missing leftModel/rightModel and no comparison-v2 entry`);
+    }
+    const seed = manualArticleSeeds.find((s) => s.id === props.articleId);
+
+    const toSideFromComp = (side: "left" | "right"): Side => ({
+      brand: compEntry[side].brand,
+      line: compEntry[side].line,
+      tagline: compEntry[side].tagline,
+      image: compEntry[side].image,
+      imageAlt: compEntry[side].imageAlt,
+      officialHref: compEntry[side].officialHref,
+      guidePoints: [...compEntry[side].guidePoints],
+      productId: compEntry[side].productId,
+      purchaseHref: (articlePurchaseLinks as Record<string, { purchaseUrl: string }>)[`${purchaseKey}:${side}`]?.purchaseUrl,
+    });
+
+    const leftSide = toSideFromComp("left");
+    const rightSide = toSideFromComp("right");
+
+    const defaultFaq = [
+      { question: '比較対象はどのように選んでいますか？', answer: 'メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。' },
+      { question: '価格や在庫は確認できますか？', answer: '価格・在庫・ポイント・送料は変動するため、記事内の販売ページで購入時点の情報をご確認ください。' },
+      { question: 'どちらを選べばよいですか？', answer: '用途、置き場所、対応機器、サイズ、手入れのしやすさを優先順位にして、公式仕様と販売ページを照らし合わせてください。' },
+    ];
+
+    const faq = seed?.faqEntries?.length ? [...seed.faqEntries] : defaultFaq;
+    const specsRows = compEntry.rows.map((row: { label: string; left: string; right: string }) => ({
+      label: row.label, left: row.left, right: row.right,
+    }));
+
+    const officialLinks = [
+      { label: `${leftSide.line} 公式商品ページ`, href: leftSide.officialHref },
+      { label: `${rightSide.line} 公式商品ページ`, href: rightSide.officialHref },
+    ];
+
+    const sourceLinks: SourceLink[] = seed?.sourceLinks
+      ? seed.sourceLinks.map((l) => ({ label: l.label, href: l.url, checkedAt: l.date }))
+      : [
+          { label: `${leftSide.line} 公式商品ページ`, href: leftSide.officialHref, checkedAt: article.productInfoCheckedAt },
+          { label: `${rightSide.line} 公式商品ページ`, href: rightSide.officialHref, checkedAt: article.productInfoCheckedAt },
+        ];
+
+    resolved = {
+      articleMetadata: article,
+      left: leftSide,
+      right: rightSide,
+      keyDiffRows: specsRows,
+      lead: seed?.lead ?? article.summary,
+      summaryParagraph: seed?.disclaimer,
+      officialDescription: seed?.officialProse?.map((s) => `${s.heading}：${s.items.join('。')}`).join('\n') ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
+      officialLinks,
+      specRows: props.specRows,
+      socialProofQuery: seed?.socialProofQuery ?? `${leftSide.brand} ${leftSide.line} ${rightSide.line}`,
+      socialProofCheckedAt: seed?.socialProofCheckedAt,
+      socialProofHasPosts: seed?.socialProofHasPosts,
+      socialProofBestMatch: seed?.socialProofBestMatch,
+      embeds: seed?.embeds,
+      faqEntries: faq,
+      leftPurchaseName: `${leftSide.brand} ${leftSide.line}`,
+      leftPurchaseAudience: leftSide.tagline,
+      rightPurchaseName: `${rightSide.brand} ${rightSide.line}`,
+      rightPurchaseAudience: rightSide.tagline,
+      sourceLinks,
+      purchaseWarning: props.purchaseWarning ?? '価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。',
+      disclaimer: props.disclaimer ?? seed?.disclaimer ?? 'この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。',
+      diagnosisHref: compEntry.diagnosisHref,
+    };
+  }
+} else if (props.articleMetadata && props.left && props.right) {
+  // --- 明示モード: 全プロップを直接渡す（後方互換） ---
+    if (!props.keyDiffRows) throw new Error("keyDiffRows is required in explicit mode");
+    if (!props.lead) throw new Error("lead is required in explicit mode");
+    if (!props.faqEntries) throw new Error("faqEntries is required in explicit mode");
+    if (!props.leftPurchaseName) throw new Error("leftPurchaseName is required in explicit mode");
+    if (!props.leftPurchaseAudience) throw new Error("leftPurchaseAudience is required in explicit mode");
+    if (!props.rightPurchaseName) throw new Error("rightPurchaseName is required in explicit mode");
+    if (!props.rightPurchaseAudience) throw new Error("rightPurchaseAudience is required in explicit mode");
+    if (!props.sourceLinks) throw new Error("sourceLinks is required in explicit mode");
 
   resolved = {
     articleMetadata: props.articleMetadata,
@@ -192,7 +268,10 @@ if (props.articleId) {
     sourceLinks: props.sourceLinks,
     purchaseWarning: props.purchaseWarning ?? '価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。',
     disclaimer: props.disclaimer ?? 'この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。',
+    diagnosisHref: props.diagnosisHref,
   };
+} else {
+  throw new Error("Provide articleId or articleMetadata+left+right");
 }
 
 const {
@@ -212,7 +291,7 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">{lead}</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2 left={left} right={right} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />
+    <ArticleComparisonV2 left={left} right={right} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} purchaseLinkStatus={articleMetadata.purchaseLinkStatus} diagnosisHref={resolved.diagnosisHref} />
     {summaryParagraph && <p>{summaryParagraph}</p>}
     <details class="fold-section" id="specs">
       <summary>詳細仕様（公式ページで確認した項目）</summary>
@@ -257,6 +336,31 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
           </div>
         )}
       </>
+    )}
+    {resolved.socialProofQuery && (
+      <ArticleSocialProof
+        query={resolved.socialProofQuery}
+        checkedAt={resolved.socialProofCheckedAt}
+        hasPosts={resolved.socialProofHasPosts}
+        bestMatch={resolved.socialProofBestMatch as any}
+      >
+        {resolved.embeds && resolved.embeds.length > 0 && (
+          <div class="sns-embeds">
+            {resolved.embeds.map((embed: { provider: string; url: string; title: string; match: string; purpose?: string; tone?: string; autoload?: boolean; compact?: boolean }) => (
+              <ExternalEmbed
+                provider={embed.provider as any}
+                url={embed.url}
+                title={embed.title}
+                match={embed.match as any}
+                purpose={embed.purpose}
+                tone={embed.tone as any}
+                autoload={embed.autoload}
+                compact={embed.compact}
+              />
+            ))}
+          </div>
+        )}
+      </ArticleSocialProof>
     )}
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">

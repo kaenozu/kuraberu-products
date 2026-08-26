@@ -482,9 +482,9 @@ describe.skipIf(!hasDist)("source-toggle fold (rendered dist)", () => {
     expect(pagesWithToggle).toBe(pagesWithSourceTable);
   });
 
-  it("renders the toggle immediately before the table on pampers", () => {
+  it("renders the toggle immediately before the table on a manual page", () => {
     const html = readFileSync(
-      "dist/articles/pampers-newborn/index.html",
+      "dist/articles/combi-the-s-plus-vs-premium/index.html",
       "utf8",
     );
     const tableIndex = html.indexOf('<div class="table-scroll">');
