@@ -19,8 +19,6 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const ARTICLES_FILE = "content/articles.ts";
-
 /**
  * 型番候補テキスト群から照合用トークンを抽出する。
  * 正規化: NFKC → 小文字化 → 英数（+内部ハイフン）連片の切り出し。
@@ -148,13 +146,18 @@ export function findSourceRelevancyFindings(content) {
 }
 
 export function checkSourceRelevancy({ srcDirectory = "src" } = {}) {
-  const file = path.join(srcDirectory, ARTICLES_FILE);
-  if (!fs.existsSync(file)) {
-    throw new Error(`article registry not found: ${file}`);
+  const articlesDir = path.join(srcDirectory, "content/articles");
+  if (!fs.existsSync(articlesDir)) {
+    throw new Error(`article registry not found: ${articlesDir}`);
   }
-  const content = fs.readFileSync(file, "utf8");
+  const excludeFiles = new Set(["index.ts", "types.ts"]);
+  const content = fs
+    .readdirSync(articlesDir)
+    .filter((f) => f.endsWith(".ts") && !excludeFiles.has(f))
+    .map((f) => fs.readFileSync(path.join(articlesDir, f), "utf8"))
+    .join("\n");
   const { findings, checkedSources } = findSourceRelevancyFindings(content);
-  return { findings, checkedSources, file };
+  return { findings, checkedSources, file: articlesDir };
 }
 
 function formatReport({ findings, checkedSources, file }) {

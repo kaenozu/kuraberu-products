@@ -53,11 +53,11 @@ const resolvedImage = resolveImage(imagePath);
 
 <article class="purchase-card">
   <div class="purchase-card__main">
-    {(imagePath || imageUrl) && (
+    {(resolvedImage || imageUrl) && (
       resolvedImage ? (
         <Picture class="purchase-card__image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
       ) : (
-        <img class="purchase-card__image" src={imagePath ?? imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
+        <img class="purchase-card__image" src={imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
       )
     )}
     <div class="purchase-card__body">

@@ -3,10 +3,12 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const root = resolve(process.cwd());
-const articleSource = readFileSync(
-  join(root, "src/content/articles.ts"),
-  "utf8",
-);
+const articlesDir = join(root, "src/content/articles");
+const excludeFiles = new Set(["index.ts", "commercial.ts", "types.ts"]);
+const articleSource = readdirSync(articlesDir)
+  .filter((f) => f.endsWith(".ts") && !excludeFiles.has(f))
+  .map((f) => readFileSync(join(articlesDir, f), "utf8"))
+  .join("\n");
 const articlePages = readdirSync(join(root, "src/pages/articles"), {
   recursive: true,
   withFileTypes: true,

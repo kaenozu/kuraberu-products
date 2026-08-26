@@ -8,6 +8,10 @@
  * import.meta.glob で全画像を eager import し、パス → ImageMetadata の
  * マップを構築する。コンポーネントからは resolveImage() を呼ぶだけで
  * 最適化された画像参照が得られる。
+ *
+ * - ローカルパス（"/products/xxx.jpg"）: src/assets/products/ に存在しない場合はビルドエラー
+ * - 外部URL（"https://..."）: undefined を返す（コンポーネントが <img> で表示）
+ * - undefined: undefined を返す
  */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -19,11 +23,26 @@ const imageModules = import.meta.glob<{
   default: any;
 }>("/src/assets/products/*.{jpg,jpeg,png,webp,avif}", { eager: true });
 
-/** "/products/xxx.jpg" → ImageMetadata（any）| undefined */
+/**
+ * 画像パスを ImageMetadata に解決する。
+ *
+ * - "/products/xxx.jpg" → src/assets/products/xxx.jpg を探索。見つからなければビルドエラー。
+ * - "https://..." → undefined（外部URLは最適化対象外）
+ * - undefined → undefined
+ */
 export function resolveImage(path: string | undefined): any | undefined {
   if (!path) return undefined;
+  // 外部URLはローカル最適化の対象外
+  if (path.startsWith("http://") || path.startsWith("https://"))
+    return undefined;
   // "/products/xxx.jpg" → "/src/assets/products/xxx.jpg"
   const normalized = path.replace(/^\/products\//, "/src/assets/products/");
   const mod = imageModules[normalized];
-  return mod?.default;
+  if (!mod) {
+    throw new Error(
+      `[image-resolver] Image not found: "${path}" resolved to "${normalized}" but no matching file exists in src/assets/products/. ` +
+        `Check the imagePath in your article metadata.`,
+    );
+  }
+  return mod.default;
 }
