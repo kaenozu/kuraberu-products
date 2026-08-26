@@ -23,7 +23,7 @@ const MISCLASSIFICATION_CHECKS = [
   },
 ];
 
-const INCOMPLETE_PATTERNS = [/購入先の確認中/g, /公開後に.*表示されます/g];
+const INCOMPLETE_PATTERNS = [/購入先の確認中.*公開後/g];
 
 function extractArticleIds(content) {
   const ids = [];

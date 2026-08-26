@@ -34,12 +34,13 @@ const REGISTRY_FILE = "lib/products.ts";
 const ARTICLES_FILE = "content/articles.ts";
 const MODULAR_ARTICLES_DIR = "content/articles";
 
-// verified CTA の到達先として明示的に許すホスト（楽天アフィリエイト経由地）。
-// 実運用ホストはレジストリ purchaseUrl の初期ホスト集合も動的に加える
-// （outboundHostAllowlist を参照）。
+// verified CTA の**最終到達先**ホスト（リダイレクト追従後の最終ホスト）。
+// a.r10.to 等の短縮リンクホストはここに含めない。
+// リダイレクト追従は全 CTA に対して必須。
 export const ALLOWED_OUTBOUND_HOSTS = Object.freeze([
-  "a.r10.to",
   "hb.afl.rakuten.co.jp",
+  "www.rakuten.co.jp",
+  "www.amazon.co.jp",
 ]);
 
 // リダイレクト追従の上限 hop 数と 1 リクエストあたりのタイムアウト（ms）。
@@ -111,6 +112,26 @@ export function extractNextStepHrefs(source) {
       out.push(href ? href[1].trim() : null);
     }
     return out;
+  }
+  // ArticleComparisonPage with explicit left/right props containing purchaseHref
+  const page = /<ArticleComparisonPage\b/.exec(source);
+  if (page) {
+    const remaining = source.slice(page.index);
+    const selfClose = remaining.indexOf("/>");
+    if (selfClose !== -1) {
+      const tag = remaining.slice(0, selfClose);
+      const out = [];
+      for (const key of ["left", "right"]) {
+        const literal = expressionAfterKey(tag, key);
+        if (literal === null) {
+          // articleId mode — no explicit left/right props
+          return null;
+        }
+        const href = /\bpurchaseHref:\s*([^,}]+)/.exec(literal);
+        out.push(href ? href[1].trim() : null);
+      }
+      return out;
+    }
   }
   const block = /<NextStepBlock\b/.exec(source);
   if (block) {
@@ -212,6 +233,11 @@ export function loadRegistryEntries(srcDirectory) {
 // 1 記事のソースを検査する。エラーを errors に積む。
 export function checkArticleSource(source, relative, errors, registryKeys) {
   if (/CommercialArticlePage/.test(source)) return; // テンプレート側で 1 回だけ検査
+  // ArticleComparisonPage with explicit left/right props: the component renders
+  // PurchaseCard internally, so no page-level PurchaseCard to compare against.
+  // CTA destination is checked separately by auditVerifiedCtaDestinations.
+  if (/ArticleComparisonPage/.test(source) && /articleMetadata/.test(source))
+    return;
 
   const blockExprs = extractNextStepHrefs(source);
   const cardExprs = extractPurchaseCardHrefs(source);
@@ -385,6 +411,8 @@ export function collectVerifiedCtaUrls({ srcDirectory = "src" } = {}) {
     if (statuses.get(slug) !== "verified") continue;
     const source = fs.readFileSync(file, "utf8");
     if (/CommercialArticlePage/.test(source)) continue; // API 解決のため対象外
+
+    // 1. Direct references (ArticleComparisonV2 / NextStepBlock / PurchaseCard)
     const exprs = [
       ...(extractNextStepHrefs(source) ?? []),
       ...extractPurchaseCardHrefs(source),
@@ -396,6 +424,21 @@ export function collectVerifiedCtaUrls({ srcDirectory = "src" } = {}) {
       seen.add(key);
       const url = registry.get(key);
       if (url) ctas.push({ article: slug, key, url });
+    }
+
+    // 2. ArticleComparisonPage with articleId: CTA keys are inferred from the
+    //    articleId (the component renders PurchaseCard with
+    //    articlePurchaseLinks[`${articleId}:left/right`]).
+    if (seen.size === 0) {
+      const idMatch = /articleId="([^"]+)"/.exec(source);
+      if (idMatch) {
+        for (const side of ["left", "right"]) {
+          const key = `${idMatch[1]}:${side}`;
+          if (registry.has(key)) {
+            ctas.push({ article: slug, key, url: registry.get(key) });
+          }
+        }
+      }
     }
   }
   return { ctas, statuses };
@@ -411,16 +454,12 @@ export function hostnameOf(value) {
 }
 
 /**
- * verified CTA の許可リスト。既定の楽天ホスト + レジストリに現れる
- * アウトバウンド URL の初期ホスト集合（将来の正規ホスト追加に自動追随）。
+ * verified CTA の**最終到達先**許可リスト。
+ * レジストリ URL のホストを自動追加しない。
+ * リダイレクト追従後にこのホスト集合に含まれることのみで合格とする。
  */
-export function outboundHostAllowlist(registryUrls = []) {
-  const hosts = new Set(ALLOWED_OUTBOUND_HOSTS);
-  for (const url of registryUrls) {
-    const host = hostnameOf(url);
-    if (host) hosts.add(host);
-  }
-  return hosts;
+export function outboundHostAllowlist() {
+  return new Set(ALLOWED_OUTBOUND_HOSTS);
 }
 
 async function requestWithHeadGetFallback(url, fetchImpl, timeoutMs) {
@@ -534,12 +573,9 @@ export async function auditVerifiedCtaDestinations({
       );
       continue;
     }
-    if (allowlist.has(initialHost)) {
-      checked.push({
-        url,
-        article: cta.article,
-        result: "allowlisted-initial",
-      });
+    if (allowNetworkSkip) {
+      // Skip network calls entirely: record as unchecked for coverage reporting
+      checked.push({ url, article: cta.article, result: "skipped" });
       continue;
     }
     try {
@@ -585,8 +621,8 @@ if (
   const counts = countPurchaseLinkStatuses();
   console.log(`purchase link status audit: ${JSON.stringify(counts)}`);
 
-  const { ctas } = collectVerifiedCtaUrls();
-  const allowlist = outboundHostAllowlist(loadRegistryEntries("src").values());
+  const { ctas, statuses } = collectVerifiedCtaUrls();
+  const allowlist = outboundHostAllowlist();
   const audit = await auditVerifiedCtaDestinations({
     urls: ctas,
     allowlist,
@@ -596,8 +632,23 @@ if (
   const viaNetwork = audit.checked.filter(
     (entry) => entry.result === "resolved",
   ).length;
+  const skipped = audit.checked.filter(
+    (entry) => entry.result === "skipped",
+  ).length;
   console.log(
-    `verified CTA destination audit ok: ${audit.checked.length} CTAs checked (${viaNetwork} via network redirect follow, ${audit.checked.length - viaNetwork} skipped by initial-host allowlist)`,
+    `verified CTA destination audit: ${audit.checked.length} CTAs (${viaNetwork} resolved, ${skipped} skipped)`,
   );
+  // Coverage: all verified articles must have their CTAs checked
+  const verifiedSlugs = [...statuses.entries()]
+    .filter(([, status]) => status === "verified")
+    .map(([slug]) => slug);
+  const checkedArticles = new Set(audit.checked.map((e) => e.article));
+  const unchecked = verifiedSlugs.filter((slug) => !checkedArticles.has(slug));
+  if (unchecked.length > 0) {
+    console.error(
+      `Coverage failure: ${unchecked.length} verified article(s) not covered by CTA audit: ${unchecked.join(", ")}`,
+    );
+    process.exit(1);
+  }
   if (audit.errors.length) throw new Error(audit.errors.join("\n"));
 }

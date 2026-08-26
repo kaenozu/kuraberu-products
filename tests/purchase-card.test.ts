@@ -136,9 +136,7 @@ describe("PurchaseCard", () => {
       expect(html).not.toContain("楽天市場で型番を確認");
       expect(html).not.toContain("Amazonで商品を確認");
       expect(html).not.toContain("data-cta-event");
-      expect(html).toContain(
-        "購入先の確認中です。公開後に販売先リンクが表示されます。",
-      );
+      expect(html).toContain("購入リンクは現在確認中です。");
       // カード本体（名前・対象読者）は表示を維持する
       expect(html).toContain("サーモス JNL-S500");
       expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");

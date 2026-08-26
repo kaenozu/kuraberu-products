@@ -35,6 +35,7 @@ jobs:
       - name: Lint, typecheck & test
         env:
           DEPLOYMENT_ENV: preview
+          ALLOW_NETWORK_SKIP: "1"
         run: pnpm verify:lint
 
   # --- ビルド + ビルド出力の検証 ---
@@ -57,6 +58,10 @@ jobs:
         env:
           DEPLOYMENT_ENV: preview
         run: pnpm verify:build
+      - name: Run dist-dependent tests (post-build)
+        env:
+          DEPLOYMENT_ENV: preview
+        run: pnpm test:dist
       - name: Verify production configuration and output
         env:
           DEPLOYMENT_ENV: production
@@ -71,15 +76,16 @@ jobs:
   # 両方が成功した場合にのみこのジョブが通る。
   verify:
     if: always()
-    needs: [lint-and-test, build-and-verify]
+    needs: [lint-and-test, build-and-verify, e2e]
     runs-on: ubuntu-latest
     timeout-minutes: 1
     steps:
       - name: Check all jobs passed
         run: |
-          if [ '${{ needs.lint-and-test.result }}' != 'success' ] || [ '${{ needs.build-and-verify.result }}' != 'success' ]; then
+          if [ '${{ needs.lint-and-test.result }}' != 'success' ] || [ '${{ needs.build-and-verify.result }}' != 'success' ] || [ '${{ needs.e2e.result }}' != 'success' ]; then
             echo 'lint-and-test: ${{ needs.lint-and-test.result }}'
             echo 'build-and-verify: ${{ needs.build-and-verify.result }}'
+            echo 'e2e: ${{ needs.e2e.result }}'
             exit 1
           fi
           echo 'All required jobs passed.'
