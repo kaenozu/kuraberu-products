@@ -55,6 +55,7 @@ import {
   yamazakiDishwasherRackArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
+import { site } from "../src/config/site";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
   return [
@@ -335,10 +336,7 @@ describe.skipIf(!hasDist)("article metadata (rendered dist)", () => {
     expect(article?.dateModified).toBe(pampersNewbornArticle.modifiedAt);
     expect(article?.url).toBe(article?.mainEntityOfPage);
     expect(article?.image).toBe(
-      new URL(
-        pampersNewbornArticle.imagePath!,
-        "https://kuraberu-products.pages.dev/",
-      ).toString(),
+      new URL(pampersNewbornArticle.imagePath!, `${site.url}/`).toString(),
     );
     expect(html).toContain(
       `<meta property="article:published_time" content="${pampersNewbornArticle.publishedAt}">`,
