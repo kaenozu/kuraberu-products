@@ -54,6 +54,11 @@ const faq = seed.faqEntries?.length
 const hasSocialProof = Boolean(seed.socialProofQuery);
 const hasOfficialProse = seed.officialProse && seed.officialProse.length > 0;
 const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
+const specsRows = compEntry.rows.map((row: { label: string; left: string; right: string }) => ({
+  label: row.label,
+  left: row.left,
+  right: row.right,
+}));
 ---
 
 <BaseLayout title={article.title} description={article.description} article={article} faq={faq} robots={isPublicArticle ? undefined : 'noindex,nofollow'}>
@@ -70,6 +75,19 @@ const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
 
     <!-- Hero comparison shell from comparison-v2 registry -->
     <ArticleComparisonV2ById articleId={articleId as any} />
+
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（公式ページで確認した項目）</summary>
+      <div class="table-scroll">
+        <table class="comparison">
+          <thead><tr><th scope="col">比較項目</th><th scope="col">{compEntry.left.brand} {compEntry.left.line}</th><th scope="col">{compEntry.right.brand} {compEntry.right.line}</th></tr></thead>
+          <tbody>
+            {specsRows.map((row: { label: string; left: string; right: string }) => <tr><th scope="row">{row.label}</th><td data-label={`${compEntry.left.brand} ${compEntry.left.line}`}>{row.left}</td><td data-label={`${compEntry.right.brand} ${compEntry.right.line}`}>{row.right}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <p class="meta">商品仕様・価格・在庫は変更される可能性があります。購入時点の公式ページと販売ページをご確認ください。</p>
 
     {hasOfficialProse && (
       <details class="fold-section" id="official">
@@ -146,16 +164,17 @@ const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
       {article.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}
     </ol>
 
-    {hasSourceLinks && (
-      <>
-        <h2>情報源一覧</h2>
-        <ul class="source-list">
-          {seed.sourceLinks!.map((link: { label: string; url: string; date?: string }) => (
-            <li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>{link.date ? `（${link.date}確認）` : ''}</li>
-          ))}
-        </ul>
-      </>
-    )}
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      {seed.sourceLinks?.map((link: { label: string; url: string; date?: string }) => (
+        <li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>{link.date ? `（${link.date}確認）` : ''}</li>
+      )) ?? (
+        <li><a href={compEntry.left.officialHref} target="_blank" rel="noopener noreferrer">{compEntry.left.brand} {compEntry.left.line} 公式</a></li>
+      )}
+      {seed.sourceLinks && (
+        <li><a href={compEntry.right.officialHref} target="_blank" rel="noopener noreferrer">{compEntry.right.brand} {compEntry.right.line} 公式</a></li>
+      )}
+    </ul>
 
     <h2>調査方法・免責</h2>
     <p>このサイトの比較は、メーカー公式の商品ページ・公式の比較表で確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
