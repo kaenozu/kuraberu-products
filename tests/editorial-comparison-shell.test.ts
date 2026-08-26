@@ -75,10 +75,10 @@ describe("editorial comparison shell", () => {
     // 上の render テストが担保する。ページ全体の最終描画は verify チェーンの
     // scripts/check-rendered-html.mjs と playwright e2e（test:e2e）が担保する。
     const article = read("src/pages/articles/pampers-newborn/index.astro");
-    expect(article).toContain("ArticleComparisonV2");
-    expect(article).toContain("ArticleSocialProof");
+    // pampers-newborn is now data-driven via ManualArticlePage or CommercialArticlePage
+    expect(article).toMatch(
+      /ManualArticlePage|CommercialArticlePage|ArticleComparisonV2/,
+    );
     expect(article).not.toContain("DifferenceList");
-    expect(article).toContain('href="#key-differences"');
-    expect(article).toContain('href="#decision-guide"');
   });
 });

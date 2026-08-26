@@ -4,30 +4,28 @@
   "entries": [
     {
       "articleId": "babybjorn",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:5f3296e2ca25173c12289e6cadea085d1e864faa092fd79631d7b2100e3cefbf",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:d8373122f36da086a3f87e77e905229688a4e45131340a267f2c4e140609defe",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/",
-        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/",
-        "https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers"
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/"
       ],
       "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
     },
     {
       "articleId": "babybjorn-onekai",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:cabf2b528a1cfac111ed4e3b2ce816be77f74945eceeba8a8e180193ff7faba9",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:a3602f8a34363c929b095491aa2c98dc0b0b202130adeff63135e3d9d776cf87",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/",
-        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/",
-        "https://www.rakuten.ne.jp/gold/babybjorn/comparison-chart-babycarriers"
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/"
       ],
       "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
     },
     {
       "articleId": "babybjorn-bouncer",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:71b564f8e960246774d936201267d4e96df05da60312f90c6578e0d5727cf2f6",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:8ab8882d28e9d4c783914632cb5e3eb2cef543904b206fe15e4136e5d8805761",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-bouncers/bouncer-balance-soft/sky-blue-white-mesh-light-grey/",
         "https://www.babybjorn.jp/products/baby-bouncers/bouncer-bliss/"
@@ -36,8 +34,8 @@
     },
     {
       "articleId": "babybjorn-cradle",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:86859afe6956a7b9481ea4d33bf72ec7cd291a78795b38a899c9ecd8c922304d",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:bbe6cb33b39b95c3273cf9590785ba1f5000d2af9b1a5ba9c6cc28d2da93312f",
       "officialUrls": [
         "https://www.aprica.jp/products/home/bed/coconel_air/",
         "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/"
@@ -46,8 +44,8 @@
     },
     {
       "articleId": "babybjorn-potty",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:66aac15d27dfa2caf0dd17bcf22e7c91f74ab331d98170628255e06e13b2ffc9",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:e993268ed18770f5c368cd937715a32d6aefc8ef783922ed72e49a1c726e7f34",
       "officialUrls": [
         "https://www.babybjorn.jp/products/bathroom/potty-chair/",
         "https://www.babybjorn.jp/products/bathroom/smart-potty/"
@@ -56,9 +54,12 @@
     },
     {
       "articleId": "pigeon-bottle-160-240",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:3883266098e9d0db5885158cba798ab7bb02d061288bb11caac722e66324e697",
-      "officialUrls": ["https://shop.pigeon.co.jp/products/1026735"],
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:58d6ab8d308ffb11fdf584bdb8c5ab263e8a2f4d26d3fce946e3bf4d059dbb08",
+      "officialUrls": [
+        "https://products.pigeon.co.jp/item/index-2377.html",
+        "https://products.pigeon.co.jp/item/index-2378.html"
+      ],
       "note": "価格クレーム（160ml 2,750円 / 240ml 2,860円、2026-08-11時点）をピジョン公式オンラインショップで確認（2026-08-16再確認）。対象月齢目安は公式商品ページに基づく"
     },
     {
@@ -173,8 +174,8 @@
     },
     {
       "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:6aaa3d10248e36f6ed2b6da9e5f155ab14cdb7a67ca1ad21e09fd8950b9a1dd9",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:b15408c6273418269bf00fea7a7319c3cb7d219adb9e5fa5d1d3f358cf640c06",
       "officialUrls": [
         "https://www.kingjim.co.jp/products/tepra/sr-mk1.html",
         "https://www.kingjim.co.jp/products/tepra/sr-r2500p.html"
@@ -203,8 +204,8 @@
     },
     {
       "articleId": "panasonic-ne-fl1a-vs-ne-fl1c",
-      "checkedAt": "2026-08-15",
-      "claimsFingerprint": "sha256:0521f2127eea2b83160a9cd301f3ce08ed5d1e76826aa2b9e171b0f7df587017",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:02a752eb5f3f9cb8dab9696eddd59c8f8c7986642757471534e2039aec619121",
       "officialUrls": [
         "https://panasonic.jp/range/products/NE-FL1A.html",
         "https://panasonic.jp/range/products/NE-FL1C.html"
@@ -223,10 +224,9 @@
     },
     {
       "articleId": "tiger-mta-j050-guide",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:ecf9db045cb13078c36e4b278103a58bf0c0cf1e67b9155f4ea2f7567e5ba188",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:7b121193698ddf31fa3f0b6c17edc1b585637d7b7b2f93661dca8a10c076732e",
       "officialUrls": [
-        "https://www.thermos.jp/product/series/jnl-s00.html",
         "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
       ],
       "note": ""
@@ -292,8 +292,8 @@
     },
     {
       "articleId": "panasonic-es-lt4b-vs-es-lv7j",
-      "checkedAt": "2026-08-19",
-      "claimsFingerprint": "sha256:8b6021bae721a6439142dfbc3ff8963129a295abc286cf3f9a28c099c25b19fa",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:43721782c288c3cf75eaac276109dd74ee5a36c616af87a66ef5fe17e026ae95",
       "officialUrls": [
         "https://panasonic.jp/shaver/products/ES-LT4B.html",
         "https://panasonic.jp/shaver/products/ES-LV7J.html"
@@ -302,8 +302,8 @@
     },
     {
       "articleId": "yamajitsu-film-holder-242286-vs-242287",
-      "checkedAt": "2026-08-19",
-      "claimsFingerprint": "sha256:99daaedde9fef13f0d3826b0ae9e9def5f643c614a72c716e9412677317a0fa2",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:93e50d83bde3cc2a37293e1f334baae92e826c2245a6d369d39d82e017fa24c6",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/242286",
         "https://www.yamajitsu.co.jp/products/242287"
@@ -367,6 +367,16 @@
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/241925",
         "https://www.yamajitsu.co.jp/products/241926"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "shupot",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:5d37ee5634698c2a84c236bbecfef370db8ab54952321eb69004b9662adf3deb",
+      "officialUrls": [
+        "https://shop.pigeon.co.jp/products/1032018",
+        "https://shop.pigeon.co.jp/products/2000638s"
       ],
       "note": ""
     }

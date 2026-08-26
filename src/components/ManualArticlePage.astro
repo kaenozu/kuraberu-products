@@ -1,0 +1,182 @@
+---
+/**
+ * ManualArticlePage — data-driven page for articles that were previously
+ * hand-written as individual .astro pages.
+ *
+ * Uses comparison-v2 registry for the hero comparison shell,
+ * and manual seed data for FAQ, official prose, social proof, source links.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ComparisonMemoButton from './ComparisonMemoButton.astro';
+import PurchaseCard from './PurchaseCard.astro';
+import ArticleComparisonV2ById from './ArticleComparisonV2ById.astro';
+import ArticleSocialProof from './ArticleSocialProof.astro';
+import ExternalEmbed from './ExternalEmbed.astro';
+import RelatedArticles from './RelatedArticles.astro';
+import { articleMetadata, publicArticleMetadata } from '../content/articles';
+import { manualArticleSeeds } from '../content/articles/manual-seeds';
+import { articlePurchaseLinks } from '../lib/products';
+import { getComparisonV2Entry } from '../content/articles/comparison-v2';
+
+
+interface Props {
+  articleId: string;
+}
+
+const { articleId } = Astro.props;
+const article = articleMetadata.find((item) => item.id === articleId);
+const seed = manualArticleSeeds.find((item) => item.id === articleId);
+
+if (!article || !seed) {
+  throw new Error(`Unknown manual article: ${articleId}`);
+}
+
+const isPublicArticle = publicArticleMetadata.some((item) => item.id === article.id);
+const compEntry = getComparisonV2Entry(articleId as any);
+
+const faq = seed.faqEntries?.length
+  ? seed.faqEntries
+  : [
+      {
+        question: '比較対象はどのように選んでいますか？',
+        answer: 'メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。ランキング順位や価格を保証するものではありません。',
+      },
+      {
+        question: '価格や在庫は確認できますか？',
+        answer: '価格・在庫・ポイント・送料は変動するため、記事内の販売ページで購入時点の情報をご確認ください。',
+      },
+      {
+        question: 'どちらを選べばよいですか？',
+        answer: '用途、置き場所、対応機器、サイズ、手入れのしやすさを優先順位にして、公式仕様と販売ページを照らし合わせてください。',
+      },
+    ];
+
+const hasSocialProof = Boolean(seed.socialProofQuery);
+const hasOfficialProse = seed.officialProse && seed.officialProse.length > 0;
+const specsRows = compEntry.rows.map((row: { label: string; left: string; right: string }) => ({
+  label: row.label,
+  left: row.left,
+  right: row.right,
+}));
+---
+
+<BaseLayout title={article.title} description={article.description} article={article} faq={faq} robots={isPublicArticle ? undefined : 'noindex,nofollow'}>
+  <article class="wrap section article">
+    <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
+    <h1>{article.headline}</h1>
+    <ComparisonMemoButton articleId={article.id} />
+    <p class="lead">{seed.lead ?? article.summary}</p>
+    <nav class="jump-nav" aria-label="ページ内ジャンプ">
+      <a href="#key-differences">違い</a>
+      <a href="#decision-guide">結局どっち？</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <!-- Hero comparison shell from comparison-v2 registry -->
+    <ArticleComparisonV2ById articleId={articleId as any} />
+
+    <details class="fold-section" id="specs">
+      <summary>詳細仕様（公式ページで確認した項目）</summary>
+      <div class="table-scroll">
+        <table class="comparison">
+          <thead><tr><th scope="col">比較項目</th><th scope="col">{compEntry.left.brand} {compEntry.left.line}</th><th scope="col">{compEntry.right.brand} {compEntry.right.line}</th></tr></thead>
+          <tbody>
+            {specsRows.map((row: { label: string; left: string; right: string }) => <tr><th scope="row">{row.label}</th><td data-label={`${compEntry.left.brand} ${compEntry.left.line}`}>{row.left}</td><td data-label={`${compEntry.right.brand} ${compEntry.right.line}`}>{row.right}</td></tr>)}
+          </tbody>
+        </table>
+      </div>
+    </details>
+    <p class="meta">商品仕様・価格・在庫は変更される可能性があります。購入時点の公式ページと販売ページをご確認ください。</p>
+
+    {hasOfficialProse && (
+      <details class="fold-section" id="official">
+        <summary>公式情報（確認できた項目）</summary>
+        {seed.officialProse!.map((section: { heading: string; items: readonly string[] }) => (
+          <>
+            <h3>{section.heading}</h3>
+            <ul class="official-list">
+              {section.items.map((item: string) => <li>{item}</li>)}
+            </ul>
+          </>
+        ))}
+      </details>
+    )}
+
+    {hasSocialProof && (
+      <ArticleSocialProof
+        query={seed.socialProofQuery!}
+        checkedAt={seed.socialProofCheckedAt}
+        hasPosts={seed.socialProofHasPosts}
+        bestMatch={seed.socialProofBestMatch as any}
+      >
+        {seed.embeds && seed.embeds.length > 0 && (
+          <div class="sns-embeds">
+            {seed.embeds.map((embed: { provider: string; url: string; title: string; match: string; purpose?: string; tone?: string; autoload?: boolean; compact?: boolean }) => (
+              <ExternalEmbed
+                provider={embed.provider as any}
+                url={embed.url}
+                title={embed.title}
+                match={embed.match as any}
+                purpose={embed.purpose}
+                tone={embed.tone as any}
+                autoload={embed.autoload}
+                compact={embed.compact}
+              />
+            ))}
+          </div>
+        )}
+      </ArticleSocialProof>
+    )}
+
+    <h2 id="faq">よくある質問</h2>
+    <div class="faq-list">
+      {faq.map((entry: { question: string; answer: string }) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
+    </div>
+
+    <h2>購入前の注意</h2>
+    <p>{seed.disclaimer ?? 'ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。'}</p>
+    <div class="purchase-cards">
+      <PurchaseCard
+        name={`${compEntry.left.brand} ${compEntry.left.line}`}
+        audience={compEntry.left.tagline}
+        href={articlePurchaseLinks[`${articleId}:left` as keyof typeof articlePurchaseLinks]?.purchaseUrl}
+        productId={compEntry.left.productId}
+        imagePath={compEntry.left.image}
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+        purchaseLinkStatus={article.purchaseLinkStatus}
+      />
+      <PurchaseCard
+        name={`${compEntry.right.brand} ${compEntry.right.line}`}
+        audience={compEntry.right.tagline}
+        href={articlePurchaseLinks[`${articleId}:right` as keyof typeof articlePurchaseLinks]?.purchaseUrl}
+        productId={compEntry.right.productId}
+        imagePath={compEntry.right.image}
+        placement="article-end"
+        note="価格・在庫は販売先でご確認ください。"
+        purchaseLinkStatus={article.purchaseLinkStatus}
+      />
+    </div>
+
+    <h2>更新履歴</h2>
+    <ol class="change-log">
+      {article.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}
+    </ol>
+
+    <h2>情報源一覧</h2>
+    <ul class="source-list">
+      {seed.sourceLinks?.map((link: { label: string; url: string; date?: string }) => (
+        <li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>{link.date ? `（${link.date}確認）` : ''}</li>
+      )) ?? (
+        <li><a href={compEntry.left.officialHref} target="_blank" rel="noopener noreferrer">{compEntry.left.brand} {compEntry.left.line} 公式</a></li>
+      )}
+      {seed.sourceLinks && (
+        <li><a href={compEntry.right.officialHref} target="_blank" rel="noopener noreferrer">{compEntry.right.brand} {compEntry.right.line} 公式</a></li>
+      )}
+    </ul>
+
+    <h2>調査方法・免責</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式の比較表で確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
+  </article>
+  <RelatedArticles currentPath={article.path} currentCategory={article.category} />
+</BaseLayout>
