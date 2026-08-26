@@ -394,6 +394,29 @@ export function readArticlePurchaseLinkStatus(_relative, html) {
   return match?.[1] ?? null;
 }
 
+// 購入CTAは、記事メタデータで verified が明示された場合だけ許可する。
+// status が欠落した古いテンプレートを verified とみなすと、未確認リンクが
+// 新しい記事や手書きページから公開されるため、CTAがある場合は fail-closed にする。
+export function validateArticlePurchaseLinkStatus(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const status = readArticlePurchaseLinkStatus(relative, html);
+  const ctaCount = [
+    ...html.matchAll(/<a\b[^>]*\bdata-cta-event="purchase"[^>]*>/gi),
+  ].length;
+  if (ctaCount === 0) return [];
+  if (status === null) {
+    return [
+      `${relative}: purchase CTA requires an explicit article:purchase-link-status="verified" meta`,
+    ];
+  }
+  if (status !== "verified") {
+    return [
+      `${relative}: purchase CTA rendered for non-verified purchase-link-status "${status}"`,
+    ];
+  }
+  return [];
+}
+
 // 記事のコンテンツタイプを
 // <meta name="article:content-type" content="guide|comparison"> から読み取る。
 export function readArticleContentType(relative, html, errors) {
@@ -495,8 +518,7 @@ export function validateArticleNextStep(relative, html) {
     html.match(
       /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
     )?.[1] ?? null;
-  const isUnverified =
-    purchaseLinkStatus === "unverified" || purchaseLinkStatus === "unavailable";
+  const isUnverified = purchaseLinkStatus !== "verified";
   const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
@@ -1223,12 +1245,12 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
     const purchaseLinkStatus = readArticlePurchaseLinkStatus(relative, html);
-    const isVerified =
-      purchaseLinkStatus === "verified" || purchaseLinkStatus === null;
+    const isVerified = purchaseLinkStatus === "verified";
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
     errors.push(...validateArticleNextStep(relative, html));
+    errors.push(...validateArticlePurchaseLinkStatus(relative, html));
     errors.push(...validateArticleSectionOrder(relative, html));
     // Issue #343: 全記事ページへ拡大した検証（必須セクション有無・未解決トークン）
     errors.push(...validateRequiredSections(relative, html));

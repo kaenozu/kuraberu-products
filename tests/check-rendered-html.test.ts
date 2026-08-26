@@ -16,6 +16,7 @@ import {
   validateArticleCardThumbnails,
   validateArticleTrustLine,
   validateArticleNextStep,
+  validateArticlePurchaseLinkStatus,
   validateArticleSectionOrder,
   validateTopSearch,
   validateHeaderNav,
@@ -72,7 +73,7 @@ function validPage(body: string) {
   // （validateHeaderNav / validateComparisonCardLabels ゲートが要求するため）。
   // ヘッダーリンクはアンカー（#）にして broken-internal-link 検知を避ける。
   return `<!doctype html>
-<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.invalid/"><meta name="comparison-card-labels" content="present"></head>
+<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://example.invalid/"><meta name="comparison-card-labels" content="present"><meta name="article:purchase-link-status" content="verified"></head>
 <body><header><div class="wrap nav"><a class="brand" href="#">Fixture</a><details class="nav-toggle"><summary></summary><nav class="navlinks"><a href="#menu">比較記事</a></nav></details></div></header><p class="meta">カテゴリ・2026-01-01</p><main><h1>Fixture</h1>${body}</main></body></html>`;
 }
 
@@ -84,6 +85,25 @@ function sectionsOf(html: string) {
 }
 
 describe("rendered article CTA audit", () => {
+  it("rejects purchase CTAs when the article purchase status is missing or unverified", () => {
+    expect(
+      validateArticlePurchaseLinkStatus(
+        "articles/example/index.html",
+        '<a data-cta-event="purchase" href="https://a.r10.to/example">購入</a>',
+      ),
+    ).toEqual([
+      'articles/example/index.html: purchase CTA requires an explicit article:purchase-link-status="verified" meta',
+    ]);
+    expect(
+      validateArticlePurchaseLinkStatus(
+        "articles/example/index.html",
+        '<meta name="article:purchase-link-status" content="unavailable"><a data-cta-event="purchase" href="https://a.r10.to/example">購入</a>',
+      ),
+    ).toEqual([
+      'articles/example/index.html: purchase CTA rendered for non-verified purchase-link-status "unavailable"',
+    ]);
+  });
+
   it("accepts four CTAs for a two-product article (article-end + next-step)", () => {
     const standardComparisonCtas =
       twoEndCtas +
@@ -1216,7 +1236,7 @@ describe("article next-step block (conclusion → 次にすること: A/B購入 
     return `<section class="next-step" data-next-step aria-label="次にすること"><div class="next-step__grid">${buys}</div><p class="next-step__diagnosis">まだ迷っている？<a class="next-step__diagnosis-link" href="${diagnosisHref}">30秒で診断する →</a></p></section>`;
   };
   const comparisonWith = (extra: string, specs = false) =>
-    `${contentTypeMeta("comparison")}<article>${extra}${
+    `${contentTypeMeta("comparison")}<meta name="article:purchase-link-status" content="verified"><article>${extra}${
       specs
         ? '<details class="fold-section" id="specs"><summary>詳細仕様</summary></details>'
         : ""
@@ -1280,7 +1300,7 @@ describe("article next-step block (conclusion → 次にすること: A/B購入 
 
   it("rejects a block placed after the specs fold", () => {
     const html =
-      `${contentTypeMeta("comparison")}<details class="fold-section" id="specs"><summary>詳細仕様</summary></details>` +
+      `${contentTypeMeta("comparison")}<meta name="article:purchase-link-status" content="verified"><details class="fold-section" id="specs"><summary>詳細仕様</summary></details>` +
       nextStep();
     const errors = validateArticleNextStep("articles/x/index.html", html);
     expect(errors).toHaveLength(1);
