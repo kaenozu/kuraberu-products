@@ -53,7 +53,6 @@ const faq = seed.faqEntries?.length
 
 const hasSocialProof = Boolean(seed.socialProofQuery);
 const hasOfficialProse = seed.officialProse && seed.officialProse.length > 0;
-const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
 const specsRows = compEntry.rows.map((row: { label: string; left: string; right: string }) => ({
   label: row.label,
   left: row.left,
