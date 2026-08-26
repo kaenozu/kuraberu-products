@@ -26,13 +26,10 @@ const errors = [];
 
 /* ── 1. Collect imagePath from individual article files ── */
 for (const file of fs.readdirSync(ARTICLE_DIR)) {
-  if (
-    !file.endsWith(".ts") ||
-    file === "index.ts" ||
-    file === "types.ts" ||
-    file === "commercial.ts"
-  )
+  if (!file.endsWith(".ts") || file === "index.ts" || file === "types.ts")
     continue;
+  // Skip commercial/ directory — handled separately
+  if (file === "commercial") continue;
   const text = fs.readFileSync(path.join(ARTICLE_DIR, file), "utf8");
   for (const match of text.matchAll(
     /(?:imagePath|image):\s*["'`]([^"'`]+)["'`]/g,
@@ -66,20 +63,29 @@ for (const file of fs.readdirSync(COMPARISON_V2_DIR)) {
 }
 
 /* ── 3. Collect leftImage/rightImage from commercial seeds ── */
-const commercialText = fs.readFileSync(
-  path.join(ARTICLE_DIR, "commercial.ts"),
-  "utf8",
-);
-for (const match of commercialText.matchAll(
-  /(?:leftImage|rightImage):\s*["'`]([^"'`]+)["'`]/g,
-)) {
-  const imgPath = match[1];
-  if (imgPath.startsWith("http")) continue;
-  const filename = imgPath.replace(/^\/products\//, "");
-  if (!availableFiles.has(filename)) {
-    errors.push(
-      `commercial.ts: ${match[0].split(":")[0]} "${imgPath}" → file not found in src/assets/products/`,
-    );
+const commercialDir = path.resolve("src/content/articles/commercial");
+for (const file of fs.readdirSync(commercialDir)) {
+  if (
+    !file.endsWith(".ts") ||
+    file === "index.ts" ||
+    file === "types.ts" ||
+    file === "images.ts" ||
+    file === "create.ts" ||
+    file === "seeds.ts"
+  )
+    continue;
+  const text = fs.readFileSync(path.join(commercialDir, file), "utf8");
+  for (const match of text.matchAll(
+    /(?:leftImage|rightImage):\s*["'`]([^"'`]+)["'`]/g,
+  )) {
+    const imgPath = match[1];
+    if (imgPath.startsWith("http")) continue;
+    const filename = imgPath.replace(/^\/products\//, "");
+    if (!availableFiles.has(filename)) {
+      errors.push(
+        `commercial/${file}: ${match[0].split(":")[0]} "${imgPath}" → file not found in src/assets/products/`,
+      );
+    }
   }
 }
 
@@ -94,7 +100,26 @@ const collectRef = (imgPath) => {
 for (const file of fs.readdirSync(ARTICLE_DIR)) {
   if (!file.endsWith(".ts") || file === "index.ts" || file === "types.ts")
     continue;
+  // Skip commercial/ directory — handled separately
+  if (file === "commercial") continue;
   const text = fs.readFileSync(path.join(ARTICLE_DIR, file), "utf8");
+  for (const match of text.matchAll(
+    /(?:imagePath|leftImage|rightImage|image):\s*["'`]([^"'`]+)["'`]/g,
+  )) {
+    collectRef(match[1]);
+  }
+}
+// Scan commercial/ directory for image references
+for (const file of fs.readdirSync(commercialDir)) {
+  if (
+    !file.endsWith(".ts") ||
+    file === "index.ts" ||
+    file === "types.ts" ||
+    file === "create.ts" ||
+    file === "seeds.ts"
+  )
+    continue;
+  const text = fs.readFileSync(path.join(commercialDir, file), "utf8");
   for (const match of text.matchAll(
     /(?:imagePath|leftImage|rightImage|image):\s*["'`]([^"'`]+)["'`]/g,
   )) {
@@ -110,11 +135,17 @@ for (const file of fs.readdirSync(COMPARISON_V2_DIR)) {
   }
 }
 // Also scan commercialArticleImages map (key: "id", value: {left, right})
-for (const match of commercialText.matchAll(/\"\/(?:products\/[^\"]+)\"/g)) {
+const commercialImagesText = fs.readFileSync(
+  path.join(commercialDir, "images.ts"),
+  "utf8",
+);
+for (const match of commercialImagesText.matchAll(
+  /\"\/(?:products\/[^\"]+)\"/g,
+)) {
   collectRef(match[0].replace(/"/g, ""));
 }
 // Scan left/right image paths in seed entries (e.g., left: "/products/...")
-for (const match of commercialText.matchAll(
+for (const match of commercialImagesText.matchAll(
   /(?:^|\s)(?:left|right):\s*["'`]([^"'`]+)["'`]/gm,
 )) {
   collectRef(match[1]);
