@@ -119,7 +119,8 @@ export function validateExternalEmbedDirectory(directory = "src/pages") {
     .filter((filePath) => !filePath.endsWith(`${path.sep}ExternalEmbed.astro`))
     .filter(
       (filePath) =>
-        !filePath.endsWith(`${path.sep}CommercialArticlePage.astro`),
+        !filePath.endsWith(`${path.sep}CommercialArticlePage.astro`) &&
+        !filePath.endsWith(`${path.sep}ArticleComparisonPage.astro`),
     )
     .map((filePath) => ({
       filePath,

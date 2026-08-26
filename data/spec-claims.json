@@ -3,6 +3,66 @@
   "description": "記事の仕様クレームと公式ソースの突合記録。checkedAt は公式ページで確認した日。",
   "entries": [
     {
+      "articleId": "babybjorn",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:d8373122f36da086a3f87e77e905229688a4e45131340a267f2c4e140609defe",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/",
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/"
+      ],
+      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
+    },
+    {
+      "articleId": "babybjorn-onekai",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:a3602f8a34363c929b095491aa2c98dc0b0b202130adeff63135e3d9d776cf87",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/",
+        "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/"
+      ],
+      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
+    },
+    {
+      "articleId": "babybjorn-bouncer",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:8ab8882d28e9d4c783914632cb5e3eb2cef543904b206fe15e4136e5d8805761",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/baby-bouncers/bouncer-balance-soft/sky-blue-white-mesh-light-grey/",
+        "https://www.babybjorn.jp/products/baby-bouncers/bouncer-bliss/"
+      ],
+      "note": "寸法 幅約39×奥行約89×高さ46-58cm・重量 約2.1kg を公式製品ページで確認"
+    },
+    {
+      "articleId": "babybjorn-cradle",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:bbe6cb33b39b95c3273cf9590785ba1f5000d2af9b1a5ba9c6cc28d2da93312f",
+      "officialUrls": [
+        "https://www.aprica.jp/products/home/bed/coconel_air/",
+        "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/"
+      ],
+      "note": "本体重量を約6kg に修正（PR #172）。表示価格 49,500円（2026-08-10時点）"
+    },
+    {
+      "articleId": "babybjorn-potty",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:e993268ed18770f5c368cd937715a32d6aefc8ef783922ed72e49a1c726e7f34",
+      "officialUrls": [
+        "https://www.babybjorn.jp/products/bathroom/potty-chair/",
+        "https://www.babybjorn.jp/products/bathroom/smart-potty/"
+      ],
+      "note": "スマートポッティ重量を約540g に修正（PR #173、公式商品ページ）。表示価格 3,080円（2026-08-10時点）を2026-08-16再確認"
+    },
+    {
+      "articleId": "pigeon-bottle-160-240",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:58d6ab8d308ffb11fdf584bdb8c5ab263e8a2f4d26d3fce946e3bf4d059dbb08",
+      "officialUrls": [
+        "https://products.pigeon.co.jp/item/index-2377.html",
+        "https://products.pigeon.co.jp/item/index-2378.html"
+      ],
+      "note": "価格クレーム（160ml 2,750円 / 240ml 2,860円、2026-08-11時点）をピジョン公式オンラインショップで確認（2026-08-16再確認）。対象月齢目安は公式商品ページに基づく"
+    },
+    {
       "articleId": "combi-the-s-plus-vs-premium",
       "checkedAt": "2026-08-16",
       "claimsFingerprint": "sha256:d7d2b63bbc4ce44a5c6af0ea7ae28716c892446d5e0f71b9297c6393b8e96f47",
@@ -113,6 +173,16 @@
       "note": "重量 690/680g・タンク 120/140mL・800/950W・スチーム量・連続運転 約9/約14分を公式比較表で確認"
     },
     {
+      "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:b15408c6273418269bf00fea7a7319c3cb7d219adb9e5fa5d1d3f358cf640c06",
+      "officialUrls": [
+        "https://www.kingjim.co.jp/products/tepra/sr-mk1.html",
+        "https://www.kingjim.co.jp/products/tepra/sr-r2500p.html"
+      ],
+      "note": "寸法・質量 420/470g・テープ幅を公式ページで確認"
+    },
+    {
       "articleId": "panasonic-f-yhvx120-vs-f-yhvx90",
       "checkedAt": "2026-08-16",
       "claimsFingerprint": "sha256:02ff4355dda0d0be18496941285c8a047eda7b1f8f565141c3e43ca88a84aa87",
@@ -133,6 +203,16 @@
       "note": "使用サイズ 330/460mm・重量 約320/370g・材質を山崎産業公式ページで確認（2026-08-16）"
     },
     {
+      "articleId": "panasonic-ne-fl1a-vs-ne-fl1c",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:02a752eb5f3f9cb8dab9696eddd59c8f8c7986642757471534e2039aec619121",
+      "officialUrls": [
+        "https://panasonic.jp/range/products/NE-FL1A.html",
+        "https://panasonic.jp/range/products/NE-FL1C.html"
+      ],
+      "note": "庫内容量・外形寸法・質量・自動メニュー数をパナソニック公式仕様ページで確認（2026-08-15）"
+    },
+    {
       "articleId": "thermos-kfm-020-vs-kfi-020",
       "checkedAt": "2026-08-15",
       "claimsFingerprint": "sha256:06a8841f580441140cbb00f06de4eb749a2e9a2192ff68bde96dac59d6d0d7c9",
@@ -141,6 +221,15 @@
         "https://www.thermos.jp/product/series/kfm.html"
       ],
       "note": "対応熱源・重量 約0.4kg・寸法・価格をサーモス公式シリーズページで確認（2026-08-15）"
+    },
+    {
+      "articleId": "tiger-mta-j050-guide",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:7b121193698ddf31fa3f0b6c17edc1b585637d7b7b2f93661dca8a10c076732e",
+      "officialUrls": [
+        "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
+      ],
+      "note": ""
     },
     {
       "articleId": "panasonic-eh-na9m-vs-eh-na7m",
@@ -202,6 +291,26 @@
       "note": ""
     },
     {
+      "articleId": "panasonic-es-lt4b-vs-es-lv7j",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:43721782c288c3cf75eaac276109dd74ee5a36c616af87a66ef5fe17e026ae95",
+      "officialUrls": [
+        "https://panasonic.jp/shaver/products/ES-LT4B.html",
+        "https://panasonic.jp/shaver/products/ES-LV7J.html"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "yamajitsu-film-holder-242286-vs-242287",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:93e50d83bde3cc2a37293e1f334baae92e826c2245a6d369d39d82e017fa24c6",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/242286",
+        "https://www.yamajitsu.co.jp/products/242287"
+      ],
+      "note": ""
+    },
+    {
       "articleId": "zojirushi-eq-aa22-vs-eq-sa22",
       "checkedAt": "2026-08-19",
       "claimsFingerprint": "sha256:646a657a62176fef70f0d778fa57f3cf4481010009d9eff38463954ac5badb55",
@@ -258,6 +367,16 @@
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/241925",
         "https://www.yamajitsu.co.jp/products/241926"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "shupot",
+      "checkedAt": "2026-08-26",
+      "claimsFingerprint": "sha256:5d37ee5634698c2a84c236bbecfef370db8ab54952321eb69004b9662adf3deb",
+      "officialUrls": [
+        "https://shop.pigeon.co.jp/products/1032018",
+        "https://shop.pigeon.co.jp/products/2000638s"
       ],
       "note": ""
     }
