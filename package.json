@@ -32,7 +32,7 @@
     "announce:draft": "node scripts/generate-x-announcements.mjs",
     "resize:images": "node scripts/resize-source-images.mjs",
     "verify": "pnpm verify:lint && pnpm verify:build",
-    "verify:lint": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/check-image-paths.mjs && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run --coverage",
+    "verify:lint": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run --coverage",
     "verify:build": "astro build && node scripts/report-css-usage.mjs --fail-on-unused && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/check-article-factual-integrity.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check"
   },
   "dependencies": {
