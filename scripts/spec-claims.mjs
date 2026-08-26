@@ -32,7 +32,13 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { format } from "prettier";
 import { parseArticles } from "./generate-x-announcements.mjs";
@@ -431,8 +437,13 @@ function parseArgs(argv) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
+  const articlesDir = "src/content/articles";
+  const excludeFiles = new Set(["index.ts", "types.ts"]);
   const articles = parseArticles(
-    readFileSync("src/content/articles.ts", "utf8"),
+    readdirSync(articlesDir)
+      .filter((f) => f.endsWith(".ts") && !excludeFiles.has(f))
+      .map((f) => readFileSync(path.join(articlesDir, f), "utf8"))
+      .join("\n"),
   );
 
   if (options.mode === "check") {
