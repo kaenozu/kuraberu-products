@@ -210,6 +210,29 @@ describe("buildIssueBody", () => {
       "- [x] BLOCKER だった場合、Rollback 手順を適用・記録した",
     );
   });
+
+  it("includes a UNKNOWN warning when report.json is missing", () => {
+    const body = buildIssueBody({
+      report: {
+        result: "UNKNOWN",
+        attempts: 0,
+        resultsPerAttempt: [],
+        expectedCommitSha: EXPECTED_SHA,
+        baseUrl: null,
+        checks: [],
+        secretsIncluded: false,
+        generatedAt: null,
+      },
+      checkRun: null,
+      runId: "32090894999",
+      expectedSha: EXPECTED_SHA,
+      deployedAt: "2026-08-21T03:00:00Z",
+      siteUrl: "https://kuraberu-products.pages.dev",
+    });
+    expect(body).toContain("report.json が見つかりませんでした");
+    expect(body).toContain("Result: UNKNOWN");
+    expect(body).toContain("Attempts: 0");
+  });
 });
 
 describe("constants", () => {
