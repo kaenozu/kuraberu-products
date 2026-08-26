@@ -15,6 +15,8 @@ export interface ComparisonSide {
   imageAlt: string;
   officialHref: string;
   guidePoints: readonly string[];
+  /** クリック計測用の商品ID（任意） */
+  productId?: string;
 }
 
 /** 比較行（ verifiedRows / keyDiffRows 共通） */

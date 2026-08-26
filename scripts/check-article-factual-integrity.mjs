@@ -2,9 +2,18 @@
  * scripts/check-article-factual-integrity.mjs
  * 公開記事の事実整合性を機械検証する (Issue #353)。
  */
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 
-const ARTICLES_FILE = "src/content/articles.ts";
+const ARTICLES_DIR = "src/content/articles";
+const EXCLUDE_FILES = new Set(["index.ts", "types.ts"]);
+
+function readAllArticleSources() {
+  return readdirSync(ARTICLES_DIR)
+    .filter((f) => f.endsWith(".ts") && !EXCLUDE_FILES.has(f))
+    .map((f) => readFileSync(path.join(ARTICLES_DIR, f), "utf8"))
+    .join("\n");
+}
 
 const MISCLASSIFICATION_CHECKS = [
   {
@@ -35,7 +44,7 @@ function extractArticleBlock(content, articleId) {
 }
 
 function main() {
-  const content = readFileSync(ARTICLES_FILE, "utf8");
+  const content = readAllArticleSources();
   const articles = extractArticleIds(content);
   console.log(
     `Checking ${articles.length} articles for factual integrity...\n`,

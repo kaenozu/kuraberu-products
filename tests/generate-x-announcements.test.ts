@@ -1,4 +1,5 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   MAX_POST_LENGTH,
@@ -50,8 +51,13 @@ describe("parseArticles", () => {
     });
   });
 
-  it("parses every article in the real articles.ts", () => {
-    const source = readFileSync("src/content/articles.ts", "utf8");
+  it("parses every article in the real articles", () => {
+    const dir = "src/content/articles";
+    const exclude = new Set(["index.ts", "commercial.ts", "types.ts"]);
+    const source = readdirSync(dir)
+      .filter((f) => f.endsWith(".ts") && !exclude.has(f))
+      .map((f) => readFileSync(join(dir, f), "utf8"))
+      .join("\n");
     const articles = parseArticles(source);
     expect(articles.length).toBeGreaterThan(0);
     for (const article of articles) {
@@ -87,7 +93,12 @@ describe("buildDraft", () => {
   });
 
   it("produces drafts under the limit for every real article", () => {
-    const source = readFileSync("src/content/articles.ts", "utf8");
+    const dir = "src/content/articles";
+    const exclude = new Set(["index.ts", "commercial.ts", "types.ts"]);
+    const source = readdirSync(dir)
+      .filter((f) => f.endsWith(".ts") && !exclude.has(f))
+      .map((f) => readFileSync(join(dir, f), "utf8"))
+      .join("\n");
     for (const article of parseArticles(source)) {
       const draft = buildDraft(article, "https://kuraberu-products.pages.dev");
       expect(

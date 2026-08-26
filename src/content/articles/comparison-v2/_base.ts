@@ -24,20 +24,10 @@ import {
   type ArticlePurchaseLink,
 } from "../../../lib/products";
 import { articleMetadata } from "../../articles";
-import type { ComparisonRow } from "../types";
+import type { ComparisonRow, ComparisonSide } from "../types";
 
-/** ArticleComparisonV2 の片側商品データ。purchaseHref はレジストリが解決するため不要。 */
-export interface ComparisonV2Side {
-  brand: string;
-  line: string;
-  tagline: string;
-  image: string;
-  imageAlt: string;
-  officialHref: string;
-  guidePoints: readonly string[];
-  /** クリック計測用の商品ID（任意） */
-  productId?: string;
-}
+/** ComparisonSide のエイリアス（互換性のため残置）。 */
+export type ComparisonV2Side = ComparisonSide;
 
 /** 記事ページから宣言する比較シェルデータ。 */
 export interface ComparisonV2EntryInput {

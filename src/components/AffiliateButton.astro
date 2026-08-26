@@ -78,12 +78,8 @@ const resolvedImage = resolveImage(imagePath);
     data-placement={placement}
     data-cta-event={ARTICLE_LAYOUT.ctaEvent}
   >
-    {imagePath && (
-      resolvedImage ? (
-        <Picture class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
-      ) : (
-        <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />
-      )
+    {resolvedImage && (
+      <Picture class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
     )}
     <span class="cta-card-body">
       <span class="cta-card-label">{ctaLabel}</span>
