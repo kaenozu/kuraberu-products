@@ -214,9 +214,10 @@ export function collectArticleClaims(articleId) {
   let claims = extractSpecClaims(text);
   let officialUrls = extractOfficialUrls(text);
 
-  // Data-driven pages (ManualArticlePage / CommercialArticlePage) may have
-  // spec claims in comparison-v2 entries rather than inline in the page.
+  // Data-driven pages may have spec claims in comparison-v2 entries,
+  // manual-seeds entries, or both rather than inline in the page.
   if (claims.length === 0 && officialUrls.length === 0) {
+    // 1. comparison-v2 entry (spec rows, official hrefs)
     const compFile = `src/content/articles/comparison-v2/${articleId}.ts`;
     try {
       const compText = readFileSync(compFile, "utf8");
@@ -224,6 +225,22 @@ export function collectArticleClaims(articleId) {
       officialUrls = extractOfficialUrls(compText);
     } catch {
       // No comparison-v2 entry.
+    }
+
+    // 2. manual-seeds entry (official prose, source links with spec values)
+    const seedsFile = `src/content/articles/manual-seeds.ts`;
+    try {
+      const seedsText = readFileSync(seedsFile, "utf8");
+      // Extract the seed block for this articleId
+      const seedMatch = new RegExp(
+        `\\{\\s*id:\s*"${articleId}"[\\s\\S]*?\n\\},?\n`,
+      ).exec(seedsText);
+      if (seedMatch) {
+        claims = claims.concat(extractSpecClaims(seedMatch[0]));
+        officialUrls = officialUrls.concat(extractOfficialUrls(seedMatch[0]));
+      }
+    } catch {
+      // No manual-seeds file.
     }
   }
 

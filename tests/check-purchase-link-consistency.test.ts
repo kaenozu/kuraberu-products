@@ -323,30 +323,42 @@ describe("verified CTA destination audit (issue #342)", () => {
     }
   });
 
-  it("normalizes hostnames and builds the allowlist from required + registry hosts", () => {
+  it("normalizes hostnames and builds a static allowlist (no registry auto-generation)", () => {
     expect(hostnameOf("https://Example.com./x")).toBe("example.com");
     expect(hostnameOf("not a url")).toBeNull();
-    const allowlist = outboundHostAllowlist([
-      "https://hb.afl.rakuten.co.jp/hgc/x",
-      "https://a.r10.to/abc",
-    ]);
+    const allowlist = outboundHostAllowlist();
     for (const host of ALLOWED_OUTBOUND_HOSTS)
       expect(allowlist.has(host)).toBe(true);
-    expect(allowlist.size).toBe(ALLOWED_OUTBOUND_HOSTS.length);
+    // a.r10.to must NOT be in the allowlist — it is a redirect host, not a final destination
+    expect(allowlist.has("a.r10.to")).toBe(false);
   });
 
-  it("accepts an allowlisted initial host without touching the network", async () => {
+  it("follows redirects for a.r10.to shortener links (AC: redirect hosts must always resolve)", async () => {
     const calls: { url: string; init?: RequestInit }[] = [];
-    const fetchImpl = stubFetch({}, calls) as unknown as typeof fetch;
+    const fetchImpl = stubFetch(
+      {
+        "https://a.r10.to/h58jf3": redirect(
+          "https://hb.afl.rakuten.co.jp/item/12345",
+        ),
+        "https://hb.afl.rakuten.co.jp/item/12345": {
+          status: 200,
+          headers: new Map(),
+        },
+      },
+      calls,
+    ) as unknown as typeof fetch;
     const audit = await auditVerifiedCtaDestinations({
       urls: [{ article: "a", key: "a:left", url: "https://a.r10.to/h58jf3" }],
       allowlist: outboundHostAllowlist(),
       fetchImpl,
     });
     expect(audit.errors).toEqual([]);
-    expect(audit.warnings).toEqual([]);
-    expect(calls).toHaveLength(0);
-    expect(audit.checked[0].result).toBe("allowlisted-initial");
+    expect(calls).toHaveLength(2);
+    expect(audit.checked[0]).toMatchObject({
+      result: "resolved",
+      finalHost: "hb.afl.rakuten.co.jp",
+      hops: 1,
+    });
   });
 
   it("follows redirects up to the hop cap and accepts an allowlisted final host", async () => {
@@ -466,9 +478,10 @@ describe("verified CTA destination audit (issue #342)", () => {
       allowNetworkSkip: true,
     });
     expect(skipped.errors).toEqual([]);
-    expect(skipped.warnings).toHaveLength(1);
-    expect(skipped.warnings[0]).toContain("ALLOW_NETWORK_SKIP=1");
-    expect(skipped.warnings[0]).toContain("DNS lookup failed");
+    expect(skipped.warnings).toEqual([]);
+    // allowNetworkSkip now skips network calls entirely and records as "skipped"
+    expect(skipped.checked).toHaveLength(1);
+    expect(skipped.checked[0].result).toBe("skipped");
   });
 
   it("reports unparseable CTA URLs as errors", async () => {

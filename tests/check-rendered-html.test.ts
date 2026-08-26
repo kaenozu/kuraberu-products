@@ -795,20 +795,18 @@ describe("source-toggle fold (根拠・確認先 column)", () => {
     ).toEqual([]);
   });
 
-  it("rejects a 4-column source table without the toggle", () => {
+  it("accepts a 4-column source table without the toggle (toggle removed in P2-2)", () => {
     expect(
       validateSourceToggle("articles/example/index.html", sourceTable(false)),
-    ).toEqual([
-      'articles/example/index.html: 根拠・確認先 column table must be preceded by <details class="source-toggle">',
-    ]);
+    ).toEqual([]);
   });
 
-  it("rejects a toggle with no 4-column source table (dead toggle)", () => {
+  it("accepts a toggle with no 4-column source table (toggle removed in P2-2)", () => {
     const html =
       '<details class="source-toggle"><summary>根拠・確認先を表示</summary></details><div class="table-scroll"><table class="comparison"><thead><tr><th scope="col">比較項目</th><th scope="col">A</th><th scope="col">B</th></tr></thead></table></div>';
-    expect(validateSourceToggle("articles/example/index.html", html)).toEqual([
-      "articles/example/index.html: source-toggle present but no 根拠・確認先 column table found",
-    ]);
+    expect(validateSourceToggle("articles/example/index.html", html)).toEqual(
+      [],
+    );
   });
 
   it("ignores 3-column tables without a toggle (no false positive)", () => {
