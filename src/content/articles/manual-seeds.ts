@@ -27,6 +27,19 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
     socialProofCheckedAt: "2026-08-12",
     socialProofHasPosts: true,
     socialProofBestMatch: "model",
+    embeds: [
+      {
+        provider: "x",
+        match: "model",
+        url: "https://x.com/i/status/1896897623086506167",
+        title: "ベビービョルン HARMONY を最近買ったという投稿",
+        purpose:
+          "HARMONYについての購入経験に触れた投稿。MINIとの一致は確認できないため、HARMONY記事の参考情報として扱います。",
+        tone: "good",
+        autoload: true,
+        compact: true,
+      },
+    ],
     faqEntries: [
       {
         question: "HARMONYとMINI、どっちを選べばいい？",
@@ -83,19 +96,6 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
           "公式の紹介文では「シンプル設計でファースト抱っこひもにぴったり」と案内。",
           "保証期間は2年（正規保証1年＋ユーザー登録1年）。",
         ],
-      },
-    ],
-    embeds: [
-      {
-        provider: "x",
-        match: "model",
-        url: "https://x.com/i/status/1896897623086506167",
-        title: "ベビービョルン HARMONY を最近買ったという投稿",
-        purpose:
-          "HARMONYについての購入経験に触れた投稿。MINIとの一致は確認できないため、HARMONY記事の参考情報として扱います。",
-        tone: "good",
-        autoload: true,
-        compact: true,
       },
     ],
     lead: "ベビービョルンの抱っこひも「ベビーキャリア HARMONY」と「ベビーキャリア MINI」を、公式の比較表・製品ページで確認できる内容で比較します。",
@@ -424,6 +424,10 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
   },
   {
     id: "merries-newborn",
+    socialProofQuery: "メリーズ ファーストプレミアム エアスルー",
+    socialProofCheckedAt: "2026-08-12",
+    socialProofHasPosts: true,
+    socialProofBestMatch: "series",
     faqEntries: [
       {
         question: "メリーズの新生児用テープはどっちがいい？",
@@ -466,6 +470,10 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
   },
   {
     id: "merries-pants",
+    socialProofQuery: "メリーズ ファーストプレミアム エアスルー",
+    socialProofCheckedAt: "2026-08-12",
+    socialProofHasPosts: true,
+    socialProofBestMatch: "series",
     faqEntries: [
       {
         question: "メリーズのパンツタイプはどっちがいい？",
@@ -541,6 +549,10 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
   },
   {
     id: "pampers-newborn",
+    socialProofQuery: "パンパース 肌へのいちばん さらさらケア",
+    socialProofCheckedAt: "2026-08-12",
+    socialProofHasPosts: true,
+    socialProofBestMatch: "series",
     faqEntries: [
       {
         question: "パンパースの新生児用テープはどっちがいい？",
@@ -701,6 +713,10 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
   },
   {
     id: "pigeon-bottle-160-240",
+    socialProofQuery: "ピジョン 母乳実感 160ml 240ml",
+    socialProofCheckedAt: "2026-08-12",
+    socialProofHasPosts: true,
+    socialProofBestMatch: "model",
     embeds: [
       {
         provider: "x",
@@ -793,6 +809,32 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
   },
   {
     id: "shupot",
+    socialProofQuery: "ピジョン シュポット 電動 手動",
+    socialProofCheckedAt: "2026-08-12",
+    socialProofHasPosts: true,
+    socialProofBestMatch: "model",
+    embeds: [
+      {
+        provider: "x",
+        match: "model",
+        url: "https://x.com/i/status/2084195329797447777",
+        title: "ピジョン シュポット手動タイプの使用感に関する投稿",
+        purpose: "手動タイプの使用感に触れた投稿。",
+        tone: "bad",
+        autoload: true,
+        compact: true,
+      },
+      {
+        provider: "x",
+        match: "model",
+        url: "https://x.com/i/status/1891454570821239022",
+        title: "ピジョン シュポット電動タイプを使った感想",
+        purpose: "電動タイプの使用感に触れた投稿。",
+        tone: "good",
+        autoload: true,
+        compact: true,
+      },
+    ],
     faqEntries: [
       {
         question: "電動鼻吸い器 シュポットと手動、どっちを選べばいい？",
@@ -823,28 +865,6 @@ export const manualArticleSeeds: readonly ManualSeed[] = [
         question: "電動鼻吸い器 シュポットは何秒くらい吸引していい？",
         answer:
           "公式の安全上のルールでは、1回あたり片方の鼻に5秒を超える吸引は禁止されています。また、定格時間15分を超える連続運転は禁止され、再使用するときは5分以上停止するよう案内されています。使用前には取扱説明書と公式の安全に関する重要なお知らせも確認してください。",
-      },
-    ],
-    embeds: [
-      {
-        provider: "x",
-        match: "model",
-        url: "https://x.com/i/status/2084195329797447777",
-        title: "ピジョン シュポット手動タイプの使用感に関する投稿",
-        purpose: "手動タイプの使用感に触れた投稿。",
-        tone: "bad",
-        autoload: true,
-        compact: true,
-      },
-      {
-        provider: "x",
-        match: "model",
-        url: "https://x.com/i/status/1891454570821239022",
-        title: "ピジョン シュポット電動タイプを使った感想",
-        purpose: "電動タイプの使用感に触れた投稿。",
-        tone: "good",
-        autoload: true,
-        compact: true,
       },
     ],
     lead: "ピジョンの鼻吸い器「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を、公式ショップで確認できる電源・吸引方法・お手入れ・価格で比較します。",

@@ -19,10 +19,6 @@ const templates: Record<string, string> = {
     "src/components/CommercialArticlePage.astro",
     "utf8",
   ),
-  ManualArticlePage: readFileSync(
-    "src/components/ManualArticlePage.astro",
-    "utf8",
-  ),
   ArticleComparisonPage: readFileSync(
     "src/components/ArticleComparisonPage.astro",
     "utf8",

@@ -6,11 +6,15 @@
  * This catches typos and missing images at build time instead of producing
  * silent 404s or runtime throws deep inside Astro rendering.
  *
- * Usage: node scripts/check-image-paths.mjs
+ * Usage:
+ *   node scripts/check-image-paths.mjs          # verify only
+ *   node scripts/check-image-paths.mjs --delete  # delete orphaned images
  * Exit 1 if any image path is missing.
  */
 import fs from "node:fs";
 import path from "node:path";
+
+const DELETE_MODE = process.argv.includes("--delete");
 
 const ASSETS_DIR = path.resolve("src/assets/products");
 const ARTICLE_DIR = path.resolve("src/content/articles");
@@ -30,7 +34,9 @@ for (const file of fs.readdirSync(ARTICLE_DIR)) {
   )
     continue;
   const text = fs.readFileSync(path.join(ARTICLE_DIR, file), "utf8");
-  for (const match of text.matchAll(/imagePath:\s*["'`]([^"'`]+)["'`]/g)) {
+  for (const match of text.matchAll(
+    /(?:imagePath|image):\s*["'`]([^"'`]+)["'`]/g,
+  )) {
     const imgPath = match[1];
     if (imgPath.startsWith("http")) continue; // external URL, skip
     const filename = imgPath.replace(/^\/products\//, "");
@@ -77,7 +83,7 @@ for (const match of commercialText.matchAll(
   }
 }
 
-/* ── 4. Check for orphaned image files (in assets but not referenced) ── */
+/* ── 4. Collect all referenced images (for orphan detection) ── */
 const referencedFiles = new Set();
 const collectRef = (imgPath) => {
   if (imgPath && !imgPath.startsWith("http")) {
@@ -90,7 +96,7 @@ for (const file of fs.readdirSync(ARTICLE_DIR)) {
     continue;
   const text = fs.readFileSync(path.join(ARTICLE_DIR, file), "utf8");
   for (const match of text.matchAll(
-    /(?:imagePath|leftImage|rightImage):\s*["'`]([^"'`]+)["'`]/g,
+    /(?:imagePath|leftImage|rightImage|image):\s*["'`]([^"'`]+)["'`]/g,
   )) {
     collectRef(match[1]);
   }
@@ -103,12 +109,67 @@ for (const file of fs.readdirSync(COMPARISON_V2_DIR)) {
     collectRef(match[1]);
   }
 }
+// Also scan commercialArticleImages map (key: "id", value: {left, right})
+for (const match of commercialText.matchAll(/\"\/(?:products\/[^\"]+)\"/g)) {
+  collectRef(match[0].replace(/"/g, ""));
+}
+// Scan left/right image paths in seed entries (e.g., left: "/products/...")
+for (const match of commercialText.matchAll(
+  /(?:^|\s)(?:left|right):\s*["'`]([^"'`]+)["'`]/gm,
+)) {
+  collectRef(match[1]);
+}
+// Scan src/pages/articles/ for image references in hand-written pages
+const PAGES_DIR = path.resolve("src/pages/articles");
+for (const dir of fs.readdirSync(PAGES_DIR, { withFileTypes: true })) {
+  if (!dir.isDirectory() || dir.name === "index") continue;
+  const pageFile = path.join(PAGES_DIR, dir.name, "index.astro");
+  if (!fs.existsSync(pageFile)) continue;
+  const text = fs.readFileSync(pageFile, "utf8");
+  // Skip one-liner pages (only import + component call)
+  if (text.split("\n").filter((l) => l.trim()).length < 10) continue;
+  // Match image: "/products/..." or image: '/products/...'
+  for (const match of text.matchAll(
+    /image:\s*["'`][\/]?products\/([^"'`]+)["'`]/g,
+  )) {
+    collectRef(`/products/${match[1]}`);
+  }
+  // Match const xImage = '/products/...'
+  for (const match of text.matchAll(
+    /(?:const\s+\w+\s*=\s*)["'`][\/]?products\/([^"'`]+)["'`]/g,
+  )) {
+    collectRef(`/products/${match[1]}`);
+  }
+  // Match imagePath: "/products/..."
+  for (const match of text.matchAll(
+    /imagePath:\s*["'`][\/]?products\/([^"'`]+)["'`]/g,
+  )) {
+    collectRef(`/products/${match[1]}`);
+  }
+}
 
 const orphans = [...availableFiles].filter((f) => !referencedFiles.has(f));
-for (const orphan of orphans) {
-  console.warn(
-    `WARN: orphaned image — src/assets/products/${orphan} is not referenced by any article`,
-  );
+
+if (DELETE_MODE && orphans.length > 0) {
+  console.log(`\nDeleting ${orphans.length} orphaned image(s)...\n`);
+  let deleted = 0;
+  for (const orphan of orphans) {
+    const filePath = path.join(ASSETS_DIR, orphan);
+    try {
+      fs.unlinkSync(filePath);
+      console.log(`  deleted ${orphan}`);
+      deleted++;
+    } catch (err) {
+      console.error(`  FAILED to delete ${orphan}: ${err.message}`);
+    }
+  }
+  console.log(`\n✔ Deleted ${deleted}/${orphans.length} orphaned image(s)`);
+} else {
+  for (const orphan of orphans) {
+    console.warn(
+      `WARN: orphaned image — src/assets/products/${orphan} is not referenced by any article`,
+    );
+  }
 }
 
 /* ── Report ── */
@@ -118,6 +179,7 @@ if (errors.length > 0) {
   process.exit(1);
 }
 
+const remaining = fs.readdirSync(ASSETS_DIR).length;
 console.log(
-  `✔ All image paths verified (${referencedFiles.size} referenced, ${availableFiles.size} files on disk, ${orphans.length} orphaned)`,
+  `✔ All image paths verified (${referencedFiles.size} referenced, ${remaining} files on disk, ${orphans.length - (DELETE_MODE ? orphans.length : 0)} orphaned)`,
 );
