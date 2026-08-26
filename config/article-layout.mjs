@@ -97,12 +97,12 @@ export const ARTICLE_LAYOUT = {
         label: "比較本文（結論・違い・次にすること・信頼）",
         required: true,
       },
-      { id: "specs", label: "詳細仕様", required: true },
+      { id: "specs", label: "詳細仕様", required: false },
       { id: "official", label: "公式情報", required: false },
       { id: "faq", label: "よくある質問", required: true },
       { id: "purchase-cards", label: "購入カード", required: true },
       { id: "change-log", label: "更新履歴", required: true },
-      { id: "source-list", label: "情報源一覧", required: true },
+      { id: "source-list", label: "情報源一覧", required: false },
     ],
     // CommercialArticlePage.astro（自動生成比較記事）のセクション順序。
     commercialPage: [
