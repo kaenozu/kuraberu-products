@@ -23,6 +23,10 @@ type ManualSeed = Partial<
 export const manualArticleSeeds: readonly ManualSeed[] = [
   {
     id: "babybjorn",
+    socialProofQuery: "HARMONY MINI ベビービョルン",
+    socialProofCheckedAt: "2026-08-12",
+    socialProofHasPosts: true,
+    socialProofBestMatch: "model",
     faqEntries: [
       {
         question: "HARMONYとMINI、どっちを選べばいい？",
