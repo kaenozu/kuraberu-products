@@ -5,7 +5,9 @@ import {
   publicArticleMetadata,
 } from "../src/content/articles";
 
-const SITE_ORIGIN = "https://kuraberu-products.pages.dev";
+import { site } from "../src/config/site";
+
+const SITE_ORIGIN = site.url;
 
 async function sitemapXml(): Promise<string> {
   // 実装は context を参照しないため、キャストして引数なしで呼び出す。
