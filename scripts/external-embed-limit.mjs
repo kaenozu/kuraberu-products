@@ -119,7 +119,8 @@ export function validateExternalEmbedDirectory(directory = "src/pages") {
     .filter((filePath) => !filePath.endsWith(`${path.sep}ExternalEmbed.astro`))
     .filter(
       (filePath) =>
-        !filePath.endsWith(`${path.sep}CommercialArticlePage.astro`),
+        !filePath.endsWith(`${path.sep}CommercialArticlePage.astro`) &&
+        !filePath.endsWith(`${path.sep}ManualArticlePage.astro`),
     )
     // ManualArticlePage expands seed data into page-local embeds. The
     // rendered HTML validator still enforces the limit per generated page.
