@@ -5,7 +5,13 @@ import { describe, expect, it } from "vitest";
 /** Read all individual article source files (post-split structure). */
 function readAllArticleSources(): string {
   const dir = "src/content/articles";
-  const exclude = new Set(["index.ts", "commercial.ts", "types.ts"]);
+  const exclude = new Set([
+    "index.ts",
+    "commercial.ts",
+    "types.ts",
+    "manual-seeds.ts",
+    "comparison-v2.ts",
+  ]);
   return readdirSync(dir)
     .filter((f) => f.endsWith(".ts") && !exclude.has(f))
     .map((f) => readFileSync(join(dir, f), "utf8"))

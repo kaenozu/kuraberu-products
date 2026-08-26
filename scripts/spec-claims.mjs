@@ -213,6 +213,20 @@ export function collectArticleClaims(articleId) {
   const text = readFileSync(file, "utf8");
   let claims = extractSpecClaims(text);
   let officialUrls = extractOfficialUrls(text);
+
+  // Data-driven pages (ManualArticlePage / CommercialArticlePage) may have
+  // spec claims in comparison-v2 entries rather than inline in the page.
+  if (claims.length === 0 && officialUrls.length === 0) {
+    const compFile = `src/content/articles/comparison-v2/${articleId}.ts`;
+    try {
+      const compText = readFileSync(compFile, "utf8");
+      claims = extractSpecClaims(compText);
+      officialUrls = extractOfficialUrls(compText);
+    } catch {
+      // No comparison-v2 entry.
+    }
+  }
+
   const recordNames = readProductRecordNames();
   if (recordNames.some((name) => new RegExp(`\\b${name}\\b`).test(text))) {
     const products = readProductsSpecData();

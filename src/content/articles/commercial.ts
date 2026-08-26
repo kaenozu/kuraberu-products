@@ -2173,3 +2173,4 @@ const createCommercialArticle = (
   });
 
 export { commercialArticleSeeds, createCommercialArticle };
+export type { CommercialArticleSeed };
