@@ -50,73 +50,64 @@ describe("Amazon Associates integration", () => {
     expect(url.searchParams.get("tag")).toBe("example-22");
   });
 
-  it(
-    "keeps Amazon optional in build validation but validates a configured tag",
-    () => {
-      expect(
-        validateBuildEnvironment({ DEPLOYMENT_ENV: "preview" })
-          .amazonAssociateTag,
-      ).toBeUndefined();
-      expect(
-        validateBuildEnvironment({
-          DEPLOYMENT_ENV: "preview",
-          PUBLIC_AMAZON_ASSOCIATE_TAG: "example-22",
-        }).amazonAssociateTag,
-      ).toBe("example-22");
-      expect(() =>
-        validateBuildEnvironment({
-          DEPLOYMENT_ENV: "preview",
-          PUBLIC_AMAZON_ASSOCIATE_TAG: "example 22",
-        }),
-      ).toThrow(/PUBLIC_AMAZON_ASSOCIATE_TAG/);
-    },
-  );
+  it("keeps Amazon optional in build validation but validates a configured tag", () => {
+    expect(
+      validateBuildEnvironment({ DEPLOYMENT_ENV: "preview" })
+        .amazonAssociateTag,
+    ).toBeUndefined();
+    expect(
+      validateBuildEnvironment({
+        DEPLOYMENT_ENV: "preview",
+        PUBLIC_AMAZON_ASSOCIATE_TAG: "example-22",
+      }).amazonAssociateTag,
+    ).toBe("example-22");
+    expect(() =>
+      validateBuildEnvironment({
+        DEPLOYMENT_ENV: "preview",
+        PUBLIC_AMAZON_ASSOCIATE_TAG: "example 22",
+      }),
+    ).toThrow(/PUBLIC_AMAZON_ASSOCIATE_TAG/);
+  });
 
-  it(
-    "renders a tracked sponsored Amazon CTA only for a verified purchase card",
-    async () => {
-      vi.stubEnv("PUBLIC_AMAZON_ASSOCIATE_TAG", "example-22");
-      const container = await AstroContainer.create();
-      const html = await container.renderToString(PurchaseCard, {
-        props: {
-          name: "サーモス JNL-S500",
-          audience: "軽さを優先する人向け",
-          href: validRakutenUrl,
-          productId: "thermos-jnl-s500",
-          placement: "article-end",
-          purchaseLinkStatus: "verified",
-        },
-      });
+  it("renders a tracked sponsored Amazon CTA only for a verified purchase card", async () => {
+    vi.stubEnv("PUBLIC_AMAZON_ASSOCIATE_TAG", "example-22");
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(PurchaseCard, {
+      props: {
+        name: "サーモス JNL-S500",
+        audience: "軽さを優先する人向け",
+        href: validRakutenUrl,
+        productId: "thermos-jnl-s500",
+        placement: "article-end",
+        purchaseLinkStatus: "verified",
+      },
+    });
 
-      expect(html).toContain("Amazonで商品を確認");
-      expect(html).toContain("tag=example-22");
-      expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
-      expect(html).toContain('data-amazon-cta="purchase"');
-      expect(html).toContain('data-product-id="thermos-jnl-s500"');
-      expect(html).toContain('data-placement="article-end"');
-      expect(html).toContain("（広告）");
-    },
-  );
+    expect(html).toContain("Amazonで商品を確認");
+    expect(html).toContain("tag=example-22");
+    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
+    expect(html).toContain('data-amazon-cta="purchase"');
+    expect(html).toContain('data-product-id="thermos-jnl-s500"');
+    expect(html).toContain('data-placement="article-end"');
+    expect(html).toContain("（広告）");
+  });
 
-  it(
-    "does not render an Amazon CTA for an unverified card even when configured",
-    async () => {
-      vi.stubEnv("PUBLIC_AMAZON_ASSOCIATE_TAG", "example-22");
-      const container = await AstroContainer.create();
-      const html = await container.renderToString(PurchaseCard, {
-        props: {
-          name: "サーモス JNL-S500",
-          audience: "軽さを優先する人向け",
-          href: validRakutenUrl,
-          productId: "thermos-jnl-s500",
-          purchaseLinkStatus: "unverified",
-        },
-      });
+  it("does not render an Amazon CTA for an unverified card even when configured", async () => {
+    vi.stubEnv("PUBLIC_AMAZON_ASSOCIATE_TAG", "example-22");
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(PurchaseCard, {
+      props: {
+        name: "サーモス JNL-S500",
+        audience: "軽さを優先する人向け",
+        href: validRakutenUrl,
+        productId: "thermos-jnl-s500",
+        purchaseLinkStatus: "unverified",
+      },
+    });
 
-      expect(html).not.toContain("Amazonで商品を確認");
-      expect(html).toContain("購入リンクは現在確認中です。");
-    },
-  );
+    expect(html).not.toContain("Amazonで商品を確認");
+    expect(html).toContain("購入リンクは現在確認中です。");
+  });
 
   it("tracks Amazon without changing the strict core CTA count contract", () => {
     const purchaseCardSource = readFileSync(
@@ -136,20 +127,17 @@ describe("Amazon Associates integration", () => {
     expect(amazonCtaSource).not.toContain("data-cta-event");
 
     const beaconSource = readFileSync("public/click-beacon.js", "utf8");
-    expect(beaconSource).toContain('[data-cta-event], [data-amazon-cta]');
+    expect(beaconSource).toContain("[data-cta-event], [data-amazon-cta]");
     expect(beaconSource).toContain(
       "cta.dataset.ctaEvent || cta.dataset.amazonCta",
     );
   });
 
-  it(
-    "keeps the required Associates identification statement on the shared layout",
-    () => {
-      const source = readFileSync("src/layouts/BaseLayout.astro", "utf8");
-      expect(source).toContain("PUBLIC_AMAZON_ASSOCIATE_TAG?.trim()");
-      expect(source).toContain(
-        "Amazonのアソシエイトとして、{site.name}は適格販売により収入を得ています。",
-      );
-    },
-  );
+  it("keeps the required Associates identification statement on the shared layout", () => {
+    const source = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+    expect(source).toContain("PUBLIC_AMAZON_ASSOCIATE_TAG?.trim()");
+    expect(source).toContain(
+      "Amazonのアソシエイトとして、{site.name}は適格販売により収入を得ています。",
+    );
+  });
 });
