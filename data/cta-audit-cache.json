@@ -317,6 +317,20 @@
       "finalHost": "search.rakuten.co.jp",
       "hops": 4,
       "checkedAt": "2026-08-26T13:36:22.761Z"
+    },
+    {
+      "article": "babybjorn-bouncer",
+      "url": "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbouncer-bliss%2F&link_type=picttext",
+      "finalHost": "item.rakuten.co.jp",
+      "hops": 1,
+      "checkedAt": "2026-08-27T21:24:00.000Z"
+    },
+    {
+      "article": "babybjorn-bouncer",
+      "url": "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbouncer-balance-soft%2F&link_type=picttext",
+      "finalHost": "item.rakuten.co.jp",
+      "hops": 1,
+      "checkedAt": "2026-08-27T21:24:00.000Z"
     }
   ]
 }

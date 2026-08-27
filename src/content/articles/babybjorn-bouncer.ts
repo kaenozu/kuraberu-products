@@ -20,9 +20,10 @@ export const babybjornBouncerArticle = defineArticleMetadata({
   summary:
     "「Bliss」と「バランスソフト」を、ベビービョルン公式のガイド・対象月齢・シート素材・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-17",
+  modifiedAt: "2026-08-27",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-27",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-bouncer-bliss.jpg",
   changeLog: [
     {
