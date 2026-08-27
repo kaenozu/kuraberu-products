@@ -124,15 +124,19 @@ describe("Amazon Associates integration", () => {
       "utf8",
     );
     const amazonCtaStart = purchaseCardSource.indexOf("amazon-purchase-link");
-    const amazonCtaEnd = purchaseCardSource.indexOf(">\n          Amazon", amazonCtaStart);
-    const amazonCtaSource = purchaseCardSource.slice(amazonCtaStart, amazonCtaEnd);
+    const amazonCtaEnd = purchaseCardSource.indexOf(
+      ">\n          Amazon",
+      amazonCtaStart,
+    );
+    const amazonCtaSource = purchaseCardSource.slice(
+      amazonCtaStart,
+      amazonCtaEnd,
+    );
     expect(amazonCtaSource).toContain('data-amazon-cta="purchase"');
     expect(amazonCtaSource).not.toContain("data-cta-event");
 
     const beaconSource = readFileSync("public/click-beacon.js", "utf8");
-    expect(beaconSource).toContain(
-      '[data-cta-event], [data-amazon-cta]',
-    );
+    expect(beaconSource).toContain('[data-cta-event], [data-amazon-cta]');
     expect(beaconSource).toContain(
       "cta.dataset.ctaEvent || cta.dataset.amazonCta",
     );
