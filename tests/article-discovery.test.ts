@@ -61,6 +61,18 @@ describe("article discovery", () => {
     const source = readFileSync("src/components/ArticleListPage.astro", "utf8");
     expect(source).toContain("set:html={safeJsonForScript(discoveryIndex)}");
   });
+  it("discoveryIndex includes productCount for correct content-type rendering", () => {
+    const source = readFileSync("src/components/ArticleListPage.astro", "utf8");
+    expect(source).toContain("productCount: article.productCount,");
+  });
+  it("passes selectedCategory to client via data attribute for path-based category pages", () => {
+    const source = readFileSync("src/components/ArticleListPage.astro", "utf8");
+    expect(source).toContain("data-discovery-initial-category");
+  });
+  it("hides tag select when tagOptions is empty (category pages)", () => {
+    const source = readFileSync("src/components/ArticleListPage.astro", "utf8");
+    expect(source).toContain("tagOptions.length > 0");
+  });
 });
 
 // 実ビルド（astro build）後の dist を検証する。dist が無い環境では
