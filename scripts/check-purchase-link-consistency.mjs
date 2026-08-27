@@ -41,10 +41,12 @@ export const CTA_CACHE_FILE = "data/cta-audit-cache.json";
 export const CTA_CACHE_MAX_AGE_DAYS = 7;
 
 // verified CTA の**最終到達先**ホスト（リダイレクト追従後の最終ホスト）。
+// 商品詳細ページ（item.rakuten.co.jp）も確認済みの正規到達先として許可する。
 // a.r10.to 等の短縮リンクホストはここに含めない。
 // リダイレクト追従は全 CTA に対して必須。
 export const ALLOWED_OUTBOUND_HOSTS = Object.freeze([
   "hb.afl.rakuten.co.jp",
+  "item.rakuten.co.jp",
   "www.rakuten.co.jp",
   "www.amazon.co.jp",
   "search.rakuten.co.jp",
