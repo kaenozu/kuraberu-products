@@ -81,8 +81,11 @@ Production では次が必須です。
 任意:
 
 - `PUBLIC_RAKUTEN_AFFILIATE_REDIRECT`: 楽天アフィリエイトリダイレクトのURLプレフィックス。未設定時はデフォルト値を使用。
+- `PUBLIC_AMAZON_ASSOCIATE_TAG`: Amazon.co.jp アソシエイトのトラッキングID。設定すると、`purchaseLinkStatus === "verified"` の購入カードだけに商品名/型番の Amazon 検索CTAを追加します。価格・在庫・画像・レビューは取得せず、未設定時はAmazon CTAを表示しません。不正な形式はビルド時に拒否します。
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
 - `PUBLIC_BUILD_SHA`: デプロイ検証用のビルド元コミットSHA。`tools/production/Invoke-ProductionBuildAndDeploy.ps1` が本番ビルド時に自動注入し、`Invoke-PostDeployVerification.ps1` が配信HTMLの `meta[name=build-sha]` と突合する。通常は手動設定不要。
+
+Amazon導線を有効にする場合は、Amazonアソシエイト・プログラムの参加承認済みトラッキングIDを `PUBLIC_AMAZON_ASSOCIATE_TAG` に設定してください。サイトはAmazonリンク付近にアソシエイト識別文言を表示し、リンクには `rel="sponsored nofollow noopener noreferrer"` を付与します。Amazonの商品情報を転載する実装ではありません。
 
 お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定またはRate Limiting APIエラー時は **503でfail-closed** とし、レート制限を迂回して送信を継続しません。通常の上限超過は429と`Retry-After`を返します。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
 
