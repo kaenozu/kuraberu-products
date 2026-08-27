@@ -140,11 +140,13 @@ export const articlePurchaseLinks = {
   },
   "babybjorn-cradle:left": {
     name: "ベビービョルン クレードル",
-    purchaseUrl: "https://a.r10.to/hgUiG0",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-cradle%2F&link_type=picttext",
   },
   "babybjorn-cradle:right": {
     name: "アップリカ ココネルエアー AB",
-    purchaseUrl: "https://a.r10.to/h8tr4u",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e58e32.3ad2a371.56e58e34.66665b3b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Faprica-shop%2Fapr2594%2F&link_type=picttext",
   },
   "babybjorn-onekai:left": {
     name: "ベビービョルン ONE KAI",
@@ -384,11 +386,13 @@ export const articlePurchaseLinks = {
   },
   "tiger-mta-j050-guide:left": {
     name: "タイガー MTA-J050",
-    purchaseUrl: tigerMtaJ050.rakutenUrl,
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiger-official-store%2Fmta-j%2F&link_type=text",
   },
   "tiger-mta-j050-guide:right": {
     name: "タイガー MTA-J080",
-    purchaseUrl: "",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiger-official-store%2Fmta-j%2F&link_type=text",
   },
   "tiger-pcj-a080-vs-pcm-a080:left": {
     name: "タイガー 電気ケトル PCJ-A080",

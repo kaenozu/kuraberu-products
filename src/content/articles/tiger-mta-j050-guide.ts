@@ -18,9 +18,10 @@ export const tigerMtaJ050GuideArticle = defineArticleMetadata({
   summary:
     "タイガー MTA-J050とMTA-J080は同じシリーズの真空断熱ボトル。容量・重量・保温保冷効力・寸法の違いを公式情報から整理します。",
   publishedAt: "2026-08-16",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-28",
   productInfoCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-28",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/tiger-mta-j050.jpg",
   changeLog: [
     {
