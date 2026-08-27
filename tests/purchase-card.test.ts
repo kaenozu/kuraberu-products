@@ -37,8 +37,7 @@ describe("PurchaseCard", () => {
 
     expect(html).toContain("サーモス JNL-S500");
     expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
-    expect(html).toContain("楽天市場で型番を確認");
-    expect(html).toContain("商品ページを確認する");
+    expect(html).toContain("楽天市場で確認する");
     expect(html).toContain("（広告）");
     expect(html).toContain("価格・在庫は販売先でご確認ください。");
     expect(html).toContain('data-placement="article-end"');
@@ -57,8 +56,7 @@ describe("PurchaseCard", () => {
       },
     });
 
-    expect(html).toContain("楽天市場で型番を確認");
-    expect(html).toContain("商品ページを確認する");
+    expect(html).toContain("楽天市場で確認する");
     expect(html).toContain("（広告）");
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
   });
@@ -75,7 +73,7 @@ describe("PurchaseCard", () => {
       },
     });
 
-    expect(html).toContain("楽天市場で型番を確認");
+    expect(html).toContain("楽天市場で確認する");
     expect(html).toContain("（広告）");
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
   });
@@ -133,7 +131,7 @@ describe("PurchaseCard", () => {
         },
       });
 
-      expect(html).not.toContain("楽天市場で型番を確認");
+      expect(html).not.toContain("楽天市場で確認する");
       expect(html).not.toContain("Amazonで商品を確認");
       expect(html).not.toContain("data-cta-event");
       expect(html).toContain("購入リンクは現在確認中です。");

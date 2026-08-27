@@ -188,13 +188,22 @@ if (props.articleId) {
     const leftSide = toSideFromComp("left");
     const rightSide = toSideFromComp("right");
 
-    const defaultFaq = [
-      { question: '比較対象はどのように選んでいますか？', answer: 'メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。' },
-      { question: '価格や在庫は確認できますか？', answer: '価格・在庫・ポイント・送料は変動するため、記事内の販売ページで購入時点の情報をご確認ください。' },
-      { question: 'どちらを選べばよいですか？', answer: '用途、置き場所、対応機器、サイズ、手入れのしやすさを優先順位にして、公式仕様と販売ページを照らし合わせてください。' },
+    const productFaq = [
+      {
+        question: `${leftSide.line}と${rightSide.line}の主な違いは？`,
+        answer: `主要な差分はこの記事の比較表で確認できます。価格・在庫・仕様は変動するため、購入時点の公式ページと販売ページを確認してください。`,
+      },
+      {
+        question: `どちらを選べばよい？`,
+        answer: `用途・置き場所・対応機器・サイズを優先順位にして、公式仕様と販売ページを照らし合わせてください。`,
+      },
+      {
+        question: `比較対象はどのように選んでいますか？`,
+        answer: `メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。`,
+      },
     ];
 
-    const faq = seed?.faqEntries?.length ? [...seed.faqEntries] : defaultFaq;
+    const faq = seed?.faqEntries?.length ? [...seed.faqEntries] : productFaq;
     const specsRows = compEntry.rows.map((row: { label: string; left: string; right: string }) => ({
       label: row.label, left: row.left, right: row.right,
     }));
