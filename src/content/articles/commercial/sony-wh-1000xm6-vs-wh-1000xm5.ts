@@ -22,7 +22,7 @@ export const sonyWh1000xm6VsWh1000xm5Seed: CommercialArticleSeed = {
   rightPoint: "公式仕様と電池持続時間を確認して選びたい人向け",
   productInfoCheckedAt: "2026-08-22",
   modifiedAt: "2026-08-22",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   purchaseLinksCheckedAt: "2026-08-22",
   officialSources: [
     {

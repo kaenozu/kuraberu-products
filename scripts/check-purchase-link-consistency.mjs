@@ -220,7 +220,7 @@ export function loadRegistryEntries(srcDirectory) {
       end += 1;
     }
     const body = block[1].slice(entryStart, end - 1);
-    const literal = /\bpurchaseUrl:\s*"([^"]+)"/.exec(body);
+    const literal = /\bpurchaseUrl:\s*"([^"]*)"/.exec(body);
     if (literal) {
       entries.set(key, literal[1]);
       continue;

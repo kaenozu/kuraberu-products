@@ -153,11 +153,11 @@ describe("rendered article CTA audit", () => {
       ),
     ).toEqual([
       "articles/example/index.html: expected exactly 4 purchase CTAs (per config/article-layout.mjs and article productCount), found 1",
-      "articles/example/index.html: CTA 1 is not a Rakuten affiliate URL",
+      "articles/example/index.html: CTA 1 is not a confirmed Rakuten affiliate URL",
     ]);
   });
 
-  it("accepts a plain Rakuten search fallback CTA with nofollow", () => {
+  it("rejects a plain Rakuten search fallback CTA", () => {
     const searchCta =
       '<a href="https://search.rakuten.co.jp/search/mall/KX-HC705" rel="nofollow noopener noreferrer" data-cta-event="purchase" data-placement="article-end">楽天市場で検索</a>';
     expect(
@@ -166,7 +166,9 @@ describe("rendered article CTA audit", () => {
         searchCta,
         expectedPurchaseCtasPerArticle(1),
       ),
-    ).toEqual([]);
+    ).toEqual([
+      "articles/example/index.html: CTA 1 must not use a Rakuten search URL; only a confirmed item detail destination is allowed",
+    ]);
   });
 
   it("rejects a placeholder affiliate URL", () => {

@@ -18,7 +18,7 @@ export const zojirushiEqSb22VsAh22Article = defineArticleMetadata({
   modifiedAt: "2026-08-20",
   productInfoCheckedAt: "2026-08-20",
   purchaseLinksCheckedAt: "2026-08-20",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/zojirushi-eq-sb22.png",
   aboutProductNames: ["象印 EQ-SB22", "象印 EQ-AH22"],
   changeLog: [

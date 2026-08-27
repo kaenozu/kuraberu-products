@@ -18,7 +18,7 @@ export const tigerKettlePcjVsPcmArticle = defineArticleMetadata({
   modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-17",
   purchaseLinksCheckedAt: "2026-08-17",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/tiger-pcj-a080.jpg",
   aboutProductNames: ["タイガー PCJ-A080", "タイガー PCM-A080"],
   changeLog: [

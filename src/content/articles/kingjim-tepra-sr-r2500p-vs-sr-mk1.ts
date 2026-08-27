@@ -22,7 +22,7 @@ export const kingjimTepraArticle = defineArticleMetadata({
   modifiedAt: "2026-08-14",
   productInfoCheckedAt: "2026-08-14",
   purchaseLinksCheckedAt: "2026-08-14",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/kingjim-sr-r2500p.jpg",
   changeLog: [
     {

@@ -141,7 +141,10 @@ export function defineComparisonV2(
   const rightPurchaseUrl = purchaseLinkIndex.get(
     `${articleId}:right`,
   )?.purchaseUrl;
-  if (!leftPurchaseUrl || !rightPurchaseUrl) {
+  if (
+    (!leftPurchaseUrl || !rightPurchaseUrl) &&
+    metadata.purchaseLinkStatus === "verified"
+  ) {
     throw new TypeError(
       `comparisonV2: articlePurchaseLinks must declare "${articleId}:left" and "${articleId}:right"`,
     );
@@ -155,8 +158,8 @@ export function defineComparisonV2(
     diagnosisHref: input.diagnosisHref,
     commonNote: input.commonNote,
     purchaseHrefs: Object.freeze({
-      left: leftPurchaseUrl,
-      right: rightPurchaseUrl,
+      left: leftPurchaseUrl ?? "",
+      right: rightPurchaseUrl ?? "",
     }),
     checkedAt: metadata.productInfoCheckedAt,
     purchaseLinkStatus: metadata.purchaseLinkStatus,

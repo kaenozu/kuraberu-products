@@ -23,7 +23,7 @@ export const yamajitsuFilmHolderArticle = defineArticleMetadata({
   modifiedAt: "2026-08-19",
   productInfoCheckedAt: "2026-08-19",
   purchaseLinksCheckedAt: "2026-08-19",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-film-holder-242286.jpg",
   aboutProductNames: [
     "山崎実業 フィルムフックまな板ホルダー タワー 242286",

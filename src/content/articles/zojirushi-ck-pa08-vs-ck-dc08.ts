@@ -18,7 +18,7 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
   modifiedAt: "2026-08-14",
   productInfoCheckedAt: "2026-08-13",
   purchaseLinksCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/zojirushi-ck-pa08.webp",
   changeLog: [
     {

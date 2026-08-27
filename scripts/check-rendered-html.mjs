@@ -895,13 +895,13 @@ export function validateArticleCtas(
       } catch {
         // The generic validation below reports malformed URLs.
       }
-      if (!isRakutenFallback) {
+      if (isRakutenFallback) {
         errors.push(
-          `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
+          `${relative}: CTA ${index + 1} must not use a Rakuten search URL; only a confirmed item detail destination is allowed`,
         );
-      } else if (!/\bnofollow\b/i.test(rel)) {
+      } else {
         errors.push(
-          `${relative}: CTA ${index + 1} fallback URL is missing nofollow rel attribute`,
+          `${relative}: CTA ${index + 1} is not a confirmed Rakuten affiliate URL`,
         );
       }
     }

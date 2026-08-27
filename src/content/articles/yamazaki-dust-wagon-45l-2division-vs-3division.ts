@@ -18,7 +18,7 @@ export const yamazakiDustWagonArticle = defineArticleMetadata({
   modifiedAt: "2026-08-15",
   productInfoCheckedAt: "2026-08-15",
   purchaseLinksCheckedAt: "2026-08-15",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-dust-wagon-45l-2division.jpg",
   changeLog: [
     {

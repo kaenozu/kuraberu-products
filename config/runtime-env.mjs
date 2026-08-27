@@ -111,6 +111,20 @@ export function isAllowedRakutenUrl(value) {
   );
 }
 
+/** A purchase destination must identify one Ichiba item, never a search page. */
+export function isRakutenProductDetailUrl(value) {
+  if (!isAllowedRakutenUrl(value)) return false;
+  try {
+    const url = new URL(value);
+    return (
+      url.hostname.toLowerCase() === "item.rakuten.co.jp" &&
+      url.pathname.split("/").filter(Boolean).length >= 2
+    );
+  } catch {
+    return false;
+  }
+}
+
 // 楽天アフィリエイトリダイレクトの共通プレフィックス（hb.afl 経由）。
 // AffiliateButton と NextStepBlock の両方が購入リンクの変換に使う。
 // リダイレクトIDは RAKUTEN_AFFILIATE_ID 環境変数を優先して組み立て、

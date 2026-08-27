@@ -10,7 +10,7 @@
 //
 // 配置・枚数の機械的契約は config/article-layout.mjs（next-step set）が唯一の定義で、
 // 品質ゲート scripts/check-rendered-html.mjs（validateArticleNextStep）が照合する。
-import {toAffiliateRakutenUrl, isAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
+import {toAffiliateRakutenUrl, isAffiliateRakutenUrl, isRakutenProductDetailUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 
 export interface NextStepProduct {
@@ -32,8 +32,8 @@ interface Props {
 }
 
 const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
-const leftHref = toAffiliateRakutenUrl(left.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
-const rightHref = toAffiliateRakutenUrl(right.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
+const leftHref = isRakutenProductDetailUrl(left.href) ? toAffiliateRakutenUrl(left.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT) : undefined;
+const rightHref = isRakutenProductDetailUrl(right.href) ? toAffiliateRakutenUrl(right.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT) : undefined;
 const leftAffiliate = isAffiliateRakutenUrl(leftHref);
 const rightAffiliate = isAffiliateRakutenUrl(rightHref);
 const buyRel = (affiliate: boolean) =>

@@ -29,6 +29,7 @@ export function toAmazonAssociateSearchUrl(
   associateTag: string | undefined,
 ): string | undefined;
 export function isAllowedRakutenUrl(value: unknown): boolean;
+export function isRakutenProductDetailUrl(value: unknown): boolean;
 export function toAffiliateRakutenUrl(
   value: string | undefined,
   redirectPrefix?: string,

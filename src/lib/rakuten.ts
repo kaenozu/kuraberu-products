@@ -1,6 +1,7 @@
 import {
   isAllowedRakutenUrl,
   isAffiliateRakutenUrl,
+  isRakutenProductDetailUrl,
   toAffiliateRakutenUrl,
 } from "../../config/runtime-env.mjs";
 
@@ -165,7 +166,9 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         name: String(item.itemName ?? ""),
         url: itemUrl,
         affiliateUrl:
-          affiliateUrl && isAllowedRakutenUrl(affiliateUrl)
+          affiliateUrl &&
+          isAllowedRakutenUrl(affiliateUrl) &&
+          isRakutenProductDetailUrl(itemUrl)
             ? affiliateUrl
             : undefined,
         imageUrl: /^https:\/\/(?:[^/]+\.)?image\.rakuten\.co\.jp\//i.test(
@@ -181,7 +184,7 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         item.id &&
         item.name &&
         Number.isFinite(item.price) &&
-        isAllowedRakutenUrl(item.url),
+        isRakutenProductDetailUrl(item.url),
     );
 }
 
@@ -367,15 +370,16 @@ export async function resolvePurchaseHref(
     options.selection ?? {},
   );
 
-  const rawHref =
-    selected?.affiliateUrl ?? selected?.url ?? options.fallbackUrl;
+  // Search URLs are never purchase destinations. A missing/ambiguous detail
+  // page remains unset rather than becoming a misleading affiliate CTA.
+  const rawHref = selected?.url;
   const href =
-    toAffiliateRakutenUrl(
-      rawHref,
-      import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
-    ) ??
-    rawHref ??
-    "";
+    rawHref && isRakutenProductDetailUrl(rawHref)
+      ? (toAffiliateRakutenUrl(
+          selected?.affiliateUrl ?? rawHref,
+          import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
+        ) ?? rawHref)
+      : "";
   const isAffiliate = isAffiliateRakutenUrl(href);
 
   return { href, isAffiliate, product: selected };
