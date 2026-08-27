@@ -89,6 +89,21 @@ describe("CSP-compatible comparison table fallback", () => {
     );
   });
 
+  it("loads nav-toggle from external script (CSP-compliant)", () => {
+    const layout = readFileSync("src/layouts/BaseLayout.astro", "utf8");
+    const markerIdx = layout.indexOf("marker: nav-toggle-sync");
+    expect(markerIdx).toBeGreaterThan(-1);
+    const beforeMarker = layout.substring(0, markerIdx);
+    // nav-toggle logic must NOT be an inline script body — Production CSP
+    // script-src 'self' rejects inline JS.
+    expect(beforeMarker).not.toMatch(/<script is:inline>\s*\(function/);
+    expect(layout).toContain(
+      '<script is:inline src="/nav-toggle.js" defer></script>',
+    );
+    // The JS file must exist on disk.
+    expect(existsSync("public/nav-toggle.js")).toBe(true);
+  });
+
   it("emits FAQPage JSON-LD for populated FAQ entries and preserves primary data", ({
     skip,
   }) => {
