@@ -68,6 +68,39 @@ describe("公開記事コンテンツ品質ゲート", () => {
     }
   });
 
+  // #371: CTAは1アクション1メッセージ。旧「楽天市場で型番を確認」+「商品ページを確認する」の
+  // 同義重複を禁止する。メインCTAは単一の明確な行動指示であること。
+  it("PurchaseCardのCTAラベルが同義重複していない", () => {
+    const componentSource = readFileSync(
+      join(root, "src/components/PurchaseCard.astro"),
+      "utf8",
+    );
+    // 旧ラベルの再混入を禁止
+    expect(componentSource).not.toContain('label="楽天市場で型番を確認"');
+  });
+
+  // #371: 汎用FAQ（比較対象はどのように選んでいますか？等）がコンポーネントに
+  // ハードコードされていないことを確認。デフォルトは商品固有の内容に置き換わっていること。
+  it("ArticleComparisonPage/CommercialArticlePageのデフォルトFAQが汎用テンプレでない", () => {
+    const comparisonSource = readFileSync(
+      join(root, "src/components/ArticleComparisonPage.astro"),
+      "utf8",
+    );
+    const commercialSource = readFileSync(
+      join(root, "src/components/CommercialArticlePage.astro"),
+      "utf8",
+    );
+    // 汎用FAQの代表パターンを両方のコンポーネントで禁止
+    for (const source of [comparisonSource, commercialSource]) {
+      expect(source).not.toMatch(
+        /question:\s*["']どちらを選べばよいですか？["']/,
+      );
+      expect(source).not.toMatch(
+        /question:\s*["']価格や在庫は確認できますか？["']/,
+      );
+    }
+  });
+
   it("PurchaseCardコンポーネントがfail-closed実装であること", () => {
     const componentSource = readFileSync(
       join(root, "src/components/PurchaseCard.astro"),
