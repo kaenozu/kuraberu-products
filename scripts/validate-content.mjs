@@ -15,6 +15,10 @@ const includedExtensions = new Set([
   ".yml",
 ]);
 const banned = ["大人気", "話題", "絶対におすすめ", "これ一択"];
+// Numeric value and its delta must remain separate in rendered prose. These
+// compacted forms are easy to create when article data is interpolated and
+// make the comparison direction/meaning ambiguous.
+const malformedDelta = /約\d+g約\d+g|\d+枚\d+枚多い/g;
 const placeholderUrl =
   /https?:\/\/(?:[^\s"'<>/]+\.)?example\.com(?:[\s"'<>/]|$)/gi;
 const placeholderTokenUrl = /https?:\/\/[^\s"'<>]*placeholder[^\s"'<>]*/gi;
@@ -53,6 +57,11 @@ for (const file of files) {
   for (const match of text.matchAll(placeholderTokenUrl)) {
     errors.push(
       `${file}:${lineNumber(text, match.index ?? 0)}: placeholder URL`,
+    );
+  }
+  for (const match of text.matchAll(malformedDelta)) {
+    errors.push(
+      `${file}:${lineNumber(text, match.index ?? 0)}: malformed numeric delta expression: ${match[0]}`,
     );
   }
 }

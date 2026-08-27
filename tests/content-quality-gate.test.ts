@@ -23,6 +23,14 @@ function purchaseCardBlocks(source: string): string[] {
 }
 
 describe("公開記事コンテンツ品質ゲート", () => {
+  it("不自然な数値差分の連結表現を回帰検知する", () => {
+    const malformedDelta = /約\d+g約\d+g|\d+枚\d+枚多い/g;
+    expect("約155g約55g軽い").toMatch(malformedDelta);
+    expect("約155g（比較対象より約55g軽い）").not.toMatch(malformedDelta);
+    expect("4枚2枚多い").toMatch(malformedDelta);
+    expect("4枚焼き（比較対象より2枚多い）").not.toMatch(malformedDelta);
+  });
+
   it("記事データへコード片や未展開の簡体字が混入しない", () => {
     expect(articleSource).not.toMatch(/\.setBackgroundResource|\bundefined\b/);
     expect(articleSource).not.toContain("毛络まり");
