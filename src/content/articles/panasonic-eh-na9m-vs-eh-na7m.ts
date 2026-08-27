@@ -19,10 +19,10 @@ export const panasonicEhNa9mVsEhNa7mArticle = defineArticleMetadata({
   summary:
     "ナノケア EH-NA9MとEH-NA7Mを、公式仕様で確認できる機能・モード・風量・質量・収納性に分けて比較します。",
   publishedAt: "2026-08-16",
-  modifiedAt: "2026-08-16",
+  modifiedAt: "2026-08-28",
   productInfoCheckedAt: "2026-08-16",
-  purchaseLinksCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-28",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/panasonic-eh-na9m.jpg",
   changeLog: [
     {
