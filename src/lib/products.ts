@@ -388,7 +388,8 @@ export const articlePurchaseLinks = {
   },
   "tiger-mta-j050-guide:right": {
     name: "タイガー MTA-J080",
-    purchaseUrl: "",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiger-official-store%2Fmta-j%2F&link_type=text",
   },
   "tiger-pcj-a080-vs-pcm-a080:left": {
     name: "タイガー 電気ケトル PCJ-A080",
