@@ -1,4 +1,4 @@
-// プライバシー配慮型クリック計測: 購入CTA（[data-cta-event]）のクリックを
+// プライバシー配慮型クリック計測: 購入CTA（[data-cta-event] / [data-amazon-cta]）のクリックを
 // 同一オリジンの /api/events へ送信する。
 // Cookie・フィンガープリント・第三者ドメインへの送信は行わない。
 // 計測失敗はユーザー体験に影響させない（失敗は黙って無視する）。
@@ -26,9 +26,9 @@
   document.addEventListener("click", function (event) {
     var target = event.target;
     if (!(target instanceof Element)) return;
-    var cta = target.closest("[data-cta-event]");
+    var cta = target.closest("[data-cta-event], [data-amazon-cta]");
     if (!(cta instanceof HTMLElement)) return;
-    var eventName = cta.dataset.ctaEvent;
+    var eventName = cta.dataset.ctaEvent || cta.dataset.amazonCta;
     if (!eventName) return;
     var payload = {
       event: eventName,
