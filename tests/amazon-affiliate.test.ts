@@ -91,7 +91,7 @@ describe("Amazon Associates integration", () => {
       expect(html).toContain("Amazonで商品を確認");
       expect(html).toContain("tag=example-22");
       expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
-      expect(html).toContain('data-cta-event="purchase"');
+      expect(html).toContain('data-amazon-cta="purchase"');
       expect(html).toContain('data-product-id="thermos-jnl-s500"');
       expect(html).toContain('data-placement="article-end"');
       expect(html).toContain("（広告）");
@@ -117,6 +117,26 @@ describe("Amazon Associates integration", () => {
       expect(html).toContain("購入リンクは現在確認中です。");
     },
   );
+
+  it("tracks Amazon without changing the strict core CTA count contract", () => {
+    const purchaseCardSource = readFileSync(
+      "src/components/PurchaseCard.astro",
+      "utf8",
+    );
+    const amazonCtaStart = purchaseCardSource.indexOf("amazon-purchase-link");
+    const amazonCtaEnd = purchaseCardSource.indexOf(">\n          Amazon", amazonCtaStart);
+    const amazonCtaSource = purchaseCardSource.slice(amazonCtaStart, amazonCtaEnd);
+    expect(amazonCtaSource).toContain('data-amazon-cta="purchase"');
+    expect(amazonCtaSource).not.toContain("data-cta-event");
+
+    const beaconSource = readFileSync("public/click-beacon.js", "utf8");
+    expect(beaconSource).toContain(
+      '[data-cta-event], [data-amazon-cta]',
+    );
+    expect(beaconSource).toContain(
+      "cta.dataset.ctaEvent || cta.dataset.amazonCta",
+    );
+  });
 
   it(
     "keeps the required Associates identification statement on the shared layout",
