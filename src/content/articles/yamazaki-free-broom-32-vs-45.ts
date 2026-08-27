@@ -17,7 +17,7 @@ export const yamazakiFreeBroomArticle = defineArticleMetadata({
   modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-16",
   purchaseLinksCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-free-broom-32.jpg",
   changeLog: [
     {

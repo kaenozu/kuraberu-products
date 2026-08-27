@@ -22,7 +22,7 @@ export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
   modifiedAt: "2026-08-15",
   productInfoCheckedAt: "2026-08-15",
   purchaseLinksCheckedAt: "2026-08-15",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/f-yhvx120.jpg",
   changeLog: [
     {

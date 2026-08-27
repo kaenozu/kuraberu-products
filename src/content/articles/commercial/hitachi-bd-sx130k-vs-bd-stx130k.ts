@@ -19,7 +19,7 @@ export const hitachiBdSx130kVsBdStx130kSeed: CommercialArticleSeed = {
   rightProduct: "日立 BD-STX130K",
   leftPoint: "プッシュボタン式操作パネルを確認したい人向け",
   rightPoint: "温水・タッチ操作・スチームアイロンコースを確認したい人向け",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   purchaseLinksCheckedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-17",
 };

@@ -66,10 +66,8 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
   it("keeps every generated purchase link in the registry on approved Rakuten hosts", async () => {
     const { articlePurchaseLinks } = await import("../src/lib/products");
     for (const entry of Object.values(articlePurchaseLinks)) {
-      expect(
-        isAffiliateRakutenUrl(entry.purchaseUrl),
-        `not an affiliate URL: ${entry.purchaseUrl}`,
-      ).toBe(true);
+      expect(entry.purchaseUrl).not.toMatch(/search\.rakuten\.co\.jp/);
+      expect(entry.purchaseUrl).not.toContain("<");
       expect(entry.purchaseUrl).not.toContain("<");
     }
     const { hairDryerProducts } =

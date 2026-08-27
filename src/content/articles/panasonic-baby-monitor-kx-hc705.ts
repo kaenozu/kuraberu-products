@@ -19,7 +19,7 @@ export const panasonicBabyMonitorArticle = defineArticleMetadata({
   modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-14",
   purchaseLinksCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/panasonic-kx-hc705.jpg",
   aboutProductNames: ["パナソニック ベビーモニター KX-HC705"],
   changeLog: [

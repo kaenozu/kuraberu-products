@@ -22,7 +22,7 @@ export const panasonicEhNa9mVsEhNa7mArticle = defineArticleMetadata({
   modifiedAt: "2026-08-16",
   productInfoCheckedAt: "2026-08-16",
   purchaseLinksCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/panasonic-eh-na9m.jpg",
   changeLog: [
     {

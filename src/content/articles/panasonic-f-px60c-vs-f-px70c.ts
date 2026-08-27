@@ -18,7 +18,7 @@ export const panasonicAirCleanerArticle = defineArticleMetadata({
   modifiedAt: "2026-08-18",
   productInfoCheckedAt: "2026-08-18",
   purchaseLinksCheckedAt: "2026-08-18",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/panasonic-f-px60c.png",
   aboutProductNames: ["パナソニック F-PX60C", "パナソニック F-PX70C"],
   changeLog: [

@@ -277,7 +277,8 @@ describe("verified CTA destination audit (issue #342)", () => {
     expect(entries.size).toBeGreaterThan(40);
     for (const [key, url] of entries) {
       expect(key).toMatch(/:(left|right|card)$/);
-      expect(url).toMatch(/^https:\/\//);
+      // 商品詳細URLを確認できない項目は空URLでfail-closedにする。
+      if (url) expect(url).toMatch(/^https:\/\//);
     }
     // 商品定数参照（thermosJnlS500.rakutenUrl 等）も解決できる
     expect(entries.get("thermos-tiger-bottle:left")).toMatch(/^https:\/\//);

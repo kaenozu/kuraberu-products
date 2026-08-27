@@ -18,7 +18,7 @@ export const yamazakiOfudaStandArticle = defineArticleMetadata({
   modifiedAt: "2026-08-25",
   productInfoCheckedAt: "2026-08-25",
   purchaseLinksCheckedAt: "2026-08-25",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-ofuda-stand-rin.jpg",
   aboutProductNames: [
     "山崎実業 神札スタンド リン（6141・6142）",

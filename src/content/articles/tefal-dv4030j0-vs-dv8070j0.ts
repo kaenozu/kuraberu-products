@@ -19,7 +19,7 @@ export const tefalGarmentSteamerArticle = defineArticleMetadata({
   modifiedAt: "2026-08-14",
   productInfoCheckedAt: "2026-08-13",
   purchaseLinksCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/tefal-dv4030j0.jpg",
   changeLog: [
     {

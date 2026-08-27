@@ -20,6 +20,7 @@ export function normalizeOptionalPublicUrl(
   name?: string,
 ): string | undefined;
 export function isAllowedRakutenUrl(value: unknown): boolean;
+export function isRakutenProductDetailUrl(value: unknown): boolean;
 export function toAffiliateRakutenUrl(
   value: string | undefined,
   redirectPrefix?: string,

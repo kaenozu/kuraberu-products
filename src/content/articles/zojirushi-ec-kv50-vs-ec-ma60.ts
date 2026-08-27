@@ -17,7 +17,7 @@ export const zojirushiCoffeeArticle = defineArticleMetadata({
   publishedAt: "2026-08-17",
   modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-17",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   purchaseLinksCheckedAt: "2026-08-17",
   imagePath: "/products/zojirushi-ec-kv50.png",
   aboutProductNames: ["象印 EC-KV50", "象印 EC-MA60"],

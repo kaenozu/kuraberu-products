@@ -12,6 +12,7 @@ import { articleMetadata, additionalCommercialArticleSeeds, publicArticleMetadat
 import { articlePurchaseLinks } from '../lib/products';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
+import { isRakutenProductDetailUrl } from '../../config/runtime-env.mjs';
 
 interface Props {
   articleId: string;
@@ -38,7 +39,7 @@ const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchase
 const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
-  leftStaticPurchaseUrl
+  leftStaticPurchaseUrl && isRakutenProductDetailUrl(leftStaticPurchaseUrl)
     ? Promise.resolve({
         href: leftStaticPurchaseUrl,
         isAffiliate: true,
@@ -49,7 +50,7 @@ const [leftResolved, rightResolved] = await Promise.all([
         requiredTerms: leftTerms,
         fallbackUrl: leftSearchUrl,
       }),
-  rightStaticPurchaseUrl
+  rightStaticPurchaseUrl && isRakutenProductDetailUrl(rightStaticPurchaseUrl)
     ? Promise.resolve({
         href: rightStaticPurchaseUrl,
         isAffiliate: true,

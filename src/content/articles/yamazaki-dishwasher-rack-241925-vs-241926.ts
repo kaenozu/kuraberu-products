@@ -25,7 +25,7 @@ export const yamazakiDishwasherRackArticle = defineArticleMetadata({
   modifiedAt: "2026-08-25",
   productInfoCheckedAt: "2026-08-18",
   purchaseLinksCheckedAt: "2026-08-25",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-dishwasher-rack-low.jpg",
   aboutProductNames: [
     "山崎実業 食洗機ラック タワー ロータイプ（241925）",

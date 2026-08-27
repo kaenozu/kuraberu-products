@@ -18,7 +18,7 @@ export const tigerPctA120VsPctA150Article = defineArticleMetadata({
   modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-17",
   purchaseLinksCheckedAt: "2026-08-17",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/tiger-pct-a120.jpg",
   aboutProductNames: [
     "タイガー 電気ケトル PCT-A120",
