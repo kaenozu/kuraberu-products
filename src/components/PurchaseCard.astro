@@ -7,6 +7,7 @@
 import { Picture } from 'astro:assets';
 import AffiliateButton from './AffiliateButton.astro';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
+import {toAmazonAssociateSearchUrl} from '../../config/runtime-env.mjs';
 import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
@@ -44,10 +45,10 @@ const {
 
 // fail-closed: 明示的に verified のときだけ CTA を出す。undefined は「確認中」扱い。
 const isVerified = purchaseLinkStatus === "verified";
-const amazonAssociateTag = import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim();
-const amazonSearchUrl = amazonAssociateTag
-  ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(name)}&tag=${encodeURIComponent(amazonAssociateTag)}`
-  : undefined;
+const amazonSearchUrl = toAmazonAssociateSearchUrl(
+  name,
+  import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG,
+);
 const resolvedImage = resolveImage(imagePath);
 ---
 
@@ -83,6 +84,9 @@ const resolvedImage = resolveImage(imagePath);
           target="_blank"
           rel="sponsored nofollow noopener noreferrer"
           data-amazon-cta="purchase"
+          data-product-id={productId}
+          data-placement={placement}
+          data-cta-event={ARTICLE_LAYOUT.ctaEvent}
         >
           Amazonで商品を確認 → <span class="ad-note">（広告）</span>
         </a>
