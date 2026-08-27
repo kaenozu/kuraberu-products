@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   ALLOWED_OUTBOUND_HOSTS,
+  CTA_CACHE_FILE,
+  CTA_CACHE_MAX_AGE_DAYS,
   MAX_REDIRECT_HOPS,
   auditVerifiedCtaDestinations,
   checkArticleSource,
@@ -10,7 +12,10 @@ import {
   extractNextStepHrefs,
   extractPurchaseCardHrefs,
   hostnameOf,
+  isCacheFresh,
+  isCommercialArticle,
   keyFromRef,
+  loadCachedAuditResults,
   loadPurchaseLinkStatusesFromSource,
   loadRegistryEntries,
   loadRegistryKeys,
@@ -525,6 +530,112 @@ export const c = defineArticleMetadata({
     new Map<string, string>(),
   );
 }
+
+describe("CTA audit cache (P1-1 fail-closed coverage)", () => {
+  it("loadCachedAuditResults returns null when file is missing", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-missing-"));
+    try {
+      expect(
+        loadCachedAuditResults(join(directory, "nonexistent.json")),
+      ).toBeNull();
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("loadCachedAuditResults returns null for malformed JSON", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-malformed-"));
+    try {
+      const cachePath = join(directory, "cache.json");
+      writeFileSync(cachePath, "not json");
+      expect(loadCachedAuditResults(cachePath)).toBeNull();
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("loadCachedAuditResults returns null for schema without required fields", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-schema-"));
+    try {
+      const cachePath = join(directory, "cache.json");
+      writeFileSync(cachePath, JSON.stringify({ foo: "bar" }));
+      expect(loadCachedAuditResults(cachePath)).toBeNull();
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("loadCachedAuditResults returns valid cache object", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-valid-"));
+    try {
+      const cachePath = join(directory, "cache.json");
+      const cache = {
+        schemaVersion: 1,
+        generatedAt: new Date().toISOString(),
+        entries: [
+          {
+            article: "a",
+            url: "https://a.r10.to/x",
+            finalHost: "hb.afl.rakuten.co.jp",
+            hops: 1,
+          },
+        ],
+      };
+      writeFileSync(cachePath, JSON.stringify(cache));
+      const loaded = loadCachedAuditResults(cachePath);
+      expect(loaded).not.toBeNull();
+      expect(loaded!.entries).toHaveLength(1);
+      expect(loaded!.entries[0].article).toBe("a");
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("isCacheFresh returns false for null cache", () => {
+    expect(isCacheFresh(null)).toBe(false);
+  });
+
+  it("isCacheFresh returns true for recent cache", () => {
+    const cache = { generatedAt: new Date().toISOString(), entries: [] };
+    expect(isCacheFresh(cache)).toBe(true);
+  });
+
+  it("isCacheFresh returns false for stale cache", () => {
+    const stale = new Date(
+      Date.now() - (CTA_CACHE_MAX_AGE_DAYS + 1) * 86400000,
+    ).toISOString();
+    const cache = { generatedAt: stale, entries: [] };
+    expect(isCacheFresh(cache)).toBe(false);
+  });
+
+  it("isCacheFresh returns false for future-dated cache", () => {
+    const future = new Date(Date.now() + 86400000).toISOString();
+    const cache = { generatedAt: future, entries: [] };
+    expect(isCacheFresh(cache)).toBe(false);
+  });
+
+  it("isCacheFresh respects custom maxAgeDays", () => {
+    const twoDaysAgo = new Date(Date.now() - 2 * 86400000).toISOString();
+    const cache = { generatedAt: twoDaysAgo, entries: [] };
+    expect(isCacheFresh(cache, 1)).toBe(false);
+    expect(isCacheFresh(cache, 3)).toBe(true);
+  });
+
+  it("isCommercialArticle detects CommercialArticlePage source", () => {
+    expect(isCommercialArticle(`<CommercialArticlePage articleId="x" />`)).toBe(
+      true,
+    );
+    expect(isCommercialArticle(`<ArticleComparisonV2 />`)).toBe(false);
+  });
+
+  it("isCacheFresh returns false for missing generatedAt", () => {
+    expect(isCacheFresh({ entries: [] })).toBe(false);
+  });
+
+  it("CTA_CACHE_FILE points to data/ directory", () => {
+    expect(CTA_CACHE_FILE).toMatch(/^data\//);
+  });
+});
 
 function writeSrcTree(
   directory: string,

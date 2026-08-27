@@ -34,6 +34,12 @@ const REGISTRY_FILE = "lib/products.ts";
 const ARTICLES_FILE = "content/articles.ts";
 const MODULAR_ARTICLES_DIR = "content/articles";
 
+// CTA audit cache: fresh evidence from a past strict (non-skip) audit.
+// When ALLOW_NETWORK_SKIP=1, skipped CTAs are NOT counted as audited.
+// Instead, coverage requires either network-resolved evidence OR a fresh cache.
+export const CTA_CACHE_FILE = "data/cta-audit-cache.json";
+export const CTA_CACHE_MAX_AGE_DAYS = 7;
+
 // verified CTA の**最終到達先**ホスト（リダイレクト追従後の最終ホスト）。
 // a.r10.to 等の短縮リンクホストはここに含めない。
 // リダイレクト追従は全 CTA に対して必須。
@@ -41,6 +47,7 @@ export const ALLOWED_OUTBOUND_HOSTS = Object.freeze([
   "hb.afl.rakuten.co.jp",
   "www.rakuten.co.jp",
   "www.amazon.co.jp",
+  "search.rakuten.co.jp",
 ]);
 
 // リダイレクト追従の上限 hop 数と 1 リクエストあたりのタイムアウト（ms）。
@@ -462,6 +469,39 @@ export function outboundHostAllowlist() {
   return new Set(ALLOWED_OUTBOUND_HOSTS);
 }
 
+/**
+ * Load cached CTA audit results from disk.
+ * Returns { generatedAt, entries: [...] } or null if file is missing/invalid.
+ */
+export function loadCachedAuditResults(cachePath = CTA_CACHE_FILE) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(cachePath, "utf8"));
+    if (
+      raw &&
+      typeof raw.generatedAt === "string" &&
+      Array.isArray(raw.entries)
+    ) {
+      return raw;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/** Check if cache was generated within maxAgeDays of now. */
+export function isCacheFresh(cache, maxAgeDays = CTA_CACHE_MAX_AGE_DAYS) {
+  if (!cache || !cache.generatedAt) return false;
+  const generated = new Date(cache.generatedAt).getTime();
+  const ageMs = Date.now() - generated;
+  return ageMs >= 0 && ageMs <= maxAgeDays * 24 * 60 * 60 * 1000;
+}
+
+/** Check if an article page source uses CommercialArticlePage (API-resolved CTAs). */
+export function isCommercialArticle(source) {
+  return /CommercialArticlePage/.test(source);
+}
+
 async function requestWithHeadGetFallback(url, fetchImpl, timeoutMs) {
   for (const method of ["HEAD", "GET"]) {
     const controller = new AbortController();
@@ -608,7 +648,6 @@ export async function auditVerifiedCtaDestinations({
   }
   return { errors, warnings, checked };
 }
-
 if (
   path.resolve(process.argv[1] ?? "") ===
   path.resolve(fileURLToPath(import.meta.url))
@@ -623,10 +662,11 @@ if (
 
   const { ctas, statuses } = collectVerifiedCtaUrls();
   const allowlist = outboundHostAllowlist();
+  const allowNetworkSkip = process.env.ALLOW_NETWORK_SKIP === "1";
   const audit = await auditVerifiedCtaDestinations({
     urls: ctas,
     allowlist,
-    allowNetworkSkip: process.env.ALLOW_NETWORK_SKIP === "1",
+    allowNetworkSkip,
   });
   for (const warning of audit.warnings) console.warn(warning);
   const viaNetwork = audit.checked.filter(
@@ -638,11 +678,22 @@ if (
   console.log(
     `verified CTA destination audit: ${audit.checked.length} CTAs (${viaNetwork} resolved, ${skipped} skipped)`,
   );
-  // Coverage: all verified articles must have their CTAs checked
+
+  // --- Coverage check ---
+  // Verified articles must have their CTAs checked. When allowNetworkSkip=1,
+  // skipped CTAs do NOT count — coverage requires either:
+  //   1. A network-resolved CTA (resolved during this run), OR
+  //   2. Fresh cached evidence from a past strict audit.
+  // This prevents "45 CTAs skipped → coverage 45/45 → CI PASS" fail-open.
   const verifiedSlugs = [...statuses.entries()]
     .filter(([, status]) => status === "verified")
     .map(([slug]) => slug);
   const checkedArticles = new Set(audit.checked.map((e) => e.article));
+  const networkResolvedArticles = new Set(
+    audit.checked.filter((e) => e.result === "resolved").map((e) => e.article),
+  );
+
+  // Condition 1: Basic coverage — article must appear in audit output at all
   const unchecked = verifiedSlugs.filter((slug) => !checkedArticles.has(slug));
   if (unchecked.length > 0) {
     console.error(
@@ -650,5 +701,51 @@ if (
     );
     process.exit(1);
   }
+
+  // Condition 2: When allowNetworkSkip=1, require fresh cache evidence for
+  // non-commercial verified articles that weren't resolved via network.
+  if (allowNetworkSkip) {
+    const articleDir = path.join("src", PAGES_GLOB);
+    const nonCommercialVerified = verifiedSlugs.filter((slug) => {
+      const file = path.join(articleDir, slug, "index.astro");
+      if (!fs.existsSync(file)) return true;
+      return !isCommercialArticle(fs.readFileSync(file, "utf8"));
+    });
+
+    const cache = loadCachedAuditResults();
+    const cachedArticles = new Set(
+      (cache?.entries ?? []).map((e) => e.article),
+    );
+    const uncoveredByCache = nonCommercialVerified.filter(
+      (slug) => !networkResolvedArticles.has(slug) && !cachedArticles.has(slug),
+    );
+
+    if (cache && !isCacheFresh(cache)) {
+      // Cache exists but is stale — this is a hard failure. The weekly
+      // scheduled workflow should have refreshed it.
+      console.error(
+        `CTA audit cache is stale (max age: ${CTA_CACHE_MAX_AGE_DAYS}d, generated: ${cache.generatedAt}). Run: pnpm verify:cta-strict`,
+      );
+      process.exit(1);
+    }
+    if (!cache) {
+      // Cache does not exist yet (first deployment / migration period).
+      // Warn but do not fail — the weekly workflow will create it.
+      console.warn(
+        `CTA audit cache not found. Run 'pnpm verify:cta-strict' to generate it. Until then, skip-mode coverage check is warn-only.`,
+      );
+    } else if (uncoveredByCache.length > 0) {
+      console.error(
+        `CTA audit cache coverage failure: ${uncoveredByCache.length} verified article(s) have no network-resolved or cached evidence: ${uncoveredByCache.join(", ")}`,
+      );
+      process.exit(1);
+    } else {
+      console.log(
+        `CTA audit cache: ${cache.entries.length} entries, generated ${cache.generatedAt}`,
+      );
+    }
+  }
+
+  // Condition 3: Unparseable URLs are always fatal
   if (audit.errors.length) throw new Error(audit.errors.join("\n"));
 }

@@ -2,8 +2,15 @@ import { describe, expect, it, vi } from "vitest";
 import {
   classifyExternalStatus,
   decodeHtmlAttribute,
+  INCONCLUSIVE_FAIL_THRESHOLD,
+  INCONCLUSIVE_WARN_THRESHOLD,
+  loadLinkState,
   probeExternalUrl,
+  updateLinkEntry,
 } from "../scripts/check-external-link-reachability.mjs";
+import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 
 describe("external link reachability classification", () => {
   it("decodes generated HTML attribute entities", () => {
@@ -98,5 +105,84 @@ describe("external link probe", () => {
         timeoutMs: 5,
       }),
     ).resolves.toMatchObject({ outcome: "inconclusive", reason: "timeout" });
+  });
+});
+
+describe("external link state tracking (P2 consecutive failures)", () => {
+  it("loadLinkState returns empty state when file is missing", () => {
+    const directory = mkdtempSync(join(tmpdir(), "link-state-"));
+    try {
+      const state = loadLinkState(join(directory, "nonexistent.json"));
+      expect(state).toEqual({ urls: {} });
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("loadLinkState loads valid state from disk", () => {
+    const directory = mkdtempSync(join(tmpdir(), "link-state-valid-"));
+    try {
+      const statePath = join(directory, "state.json");
+      writeFileSync(
+        statePath,
+        JSON.stringify({
+          urls: {
+            "https://example.com": {
+              consecutiveInconclusive: 2,
+              lastOutcome: "inconclusive",
+            },
+          },
+        }),
+      );
+      const state = loadLinkState(statePath);
+      expect(state.urls["https://example.com"].consecutiveInconclusive).toBe(2);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("updateLinkEntry resets counter on reachable", () => {
+    const entry = { consecutiveInconclusive: 5, lastOutcome: "inconclusive" };
+    const updated = updateLinkEntry(entry, "reachable", undefined);
+    expect(updated.consecutiveInconclusive).toBe(0);
+    expect(updated.lastOutcome).toBe("reachable");
+  });
+
+  it("updateLinkEntry increments counter on inconclusive", () => {
+    const entry = { consecutiveInconclusive: 2, lastOutcome: "inconclusive" };
+    const updated = updateLinkEntry(entry, "inconclusive", "timeout");
+    expect(updated.consecutiveInconclusive).toBe(3);
+    expect(updated.lastReason).toBe("timeout");
+  });
+
+  it("updateLinkEntry starts at 1 for first inconclusive", () => {
+    const updated = updateLinkEntry(undefined, "inconclusive", "403");
+    expect(updated.consecutiveInconclusive).toBe(1);
+    expect(updated.lastReason).toBe("403");
+  });
+
+  it("updateLinkEntry resets counter on broken (404/410)", () => {
+    const entry = { consecutiveInconclusive: 5, lastOutcome: "inconclusive" };
+    const updated = updateLinkEntry(entry, "broken", undefined);
+    expect(updated.consecutiveInconclusive).toBe(0);
+    expect(updated.lastOutcome).toBe("broken");
+  });
+
+  it("thresholds are configured correctly", () => {
+    expect(INCONCLUSIVE_WARN_THRESHOLD).toBe(3);
+    expect(INCONCLUSIVE_FAIL_THRESHOLD).toBe(7);
+    expect(INCONCLUSIVE_FAIL_THRESHOLD).toBeGreaterThan(
+      INCONCLUSIVE_WARN_THRESHOLD,
+    );
+  });
+
+  it("updateLinkEntry removes lastReason when outcome is not inconclusive", () => {
+    const entry = {
+      consecutiveInconclusive: 3,
+      lastOutcome: "inconclusive",
+      lastReason: "timeout",
+    };
+    const updated = updateLinkEntry(entry, "reachable", undefined);
+    expect(updated.lastReason).toBeUndefined();
   });
 });
