@@ -18,7 +18,7 @@ export const thermosKfm020VsKfi020Article = defineArticleMetadata({
   modifiedAt: "2026-08-15",
   productInfoCheckedAt: "2026-08-15",
   purchaseLinksCheckedAt: "2026-08-15",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/thermos-kfm-020.jpg",
   changeLog: [
     {

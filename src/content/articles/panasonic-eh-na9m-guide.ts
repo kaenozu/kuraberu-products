@@ -18,7 +18,7 @@ export const panasonicEhNa9mGuideArticle = defineArticleMetadata({
   modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-08-16",
   purchaseLinksCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/panasonic-eh-na9m.jpg",
   aboutProductNames: ["パナソニック ナノケア EH-NA9M"],
   changeLog: [

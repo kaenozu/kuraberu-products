@@ -19,7 +19,7 @@ export const pampersNewbornArticle = defineArticleMetadata({
   modifiedAt: "2026-08-17",
   productInfoCheckedAt: "2026-07-31",
   purchaseLinksCheckedAt: "2026-08-16",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/pampers-premium-newborn.jpg",
   changeLog: [
     {

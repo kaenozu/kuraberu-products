@@ -18,7 +18,7 @@ export const yamazakiLaundryWireBasketArticle = defineArticleMetadata({
   modifiedAt: "2026-08-25",
   productInfoCheckedAt: "2026-08-25",
   purchaseLinksCheckedAt: "2026-08-25",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-laundry-wire-basket-m.jpg",
   aboutProductNames: [
     "山崎実業 ランドリーワイヤーバスケット タワー スリム M（240001）",

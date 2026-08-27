@@ -41,7 +41,7 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
+    expect(result.href).toBe("https://hb.afl.rakuten.co.jp/hgc/premium-66");
     expect(result.isAffiliate).toBe(true);
     expect(result.product).toBeDefined();
     expect(result.product?.id).toBe("4987176203229");
@@ -88,9 +88,9 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    // fallback is a search URL → toAffiliateRakutenUrl converts to hb.afl redirect
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
+    // A search URL is never a purchase CTA fallback.
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
     expect(result.product).toBeUndefined();
   });
 
@@ -168,9 +168,8 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
-    expect(result.href).toContain("search.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 
   it("passes through already-affiliate fallback URLs unchanged", async () => {
@@ -191,8 +190,8 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toBe(affiliateUrl);
-    expect(result.isAffiliate).toBe(true);
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 
   it("selects product over fallback when API returns a match", async () => {

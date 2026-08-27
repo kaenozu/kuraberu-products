@@ -19,7 +19,7 @@ export const panasonicShaverEsLt4bVsEsLv7jArticle = defineArticleMetadata({
   modifiedAt: "2026-08-19",
   productInfoCheckedAt: "2026-08-19",
   purchaseLinksCheckedAt: "2026-08-19",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/panasonic-es-lt4b.jpg",
   aboutProductNames: ["パナソニック ES-LT4B", "パナソニック ES-LV7J"],
   changeLog: [

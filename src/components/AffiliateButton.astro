@@ -1,6 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
-import {isAllowedRakutenUrl, isAffiliateRakutenUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
+import {isAffiliateRakutenUrl, isRakutenProductDetailUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {resolvePurchaseHref} from '../lib/rakuten';
 import {productQueries} from '../lib/purchase-queries';
@@ -22,7 +22,7 @@ interface Props {
 // interface Props により Astro.props は型付きで受ける。
 const {href,label,productId,placement,imagePath,subLabel,searchQuery,requiredTerms} = Astro.props;
 
-const directHref = typeof href === 'string' && isAllowedRakutenUrl(href) ? href : undefined;
+const directHref = typeof href === 'string' && isRakutenProductDetailUrl(href) ? href : undefined;
 const genericQuery = typeof searchQuery === 'string' && searchQuery.trim()
   ? {
       keyword: searchQuery,
@@ -56,16 +56,23 @@ const resolved = query
       fallbackUrl: directHref,
     })
   : { href: fallbackHref ?? '', isAffiliate: isAffiliateRakutenUrl(fallbackHref) };
-const resolvedHref = resolved.href;
-const valid = isAllowedRakutenUrl(resolvedHref);
-const isAffiliateHref = resolved.isAffiliate;
+const resolvedHref = resolved.href || directHref || '';
+const isAffiliateHref = resolved.href ? resolved.isAffiliate : isAffiliateRakutenUrl(resolvedHref);
+const valid = isRakutenProductDetailUrl(resolvedHref) || isAffiliateHref;
+const isProductDetail = isRakutenProductDetailUrl(resolvedHref);
 const ctaRel = isAffiliateHref
   ? 'sponsored nofollow noopener noreferrer'
   : 'nofollow noopener noreferrer';
-const ctaLabel = isAffiliateHref ? label : '楽天市場で検索';
+const ctaLabel = isAffiliateHref
+  ? label
+  : isProductDetail
+    ? '楽天市場で商品ページを見る'
+    : '楽天市場で検索';
 const ctaSubLabel = isAffiliateHref
   ? (subLabel ?? '商品ページを確認する')
-  : '検索結果を確認する';
+  : isProductDetail
+    ? '商品ページを確認する'
+    : '検索結果を確認する';
 const resolvedImage = resolveImage(imagePath);
 ---
 {valid ? (

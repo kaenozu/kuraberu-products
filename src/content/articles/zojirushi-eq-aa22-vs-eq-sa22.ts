@@ -21,7 +21,7 @@ export const zojirushiToasterArticle = defineArticleMetadata({
   modifiedAt: "2026-08-19",
   productInfoCheckedAt: "2026-08-19",
   purchaseLinksCheckedAt: "2026-08-19",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/zojirushi-eq-aa22.png",
   aboutProductNames: ["象印 EQ-AA22", "象印 EQ-SA22"],
   changeLog: [

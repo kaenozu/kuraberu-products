@@ -22,7 +22,7 @@ export const panasonicMcNx810kmVsMcNx700kArticle = defineArticleMetadata({
   modifiedAt: "2026-08-24",
   productInfoCheckedAt: "2026-08-24",
   purchaseLinksCheckedAt: "2026-08-24",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/panasonic-mc-nx810km.jpg",
   aboutProductNames: ["パナソニック MC-NX810KM", "パナソニック MC-NX700K"],
   changeLog: [
