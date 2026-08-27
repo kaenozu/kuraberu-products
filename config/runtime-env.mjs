@@ -15,6 +15,7 @@ export const CONFIGURED_ENVIRONMENT_VARIABLES = Object.freeze([
   "RAKUTEN_ACCESS_KEY",
   "RAKUTEN_AFFILIATE_ID",
   "PUBLIC_RAKUTEN_AFFILIATE_REDIRECT",
+  "PUBLIC_AMAZON_ASSOCIATE_TAG",
   "PUBLIC_CONTACT_URL",
 ]);
 
@@ -64,6 +65,31 @@ export function normalizeSiteUrl(value, name = "PUBLIC_SITE_URL") {
 export function normalizeOptionalPublicUrl(value, name = "PUBLIC_CONTACT_URL") {
   if (!nonEmpty(value)) return undefined;
   return parseHttpsUrl(value, name).toString();
+}
+
+export function normalizeAmazonAssociateTag(
+  value,
+  name = "PUBLIC_AMAZON_ASSOCIATE_TAG",
+) {
+  if (!nonEmpty(value)) return undefined;
+  const tag = value.trim();
+  if (!/^[A-Za-z0-9][A-Za-z0-9_-]{0,127}$/.test(tag)) {
+    throw new Error(
+      `${name} must contain only letters, numbers, hyphen, or underscore`,
+    );
+  }
+  return tag;
+}
+
+export function toAmazonAssociateSearchUrl(query, associateTag) {
+  const keyword = typeof query === "string" ? query.trim() : "";
+  const tag = normalizeAmazonAssociateTag(associateTag);
+  if (!keyword || !tag) return undefined;
+
+  const url = new URL("https://www.amazon.co.jp/s");
+  url.searchParams.set("k", keyword);
+  url.searchParams.set("tag", tag);
+  return url.toString();
 }
 
 export function isAllowedRakutenUrl(value) {
@@ -170,6 +196,9 @@ export function validateBuildEnvironment(environment = process.env) {
     ? normalizeSiteUrl(environment.PUBLIC_SITE_URL)
     : undefined;
   const contactUrl = normalizeOptionalPublicUrl(environment.PUBLIC_CONTACT_URL);
+  const amazonAssociateTag = normalizeAmazonAssociateTag(
+    environment.PUBLIC_AMAZON_ASSOCIATE_TAG,
+  );
   const rakutenPremiumUrl = normalizeOptionalRakutenUrl(
     environment.PUBLIC_RAKUTEN_PREMIUM_URL,
     "PUBLIC_RAKUTEN_PREMIUM_URL",
@@ -210,6 +239,7 @@ export function validateBuildEnvironment(environment = process.env) {
     deploymentEnv,
     siteUrl,
     contactUrl,
+    amazonAssociateTag,
     rakutenPremiumUrl,
     rakutenSarasaraUrl,
     rakutenApiReady,
