@@ -150,11 +150,13 @@ export const articlePurchaseLinks = {
   },
   "babybjorn-onekai:left": {
     name: "ベビービョルン ONE KAI",
-    purchaseUrl: "https://a.r10.to/hYhUfN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbabycarrier-one-kai-air%2F&link_type=text",
   },
   "babybjorn-onekai:right": {
     name: "ベビービョルン MOVE",
-    purchaseUrl: "https://a.r10.to/h41WNP",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbabycarrier-move%2F&link_type=text",
   },
   "babybjorn-potty:left": {
     name: "ベビービョルン スマートポッティ",
