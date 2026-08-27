@@ -233,7 +233,8 @@ export const articlePurchaseLinks = {
   },
   "panasonic-eh-na9m-guide:card": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl: "",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpanasonic-store%2Feh-na9m-h%2F&link_type=text",
   },
   "panasonic-eh-na9m-vs-eh-na7m:left": {
     name: "パナソニック ナノケア EH-NA9M",
