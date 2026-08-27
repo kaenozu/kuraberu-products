@@ -68,6 +68,7 @@ jobs:
           PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
           PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
           PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
+          PUBLIC_AMAZON_ASSOCIATE_TAG: ci-example-22
           PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
         run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
 
