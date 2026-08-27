@@ -130,11 +130,13 @@ export interface ArticlePurchaseLink {
 export const articlePurchaseLinks = {
   "babybjorn-bouncer:left": {
     name: "ベビービョルン Bliss",
-    purchaseUrl: "https://a.r10.to/h5dRLC",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbouncer-bliss%2F&link_type=picttext",
   },
   "babybjorn-bouncer:right": {
     name: "ベビービョルン バランスソフト",
-    purchaseUrl: "https://a.r10.to/hPmZhN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbouncer-balance-soft%2F&link_type=picttext",
   },
   "babybjorn-cradle:left": {
     name: "ベビービョルン クレードル",
