@@ -20,11 +20,17 @@ export const cradleArticle = defineArticleMetadata({
   summary:
     "「ベビービョルン クレードル」と「アップリカ ココネルエアー AB」を、各メーカー公式の案内・対象期間・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-17",
+  modifiedAt: "2026-08-28",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-28",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-cradle.jpg",
   changeLog: [
+    {
+      date: "2026-08-28",
+      summary:
+        "楽天市場の商品詳細ページで商品名・型番・ショップを照合し、楽天アフィリエイト公式UIで生成した商品詳細リンクへ更新。",
+    },
     {
       date: "2026-08-17",
       summary:
