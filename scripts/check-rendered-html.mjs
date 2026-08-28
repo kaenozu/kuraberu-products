@@ -333,7 +333,12 @@ const TEMPLATE_TOKEN_PATTERNS = [
   { pattern: /\$\{[^}]{0,200}\}/, label: "${...}" },
   // %TOKEN% は URL エンコード断片（%E3%81…）を誤検知しないよう
   // 内側 4 文字以上の大文字スネークケースに限定する（エンコードは常に 2 桁）。
-  { pattern: /%[A-Z][A-Z0-9_]{3,}%/, label: "%TOKEN%" },
+  // ただし `%BB6142%` のように、エンコード済みバイト（%BB）へ
+  // 商品番号が続く形もあるため、先頭2文字が16進数の断片は除外する。
+  {
+    pattern: /%(?![0-9A-F]{2}[A-Z0-9_])[A-Z][A-Z0-9_]{3,}%/,
+    label: "%TOKEN%",
+  },
   { pattern: /\[object Object\]/, label: "[object Object]" },
 ];
 

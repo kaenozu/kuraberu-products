@@ -179,6 +179,9 @@ const faqStructuredData = faq && faq.length > 0
     <footer class="footer">
       <div class="wrap">
         <p>広告を含みます。価格・在庫・仕様は販売先でご確認ください。</p>
+        {import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim() && (
+          <p>Amazonのアソシエイトとして、{site.name}は適格販売により収入を得ています。</p>
+        )}
         <p><a href="/privacy/">プライバシーポリシー</a> · <a href="/disclaimer/">広告・免責事項</a> · <a href="/about/">運営者情報</a></p>
       </div>
     </footer>
