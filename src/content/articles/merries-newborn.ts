@@ -16,9 +16,10 @@ export const merriesNewbornArticle = defineArticleMetadata({
   summary:
     "「ファーストプレミアム」と「ずっと肌さらエアスルー」を、公式情報・販売ページ・確認状況に分けて比較します。",
   publishedAt: "2026-08-08",
-  modifiedAt: "2026-08-17",
+  modifiedAt: "2026-08-28",
   productInfoCheckedAt: "2026-08-08",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-28",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/merries-fp-newborn.jpg",
   changeLog: [
     {
