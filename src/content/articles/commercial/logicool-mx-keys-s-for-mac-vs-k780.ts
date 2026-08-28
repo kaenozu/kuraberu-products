@@ -21,8 +21,9 @@ export const logicoolMxKeysSForMacVsK780Seed: CommercialArticleSeed = {
   leftPoint: "公式仕様とサイズを確認して選びたい人向け",
   rightPoint: "公式仕様と用途を確認して選びたい人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-08-29",
+  purchaseLinkStatus: "verified",
+  purchaseLinksCheckedAt: "2026-08-29",
   officialSources: [
     {
       label: "Logicool MX Keys S for Mac 公式商品ページ",
