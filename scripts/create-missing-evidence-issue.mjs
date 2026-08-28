@@ -52,6 +52,19 @@ export function buildMissingReportBody({ runId, expectedSha, siteUrl }) {
   ].join("\n");
 }
 
+export function buildIssueCreateArgs({ repo, title, bodyPath }) {
+  return [
+    "issue",
+    "create",
+    "--repo",
+    repo,
+    "--title",
+    title,
+    "--body-file",
+    bodyPath,
+  ];
+}
+
 function main() {
   const runId = parseArg("--run-id");
   const expectedSha = parseArg("--expected-sha");
@@ -94,18 +107,7 @@ function main() {
   const bodyPath = path.join(tempDir, "issue-body.md");
   writeFileSync(bodyPath, body, "utf8");
   try {
-    const created = ghText([
-      "issue",
-      "create",
-      "--repo",
-      repo,
-      "--title",
-      title,
-      "--body-file",
-      bodyPath,
-      "--label",
-      "deploy-evidence,blocker",
-    ]);
+    const created = ghText(buildIssueCreateArgs({ repo, title, bodyPath }));
     console.log(`Created placeholder evidence issue: ${created}`);
   } finally {
     rmSync(tempDir, { recursive: true, force: true });

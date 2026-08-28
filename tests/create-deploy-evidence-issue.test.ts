@@ -7,6 +7,10 @@ import {
   buildReportChecklist,
   buildStepLogExcerpt,
 } from "../scripts/create-deploy-evidence-issue.mjs";
+import {
+  buildIssueCreateArgs,
+  buildMissingReportBody,
+} from "../scripts/create-missing-evidence-issue.mjs";
 
 const EXPECTED_SHA = "7f54044e44872f8874f5c4e38da7ea48003ebefc";
 
@@ -239,5 +243,24 @@ describe("constants", () => {
   it("uses the check-run name and title prefix the workflow relies on", () => {
     expect(CHECK_RUN_NAME).toBe("production-post-deploy-verification");
     expect(ISSUE_TITLE_PREFIX).toBe("[deploy-verification]");
+  });
+});
+
+describe("missing deploy evidence fallback", () => {
+  it("does not require repository-specific labels", () => {
+    const args = buildIssueCreateArgs({
+      repo: "kaenozu/kuraberu-products",
+      title: "[deploy-verification] 123 — NO REPORT",
+      bodyPath: "/tmp/body.md",
+    });
+    expect(args).not.toContain("--label");
+    expect(args).not.toContain("deploy-evidence,blocker");
+    expect(
+      buildMissingReportBody({
+        runId: "123",
+        expectedSha: "a".repeat(40),
+        siteUrl: "https://kuraberu-products.pages.dev",
+      }),
+    ).toContain("Evidence issue");
   });
 });
