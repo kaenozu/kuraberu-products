@@ -229,11 +229,13 @@ export const articlePurchaseLinks = {
   },
   "moony-m:left": {
     name: "ムーニー 低刺激であんしん",
-    purchaseUrl: "https://a.r10.to/h58jf3",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56eb110b.d12f383c.56eb110c.df99efd3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F4903111241439%2F&link_type=picttext",
   },
   "moony-m:right": {
     name: "ムーニー マシュマロ肌ごこちモレ安心",
-    purchaseUrl: "https://a.r10.to/h5ZjVa",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56eb1351.8b5bcbf5.56eb1352.65c70c66/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Funicharm%2F101302%2F&link_type=picttext",
   },
   "pampers-newborn:left": {
     name: "パンパース 新生児用 肌へのいちばん",
