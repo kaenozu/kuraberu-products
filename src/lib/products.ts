@@ -209,11 +209,13 @@ export const articlePurchaseLinks = {
   },
   "merries-newborn:left": {
     name: "メリーズ 新生児用 ファーストプレミアム",
-    purchaseUrl: "https://a.r10.to/h5xcuC",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e93b53.ec7144bb.56e93b54.78dff077/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnetbaby%2F404201%2F&link_type=picttext",
   },
   "merries-newborn:right": {
     name: "メリーズ 新生児用 ずっと肌さらエアスルー",
-    purchaseUrl: "https://a.r10.to/h8gCjo",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e93b96.676553d5.56e93b97.c08dff4b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjandcbaby%2Fkao-tnb96%2F&link_type=picttext",
   },
   "merries-pants:left": {
     name: "メリーズ パンツタイプ ファーストプレミアム",
