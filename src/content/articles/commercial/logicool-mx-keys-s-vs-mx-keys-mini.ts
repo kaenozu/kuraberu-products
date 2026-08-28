@@ -21,8 +21,9 @@ export const logicoolMxKeysSVsMxKeysMiniSeed: CommercialArticleSeed = {
   leftPoint: "テンキー・ナビキー付きフルサイズで効率的にタイピングしたい人向け",
   rightPoint: "デスクのスペースを抑えたい・持ち運びもしたい人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-08-29",
+  purchaseLinkStatus: "verified",
+  purchaseLinksCheckedAt: "2026-08-29",
   officialSources: [
     {
       label: "Logicool MX Keys S 公式商品ページ",
