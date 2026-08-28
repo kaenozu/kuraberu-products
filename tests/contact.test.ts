@@ -418,7 +418,7 @@ describe("onRequestPost", () => {
   it("rejects payloads exceeding the encoded body limit before formData expansion", async () => {
     const telegram = telegramOk();
     const response = await onRequestPost({
-      request: postRequest(validForm(), {
+      request: postRequest("a".repeat(90_001), {
         "Content-Length": String(90_001),
       }),
       env: baseEnv(),
