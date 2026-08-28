@@ -16,9 +16,10 @@ export const combiTheSArticle = defineArticleMetadata({
   summary:
     "THE S plusとTHE S premiumを、公式の対象身長・使用期間・回転・固定方法・重量・価格に分けて比較します。",
   publishedAt: "2026-08-12",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-29",
   productInfoCheckedAt: "2026-08-12",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-29",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/the-s-plus.jpg",
   changeLog: [
     {
