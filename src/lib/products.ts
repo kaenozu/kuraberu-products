@@ -560,4 +560,24 @@ export const articlePurchaseLinks = {
     name: "ソニー WH-1000XM5",
     purchaseUrl: "https://a.r10.to/hPygQu",
   },
+  "logicool-mx-keys-s-vs-mx-keys-mini:left": {
+    name: "Logicool MX Keys S",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx800sgr%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-vs-mx-keys-mini:right": {
+    name: "Logicool MX Keys Mini",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx700gr%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-for-mac-vs-k780:left": {
+    name: "Logicool MX Keys S for Mac",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx800smsg%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-for-mac-vs-k780:right": {
+    name: "Logicool K780",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk780%2F&link_type=picttext",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
