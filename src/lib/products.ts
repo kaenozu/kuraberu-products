@@ -184,7 +184,8 @@ export const articlePurchaseLinks = {
   },
   "combi-the-s-plus-vs-premium:right": {
     name: "コンビ THE S premium",
-    purchaseUrl: "https://a.r10.to/hPmZEE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e77b3a.3527f7d5.56e77b3b.a37819ca/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcombi%2Fthes-premium-r129-va%2F&link_type=picttext",
   },
   "hitachi-bd-sx130k-vs-bd-stx130k:left": {
     name: "日立 BD-SX130K",
