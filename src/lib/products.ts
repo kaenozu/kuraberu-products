@@ -189,11 +189,13 @@ export const articlePurchaseLinks = {
   },
   "hitachi-bd-sx130k-vs-bd-stx130k:left": {
     name: "日立 BD-SX130K",
-    purchaseUrl: "https://a.r10.to/hgXjdE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e827a8.6d705129.56e827a9.d5f820cf/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frisaikurushopr-1%2Fe6602r-1%2F&link_type=picttext",
   },
   "hitachi-bd-sx130k-vs-bd-stx130k:right": {
     name: "日立 BD-STX130K",
-    purchaseUrl: "https://a.r10.to/hRIzoN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e827c9.3ddf94e9.56e827ca.fba0ee75/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fden-ki-ya2%2Fbd-stx130kl-w%2F&link_type=picttext",
   },
   "kingjim-tepra-sr-r2500p-vs-sr-mk1:left": {
     name: "キングジム テプラ PRO SR-R2500P",
