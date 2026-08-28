@@ -415,11 +415,11 @@ describe("onRequestPost", () => {
 
   // ---- Content-Length size guard ----
 
-  it("rejects payloads exceeding 10 KB before formData expansion", async () => {
+  it("rejects payloads exceeding the encoded body limit before formData expansion", async () => {
     const telegram = telegramOk();
     const response = await onRequestPost({
       request: postRequest(validForm(), {
-        "Content-Length": String(10_001),
+        "Content-Length": String(90_001),
       }),
       env: baseEnv(),
       params: {},
