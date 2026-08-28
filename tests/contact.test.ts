@@ -549,6 +549,26 @@ describe("onRequestPost", () => {
     expect(telegram).not.toHaveBeenCalled();
   });
 
+  it("accepts a URL-encoded multibyte payload whose raw length exceeds 10 KB", async () => {
+    const telegram = telegramOk();
+    const encodedBody = new URLSearchParams({
+      email: "test@example.com",
+      message: "あ".repeat(1500),
+    }).toString();
+    const response = await onRequestPost({
+      request: postRequest(encodedBody, {
+        "Content-Length": String(new TextEncoder().encode(encodedBody).length),
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(new TextEncoder().encode(encodedBody).length).toBeGreaterThan(10_000);
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
+  });
+
   it("accepts a multibyte payload at exactly the 10_000-byte boundary", async () => {
     // フィールド名計 16B（message 7 + name 4 + email 5）+ email 値 16B +
     // message 値 9963B（3バイト文字 × 3321 字）= ちょうど 10000 バイト
