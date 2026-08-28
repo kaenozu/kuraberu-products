@@ -28,7 +28,7 @@ export const babybjornArticle = defineArticleMetadata({
     {
       date: "2026-08-28",
       summary:
-        "HARMONY・MINIの商品名と取扱ショップを楽天市場の商品詳細ページで照合し、楽天アフィリエイト公式UI生成リンクへ更新。",
+        "HARMONY・MINIの商品名・仕様・ショップを楽天市場の商品詳細ページで照合し、楽天アフィリエイト公式UIで生成した商品詳細リンクへ更新。",
     },
     {
       date: "2026-08-17",
