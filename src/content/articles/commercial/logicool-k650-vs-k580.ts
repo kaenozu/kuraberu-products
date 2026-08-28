@@ -20,8 +20,9 @@ export const logicoolK650VsK580Seed: CommercialArticleSeed = {
   leftPoint: "公式仕様とサイズを確認して選びたい人向け",
   rightPoint: "公式仕様と用途を確認して選びたい人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-08-29",
+  purchaseLinkStatus: "verified",
+  purchaseLinksCheckedAt: "2026-08-29",
   officialSources: [
     {
       label: "Logicool K650 Signature Wireless Keyboard 公式商品ページ",
