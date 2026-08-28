@@ -67,13 +67,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid content type" }, 415);
   }
 
-  // Content-Length があれば早期に上限判定し、過大リクエストを本文の
-  // 読み込み前に拒否する。ヘッダー欠落・過少申告は次段の累積上限で担保する。
+  // Content-Length は URL エンコード前の生バイト数であり、デコード後の
+  // 10 KB 制限とは異なるため、ここでは判定に使わない。本文は次段で
+  // エンコード済み上限を付けて読み込み、デコード後に TextEncoder で検証する。
   const MAX_BODY_BYTES = 10_000;
-  const contentLength = Number(request.headers.get("Content-Length") ?? 0);
-  if (contentLength > MAX_BODY_BYTES) {
-    return json({ ok: false, error: "payload too large" }, 413);
-  }
 
   // formData() の展開前に行う累積上限付きの本文読み込み。
   // urlencoded 形式では 3バイトUTF-8文字が %XX%XX%XX（9バイト）へ膨張するため、
