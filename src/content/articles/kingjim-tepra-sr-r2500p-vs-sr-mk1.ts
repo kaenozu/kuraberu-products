@@ -19,12 +19,17 @@ export const kingjimTepraArticle = defineArticleMetadata({
   summary:
     "SR-R2500PとSR-MK1を、キングジム公式の商品ページで確認できる対応テープ幅・電源・寸法・質量・印刷幅に分けて比較します。",
   publishedAt: "2026-08-14",
-  modifiedAt: "2026-08-14",
-  productInfoCheckedAt: "2026-08-14",
-  purchaseLinksCheckedAt: "2026-08-14",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-08-28",
+  productInfoCheckedAt: "2026-08-28",
+  purchaseLinksCheckedAt: "2026-08-28",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/kingjim-sr-r2500p.jpg",
   changeLog: [
+    {
+      date: "2026-08-28",
+      summary:
+        "楽天市場の商品詳細ページで商品名・型番・ショップを照合し、楽天公式UI生成の購入リンクへ更新。",
+    },
     {
       date: "2026-08-14",
       summary:

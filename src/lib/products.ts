@@ -150,27 +150,33 @@ export const articlePurchaseLinks = {
   },
   "babybjorn-onekai:left": {
     name: "ベビービョルン ONE KAI",
-    purchaseUrl: "https://a.r10.to/hYhUfN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbabycarrier-one-kai-air%2F&link_type=text",
   },
   "babybjorn-onekai:right": {
     name: "ベビービョルン MOVE",
-    purchaseUrl: "https://a.r10.to/h41WNP",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbabycarrier-move%2F&link_type=text",
   },
   "babybjorn-potty:left": {
     name: "ベビービョルン スマートポッティ",
-    purchaseUrl: "https://a.r10.to/hP1wdW",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fsmart-potty%2F&link_type=text",
   },
   "babybjorn-potty:right": {
     name: "ベビービョルン ポッティチェア",
-    purchaseUrl: "https://a.r10.to/h5kpDa",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fpotty-chair%2F&link_type=text",
   },
   "babybjorn:left": {
     name: "ベビービョルン HARMONY",
-    purchaseUrl: "https://a.r10.to/hgxfw5",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-harmony%2F&link_type=text",
   },
   "babybjorn:right": {
     name: "ベビービョルン MINI",
-    purchaseUrl: "https://a.r10.to/hY6U8Q",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-mini-3d%2F&link_type=text",
   },
   "combi-the-s-plus-vs-premium:left": {
     name: "コンビ THE S plus",
@@ -178,23 +184,28 @@ export const articlePurchaseLinks = {
   },
   "combi-the-s-plus-vs-premium:right": {
     name: "コンビ THE S premium",
-    purchaseUrl: "https://a.r10.to/hPmZEE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e77b3a.3527f7d5.56e77b3b.a37819ca/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcombi%2Fthes-premium-r129-va%2F&link_type=picttext",
   },
   "hitachi-bd-sx130k-vs-bd-stx130k:left": {
     name: "日立 BD-SX130K",
-    purchaseUrl: "https://a.r10.to/hgXjdE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e827a8.6d705129.56e827a9.d5f820cf/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frisaikurushopr-1%2Fe6602r-1%2F&link_type=picttext",
   },
   "hitachi-bd-sx130k-vs-bd-stx130k:right": {
     name: "日立 BD-STX130K",
-    purchaseUrl: "https://a.r10.to/hRIzoN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e827c9.3ddf94e9.56e827ca.fba0ee75/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fden-ki-ya2%2Fbd-stx130kl-w%2F&link_type=picttext",
   },
   "kingjim-tepra-sr-r2500p-vs-sr-mk1:left": {
     name: "キングジム テプラ PRO SR-R2500P",
-    purchaseUrl: "https://a.r10.to/h9jN67",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e8aeb8.699b0598.56e8aeb9.8561f4a2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F525788018%2F&link_type=picttext",
   },
   "kingjim-tepra-sr-r2500p-vs-sr-mk1:right": {
     name: "キングジム テプラ PRO SR-MK1",
-    purchaseUrl: "https://a.r10.to/hPnFPC",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e8b069.e9228dbc.56e8b06a.9ca23c34/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fonesmart%2F4971660776429%2F&link_type=picttext",
   },
   "merries-newborn:left": {
     name: "メリーズ 新生児用 ファーストプレミアム",
