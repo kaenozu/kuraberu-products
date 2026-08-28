@@ -564,7 +564,9 @@ describe("onRequestPost", () => {
       data: {},
     });
 
-    expect(new TextEncoder().encode(encodedBody).length).toBeGreaterThan(10_000);
+    expect(new TextEncoder().encode(encodedBody).length).toBeGreaterThan(
+      10_000,
+    );
     expect(response.status).toBe(200);
     expect(telegram).toHaveBeenCalledTimes(1);
   });
