@@ -170,11 +170,13 @@ export const articlePurchaseLinks = {
   },
   "babybjorn:left": {
     name: "ベビービョルン HARMONY",
-    purchaseUrl: "https://a.r10.to/hgxfw5",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-harmony%2F&link_type=text",
   },
   "babybjorn:right": {
     name: "ベビービョルン MINI",
-    purchaseUrl: "https://a.r10.to/hY6U8Q",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-mini-3d%2F&link_type=text",
   },
   "combi-the-s-plus-vs-premium:left": {
     name: "コンビ THE S plus",
