@@ -199,11 +199,13 @@ export const articlePurchaseLinks = {
   },
   "kingjim-tepra-sr-r2500p-vs-sr-mk1:left": {
     name: "キングジム テプラ PRO SR-R2500P",
-    purchaseUrl: "https://a.r10.to/h9jN67",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e8aeb8.699b0598.56e8aeb9.8561f4a2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F525788018%2F&link_type=picttext",
   },
   "kingjim-tepra-sr-r2500p-vs-sr-mk1:right": {
     name: "キングジム テプラ PRO SR-MK1",
-    purchaseUrl: "https://a.r10.to/hPnFPC",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e8b069.e9228dbc.56e8b06a.9ca23c34/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fonesmart%2F4971660776429%2F&link_type=picttext",
   },
   "merries-newborn:left": {
     name: "メリーズ 新生児用 ファーストプレミアム",
