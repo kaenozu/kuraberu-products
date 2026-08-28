@@ -180,7 +180,8 @@ export const articlePurchaseLinks = {
   },
   "combi-the-s-plus-vs-premium:left": {
     name: "コンビ THE S plus",
-    purchaseUrl: "https://a.r10.to/hgk4Rg",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e77b3a.3527f7d5.56e77b3b.a37819ca/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcombi%2F4972990195010%2F&link_type=picttext",
   },
   "combi-the-s-plus-vs-premium:right": {
     name: "コンビ THE S premium",
