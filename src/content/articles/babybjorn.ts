@@ -19,11 +19,17 @@ export const babybjornArticle = defineArticleMetadata({
   summary:
     "「HARMONY」と「MINI」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-17",
+  modifiedAt: "2026-08-28",
   productInfoCheckedAt: "2026-08-10",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-28",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-harmony.jpg",
   changeLog: [
+    {
+      date: "2026-08-28",
+      summary:
+        "HARMONY・MINIの商品名と取扱ショップを楽天市場の商品詳細ページで照合し、楽天アフィリエイト公式UI生成リンクへ更新。",
+    },
     {
       date: "2026-08-17",
       summary:

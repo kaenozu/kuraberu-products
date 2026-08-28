@@ -35,6 +35,28 @@ import { tmpdir } from "node:os";
 const registry = new Set(["moony-m:left", "moony-m:right"]);
 
 describe("purchase link consistency gate (registry keys)", () => {
+  it("keeps the BabyBjorn HARMONY/MINI CTAs on verified item pages", async () => {
+    const { articlePurchaseLinks } = await import("../src/lib/products");
+    expect(articlePurchaseLinks["babybjorn:left"].purchaseUrl).toContain(
+      "item.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-harmony%2F",
+    );
+    expect(articlePurchaseLinks["babybjorn:right"].purchaseUrl).toContain(
+      "item.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-mini-3d%2F",
+    );
+    expect(articlePurchaseLinks["babybjorn:left"].purchaseUrl).toMatch(
+      /^https:\/\/hb\.afl\.rakuten\.co\.jp\/ichiba\//,
+    );
+    expect(articlePurchaseLinks["babybjorn:right"].purchaseUrl).toMatch(
+      /^https:\/\/hb\.afl\.rakuten\.co\.jp\/ichiba\//,
+    );
+    expect(articlePurchaseLinks["babybjorn:left"].purchaseUrl).not.toMatch(
+      /a\.r10\.to/,
+    );
+    expect(articlePurchaseLinks["babybjorn:right"].purchaseUrl).not.toMatch(
+      /a\.r10\.to/,
+    );
+  });
+
   it("extracts registry keys from an ArticleComparisonV2 page in left/right order", () => {
     const source = `<ArticleComparisonV2
   left={{ brand: "A", line: "L", purchaseHref: articlePurchaseLinks['moony-m:left'].purchaseUrl }}
