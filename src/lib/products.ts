@@ -219,11 +219,13 @@ export const articlePurchaseLinks = {
   },
   "merries-pants:left": {
     name: "メリーズ パンツタイプ ファーストプレミアム",
-    purchaseUrl: "https://a.r10.to/hPx3cE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e93b53.ec7144bb.56e93b54.78dff077/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnetbaby%2F404698%2F&link_type=picttext",
   },
   "merries-pants:right": {
     name: "メリーズ パンツタイプ ずっと肌さらエアスルー",
-    purchaseUrl: "https://a.r10.to/h5LbWy",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ea557f.e01de687.56ea5580.6eb3aa89/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjandcshop%2Fahkaopm58%2F&link_type=picttext",
   },
   "moony-m:left": {
     name: "ムーニー 低刺激であんしん",
