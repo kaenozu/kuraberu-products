@@ -138,6 +138,16 @@ export const articlePurchaseLinks = {
     purchaseUrl:
       "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk580gr%2F&link_type=picttext",
   },
+  "logicool-lift-vs-m550:left": {
+    name: "Logicool LIFT Vertical Ergonomic Mouse",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm800gr%2F&link_type=picttext",
+  },
+  "logicool-lift-vs-m550:right": {
+    name: "Logicool Signature M550",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm550mgr%2F&link_type=picttext",
+  },
   "babybjorn-bouncer:left": {
     name: "ベビービョルン Bliss",
     purchaseUrl:
