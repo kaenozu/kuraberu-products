@@ -179,8 +179,8 @@ jobs:
         with:
           name: acceptance-reports-${{ github.run_id }}
           path: |
-            .acceptance/production-build-*/report.json
-            .acceptance/post-deploy-*/report.json
+            .acceptance/production-build-*/**
+            .acceptance/post-deploy-*/**
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 90
