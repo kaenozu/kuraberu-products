@@ -160,11 +160,13 @@ export const articlePurchaseLinks = {
   },
   "babybjorn-potty:left": {
     name: "ベビービョルン スマートポッティ",
-    purchaseUrl: "https://a.r10.to/hP1wdW",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fsmart-potty%2F&link_type=text",
   },
   "babybjorn-potty:right": {
     name: "ベビービョルン ポッティチェア",
-    purchaseUrl: "https://a.r10.to/h5kpDa",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fpotty-chair%2F&link_type=text",
   },
   "babybjorn:left": {
     name: "ベビービョルン HARMONY",
