@@ -87,6 +87,10 @@ try {
     try {
         Run $pnpm @('install', '--frozen-lockfile') (Join-Path $runDirectory 'install.log') | Out-Null
         Run $pnpm @('validate:env') (Join-Path $runDirectory 'validate-env.log') | Out-Null
+        # Production runners may not reach every Rakuten redirect endpoint.
+        # Use the committed fresh CTA evidence cache for those checks; any
+        # uncached verified article remains a hard failure in the checker.
+        $env:ALLOW_NETWORK_SKIP = '1'
         Run $pnpm @('verify') (Join-Path $runDirectory 'verify.log') | Out-Null
         Run $pnpm @('build') (Join-Path $runDirectory 'build.log') | Out-Null
         Run $pnpm @('check:rendered') (Join-Path $runDirectory 'check-rendered.log') | Out-Null
