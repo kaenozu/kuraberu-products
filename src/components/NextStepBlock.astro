@@ -11,6 +11,8 @@
 // 配置・枚数の機械的契約は config/article-layout.mjs（next-step set）が唯一の定義で、
 // 品質ゲート scripts/check-rendered-html.mjs（validateArticleNextStep）が照合する。
 import {toAffiliateRakutenUrl, isAffiliateRakutenUrl, isRakutenProductDetailUrl} from '../../config/runtime-env.mjs';
+import { Picture } from 'astro:assets';
+import { resolveImage } from '../lib/image-resolver';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 
 export interface NextStepProduct {
@@ -20,6 +22,8 @@ export interface NextStepProduct {
   href?: string;
   /** クリック計測用の商品ID（任意） */
   productId?: string;
+  /** 商品画像。指定時は画像も同じ購入リンク内に含める。 */
+  image?: string;
 }
 
 interface Props {
@@ -32,6 +36,8 @@ interface Props {
 }
 
 const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
+const leftImage = resolveImage(left.image);
+const rightImage = resolveImage(right.image);
 const leftHref = isRakutenProductDetailUrl(left.href) || isAffiliateRakutenUrl(left.href) ? toAffiliateRakutenUrl(left.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT) : undefined;
 const rightHref = isRakutenProductDetailUrl(right.href) || isAffiliateRakutenUrl(right.href) ? toAffiliateRakutenUrl(right.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT) : undefined;
 const leftAffiliate = isAffiliateRakutenUrl(leftHref);
@@ -56,6 +62,7 @@ const buyRel = (affiliate: boolean) =>
         data-placement="next-step"
         data-product-id={left.productId}
       >
+        {leftImage && <Picture class="next-step__buy-image" src={leftImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />}
         <span class="next-step__buy-name">{left.label}</span>
         <span class="next-step__buy-action">
           販売ページを見る
@@ -77,6 +84,7 @@ const buyRel = (affiliate: boolean) =>
         data-placement="next-step"
         data-product-id={right.productId}
       >
+        {rightImage && <Picture class="next-step__buy-image" src={rightImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />}
         <span class="next-step__buy-name">{right.label}</span>
         <span class="next-step__buy-action">
           販売ページを見る
@@ -141,6 +149,13 @@ const buyRel = (affiliate: boolean) =>
   .next-step__buy:focus-visible {
     border-color: var(--product-color);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.10);
+  }
+  .next-step__buy-image {
+    width: 96px;
+    height: 96px;
+    object-fit: contain;
+    justify-self: center;
+    border-radius: var(--radius-sm);
   }
   .next-step__buy-name {
     font-weight: 800;

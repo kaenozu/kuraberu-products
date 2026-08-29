@@ -153,8 +153,8 @@ const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
     ) : <h2 id="key-differences">違いを確認する</h2>}
     {!hasHeroSources && (
       <NextStepBlock
-        left={{ label: seed.leftProduct, href: leftProductHref }}
-        right={{ label: seed.rightProduct, href: rightProductHref }}
+        left={{ label: seed.leftProduct, href: leftProductHref, image: images.left }}
+        right={{ label: seed.rightProduct, href: rightProductHref, image: images.right }}
         purchaseLinkStatus={article.purchaseLinkStatus}
       />
     )}
