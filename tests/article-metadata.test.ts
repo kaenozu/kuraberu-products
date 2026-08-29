@@ -125,9 +125,8 @@ describe("article metadata", () => {
     expect(memoPage).toContain(
       "data-memo-template data-article-id={article.id}",
     );
-    expect(memoPage).toContain(
-      "sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds)",
-    );
+    // memo-app.ts に抽出された初期化ロジックが読み込まれることを確認
+    expect(memoPage).toContain('import { initMemoApp } from "../lib/memo-app"');
     expect(articleMetadata.map((article) => article.path)).toContain(
       waterBottle!.path,
     );

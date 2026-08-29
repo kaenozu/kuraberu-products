@@ -22,7 +22,10 @@ function findTagEnd(source, start) {
   for (let index = start; index < source.length; index += 1) {
     const character = source[index];
     if (quote) {
-      if (character === quote && source[index - 1] !== "\\") quote = null;
+      // HTML属性値ではバックスラッシュはエスケープ文字ではない。
+      // バックスラッシュによるクォート無効化チェックは行わない。
+      // サロゲートペアの末尾も正しく処理される。
+      if (character === quote) quote = null;
     } else if (character === '"' || character === "'") {
       quote = character;
     } else if (character === ">") {

@@ -15,6 +15,9 @@ export type RakutenProduct = {
 
 export const RAKUTEN_API_TIMEOUT_MS = 5_000;
 
+/** 楽天IchibaItem Search API のバージョン。キャッシュキーに含め、API仕様変更時に自動的にキャッシュを無効化する。 */
+const RAKUTEN_API_VERSION = "20260701";
+
 const cache = new Map<string, Promise<RakutenProduct[]>>();
 
 type UnknownRecord = Record<string, unknown>;
@@ -249,7 +252,7 @@ export async function fetchRakutenProducts(
   hits = 10,
   options: RequestRakutenOptions = {},
 ): Promise<RakutenProduct[]> {
-  const cacheKey = `${keyword}\u0000${hits}`;
+  const cacheKey = `${keyword}\u0000${hits}\u0000${RAKUTEN_API_VERSION}`;
   const cached = cache.get(cacheKey);
   if (cached) return cached;
   const request = fetchRakutenProductsUncached(keyword, hits, options);
@@ -340,7 +343,7 @@ async function fetchRakutenProductsUncached(
   if (!applicationId || !accessKey || !affiliateId) return [];
 
   const url = new URL(
-    "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701",
+    `https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/${RAKUTEN_API_VERSION}`,
   );
   url.searchParams.set("format", "json");
   url.searchParams.set("formatVersion", "2");
