@@ -128,6 +128,16 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "logicool-mx-master-3s-vs-m650:left": {
+    name: "Logicool MX Master 3S",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fmx2300cr%2F&link_type=picttext",
+  },
+  "logicool-mx-master-3s-vs-m650:right": {
+    name: "Logicool Signature M650",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm650mgr%2F&link_type=picttext",
+  },
   "logicool-k650-vs-k580:left": {
     name: "Logicool K650 Signature Wireless Keyboard",
     purchaseUrl:
