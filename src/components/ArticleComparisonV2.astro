@@ -60,8 +60,8 @@ const { left, right, rows, checkedAt, diagnosisHref, commonNote, purchaseLinkSta
     commonNote={commonNote}
   />
   <NextStepBlock
-    left={{ label: `${left.brand} ${left.line}`, href: left.purchaseHref, productId: left.productId }}
-    right={{ label: `${right.brand} ${right.line}`, href: right.purchaseHref, productId: right.productId }}
+    left={{ label: `${left.brand} ${left.line}`, href: left.purchaseHref, productId: left.productId, image: left.image }}
+    right={{ label: `${right.brand} ${right.line}`, href: right.purchaseHref, productId: right.productId, image: right.image }}
     diagnosisHref={diagnosisHref}
     purchaseLinkStatus={purchaseLinkStatus}
   />
