@@ -322,11 +322,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
-    purchaseUrl: "https://a.r10.to/hPgPTZ",
+    purchaseUrl: "https://a.r10.to/h5Y7Pe",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:right": {
     name: "パナソニック MC-SB35K",
-    purchaseUrl: "https://a.r10.to/hgxWYi",
+    purchaseUrl: "https://a.r10.to/hPV2LX",
   },
   "panasonic-ne-fl1a-vs-ne-fl1c:left": {
     name: "パナソニック NE-FL1A",
