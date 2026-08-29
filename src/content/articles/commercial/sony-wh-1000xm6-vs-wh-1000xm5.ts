@@ -21,9 +21,9 @@ export const sonyWh1000xm6VsWh1000xm5Seed: CommercialArticleSeed = {
   leftPoint: "Bluetooth 5.3とLE Audio対応を確認したい人向け",
   rightPoint: "公式仕様と電池持続時間を確認して選びたい人向け",
   productInfoCheckedAt: "2026-08-22",
-  modifiedAt: "2026-08-22",
-  purchaseLinkStatus: "unverified",
-  purchaseLinksCheckedAt: "2026-08-22",
+  modifiedAt: "2026-08-29",
+  purchaseLinkStatus: "verified",
+  purchaseLinksCheckedAt: "2026-08-29",
   officialSources: [
     {
       label: "ソニー WH-1000XM6 公式商品ページ",

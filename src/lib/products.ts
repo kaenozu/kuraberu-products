@@ -564,11 +564,13 @@ export const articlePurchaseLinks = {
   },
   "sony-wh-1000xm6-vs-wh-1000xm5:left": {
     name: "ソニー WH-1000XM6",
-    purchaseUrl: "https://a.r10.to/hgj0yu",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56efb198.78b56db2.56efb199.4a5fe96d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fa-price%2F4548736162600%2F&link_type=picttext",
   },
   "sony-wh-1000xm6-vs-wh-1000xm5:right": {
     name: "ソニー WH-1000XM5",
-    purchaseUrl: "https://a.r10.to/hPygQu",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56efb198.78b56db2.56efb199.4a5fe96d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fa-price%2F4548736132566%2F&link_type=picttext",
   },
   "logicool-mx-keys-s-vs-mx-keys-mini:left": {
     name: "Logicool MX Keys S",
