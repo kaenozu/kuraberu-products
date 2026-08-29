@@ -44,6 +44,7 @@ import { logicoolMxMaster3sVsM650Seed } from "./logicool-mx-master-3s-vs-m650";
 import { logicoolLiftVsM550Seed } from "./logicool-lift-vs-m550";
 import { logicoolZoneVibe100VsZone300Seed } from "./logicool-zone-vibe-100-vs-zone-300";
 import { sonyWh1000xm6VsWh1000xm5Seed } from "./sony-wh-1000xm6-vs-wh-1000xm5";
+import { ankerSoundcoreLiberty4NcVsSonyWfC710nSeed } from "./anker-soundcore-liberty-4-nc-vs-sony-wf-c710n";
 
 export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   roborockQrevoCurvVsDreameX50Seed,
@@ -87,4 +88,5 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   logicoolLiftVsM550Seed,
   logicoolZoneVibe100VsZone300Seed,
   sonyWh1000xm6VsWh1000xm5Seed,
+  ankerSoundcoreLiberty4NcVsSonyWfC710nSeed,
 ];

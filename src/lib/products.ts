@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:left": {
+    name: "Soundcore Liberty 4 NC",
+    purchaseUrl: "https://a.r10.to/hF7iGR",
+  },
+  "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:right": {
+    name: "ソニー WF-C710N",
+    purchaseUrl: "https://a.r10.to/hgcZzy",
+  },
   "logicool-mx-master-3s-vs-m650:left": {
     name: "Logicool MX Master 3S",
     purchaseUrl:
