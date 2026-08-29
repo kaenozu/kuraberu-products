@@ -15,10 +15,10 @@ export const zojirushiCoffeeArticle = defineArticleMetadata({
   summary:
     "EC-KV50とEC-MA60を、象印公式の容量・抽出先・濃度調節・サイズ・質量に分けて比較します。",
   publishedAt: "2026-08-17",
-  modifiedAt: "2026-08-17",
+  modifiedAt: "2026-08-29",
   productInfoCheckedAt: "2026-08-17",
-  purchaseLinkStatus: "unverified",
-  purchaseLinksCheckedAt: "2026-08-17",
+  purchaseLinkStatus: "verified",
+  purchaseLinksCheckedAt: "2026-08-29",
   imagePath: "/products/zojirushi-ec-kv50.png",
   aboutProductNames: ["象印 EC-KV50", "象印 EC-MA60"],
   changeLog: [

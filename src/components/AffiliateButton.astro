@@ -24,8 +24,7 @@ const {href,label,productId,placement,imagePath,subLabel,searchQuery,requiredTer
 
 const isVerifiedAffiliateHref =
   typeof href === 'string' &&
-  isAffiliateRakutenUrl(href) &&
-  !/^https:\/\/(?:a\.)?r10\.to\//i.test(href);
+  isAffiliateRakutenUrl(href);
 const directHref =
   typeof href === 'string' && (isRakutenProductDetailUrl(href) || isVerifiedAffiliateHref)
     ? href

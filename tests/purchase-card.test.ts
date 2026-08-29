@@ -60,7 +60,7 @@ describe("PurchaseCard", () => {
     expect(html).toContain('rel="nofollow noopener noreferrer"');
   });
 
-  it("hides a Rakuten short URL even when status is verified", async () => {
+  it("renders a Rakuten short URL when status is verified", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
       props: {
@@ -73,12 +73,8 @@ describe("PurchaseCard", () => {
       },
     });
 
-    // short-url assertions
-    expect(html).not.toContain("楽天市場で商品ページを見る");
-    expect(html).toContain(
-      "公式サイトまたは販売ページで商品を確認してください。",
-    );
-    expect(html).not.toContain('rel="sponsored nofollow noopener noreferrer"');
+    expect(html).toContain("楽天市場で確認する");
+    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
   });
 
   it("defaults to article-end placement (v3 principle) and renders image", async () => {

@@ -17,9 +17,10 @@ export const tefalKettleArticle = defineArticleMetadata({
   summary:
     "KO5901JPとKO8601J0を、ティファール公式の容量・重量・温度調節・保温などの仕様に分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-29",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinkStatus: "verified",
+  purchaseLinksCheckedAt: "2026-08-29",
   imagePath: "/products/tefal-ko5901jp.jpg",
   changeLog: [
     {
