@@ -402,11 +402,11 @@ export const articlePurchaseLinks = {
   },
   "tefal-ko5901jp-vs-ko8601j0:left": {
     name: "ティファール KO5901JP",
-    purchaseUrl: "https://a.r10.to/hk5Hnn",
+    purchaseUrl: "https://a.r10.to/hgJSgN",
   },
   "tefal-ko5901jp-vs-ko8601j0:right": {
     name: "ティファール KO8601J0",
-    purchaseUrl: "https://a.r10.to/h5Qe2o",
+    purchaseUrl: "https://a.r10.to/hPYDq2",
   },
   "thermos-kfm-020-vs-kfi-020:left": {
     name: "サーモス KFM-020",
@@ -452,11 +452,11 @@ export const articlePurchaseLinks = {
   },
   "tiger-pct-a120-vs-pct-a150:left": {
     name: "タイガー PCT-A120",
-    purchaseUrl: "https://a.r10.to/hRBUg4",
+    purchaseUrl: "https://a.r10.to/hFYUbM",
   },
   "tiger-pct-a120-vs-pct-a150:right": {
     name: "タイガー PCT-A150",
-    purchaseUrl: "https://a.r10.to/hPWaUo",
+    purchaseUrl: "https://a.r10.to/h57s1i",
   },
   "yamazaki-condor-wagon-vs-self-wagon:left": {
     name: "山崎産業 コンドル FU943-000X-MB",
@@ -532,11 +532,11 @@ export const articlePurchaseLinks = {
   },
   "zojirushi-ec-kv50-vs-ec-ma60:left": {
     name: "象印 EC-KV50",
-    purchaseUrl: "https://a.r10.to/h5QPUy",
+    purchaseUrl: "https://a.r10.to/hg1Lco",
   },
   "zojirushi-ec-kv50-vs-ec-ma60:right": {
     name: "象印 EC-MA60",
-    purchaseUrl: "https://a.r10.to/h5Ob79",
+    purchaseUrl: "https://a.r10.to/h5tron",
   },
   "yamajitsu-film-holder-242286-vs-242287:left": {
     name: "山崎実業 フィルムフックまな板ホルダー タワー 242286",
