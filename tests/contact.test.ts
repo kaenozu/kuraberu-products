@@ -415,11 +415,11 @@ describe("onRequestPost", () => {
 
   // ---- Content-Length size guard ----
 
-  it("rejects payloads exceeding 10 KB before formData expansion", async () => {
+  it("rejects payloads exceeding the encoded body limit before formData expansion", async () => {
     const telegram = telegramOk();
     const response = await onRequestPost({
-      request: postRequest(validForm(), {
-        "Content-Length": String(10_001),
+      request: postRequest("a".repeat(90_001), {
+        "Content-Length": String(90_001),
       }),
       env: baseEnv(),
       params: {},
@@ -547,6 +547,28 @@ describe("onRequestPost", () => {
       error: "payload too large",
     });
     expect(telegram).not.toHaveBeenCalled();
+  });
+
+  it("accepts a URL-encoded multibyte payload whose raw length exceeds 10 KB", async () => {
+    const telegram = telegramOk();
+    const encodedBody = new URLSearchParams({
+      email: "test@example.com",
+      message: "あ".repeat(1500),
+    }).toString();
+    const response = await onRequestPost({
+      request: postRequest(encodedBody, {
+        "Content-Length": String(new TextEncoder().encode(encodedBody).length),
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+
+    expect(new TextEncoder().encode(encodedBody).length).toBeGreaterThan(
+      10_000,
+    );
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
   });
 
   it("accepts a multibyte payload at exactly the 10_000-byte boundary", async () => {

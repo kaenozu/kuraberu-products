@@ -12,7 +12,10 @@ import { articleMetadata, additionalCommercialArticleSeeds, publicArticleMetadat
 import { articlePurchaseLinks } from '../lib/products';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
-import { isRakutenProductDetailUrl } from '../../config/runtime-env.mjs';
+import {
+  isAffiliateRakutenUrl,
+  isRakutenProductDetailUrl,
+} from '../../config/runtime-env.mjs';
 
 interface Props {
   articleId: string;
@@ -37,9 +40,19 @@ const rightSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComp
 const staticPurchaseLinks = articlePurchaseLinks as Record<string, { purchaseUrl: string }>;
 const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchaseUrl;
 const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
+const isVerifiedPurchaseUrl = (value: string | undefined) => {
+  if (!value) return false;
+  if (isRakutenProductDetailUrl(value)) return true;
+  if (!isAffiliateRakutenUrl(value)) return false;
+  try {
+    return isRakutenProductDetailUrl(new URL(value).searchParams.get('pc') ?? '');
+  } catch {
+    return false;
+  }
+};
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
-  leftStaticPurchaseUrl && isRakutenProductDetailUrl(leftStaticPurchaseUrl)
+  leftStaticPurchaseUrl && isVerifiedPurchaseUrl(leftStaticPurchaseUrl)
     ? Promise.resolve({
         href: leftStaticPurchaseUrl,
         isAffiliate: true,
@@ -50,7 +63,7 @@ const [leftResolved, rightResolved] = await Promise.all([
         requiredTerms: leftTerms,
         fallbackUrl: leftSearchUrl,
       }),
-  rightStaticPurchaseUrl && isRakutenProductDetailUrl(rightStaticPurchaseUrl)
+  rightStaticPurchaseUrl && isVerifiedPurchaseUrl(rightStaticPurchaseUrl)
     ? Promise.resolve({
         href: rightStaticPurchaseUrl,
         isAffiliate: true,

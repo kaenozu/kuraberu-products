@@ -16,9 +16,10 @@ export const moonyMArticle = defineArticleMetadata({
   summary:
     "「低刺激であんしん」と「マシュマロ肌ごこちモレ安心」を、公式情報・サイズ別仕様・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-17",
+  modifiedAt: "2026-08-28",
   productInfoCheckedAt: "2026-08-09",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-28",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/moony-teishigeki-m.jpg",
   changeLog: [
     {

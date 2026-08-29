@@ -128,6 +128,36 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "logicool-mx-master-3s-vs-m650:left": {
+    name: "Logicool MX Master 3S",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fmx2300cr%2F&link_type=picttext",
+  },
+  "logicool-mx-master-3s-vs-m650:right": {
+    name: "Logicool Signature M650",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm650mgr%2F&link_type=picttext",
+  },
+  "logicool-k650-vs-k580:left": {
+    name: "Logicool K650 Signature Wireless Keyboard",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk650gr%2F&link_type=picttext",
+  },
+  "logicool-k650-vs-k580:right": {
+    name: "Logicool K580",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk580gr%2F&link_type=picttext",
+  },
+  "logicool-lift-vs-m550:left": {
+    name: "Logicool LIFT Vertical Ergonomic Mouse",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm800gr%2F&link_type=picttext",
+  },
+  "logicool-lift-vs-m550:right": {
+    name: "Logicool Signature M550",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm550mgr%2F&link_type=picttext",
+  },
   "babybjorn-bouncer:left": {
     name: "ベビービョルン Bliss",
     purchaseUrl:
@@ -180,7 +210,8 @@ export const articlePurchaseLinks = {
   },
   "combi-the-s-plus-vs-premium:left": {
     name: "コンビ THE S plus",
-    purchaseUrl: "https://a.r10.to/hgk4Rg",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e77b3a.3527f7d5.56e77b3b.a37819ca/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcombi%2F4972990195010%2F&link_type=picttext",
   },
   "combi-the-s-plus-vs-premium:right": {
     name: "コンビ THE S premium",
@@ -229,11 +260,13 @@ export const articlePurchaseLinks = {
   },
   "moony-m:left": {
     name: "ムーニー 低刺激であんしん",
-    purchaseUrl: "https://a.r10.to/h58jf3",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56eb110b.d12f383c.56eb110c.df99efd3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F4903111241439%2F&link_type=picttext",
   },
   "moony-m:right": {
     name: "ムーニー マシュマロ肌ごこちモレ安心",
-    purchaseUrl: "https://a.r10.to/h5ZjVa",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56eb1351.8b5bcbf5.56eb1352.65c70c66/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Funicharm%2F101302%2F&link_type=picttext",
   },
   "pampers-newborn:left": {
     name: "パンパース 新生児用 肌へのいちばん",
@@ -536,5 +569,25 @@ export const articlePurchaseLinks = {
   "sony-wh-1000xm6-vs-wh-1000xm5:right": {
     name: "ソニー WH-1000XM5",
     purchaseUrl: "https://a.r10.to/hPygQu",
+  },
+  "logicool-mx-keys-s-vs-mx-keys-mini:left": {
+    name: "Logicool MX Keys S",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx800sgr%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-vs-mx-keys-mini:right": {
+    name: "Logicool MX Keys Mini",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx700gr%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-for-mac-vs-k780:left": {
+    name: "Logicool MX Keys S for Mac",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx800smsg%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-for-mac-vs-k780:right": {
+    name: "Logicool K780",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk780%2F&link_type=picttext",
   },
 } as const satisfies Record<string, ArticlePurchaseLink>;
