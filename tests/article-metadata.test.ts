@@ -87,7 +87,7 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(73);
+    expect(publicArticleMetadata).toHaveLength(74);
     const newlyPublishedIds = [
       "yamazaki-dishwasher-rack-241925-vs-241926",
       "panasonic-mc-nx810km-vs-mc-nx700k",
@@ -104,6 +104,7 @@ describe("article metadata", () => {
       "yamazaki-ofuda-stand-rin-vs-single",
       "zojirushi-eq-aa22-vs-eq-sa22",
       "zojirushi-eq-sb22-vs-eq-ah22",
+      "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -241,7 +242,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(85);
+    ).toHaveLength(86);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);

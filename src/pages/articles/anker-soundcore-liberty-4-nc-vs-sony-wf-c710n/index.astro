@@ -1,0 +1,50 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { additionalCommercialArticles } from '../../../content/articles'
+
+const articleMetadata = additionalCommercialArticles.find((article) => article.id === 'anker-soundcore-liberty-4-nc-vs-sony-wf-c710n')!
+const leftOfficial = 'https://www.ankerjapan.com/products/a3947'
+const rightOfficial = 'https://www.sony.jp/headphone/products/WF-C710N/'
+const leftImage = '/products/soundcore-liberty-4-nc.jpg'
+const rightImage = '/products/sony-wf-c710n.jpg'
+const leftAudience = 'ケース込みの再生時間とLDAC・マルチポイントを確認したい人向け'
+const rightAudience = 'ノイズキャンセリング時の再生時間や通話時間を確認したい人向け'
+const leftPurchase = articlePurchaseLinks['anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:left'].purchaseUrl
+const rightPurchase = articlePurchaseLinks['anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:right'].purchaseUrl
+
+const faqEntries = [
+  {question: 'Soundcore Liberty 4 NCとWF-C710Nの違いは？', answer: '今回公式ページで確認できた主な違いは、Soundcore Liberty 4 NCがイヤホン単体最大10時間・ケース込み最大50時間、WF-C710Nがノイズキャンセリングオンで連続音声再生最大8.5時間と案内されている点です。BluetoothはいずれもVer.5.3です。'},
+  {question: '再生時間を重視するならどちら？', answer: 'Soundcore Liberty 4 NCは公式ページでイヤホン単体最大10時間、充電ケース込み最大50時間と案内されています。WF-C710Nはノイズキャンセリングオンで最大8.5時間、オフで最大12時間です。測定条件が異なるため、使うモードをそろえて確認してください。'},
+  {question: 'マルチポイントやLDACに対応している？', answer: 'Soundcore Liberty 4 NCの公式ページではマルチポイントとLDAC対応を確認できます。WF-C710Nについては、今回確認した公式ページの範囲ではこれらの記載を確認できませんでした。'},
+  {question: '価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、購入時点の販売ページで確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: 'Bluetooth', left: '5.3', right: 'Ver.5.3'},
+  {label: '連続音声再生', left: 'イヤホン単体 最大10時間', right: 'NCオン 最大8.5時間／NCオフ 最大12時間', highlight: 'left', highlightNote: '単体最大10時間'},
+  {label: 'ケース込み再生', left: '最大50時間', right: '公式ページで確認できず', highlight: 'left', highlightNote: 'ケース込み50時間'},
+  {label: '接続・コーデック', left: 'マルチポイント・LDAC対応', right: '公式ページで確認できず'},
+  {label: '急速充電', left: '10分の充電で4時間再生', right: '公式ページで確認できず'},
+]
+---
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'Soundcore', line: 'Liberty 4 NC', tagline: '長時間再生・LDACなら', image: leftImage, imageAlt: 'Soundcore Liberty 4 NC', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: leftPurchase}}
+  right={{brand: 'ソニー', line: 'WF-C710N', tagline: 'NCオンの再生時間を確認するなら', image: rightImage, imageAlt: 'ソニー WF-C710N', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: rightPurchase}}
+  keyDiffRows={keyDiffRows}
+  lead={'Soundcore Liberty 4 NCとソニー WF-C710Nを、メーカー公式ページで確認できる再生時間・Bluetooth・接続機能から比較します。測定条件が異なる数値は、そのまま優劣とせず、公式の記載どおりに整理します。'}
+  summaryParagraph={'ケース込みの再生時間やLDAC・マルチポイントを確認したいならSoundcore Liberty 4 NC、ノイズキャンセリングのオン・オフで再生時間を見比べたいならWF-C710Nが候補です。'}
+  officialDescription={'Soundcore Liberty 4 NCの公式ページでは、イヤホン単体最大10時間、ケース込み最大50時間、Bluetooth 5.3、マルチポイント、LDAC対応を確認しました。ソニー WF-C710Nの公式ページでは、Bluetooth標準規格Ver.5.3、NCオン最大8.5時間・NCオフ最大12時間、充電時間約1.5時間を確認しました。'}
+  officialLinks={[{label: 'Soundcore Liberty 4 NC 公式商品ページ', href: leftOfficial}, {label: 'WF-C710N 公式商品ページ', href: rightOfficial}]}
+  socialProofQuery={'Soundcore Liberty 4 NC WF-C710N'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'Soundcore Liberty 4 NC'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'ソニー WF-C710N'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[{label: 'Soundcore Liberty 4 NC 公式商品ページ', href: leftOfficial, checkedAt: '2026-08-29'}, {label: 'ソニー WF-C710N 公式商品ページ', href: rightOfficial, checkedAt: '2026-08-29'}]}
+  purchaseWarning={'再生時間はノイズキャンセリングの設定や測定条件で変わります。価格・在庫・送料・ポイントは購入時点の販売ページで確認してください。'}
+  disclaimer={'この比較は、各メーカー公式ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。'}
+/>
