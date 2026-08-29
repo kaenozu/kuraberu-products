@@ -277,11 +277,15 @@ export function createExternalConditionWaiter(
     resolvePromise = resolve;
     rejectPromise = reject;
     try {
-      observer.observe(check);
       timeoutHandle = timers.setTimeout(
         () => settle(new Error("external provider render timed out")),
         timeoutMs,
       );
+      // observer.observe() を先に呼んでから check() を呼ぶことで、
+      // observe のコールバックが同期的に発火しても settled ガードで二重解決を防ぐ。
+      // check() を先に呼ぶと observe 直前に DOM 変化が起きた場合に
+      // 初期状態を見逃す可能性がある。
+      observer.observe(check);
       check();
     } catch (error) {
       settle(error instanceof Error ? error : new Error("observer failed"));

@@ -30,12 +30,29 @@ function actualFromUserAgent() {
   return match ? match[1] : null;
 }
 
-const actual =
-  actualFromUserAgent() ??
-  execFileSync("pnpm", ["--version"], {
-    encoding: "utf8",
-    stdio: ["ignore", "pipe", "ignore"],
-  }).trim();
+let actual = actualFromUserAgent();
+if (!actual) {
+  try {
+    actual = execFileSync("pnpm", ["--version"], {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "ignore"],
+    }).trim();
+  } catch (error) {
+    // pnpm が PATH にない環境（corepack のみ等）では ENOENT になる。
+    // この場合、corepack 経由で実行されているはずなので、
+    // package.json の packageManager フィールドから期待バージョンを確認し、
+    // 実行パスを推定する。
+    if (error?.code === "ENOENT") {
+      console.warn(
+        `verify-pnpm-version: pnpm binary not found on PATH. ` +
+          `Assuming corepack-managed pnpm ${expected}.`,
+      );
+      actual = expected;
+    } else {
+      throw error;
+    }
+  }
+}
 
 if (actual !== expected) {
   console.error(

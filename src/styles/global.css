@@ -1150,6 +1150,7 @@ a {
 .purchase-card {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 0.9rem;
   padding: 1.25rem;
   background: var(--surface, #fff);
