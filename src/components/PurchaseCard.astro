@@ -26,7 +26,7 @@ interface Props {
    * 未指定（undefined）は検証状態不明として扱い、unverified 同等の
    * 「購入先の確認中です」メッセージを出す（CTA は非表示）。
    */
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
+  purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
 
 const {
@@ -44,7 +44,7 @@ const {
 } = Astro.props;
 
 // fail-closed: 明示的に verified のときだけ CTA を出す。undefined は「確認中」扱い。
-const isVerified = purchaseLinkStatus === "verified";
+const isVerified = purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
 const amazonSearchUrl = toAmazonAssociateSearchUrl(
   name,
   import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG,

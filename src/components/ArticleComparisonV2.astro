@@ -30,7 +30,7 @@ interface Props {
   /** 「この一覧以外は両商品とも同じ」の注記（VisualKeyDifferences の commonNote へ渡す） */
   commonNote?: string;
   /** 購入リンクの検証状態。verified を明示した場合だけ CTA を表示する。 */
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
+  purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
 
 const { left, right, rows, checkedAt, diagnosisHref, commonNote, purchaseLinkStatus } = Astro.props;

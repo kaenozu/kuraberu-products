@@ -306,11 +306,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-eh-ne7m-vs-eh-ne5m:left": {
     name: "パナソニック EH-NE7M",
-    purchaseUrl: "https://a.r10.to/h8tr3m",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-ne7m-w/",
   },
   "panasonic-eh-ne7m-vs-eh-ne5m:right": {
     name: "パナソニック EH-NE5M",
-    purchaseUrl: "https://a.r10.to/hPEiKo",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-ne5m-w/",
   },
   "panasonic-mc-nx810km-vs-mc-nx700k:left": {
     name: "パナソニック MC-NX810KM",

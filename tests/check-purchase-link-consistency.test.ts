@@ -246,9 +246,9 @@ describe("purchase link consistency gate (registry keys)", () => {
   it("keeps NextStepBlock purchase CTA fail-closed when status is omitted", () => {
     const source = readFileSync("src/components/NextStepBlock.astro", "utf8");
     expect(source).toContain(
-      'purchaseLinkStatus: "verified" | "unverified" | "unavailable"',
+      'purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable"',
     );
-    expect(source).toContain("purchaseLinkStatus === 'verified' ?");
+    expect(source).toContain("purchaseLinkStatus === 'verified' || purchaseLinkStatus === 'direct' ?");
     expect(source).toContain("販売先を確認中です");
     expect(source.match(/販売先を確認中です/g)).toHaveLength(1);
   });

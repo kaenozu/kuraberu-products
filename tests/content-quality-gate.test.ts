@@ -107,12 +107,12 @@ describe("公開記事コンテンツ品質ゲート", () => {
       "utf8",
     );
     expect(componentSource).toMatch(
-      /isVerified\s*=\s*purchaseLinkStatus\s*===\s*["']verified["']/,
+      /isVerified\s*=\s*purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
     );
     // 旧fail-open実装（undefined を verified 扱いにする OR 節）の再混入を禁止
     expect(componentSource).not.toMatch(
       /purchaseLinkStatus\s*!==?\s*["'](?:unverified|unavailable)["']\s*&&/,
     );
-    expect(componentSource).not.toMatch(/===\s*["']verified["']\s*\|\|/);
+
   });
 });
