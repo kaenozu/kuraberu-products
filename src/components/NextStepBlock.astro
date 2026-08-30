@@ -51,52 +51,50 @@ const buyRel = (affiliate: boolean) =>
     <p class="section-label">次にすること</p>
     <h2 id="next-step">迷ったら、ここから決める</h2>
   </div>
-  <div class="next-step__grid">
-    {purchaseLinkStatus === 'verified' && leftHref ? (
-      <a
-        class="next-step__buy next-step__buy--left"
-        href={leftHref}
-        target="_blank"
-        rel={buyRel(leftAffiliate)}
-        data-cta-event={ARTICLE_LAYOUT.ctaEvent}
-        data-placement="next-step"
-        data-product-id={left.productId}
-      >
-        {leftImage && <Picture class="next-step__buy-image" src={leftImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />}
-        <span class="next-step__buy-name">{left.label}</span>
-        <span class="next-step__buy-action">
-          販売ページを見る
-          {leftAffiliate && <span class="ad-note">（広告）</span>}
-        </span>
-      </a>
-    ) : (
-      <span class="next-step__buy next-step__buy--missing">
-        購入先の確認中です
-      </span>
-    )}
-    {purchaseLinkStatus === 'verified' && rightHref ? (
-      <a
-        class="next-step__buy next-step__buy--right"
-        href={rightHref}
-        target="_blank"
-        rel={buyRel(rightAffiliate)}
-        data-cta-event={ARTICLE_LAYOUT.ctaEvent}
-        data-placement="next-step"
-        data-product-id={right.productId}
-      >
-        {rightImage && <Picture class="next-step__buy-image" src={rightImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />}
-        <span class="next-step__buy-name">{right.label}</span>
-        <span class="next-step__buy-action">
-          販売ページを見る
-          {rightAffiliate && <span class="ad-note">（広告）</span>}
-        </span>
-      </a>
-    ) : (
-      <span class="next-step__buy next-step__buy--missing">
-        購入先の確認中です
-      </span>
-    )}
-  </div>
+  {purchaseLinkStatus === 'verified' ? (
+    <div class="next-step__grid">
+      {leftHref ? (
+        <a
+          class="next-step__buy next-step__buy--left"
+          href={leftHref}
+          target="_blank"
+          rel={buyRel(leftAffiliate)}
+          data-cta-event={ARTICLE_LAYOUT.ctaEvent}
+          data-placement="next-step"
+          data-product-id={left.productId}
+        >
+          {leftImage && <Picture class="next-step__buy-image" src={leftImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />}
+          <span class="next-step__buy-name">{left.label}</span>
+          <span class="next-step__buy-action">
+            販売ページを見る
+            {leftAffiliate && <span class="ad-note">（広告）</span>}
+          </span>
+        </a>
+      ) : null}
+      {rightHref ? (
+        <a
+          class="next-step__buy next-step__buy--right"
+          href={rightHref}
+          target="_blank"
+          rel={buyRel(rightAffiliate)}
+          data-cta-event={ARTICLE_LAYOUT.ctaEvent}
+          data-placement="next-step"
+          data-product-id={right.productId}
+        >
+          {rightImage && <Picture class="next-step__buy-image" src={rightImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />}
+          <span class="next-step__buy-name">{right.label}</span>
+          <span class="next-step__buy-action">
+            販売ページを見る
+            {rightAffiliate && <span class="ad-note">（広告）</span>}
+          </span>
+        </a>
+      ) : null}
+    </div>
+  ) : (
+    <p class="next-step__buy next-step__buy--missing next-step__buy--single">
+      販売先を確認中です
+    </p>
+  )}
   {diagnosisHref ? (
     <p class="next-step__diagnosis">
       まだ迷っている？
