@@ -370,11 +370,11 @@ export const articlePurchaseLinks = {
   },
   "sharp-kc-s50-vs-fu-s50:left": {
     name: "シャープ KC-S50",
-    purchaseUrl: "https://a.r10.to/hgZ0mc",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4974019761503/",
   },
   "sharp-kc-s50-vs-fu-s50:right": {
     name: "シャープ FU-S50",
-    purchaseUrl: "https://a.r10.to/hPyHPd",
+    purchaseUrl: "https://item.rakuten.co.jp/a-price/2980000205750/",
   },
   "panasonic-f-px60c-vs-f-px70c:left": {
     name: "パナソニック F-PX60C",
