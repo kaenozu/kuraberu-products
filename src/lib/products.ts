@@ -314,11 +314,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-mc-nx810km-vs-mc-nx700k:left": {
     name: "パナソニック MC-NX810KM",
-    purchaseUrl: "https://a.r10.to/hPxF2V",
+    purchaseUrl: "https://item.rakuten.co.jp/akindo/mc-nx810km-w/",
   },
   "panasonic-mc-nx810km-vs-mc-nx700k:right": {
     name: "パナソニック MC-NX700K",
-    purchaseUrl: "https://a.r10.to/hgb52S",
+    purchaseUrl: "https://item.rakuten.co.jp/akindo/mc-nx700k-w/",
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
