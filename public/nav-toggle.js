@@ -24,11 +24,9 @@
   var syncByWidth = function () {
     details.open = mq.matches;
   };
-  if (typeof mq.addEventListener === "function") {
-    mq.addEventListener("change", syncByWidth);
-  } else if (typeof mq.addListener === "function") {
-    mq.addListener(syncByWidth);
-  }
+  // addEventListener は MediaQueryList で Safari 14+(2020)以降対応のため
+  // 旧 addListener フォールバックは撤去した。
+  mq.addEventListener("change", syncByWidth);
   // 初期同期。open 変更は上の toggle リスナー経由でラベルも連動する。
   syncByWidth();
 })();
