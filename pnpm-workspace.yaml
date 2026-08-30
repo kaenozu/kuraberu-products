@@ -11,8 +11,12 @@ onlyBuiltDependencies:
 # 推移依存を修正版へ固定する（package.json の pnpm.overrides からこの場所へ一本化した）。
 # cookie: <0.7.0のCVE-2024-47764を回避（youch→miniflare→wrangler経由で引き込まれる）。
 # js-yaml / sharp: 推移依存の解決を固定。
+# fast-uri: <3.1.5のGHSA-7p8r-x3mc-p8w7を回避（@astrojs/check→@astrojs/language-server→
+#   volar-service-yaml→yaml-language-server→ajv経由で引き込まれる。astro check 等
+#   開発時ツールチェーンのみで本番バンドルには含まれない）。
 # それぞれ override なしでも全依存経路が修正版以上へ解決すると確認できたら削除する。
 overrides:
   cookie: 2.0.1
   js-yaml: 4.3.1
-  sharp: 0.35.3
+  sharp: 0.35.4
+  fast-uri: 3.1.6
