@@ -113,6 +113,5 @@ describe("公開記事コンテンツ品質ゲート", () => {
     expect(componentSource).not.toMatch(
       /purchaseLinkStatus\s*!==?\s*["'](?:unverified|unavailable)["']\s*&&/,
     );
-
   });
 });
