@@ -38,23 +38,23 @@
     "verify:build": "astro build && node scripts/report-css-usage.mjs --fail-on-unused && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/check-article-factual-integrity.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check"
   },
   "dependencies": {
-    "astro": "7.2.4",
-    "typescript": "5.9.3"
+    "astro": "7.2.9",
+    "typescript": "6.0.3"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@playwright/test": "^1.62.1",
-    "@typescript-eslint/parser": "8.67.0",
+    "@typescript-eslint/parser": "8.68.0",
     "@vitest/coverage-v8": "4.1.11",
     "cookie": "2.0.1",
-    "eslint": "10.8.1",
+    "eslint": "10.9.1",
     "eslint-plugin-astro": "3.1.0",
     "prettier": "3.9.6",
     "serve": "^14.2.6",
-    "sharp": "0.35.3",
-    "typescript-eslint": "8.67.0",
+    "sharp": "0.35.4",
+    "typescript-eslint": "8.68.0",
     "vitest": "4.1.11",
-    "wrangler": "^4.123.0",
+    "wrangler": "^4.127.1",
     "yaml": "^2.9.0"
   }
 }
