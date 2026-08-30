@@ -248,10 +248,9 @@ describe("purchase link consistency gate (registry keys)", () => {
     expect(source).toContain(
       'purchaseLinkStatus: "verified" | "unverified" | "unavailable"',
     );
-    expect(source).toContain("purchaseLinkStatus === 'verified' && leftHref");
-    expect(source).toContain("purchaseLinkStatus === 'verified' && rightHref");
-    expect(source).not.toContain("purchaseLinkStatus !== 'unverified'");
-    expect(source).not.toContain("purchaseLinkStatus !== 'unavailable'");
+    expect(source).toContain("purchaseLinkStatus === 'verified' ?");
+    expect(source).toContain("販売先を確認中です");
+    expect(source.match(/販売先を確認中です/g)).toHaveLength(1);
   });
 
   it("audits purchaseLinkStatus values from the article metadata", () => {
