@@ -348,7 +348,7 @@ const TEMPLATE_TOKEN_PATTERNS = [
 function stripScriptAndStyleContents(html) {
   return html.replace(
     /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,
-    (match, tagName) => `<${tagName}></${tagName}>`,
+    (_match, tagName) => `<${tagName}></${tagName}>`,
   );
 }
 
