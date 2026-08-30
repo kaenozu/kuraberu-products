@@ -19,17 +19,17 @@ export const panasonicMcNx810kmVsMcNx700kArticle = defineArticleMetadata({
   summary:
     "MC-NX810KMとMC-NX700Kを、パナソニック公式の集じん方式・使用時間・質量・寸法・ノズル機能に分けて比較します。",
   publishedAt: "2026-08-24",
-  modifiedAt: "2026-08-24",
+  modifiedAt: "2026-08-31",
   productInfoCheckedAt: "2026-08-24",
-  purchaseLinksCheckedAt: "2026-08-24",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-31",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/panasonic-mc-nx810km.jpg",
   aboutProductNames: ["パナソニック MC-NX810KM", "パナソニック MC-NX700K"],
   changeLog: [
     {
-      date: "2026-08-24",
+      date: "2026-08-31",
       summary:
-        "パナソニック公式の仕様ページで両機種の仕様・画像を確認し、楽天公式UIで生成した短縮リンクを追加。",
+        "公式仕様ページで型番を再確認。楽天検索へ遷移していた短縮リンクを、商品名・型番・ショップが一致するHTTP 200の商品単体ページへ置き換え。",
     },
   ],
 });
