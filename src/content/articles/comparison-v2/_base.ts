@@ -54,7 +54,8 @@ export interface ComparisonV2Entry {
   /** モノリスメタデータの productInfoCheckedAt */
   readonly checkedAt?: string;
   /** モノリスメタデータの purchaseLinkStatus */
-  readonly purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
+  readonly purchaseLinkStatus:
+    "verified" | "direct" | "unverified" | "unavailable";
 }
 
 const purchaseLinkIndex = new Map<string, ArticlePurchaseLink>(
