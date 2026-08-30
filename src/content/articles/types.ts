@@ -53,7 +53,7 @@ export type ArticleMetadataBase = {
   modifiedAt: string;
   productInfoCheckedAt?: string;
   purchaseLinksCheckedAt?: string;
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
+  purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
   changeLog: readonly ArticleChangeLogEntry[];
   imagePath?: `/${string}`;
   /**

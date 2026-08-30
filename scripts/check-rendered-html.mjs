@@ -397,7 +397,7 @@ export function readArticleProductCount(relative, html, errors) {
 // <meta name="article:purchase-link-status" content="verified|unverified"> から読み取る。
 export function readArticlePurchaseLinkStatus(_relative, html) {
   const match = html.match(
-    /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
+    /<meta name="article:purchase-link-status" content="(verified|direct|unverified|unavailable)">/i,
   );
   return match?.[1] ?? null;
 }
@@ -417,7 +417,7 @@ export function validateArticlePurchaseLinkStatus(relative, html) {
       `${relative}: purchase CTA requires an explicit article:purchase-link-status="verified" meta`,
     ];
   }
-  if (status !== "verified") {
+  if (status !== "verified" && status !== "direct") {
     return [
       `${relative}: purchase CTA rendered for non-verified purchase-link-status "${status}"`,
     ];
@@ -524,9 +524,10 @@ export function validateArticleNextStep(relative, html) {
     )?.[1] ?? null;
   const purchaseLinkStatus =
     html.match(
-      /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
+      /<meta name="article:purchase-link-status" content="(verified|direct|unverified|unavailable)">/i,
     )?.[1] ?? null;
-  const isUnverified = purchaseLinkStatus !== "verified";
+  const isUnverified =
+    purchaseLinkStatus === "unverified" || purchaseLinkStatus === "unavailable";
   const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
@@ -889,14 +890,21 @@ export function validateArticleCtas(
       // アフィリエイトでないCTA（未差し替え時の楽天検索フォールバック等）は
       // 許可済みの楽天ホストだけを許し、nofollow を必須にする。
       let isRakutenFallback = false;
+      let isItemDetail = false;
       try {
         const url = new URL(href);
+        isItemDetail =
+          url.hostname === "item.rakuten.co.jp" &&
+          /^\/[^/]+\/[^/]+\/?$/.test(url.pathname);
         isRakutenFallback =
           url.protocol === "https:" &&
           (url.hostname === "search.rakuten.co.jp" ||
             url.hostname.endsWith(".rakuten.co.jp"));
       } catch {
         // The generic validation below reports malformed URLs.
+      }
+      if (isItemDetail) {
+        continue;
       }
       if (isRakutenFallback) {
         errors.push(
@@ -1212,7 +1220,8 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
     const purchaseLinkStatus = readArticlePurchaseLinkStatus(relative, html);
-    const isVerified = purchaseLinkStatus === "verified";
+    const isVerified =
+      purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));

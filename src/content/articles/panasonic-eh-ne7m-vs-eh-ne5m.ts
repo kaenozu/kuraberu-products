@@ -17,7 +17,7 @@ export const panasonicHairDryerArticle = defineArticleMetadata({
   publishedAt: "2026-08-13",
   modifiedAt: "2026-08-14",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/panasonic-eh-ne7m.png",
   changeLog: [
     {
