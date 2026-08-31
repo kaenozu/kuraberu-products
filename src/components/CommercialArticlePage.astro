@@ -46,13 +46,10 @@ const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchase
 const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
 const isVerifiedPurchaseUrl = (value: string | undefined) => {
   if (!value) return false;
-  if (isRakutenProductDetailUrl(value)) return true;
-  if (!isAffiliateRakutenUrl(value)) return false;
-  try {
-    return isRakutenProductDetailUrl(new URL(value).searchParams.get('pc') ?? '');
-  } catch {
-    return false;
-  }
+  // a.r10.to is a complete Rakuten affiliate URL whose destination is
+  // validated separately in the queue evidence; it has no `pc` parameter.
+  if (isAffiliateRakutenUrl(value)) return true;
+  return isRakutenProductDetailUrl(value);
 };
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
