@@ -136,6 +136,14 @@ export const articlePurchaseLinks = {
     name: "ReFa BEAUTECH DRYER",
     purchaseUrl: "https://item.rakuten.co.jp/mtgec-beauty/2009320101/",
   },
+  "panasonic-eh-na0k-vs-eh-ne9n:left": {
+    name: "パナソニック EH-NA0K-K",
+    purchaseUrl: "https://a.r10.to/hk0qJc",
+  },
+  "panasonic-eh-na0k-vs-eh-ne9n:right": {
+    name: "パナソニック EH-NE9N-W",
+    purchaseUrl: "https://a.r10.to/h5SMmD",
+  },
   "recolte-automatic-cooker-vs-panasonic-nf-pc400:left": {
     name: "レコルト 自動調理ポット RSY-2",
     purchaseUrl: "https://item.rakuten.co.jp/plywood/20149238/",
