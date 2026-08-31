@@ -101,17 +101,15 @@ describe("公開記事コンテンツ品質ゲート", () => {
     }
   });
 
-  it("PurchaseCardコンポーネントがfail-closed実装であること", () => {
+  it("PurchaseCardコンポーネントがhref存在時にCTAを表示すること", () => {
     const componentSource = readFileSync(
       join(root, "src/components/PurchaseCard.astro"),
       "utf8",
     );
-    expect(componentSource).toMatch(
-      /isVerified\s*=\s*purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
-    );
-    // 旧fail-open実装（undefined を verified 扱いにする OR 節）の再混入を禁止
+    expect(componentSource).toMatch(/hasHref\s*=\s*Boolean\(href\)/);
+    expect(componentSource).toMatch(/\{hasHref\s*\?\s*\(/);
     expect(componentSource).not.toMatch(
-      /purchaseLinkStatus\s*!==?\s*["'](?:unverified|unavailable)["']\s*&&/,
+      /purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
     );
   });
 });

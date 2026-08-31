@@ -380,7 +380,7 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <h2>購入時の注意</h2>
     <p>{purchaseWarning}</p>
     <div class="purchase-cards">
-      {articleMetadata.purchaseLinkStatus === 'verified' || articleMetadata.purchaseLinkStatus === 'direct' ? (
+      {(left.purchaseHref || right.purchaseHref) ? (
         <>
           <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />
           <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />

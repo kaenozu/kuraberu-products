@@ -35,7 +35,7 @@ interface Props {
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
 
-const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
+const {left, right, diagnosisHref} = Astro.props;
 const leftImage = resolveImage(left.image);
 const rightImage = resolveImage(right.image);
 const leftHref = isRakutenProductDetailUrl(left.href) || isAffiliateRakutenUrl(left.href) ? toAffiliateRakutenUrl(left.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT) : undefined;
@@ -51,7 +51,7 @@ const buyRel = (affiliate: boolean) =>
     <p class="section-label">次にすること</p>
     <h2 id="next-step">迷ったら、ここから決める</h2>
   </div>
-  {purchaseLinkStatus === 'verified' || purchaseLinkStatus === 'direct' ? (
+  {(leftHref || rightHref) ? (
     <div class="next-step__grid">
       {leftHref ? (
         <a

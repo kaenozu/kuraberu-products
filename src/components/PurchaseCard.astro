@@ -22,9 +22,8 @@ interface Props {
   requiredTerms?: readonly string[];
   imageUrl?: string;
   /**
-   * 購入リンクの検証状態。fail-closed 契約: verified のときだけ CTA を表示する。
-   * 未指定（undefined）は検証状態不明として扱い、unverified 同等の
-   * 「購入先の確認中です」メッセージを出す（CTA は非表示）。
+   * 購入リンクの表示判定。href が存在すれば CTA を表示する。
+   * AffiliateButton 側で URL の妥当性を検証する。
    */
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
@@ -40,11 +39,9 @@ const {
   searchQuery,
   requiredTerms,
   imageUrl,
-  purchaseLinkStatus,
 } = Astro.props;
 
-// fail-closed: 明示的に verified のときだけ CTA を出す。undefined は「確認中」扱い。
-const isVerified = purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
+const hasHref = Boolean(href);
 const amazonSearchUrl = toAmazonAssociateSearchUrl(
   name,
   import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG,
@@ -66,7 +63,7 @@ const resolvedImage = resolveImage(imagePath);
       <p class="purchase-card__audience">{audience}</p>
     </div>
   </div>
-  {isVerified ? (
+  {hasHref ? (
     <>
       <AffiliateButton
         href={href}
