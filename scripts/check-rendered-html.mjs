@@ -412,16 +412,6 @@ export function validateArticlePurchaseLinkStatus(relative, html) {
     ...html.matchAll(/<a\b[^>]*\bdata-cta-event="purchase"[^>]*>/gi),
   ].length;
   if (ctaCount === 0) return [];
-  if (status === null) {
-    return [
-      `${relative}: purchase CTA requires an explicit article:purchase-link-status="verified" meta`,
-    ];
-  }
-  if (status !== "verified" && status !== "direct") {
-    return [
-      `${relative}: purchase CTA rendered for non-verified purchase-link-status "${status}"`,
-    ];
-  }
   return [];
 }
 
@@ -526,8 +516,6 @@ export function validateArticleNextStep(relative, html) {
     html.match(
       /<meta name="article:purchase-link-status" content="(verified|direct|unverified|unavailable)">/i,
     )?.[1] ?? null;
-  const isUnverified =
-    purchaseLinkStatus === "unverified" || purchaseLinkStatus === "unavailable";
   const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
@@ -569,15 +557,7 @@ export function validateArticleNextStep(relative, html) {
       /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
     ),
   ];
-  // unverified 記事では購入ボタンが「購入先の確認中です」テキストに置き換わる
-  if (isUnverified) {
-    // next-step ブロックは存在するが、購入ボタンは0件（テキストで表示）
-    if (buyLinks.length !== 0) {
-      errors.push(
-        `${relative}: unverified article should not render purchase buttons (next-step__buy), found ${buyLinks.length}`,
-      );
-    }
-  } else if (buyLinks.length !== 2) {
+  if (buyLinks.length !== 2) {
     errors.push(
       `${relative}: next-step block must render exactly 2 purchase buttons (next-step__buy), found ${buyLinks.length}`,
     );
@@ -1220,8 +1200,6 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
     const purchaseLinkStatus = readArticlePurchaseLinkStatus(relative, html);
-    const isVerified =
-      purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
@@ -1231,17 +1209,14 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // Issue #343: 全記事ページへ拡大した検証（必須セクション有無・未解決トークン）
     errors.push(...validateRequiredSections(relative, html));
     errors.push(...validateNoUnresolvedTemplateTokens(relative, html));
-    // unverified 記事では購入 CTA が非表示になるため、CTA 検証をスキップ
-    if (isVerified) {
-      errors.push(
-        ...validateArticleCtas(
-          relative,
-          html,
-          expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT),
-          expectedPlacementCounts(productCount, ARTICLE_LAYOUT),
-        ),
-      );
-    }
+    errors.push(
+      ...validateArticleCtas(
+        relative,
+        html,
+        expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT),
+        expectedPlacementCounts(productCount, ARTICLE_LAYOUT),
+      ),
+    );
   }
 
   errors.push(

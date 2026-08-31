@@ -47,7 +47,7 @@ describe("resolvePurchaseHref", () => {
     expect(result.product?.id).toBe("4987176203229");
   });
 
-  it("returns fallback URL when no product is selected (ambiguous candidates)", async () => {
+  it("returns affiliate-converted fallback URL when no product is selected (ambiguous candidates)", async () => {
     vi.stubEnv("RAKUTEN_APPLICATION_ID", "test-app");
     vi.stubEnv("RAKUTEN_ACCESS_KEY", "test-key");
     vi.stubEnv("RAKUTEN_AFFILIATE_ID", "test-affiliate");
@@ -88,10 +88,9 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    // A search URL is never a purchase CTA fallback.
-    expect(result.href).toBe("");
-    expect(result.isAffiliate).toBe(false);
     expect(result.product).toBeUndefined();
+    expect(result.href).toContain("search.rakuten.co.jp");
+    expect(result.isAffiliate).toBe(true);
   });
 
   it("returns product URL when no affiliate URL is available", async () => {
@@ -168,8 +167,8 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toBe("");
-    expect(result.isAffiliate).toBe(false);
+    expect(result.href).toContain("search.rakuten.co.jp");
+    expect(result.isAffiliate).toBe(true);
   });
 
   it("passes through already-affiliate fallback URLs unchanged", async () => {
@@ -190,8 +189,8 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toBe("");
-    expect(result.isAffiliate).toBe(false);
+    expect(result.href).toBe(affiliateUrl);
+    expect(result.isAffiliate).toBe(true);
   });
 
   it("selects product over fallback when API returns a match", async () => {

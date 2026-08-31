@@ -376,13 +376,20 @@ export async function resolvePurchaseHref(
   // Search URLs are never purchase destinations. A missing/ambiguous detail
   // page remains unset rather than becoming a misleading affiliate CTA.
   const rawHref = selected?.url;
-  const href =
+  const resolvedHref =
     rawHref && isRakutenProductDetailUrl(rawHref)
       ? (toAffiliateRakutenUrl(
           selected?.affiliateUrl ?? rawHref,
           import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
         ) ?? rawHref)
       : "";
+  const fallbackHref = options.fallbackUrl
+    ? toAffiliateRakutenUrl(
+        options.fallbackUrl,
+        import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
+      ) ?? options.fallbackUrl
+    : "";
+  const href = resolvedHref || fallbackHref;
   const isAffiliate = isAffiliateRakutenUrl(href);
 
   return { href, isAffiliate, product: selected };

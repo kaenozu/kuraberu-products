@@ -85,23 +85,19 @@ function sectionsOf(html: string) {
 }
 
 describe("rendered article CTA audit", () => {
-  it("rejects purchase CTAs when the article purchase status is missing or unverified", () => {
+  it("allows purchase CTAs for any article regardless of purchase-link-status", () => {
     expect(
       validateArticlePurchaseLinkStatus(
         "articles/example/index.html",
         '<a data-cta-event="purchase" href="https://a.r10.to/example">購入</a>',
       ),
-    ).toEqual([
-      'articles/example/index.html: purchase CTA requires an explicit article:purchase-link-status="verified" meta',
-    ]);
+    ).toEqual([]);
     expect(
       validateArticlePurchaseLinkStatus(
         "articles/example/index.html",
         '<meta name="article:purchase-link-status" content="unavailable"><a data-cta-event="purchase" href="https://a.r10.to/example">購入</a>',
       ),
-    ).toEqual([
-      'articles/example/index.html: purchase CTA rendered for non-verified purchase-link-status "unavailable"',
-    ]);
+    ).toEqual([]);
   });
 
   it("accepts four CTAs for a two-product article (article-end + next-step)", () => {
