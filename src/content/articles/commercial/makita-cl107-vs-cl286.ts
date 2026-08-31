@@ -19,9 +19,10 @@ export const makitaCl107VsCl286Seed: CommercialArticleSeed = {
   rightProduct: "マキタ CL286FD",
   leftPoint: "10.8V・BL1015・質量1.1kgの軽さと紙パック式を重視する人向け",
   rightPoint: "18V・サイクロン一体式・質量1.7kgの構成を重視する人向け",
-  productInfoCheckedAt: "2026-08-23",
-  modifiedAt: "2026-08-23",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-08-31",
+  modifiedAt: "2026-08-31",
+  purchaseLinksCheckedAt: "2026-08-31",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "マキタ CL107FDSHW 公式商品ページ",

@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "makita-cl107-vs-cl286:left": {
+    name: "マキタ CL107FDSHW",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/0088381346009/",
+  },
+  "makita-cl107-vs-cl286:right": {
+    name: "マキタ CL286FD",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/0088381781572/",
+  },
   "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:left": {
     name: "Soundcore Liberty 4 NC",
     purchaseUrl: "https://a.r10.to/hF7iGR",
