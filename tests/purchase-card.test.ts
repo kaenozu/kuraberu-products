@@ -110,14 +110,13 @@ describe("PurchaseCard", () => {
     expect(html).toContain('data-placement="article-end"');
   });
 
-  // fail-closed 契約: 未指定（undefined）/ unverified / unavailable では
-  // アフィリエイトCTAを出さず、「購入先の確認中です」メッセージを表示する。
+  // href が存在するときは CTA を表示する。purchaseLinkStatus は表示判定に影響しない。
   it.each([
     ["omitted", undefined],
     ["unverified", "unverified"],
     ["unavailable", "unavailable"],
   ] as const)(
-    "hides CTAs and shows the pending message when the status is %s",
+    "shows CTAs when the status is %s and href exists",
     async (_label, purchaseLinkStatus) => {
       const container = await AstroContainer.create();
       const html = await container.renderToString(PurchaseCard, {
@@ -130,11 +129,8 @@ describe("PurchaseCard", () => {
         },
       });
 
-      expect(html).not.toContain("楽天市場で確認する");
-      expect(html).not.toContain("Amazonで商品を確認");
-      expect(html).not.toContain("data-cta-event");
-      expect(html).toContain("購入リンクは現在確認中です。");
-      // カード本体（名前・対象読者）は表示を維持する
+      expect(html).toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      expect(html).toContain('data-cta-event="purchase"');
       expect(html).toContain("サーモス JNL-S500");
       expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
     },

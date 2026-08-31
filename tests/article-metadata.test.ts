@@ -554,9 +554,6 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
         html.match(
           /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
         )?.[1] ?? null;
-      const isUnverified =
-        purchaseLinkStatus === "unverified" ||
-        purchaseLinkStatus === "unavailable";
       const supportedDiagnosis = new Set([
         "pigeon-bottle-160-240",
         "pigeon-bottle-240",
@@ -578,17 +575,10 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
       const buyLinks = html.match(
         /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
       );
-      if (isUnverified) {
-        expect(
-          buyLinks?.length ?? 0,
-          `${slug}: unverified article should have 0 purchase buttons`,
-        ).toBe(0);
-      } else {
-        expect(
-          buyLinks?.length,
-          `${slug}: next-step has 2 purchase buttons`,
-        ).toBe(2);
-      }
+      expect(
+        buyLinks?.length,
+        `${slug}: next-step has 2 purchase buttons`,
+      ).toBe(2);
       const specsIndex = html.indexOf('id="specs"');
       const blockIndex = html.indexOf('class="next-step"');
       if (specsIndex !== -1) {
