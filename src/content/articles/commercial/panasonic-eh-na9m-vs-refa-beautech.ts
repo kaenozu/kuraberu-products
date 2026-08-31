@@ -18,8 +18,9 @@ export const panasonicEhNa9mVsRefaBeautechSeed: CommercialArticleSeed = {
   leftPoint: "複数のケアモードと風量を確認したい人向け",
   rightPoint: "温度管理やサロン系の仕上がりを確認したい人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-01",
+  purchaseLinksCheckedAt: "2026-09-01",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "パナソニック EH-NA9M 公式仕様ページ",

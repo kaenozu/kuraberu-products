@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-eh-na9m-vs-refa-beautech:left": {
+    name: "パナソニック ナノケア EH-NA9M-H",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-na9m-h/",
+  },
+  "panasonic-eh-na9m-vs-refa-beautech:right": {
+    name: "ReFa BEAUTECH DRYER",
+    purchaseUrl: "https://item.rakuten.co.jp/mtgec-beauty/2009320101/",
+  },
   "recolte-automatic-cooker-vs-panasonic-nf-pc400:left": {
     name: "レコルト 自動調理ポット RSY-2",
     purchaseUrl: "https://item.rakuten.co.jp/plywood/20149238/",
