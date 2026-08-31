@@ -206,6 +206,14 @@ export const articlePurchaseLinks = {
     purchaseUrl:
       "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm550mgr%2F&link_type=picttext",
   },
+  "logicool-zone-vibe-100-vs-zone-300:left": {
+    name: "Logicool Zone Vibe 100 Wireless (Zonev100GR)",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/zonev100gr/",
+  },
+  "logicool-zone-vibe-100-vs-zone-300:right": {
+    name: "Logicool Zone 300 Wireless (Zone300MBK)",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/zone300mbk/",
+  },
   "babybjorn-bouncer:left": {
     name: "ベビービョルン Bliss",
     purchaseUrl:
