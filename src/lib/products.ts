@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-eh-na9m-vs-refa-beautech:left": {
+    name: "パナソニック ナノケア EH-NA9M-H",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-na9m-h/",
+  },
+  "panasonic-eh-na9m-vs-refa-beautech:right": {
+    name: "ReFa BEAUTECH DRYER",
+    purchaseUrl: "https://item.rakuten.co.jp/mtgec-beauty/2009320101/",
+  },
   "panasonic-eh-na0k-vs-eh-ne9n:left": {
     name: "パナソニック EH-NA0K-K",
     purchaseUrl: "https://a.r10.to/hk0qJc",
