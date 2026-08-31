@@ -21,9 +21,9 @@ export const panasonicEsWp9bVsEsWg0bSeed: CommercialArticleSeed = {
   rightProduct: "パナソニック スムースエピ ES-WG0B",
   leftPoint: "4種アタッチメントと2モード、約390gを重視する人向け",
   rightPoint: "3モードとワイドアタッチメント、据え置き型の構成を重視する人向け",
-  productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-08-31",
+  modifiedAt: "2026-08-31",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "パナソニック スムースエピ ES-WP9B 公式商品ページ",

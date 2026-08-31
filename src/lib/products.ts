@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-es-wp9b-vs-es-wg0b:left": {
+    name: "パナソニック スムースエピ ES-WP9B",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980882580/",
+  },
+  "panasonic-es-wp9b-vs-es-wg0b:right": {
+    name: "パナソニック スムースエピ ES-WG0B",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980872321/",
+  },
   "makita-cl107-vs-cl286:left": {
     name: "マキタ CL107FDSHW",
     purchaseUrl: "https://item.rakuten.co.jp/biccamera/0088381346009/",
