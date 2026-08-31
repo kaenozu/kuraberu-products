@@ -550,10 +550,6 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
       const diagnosisLink = html.match(
         /<a class="next-step__diagnosis-link" href="([^"]+)"/,
       );
-      const purchaseLinkStatus =
-        html.match(
-          /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
-        )?.[1] ?? null;
       const supportedDiagnosis = new Set([
         "pigeon-bottle-160-240",
         "pigeon-bottle-240",

@@ -407,7 +407,6 @@ export function readArticlePurchaseLinkStatus(_relative, html) {
 // 新しい記事や手書きページから公開されるため、CTAがある場合は fail-closed にする。
 export function validateArticlePurchaseLinkStatus(relative, html) {
   if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
-  const status = readArticlePurchaseLinkStatus(relative, html);
   const ctaCount = [
     ...html.matchAll(/<a\b[^>]*\bdata-cta-event="purchase"[^>]*>/gi),
   ].length;
@@ -511,10 +510,6 @@ export function validateArticleNextStep(relative, html) {
   const contentType =
     html.match(
       /<meta name="article:content-type" content="(guide|comparison)">/i,
-    )?.[1] ?? null;
-  const purchaseLinkStatus =
-    html.match(
-      /<meta name="article:purchase-link-status" content="(verified|direct|unverified|unavailable)">/i,
     )?.[1] ?? null;
   const legacyCtas = [
     ...html.matchAll(
@@ -1199,7 +1194,6 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // （meta タグ経由）と config の ctaSets から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
-    const purchaseLinkStatus = readArticlePurchaseLinkStatus(relative, html);
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));

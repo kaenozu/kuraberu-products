@@ -35,7 +35,7 @@ interface Props {
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
 
-const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
+const {left, right, diagnosisHref} = Astro.props;
 const leftImage = resolveImage(left.image);
 const rightImage = resolveImage(right.image);
 const leftHref = isRakutenProductDetailUrl(left.href) || isAffiliateRakutenUrl(left.href) ? toAffiliateRakutenUrl(left.href, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT) : undefined;
