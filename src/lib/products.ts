@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "recolte-automatic-cooker-vs-panasonic-nf-pc400:left": {
+    name: "レコルト 自動調理ポット RSY-2",
+    purchaseUrl: "https://item.rakuten.co.jp/plywood/20149238/",
+  },
+  "recolte-automatic-cooker-vs-panasonic-nf-pc400:right": {
+    name: "パナソニック NF-PC400",
+    purchaseUrl: "https://item.rakuten.co.jp/yamada-denki/6612234017/",
+  },
   "panasonic-es-wp9b-vs-es-wg0b:left": {
     name: "パナソニック スムースエピ ES-WP9B",
     purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980882580/",
