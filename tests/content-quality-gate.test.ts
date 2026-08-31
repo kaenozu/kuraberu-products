@@ -106,12 +106,8 @@ describe("公開記事コンテンツ品質ゲート", () => {
       join(root, "src/components/PurchaseCard.astro"),
       "utf8",
     );
-    expect(componentSource).toMatch(
-      /hasHref\s*=\s*Boolean\(href\)/,
-    );
-    expect(componentSource).toMatch(
-      /\{hasHref\s*\?\s*\(/,
-    );
+    expect(componentSource).toMatch(/hasHref\s*=\s*Boolean\(href\)/);
+    expect(componentSource).toMatch(/\{hasHref\s*\?\s*\(/);
     expect(componentSource).not.toMatch(
       /purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
     );

@@ -102,10 +102,7 @@ describe("article CTA layout vs metadata productCount", () => {
           blocks.length + nextStepBuyCount,
           `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout)`,
         ).toBe(
-          expectedPurchaseCtasPerArticle(
-            article.productCount,
-            ARTICLE_LAYOUT,
-          ),
+          expectedPurchaseCtasPerArticle(article.productCount, ARTICLE_LAYOUT),
         );
       }
     },

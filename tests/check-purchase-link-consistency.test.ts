@@ -248,9 +248,7 @@ describe("purchase link consistency gate (registry keys)", () => {
     expect(source).toContain(
       'purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable"',
     );
-    expect(source).toContain(
-      "(leftHref || rightHref) ?",
-    );
+    expect(source).toContain("(leftHref || rightHref) ?");
     expect(source).toContain("販売先を確認中です");
     expect(source.match(/販売先を確認中です/g)).toHaveLength(1);
   });

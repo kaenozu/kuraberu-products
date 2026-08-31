@@ -384,10 +384,10 @@ export async function resolvePurchaseHref(
         ) ?? rawHref)
       : "";
   const fallbackHref = options.fallbackUrl
-    ? toAffiliateRakutenUrl(
+    ? (toAffiliateRakutenUrl(
         options.fallbackUrl,
         import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
-      ) ?? options.fallbackUrl
+      ) ?? options.fallbackUrl)
     : "";
   const href = resolvedHref || fallbackHref;
   const isAffiliate = isAffiliateRakutenUrl(href);
