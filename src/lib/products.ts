@@ -608,4 +608,12 @@ export const articlePurchaseLinks = {
     purchaseUrl:
       "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk780%2F&link_type=picttext",
   },
+  "panasonic-eh-na0j-vs-eh-na0g:left": {
+    name: "パナソニック ナノケア EH-NA0J",
+    purchaseUrl: "https://item.rakuten.co.jp/jtus/652954/",
+  },
+  "panasonic-eh-na0j-vs-eh-na0g:right": {
+    name: "パナソニック ナノケア EH-NA0G",
+    purchaseUrl: "https://item.rakuten.co.jp/ekosuta/eh20819/",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;

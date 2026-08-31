@@ -20,9 +20,10 @@ export const panasonicEhNa0jVsEhNa0gSeed: CommercialArticleSeed = {
   rightProduct: "パナソニック ナノケア EH-NA0G",
   leftPoint: "1.6m³/分の風量と約550gの軽さを重視する人向け",
   rightPoint: "インテリジェント温風モードを含む多機能モデルを選びたい人向け",
-  productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-08-31",
+  modifiedAt: "2026-08-31",
+  purchaseLinksCheckedAt: "2026-08-31",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（EH-NA0J）",
