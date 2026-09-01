@@ -4,8 +4,11 @@
 // 配置: 記事末尾（article-end）。比較記事の結論直後は NextStepBlock が担当。
 // 要素: 商品画像 / 商品名 / 「こんな人向け」の1文 / 販売先確認CTA / 価格・在庫の注意書き
 // 配置・枚数の機械的契約は config/article-layout.mjs が唯一の定義。
+import { Picture } from 'astro:assets';
 import AffiliateButton from './AffiliateButton.astro';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
+import {toAmazonAssociateSearchUrl} from '../../config/runtime-env.mjs';
+import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
   name: string;
@@ -19,11 +22,10 @@ interface Props {
   requiredTerms?: readonly string[];
   imageUrl?: string;
   /**
-   * 購入リンクの検証状態。fail-closed 契約: verified のときだけ CTA を表示する。
-   * 未指定（undefined）は検証状態不明として扱い、unverified 同等の
-   * 「購入先の確認中です」メッセージを出す（CTA は非表示）。
+   * 購入リンクの表示判定。href が存在すれば CTA を表示する。
+   * AffiliateButton 側で URL の妥当性を検証する。
    */
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
+  purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
 
 const {
@@ -37,35 +39,37 @@ const {
   searchQuery,
   requiredTerms,
   imageUrl,
-  purchaseLinkStatus,
 } = Astro.props;
 
-// fail-closed: 明示的に verified のときだけ CTA を出す。undefined は「確認中」扱い。
-const isVerified = purchaseLinkStatus === "verified";
-const amazonAssociateTag = import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim();
-const amazonSearchUrl = amazonAssociateTag
-  ? `https://www.amazon.co.jp/s?k=${encodeURIComponent(name)}&tag=${encodeURIComponent(amazonAssociateTag)}`
-  : undefined;
+const hasHref = Boolean(href);
+const amazonSearchUrl = toAmazonAssociateSearchUrl(
+  name,
+  import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG,
+);
+const resolvedImage = resolveImage(imagePath);
 ---
 
 <article class="purchase-card">
   <div class="purchase-card__main">
-    {(imagePath || imageUrl) && (
-      <img class="purchase-card__image" src={imagePath ?? imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
+    {(resolvedImage || imageUrl) && (
+      resolvedImage ? (
+        <Picture class="purchase-card__image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
+      ) : (
+        <img class="purchase-card__image" src={imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
+      )
     )}
     <div class="purchase-card__body">
       <h3 class="purchase-card__name">{name}</h3>
       <p class="purchase-card__audience">{audience}</p>
     </div>
   </div>
-  {isVerified ? (
+  {hasHref ? (
     <>
       <AffiliateButton
         href={href}
         productId={productId}
-        label="楽天市場で型番を確認"
-        subLabel="商品ページを確認する"
-        imagePath={undefined}
+        label="楽天市場で確認する"
+        imagePath={imagePath}
         placement={placement}
         searchQuery={searchQuery}
         requiredTerms={requiredTerms}
@@ -77,6 +81,8 @@ const amazonSearchUrl = amazonAssociateTag
           target="_blank"
           rel="sponsored nofollow noopener noreferrer"
           data-amazon-cta="purchase"
+          data-product-id={productId}
+          data-placement={placement}
         >
           Amazonで商品を確認 → <span class="ad-note">（広告）</span>
         </a>
@@ -84,7 +90,7 @@ const amazonSearchUrl = amazonAssociateTag
     </>
   ) : (
     <p class="purchase-card__pending">
-      購入先の確認中です。公開後に販売先リンクが表示されます。
+      購入リンクは現在確認中です。
     </p>
   )}
   {note && <p class="purchase-card__note">{note}</p>}

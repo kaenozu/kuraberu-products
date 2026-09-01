@@ -6,45 +6,18 @@
 import {
   clientIp,
   enforceRateLimit,
+  isSameSiteOrigin,
   json,
   readBodyTextWithLimit,
 } from "./shared";
 import type { RateLimitResult } from "./shared";
 
-export { clientIp } from "./shared";
+export { clientIp, isSameSiteOrigin } from "./shared";
 
 interface ContactBody {
   name?: string;
   email?: string;
   message?: string;
-}
-
-/**
- * Origin ヘッダーが許可されたサイトのオリジンと完全一致するかを判定する。
- * 前方一致ではなく origin（scheme + host + port）の完全比較を行うため、
- * `https://kuraberu-products.pages.dev.evil.com` のような偽装オリジンは
- * 許可しない。
- *
- * 注意: これはCSRF対策の完全な代替ではない。Origin が無いリクエスト
- * （curl・サーバー間呼び出し・一部の旧クライアント）は意図的に許可する
- * ため、非ブラウザクライアントからの偽装は防げない。ブラウザ由来の
- * クロスサイト送信は Origin を必ず付けるため、実質的にはブラウザ経由の
- * 不正送信を拒否する役割を担う。
- */
-export function isSameSiteOrigin(
-  originHeader: string | null,
-  siteUrl: string,
-): boolean {
-  if (!originHeader) return true;
-  let origin: URL;
-  let expected: URL;
-  try {
-    origin = new URL(originHeader);
-    expected = new URL(siteUrl);
-  } catch {
-    return false;
-  }
-  return origin.origin === expected.origin;
 }
 
 /**
@@ -94,13 +67,10 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid content type" }, 415);
   }
 
-  // Content-Length があれば早期に上限判定し、過大リクエストを本文の
-  // 読み込み前に拒否する。ヘッダー欠落・過少申告は次段の累積上限で担保する。
+  // Content-Length は URL エンコード前の生バイト数であり、デコード後の
+  // 10 KB 制限とは異なるため、ここでは判定に使わない。本文は次段で
+  // エンコード済み上限を付けて読み込み、デコード後に TextEncoder で検証する。
   const MAX_BODY_BYTES = 10_000;
-  const contentLength = Number(request.headers.get("Content-Length") ?? 0);
-  if (contentLength > MAX_BODY_BYTES) {
-    return json({ ok: false, error: "payload too large" }, 413);
-  }
 
   // formData() の展開前に行う累積上限付きの本文読み込み。
   // urlencoded 形式では 3バイトUTF-8文字が %XX%XX%XX（9バイト）へ膨張するため、
@@ -166,6 +136,14 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "server not configured" }, 500);
   }
 
+  // chatId が数値であることを確認。username 形式（"@channel" 等）は
+  // Number() で NaN になり、Telegram API が無視して失敗する。
+  const numericChatId = Number(chatId);
+  if (!Number.isFinite(numericChatId)) {
+    console.error("TELEGRAM_CHAT_ID is not numeric:", chatId);
+    return json({ ok: false, error: "server misconfigured" }, 500);
+  }
+
   // 簡単なスパム防止: メッセージに URL が多すぎる場合は拒否
   const urlCount = (body.message.match(/https?:\/\//g) ?? []).length;
   if (urlCount > 5) {
@@ -190,7 +168,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        chat_id: Number(chatId),
+        chat_id: numericChatId,
         text,
         disable_web_page_preview: true,
       }),

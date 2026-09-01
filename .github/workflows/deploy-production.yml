@@ -179,8 +179,8 @@ jobs:
         with:
           name: acceptance-reports-${{ github.run_id }}
           path: |
-            .acceptance/production-build-*/report.json
-            .acceptance/post-deploy-*/report.json
+            .acceptance/production-build-*/**
+            .acceptance/post-deploy-*/**
           include-hidden-files: true
           if-no-files-found: warn
           retention-days: 90
@@ -224,7 +224,8 @@ jobs:
               '{name:"production-post-deploy-verification", head_sha:$head_sha, status:"completed", conclusion:"failure", output:{title:"Post-deploy verification did not run", summary:"The deploy run did not reach the public verification step (no post-deploy report.json was produced). See the run log for the failing step.", text:""}}')
           fi
           if ! echo "$payload" | gh api --method POST "repos/${{ github.repository }}/check-runs" --input - >/dev/null; then
-            echo "::warning::Failed to record post-deploy verification check run"
+            echo "::error::CRITICAL: Failed to record post-deploy verification check run. Audit trail is incomplete — this must not silently succeed."
+            exit 1
           fi
 
       - name: Create deploy verification evidence issue
@@ -246,5 +247,10 @@ jobs:
               --expected-sha "$EXPECTED_SHA" \
               --site-url "$PUBLIC_SITE_URL"
           else
-            echo "::warning::No post-deploy report.json found; skipping evidence issue creation"
+            # report.json がない場合でも監査証跡として evidence issue を残す。
+            # issue は OPEN のまま人間が確認・Close する契約（#361）。
+            node scripts/create-missing-evidence-issue.mjs \
+              --run-id "${{ github.run_id }}" \
+              --expected-sha "$EXPECTED_SHA" \
+              --site-url "$PUBLIC_SITE_URL"
           fi

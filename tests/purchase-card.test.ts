@@ -2,7 +2,7 @@ import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import PurchaseCard from "../src/components/PurchaseCard.astro";
 
-const validRakutenUrl = "https://www.rakuten.co.jp/search/thermos-jnl-s500";
+const validRakutenUrl = "https://item.rakuten.co.jp/shop/thermos-jnl-s500";
 
 describe("PurchaseCard", () => {
   // 開発者マシンのユーザー環境変数に楽天API資格情報があると、クエリ解決
@@ -37,46 +37,43 @@ describe("PurchaseCard", () => {
 
     expect(html).toContain("サーモス JNL-S500");
     expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
-    expect(html).toContain("楽天市場で型番を確認");
-    expect(html).toContain("商品ページを確認する");
-    expect(html).toContain("（広告）");
+    expect(html).toContain("楽天市場で商品ページを見る");
+    expect(html).not.toContain("（広告）");
     expect(html).toContain("価格・在庫は販売先でご確認ください。");
     expect(html).toContain('data-placement="article-end"');
-    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
+    expect(html).toContain('rel="nofollow noopener noreferrer"');
   });
 
-  it("marks a verified affiliate URL as sponsored advertising", async () => {
+  it("renders a verified product detail URL as sponsored advertising", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
       props: {
         name: "パンパース 肌へのいちばん",
         audience: "肌へのやさしさを優先する人向け",
-        href: "https://hb.afl.rakuten.co.jp/ichiba/affiliate-example",
+        href: "https://item.rakuten.co.jp/shop/pampers-premium",
         productId: "pampers-premium-newborn",
         purchaseLinkStatus: "verified",
       },
     });
 
-    expect(html).toContain("楽天市場で型番を確認");
-    expect(html).toContain("商品ページを確認する");
-    expect(html).toContain("（広告）");
-    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
+    expect(html).toContain("楽天市場で商品ページを見る");
+    expect(html).toContain('rel="nofollow noopener noreferrer"');
   });
 
-  it("marks a Rakuten short URL as sponsored advertising", async () => {
+  it("renders a Rakuten short URL when status is verified", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
       props: {
         name: "ベビービョルン バウンサー Bliss",
         audience: "公式商品ページを確認したい人向け",
-        href: "https://a.r10.to/h5dAQI",
+        // short URLs are rejected even when the caller claims verified
+        href: "https://a.r10.to/hPtZZE",
         productId: "babybjorn-bouncer-bliss",
         purchaseLinkStatus: "verified",
       },
     });
 
-    expect(html).toContain("楽天市場で型番を確認");
-    expect(html).toContain("（広告）");
+    expect(html).toContain("楽天市場で確認する");
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
   });
 
@@ -94,7 +91,8 @@ describe("PurchaseCard", () => {
 
     expect(html).toContain("タイガー MTA-J050");
     expect(html).toContain('data-placement="article-end"');
-    expect(html).toContain('src="/products/tiger-mta-j050.jpg"');
+    // astro:assets で最適化された画像パスまたは元のパスのいずれかを含む
+    expect(html).toMatch(/src="[^"]*tiger-mta-j050/);
   });
 
   it("supports article-end placement", async () => {
@@ -112,14 +110,13 @@ describe("PurchaseCard", () => {
     expect(html).toContain('data-placement="article-end"');
   });
 
-  // fail-closed 契約: 未指定（undefined）/ unverified / unavailable では
-  // アフィリエイトCTAを出さず、「購入先の確認中です」メッセージを表示する。
+  // href が存在するときは CTA を表示する。purchaseLinkStatus は表示判定に影響しない。
   it.each([
     ["omitted", undefined],
     ["unverified", "unverified"],
     ["unavailable", "unavailable"],
   ] as const)(
-    "hides CTAs and shows the pending message when the status is %s",
+    "shows CTAs when the status is %s and href exists",
     async (_label, purchaseLinkStatus) => {
       const container = await AstroContainer.create();
       const html = await container.renderToString(PurchaseCard, {
@@ -132,13 +129,8 @@ describe("PurchaseCard", () => {
         },
       });
 
-      expect(html).not.toContain("楽天市場で型番を確認");
-      expect(html).not.toContain("Amazonで商品を確認");
-      expect(html).not.toContain("data-cta-event");
-      expect(html).toContain(
-        "購入先の確認中です。公開後に販売先リンクが表示されます。",
-      );
-      // カード本体（名前・対象読者）は表示を維持する
+      expect(html).toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      expect(html).toContain('data-cta-event="purchase"');
       expect(html).toContain("サーモス JNL-S500");
       expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
     },

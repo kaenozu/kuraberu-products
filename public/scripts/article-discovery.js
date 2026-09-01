@@ -14,7 +14,6 @@
   if (
     !(query instanceof HTMLInputElement) ||
     !(category instanceof HTMLSelectElement) ||
-    !(tag instanceof HTMLSelectElement) ||
     !(results instanceof HTMLElement) ||
     !(indexNode instanceof HTMLScriptElement)
   )
@@ -71,13 +70,14 @@
       ].join(" "),
     );
 
-  const articleSearchTextExpanded = (article) => {
-    const base = articleSearchText(article);
-    const synonyms = [];
-    for (const [key, syns] of SYNONYMS) {
-      if (base.includes(key)) synonyms.push(...syns);
+  // 同義語展開: クエリ語を同義語集合で拡張してから記事テキストと照合する。
+  const expandQueryWithSynonyms = (terms) => {
+    const expanded = [...terms];
+    for (const term of terms) {
+      const syns = SYNONYMS.get(term);
+      if (syns) expanded.push(...syns);
     }
-    return synonyms.length ? base + " " + synonyms.join(" ") : base;
+    return expanded;
   };
 
   const createCard = (article) => {
@@ -146,23 +146,36 @@
     return card;
   };
 
+  // 初期カテゴリ: data-discovery-initial-category 属性があれば path ベースの
+  // カテゴリページからの値を採用し、なければ URL query param から読み取る。
+  const initialCategoryNode = root.querySelector(
+    "[data-discovery-initial-category]",
+  );
+  const initialCategoryFromPath = initialCategoryNode
+    ? (initialCategoryNode.textContent || "").replace(/^"|"$/g, "")
+    : "";
   const initial = new URLSearchParams(location.search);
   query.value = (initial.get("q") || "").slice(0, 100);
-  category.value = allowed(category, initial.get("category") || "");
-  tag.value = allowed(tag, initial.get("tag") || "");
+  category.value = allowed(
+    category,
+    initialCategoryFromPath || initial.get("category") || "",
+  );
+  if (tag) tag.value = allowed(tag, initial.get("tag") || "");
 
   const apply = () => {
     const queryText = normalize(query.value);
     const terms = queryText.split(" ").filter(Boolean);
-    const hasFilter = Boolean(queryText || category.value || tag.value);
+    const hasFilter = Boolean(
+      queryText || category.value || (tag && tag.value),
+    );
     let visible = 0;
     if (hasFilter) {
       const matches = index.filter(
         (article) =>
           (!category.value || article.category === category.value) &&
-          (!tag.value || (article.tags || []).includes(tag.value)) &&
-          terms.every((term) =>
-            articleSearchTextExpanded(article).includes(term),
+          (!(tag && tag.value) || (article.tags || []).includes(tag.value)) &&
+          expandQueryWithSynonyms(terms).every((term) =>
+            articleSearchText(article).includes(term),
           ),
       );
       results.replaceChildren(...matches.map(createCard));
@@ -194,12 +207,12 @@
     ?.addEventListener("submit", (event) => event.preventDefault());
   query.addEventListener("input", apply);
   category.addEventListener("change", apply);
-  tag.addEventListener("change", apply);
+  if (tag) tag.addEventListener("change", apply);
   root.querySelectorAll("[data-discovery-clear]").forEach((button) =>
     button.addEventListener("click", () => {
       query.value = "";
-      category.value = "";
-      tag.value = "";
+      category.value = initialCategoryFromPath || "";
+      if (tag) tag.value = "";
       apply();
       query.focus();
     }),

@@ -1,0 +1,53 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { yamazakiDishwasherRackArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://www.yamajitsu.co.jp/products/241925'
+const rightOfficial = 'https://www.yamajitsu.co.jp/products/241926'
+const leftImage = '/products/yamazaki-dishwasher-rack-low.jpg'
+const rightImage = '/products/yamazaki-dishwasher-rack-high.jpg'
+const leftAudience = 'カウンター高さ8〜12cmに設置し、ラックの高さを抑えたい人向け'
+const rightAudience = 'カウンター高さ12〜20.5cmに合わせ、より高い設置スペースを使いたい人向け'
+
+const faqEntries = [
+  {question: '山崎実業の食洗機ラック ロータイプとハイタイプの違いは？', answer: '公式仕様では、ロータイプは商品高さ9.8〜13.8cm・設置できるカウンター高さ8〜12cm、ハイタイプは商品高さ13.8〜22.3cm・設置できるカウンター高さ12〜20.5cmです。'},
+  {question: '食洗機ラックの耐荷重はどちらが大きい？', answer: '棚の耐荷重はロータイプ・ハイタイプとも25kgです。フックも両方とも1つあたり250g（静止荷重）です。'},
+  {question: 'ロータイプとハイタイプで天板の幅は違いますか？', answer: '公式仕様では、どちらも商品サイズの幅が41.2〜62cm、奥行が36.1cmです。高さと設置できるカウンター高さが主な差分です。'},
+  {question: '楽天市場の価格や在庫は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '商品サイズ（幅×奥行×高さ）', left: 'W41.2〜62×D36.1×H9.8〜13.8cm', right: 'W41.2〜62×D36.1×H13.8〜22.3cm', highlight: 'left', highlightNote: '高さを抑えやすい'},
+  {label: '商品重量', left: '3150g', right: '3350g', highlight: 'left', highlightNote: '200g軽い'},
+  {label: '設置できるカウンター高さ', left: '8〜12cm', right: '12〜20.5cm', highlight: 'right', highlightNote: '高いカウンター向け'},
+  {label: '棚の耐荷重', left: '25kg', right: '25kg', highlight: null},
+  {label: 'フック1つあたりの耐荷重（静止荷重）', left: '250g', right: '250g', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: '山崎実業', line: 'カウンターに載せられる伸縮食洗機ラック タワー ロータイプ', tagline: '高さを抑えるなら', image: leftImage, imageAlt: '山崎実業 カウンターに載せられる伸縮食洗機ラック タワー ロータイプ', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['yamazaki-dishwasher-rack-241925-vs-241926:left'].purchaseUrl}}
+  right={{brand: '山崎実業', line: 'カウンターに載せられる伸縮食洗機ラック タワー ハイタイプ', tagline: '高いカウンターなら', image: rightImage, imageAlt: '山崎実業 カウンターに載せられる伸縮食洗機ラック タワー ハイタイプ', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['yamazaki-dishwasher-rack-241925-vs-241926:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'山崎実業の伸縮食洗機ラック タワー ロータイプとハイタイプを比較します。メーカー公式ページで確認できるサイズ・重量・耐荷重・設置できるカウンター高さをもとに、置き場所の高さに合う方を整理します。'}
+  summaryParagraph={'ロータイプは設置できるカウンター高さが8〜12cm、ハイタイプは12〜20.5cmです。設置場所の高さを測ってから選んでください。'}
+  officialDescription={'仕様の根拠は、山崎実業公式の商品ページで2026年8月18日に確認しました。この記事では公式に記載されたサイズ・重量・耐荷重・設置条件だけを比較しています。'}
+  officialLinks={[
+    {label: '山崎実業公式：食洗機ラック タワー ロータイプ', href: leftOfficial},
+    {label: '山崎実業公式：食洗機ラック タワー ハイタイプ', href: rightOfficial},
+  ]}
+  socialProofQuery={'山崎実業 食洗機ラック タワー'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'山崎実業 食洗機ラック タワー ロータイプ（241925）'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'山崎実業 食洗機ラック タワー ハイタイプ（241926）'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: '山崎実業公式：食洗機ラック タワー ロータイプ', href: leftOfficial, checkedAt: '2026-08-18'},
+    {label: '山崎実業公式：食洗機ラック タワー ハイタイプ', href: rightOfficial, checkedAt: '2026-08-18'},
+  ]}
+/>

@@ -80,14 +80,20 @@ Production では次が必須です。
 
 任意:
 
+- `PUBLIC_RAKUTEN_AFFILIATE_REDIRECT`: 楽天アフィリエイトリダイレクトのURLプレフィックス。未設定時はデフォルト値を使用。
+- `PUBLIC_AMAZON_ASSOCIATE_TAG`: Amazon.co.jp のアソシエイトIDまたはトラッキングID。設定時は `verified` の購入カードに、商品名を使った Amazon.co.jp 検索リンクを追加します。価格・在庫・画像・レビュー等のAmazon商品情報は取得しません。
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
 - `PUBLIC_BUILD_SHA`: デプロイ検証用のビルド元コミットSHA。`tools/production/Invoke-ProductionBuildAndDeploy.ps1` が本番ビルド時に自動注入し、`Invoke-PostDeployVerification.ps1` が配信HTMLの `meta[name=build-sha]` と突合する。通常は手動設定不要。
+
+`PUBLIC_AMAZON_ASSOCIATE_TAG` を設定したビルドでは、Amazonアソシエイト・プログラムの識別文言を共通フッターに表示します。実際のトラッキングIDはコードやIssue/PRへ記録せず、デプロイ環境から注入してください。
 
 お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定またはRate Limiting APIエラー時は **503でfail-closed** とし、レート制限を迂回して送信を継続しません。通常の上限超過は429と`Retry-After`を返します。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
 
 クリック計測（`/api/events`）はプライバシー配慮型で、購入CTAクリックを同一オリジンの Function で受け取ります。Cookie・IP・フィンガープリントは保存しません。永続化は任意の Workers KV（`ANALYTICS_KV`）で、未設定時はイベントを破棄して動作を続けます。詳細は [`docs/click-analytics.md`](./docs/click-analytics.md)。
 
 `.env.example` を基準にしてください。`.env` と `.env.*` は `.env.example` を除いて Git 管理対象外です。秘密値をログ、Issue、PRへ記録しないでください。
+
+ビルド時の楽天 API と固定 URL の違い、再現可能な Production ビルド手順、生成物の証跡は [`docs/build-reproducibility.md`](./docs/build-reproducibility.md) を参照してください。
 
 ## SEO / 生成物の基本契約
 

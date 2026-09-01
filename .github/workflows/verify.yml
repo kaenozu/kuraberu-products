@@ -16,15 +16,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  verify:
+  # --- ビルド不要の lint / typecheck / test（高速） ---
+  lint-and-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
           persist-credentials: false
-      # setup-node の cache: 'pnpm' は pnpm バイナリを必要とするため、
-      # corepack enable を必ず先に置く。
       - name: Enable Corepack
         run: corepack enable
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
@@ -33,19 +32,66 @@ jobs:
           cache: "pnpm"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Verify preview build
+      - name: Lint, typecheck & test
         env:
           DEPLOYMENT_ENV: preview
-        run: pnpm verify
+          ALLOW_NETWORK_SKIP: "1"
+        run: pnpm verify:lint
+
+  # --- ビルド + ビルド出力の検証 ---
+  build-and-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          persist-credentials: false
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
+        with:
+          node-version-file: .node-version
+          cache: "pnpm"
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build & verify output
+        env:
+          DEPLOYMENT_ENV: preview
+        run: pnpm verify:build
+      - name: Run dist-dependent tests (post-build)
+        env:
+          DEPLOYMENT_ENV: preview
+        run: pnpm test:dist
       - name: Verify production configuration and output
         env:
           DEPLOYMENT_ENV: production
           PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
           PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
           PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara
+          PUBLIC_AMAZON_ASSOCIATE_TAG: ci-example-22
           PUBLIC_CONTACT_URL: https://contact.kuraberu-products.invalid/form
         run: pnpm validate:env && pnpm build && pnpm check:rendered && pnpm check:deployment && pnpm check:external-link-syntax
 
+  # --- ブランチ保護の必須チェック名 "verify" を満たすゲートジョブ ---
+  # lint-and-test / build-and-verify は並列実行され、
+  # 両方が成功した場合にのみこのジョブが通る。
+  verify:
+    if: always()
+    needs: [lint-and-test, build-and-verify, e2e]
+    runs-on: ubuntu-latest
+    timeout-minutes: 1
+    steps:
+      - name: Check all jobs passed
+        run: |
+          if [ '${{ needs.lint-and-test.result }}' != 'success' ] || [ '${{ needs.build-and-verify.result }}' != 'success' ] || [ '${{ needs.e2e.result }}' != 'success' ]; then
+            echo 'lint-and-test: ${{ needs.lint-and-test.result }}'
+            echo 'build-and-verify: ${{ needs.build-and-verify.result }}'
+            echo 'e2e: ${{ needs.e2e.result }}'
+            exit 1
+          fi
+          echo 'All required jobs passed.'
+
+  # --- プライバシー契約の E2E 検証 ---
   e2e:
     # プライバシー契約（同意前のサードパーティリクエストゼロ）など
     # ネットワークレベルでしか検証できない挙動を CI で常時検証する。

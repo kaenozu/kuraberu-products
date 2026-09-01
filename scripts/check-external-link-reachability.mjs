@@ -4,6 +4,62 @@ import { pathToFileURL } from "node:url";
 
 export const DEFAULT_LINK_TIMEOUT_MS = 10_000;
 
+// State tracking for persistent inconclusive results.
+// A single 403/429/500 is normal (bot defense, transient). But if a URL
+// stays inconclusive across multiple weekly runs, it needs human review.
+export const LINK_STATE_FILE = "data/external-link-state.json";
+export const INCONCLUSIVE_WARN_THRESHOLD = 3; // consecutive inconclusive → warning
+export const INCONCLUSIVE_FAIL_THRESHOLD = 7; // consecutive inconclusive → BLOCKER
+
+/**
+ * Load link state from disk. Returns { urls: { [url]: LinkEntry } }.
+ */
+export function loadLinkState(statePath = LINK_STATE_FILE) {
+  try {
+    const raw = JSON.parse(fs.readFileSync(statePath, "utf8"));
+    if (raw && typeof raw.urls === "object") return raw;
+    return { urls: {} };
+  } catch {
+    return { urls: {} };
+  }
+}
+
+/**
+ * Save link state to disk.
+ */
+export function saveLinkState(state, statePath = LINK_STATE_FILE) {
+  const dir = path.dirname(statePath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(statePath, JSON.stringify(state, null, 2) + "\n");
+}
+
+/**
+ * Update state for a single URL based on probe outcome.
+ * Returns the updated entry.
+ */
+export function updateLinkEntry(entry, outcome, reason) {
+  const now = new Date().toISOString();
+  if (!entry) entry = {};
+
+  if (outcome === "reachable") {
+    entry.consecutiveInconclusive = 0;
+    entry.lastOutcome = "reachable";
+    delete entry.lastReason;
+  } else if (outcome === "broken") {
+    entry.consecutiveInconclusive = 0;
+    entry.lastOutcome = "broken";
+    delete entry.lastReason;
+  } else {
+    // inconclusive (403, 429, 5xx, timeout, network-error)
+    entry.consecutiveInconclusive = (entry.consecutiveInconclusive || 0) + 1;
+    entry.lastOutcome = "inconclusive";
+    if (reason) entry.lastReason = reason;
+    else delete entry.lastReason;
+  }
+  entry.lastCheckedAt = now;
+  return entry;
+}
+
 function walkHtmlFiles(directory, files = []) {
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
     const current = path.join(directory, entry.name);
@@ -95,29 +151,60 @@ export async function checkExternalLinkReachability({
   directory = "dist",
   fetchImpl = fetch,
   timeoutMs = DEFAULT_LINK_TIMEOUT_MS,
+  statePath = LINK_STATE_FILE,
 } = {}) {
   const urls = collectExternalAnchorUrls(directory);
   const results = [];
+  const state = loadLinkState(statePath);
+  const warnings = [];
+  const errors = [];
 
   for (const url of urls) {
-    results.push(await probeExternalUrl(url, { fetchImpl, timeoutMs }));
-  }
+    const result = await probeExternalUrl(url, { fetchImpl, timeoutMs });
+    results.push(result);
 
-  const broken = results.filter((result) => result.outcome === "broken");
-  const inconclusive = results.filter(
-    (result) => result.outcome === "inconclusive",
-  );
+    // Update state for this URL
+    const prev = state.urls[url];
+    state.urls[url] = updateLinkEntry(prev, result.outcome, result.reason);
+    const entry = state.urls[url];
 
-  for (const result of results) {
+    // Check consecutive failure thresholds
+    const consecutive = entry.consecutiveInconclusive || 0;
+    if (consecutive >= INCONCLUSIVE_FAIL_THRESHOLD) {
+      errors.push(
+        `${url}: ${consecutive} consecutive inconclusive results (last: ${entry.lastReason ?? "unknown"}) — needs human review`,
+      );
+    } else if (consecutive >= INCONCLUSIVE_WARN_THRESHOLD) {
+      warnings.push(
+        `${url}: ${consecutive} consecutive inconclusive results (last: ${entry.lastReason ?? "unknown"})`,
+      );
+    }
+
     const detail = result.status
       ? `HTTP ${result.status}${result.finalUrl && result.finalUrl !== result.url ? ` -> ${result.finalUrl}` : ""}`
       : result.reason;
     console.log(`${result.outcome}: ${result.url} (${detail})`);
   }
 
+  // Persist state for next run
+  saveLinkState(state, statePath);
+
+  const broken = results.filter((result) => result.outcome === "broken");
+  const inconclusive = results.filter(
+    (result) => result.outcome === "inconclusive",
+  );
+
+  if (warnings.length) {
+    for (const w of warnings) console.warn(`⚠ ${w}`);
+  }
   if (inconclusive.length) {
     console.warn(
       `external link reachability inconclusive: ${inconclusive.length}/${results.length}`,
+    );
+  }
+  if (errors.length) {
+    throw new Error(
+      `External links with persistent inconclusive status (>=${INCONCLUSIVE_FAIL_THRESHOLD} consecutive runs):\n${errors.join("\n")}`,
     );
   }
   if (broken.length) {

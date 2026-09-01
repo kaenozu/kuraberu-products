@@ -179,6 +179,9 @@ const faqStructuredData = faq && faq.length > 0
     <footer class="footer">
       <div class="wrap">
         <p>広告を含みます。価格・在庫・仕様は販売先でご確認ください。</p>
+        {import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim() && (
+          <p>Amazonのアソシエイトとして、{site.name}は適格販売により収入を得ています。</p>
+        )}
         <p><a href="/privacy/">プライバシーポリシー</a> · <a href="/disclaimer/">広告・免責事項</a> · <a href="/about/">運営者情報</a></p>
       </div>
     </footer>
@@ -186,33 +189,10 @@ const faqStructuredData = faq && faq.length > 0
           summary はデスクトップで display:none のため、閉じた details の中身
           （navlinks）は CSS では再表示できない。広い幅では details を open にして
           ナビを常時表示し、狭い幅では閉じてモバイルのドロワー挙動（ネイティブ開閉）を維持する。
+          外部JS化: inline script は Production CSP（script-src 'self'）で実行不可のため、
+          同一オリジンの /nav-toggle.js として外部化。
           marker: nav-toggle-sync -->
-    <script is:inline>
-      (function () {
-        const mq = window.matchMedia('(min-width: 561px)');
-        const details = document.querySelector('[data-nav-toggle]');
-        if (!details) return;
-        const summary = details.querySelector('summary');
-        // 開閉状態に応じて summary のラベルを同期する（ネイティブ開閉にも追従）。
-        // toggle イベントは非同期に発火するため、初期同期より先に登録する。
-        details.addEventListener('toggle', function () {
-          if (summary) {
-            summary.setAttribute('aria-label', details.open ? 'メニューを閉じる' : 'メニューを開く');
-          }
-        });
-        // 幅の変化に追従する（広い=常時表示のため開く / 狭い=ドロワーのため閉じる）。
-        const syncByWidth = function () {
-          details.open = mq.matches;
-        };
-        if (typeof mq.addEventListener === 'function') {
-          mq.addEventListener('change', syncByWidth);
-        } else if (typeof mq.addListener === 'function') {
-          mq.addListener(syncByWidth);
-        }
-        // 初期同期。open 変更は上の toggle リスナー経由でラベルも連動する。
-        syncByWidth();
-      })();
-    </script>
+    <script is:inline src="/nav-toggle.js" defer></script>
     <!-- クリック計測（プライバシー配慮型・同一オリジン）。詳細: docs/click-analytics.md -->
     <script is:inline src="/click-beacon.js" defer></script>
     <!-- 比較表のスマホ比較カード表示用: 各セルへ列見出し（商品名）を data-label として付与する。

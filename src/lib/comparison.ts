@@ -20,6 +20,11 @@ export interface ComparisonCandidate {
   imageAlt?: string;
 }
 
+/**
+ * 比較テーブルの1行。
+ * HeroComparison・VisualKeyDifferences 等の共通コンポーネントで使う。
+ * 検証ステータス（出典の信頼性）を持たない場合に使う。
+ */
 export interface ComparisonRow {
   label: string;
   left: string;
@@ -30,7 +35,14 @@ export interface ComparisonRow {
   highlightNote?: string;
 }
 
+/**
+ * 検証ステータス付きの比較テーブル行。
+ * 左右それぞれの出典確認状態（official / retailer / unverified 等）を
+ * 表示する必要がある記事の詳細比較テーブルで使う。
+ */
 export interface DifferenceRow extends ComparisonRow {
+  /** 左側の検証ステータス */
   leftStatus?: VerificationStatus | string;
+  /** 右側の検証ステータス */
   rightStatus?: VerificationStatus | string;
 }

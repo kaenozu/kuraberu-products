@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   ALLOWED_OUTBOUND_HOSTS,
+  CTA_CACHE_FILE,
+  CTA_CACHE_MAX_AGE_DAYS,
   MAX_REDIRECT_HOPS,
   auditVerifiedCtaDestinations,
   checkArticleSource,
@@ -10,7 +12,10 @@ import {
   extractNextStepHrefs,
   extractPurchaseCardHrefs,
   hostnameOf,
+  isCacheFresh,
+  isCommercialArticle,
   keyFromRef,
+  loadCachedAuditResults,
   loadPurchaseLinkStatusesFromSource,
   loadRegistryEntries,
   loadRegistryKeys,
@@ -30,6 +35,28 @@ import { tmpdir } from "node:os";
 const registry = new Set(["moony-m:left", "moony-m:right"]);
 
 describe("purchase link consistency gate (registry keys)", () => {
+  it("keeps the BabyBjorn HARMONY/MINI CTAs on verified item pages", async () => {
+    const { articlePurchaseLinks } = await import("../src/lib/products");
+    expect(articlePurchaseLinks["babybjorn:left"].purchaseUrl).toContain(
+      "item.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-harmony%2F",
+    );
+    expect(articlePurchaseLinks["babybjorn:right"].purchaseUrl).toContain(
+      "item.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-mini-3d%2F",
+    );
+    expect(articlePurchaseLinks["babybjorn:left"].purchaseUrl).toMatch(
+      /^https:\/\/hb\.afl\.rakuten\.co\.jp\/ichiba\//,
+    );
+    expect(articlePurchaseLinks["babybjorn:right"].purchaseUrl).toMatch(
+      /^https:\/\/hb\.afl\.rakuten\.co\.jp\/ichiba\//,
+    );
+    expect(articlePurchaseLinks["babybjorn:left"].purchaseUrl).not.toMatch(
+      /a\.r10\.to/,
+    );
+    expect(articlePurchaseLinks["babybjorn:right"].purchaseUrl).not.toMatch(
+      /a\.r10\.to/,
+    );
+  });
+
   it("extracts registry keys from an ArticleComparisonV2 page in left/right order", () => {
     const source = `<ArticleComparisonV2
   left={{ brand: "A", line: "L", purchaseHref: articlePurchaseLinks['moony-m:left'].purchaseUrl }}
@@ -216,15 +243,14 @@ describe("purchase link consistency gate (registry keys)", () => {
 
   // fail-closed 契約の監査用集計。verified / unverified / unavailable の
   // 3値のみを扱い、未分類のステータス文字列を黙って無視しないことを確認する。
-  it("keeps NextStepBlock purchase CTA fail-closed when status is omitted", () => {
+  it("keeps NextStepBlock purchase CTA href-based when status is omitted", () => {
     const source = readFileSync("src/components/NextStepBlock.astro", "utf8");
     expect(source).toContain(
-      'purchaseLinkStatus: "verified" | "unverified" | "unavailable"',
+      'purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable"',
     );
-    expect(source).toContain("purchaseLinkStatus === 'verified' && leftHref");
-    expect(source).toContain("purchaseLinkStatus === 'verified' && rightHref");
-    expect(source).not.toContain("purchaseLinkStatus !== 'unverified'");
-    expect(source).not.toContain("purchaseLinkStatus !== 'unavailable'");
+    expect(source).toContain("(leftHref || rightHref) ?");
+    expect(source).toContain("販売先を確認中です");
+    expect(source.match(/販売先を確認中です/g)).toHaveLength(1);
   });
 
   it("audits purchaseLinkStatus values from the article metadata", () => {
@@ -272,7 +298,8 @@ describe("verified CTA destination audit (issue #342)", () => {
     expect(entries.size).toBeGreaterThan(40);
     for (const [key, url] of entries) {
       expect(key).toMatch(/:(left|right|card)$/);
-      expect(url).toMatch(/^https:\/\//);
+      // 商品詳細URLを確認できない項目は空URLでfail-closedにする。
+      if (url) expect(url).toMatch(/^https:\/\//);
     }
     // 商品定数参照（thermosJnlS500.rakutenUrl 等）も解決できる
     expect(entries.get("thermos-tiger-bottle:left")).toMatch(/^https:\/\//);
@@ -323,30 +350,42 @@ describe("verified CTA destination audit (issue #342)", () => {
     }
   });
 
-  it("normalizes hostnames and builds the allowlist from required + registry hosts", () => {
+  it("normalizes hostnames and builds a static allowlist (no registry auto-generation)", () => {
     expect(hostnameOf("https://Example.com./x")).toBe("example.com");
     expect(hostnameOf("not a url")).toBeNull();
-    const allowlist = outboundHostAllowlist([
-      "https://hb.afl.rakuten.co.jp/hgc/x",
-      "https://a.r10.to/abc",
-    ]);
+    const allowlist = outboundHostAllowlist();
     for (const host of ALLOWED_OUTBOUND_HOSTS)
       expect(allowlist.has(host)).toBe(true);
-    expect(allowlist.size).toBe(ALLOWED_OUTBOUND_HOSTS.length);
+    // a.r10.to must NOT be in the allowlist — it is a redirect host, not a final destination
+    expect(allowlist.has("a.r10.to")).toBe(false);
   });
 
-  it("accepts an allowlisted initial host without touching the network", async () => {
+  it("follows redirects for a.r10.to shortener links (AC: redirect hosts must always resolve)", async () => {
     const calls: { url: string; init?: RequestInit }[] = [];
-    const fetchImpl = stubFetch({}, calls) as unknown as typeof fetch;
+    const fetchImpl = stubFetch(
+      {
+        "https://a.r10.to/h58jf3": redirect(
+          "https://hb.afl.rakuten.co.jp/item/12345",
+        ),
+        "https://hb.afl.rakuten.co.jp/item/12345": {
+          status: 200,
+          headers: new Map(),
+        },
+      },
+      calls,
+    ) as unknown as typeof fetch;
     const audit = await auditVerifiedCtaDestinations({
       urls: [{ article: "a", key: "a:left", url: "https://a.r10.to/h58jf3" }],
       allowlist: outboundHostAllowlist(),
       fetchImpl,
     });
     expect(audit.errors).toEqual([]);
-    expect(audit.warnings).toEqual([]);
-    expect(calls).toHaveLength(0);
-    expect(audit.checked[0].result).toBe("allowlisted-initial");
+    expect(calls).toHaveLength(2);
+    expect(audit.checked[0]).toMatchObject({
+      result: "resolved",
+      finalHost: "hb.afl.rakuten.co.jp",
+      hops: 1,
+    });
   });
 
   it("follows redirects up to the hop cap and accepts an allowlisted final host", async () => {
@@ -466,9 +505,10 @@ describe("verified CTA destination audit (issue #342)", () => {
       allowNetworkSkip: true,
     });
     expect(skipped.errors).toEqual([]);
-    expect(skipped.warnings).toHaveLength(1);
-    expect(skipped.warnings[0]).toContain("ALLOW_NETWORK_SKIP=1");
-    expect(skipped.warnings[0]).toContain("DNS lookup failed");
+    expect(skipped.warnings).toEqual([]);
+    // allowNetworkSkip now skips network calls entirely and records as "skipped"
+    expect(skipped.checked).toHaveLength(1);
+    expect(skipped.checked[0].result).toBe("skipped");
   });
 
   it("reports unparseable CTA URLs as errors", async () => {
@@ -512,6 +552,112 @@ export const c = defineArticleMetadata({
     new Map<string, string>(),
   );
 }
+
+describe("CTA audit cache (P1-1 fail-closed coverage)", () => {
+  it("loadCachedAuditResults returns null when file is missing", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-missing-"));
+    try {
+      expect(
+        loadCachedAuditResults(join(directory, "nonexistent.json")),
+      ).toBeNull();
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("loadCachedAuditResults returns null for malformed JSON", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-malformed-"));
+    try {
+      const cachePath = join(directory, "cache.json");
+      writeFileSync(cachePath, "not json");
+      expect(loadCachedAuditResults(cachePath)).toBeNull();
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("loadCachedAuditResults returns null for schema without required fields", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-schema-"));
+    try {
+      const cachePath = join(directory, "cache.json");
+      writeFileSync(cachePath, JSON.stringify({ foo: "bar" }));
+      expect(loadCachedAuditResults(cachePath)).toBeNull();
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("loadCachedAuditResults returns valid cache object", () => {
+    const directory = mkdtempSync(join(tmpdir(), "cta-cache-valid-"));
+    try {
+      const cachePath = join(directory, "cache.json");
+      const cache = {
+        schemaVersion: 1,
+        generatedAt: new Date().toISOString(),
+        entries: [
+          {
+            article: "a",
+            url: "https://a.r10.to/x",
+            finalHost: "hb.afl.rakuten.co.jp",
+            hops: 1,
+          },
+        ],
+      };
+      writeFileSync(cachePath, JSON.stringify(cache));
+      const loaded = loadCachedAuditResults(cachePath);
+      expect(loaded).not.toBeNull();
+      expect(loaded!.entries).toHaveLength(1);
+      expect(loaded!.entries[0].article).toBe("a");
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+  it("isCacheFresh returns false for null cache", () => {
+    expect(isCacheFresh(null)).toBe(false);
+  });
+
+  it("isCacheFresh returns true for recent cache", () => {
+    const cache = { generatedAt: new Date().toISOString(), entries: [] };
+    expect(isCacheFresh(cache)).toBe(true);
+  });
+
+  it("isCacheFresh returns false for stale cache", () => {
+    const stale = new Date(
+      Date.now() - (CTA_CACHE_MAX_AGE_DAYS + 1) * 86400000,
+    ).toISOString();
+    const cache = { generatedAt: stale, entries: [] };
+    expect(isCacheFresh(cache)).toBe(false);
+  });
+
+  it("isCacheFresh returns false for future-dated cache", () => {
+    const future = new Date(Date.now() + 86400000).toISOString();
+    const cache = { generatedAt: future, entries: [] };
+    expect(isCacheFresh(cache)).toBe(false);
+  });
+
+  it("isCacheFresh respects custom maxAgeDays", () => {
+    const twoDaysAgo = new Date(Date.now() - 2 * 86400000).toISOString();
+    const cache = { generatedAt: twoDaysAgo, entries: [] };
+    expect(isCacheFresh(cache, 1)).toBe(false);
+    expect(isCacheFresh(cache, 3)).toBe(true);
+  });
+
+  it("isCommercialArticle detects CommercialArticlePage source", () => {
+    expect(isCommercialArticle(`<CommercialArticlePage articleId="x" />`)).toBe(
+      true,
+    );
+    expect(isCommercialArticle(`<ArticleComparisonV2 />`)).toBe(false);
+  });
+
+  it("isCacheFresh returns false for missing generatedAt", () => {
+    expect(isCacheFresh({ entries: [] })).toBe(false);
+  });
+
+  it("CTA_CACHE_FILE points to data/ directory", () => {
+    expect(CTA_CACHE_FILE).toMatch(/^data\//);
+  });
+});
 
 function writeSrcTree(
   directory: string,

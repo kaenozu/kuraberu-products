@@ -58,12 +58,13 @@ const discoveryIndex = discoverySource.map((article) => ({
   modifiedAt: article.modifiedAt,
   imagePath: article.imagePath,
   subjects: comparisonSubjects(article),
+  productCount: article.productCount,
 }));
 ---
 
 <BaseLayout title={title} description={description}>
   <section class="section wrap article-index" data-article-discovery>
-    <p class="eyebrow">Comparison articles</p>
+    <p class="eyebrow">比較記事</p>
     <h1>{heading}</h1>
     <p class="lead">{lead}</p>
     {showDiagnosisNote && (
@@ -86,18 +87,21 @@ const discoveryIndex = discoverySource.map((article) => ({
           ))}
         </select>
       </label>
-      <label>
-        <span>タグ</span>
-        <select name="tag" data-discovery-tag>
-          <option value="">すべて</option>
-          {tagOptions.map((tag) => <option value={tag}>{tag}</option>)}
-        </select>
-      </label>
+      {tagOptions.length > 0 && (
+        <label>
+          <span>タグ</span>
+          <select name="tag" data-discovery-tag>
+            <option value="">すべて</option>
+            {tagOptions.map((tag) => <option value={tag}>{tag}</option>)}
+          </select>
+        </label>
+      )}
       <button type="button" class="secondary-button" data-discovery-clear>条件をクリア</button>
     </form>
     <p class="meta" aria-live="polite" data-discovery-count>{totalCount}件の記事{countNote}</p>
 
     <script is:inline type="application/json" data-discovery-index set:html={safeJsonForScript(discoveryIndex)}></script>
+    {selectedCategory && <script is:inline type="application/json" data-discovery-initial-category set:html={safeJsonForScript(selectedCategory)}></script>}
     <div class="article-list" data-discovery-results>
       {articles.map((article) => (
         <ArticleCard

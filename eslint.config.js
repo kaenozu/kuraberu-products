@@ -58,4 +58,12 @@ export default [
       ],
     },
   },
+  {
+    files: ["**/*.astro"],
+    rules: {
+      // Astro テンプレート内では ImageMetadata が直接利用できず any 型の
+      // パラメータが必要になるケースがある（画像リゾルバー統合時など）
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  },
 ];

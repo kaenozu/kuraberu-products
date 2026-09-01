@@ -15,6 +15,8 @@ export interface ComparisonSide {
   imageAlt: string;
   officialHref: string;
   guidePoints: readonly string[];
+  /** クリック計測用の商品ID（任意） */
+  productId?: string;
 }
 
 /** 比較行（ verifiedRows / keyDiffRows 共通） */
@@ -51,7 +53,7 @@ export type ArticleMetadataBase = {
   modifiedAt: string;
   productInfoCheckedAt?: string;
   purchaseLinksCheckedAt?: string;
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
+  purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
   changeLog: readonly ArticleChangeLogEntry[];
   imagePath?: `/${string}`;
   /**

@@ -7,6 +7,10 @@ import {
   buildReportChecklist,
   buildStepLogExcerpt,
 } from "../scripts/create-deploy-evidence-issue.mjs";
+import {
+  buildIssueCreateArgs,
+  buildMissingReportBody,
+} from "../scripts/create-missing-evidence-issue.mjs";
 
 const EXPECTED_SHA = "7f54044e44872f8874f5c4e38da7ea48003ebefc";
 
@@ -210,11 +214,53 @@ describe("buildIssueBody", () => {
       "- [x] BLOCKER だった場合、Rollback 手順を適用・記録した",
     );
   });
+
+  it("includes a UNKNOWN warning when report.json is missing", () => {
+    const body = buildIssueBody({
+      report: {
+        result: "UNKNOWN",
+        attempts: 0,
+        resultsPerAttempt: [],
+        expectedCommitSha: EXPECTED_SHA,
+        baseUrl: null,
+        checks: [],
+        secretsIncluded: false,
+        generatedAt: null,
+      },
+      checkRun: null,
+      runId: "32090894999",
+      expectedSha: EXPECTED_SHA,
+      deployedAt: "2026-08-21T03:00:00Z",
+      siteUrl: "https://kuraberu-products.pages.dev",
+    });
+    expect(body).toContain("report.json が見つかりませんでした");
+    expect(body).toContain("Result: UNKNOWN");
+    expect(body).toContain("Attempts: 0");
+  });
 });
 
 describe("constants", () => {
   it("uses the check-run name and title prefix the workflow relies on", () => {
     expect(CHECK_RUN_NAME).toBe("production-post-deploy-verification");
     expect(ISSUE_TITLE_PREFIX).toBe("[deploy-verification]");
+  });
+});
+
+describe("missing deploy evidence fallback", () => {
+  it("does not require repository-specific labels", () => {
+    const args = buildIssueCreateArgs({
+      repo: "kaenozu/kuraberu-products",
+      title: "[deploy-verification] 123 — NO REPORT",
+      bodyPath: "/tmp/body.md",
+    });
+    expect(args).not.toContain("--label");
+    expect(args).not.toContain("deploy-evidence,blocker");
+    expect(
+      buildMissingReportBody({
+        runId: "123",
+        expectedSha: "a".repeat(40),
+        siteUrl: "https://kuraberu-products.pages.dev",
+      }),
+    ).toContain("Evidence issue");
   });
 });

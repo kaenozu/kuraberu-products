@@ -9,10 +9,10 @@
 import {
   clientIp,
   enforceRateLimit,
+  isSameSiteOrigin,
   json,
   readBodyTextWithLimit,
 } from "./shared";
-import { isSameSiteOrigin } from "./contact";
 import { ARTICLE_LAYOUT } from "../../config/article-layout.mjs";
 
 const MAX_BODY_BYTES = 4096;

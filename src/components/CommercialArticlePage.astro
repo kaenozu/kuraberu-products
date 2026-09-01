@@ -5,10 +5,18 @@ import PurchaseCard from './PurchaseCard.astro';
 import TrustLine from './TrustLine.astro';
 import NextStepBlock from './NextStepBlock.astro';
 import ArticleComparisonV2 from './ArticleComparisonV2.astro';
-import { articleMetadata, additionalCommercialArticleSeeds, commercialArticleImages, publicArticleMetadata } from '../content/articles';
+import ArticleSocialProof from './ArticleSocialProof.astro';
+import ExternalEmbed from './ExternalEmbed.astro';
+import RelatedArticles from './RelatedArticles.astro';
+import { articleMetadata, additionalCommercialArticleSeeds, publicArticleMetadata } from '../content/articles';
 import { articlePurchaseLinks } from '../lib/products';
+import { commercialArticleImages } from '../content/articles/commercial/images';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
+import {
+  isAffiliateRakutenUrl,
+  isRakutenProductDetailUrl,
+} from '../../config/runtime-env.mjs';
 
 interface Props {
   articleId: string;
@@ -22,7 +30,10 @@ if (!article || !seed) {
   throw new Error(`Unknown commercial article: ${articleId}`);
 }
 
-const images = commercialArticleImages[articleId] ?? {};
+const images = {
+  left: seed.leftImage ?? commercialArticleImages[articleId]?.left,
+  right: seed.rightImage ?? commercialArticleImages[articleId]?.right,
+};
 // 公開対象（publicArticleMetadata）に含まれない記事 = 商品情報の確認日が未設定の
 // 自動生成初稿。非公開の意図のため、万一参照された場合に備えてインデックスを拒否する（fail-closed）。
 const isPublicArticle = publicArticleMetadata.some((item) => item.id === article.id);
@@ -33,9 +44,16 @@ const rightSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComp
 const staticPurchaseLinks = articlePurchaseLinks as Record<string, { purchaseUrl: string }>;
 const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchaseUrl;
 const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
+const isVerifiedPurchaseUrl = (value: string | undefined) => {
+  if (!value) return false;
+  // a.r10.to is a complete Rakuten affiliate URL whose destination is
+  // validated separately in the queue evidence; it has no `pc` parameter.
+  if (isAffiliateRakutenUrl(value)) return true;
+  return isRakutenProductDetailUrl(value);
+};
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
-  leftStaticPurchaseUrl
+  leftStaticPurchaseUrl && isVerifiedPurchaseUrl(leftStaticPurchaseUrl)
     ? Promise.resolve({
         href: leftStaticPurchaseUrl,
         isAffiliate: true,
@@ -46,7 +64,7 @@ const [leftResolved, rightResolved] = await Promise.all([
         requiredTerms: leftTerms,
         fallbackUrl: leftSearchUrl,
       }),
-  rightStaticPurchaseUrl
+  rightStaticPurchaseUrl && isVerifiedPurchaseUrl(rightStaticPurchaseUrl)
     ? Promise.resolve({
         href: rightStaticPurchaseUrl,
         isAffiliate: true,
@@ -99,24 +117,35 @@ const faq = seed.faqEntries?.length
   ? seed.faqEntries
   : [
       {
-        question: '比較対象はどのように選んでいますか？',
-        answer: 'メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。ランキング順位や価格を保証するものではありません。',
+        question: `${seed.leftProduct}と${seed.rightProduct}の主な違いは？`,
+        answer: `主要な差分はこの記事の比較表で確認できます。価格・在庫・仕様は変動するため、購入時点の公式ページと販売ページを確認してください。`,
       },
       {
-        question: '価格や在庫は確認できますか？',
-        answer: '価格・在庫・ポイント・送料は変動するため、記事内の販売ページで購入時点の情報をご確認ください。',
+        question: `どちらを選べばよい？`,
+        answer: `用途・置き場所・対応機器・サイズを優先順位にして、公式仕様と販売ページを照らし合わせてください。`,
       },
       {
-        question: 'どちらを選べばよいですか？',
-        answer: '用途、置き場所、対応機器、サイズ、手入れのしやすさを優先順位にして、公式仕様と販売ページを照らし合わせてください。',
+        question: `比較対象はどのように選んでいますか？`,
+        answer: `メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。`,
       },
     ];
+const hasSocialProof = Boolean(seed.socialProofQuery);
+const hasOfficialProse = seed.officialProse && seed.officialProse.length > 0;
+const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
 ---
 <BaseLayout title={article.title} description={article.description} article={article} faq={faq} robots={isPublicArticle ? undefined : 'noindex,nofollow'}>
   <article class="wrap section article">
     <p class="meta"><a href="/articles/">比較記事一覧</a> / {article.category} · 公開日 <time datetime={article.publishedAt}>{article.publishedAt}</time> · 更新日 <time datetime={article.modifiedAt}>{article.modifiedAt}</time></p>
     <h1>{article.headline}</h1>
     <ComparisonMemoButton articleId={article.id} />
+    <p class="lead">{seed.lead ?? article.summary}</p>
+    {hasHeroSources && (
+      <nav class="jump-nav" aria-label="ページ内ジャンプ">
+        <a href="#key-differences">違い</a>
+        <a href="#decision-guide">結局どっち？</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    )}
     {!hasHeroSources && <TrustLine checkedAt={article.productInfoCheckedAt} />}
     {seed.officialSources?.length ? (
       <details class="fold-section source-note" aria-labelledby="official-sources">
@@ -127,7 +156,6 @@ const faq = seed.faqEntries?.length
       </details>
     ) : null}
 
-    <p>{seed.lead ?? article.summary} ここでは、メーカー公式ページで確認できる仕様と、販売ページで購入時に確認する項目を分けて整理します。</p>
     {hasHeroSources ? (
       <ArticleComparisonV2
         left={{ brand: leftHero.brand, line: leftHero.line, tagline: seed.leftPoint, image: images.left ?? '', imageAlt: seed.leftProduct, officialHref: leftOfficialHref, guidePoints: [seed.leftPoint], purchaseHref: leftProductHref }}
@@ -139,11 +167,52 @@ const faq = seed.faqEntries?.length
     ) : <h2 id="key-differences">違いを確認する</h2>}
     {!hasHeroSources && (
       <NextStepBlock
-        left={{ label: seed.leftProduct, href: leftProductHref }}
-        right={{ label: seed.rightProduct, href: rightProductHref }}
+        left={{ label: seed.leftProduct, href: leftProductHref, image: images.left }}
+        right={{ label: seed.rightProduct, href: rightProductHref, image: images.right }}
         purchaseLinkStatus={article.purchaseLinkStatus}
       />
     )}
+
+    {hasOfficialProse && (
+      <details class="fold-section" id="official">
+        <summary>公式情報（確認できた項目）</summary>
+        {seed.officialProse!.map((section) => (
+          <>
+            <h3>{section.heading}</h3>
+            <ul class="official-list">
+              {section.items.map((item) => <li>{item}</li>)}
+            </ul>
+          </>
+        ))}
+      </details>
+    )}
+
+    {hasSocialProof && (
+      <ArticleSocialProof
+        query={seed.socialProofQuery!}
+        checkedAt={seed.socialProofCheckedAt}
+        hasPosts={seed.socialProofHasPosts}
+        bestMatch={seed.socialProofBestMatch as any}
+      >
+        {seed.embeds && seed.embeds.length > 0 && (
+          <div class="sns-embeds">
+            {seed.embeds.map((embed) => (
+              <ExternalEmbed
+                provider={embed.provider as any}
+                url={embed.url}
+                title={embed.title}
+                match={embed.match as any}
+                purpose={embed.purpose}
+                tone={embed.tone as any}
+                autoload={embed.autoload}
+                compact={embed.compact}
+              />
+            ))}
+          </div>
+        )}
+      </ArticleSocialProof>
+    )}
+
     <details class="fold-section" id="specs">
       <summary>詳細仕様（公式ページで確認した項目）</summary>
       <div class="table-scroll">
@@ -163,7 +232,7 @@ const faq = seed.faqEntries?.length
     </div>
 
     <h2>購入前の注意</h2>
-    <p>ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。</p>
+    <p>{seed.disclaimer ?? 'ランキングやレビューは時期・販売店・用途で変わります。この記事は購入を断定するものではなく、公式仕様を確認するための比較メモです。'}</p>
     <div class="purchase-cards">
       <PurchaseCard name={seed.leftProduct} audience={seed.leftPoint} href={leftProductHref} imagePath={images.left} imageUrl={leftResolved.product?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" purchaseLinkStatus={article.purchaseLinkStatus} />
       <PurchaseCard name={seed.rightProduct} audience={seed.rightPoint} href={rightProductHref} imagePath={images.right} imageUrl={rightResolved.product?.imageUrl} placement="article-end" note="購入時点の販売条件をご確認ください。" purchaseLinkStatus={article.purchaseLinkStatus} />
@@ -173,5 +242,20 @@ const faq = seed.faqEntries?.length
     <ol class="change-log">
       {article.changeLog.map((entry) => <li><time datetime={entry.date}>{entry.date}</time>：{entry.summary}</li>)}
     </ol>
+
+    {hasSourceLinks && (
+      <>
+        <h2>情報源一覧</h2>
+        <ul class="source-list">
+          {seed.sourceLinks!.map((link) => (
+            <li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a>{link.date ? `（${link.date}確認）` : ''}</li>
+          ))}
+        </ul>
+      </>
+    )}
+
+    <h2>調査方法・免責</h2>
+    <p>このサイトの比較は、メーカー公式の商品ページ・公式の比較表で確認できる情報のみを根拠としています。個人の感想や口コミは比較の根拠にしていません。</p>
   </article>
+  <RelatedArticles currentPath={article.path} currentCategory={article.category} />
 </BaseLayout>

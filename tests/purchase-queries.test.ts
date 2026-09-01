@@ -183,11 +183,9 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
       },
     );
 
-    // 同一 JAN を掲げる複数出品は一意に定められない → 商品を選ばず
-    // 検索 URL フォールバック（hb.afl リダイレクト変換）へ倒れる。
+    // 同一 JAN を掲げる複数出品は一意に定められないため、フォールバックURLへ倒れる。
     expect(result.product).toBeUndefined();
     expect(result.href).toContain("search.rakuten.co.jp");
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
     expect(result.isAffiliate).toBe(true);
   });
 
@@ -234,7 +232,6 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
     );
 
     expect(result.product).toBeUndefined();
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
     expect(result.href).toContain("search.rakuten.co.jp");
     expect(result.isAffiliate).toBe(true);
   });
@@ -256,7 +253,6 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
     );
 
     expect(result.product).toBeUndefined();
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
     expect(result.href).toContain("search.rakuten.co.jp");
     expect(result.isAffiliate).toBe(true);
   });

@@ -32,7 +32,13 @@
  */
 
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  readdirSync,
+  writeFileSync,
+} from "node:fs";
 import path from "node:path";
 import { format } from "prettier";
 import { parseArticles } from "./generate-x-announcements.mjs";
@@ -207,6 +213,37 @@ export function collectArticleClaims(articleId) {
   const text = readFileSync(file, "utf8");
   let claims = extractSpecClaims(text);
   let officialUrls = extractOfficialUrls(text);
+
+  // Data-driven pages may have spec claims in comparison-v2 entries,
+  // manual-seeds entries, or both rather than inline in the page.
+  if (claims.length === 0 && officialUrls.length === 0) {
+    // 1. comparison-v2 entry (spec rows, official hrefs)
+    const compFile = `src/content/articles/comparison-v2/${articleId}.ts`;
+    try {
+      const compText = readFileSync(compFile, "utf8");
+      claims = extractSpecClaims(compText);
+      officialUrls = extractOfficialUrls(compText);
+    } catch {
+      // No comparison-v2 entry.
+    }
+
+    // 2. manual-seeds entry (official prose, source links with spec values)
+    const seedsFile = `src/content/articles/manual-seeds.ts`;
+    try {
+      const seedsText = readFileSync(seedsFile, "utf8");
+      // Extract the seed block for this articleId
+      const seedMatch = new RegExp(
+        `\\{\\s*id:\s*"${articleId}"[\\s\\S]*?\n\\},?\n`,
+      ).exec(seedsText);
+      if (seedMatch) {
+        claims = claims.concat(extractSpecClaims(seedMatch[0]));
+        officialUrls = officialUrls.concat(extractOfficialUrls(seedMatch[0]));
+      }
+    } catch {
+      // No manual-seeds file.
+    }
+  }
+
   const recordNames = readProductRecordNames();
   if (recordNames.some((name) => new RegExp(`\\b${name}\\b`).test(text))) {
     const products = readProductsSpecData();
@@ -431,8 +468,13 @@ function parseArgs(argv) {
 
 async function main() {
   const options = parseArgs(process.argv.slice(2));
+  const articlesDir = "src/content/articles";
+  const excludeFiles = new Set(["index.ts", "types.ts"]);
   const articles = parseArticles(
-    readFileSync("src/content/articles.ts", "utf8"),
+    readdirSync(articlesDir)
+      .filter((f) => f.endsWith(".ts") && !excludeFiles.has(f))
+      .map((f) => readFileSync(path.join(articlesDir, f), "utf8"))
+      .join("\n"),
   );
 
   if (options.mode === "check") {

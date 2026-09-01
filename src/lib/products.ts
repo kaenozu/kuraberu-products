@@ -6,8 +6,6 @@
  * 確認日と参照先は各記事の metadata（productInfoCheckedAt 等）で管理する。
  */
 
-import { rakutenAffiliateSearchUrl } from "./rakuten-affiliate";
-
 export interface ProductSpec {
   /** 容量（例: 0.5L） */
   capacity: string;
@@ -130,93 +128,209 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-eh-nc80-vs-eh-nc50:left": {
+    name: "パナソニック ナノケア EH-NC80",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980767948/",
+  },
+  "panasonic-eh-nc80-vs-eh-nc50:right": {
+    name: "パナソニック ナノケア EH-NC50",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980767931/",
+  },
+  "panasonic-eh-na9m-vs-refa-beautech:left": {
+    name: "パナソニック ナノケア EH-NA9M-H",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-na9m-h/",
+  },
+  "panasonic-eh-na9m-vs-refa-beautech:right": {
+    name: "ReFa BEAUTECH DRYER",
+    purchaseUrl: "https://item.rakuten.co.jp/mtgec-beauty/2009320101/",
+  },
+  "panasonic-eh-na0k-vs-eh-ne9n:left": {
+    name: "パナソニック EH-NA0K-K",
+    purchaseUrl: "https://a.r10.to/hk0qJc",
+  },
+  "panasonic-eh-na0k-vs-eh-ne9n:right": {
+    name: "パナソニック EH-NE9N-W",
+    purchaseUrl: "https://a.r10.to/h5SMmD",
+  },
+  "recolte-automatic-cooker-vs-panasonic-nf-pc400:left": {
+    name: "レコルト 自動調理ポット RSY-2",
+    purchaseUrl: "https://item.rakuten.co.jp/plywood/20149238/",
+  },
+  "recolte-automatic-cooker-vs-panasonic-nf-pc400:right": {
+    name: "パナソニック NF-PC400",
+    purchaseUrl: "https://item.rakuten.co.jp/yamada-denki/6612234017/",
+  },
+  "panasonic-es-wp9b-vs-es-wg0b:left": {
+    name: "パナソニック スムースエピ ES-WP9B",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980882580/",
+  },
+  "panasonic-es-wp9b-vs-es-wg0b:right": {
+    name: "パナソニック スムースエピ ES-WG0B",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980872321/",
+  },
+  "makita-cl107-vs-cl286:left": {
+    name: "マキタ CL107FDSHW",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/0088381346009/",
+  },
+  "makita-cl107-vs-cl286:right": {
+    name: "マキタ CL286FD",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/0088381781572/",
+  },
+  "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:left": {
+    name: "Soundcore Liberty 4 NC",
+    purchaseUrl: "https://a.r10.to/hF7iGR",
+  },
+  "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:right": {
+    name: "ソニー WF-C710N",
+    purchaseUrl: "https://a.r10.to/hgcZzy",
+  },
+  "logicool-mx-master-3s-vs-m650:left": {
+    name: "Logicool MX Master 3S",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fmx2300cr%2F&link_type=picttext",
+  },
+  "logicool-mx-master-3s-vs-m650:right": {
+    name: "Logicool Signature M650",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm650mgr%2F&link_type=picttext",
+  },
+  "logicool-k650-vs-k580:left": {
+    name: "Logicool K650 Signature Wireless Keyboard",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk650gr%2F&link_type=picttext",
+  },
+  "logicool-k650-vs-k580:right": {
+    name: "Logicool K580",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk580gr%2F&link_type=picttext",
+  },
+  "logicool-lift-vs-m550:left": {
+    name: "Logicool LIFT Vertical Ergonomic Mouse",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm800gr%2F&link_type=picttext",
+  },
+  "logicool-lift-vs-m550:right": {
+    name: "Logicool Signature M550",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm550mgr%2F&link_type=picttext",
+  },
+  "logicool-zone-vibe-100-vs-zone-300:left": {
+    name: "Logicool Zone Vibe 100 Wireless (Zonev100GR)",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/zonev100gr/",
+  },
+  "logicool-zone-vibe-100-vs-zone-300:right": {
+    name: "Logicool Zone 300 Wireless (Zone300MBK)",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/zone300mbk/",
+  },
   "babybjorn-bouncer:left": {
     name: "ベビービョルン Bliss",
-    purchaseUrl: "https://a.r10.to/h5dRLC",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbouncer-bliss%2F&link_type=picttext",
   },
   "babybjorn-bouncer:right": {
     name: "ベビービョルン バランスソフト",
-    purchaseUrl: "https://a.r10.to/hPmZhN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbouncer-balance-soft%2F&link_type=picttext",
   },
   "babybjorn-cradle:left": {
     name: "ベビービョルン クレードル",
-    purchaseUrl: "https://a.r10.to/hgUiG0",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-cradle%2F&link_type=picttext",
   },
   "babybjorn-cradle:right": {
     name: "アップリカ ココネルエアー AB",
-    purchaseUrl: "https://a.r10.to/h8tr4u",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e58e32.3ad2a371.56e58e34.66665b3b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Faprica-shop%2Fapr2594%2F&link_type=picttext",
   },
   "babybjorn-onekai:left": {
     name: "ベビービョルン ONE KAI",
-    purchaseUrl: "https://a.r10.to/hYhUfN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbabycarrier-one-kai-air%2F&link_type=text",
   },
   "babybjorn-onekai:right": {
     name: "ベビービョルン MOVE",
-    purchaseUrl: "https://a.r10.to/h41WNP",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbabycarrier-move%2F&link_type=text",
   },
   "babybjorn-potty:left": {
     name: "ベビービョルン スマートポッティ",
-    purchaseUrl: "https://a.r10.to/hP1wdW",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fsmart-potty%2F&link_type=text",
   },
   "babybjorn-potty:right": {
     name: "ベビービョルン ポッティチェア",
-    purchaseUrl: "https://a.r10.to/h5kpDa",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fpotty-chair%2F&link_type=text",
   },
   "babybjorn:left": {
     name: "ベビービョルン HARMONY",
-    purchaseUrl: "https://a.r10.to/hgxfw5",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-harmony%2F&link_type=text",
   },
   "babybjorn:right": {
     name: "ベビービョルン MINI",
-    purchaseUrl: "https://a.r10.to/hY6U8Q",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fbabybjorn%2Fbaby-carrier-mini-3d%2F&link_type=text",
   },
   "combi-the-s-plus-vs-premium:left": {
     name: "コンビ THE S plus",
-    purchaseUrl: "https://a.r10.to/hgk4Rg",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e77b3a.3527f7d5.56e77b3b.a37819ca/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcombi%2F4972990195010%2F&link_type=picttext",
   },
   "combi-the-s-plus-vs-premium:right": {
     name: "コンビ THE S premium",
-    purchaseUrl: "https://a.r10.to/hPmZEE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e77b3a.3527f7d5.56e77b3b.a37819ca/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fcombi%2Fthes-premium-r129-va%2F&link_type=picttext",
   },
   "hitachi-bd-sx130k-vs-bd-stx130k:left": {
     name: "日立 BD-SX130K",
-    purchaseUrl: "https://a.r10.to/hgXjdE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e827a8.6d705129.56e827a9.d5f820cf/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frisaikurushopr-1%2Fe6602r-1%2F&link_type=picttext",
   },
   "hitachi-bd-sx130k-vs-bd-stx130k:right": {
     name: "日立 BD-STX130K",
-    purchaseUrl: "https://a.r10.to/hRIzoN",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e827c9.3ddf94e9.56e827ca.fba0ee75/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fden-ki-ya2%2Fbd-stx130kl-w%2F&link_type=picttext",
   },
   "kingjim-tepra-sr-r2500p-vs-sr-mk1:left": {
     name: "キングジム テプラ PRO SR-R2500P",
-    purchaseUrl: "https://a.r10.to/h9jN67",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e8aeb8.699b0598.56e8aeb9.8561f4a2/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fyamada-denki%2F525788018%2F&link_type=picttext",
   },
   "kingjim-tepra-sr-r2500p-vs-sr-mk1:right": {
     name: "キングジム テプラ PRO SR-MK1",
-    purchaseUrl: "https://a.r10.to/hPnFPC",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e8b069.e9228dbc.56e8b06a.9ca23c34/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fonesmart%2F4971660776429%2F&link_type=picttext",
   },
   "merries-newborn:left": {
     name: "メリーズ 新生児用 ファーストプレミアム",
-    purchaseUrl: "https://a.r10.to/h5xcuC",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e93b53.ec7144bb.56e93b54.78dff077/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnetbaby%2F404201%2F&link_type=picttext",
   },
   "merries-newborn:right": {
     name: "メリーズ 新生児用 ずっと肌さらエアスルー",
-    purchaseUrl: "https://a.r10.to/h8gCjo",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e93b96.676553d5.56e93b97.c08dff4b/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjandcbaby%2Fkao-tnb96%2F&link_type=picttext",
   },
   "merries-pants:left": {
     name: "メリーズ パンツタイプ ファーストプレミアム",
-    purchaseUrl: "https://a.r10.to/hPx3cE",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56e93b53.ec7144bb.56e93b54.78dff077/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fnetbaby%2F404698%2F&link_type=picttext",
   },
   "merries-pants:right": {
     name: "メリーズ パンツタイプ ずっと肌さらエアスルー",
-    purchaseUrl: "https://a.r10.to/h5LbWy",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ea557f.e01de687.56ea5580.6eb3aa89/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjandcshop%2Fahkaopm58%2F&link_type=picttext",
   },
   "moony-m:left": {
     name: "ムーニー 低刺激であんしん",
-    purchaseUrl: "https://a.r10.to/h58jf3",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56eb110b.d12f383c.56eb110c.df99efd3/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Frakuten24%2F4903111241439%2F&link_type=picttext",
   },
   "moony-m:right": {
     name: "ムーニー マシュマロ肌ごこちモレ安心",
-    purchaseUrl: "https://a.r10.to/h5ZjVa",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56eb1351.8b5bcbf5.56eb1352.65c70c66/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Funicharm%2F101302%2F&link_type=picttext",
   },
   "pampers-newborn:left": {
     name: "パンパース 新生児用 肌へのいちばん",
@@ -228,37 +342,39 @@ export const articlePurchaseLinks = {
   },
   "panasonic-baby-monitor-kx-hc705:card": {
     name: "パナソニック ベビーモニター KX-HC705",
-    purchaseUrl: rakutenAffiliateSearchUrl(
-      "パナソニック ベビーモニター KX-HC705",
-    ),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fksdenki%2F4549980233351%2F&link_type=text",
   },
   "panasonic-eh-na9m-guide:card": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpanasonic-store%2Feh-na9m-h%2F&link_type=text",
   },
   "panasonic-eh-na9m-vs-eh-na7m:left": {
     name: "パナソニック ナノケア EH-NA9M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA9M"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpanasonic-store%2Feh-na9m-h%2F&link_type=text",
   },
   "panasonic-eh-na9m-vs-eh-na7m:right": {
     name: "パナソニック ナノケア EH-NA7M",
-    purchaseUrl: rakutenAffiliateSearchUrl("EH-NA7M"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fpanasonic-store%2Feh-na7m-h%2F&link_type=text",
   },
   "panasonic-eh-ne7m-vs-eh-ne5m:left": {
     name: "パナソニック EH-NE7M",
-    purchaseUrl: "https://a.r10.to/h8tr3m",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-ne7m-w/",
   },
   "panasonic-eh-ne7m-vs-eh-ne5m:right": {
     name: "パナソニック EH-NE5M",
-    purchaseUrl: "https://a.r10.to/hPEiKo",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-ne5m-w/",
   },
   "panasonic-mc-nx810km-vs-mc-nx700k:left": {
     name: "パナソニック MC-NX810KM",
-    purchaseUrl: "https://a.r10.to/hPxF2V",
+    purchaseUrl: "https://item.rakuten.co.jp/akindo/mc-nx810km-w/",
   },
   "panasonic-mc-nx810km-vs-mc-nx700k:right": {
     name: "パナソニック MC-NX700K",
-    purchaseUrl: "https://a.r10.to/hgb52S",
+    purchaseUrl: "https://item.rakuten.co.jp/akindo/mc-nx700k-w/",
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
@@ -270,11 +386,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
-    purchaseUrl: "https://a.r10.to/hPgPTZ",
+    purchaseUrl: "https://a.r10.to/h5Y7Pe",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:right": {
     name: "パナソニック MC-SB35K",
-    purchaseUrl: "https://a.r10.to/hgxWYi",
+    purchaseUrl: "https://a.r10.to/hPV2LX",
   },
   "panasonic-ne-fl1a-vs-ne-fl1c:left": {
     name: "パナソニック NE-FL1A",
@@ -310,11 +426,19 @@ export const articlePurchaseLinks = {
   },
   "sharp-kc-s50-vs-fu-s50:left": {
     name: "シャープ KC-S50",
-    purchaseUrl: "https://a.r10.to/hgZ0mc",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4974019761503/",
   },
   "sharp-kc-s50-vs-fu-s50:right": {
     name: "シャープ FU-S50",
-    purchaseUrl: "https://a.r10.to/hPyHPd",
+    purchaseUrl: "https://item.rakuten.co.jp/a-price/2980000205750/",
+  },
+  "sharp-kc-s50-vs-panasonic-f-vxw55:left": {
+    name: "シャープ KC-S50",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4974019761503/",
+  },
+  "sharp-kc-s50-vs-panasonic-f-vxw55:right": {
+    name: "パナソニック F-VXW55",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/f-vxw55-w/",
   },
   "panasonic-f-px60c-vs-f-px70c:left": {
     name: "パナソニック F-PX60C",
@@ -350,11 +474,11 @@ export const articlePurchaseLinks = {
   },
   "tefal-ko5901jp-vs-ko8601j0:left": {
     name: "ティファール KO5901JP",
-    purchaseUrl: "https://a.r10.to/hk5Hnn",
+    purchaseUrl: "https://a.r10.to/hgJSgN",
   },
   "tefal-ko5901jp-vs-ko8601j0:right": {
     name: "ティファール KO8601J0",
-    purchaseUrl: "https://a.r10.to/h5Qe2o",
+    purchaseUrl: "https://a.r10.to/hPYDq2",
   },
   "thermos-kfm-020-vs-kfi-020:left": {
     name: "サーモス KFM-020",
@@ -382,11 +506,13 @@ export const articlePurchaseLinks = {
   },
   "tiger-mta-j050-guide:left": {
     name: "タイガー MTA-J050",
-    purchaseUrl: tigerMtaJ050.rakutenUrl,
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiger-official-store%2Fmta-j%2F&link_type=text",
   },
   "tiger-mta-j050-guide:right": {
     name: "タイガー MTA-J080",
-    purchaseUrl: rakutenAffiliateSearchUrl("タ イガー MTA-J080"),
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/hgc/56e37453.8885bd8a.56e37454.e8853422/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Ftiger-official-store%2Fmta-j%2F&link_type=text",
   },
   "tiger-pcj-a080-vs-pcm-a080:left": {
     name: "タイガー 電気ケトル PCJ-A080",
@@ -398,11 +524,11 @@ export const articlePurchaseLinks = {
   },
   "tiger-pct-a120-vs-pct-a150:left": {
     name: "タイガー PCT-A120",
-    purchaseUrl: "https://a.r10.to/hRBUg4",
+    purchaseUrl: "https://a.r10.to/hFYUbM",
   },
   "tiger-pct-a120-vs-pct-a150:right": {
     name: "タイガー PCT-A150",
-    purchaseUrl: "https://a.r10.to/hPWaUo",
+    purchaseUrl: "https://a.r10.to/h57s1i",
   },
   "yamazaki-condor-wagon-vs-self-wagon:left": {
     name: "山崎産業 コンドル FU943-000X-MB",
@@ -435,6 +561,14 @@ export const articlePurchaseLinks = {
   "yamazaki-ofuda-stand-rin-vs-single:right": {
     name: "山崎実業 神札スタンド リン シングル（6144）",
     purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz22nov22h02/",
+  },
+  "yamazaki-dishwasher-rack-241925-vs-241926:left": {
+    name: "山崎実業 食洗機ラック タワー ロータイプ（241925）",
+    purchaseUrl: "https://a.r10.to/T3hEWa",
+  },
+  "yamazaki-dishwasher-rack-241925-vs-241926:right": {
+    name: "山崎実業 食洗機ラック タワー ハイタイプ（241926）",
+    purchaseUrl: "https://a.r10.to/hg9gYo",
   },
   "yamazaki-free-broom-32-vs-45:left": {
     name: "山崎産業 JS自由箒 32（BR952-032J-MB）",
@@ -470,11 +604,11 @@ export const articlePurchaseLinks = {
   },
   "zojirushi-ec-kv50-vs-ec-ma60:left": {
     name: "象印 EC-KV50",
-    purchaseUrl: "https://a.r10.to/h5QPUy",
+    purchaseUrl: "https://a.r10.to/hg1Lco",
   },
   "zojirushi-ec-kv50-vs-ec-ma60:right": {
     name: "象印 EC-MA60",
-    purchaseUrl: "https://a.r10.to/h5Ob79",
+    purchaseUrl: "https://a.r10.to/h5tron",
   },
   "yamajitsu-film-holder-242286-vs-242287:left": {
     name: "山崎実業 フィルムフックまな板ホルダー タワー 242286",
@@ -502,10 +636,40 @@ export const articlePurchaseLinks = {
   },
   "sony-wh-1000xm6-vs-wh-1000xm5:left": {
     name: "ソニー WH-1000XM6",
-    purchaseUrl: "https://a.r10.to/hgj0yu",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56efb198.78b56db2.56efb199.4a5fe96d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fa-price%2F4548736162600%2F&link_type=picttext",
   },
   "sony-wh-1000xm6-vs-wh-1000xm5:right": {
     name: "ソニー WH-1000XM5",
-    purchaseUrl: "https://a.r10.to/hPygQu",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56efb198.78b56db2.56efb199.4a5fe96d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fa-price%2F4548736132566%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-vs-mx-keys-mini:left": {
+    name: "Logicool MX Keys S",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx800sgr%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-vs-mx-keys-mini:right": {
+    name: "Logicool MX Keys Mini",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx700gr%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-for-mac-vs-k780:left": {
+    name: "Logicool MX Keys S for Mac",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fkx800smsg%2F&link_type=picttext",
+  },
+  "logicool-mx-keys-s-for-mac-vs-k780:right": {
+    name: "Logicool K780",
+    purchaseUrl:
+      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk780%2F&link_type=picttext",
+  },
+  "panasonic-eh-na0j-vs-eh-na0g:left": {
+    name: "パナソニック ナノケア EH-NA0J",
+    purchaseUrl: "https://item.rakuten.co.jp/jtus/652954/",
+  },
+  "panasonic-eh-na0j-vs-eh-na0g:right": {
+    name: "パナソニック ナノケア EH-NA0G",
+    purchaseUrl: "https://item.rakuten.co.jp/ekosuta/eh20819/",
   },
 } as const satisfies Record<string, ArticlePurchaseLink>;

@@ -1,6 +1,7 @@
 import {
   isAllowedRakutenUrl,
   isAffiliateRakutenUrl,
+  isRakutenProductDetailUrl,
   toAffiliateRakutenUrl,
 } from "../../config/runtime-env.mjs";
 
@@ -14,6 +15,9 @@ export type RakutenProduct = {
 };
 
 export const RAKUTEN_API_TIMEOUT_MS = 5_000;
+
+/** 楽天IchibaItem Search API のバージョン。キャッシュキーに含め、API仕様変更時に自動的にキャッシュを無効化する。 */
+const RAKUTEN_API_VERSION = "20260701";
 
 /**
  * 成功応答キャッシュの TTL。長時間プロセス（wrangler dev 等）で
@@ -165,7 +169,9 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         name: String(item.itemName ?? ""),
         url: itemUrl,
         affiliateUrl:
-          affiliateUrl && isAllowedRakutenUrl(affiliateUrl)
+          affiliateUrl &&
+          isAllowedRakutenUrl(affiliateUrl) &&
+          isRakutenProductDetailUrl(itemUrl)
             ? affiliateUrl
             : undefined,
         imageUrl: /^https:\/\/(?:[^/]+\.)?image\.rakuten\.co\.jp\//i.test(
@@ -181,7 +187,7 @@ export function parseRakutenProducts(data: unknown): RakutenProduct[] {
         item.id &&
         item.name &&
         Number.isFinite(item.price) &&
-        isAllowedRakutenUrl(item.url),
+        isRakutenProductDetailUrl(item.url),
     );
 }
 
@@ -287,7 +293,7 @@ export async function fetchRakutenProducts(
   hits = 10,
   options: RequestRakutenOptions = {},
 ): Promise<RakutenProduct[]> {
-  const cacheKey = `${keyword}\u0000${hits}`;
+  const cacheKey = `${keyword}\u0000${hits}\u0000${RAKUTEN_API_VERSION}`;
   const clock = options.clock ?? Date.now;
   const cached = cache.get(cacheKey);
   if (cached) {
@@ -367,9 +373,23 @@ export async function resolvePurchaseHref(
     options.selection ?? {},
   );
 
-  const rawHref =
-    selected?.affiliateUrl ?? selected?.url ?? options.fallbackUrl;
-  const href = toAffiliateRakutenUrl(rawHref) ?? rawHref ?? "";
+  // Search URLs are never purchase destinations. A missing/ambiguous detail
+  // page remains unset rather than becoming a misleading affiliate CTA.
+  const rawHref = selected?.url;
+  const resolvedHref =
+    rawHref && isRakutenProductDetailUrl(rawHref)
+      ? (toAffiliateRakutenUrl(
+          selected?.affiliateUrl ?? rawHref,
+          import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
+        ) ?? rawHref)
+      : "";
+  const fallbackHref = options.fallbackUrl
+    ? (toAffiliateRakutenUrl(
+        options.fallbackUrl,
+        import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
+      ) ?? options.fallbackUrl)
+    : "";
+  const href = resolvedHref || fallbackHref;
   const isAffiliate = isAffiliateRakutenUrl(href);
 
   return { href, isAffiliate, product: selected };
@@ -386,7 +406,7 @@ async function fetchRakutenProductsUncached(
   if (!applicationId || !accessKey || !affiliateId) return [];
 
   const url = new URL(
-    "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701",
+    `https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/${RAKUTEN_API_VERSION}`,
   );
   url.searchParams.set("format", "json");
   url.searchParams.set("formatVersion", "2");

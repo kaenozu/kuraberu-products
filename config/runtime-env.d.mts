@@ -6,6 +6,7 @@ export interface ValidatedBuildEnvironment {
   deploymentEnv: DeploymentEnvironment;
   siteUrl?: string;
   contactUrl?: string;
+  amazonAssociateTag?: string;
   rakutenPremiumUrl?: string;
   rakutenSarasaraUrl?: string;
   rakutenApiReady: boolean;
@@ -19,9 +20,19 @@ export function normalizeOptionalPublicUrl(
   value: string | undefined,
   name?: string,
 ): string | undefined;
+export function normalizeOptionalAmazonAssociateTag(
+  value: string | undefined,
+  name?: string,
+): string | undefined;
+export function toAmazonAssociateSearchUrl(
+  query: unknown,
+  associateTag: string | undefined,
+): string | undefined;
 export function isAllowedRakutenUrl(value: unknown): boolean;
+export function isRakutenProductDetailUrl(value: unknown): boolean;
 export function toAffiliateRakutenUrl(
   value: string | undefined,
+  redirectPrefix?: string,
   environment?: EnvironmentValues,
 ): string | undefined;
 export function toAffiliateRakutenSearchUrl(

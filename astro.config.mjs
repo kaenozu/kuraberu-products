@@ -5,4 +5,7 @@ validateBuildEnvironment(process.env);
 
 export default defineConfig({
   output: "static",
+  image: {
+    service: { entrypoint: "astro/assets/services/sharp" },
+  },
 });

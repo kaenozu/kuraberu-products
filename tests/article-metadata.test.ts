@@ -52,8 +52,10 @@ import {
   yamajitsuFilmHolderArticle,
   yamazakiLaundryWireBasketArticle,
   yamazakiOfudaStandArticle,
+  yamazakiDishwasherRackArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
+import { site } from "../src/config/site";
 
 function extractJsonLd(html: string): Record<string, unknown>[] {
   return [
@@ -85,8 +87,9 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(72);
+    expect(publicArticleMetadata).toHaveLength(74);
     const newlyPublishedIds = [
+      "yamazaki-dishwasher-rack-241925-vs-241926",
       "panasonic-mc-nx810km-vs-mc-nx700k",
       "sony-wh-1000xm6-vs-wh-1000xm5",
       "roborock-qrevo-curv-vs-dreame-x50",
@@ -101,6 +104,7 @@ describe("article metadata", () => {
       "yamazaki-ofuda-stand-rin-vs-single",
       "zojirushi-eq-aa22-vs-eq-sa22",
       "zojirushi-eq-sb22-vs-eq-ah22",
+      "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -153,9 +157,8 @@ describe("article metadata", () => {
     expect(memoPage).toContain(
       "data-memo-template data-article-id={article.id}",
     );
-    expect(memoPage).toContain(
-      "sanitizeComparisonMemo(localStorage.getItem(comparisonMemoStorageKey), knownIds)",
-    );
+    // memo-app.ts に抽出された初期化ロジックが読み込まれることを確認
+    expect(memoPage).toContain('import { initMemoApp } from "../lib/memo-app"');
     expect(articleMetadata.map((article) => article.path)).toContain(
       waterBottle!.path,
     );
@@ -208,6 +211,7 @@ describe("article metadata", () => {
       yamajitsuFilmHolderArticle,
       yamazakiLaundryWireBasketArticle,
       yamazakiOfudaStandArticle,
+      yamazakiDishwasherRackArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
@@ -237,7 +241,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(84);
+    ).toHaveLength(86);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
@@ -332,10 +336,7 @@ describe.skipIf(!hasDist)("article metadata (rendered dist)", () => {
     expect(article?.dateModified).toBe(pampersNewbornArticle.modifiedAt);
     expect(article?.url).toBe(article?.mainEntityOfPage);
     expect(article?.image).toBe(
-      new URL(
-        pampersNewbornArticle.imagePath!,
-        "https://kuraberu-products.pages.dev/",
-      ).toString(),
+      new URL(pampersNewbornArticle.imagePath!, `${site.url}/`).toString(),
     );
     expect(html).toContain(
       `<meta property="article:published_time" content="${pampersNewbornArticle.publishedAt}">`,
@@ -463,33 +464,13 @@ describe.skipIf(!hasDist)(
 );
 
 describe.skipIf(!hasDist)("source-toggle fold (rendered dist)", () => {
-  it("every 根拠・確認先 table article renders the source-toggle and passes the gate", () => {
-    let pagesWithSourceTable = 0;
-    let pagesWithToggle = 0;
+  it("every article passes the source-toggle gate (toggle removed in P2-2)", () => {
     for (const slug of articleSlugs()) {
       const html = readFileSync(`dist/articles/${slug}/index.html`, "utf8");
       const relative = `articles/${slug}/index.html`;
       const errors = validateSourceToggle(relative, html);
       expect(errors).toEqual([]);
-      if (/根拠・確認先/.test(html)) pagesWithSourceTable += 1;
-      if (/class="source-toggle"/.test(html)) pagesWithToggle += 1;
     }
-    // 根拠列テーブルを持つ記事とトグルを持つ記事は同数（fold 過不足なし）
-    expect(pagesWithSourceTable).toBeGreaterThan(0);
-    expect(pagesWithToggle).toBe(pagesWithSourceTable);
-  });
-
-  it("renders the toggle immediately before the table on pampers", () => {
-    const html = readFileSync(
-      "dist/articles/pampers-newborn/index.html",
-      "utf8",
-    );
-    const tableIndex = html.indexOf('<div class="table-scroll">');
-    const before = html.slice(tableIndex - 60, tableIndex);
-    expect(before).toMatch(/<\/details>\s*$/);
-    expect(html).toMatch(
-      /<details class="source-toggle">[\s\S]*?<summary>根拠・確認先を表示<\/summary>/,
-    );
   });
 });
 
@@ -569,13 +550,6 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
       const diagnosisLink = html.match(
         /<a class="next-step__diagnosis-link" href="([^"]+)"/,
       );
-      const purchaseLinkStatus =
-        html.match(
-          /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
-        )?.[1] ?? null;
-      const isUnverified =
-        purchaseLinkStatus === "unverified" ||
-        purchaseLinkStatus === "unavailable";
       const supportedDiagnosis = new Set([
         "pigeon-bottle-160-240",
         "pigeon-bottle-240",
@@ -597,17 +571,10 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
       const buyLinks = html.match(
         /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
       );
-      if (isUnverified) {
-        expect(
-          buyLinks?.length ?? 0,
-          `${slug}: unverified article should have 0 purchase buttons`,
-        ).toBe(0);
-      } else {
-        expect(
-          buyLinks?.length,
-          `${slug}: next-step has 2 purchase buttons`,
-        ).toBe(2);
-      }
+      expect(
+        buyLinks?.length,
+        `${slug}: next-step has 2 purchase buttons`,
+      ).toBe(2);
       const specsIndex = html.indexOf('id="specs"');
       const blockIndex = html.indexOf('class="next-step"');
       if (specsIndex !== -1) {

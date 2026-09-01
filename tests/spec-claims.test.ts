@@ -1,5 +1,22 @@
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+
+/** Read all individual article source files (post-split structure). */
+function readAllArticleSources(): string {
+  const dir = "src/content/articles";
+  const exclude = new Set([
+    "index.ts",
+    "commercial.ts",
+    "types.ts",
+    "manual-seeds.ts",
+    "comparison-v2.ts",
+  ]);
+  return readdirSync(dir)
+    .filter((f) => f.endsWith(".ts") && !exclude.has(f))
+    .map((f) => readFileSync(join(dir, f), "utf8"))
+    .join("\n");
+}
 import { format } from "prettier";
 import {
   DEFAULT_THRESHOLD_DAYS,
@@ -183,17 +200,13 @@ describe("collectArticleClaims", () => {
 
 describe("checkCoverage", () => {
   it("passes for the real repository with the current manifest", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const manifest = loadManifest() as { entries: ManifestEntry[] };
     expect(checkCoverage(articles, manifest)).toEqual([]);
   });
 
   it("reports a manifest whose schemaVersion differs from SCHEMA_VERSION", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const manifest = loadManifest() as { entries: ManifestEntry[] };
     expect(SCHEMA_VERSION).toBe(1);
     expect(
@@ -204,9 +217,7 @@ describe("checkCoverage", () => {
   });
 
   it("reports spec-bearing articles without a manifest entry", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const manifest = loadManifest() as { entries: ManifestEntry[] };
     const missing = manifest.entries[0].articleId;
     const withoutEntry = {
@@ -220,9 +231,7 @@ describe("checkCoverage", () => {
   });
 
   it("reports an entry referencing an unknown article", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const manifest = {
       ...emptyManifest(),
       entries: [
@@ -238,9 +247,7 @@ describe("checkCoverage", () => {
   });
 
   it("reports a fingerprint drift for a known article", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const manifest = loadManifest() as { entries: ManifestEntry[] };
     const target = manifest.entries[0].articleId;
     const { claims } = collectArticleClaims(target);
@@ -264,9 +271,7 @@ describe("checkCoverage", () => {
 
 describe("addMissingEntries / updateEntry", () => {
   it("adds entries only for spec-bearing articles without an entry", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const { manifest, added } = addMissingEntries(
       articles,
       emptyManifest(),
@@ -281,9 +286,7 @@ describe("addMissingEntries / updateEntry", () => {
   });
 
   it("does not duplicate existing entries", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const first = addMissingEntries(articles, emptyManifest(), "2026-08-16");
     const second = addMissingEntries(articles, first.manifest, "2026-08-16");
     expect(second.added).toBe(0);
@@ -291,9 +294,7 @@ describe("addMissingEntries / updateEntry", () => {
   });
 
   it("updates the fingerprint and checkedAt of a target entry", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const seeded = addMissingEntries(articles, emptyManifest(), "2026-08-01");
     const target = seeded.manifest.entries[0];
     const { manifest } = updateEntry(
@@ -351,9 +352,7 @@ describe("real manifest hygiene", () => {
   });
 
   it("covers every real spec-bearing article", () => {
-    const articles = parseArticles(
-      readFileSync("src/content/articles.ts", "utf8"),
-    );
+    const articles = parseArticles(readAllArticleSources());
     const manifest = loadManifest() as { entries: ManifestEntry[] };
     const covered = new Set(
       manifest.entries.map((entry: ManifestEntry) => entry.articleId),

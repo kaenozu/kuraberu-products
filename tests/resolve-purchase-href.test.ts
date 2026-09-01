@@ -41,13 +41,13 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
+    expect(result.href).toBe("https://hb.afl.rakuten.co.jp/hgc/premium-66");
     expect(result.isAffiliate).toBe(true);
     expect(result.product).toBeDefined();
     expect(result.product?.id).toBe("4987176203229");
   });
 
-  it("returns fallback URL when no product is selected (ambiguous candidates)", async () => {
+  it("returns affiliate-converted fallback URL when no product is selected (ambiguous candidates)", async () => {
     vi.stubEnv("RAKUTEN_APPLICATION_ID", "test-app");
     vi.stubEnv("RAKUTEN_ACCESS_KEY", "test-key");
     vi.stubEnv("RAKUTEN_AFFILIATE_ID", "test-affiliate");
@@ -88,10 +88,9 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    // fallback is a search URL → toAffiliateRakutenUrl converts to hb.afl redirect
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
     expect(result.product).toBeUndefined();
+    expect(result.href).toContain("search.rakuten.co.jp");
+    expect(result.isAffiliate).toBe(true);
   });
 
   it("returns product URL when no affiliate URL is available", async () => {
@@ -168,7 +167,6 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toContain("hb.afl.rakuten.co.jp");
     expect(result.href).toContain("search.rakuten.co.jp");
     expect(result.isAffiliate).toBe(true);
   });

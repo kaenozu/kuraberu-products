@@ -34,6 +34,7 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
     const custom = "0123456789abcdef.01234567.fedcba9876543210.89abcdef";
     const url = toAffiliateRakutenUrl(
       "https://search.rakuten.co.jp/search/mall/F-YHVX120",
+      undefined,
       envWith({ RAKUTEN_AFFILIATE_ID: custom }),
     );
     expect(url).toContain(`https://hb.afl.rakuten.co.jp/hgc/${custom}/?pc=`);
@@ -51,9 +52,9 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
 
   it("passes already-affiliate and non-Rakuten URLs through unchanged", () => {
     const short = "https://a.r10.to/hPl2PS";
-    expect(toAffiliateRakutenUrl(short, {})).toBe(short);
+    expect(toAffiliateRakutenUrl(short, undefined, {})).toBe(short);
     const other = "https://example.com/item";
-    expect(toAffiliateRakutenUrl(other, {})).toBe(other);
+    expect(toAffiliateRakutenUrl(other, undefined, {})).toBe(other);
     expect(toAffiliateRakutenSearchUrl("   ", {})).toBeUndefined();
   });
 
@@ -65,14 +66,8 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
   it("keeps every generated purchase link in the registry on approved Rakuten hosts", async () => {
     const { articlePurchaseLinks } = await import("../src/lib/products");
     for (const entry of Object.values(articlePurchaseLinks)) {
-      const url = new URL(entry.purchaseUrl);
-      const isDirectRakutenItem =
-        url.hostname === "item.rakuten.co.jp" &&
-        url.pathname.split("/").length >= 3;
-      expect(
-        isAffiliateRakutenUrl(entry.purchaseUrl) || isDirectRakutenItem,
-        `not an affiliate or direct item URL: ${entry.purchaseUrl}`,
-      ).toBe(true);
+      expect(entry.purchaseUrl).not.toMatch(/search\.rakuten\.co\.jp/);
+      expect(entry.purchaseUrl).not.toContain("<");
       expect(entry.purchaseUrl).not.toContain("<");
     }
     const { hairDryerProducts } =

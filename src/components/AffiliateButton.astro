@@ -1,8 +1,10 @@
 ---
-import {isAllowedRakutenUrl, isAffiliateRakutenUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
+import { Picture } from 'astro:assets';
+import {isAffiliateRakutenUrl, isRakutenProductDetailUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {resolvePurchaseHref} from '../lib/rakuten';
 import {productQueries} from '../lib/purchase-queries';
+import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
   /** 検証済みの楽天URL（許可ホスト以外は無視される） */
@@ -20,7 +22,13 @@ interface Props {
 // interface Props により Astro.props は型付きで受ける。
 const {href,label,productId,placement,imagePath,subLabel,searchQuery,requiredTerms} = Astro.props;
 
-const directHref = typeof href === 'string' && isAllowedRakutenUrl(href) ? href : undefined;
+const isVerifiedAffiliateHref =
+  typeof href === 'string' &&
+  isAffiliateRakutenUrl(href);
+const directHref =
+  typeof href === 'string' && (isRakutenProductDetailUrl(href) || isVerifiedAffiliateHref)
+    ? href
+    : undefined;
 const genericQuery = typeof searchQuery === 'string' && searchQuery.trim()
   ? {
       keyword: searchQuery,
@@ -44,8 +52,10 @@ function findRegistryQuery(id: string | undefined) {
 
 // productId 未指定のときはレジストリを参照しない。登録済みならレジストリを優先し、
 // 無ければ genericQuery へフォールバックする。
-const query = findRegistryQuery(productId) ?? genericQuery;
-const fallbackHref = toAffiliateRakutenUrl(directHref);
+const query = isAffiliateRakutenUrl(directHref)
+  ? undefined
+  : findRegistryQuery(productId) ?? genericQuery;
+const fallbackHref = toAffiliateRakutenUrl(directHref, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
 const resolved = query
   ? await resolvePurchaseHref({
       keyword: query.keyword,
@@ -54,16 +64,24 @@ const resolved = query
       fallbackUrl: directHref,
     })
   : { href: fallbackHref ?? '', isAffiliate: isAffiliateRakutenUrl(fallbackHref) };
-const resolvedHref = resolved.href;
-const valid = isAllowedRakutenUrl(resolvedHref);
-const isAffiliateHref = resolved.isAffiliate;
+const resolvedHref = resolved.href || directHref || '';
+const isAffiliateHref = resolved.href ? resolved.isAffiliate : isAffiliateRakutenUrl(resolvedHref);
+const valid = isRakutenProductDetailUrl(resolvedHref) || isAffiliateHref;
+const isProductDetail = isRakutenProductDetailUrl(resolvedHref);
 const ctaRel = isAffiliateHref
   ? 'sponsored nofollow noopener noreferrer'
   : 'nofollow noopener noreferrer';
-const ctaLabel = isAffiliateHref ? label : '楽天市場で検索';
+const ctaLabel = isAffiliateHref
+  ? label
+  : isProductDetail
+    ? '楽天市場で商品ページを見る'
+    : '楽天市場で検索';
 const ctaSubLabel = isAffiliateHref
   ? (subLabel ?? '商品ページを確認する')
-  : '検索結果を確認する';
+  : isProductDetail
+    ? '商品ページを確認する'
+    : '検索結果を確認する';
+const resolvedImage = resolveImage(imagePath);
 ---
 {valid ? (
   <a
@@ -75,7 +93,9 @@ const ctaSubLabel = isAffiliateHref
     data-placement={placement}
     data-cta-event={ARTICLE_LAYOUT.ctaEvent}
   >
-    {imagePath && <img class="cta-card-image" src={imagePath} alt="" width="96" height="96" loading="lazy" />}
+    {resolvedImage && (
+      <Picture class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
+    )}
     <span class="cta-card-body">
       <span class="cta-card-label">{ctaLabel}</span>
       <span class="cta-card-sub">{ctaSubLabel} →{isAffiliateHref && <span class="ad-note">（広告）</span>}</span>

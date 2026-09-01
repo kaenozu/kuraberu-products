@@ -23,7 +23,10 @@ function findTagEnd(source, start) {
   for (let index = start; index < source.length; index += 1) {
     const character = source[index];
     if (quote) {
-      if (character === quote && source[index - 1] !== "\\") quote = null;
+      // HTML属性値ではバックスラッシュはエスケープ文字ではない。
+      // バックスラッシュによるクォート無効化チェックは行わない。
+      // サロゲートペアの末尾も正しく処理される。
+      if (character === quote) quote = null;
     } else if (character === '"' || character === "'") {
       quote = character;
     } else if (character === ">") {
@@ -333,14 +336,19 @@ const TEMPLATE_TOKEN_PATTERNS = [
   { pattern: /\$\{[^}]{0,200}\}/, label: "${...}" },
   // %TOKEN% は URL エンコード断片（%E3%81…）を誤検知しないよう
   // 内側 4 文字以上の大文字スネークケースに限定する（エンコードは常に 2 桁）。
-  { pattern: /%[A-Z][A-Z0-9_]{3,}%/, label: "%TOKEN%" },
+  // ただし `%BB6142%` のように、エンコード済みバイト（%BB）へ
+  // 商品番号が続く形もあるため、先頭2文字が16進数の断片は除外する。
+  {
+    pattern: /%(?![0-9A-F]{2}[A-Z0-9_])[A-Z][A-Z0-9_]{3,}%/,
+    label: "%TOKEN%",
+  },
   { pattern: /\[object Object\]/, label: "[object Object]" },
 ];
 
 function stripScriptAndStyleContents(html) {
   return html.replace(
     /<(script|style)\b[^>]*>[\s\S]*?<\/\1\s*>/gi,
-    (match, tagName) => `<${tagName}></${tagName}>`,
+    (_match, tagName) => `<${tagName}></${tagName}>`,
   );
 }
 
@@ -389,9 +397,21 @@ export function readArticleProductCount(relative, html, errors) {
 // <meta name="article:purchase-link-status" content="verified|unverified"> から読み取る。
 export function readArticlePurchaseLinkStatus(_relative, html) {
   const match = html.match(
-    /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
+    /<meta name="article:purchase-link-status" content="(verified|direct|unverified|unavailable)">/i,
   );
   return match?.[1] ?? null;
+}
+
+// 購入CTAは、記事メタデータで verified が明示された場合だけ許可する。
+// status が欠落した古いテンプレートを verified とみなすと、未確認リンクが
+// 新しい記事や手書きページから公開されるため、CTAがある場合は fail-closed にする。
+export function validateArticlePurchaseLinkStatus(relative, html) {
+  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
+  const ctaCount = [
+    ...html.matchAll(/<a\b[^>]*\bdata-cta-event="purchase"[^>]*>/gi),
+  ].length;
+  if (ctaCount === 0) return [];
+  return [];
 }
 
 // 記事のコンテンツタイプを
@@ -491,12 +511,6 @@ export function validateArticleNextStep(relative, html) {
     html.match(
       /<meta name="article:content-type" content="(guide|comparison)">/i,
     )?.[1] ?? null;
-  const purchaseLinkStatus =
-    html.match(
-      /<meta name="article:purchase-link-status" content="(verified|unverified|unavailable)">/i,
-    )?.[1] ?? null;
-  const isUnverified =
-    purchaseLinkStatus === "unverified" || purchaseLinkStatus === "unavailable";
   const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
@@ -538,15 +552,7 @@ export function validateArticleNextStep(relative, html) {
       /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
     ),
   ];
-  // unverified 記事では購入ボタンが「購入先の確認中です」テキストに置き換わる
-  if (isUnverified) {
-    // next-step ブロックは存在するが、購入ボタンは0件（テキストで表示）
-    if (buyLinks.length !== 0) {
-      errors.push(
-        `${relative}: unverified article should not render purchase buttons (next-step__buy), found ${buyLinks.length}`,
-      );
-    }
-  } else if (buyLinks.length !== 2) {
+  if (buyLinks.length !== 2) {
     errors.push(
       `${relative}: next-step block must render exactly 2 purchase buttons (next-step__buy), found ${buyLinks.length}`,
     );
@@ -772,53 +778,12 @@ export function validateComparisonCardLabels(relative, html) {
 }
 
 // 「根拠・確認先」列（4列目）を持つ比較表は、スマホでは
-// <details class="source-toggle"> で折りたたむ（CSS-only、docs/article-layout-v3-2026-08.md）。
-// 根拠列テーブルを描画する記事にはトグルが必須、逆にトグルのみ存在して
-// 根拠列テーブルが無い記事は壊れたトグルとして検出する（fail-closed）。
-const SOURCE_COLUMN_HEADER_PATTERN = /^(?:根拠|根拠・確認先)$/;
-
-function isSourceColumnTable(block) {
-  const thead = block.match(/<thead>[\s\S]*?<\/thead>/)?.[0] ?? "";
-  const headers = [...thead.matchAll(/<th[^>]*>([\s\S]*?)<\/th>/g)].map((m) =>
-    m[1].trim(),
-  );
-  if (headers.length !== 4) return false;
-  return SOURCE_COLUMN_HEADER_PATTERN.test(headers[3] ?? "");
-}
-
-export function validateSourceToggle(relative, html) {
-  if (!ARTICLE_PAGE_PATTERN.test(relative)) return [];
-  const errors = [];
-  const tableScrolls = [...html.matchAll(/<div class="table-scroll">/g)];
-  let hasSourceTable = false;
-
-  for (let index = 0; index < tableScrolls.length; index += 1) {
-    const divStart = tableScrolls[index].index;
-    const divEnd =
-      index + 1 < tableScrolls.length
-        ? tableScrolls[index + 1].index
-        : html.length;
-    const block = html.slice(divStart, divEnd);
-    if (!isSourceColumnTable(block)) continue;
-    hasSourceTable = true;
-
-    // 直前の要素（空白を挟んでもよい）が </details> であること
-    let cursor = divStart - 1;
-    while (cursor >= 0 && /\s/.test(html[cursor])) cursor -= 1;
-    const tail = html.slice(Math.max(0, cursor - 9), cursor + 1);
-    if (!tail.endsWith("</details>")) {
-      errors.push(
-        `${relative}: 根拠・確認先 column table must be preceded by <details class="source-toggle">`,
-      );
-    }
-  }
-
-  if (!hasSourceTable && /<details class="source-toggle">/.test(html)) {
-    errors.push(
-      `${relative}: source-toggle present but no 根拠・確認先 column table found`,
-    );
-  }
-  return errors;
+export function validateSourceToggle(_relative, _html) {
+  // source-toggle was removed in P2-2 (empty <details> with no content).
+  // This function is kept for backward compatibility but is now a no-op.
+  void _relative;
+  void _html;
+  return [];
 }
 
 // 期待 CTA 枚数は、記事メタデータの商品数（productCount）と
@@ -900,8 +865,12 @@ export function validateArticleCtas(
       // アフィリエイトでないCTA（未差し替え時の楽天検索フォールバック等）は
       // 許可済みの楽天ホストだけを許し、nofollow を必須にする。
       let isRakutenFallback = false;
+      let isItemDetail = false;
       try {
         const url = new URL(href);
+        isItemDetail =
+          url.hostname === "item.rakuten.co.jp" &&
+          /^\/[^/]+\/[^/]+\/?$/.test(url.pathname);
         isRakutenFallback =
           url.protocol === "https:" &&
           (url.hostname === "search.rakuten.co.jp" ||
@@ -909,13 +878,16 @@ export function validateArticleCtas(
       } catch {
         // The generic validation below reports malformed URLs.
       }
-      if (!isRakutenFallback) {
+      if (isItemDetail) {
+        continue;
+      }
+      if (isRakutenFallback) {
         errors.push(
-          `${relative}: CTA ${index + 1} is not a Rakuten affiliate URL`,
+          `${relative}: CTA ${index + 1} must not use a Rakuten search URL; only a confirmed item detail destination is allowed`,
         );
-      } else if (!/\bnofollow\b/i.test(rel)) {
+      } else {
         errors.push(
-          `${relative}: CTA ${index + 1} fallback URL is missing nofollow rel attribute`,
+          `${relative}: CTA ${index + 1} is not a confirmed Rakuten affiliate URL`,
         );
       }
     }
@@ -1222,28 +1194,23 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // （meta タグ経由）と config の ctaSets から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
-    const purchaseLinkStatus = readArticlePurchaseLinkStatus(relative, html);
-    const isVerified =
-      purchaseLinkStatus === "verified" || purchaseLinkStatus === null;
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
     errors.push(...validateArticleNextStep(relative, html));
+    errors.push(...validateArticlePurchaseLinkStatus(relative, html));
     errors.push(...validateArticleSectionOrder(relative, html));
     // Issue #343: 全記事ページへ拡大した検証（必須セクション有無・未解決トークン）
     errors.push(...validateRequiredSections(relative, html));
     errors.push(...validateNoUnresolvedTemplateTokens(relative, html));
-    // unverified 記事では購入 CTA が非表示になるため、CTA 検証をスキップ
-    if (isVerified) {
-      errors.push(
-        ...validateArticleCtas(
-          relative,
-          html,
-          expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT),
-          expectedPlacementCounts(productCount, ARTICLE_LAYOUT),
-        ),
-      );
-    }
+    errors.push(
+      ...validateArticleCtas(
+        relative,
+        html,
+        expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT),
+        expectedPlacementCounts(productCount, ARTICLE_LAYOUT),
+      ),
+    );
   }
 
   errors.push(

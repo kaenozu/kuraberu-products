@@ -3,10 +3,12 @@ import { readFileSync, readdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 
 const root = resolve(process.cwd());
-const articleSource = readFileSync(
-  join(root, "src/content/articles.ts"),
-  "utf8",
-);
+const articlesDir = join(root, "src/content/articles");
+const excludeFiles = new Set(["index.ts", "commercial.ts", "types.ts"]);
+const articleSource = readdirSync(articlesDir)
+  .filter((f) => f.endsWith(".ts") && !excludeFiles.has(f))
+  .map((f) => readFileSync(join(articlesDir, f), "utf8"))
+  .join("\n");
 const articlePages = readdirSync(join(root, "src/pages/articles"), {
   recursive: true,
   withFileTypes: true,
@@ -21,6 +23,14 @@ function purchaseCardBlocks(source: string): string[] {
 }
 
 describe("公開記事コンテンツ品質ゲート", () => {
+  it("不自然な数値差分の連結表現を回帰検知する", () => {
+    const malformedDelta = /約\d+g約\d+g|\d+枚\d+枚多い/g;
+    expect("約155g約55g軽い").toMatch(malformedDelta);
+    expect("約155g（比較対象より約55g軽い）").not.toMatch(malformedDelta);
+    expect("4枚2枚多い").toMatch(malformedDelta);
+    expect("4枚焼き（比較対象より2枚多い）").not.toMatch(malformedDelta);
+  });
+
   it("記事データへコード片や未展開の簡体字が混入しない", () => {
     expect(articleSource).not.toMatch(/\.setBackgroundResource|\bundefined\b/);
     expect(articleSource).not.toContain("毛络まり");
@@ -58,18 +68,48 @@ describe("公開記事コンテンツ品質ゲート", () => {
     }
   });
 
-  it("PurchaseCardコンポーネントがfail-closed実装であること", () => {
+  // #371: CTAは1アクション1メッセージ。旧「楽天市場で型番を確認」+「商品ページを確認する」の
+  // 同義重複を禁止する。メインCTAは単一の明確な行動指示であること。
+  it("PurchaseCardのCTAラベルが同義重複していない", () => {
     const componentSource = readFileSync(
       join(root, "src/components/PurchaseCard.astro"),
       "utf8",
     );
-    expect(componentSource).toMatch(
-      /isVerified\s*=\s*purchaseLinkStatus\s*===\s*["']verified["']/,
+    // 旧ラベルの再混入を禁止
+    expect(componentSource).not.toContain('label="楽天市場で型番を確認"');
+  });
+
+  // #371: 汎用FAQ（比較対象はどのように選んでいますか？等）がコンポーネントに
+  // ハードコードされていないことを確認。デフォルトは商品固有の内容に置き換わっていること。
+  it("ArticleComparisonPage/CommercialArticlePageのデフォルトFAQが汎用テンプレでない", () => {
+    const comparisonSource = readFileSync(
+      join(root, "src/components/ArticleComparisonPage.astro"),
+      "utf8",
     );
-    // 旧fail-open実装（undefined を verified 扱いにする OR 節）の再混入を禁止
+    const commercialSource = readFileSync(
+      join(root, "src/components/CommercialArticlePage.astro"),
+      "utf8",
+    );
+    // 汎用FAQの代表パターンを両方のコンポーネントで禁止
+    for (const source of [comparisonSource, commercialSource]) {
+      expect(source).not.toMatch(
+        /question:\s*["']どちらを選べばよいですか？["']/,
+      );
+      expect(source).not.toMatch(
+        /question:\s*["']価格や在庫は確認できますか？["']/,
+      );
+    }
+  });
+
+  it("PurchaseCardコンポーネントがhref存在時にCTAを表示すること", () => {
+    const componentSource = readFileSync(
+      join(root, "src/components/PurchaseCard.astro"),
+      "utf8",
+    );
+    expect(componentSource).toMatch(/hasHref\s*=\s*Boolean\(href\)/);
+    expect(componentSource).toMatch(/\{hasHref\s*\?\s*\(/);
     expect(componentSource).not.toMatch(
-      /purchaseLinkStatus\s*!==?\s*["'](?:unverified|unavailable)["']\s*&&/,
+      /purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
     );
-    expect(componentSource).not.toMatch(/===\s*["']verified["']\s*\|\|/);
   });
 });

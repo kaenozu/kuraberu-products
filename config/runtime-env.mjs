@@ -14,6 +14,8 @@ export const CONFIGURED_ENVIRONMENT_VARIABLES = Object.freeze([
   "RAKUTEN_APPLICATION_ID",
   "RAKUTEN_ACCESS_KEY",
   "RAKUTEN_AFFILIATE_ID",
+  "PUBLIC_RAKUTEN_AFFILIATE_REDIRECT",
+  "PUBLIC_AMAZON_ASSOCIATE_TAG",
   "PUBLIC_CONTACT_URL",
 ]);
 
@@ -65,6 +67,31 @@ export function normalizeOptionalPublicUrl(value, name = "PUBLIC_CONTACT_URL") {
   return parseHttpsUrl(value, name).toString();
 }
 
+export function normalizeOptionalAmazonAssociateTag(
+  value,
+  name = "PUBLIC_AMAZON_ASSOCIATE_TAG",
+) {
+  if (!nonEmpty(value)) return undefined;
+  const tag = value.trim();
+  if (!/^[A-Za-z0-9-]{1,128}$/.test(tag)) {
+    throw new Error(
+      `${name} must contain only ASCII letters, digits, or hyphens`,
+    );
+  }
+  return tag;
+}
+
+export function toAmazonAssociateSearchUrl(query, associateTag) {
+  const keyword = typeof query === "string" ? query.trim() : "";
+  const tag = normalizeOptionalAmazonAssociateTag(associateTag);
+  if (!keyword || !tag) return undefined;
+
+  const url = new URL("https://www.amazon.co.jp/s");
+  url.searchParams.set("k", keyword);
+  url.searchParams.set("tag", tag);
+  return url.toString();
+}
+
 export function isAllowedRakutenUrl(value) {
   if (!nonEmpty(value)) return false;
 
@@ -84,9 +111,22 @@ export function isAllowedRakutenUrl(value) {
   );
 }
 
+/** A purchase destination must identify one Ichiba item, never a search page. */
+export function isRakutenProductDetailUrl(value) {
+  if (!isAllowedRakutenUrl(value)) return false;
+  try {
+    const url = new URL(value);
+    return (
+      url.hostname.toLowerCase() === "item.rakuten.co.jp" &&
+      url.pathname.split("/").filter(Boolean).length >= 2
+    );
+  } catch {
+    return false;
+  }
+}
+
 // 楽天アフィリエイトリダイレクトの共通プレフィックス（hb.afl 経由）。
 // AffiliateButton と NextStepBlock の両方が購入リンクの変換に使う。
-//
 // リダイレクトIDは RAKUTEN_AFFILIATE_ID 環境変数を優先して組み立て、
 // 未設定・形式不正時は現行値へフォールバックする（CI / ローカルビルドが
 // 環境変数なしでも壊れないため）。商品ソース側に hb.afl を直書きしない。
@@ -111,11 +151,17 @@ function rakutenAffiliateRedirectPrefix(environment = process.env) {
 // - 既にアフィリエイトURL（hb.afl / r10.to / a.r10.to）: そのまま返す
 // - 楽天の検索URL（search.rakuten.co.jp 等）: hb.afl のリダイレクトへ変換
 // - それ以外: そのまま返す（呼び出し側で isAllowedRakutenUrl により弾く）
-export function toAffiliateRakutenUrl(value, environment = process.env) {
+export function toAffiliateRakutenUrl(
+  value,
+  redirectPrefix,
+  environment = process.env,
+) {
   if (!nonEmpty(value)) return undefined;
   if (isAffiliateRakutenUrl(value)) return value;
   if (/^https:\/\/(?:search\.|www\.)?rakuten\.co\.jp\//i.test(value)) {
-    return `${rakutenAffiliateRedirectPrefix(environment)}${encodeURIComponent(value)}&link_type=text`;
+    const prefix =
+      redirectPrefix || rakutenAffiliateRedirectPrefix(environment);
+    return `${prefix}${encodeURIComponent(value)}&link_type=text`;
   }
   return value;
 }
@@ -130,6 +176,7 @@ export function toAffiliateRakutenSearchUrl(query, environment = process.env) {
   if (!keyword) return undefined;
   return toAffiliateRakutenUrl(
     `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(keyword)}`,
+    undefined,
     environment,
   );
 }
@@ -163,6 +210,9 @@ export function validateBuildEnvironment(environment = process.env) {
     ? normalizeSiteUrl(environment.PUBLIC_SITE_URL)
     : undefined;
   const contactUrl = normalizeOptionalPublicUrl(environment.PUBLIC_CONTACT_URL);
+  const amazonAssociateTag = normalizeOptionalAmazonAssociateTag(
+    environment.PUBLIC_AMAZON_ASSOCIATE_TAG,
+  );
   const rakutenPremiumUrl = normalizeOptionalRakutenUrl(
     environment.PUBLIC_RAKUTEN_PREMIUM_URL,
     "PUBLIC_RAKUTEN_PREMIUM_URL",
@@ -203,6 +253,7 @@ export function validateBuildEnvironment(environment = process.env) {
     deploymentEnv,
     siteUrl,
     contactUrl,
+    amazonAssociateTag,
     rakutenPremiumUrl,
     rakutenSarasaraUrl,
     rakutenApiReady,
