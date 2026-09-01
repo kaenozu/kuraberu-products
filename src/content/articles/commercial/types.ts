@@ -15,7 +15,7 @@ type CommercialArticleSeed = {
   productInfoCheckedAt?: string;
   modifiedAt?: string;
   purchaseLinksCheckedAt?: string;
-  purchaseLinkStatus?: "verified" | "direct" | "unverified";
+  purchaseLinkStatus?: "verified" | "direct" | "unverified" | "unavailable";
   officialSources?: readonly {
     label: string;
     url: `https://${string}`;

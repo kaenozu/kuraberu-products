@@ -82,7 +82,8 @@ describe("article CTA layout vs metadata productCount", () => {
           const isComparison =
             contentTypeFor(article.productCount) === "comparison";
           const expected =
-            set.comparisonOnly && !isComparison
+            set.comparisonOnly &&
+            (article.purchaseLinkStatus === "unavailable" || !isComparison)
               ? 0
               : set.cardsPerProduct * article.productCount;
           if (set.comparisonOnly) {
@@ -102,7 +103,18 @@ describe("article CTA layout vs metadata productCount", () => {
           blocks.length + nextStepBuyCount,
           `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout)`,
         ).toBe(
-          expectedPurchaseCtasPerArticle(article.productCount, ARTICLE_LAYOUT),
+          article.purchaseLinkStatus === "unavailable"
+            ? ARTICLE_LAYOUT.ctaSets
+                .filter((set) => !set.comparisonOnly)
+                .reduce(
+                  (total, set) =>
+                    total + set.cardsPerProduct * article.productCount,
+                  0,
+                )
+            : expectedPurchaseCtasPerArticle(
+                article.productCount,
+                ARTICLE_LAYOUT,
+              ),
         );
       }
     },

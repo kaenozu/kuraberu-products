@@ -511,6 +511,10 @@ export function validateArticleNextStep(relative, html) {
     html.match(
       /<meta name="article:content-type" content="(guide|comparison)">/i,
     )?.[1] ?? null;
+  const purchaseLinkStatus =
+    html.match(
+      /<meta name="article:purchase-link-status" content="([^"]+)">/i,
+    )?.[1] ?? null;
   const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
@@ -552,9 +556,10 @@ export function validateArticleNextStep(relative, html) {
       /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
     ),
   ];
-  if (buyLinks.length !== 2) {
+  const expectedBuyLinks = purchaseLinkStatus === "unavailable" ? 0 : 2;
+  if (buyLinks.length !== expectedBuyLinks) {
     errors.push(
-      `${relative}: next-step block must render exactly 2 purchase buttons (next-step__buy), found ${buyLinks.length}`,
+      `${relative}: next-step block must render exactly ${expectedBuyLinks} purchase buttons (next-step__buy), found ${buyLinks.length}`,
     );
   } else {
     for (const [index, link] of buyLinks.entries()) {
@@ -813,19 +818,27 @@ export function validateArticleCtas(
   );
   const tags = [...html.matchAll(ctaPattern)].map(([tag]) => tag);
   const errors = [];
-  if (tags.length !== expectedCount) {
+  const isUnavailable =
+    /<meta name="article:purchase-link-status" content="unavailable">/i.test(
+      html,
+    );
+  const effectiveExpectedCount = isUnavailable ? 0 : expectedCount;
+  const effectiveExpectedByPlacement = isUnavailable ? {} : expectedByPlacement;
+  if (tags.length !== effectiveExpectedCount) {
     errors.push(
-      `${relative}: expected exactly ${expectedCount} purchase CTAs (per config/article-layout.mjs and article productCount), found ${tags.length}`,
+      `${relative}: expected exactly ${effectiveExpectedCount} purchase CTAs (per config/article-layout.mjs and article productCount), found ${tags.length}`,
     );
   }
-  if (expectedByPlacement) {
+  if (effectiveExpectedByPlacement) {
     const actual = {};
     for (const tag of tags) {
       const placement = tag.match(/\bdata-placement="([^"]+)"/i)?.[1] ?? null;
       if (placement === null) continue;
       actual[placement] = (actual[placement] ?? 0) + 1;
     }
-    for (const [placement, expected] of Object.entries(expectedByPlacement)) {
+    for (const [placement, expected] of Object.entries(
+      effectiveExpectedByPlacement,
+    )) {
       if ((actual[placement] ?? 0) !== expected) {
         errors.push(
           `${relative}: expected ${expected} purchase CTAs with placement "${placement}", found ${actual[placement] ?? 0} (per config/article-layout.mjs)`,
@@ -1194,6 +1207,30 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // （meta タグ経由）と config の ctaSets から導出する。
     const productCount = readArticleProductCount(relative, html, errors);
     if (productCount === null) continue;
+    const purchaseLinkStatus =
+      html.match(
+        /<meta name="article:purchase-link-status" content="([^"]+)">/i,
+      )?.[1] ?? null;
+    const expectedCtaCount =
+      purchaseLinkStatus === "unavailable"
+        ? ARTICLE_LAYOUT.ctaSets
+            .filter((set) => !set.comparisonOnly)
+            .reduce(
+              (total, set) => total + set.cardsPerProduct * productCount,
+              0,
+            )
+        : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
+    const expectedCtasByPlacement =
+      purchaseLinkStatus === "unavailable"
+        ? Object.fromEntries(
+            ARTICLE_LAYOUT.ctaSets
+              .filter((set) => !set.comparisonOnly)
+              .map((set) => [
+                set.placement,
+                set.cardsPerProduct * productCount,
+              ]),
+          )
+        : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
@@ -1207,8 +1244,8 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       ...validateArticleCtas(
         relative,
         html,
-        expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT),
-        expectedPlacementCounts(productCount, ARTICLE_LAYOUT),
+        expectedCtaCount,
+        expectedCtasByPlacement,
       ),
     );
   }

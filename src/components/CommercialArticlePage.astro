@@ -76,8 +76,8 @@ const [leftResolved, rightResolved] = await Promise.all([
         fallbackUrl: rightSearchUrl,
       }),
 ]);
-const leftProductHref = leftResolved.href;
-const rightProductHref = rightResolved.href;
+const leftProductHref = article.purchaseLinkStatus === "unavailable" ? undefined : leftResolved.href;
+const rightProductHref = article.purchaseLinkStatus === "unavailable" ? undefined : rightResolved.href;
 const rows: readonly DifferenceRow[] = seed.verifiedRows?.length
   ? seed.verifiedRows
   : [

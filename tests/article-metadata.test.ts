@@ -571,10 +571,11 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
       const buyLinks = html.match(
         /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
       );
+      const article = articleMetadata.find((item) => item.id === slug);
       expect(
-        buyLinks?.length,
-        `${slug}: next-step has 2 purchase buttons`,
-      ).toBe(2);
+        buyLinks?.length ?? 0,
+        `${slug}: next-step has 2 purchase buttons unless unavailable`,
+      ).toBe(article?.purchaseLinkStatus === "unavailable" ? 0 : 2);
       const specsIndex = html.indexOf('id="specs"');
       const blockIndex = html.indexOf('class="next-step"');
       if (specsIndex !== -1) {
