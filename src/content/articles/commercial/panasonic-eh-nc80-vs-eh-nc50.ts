@@ -21,8 +21,9 @@ export const panasonicEhNc80VsEhNc50Seed: CommercialArticleSeed = {
   leftPoint: "4つのメニューと第2世代高浸透ナノイーを重視する人向け",
   rightPoint: "3つのメニューで基本ケアを選びたい人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-01",
+  purchaseLinksCheckedAt: "2026-09-01",
+  purchaseLinkStatus: "verified",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（EH-NC80）",

@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-eh-nc80-vs-eh-nc50:left": {
+    name: "パナソニック ナノケア EH-NC80",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980767948/",
+  },
+  "panasonic-eh-nc80-vs-eh-nc50:right": {
+    name: "パナソニック ナノケア EH-NC50",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980767931/",
+  },
   "panasonic-eh-na9m-vs-refa-beautech:left": {
     name: "パナソニック ナノケア EH-NA9M-H",
     purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/eh-na9m-h/",
