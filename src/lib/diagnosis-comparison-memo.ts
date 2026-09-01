@@ -30,7 +30,9 @@ export function extractArticleIdsFromProduct(product: {
 }
 
 /** 比較メモの状態をlocalStorageから読み取る */
-export function loadComparisonMemo(knownIds: readonly string[]): ComparisonMemoState {
+export function loadComparisonMemo(
+  knownIds: readonly string[],
+): ComparisonMemoState {
   try {
     const raw = localStorage.getItem(comparisonMemoStorageKey);
     return sanitizeComparisonMemo(raw, knownIds);

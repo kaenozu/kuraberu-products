@@ -23,7 +23,9 @@ beforeEach(() => {
       setItem: (key: string, value: string) => localStorageMock.set(key, value),
       removeItem: (key: string) => localStorageMock.delete(key),
       clear: () => localStorageMock.clear(),
-      get length() { return localStorageMock.size; },
+      get length() {
+        return localStorageMock.size;
+      },
       key: (index: number) => [...localStorageMock.keys()][index] ?? null,
     },
     writable: true,
@@ -62,7 +64,9 @@ describe("diagnosis-comparison-memo", () => {
     });
 
     it("handles nested paths", () => {
-      expect(extractArticleIdFromPath("/articles/category/product/")).toBeNull();
+      expect(
+        extractArticleIdFromPath("/articles/category/product/"),
+      ).toBeNull();
     });
   });
 
@@ -104,7 +108,9 @@ describe("diagnosis-comparison-memo", () => {
     const knownIds = ["article-1", "article-2", "article-3"];
 
     it("adds product articles to memo", () => {
-      const product = { articleUrls: ["/articles/article-1/", "/articles/article-2/"] };
+      const product = {
+        articleUrls: ["/articles/article-1/", "/articles/article-2/"],
+      };
       const result = addProductArticlesToMemo(product, knownIds);
 
       expect(result.added).toEqual(["article-1", "article-2"]);
@@ -112,7 +118,9 @@ describe("diagnosis-comparison-memo", () => {
       expect(result.atLimit).toBe(false);
 
       // Verify localStorage was updated
-      const saved = JSON.parse(localStorageMock.get(comparisonMemoStorageKey) ?? "{}");
+      const saved = JSON.parse(
+        localStorageMock.get(comparisonMemoStorageKey) ?? "{}",
+      );
       expect(saved.ids).toContain("article-1");
       expect(saved.ids).toContain("article-2");
     });
@@ -124,7 +132,9 @@ describe("diagnosis-comparison-memo", () => {
         JSON.stringify({ version: 1, ids: ["article-1"] }),
       );
 
-      const product = { articleUrls: ["/articles/article-1/", "/articles/article-2/"] };
+      const product = {
+        articleUrls: ["/articles/article-1/", "/articles/article-2/"],
+      };
       const result = addProductArticlesToMemo(product, knownIds);
 
       expect(result.added).toEqual(["article-2"]);
@@ -133,14 +143,19 @@ describe("diagnosis-comparison-memo", () => {
 
     it("respects memo limit", () => {
       // Pre-populate memo with items at the limit using knownIds
-      const existingIds = Array.from({ length: comparisonMemoLimit }, (_, i) => `article-${i % 3 + 1}`);
+      const existingIds = Array.from(
+        { length: comparisonMemoLimit },
+        (_, i) => `article-${(i % 3) + 1}`,
+      );
       localStorageMock.set(
         comparisonMemoStorageKey,
         encodeComparisonMemo(existingIds),
       );
 
       // Verify the memo is at the limit
-      const saved = JSON.parse(localStorageMock.get(comparisonMemoStorageKey) ?? "{}");
+      const saved = JSON.parse(
+        localStorageMock.get(comparisonMemoStorageKey) ?? "{}",
+      );
       expect(saved.ids.length).toBe(comparisonMemoLimit);
 
       // Try to add a new article that's not in the memo
@@ -159,16 +174,23 @@ describe("diagnosis-comparison-memo", () => {
     it("removes product articles from memo", () => {
       localStorageMock.set(
         comparisonMemoStorageKey,
-        JSON.stringify({ version: 1, ids: ["article-1", "article-2", "article-3"] }),
+        JSON.stringify({
+          version: 1,
+          ids: ["article-1", "article-2", "article-3"],
+        }),
       );
 
-      const product = { articleUrls: ["/articles/article-1/", "/articles/article-2/"] };
+      const product = {
+        articleUrls: ["/articles/article-1/", "/articles/article-2/"],
+      };
       const result = removeProductArticlesFromMemo(product, knownIds);
 
       expect(result.removed).toEqual(["article-1", "article-2"]);
 
       // Verify localStorage was updated
-      const saved = JSON.parse(localStorageMock.get(comparisonMemoStorageKey) ?? "{}");
+      const saved = JSON.parse(
+        localStorageMock.get(comparisonMemoStorageKey) ?? "{}",
+      );
       expect(saved.ids).toEqual(["article-3"]);
     });
 

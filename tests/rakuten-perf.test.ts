@@ -22,7 +22,8 @@ function createFakeKV(): PerfKV & {
   const store = new Map<string, string>();
   return {
     store,
-    listKeys: (prefix = "") => [...store.keys()].filter((k) => k.startsWith(prefix)).sort(),
+    listKeys: (prefix = "") =>
+      [...store.keys()].filter((k) => k.startsWith(prefix)).sort(),
     async put(key: string, value: string) {
       store.set(key, value);
     },
@@ -70,8 +71,26 @@ describe("RakutenPerfCollector", () => {
   });
 
   it("drain returns entries and clears buffer", () => {
-    collector.record({ keywordHash: "abc", durationMs: 100, httpStatus: 200, productCount: 5, cacheHit: false }, "2026-09-01T10:00:00.000Z");
-    collector.record({ keywordHash: "def", durationMs: 200, httpStatus: 200, productCount: 3, cacheHit: true }, "2026-09-01T10:00:01.000Z");
+    collector.record(
+      {
+        keywordHash: "abc",
+        durationMs: 100,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:00.000Z",
+    );
+    collector.record(
+      {
+        keywordHash: "def",
+        durationMs: 200,
+        httpStatus: 200,
+        productCount: 3,
+        cacheHit: true,
+      },
+      "2026-09-01T10:00:01.000Z",
+    );
 
     const entries = collector.drain();
     expect(entries).toHaveLength(2);
@@ -83,13 +102,16 @@ describe("RakutenPerfCollector", () => {
 
   it("drops oldest entries when buffer exceeds max", () => {
     for (let i = 0; i < BUFFER_MAX_SIZE + 10; i++) {
-      collector.record({
-        keywordHash: `hash${i}`,
-        durationMs: i,
-        httpStatus: 200,
-        productCount: 0,
-        cacheHit: false,
-      }, `2026-09-01T00:00:${String(i).padStart(2, "0")}Z`);
+      collector.record(
+        {
+          keywordHash: `hash${i}`,
+          durationMs: i,
+          httpStatus: 200,
+          productCount: 0,
+          cacheHit: false,
+        },
+        `2026-09-01T00:00:${String(i).padStart(2, "0")}Z`,
+      );
     }
     expect(collector.size).toBe(BUFFER_MAX_SIZE);
     const entries = collector.drain();
@@ -105,8 +127,20 @@ describe("module-level collector", () => {
   });
 
   it("drainPerfEntries returns entries recorded via recordPerfEntry", () => {
-    recordPerfEntry({ keywordHash: "mod1", durationMs: 50, httpStatus: 200, productCount: 3, cacheHit: false });
-    recordPerfEntry({ keywordHash: "mod2", durationMs: 0, httpStatus: 200, productCount: 0, cacheHit: true });
+    recordPerfEntry({
+      keywordHash: "mod1",
+      durationMs: 50,
+      httpStatus: 200,
+      productCount: 3,
+      cacheHit: false,
+    });
+    recordPerfEntry({
+      keywordHash: "mod2",
+      durationMs: 0,
+      httpStatus: 200,
+      productCount: 0,
+      cacheHit: true,
+    });
 
     const entries = drainPerfEntries();
     expect(entries).toHaveLength(2);
@@ -115,7 +149,13 @@ describe("module-level collector", () => {
   });
 
   it("drainPerfEntries clears the collector", () => {
-    recordPerfEntry({ keywordHash: "x", durationMs: 10, httpStatus: 200, productCount: 0, cacheHit: false });
+    recordPerfEntry({
+      keywordHash: "x",
+      durationMs: 10,
+      httpStatus: 200,
+      productCount: 0,
+      cacheHit: false,
+    });
     drainPerfEntries();
     expect(drainPerfEntries()).toHaveLength(0);
   });
@@ -127,8 +167,22 @@ describe("flushEntriesToKV", () => {
   it("writes entries to KV with correct keys", async () => {
     const kv = createFakeKV();
     const entries: RakutenPerfEntry[] = [
-      { timestamp: "2026-09-01T10:00:00.000Z", keywordHash: "abc", durationMs: 150, httpStatus: 200, productCount: 5, cacheHit: false },
-      { timestamp: "2026-09-01T10:00:01.000Z", keywordHash: "def", durationMs: 200, httpStatus: 200, productCount: 3, cacheHit: true },
+      {
+        timestamp: "2026-09-01T10:00:00.000Z",
+        keywordHash: "abc",
+        durationMs: 150,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: false,
+      },
+      {
+        timestamp: "2026-09-01T10:00:01.000Z",
+        keywordHash: "def",
+        durationMs: 200,
+        httpStatus: 200,
+        productCount: 3,
+        cacheHit: true,
+      },
     ];
 
     const saved = await flushEntriesToKV(kv, entries);
@@ -151,9 +205,18 @@ describe("flushEntriesToKV", () => {
 
   it("does not throw if KV put fails", async () => {
     const kv = createFakeKV();
-    kv.put = async () => { throw new Error("KV unavailable"); };
+    kv.put = async () => {
+      throw new Error("KV unavailable");
+    };
     const entries: RakutenPerfEntry[] = [
-      { timestamp: "2026-09-01T10:00:00.000Z", keywordHash: "x", durationMs: 10, httpStatus: 200, productCount: 0, cacheHit: false },
+      {
+        timestamp: "2026-09-01T10:00:00.000Z",
+        keywordHash: "x",
+        durationMs: 10,
+        httpStatus: 200,
+        productCount: 0,
+        cacheHit: false,
+      },
     ];
     const saved = await flushEntriesToKV(kv, entries);
     expect(saved).toBe(0);
@@ -167,9 +230,36 @@ describe("full pipeline", () => {
     const kv = createFakeKV();
     const collector = new RakutenPerfCollector();
 
-    collector.record({ keywordHash: "a1b2c3", durationMs: 120, httpStatus: 200, productCount: 10, cacheHit: false }, "2026-09-01T10:00:00.000Z");
-    collector.record({ keywordHash: "d4e5f6", durationMs: 350, httpStatus: 200, productCount: 5, cacheHit: false }, "2026-09-01T10:00:01.000Z");
-    collector.record({ keywordHash: "a1b2c3", durationMs: 0, httpStatus: 200, productCount: 0, cacheHit: true }, "2026-09-01T10:00:02.000Z");
+    collector.record(
+      {
+        keywordHash: "a1b2c3",
+        durationMs: 120,
+        httpStatus: 200,
+        productCount: 10,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:00.000Z",
+    );
+    collector.record(
+      {
+        keywordHash: "d4e5f6",
+        durationMs: 350,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:01.000Z",
+    );
+    collector.record(
+      {
+        keywordHash: "a1b2c3",
+        durationMs: 0,
+        httpStatus: 200,
+        productCount: 0,
+        cacheHit: true,
+      },
+      "2026-09-01T10:00:02.000Z",
+    );
 
     const entries = collector.drain();
     expect(entries).toHaveLength(3);
@@ -178,7 +268,9 @@ describe("full pipeline", () => {
 
     const keys = kv.listKeys(PERF_KV_PREFIX);
     expect(keys).toHaveLength(3);
-    const readBack: RakutenPerfEntry[] = keys.map((k) => JSON.parse(kv.store.get(k)!));
+    const readBack: RakutenPerfEntry[] = keys.map((k) =>
+      JSON.parse(kv.store.get(k)!),
+    );
 
     const summary = computeSummary(readBack);
     expect(summary.totalRequests).toBe(3);
@@ -195,14 +287,45 @@ describe("full pipeline", () => {
     const kv = createFakeKV();
     const collector = new RakutenPerfCollector();
 
-    collector.record({ keywordHash: "err1", durationMs: 5000, httpStatus: 0, productCount: 0, cacheHit: false, error: "timeout" }, "2026-09-01T10:00:00.000Z");
-    collector.record({ keywordHash: "err2", durationMs: 200, httpStatus: 500, productCount: 0, cacheHit: false, error: "HTTP 500" }, "2026-09-01T10:00:01.000Z");
-    collector.record({ keywordHash: "ok1", durationMs: 150, httpStatus: 200, productCount: 8, cacheHit: false }, "2026-09-01T10:00:02.000Z");
+    collector.record(
+      {
+        keywordHash: "err1",
+        durationMs: 5000,
+        httpStatus: 0,
+        productCount: 0,
+        cacheHit: false,
+        error: "timeout",
+      },
+      "2026-09-01T10:00:00.000Z",
+    );
+    collector.record(
+      {
+        keywordHash: "err2",
+        durationMs: 200,
+        httpStatus: 500,
+        productCount: 0,
+        cacheHit: false,
+        error: "HTTP 500",
+      },
+      "2026-09-01T10:00:01.000Z",
+    );
+    collector.record(
+      {
+        keywordHash: "ok1",
+        durationMs: 150,
+        httpStatus: 200,
+        productCount: 8,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:02.000Z",
+    );
 
     await flushEntriesToKV(kv, collector.drain());
 
     const keys = kv.listKeys(PERF_KV_PREFIX);
-    const readBack: RakutenPerfEntry[] = keys.map((k) => JSON.parse(kv.store.get(k)!));
+    const readBack: RakutenPerfEntry[] = keys.map((k) =>
+      JSON.parse(kv.store.get(k)!),
+    );
 
     const summary = computeSummary(readBack);
     expect(summary.totalRequests).toBe(3);
@@ -216,17 +339,37 @@ describe("full pipeline", () => {
     const kv = createFakeKV();
 
     const c1 = new RakutenPerfCollector();
-    c1.record({ keywordHash: "r1", durationMs: 100, httpStatus: 200, productCount: 5, cacheHit: false }, "2026-09-01T10:00:00.000Z");
+    c1.record(
+      {
+        keywordHash: "r1",
+        durationMs: 100,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:00.000Z",
+    );
     await flushEntriesToKV(kv, c1.drain());
 
     const c2 = new RakutenPerfCollector();
-    c2.record({ keywordHash: "r2", durationMs: 200, httpStatus: 200, productCount: 3, cacheHit: false }, "2026-09-01T10:01:00.000Z");
+    c2.record(
+      {
+        keywordHash: "r2",
+        durationMs: 200,
+        httpStatus: 200,
+        productCount: 3,
+        cacheHit: false,
+      },
+      "2026-09-01T10:01:00.000Z",
+    );
     await flushEntriesToKV(kv, c2.drain());
 
     const keys = kv.listKeys(PERF_KV_PREFIX);
     expect(keys).toHaveLength(2);
 
-    const readBack: RakutenPerfEntry[] = keys.map((k) => JSON.parse(kv.store.get(k)!));
+    const readBack: RakutenPerfEntry[] = keys.map((k) =>
+      JSON.parse(kv.store.get(k)!),
+    );
     const summary = computeSummary(readBack);
     expect(summary.totalRequests).toBe(2);
     expect(summary.avgDurationMs).toBe(150);
@@ -242,21 +385,27 @@ describe("integration: recordPerfEntry → drain → flush → KV → summary", 
 
   it("success + cache hit: records, drains, flushes, reads back summary", () => {
     // Simulate what rakuten.ts does after a successful API call
-    recordPerfEntry({
-      keywordHash: hashKeywordSync("テスト商品"),
-      durationMs: 150,
-      httpStatus: 200,
-      productCount: 5,
-      cacheHit: false,
-    }, "2026-09-01T10:00:00.000Z");
+    recordPerfEntry(
+      {
+        keywordHash: hashKeywordSync("テスト商品"),
+        durationMs: 150,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:00.000Z",
+    );
     // Simulate a cache hit
-    recordPerfEntry({
-      keywordHash: hashKeywordSync("テスト商品"),
-      durationMs: 0,
-      httpStatus: 200,
-      productCount: 0,
-      cacheHit: true,
-    }, "2026-09-01T10:00:01.000Z");
+    recordPerfEntry(
+      {
+        keywordHash: hashKeywordSync("テスト商品"),
+        durationMs: 0,
+        httpStatus: 200,
+        productCount: 0,
+        cacheHit: true,
+      },
+      "2026-09-01T10:00:01.000Z",
+    );
 
     // Drain (simulates Worker POST /api/rakuten-perf)
     const entries = drainPerfEntries();
@@ -273,7 +422,9 @@ describe("integration: recordPerfEntry → drain → flush → KV → summary", 
       // Read back (simulates GET /api/rakuten-perf)
       const keys = kv.listKeys(PERF_KV_PREFIX);
       expect(keys).toHaveLength(2);
-      const readBack: RakutenPerfEntry[] = keys.map((k) => JSON.parse(kv.store.get(k)!));
+      const readBack: RakutenPerfEntry[] = keys.map((k) =>
+        JSON.parse(kv.store.get(k)!),
+      );
 
       const summary = computeSummary(readBack);
       expect(summary.totalRequests).toBe(2);
@@ -289,22 +440,28 @@ describe("integration: recordPerfEntry → drain → flush → KV → summary", 
   });
 
   it("error recording: timeout + HTTP error, then drain+flush+summary", () => {
-    recordPerfEntry({
-      keywordHash: hashKeywordSync("bad-query"),
-      durationMs: 5000,
-      httpStatus: 0,
-      productCount: 0,
-      cacheHit: false,
-      error: "Request timeout",
-    }, "2026-09-01T10:00:00.000Z");
-    recordPerfEntry({
-      keywordHash: hashKeywordSync("another-query"),
-      durationMs: 200,
-      httpStatus: 500,
-      productCount: 0,
-      cacheHit: false,
-      error: "HTTP 500",
-    }, "2026-09-01T10:00:01.000Z");
+    recordPerfEntry(
+      {
+        keywordHash: hashKeywordSync("bad-query"),
+        durationMs: 5000,
+        httpStatus: 0,
+        productCount: 0,
+        cacheHit: false,
+        error: "Request timeout",
+      },
+      "2026-09-01T10:00:00.000Z",
+    );
+    recordPerfEntry(
+      {
+        keywordHash: hashKeywordSync("another-query"),
+        durationMs: 200,
+        httpStatus: 500,
+        productCount: 0,
+        cacheHit: false,
+        error: "HTTP 500",
+      },
+      "2026-09-01T10:00:01.000Z",
+    );
 
     const entries = drainPerfEntries();
     expect(entries).toHaveLength(2);
@@ -312,7 +469,9 @@ describe("integration: recordPerfEntry → drain → flush → KV → summary", 
     const kv = createFakeKV();
     return flushEntriesToKV(kv, entries).then(() => {
       const keys = kv.listKeys(PERF_KV_PREFIX);
-      const readBack: RakutenPerfEntry[] = keys.map((k) => JSON.parse(kv.store.get(k)!));
+      const readBack: RakutenPerfEntry[] = keys.map((k) =>
+        JSON.parse(kv.store.get(k)!),
+      );
       const summary = computeSummary(readBack);
       expect(summary.totalRequests).toBe(2);
       expect(summary.errorCount).toBe(2);
@@ -325,9 +484,36 @@ describe("integration: recordPerfEntry → drain → flush → KV → summary", 
     const kv = createFakeKV();
 
     // All 3 entries with distinct timestamps
-    recordPerfEntry({ keywordHash: "req1", durationMs: 100, httpStatus: 200, productCount: 3, cacheHit: false }, "2026-09-01T10:00:00.000Z");
-    recordPerfEntry({ keywordHash: "req2", durationMs: 250, httpStatus: 200, productCount: 7, cacheHit: false }, "2026-09-01T10:00:01.000Z");
-    recordPerfEntry({ keywordHash: "req1", durationMs: 0, httpStatus: 200, productCount: 0, cacheHit: true }, "2026-09-01T10:00:02.000Z");
+    recordPerfEntry(
+      {
+        keywordHash: "req1",
+        durationMs: 100,
+        httpStatus: 200,
+        productCount: 3,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:00.000Z",
+    );
+    recordPerfEntry(
+      {
+        keywordHash: "req2",
+        durationMs: 250,
+        httpStatus: 200,
+        productCount: 7,
+        cacheHit: false,
+      },
+      "2026-09-01T10:00:01.000Z",
+    );
+    recordPerfEntry(
+      {
+        keywordHash: "req1",
+        durationMs: 0,
+        httpStatus: 200,
+        productCount: 0,
+        cacheHit: true,
+      },
+      "2026-09-01T10:00:02.000Z",
+    );
 
     // Single drain captures all 3 entries
     const entries = drainPerfEntries();
@@ -337,7 +523,9 @@ describe("integration: recordPerfEntry → drain → flush → KV → summary", 
       const keys = kv.listKeys(PERF_KV_PREFIX);
       expect(keys).toHaveLength(3);
 
-      const readBack: RakutenPerfEntry[] = keys.map((k) => JSON.parse(kv.store.get(k)!));
+      const readBack: RakutenPerfEntry[] = keys.map((k) =>
+        JSON.parse(kv.store.get(k)!),
+      );
       const summary = computeSummary(readBack);
       expect(summary.totalRequests).toBe(3);
       expect(summary.cacheHits).toBe(1);
@@ -375,8 +563,22 @@ describe("computeSummary", () => {
 
   it("excludes cache hits from duration stats", () => {
     const entries: RakutenPerfEntry[] = [
-      { timestamp: "a", keywordHash: "h1", durationMs: 0, httpStatus: 200, productCount: 0, cacheHit: true },
-      { timestamp: "b", keywordHash: "h2", durationMs: 200, httpStatus: 200, productCount: 5, cacheHit: false },
+      {
+        timestamp: "a",
+        keywordHash: "h1",
+        durationMs: 0,
+        httpStatus: 200,
+        productCount: 0,
+        cacheHit: true,
+      },
+      {
+        timestamp: "b",
+        keywordHash: "h2",
+        durationMs: 200,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: false,
+      },
     ];
     const s = computeSummary(entries);
     expect(s.cacheHits).toBe(1);
@@ -386,8 +588,24 @@ describe("computeSummary", () => {
 
   it("counts timeouts from error messages", () => {
     const entries: RakutenPerfEntry[] = [
-      { timestamp: "a", keywordHash: "h1", durationMs: 5000, httpStatus: 0, productCount: 0, cacheHit: false, error: "Request timeout" },
-      { timestamp: "b", keywordHash: "h2", durationMs: 200, httpStatus: 500, productCount: 0, cacheHit: false, error: "HTTP 500" },
+      {
+        timestamp: "a",
+        keywordHash: "h1",
+        durationMs: 5000,
+        httpStatus: 0,
+        productCount: 0,
+        cacheHit: false,
+        error: "Request timeout",
+      },
+      {
+        timestamp: "b",
+        keywordHash: "h2",
+        durationMs: 200,
+        httpStatus: 500,
+        productCount: 0,
+        cacheHit: false,
+        error: "HTTP 500",
+      },
     ];
     const s = computeSummary(entries);
     expect(s.timeoutCount).toBe(1);

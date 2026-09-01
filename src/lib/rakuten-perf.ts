@@ -152,7 +152,11 @@ export function resetPerfCollectorForTests(): void {
 
 /** Cloudflare KV バインディングの最小インターフェース */
 export interface PerfKV {
-  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
+  put(
+    key: string,
+    value: string,
+    options?: { expirationTtl?: number },
+  ): Promise<void>;
 }
 
 /**
@@ -183,7 +187,9 @@ export async function flushEntriesToKV(
 // ─── Summary Computation ──────────────────────────────────────────────────────
 
 /** エントリ配列からサマリーを計算（純粋関数） */
-export function computeSummary(entries: readonly RakutenPerfEntry[]): RakutenPerfSummary {
+export function computeSummary(
+  entries: readonly RakutenPerfEntry[],
+): RakutenPerfSummary {
   const empty: RakutenPerfSummary = {
     period: { from: "", to: "" },
     totalRequests: 0,
@@ -205,9 +211,10 @@ export function computeSummary(entries: readonly RakutenPerfEntry[]): RakutenPer
 
   const sorted = [...entries].sort((a, b) => a.durationMs - b.durationMs);
   const apiEntries = sorted.filter((e) => !e.cacheHit);
-  const durations = apiEntries.length > 0
-    ? apiEntries.map((e) => e.durationMs)
-    : sorted.map((e) => e.durationMs);
+  const durations =
+    apiEntries.length > 0
+      ? apiEntries.map((e) => e.durationMs)
+      : sorted.map((e) => e.durationMs);
 
   const percentile = (p: number): number => {
     if (durations.length === 0) return 0;
@@ -222,13 +229,17 @@ export function computeSummary(entries: readonly RakutenPerfEntry[]): RakutenPer
   const cacheHits = entries.filter((e) => e.cacheHit).length;
 
   return {
-    period: { from: entries[0].timestamp, to: entries[entries.length - 1].timestamp },
+    period: {
+      from: entries[0].timestamp,
+      to: entries[entries.length - 1].timestamp,
+    },
     totalRequests: entries.length,
     cacheHits,
     cacheHitRate: cacheHits / entries.length,
-    avgDurationMs: durations.length > 0
-      ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
-      : 0,
+    avgDurationMs:
+      durations.length > 0
+        ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
+        : 0,
     p50DurationMs: percentile(50),
     p95DurationMs: percentile(95),
     p99DurationMs: percentile(99),

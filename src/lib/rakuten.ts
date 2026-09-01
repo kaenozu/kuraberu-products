@@ -275,8 +275,12 @@ export async function requestRakutenProducts(
       "楽天API接続失敗またはタイムアウト: 購入リンクを未設定として続行します",
     );
     recordPerfEntry({
-      keywordHash, durationMs, httpStatus: 0, productCount: 0,
-      cacheHit: false, error: error instanceof Error ? error.message : "connection failed",
+      keywordHash,
+      durationMs,
+      httpStatus: 0,
+      productCount: 0,
+      cacheHit: false,
+      error: error instanceof Error ? error.message : "connection failed",
     });
     return [];
   } finally {
@@ -287,8 +291,12 @@ export async function requestRakutenProducts(
     const durationMs = Math.round(performance.now() - startTime);
     console.warn(`楽天APIエラー: HTTP ${response.status}`);
     recordPerfEntry({
-      keywordHash, durationMs, httpStatus: response.status, productCount: 0,
-      cacheHit: false, error: `HTTP ${response.status}`,
+      keywordHash,
+      durationMs,
+      httpStatus: response.status,
+      productCount: 0,
+      cacheHit: false,
+      error: `HTTP ${response.status}`,
     });
     return [];
   }
@@ -297,7 +305,10 @@ export async function requestRakutenProducts(
     const products = parseRakutenProducts(await response.json());
     const durationMs = Math.round(performance.now() - startTime);
     recordPerfEntry({
-      keywordHash, durationMs, httpStatus: 200, productCount: products.length,
+      keywordHash,
+      durationMs,
+      httpStatus: 200,
+      productCount: products.length,
       cacheHit: false,
     });
     return products;
@@ -307,8 +318,12 @@ export async function requestRakutenProducts(
       "楽天APIレスポンス解析失敗: 購入リンクを未設定として続行します",
     );
     recordPerfEntry({
-      keywordHash, durationMs, httpStatus: 200, productCount: 0,
-      cacheHit: false, error: "parse error",
+      keywordHash,
+      durationMs,
+      httpStatus: 200,
+      productCount: 0,
+      cacheHit: false,
+      error: "parse error",
     });
     return [];
   }
@@ -327,8 +342,11 @@ export async function fetchRakutenProducts(
     if (clock() < cached.expiresAt) {
       // キャッシュヒット: パフォーマンスログを記録
       recordPerfEntry({
-        keywordHash: hashKeywordSync(keyword), durationMs: 0,
-        httpStatus: 200, productCount: 0, cacheHit: true,
+        keywordHash: hashKeywordSync(keyword),
+        durationMs: 0,
+        httpStatus: 200,
+        productCount: 0,
+        cacheHit: true,
       });
       return cached.promise;
     }

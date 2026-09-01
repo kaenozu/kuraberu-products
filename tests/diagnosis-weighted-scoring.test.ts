@@ -17,7 +17,9 @@ const productA: Product = {
   attributes: { capacity: 100, material: "ppsu" },
   articleUrls: ["/articles/test/"],
   purchaseLinks: [],
-  sources: [{ label: "公式", url: "https://example.com", checkedAt: "2026-01-01" }],
+  sources: [
+    { label: "公式", url: "https://example.com", checkedAt: "2026-01-01" },
+  ],
   verifiedAt: "2026-01-01",
 };
 
@@ -30,7 +32,9 @@ const productB: Product = {
   attributes: { capacity: 200, material: "glass" },
   articleUrls: ["/articles/test/"],
   purchaseLinks: [],
-  sources: [{ label: "公式", url: "https://example.com", checkedAt: "2026-01-01" }],
+  sources: [
+    { label: "公式", url: "https://example.com", checkedAt: "2026-01-01" },
+  ],
   verifiedAt: "2026-01-01",
 };
 
@@ -51,7 +55,12 @@ const questionsNoWeight: DiagnosisQuestion[] = [
         rules: [
           {
             type: "score",
-            match: { field: "attributes", key: "capacity", operator: "eq", value: 100 },
+            match: {
+              field: "attributes",
+              key: "capacity",
+              operator: "eq",
+              value: 100,
+            },
             score: 3,
             reasonCode: "Q1_YES",
           },
@@ -71,7 +80,12 @@ const questionsNoWeight: DiagnosisQuestion[] = [
         rules: [
           {
             type: "score",
-            match: { field: "attributes", key: "capacity", operator: "eq", value: 100 },
+            match: {
+              field: "attributes",
+              key: "capacity",
+              operator: "eq",
+              value: 100,
+            },
             score: 2,
             reasonCode: "Q2_YES",
           },
@@ -109,7 +123,12 @@ const questionsWithWeight: DiagnosisQuestion[] = [
         rules: [
           {
             type: "score",
-            match: { field: "attributes", key: "capacity", operator: "eq", value: 100 },
+            match: {
+              field: "attributes",
+              key: "capacity",
+              operator: "eq",
+              value: 100,
+            },
             score: 2,
             reasonCode: "Q1_YES",
           },
@@ -130,7 +149,12 @@ const questionsWithWeight: DiagnosisQuestion[] = [
         rules: [
           {
             type: "score",
-            match: { field: "attributes", key: "capacity", operator: "eq", value: 100 },
+            match: {
+              field: "attributes",
+              key: "capacity",
+              operator: "eq",
+              value: 100,
+            },
             score: 2,
             reasonCode: "Q2_YES",
           },
@@ -188,16 +212,24 @@ describe("weighted scoring", () => {
       q1: "yes",
       q2: "yes",
     });
-    const prodA_noWeight = noWeight.rankedProducts.find((e) => e.productId === "prod-a")!;
-    const prodA_withWeight = withWeight.rankedProducts.find((e) => e.productId === "prod-a")!;
+    const prodA_noWeight = noWeight.rankedProducts.find(
+      (e) => e.productId === "prod-a",
+    )!;
+    const prodA_withWeight = withWeight.rankedProducts.find(
+      (e) => e.productId === "prod-a",
+    )!;
     // weight なし: 3 + 2 = 5, weight あり: 6 + 2 = 8
     expect(prodA_withWeight.score).toBeGreaterThan(prodA_noWeight.score);
   });
 
   it("weight=1 は既定値と同じ動作", () => {
     // weight=1 の設定と weight なしの設定で同じ結果になる
-    const resultWeight1 = runDiagnosis(configNoWeight, allProducts, { q1: "yes" });
-    const resultDefault = runDiagnosis(configWithWeight, allProducts, { q1: "yes" });
+    const resultWeight1 = runDiagnosis(configNoWeight, allProducts, {
+      q1: "yes",
+    });
+    const resultDefault = runDiagnosis(configWithWeight, allProducts, {
+      q1: "yes",
+    });
     // q1 のみ回答: 両方とも prod-a のスコアが 3（weight なし）or 6（weight=3）...
     // ただし configNoWeight と configWithWeight は別設定なので、
     // weight=1 の質問のみ比較する
@@ -215,7 +247,12 @@ describe("weighted scoring", () => {
             rules: [
               {
                 type: "score",
-                match: { field: "attributes", key: "capacity", operator: "eq", value: 100 },
+                match: {
+                  field: "attributes",
+                  key: "capacity",
+                  operator: "eq",
+                  value: 100,
+                },
                 score: 3,
                 reasonCode: "Q1_YES",
               },
@@ -228,9 +265,15 @@ describe("weighted scoring", () => {
       ...configNoWeight,
       questions: questionsWeightOne,
     };
-    const resultNoWeight = runDiagnosis(configNoWeight, allProducts, { q1: "yes" });
-    const resultWeightOne = runDiagnosis(configWeightOne, allProducts, { q1: "yes" });
-    expect(resultWeightOne.rankedProducts).toEqual(resultNoWeight.rankedProducts);
+    const resultNoWeight = runDiagnosis(configNoWeight, allProducts, {
+      q1: "yes",
+    });
+    const resultWeightOne = runDiagnosis(configWeightOne, allProducts, {
+      q1: "yes",
+    });
+    expect(resultWeightOne.rankedProducts).toEqual(
+      resultNoWeight.rankedProducts,
+    );
   });
 
   it("weight は exclude ルールに影響しない", () => {
@@ -248,7 +291,12 @@ describe("weighted scoring", () => {
             rules: [
               {
                 type: "exclude",
-                match: { field: "attributes", key: "material", operator: "eq", value: "glass" },
+                match: {
+                  field: "attributes",
+                  key: "material",
+                  operator: "eq",
+                  value: "glass",
+                },
                 reasonCode: "EXCLUDED",
               },
             ],
@@ -263,7 +311,9 @@ describe("weighted scoring", () => {
     const result = runDiagnosis(configWithExclude, allProducts, { q1: "yes" });
     // productB (glass) は除外される（weight にかかわらず）
     expect(result.excludedProducts.map((e) => e.productId)).toContain("prod-b");
-    expect(result.rankedProducts.map((e) => e.productId)).not.toContain("prod-b");
+    expect(result.rankedProducts.map((e) => e.productId)).not.toContain(
+      "prod-b",
+    );
   });
 
   it("未回答の質問は weight が適用されない", () => {

@@ -87,8 +87,7 @@ export function collectSelectedRules(
   const questionWeights: QuestionWeightMap = {};
 
   for (const question of questions) {
-    questionWeights[question.id] =
-      question.weight ?? DEFAULT_QUESTION_WEIGHT;
+    questionWeights[question.id] = question.weight ?? DEFAULT_QUESTION_WEIGHT;
     const answer = answers[question.id];
     const optionIds = selectedOptionIds(answer);
     for (const option of question.options ?? []) {

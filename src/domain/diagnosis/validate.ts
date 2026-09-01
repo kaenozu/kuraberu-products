@@ -161,7 +161,9 @@ export function validateDiagnosisData(
     // weight の範囲検証（未指定は既定値1として扱い、検証をスキップ）
     if (question.weight !== undefined) {
       assert(
-        Number.isInteger(question.weight) && question.weight >= 1 && question.weight <= 10,
+        Number.isInteger(question.weight) &&
+          question.weight >= 1 &&
+          question.weight <= 10,
         `diagnosis[${config.id}]: 質問「${question.id}」の weight は1〜10の正の整数である必要があります（${question.weight}）`,
       );
     }

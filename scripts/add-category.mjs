@@ -310,7 +310,9 @@ function patchRegistry(content, slug, label) {
     }
   }
   if (lastImportEndLine === -1) {
-    console.error("エラー: index.ts から import の終了行が見つかりませんでした");
+    console.error(
+      "エラー: index.ts から import の終了行が見つかりませんでした",
+    );
     process.exit(1);
   }
 
@@ -334,7 +336,9 @@ function patchRegistry(content, slug, label) {
     }
   }
   if (lastEntryEndLine === -1) {
-    console.error("エラー: index.ts から categories 配列の終了が見つかりませんでした");
+    console.error(
+      "エラー: index.ts から categories 配列の終了が見つかりませんでした",
+    );
     process.exit(1);
   }
 
@@ -413,14 +417,18 @@ if (!skipIndex) {
 // 次のステップ
 console.log("\n--- 次のステップ ---");
 console.log(`1. ${productsPath} に商品データを追加`);
-console.log(`2. ${diagnosesPath} に質問・ルール・理由辞書・ページコンテンツを設定`);
+console.log(
+  `2. ${diagnosesPath} に質問・ルール・理由辞書・ページコンテンツを設定`,
+);
 if (skipIndex) {
   console.log(`3. ${registryPath} に import + categories への追記`);
 }
 console.log("関連記事を追加（articleUrls, relatedArticles）");
 console.log("pnpm test でテストを実行");
 console.log("pnpm typecheck で型チェックを実行");
-console.log("\n⚠️  設定を編集した後、通常の pnpm test で validate が自動実行されます。");
+console.log(
+  "\n⚠️  設定を編集した後、通常の pnpm test で validate が自動実行されます。",
+);
 
 // --validate オプション: テスト実行
 if (runValidate) {
@@ -429,7 +437,9 @@ if (runValidate) {
     execSync("pnpm test", { cwd: ROOT, stdio: "inherit" });
     console.log("\n✅ テスト合格");
   } catch {
-    console.error("\n❌ テスト失敗。テンプレートを編集してから再実行してください。");
+    console.error(
+      "\n❌ テスト失敗。テンプレートを編集してから再実行してください。",
+    );
     process.exit(1);
   }
 }

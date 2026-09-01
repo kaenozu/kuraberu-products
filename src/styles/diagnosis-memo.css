@@ -12,7 +12,9 @@
   border: 1px solid var(--accent);
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 
 .diagnosis-card__memo-button:hover {
@@ -28,11 +30,4 @@
 .diagnosis-card__memo-button:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
-}
-
-/* 比較メモページからのリンク表示 */
-.diagnosis-card__memo-status {
-  font-size: 0.8rem;
-  color: var(--success, #28a745);
-  margin-top: 0.3rem;
 }

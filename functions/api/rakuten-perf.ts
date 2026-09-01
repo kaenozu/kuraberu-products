@@ -18,7 +18,11 @@ import {
 
 /** Cloudflare KV バインディングの最小インターフェース */
 interface PerfKV {
-  put(key: string, value: string, options?: { expirationTtl?: number }): Promise<void>;
+  put(
+    key: string,
+    value: string,
+    options?: { expirationTtl?: number },
+  ): Promise<void>;
   list(options?: { prefix?: string }): Promise<{ keys: { name: string }[] }>;
   get(key: string, options?: { type: "json" }): Promise<unknown>;
 }
@@ -78,7 +82,12 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     entries.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
     const summary = computeSummary(entries);
 
-    return json({ ok: true, summary, entryCount: entries.length, query: { hours } });
+    return json({
+      ok: true,
+      summary,
+      entryCount: entries.length,
+      query: { hours },
+    });
   } catch (error) {
     console.error("楽天APIパフォーマンスログの取得に失敗しました", error);
     return json({ ok: false, error: "failed to read logs" }, 500);
