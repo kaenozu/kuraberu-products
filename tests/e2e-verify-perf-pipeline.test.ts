@@ -18,8 +18,12 @@ import {
 function createRealKV() {
   const store = new Map<string, string>();
   return {
-    async put(key: string, value: string) { store.set(key, value); },
-    async get(key: string) { return store.get(key) ?? null; },
+    async put(key: string, value: string) {
+      store.set(key, value);
+    },
+    async get(key: string) {
+      return store.get(key) ?? null;
+    },
     async list(opts?: { prefix?: string }) {
       const prefix = opts?.prefix ?? "";
       const keys = [...store.keys()]
@@ -39,15 +43,34 @@ describe("E2E: Perf collector full pipeline", () => {
   it("record 3 entries → drain → flush to real KV → read back → compute summary", async () => {
     // Step 1: Record 3 entries with distinct timestamps
     recordPerfEntry(
-      { keywordHash: "hash_a", durationMs: 100, httpStatus: 200, productCount: 5, cacheHit: false },
+      {
+        keywordHash: "hash_a",
+        durationMs: 100,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: false,
+      },
       "2026-09-01T10:00:00.000Z",
     );
     recordPerfEntry(
-      { keywordHash: "hash_b", durationMs: 500, httpStatus: 200, productCount: 3, cacheHit: false },
+      {
+        keywordHash: "hash_b",
+        durationMs: 500,
+        httpStatus: 200,
+        productCount: 3,
+        cacheHit: false,
+      },
       "2026-09-01T10:01:00.000Z",
     );
     recordPerfEntry(
-      { keywordHash: "hash_c", durationMs: 50, httpStatus: 500, productCount: 0, cacheHit: false, error: "HTTP 500" },
+      {
+        keywordHash: "hash_c",
+        durationMs: 50,
+        httpStatus: 500,
+        productCount: 0,
+        cacheHit: false,
+        error: "HTTP 500",
+      },
       "2026-09-01T10:02:00.000Z",
     );
 
@@ -92,11 +115,23 @@ describe("E2E: Perf collector full pipeline", () => {
 
   it("cache hit entries are tracked correctly through pipeline", async () => {
     recordPerfEntry(
-      { keywordHash: "cached1", durationMs: 0, httpStatus: 200, productCount: 5, cacheHit: true },
+      {
+        keywordHash: "cached1",
+        durationMs: 0,
+        httpStatus: 200,
+        productCount: 5,
+        cacheHit: true,
+      },
       "2026-09-01T11:00:00.000Z",
     );
     recordPerfEntry(
-      { keywordHash: "real1", durationMs: 200, httpStatus: 200, productCount: 3, cacheHit: false },
+      {
+        keywordHash: "real1",
+        durationMs: 200,
+        httpStatus: 200,
+        productCount: 3,
+        cacheHit: false,
+      },
       "2026-09-01T11:01:00.000Z",
     );
 
@@ -129,11 +164,23 @@ describe("E2E: Perf collector full pipeline", () => {
 
   it("flushEntriesToKV is resilient to individual put failures", async () => {
     recordPerfEntry(
-      { keywordHash: "a", durationMs: 100, httpStatus: 200, productCount: 1, cacheHit: false },
+      {
+        keywordHash: "a",
+        durationMs: 100,
+        httpStatus: 200,
+        productCount: 1,
+        cacheHit: false,
+      },
       "2026-09-01T12:00:00.000Z",
     );
     recordPerfEntry(
-      { keywordHash: "b", durationMs: 200, httpStatus: 200, productCount: 2, cacheHit: false },
+      {
+        keywordHash: "b",
+        durationMs: 200,
+        httpStatus: 200,
+        productCount: 2,
+        cacheHit: false,
+      },
       "2026-09-01T12:00:01.000Z",
     );
 
@@ -146,8 +193,12 @@ describe("E2E: Perf collector full pipeline", () => {
         putCount++;
         if (putCount === 2) throw new Error("KV put failed");
       },
-      async list() { return { keys: [] }; },
-      async get() { return null; },
+      async list() {
+        return { keys: [] };
+      },
+      async get() {
+        return null;
+      },
     };
 
     // Should NOT throw — fail-safe design

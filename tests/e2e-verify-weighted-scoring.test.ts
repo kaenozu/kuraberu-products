@@ -18,7 +18,9 @@ const products: readonly Product[] = [
     attributes: { capacity: 160, material: "ppsu" },
     articleUrls: ["/articles/test-a/"],
     purchaseLinks: [],
-    sources: [{ label: "公式", url: "https://example.com/a", checkedAt: "2026-01-01" }],
+    sources: [
+      { label: "公式", url: "https://example.com/a", checkedAt: "2026-01-01" },
+    ],
     verifiedAt: "2026-01-01",
   },
   {
@@ -30,7 +32,9 @@ const products: readonly Product[] = [
     attributes: { capacity: 240, material: "ppsu" },
     articleUrls: ["/articles/test-b/"],
     purchaseLinks: [],
-    sources: [{ label: "公式", url: "https://example.com/b", checkedAt: "2026-01-01" }],
+    sources: [
+      { label: "公式", url: "https://example.com/b", checkedAt: "2026-01-01" },
+    ],
     verifiedAt: "2026-01-01",
   },
   {
@@ -42,7 +46,9 @@ const products: readonly Product[] = [
     attributes: { capacity: 200, material: "pp" },
     articleUrls: ["/articles/test-c/"],
     purchaseLinks: [],
-    sources: [{ label: "公式", url: "https://example.com/c", checkedAt: "2026-01-01" }],
+    sources: [
+      { label: "公式", url: "https://example.com/c", checkedAt: "2026-01-01" },
+    ],
     verifiedAt: "2026-01-01",
   },
 ];
@@ -71,7 +77,12 @@ const baseConfig: DiagnosisConfig = {
           rules: [
             {
               type: "score",
-              match: { field: "attributes", key: "capacity", operator: "eq", value: 160 },
+              match: {
+                field: "attributes",
+                key: "capacity",
+                operator: "eq",
+                value: 160,
+              },
               score: 5,
               reasonCode: "CAPACITY_SMALL",
             },
@@ -83,7 +94,12 @@ const baseConfig: DiagnosisConfig = {
           rules: [
             {
               type: "score",
-              match: { field: "attributes", key: "capacity", operator: "eq", value: 240 },
+              match: {
+                field: "attributes",
+                key: "capacity",
+                operator: "eq",
+                value: 240,
+              },
               score: 5,
               reasonCode: "CAPACITY_LARGE",
             },
@@ -103,7 +119,12 @@ const baseConfig: DiagnosisConfig = {
           rules: [
             {
               type: "score",
-              match: { field: "attributes", key: "material", operator: "eq", value: "ppsu" },
+              match: {
+                field: "attributes",
+                key: "material",
+                operator: "eq",
+                value: "ppsu",
+              },
               score: 3,
               reasonCode: "MATERIAL_PPSU",
             },
@@ -170,8 +191,12 @@ describe("E2E: Weighted scoring behavior", () => {
       capacity: "large",
       material: "ppsu",
     });
-    const nwProdA = noWeightResult.rankedProducts.find((e) => e.productId === "prod-a")!;
-    const nwProdB = noWeightResult.rankedProducts.find((e) => e.productId === "prod-b")!;
+    const nwProdA = noWeightResult.rankedProducts.find(
+      (e) => e.productId === "prod-a",
+    )!;
+    const nwProdB = noWeightResult.rankedProducts.find(
+      (e) => e.productId === "prod-b",
+    )!;
 
     expect(prodB.score).toBeGreaterThan(nwProdB.score);
     expect(prodA.score).toBeGreaterThan(nwProdA.score);
@@ -194,7 +219,9 @@ describe("E2E: Weighted scoring behavior", () => {
       rDefault.rankedProducts.map((e) => e.productId),
     );
     for (const rp of rDefault.rankedProducts) {
-      const exp = rExplicit.rankedProducts.find((e) => e.productId === rp.productId);
+      const exp = rExplicit.rankedProducts.find(
+        (e) => e.productId === rp.productId,
+      );
       expect(exp?.score).toBe(rp.score);
     }
   });
@@ -209,7 +236,10 @@ describe("E2E: Weighted scoring behavior", () => {
       // validateDiagnosisData expects full data structure — use runDiagnosis to trigger internal validation
       expect(() => {
         // Manually validate by creating config and checking
-        if (q.weight !== undefined && (q.weight < 1 || q.weight > 10 || !Number.isInteger(q.weight))) {
+        if (
+          q.weight !== undefined &&
+          (q.weight < 1 || q.weight > 10 || !Number.isInteger(q.weight))
+        ) {
           throw new Error("invalid weight");
         }
       }).toThrow();
@@ -234,7 +264,12 @@ describe("E2E: Weighted scoring behavior", () => {
               rules: [
                 {
                   type: "exclude",
-                  match: { field: "attributes", key: "material", operator: "eq", value: "pp" },
+                  match: {
+                    field: "attributes",
+                    key: "material",
+                    operator: "eq",
+                    value: "pp",
+                  },
                   reasonCode: "EXCLUDE_PP",
                 },
               ],

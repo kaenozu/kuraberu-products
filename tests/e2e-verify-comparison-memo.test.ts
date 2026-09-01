@@ -23,40 +23,63 @@ function setupLocalStorage() {
   const store = new Map<string, string>();
   const mock = {
     getItem: vi.fn((key: string) => store.get(key) ?? null),
-    setItem: vi.fn((key: string, value: string) => { store.set(key, value); }),
-    removeItem: vi.fn((key: string) => { store.delete(key); }),
-    clear: vi.fn(() => { store.clear(); }),
-    get length() { return store.size; },
+    setItem: vi.fn((key: string, value: string) => {
+      store.set(key, value);
+    }),
+    removeItem: vi.fn((key: string) => {
+      store.delete(key);
+    }),
+    clear: vi.fn(() => {
+      store.clear();
+    }),
+    get length() {
+      return store.size;
+    },
     key: vi.fn((_i: number) => null),
   };
-  Object.defineProperty(globalThis, "localStorage", { value: mock, writable: true });
+  Object.defineProperty(globalThis, "localStorage", {
+    value: mock,
+    writable: true,
+  });
   return { store, mock };
 }
 
 describe("E2E: extractArticleIdFromPath", () => {
   it("extracts article ID from standard path", () => {
-    expect(extractArticleIdFromPath("/articles/pigeon-bottle-160-240/")).toBe("pigeon-bottle-160-240");
+    expect(extractArticleIdFromPath("/articles/pigeon-bottle-160-240/")).toBe(
+      "pigeon-bottle-160-240",
+    );
   });
 
   it("extracts article ID without trailing slash", () => {
-    expect(extractArticleIdFromPath("/articles/combi-milk-cup")).toBe("combi-milk-cup");
+    expect(extractArticleIdFromPath("/articles/combi-milk-cup")).toBe(
+      "combi-milk-cup",
+    );
   });
 
   it("returns null for non-article paths", () => {
-    expect(extractArticleIdFromPath("/tools/product-finder/baby-bottle")).toBeNull();
+    expect(
+      extractArticleIdFromPath("/tools/product-finder/baby-bottle"),
+    ).toBeNull();
     expect(extractArticleIdFromPath("/memo")).toBeNull();
     expect(extractArticleIdFromPath("")).toBeNull();
   });
 
   it("handles nested paths (not article root)", () => {
-    expect(extractArticleIdFromPath("/articles/some-article/sub-page")).toBeNull();
+    expect(
+      extractArticleIdFromPath("/articles/some-article/sub-page"),
+    ).toBeNull();
   });
 });
 
 describe("E2E: extractArticleIdsFromProduct", () => {
   it("extracts multiple IDs from product articleUrls", () => {
     const product = {
-      articleUrls: ["/articles/pigeon-160/", "/articles/combi-240/", "/tools/product-finder/baby-bottle"],
+      articleUrls: [
+        "/articles/pigeon-160/",
+        "/articles/combi-240/",
+        "/tools/product-finder/baby-bottle",
+      ],
     };
     const ids = extractArticleIdsFromProduct(product);
     expect(ids).toEqual(["pigeon-160", "combi-240"]);
