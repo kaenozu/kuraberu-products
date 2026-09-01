@@ -227,7 +227,15 @@ if (props.articleId) {
       keyDiffRows: specsRows,
       lead: seed?.lead ?? article.summary,
       summaryParagraph: undefined,
-      officialDescription: seed?.officialProse?.map((s) => `${s.heading}：${s.items.join('。')}`).join('\n') ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
+      officialDescription:
+        seed?.officialProse
+          ?.map((s) => {
+            const items = s.items.map((item) =>
+              /[。！？]$/.test(item) ? item : `${item}。`,
+            );
+            return `${s.heading}：${items.join('')}`;
+          })
+          .join('\n') ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
       officialLinks,
       specRows: props.specRows,
       socialProofQuery: seed?.socialProofQuery ?? `${leftSide.brand} ${leftSide.line} ${rightSide.line}`,
