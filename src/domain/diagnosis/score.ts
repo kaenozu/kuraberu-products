@@ -54,13 +54,20 @@ export function selectedOptionIds(answer: AnswerValue | undefined): string[] {
 /** 質問IDごとに「選択肢ID → ルール群」をまとめた形 */
 export type QuestionRuleMap = Record<string, Record<string, DiagnosisRule[]>>;
 
+/** 質問ID → 重み（既定: 1） */
+export type QuestionWeightMap = Record<string, number>;
+
+const DEFAULT_QUESTION_WEIGHT = 1;
+
 /**
  * 回答から選択された選択肢のルールを集める。
  * exclude ルールと score ルールを分けて返す。
+ * 質問ごとの重みも併せて返す（未指定は 1）。
  */
 export function collectSelectedRules(
   questions: readonly {
     id: string;
+    weight?: number;
     options?: readonly { id: string; rules: DiagnosisRule[] }[];
   }[],
   answers: DiagnosisAnswers,
@@ -70,14 +77,17 @@ export function collectSelectedRules(
     reasonCode: string;
   }[];
   rulesByQuestion: QuestionRuleMap;
+  questionWeights: QuestionWeightMap;
 } {
   const exclusions: {
     match: Extract<DiagnosisRule, { type: "exclude" }>["match"];
     reasonCode: string;
   }[] = [];
   const rulesByQuestion: QuestionRuleMap = {};
+  const questionWeights: QuestionWeightMap = {};
 
   for (const question of questions) {
+    questionWeights[question.id] = question.weight ?? DEFAULT_QUESTION_WEIGHT;
     const answer = answers[question.id];
     const optionIds = selectedOptionIds(answer);
     for (const option of question.options ?? []) {
@@ -96,32 +106,37 @@ export function collectSelectedRules(
     }
   }
 
-  return { exclusions, rulesByQuestion };
+  return { exclusions, rulesByQuestion, questionWeights };
 }
 
 /**
  * 全回答をスコアへ反映する。
  * exclude 済みの商品もスコアは記録するが、ランキングからは除外される。
+ * 質問ごとの weight を適用する: 実際の加点は rule.score × weight となる。
+ * weight は ScoreRule（加点・減点）にのみ適用され、ExcludeRule には影響しない。
  */
 export function applyScores(
   scores: Map<string, ProductScore>,
   products: readonly Product[],
   rulesByQuestion: QuestionRuleMap,
+  questionWeights: QuestionWeightMap = {},
 ): void {
-  for (const options of Object.values(rulesByQuestion)) {
+  for (const [questionId, options] of Object.entries(rulesByQuestion)) {
+    const weight = questionWeights[questionId] ?? DEFAULT_QUESTION_WEIGHT;
     for (const rules of Object.values(options)) {
       for (const rule of rules) {
         if (rule.type !== "score") continue;
+        const weightedScore = rule.score * weight;
         for (const product of products) {
           if (rule.productId && rule.productId !== product.id) continue;
           if (rule.match && !matchesCondition(product, rule.match)) continue;
           const score = scores.get(product.id);
           if (!score) continue;
-          score.score += rule.score;
+          score.score += weightedScore;
           if (rule.reasonCode) {
-            if (rule.score > 0) {
+            if (weightedScore > 0) {
               score.positiveReasons.push(rule.reasonCode);
-            } else if (rule.score < 0) {
+            } else if (weightedScore < 0) {
               score.negativeReasons.push(rule.reasonCode);
             }
           }
