@@ -430,11 +430,11 @@ export const articlePurchaseLinks = {
   },
   "yamazaki-ofuda-stand-rin-vs-single:left": {
     name: "山崎実業 神札スタンド リン（6141・6142）",
-    purchaseUrl: "https://a.r10.to/hP8BTD",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz22nov22h01/",
   },
   "yamazaki-ofuda-stand-rin-vs-single:right": {
     name: "山崎実業 神札スタンド リン シングル（6144）",
-    purchaseUrl: "https://a.r10.to/h59nMJ",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz22nov22h02/",
   },
   "yamazaki-free-broom-32-vs-45:left": {
     name: "山崎産業 JS自由箒 32（BR952-032J-MB）",
