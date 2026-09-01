@@ -189,7 +189,7 @@ describe("E2E: Perf collector full pipeline", () => {
     // KV that fails on second put
     let putCount = 0;
     const flakyKV = {
-      async put(key: string, value: string) {
+      async put(_key: string, _value: string) {
         putCount++;
         if (putCount === 2) throw new Error("KV put failed");
       },

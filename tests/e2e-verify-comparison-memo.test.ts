@@ -7,18 +7,10 @@ import {
   extractArticleIdFromPath,
   extractArticleIdsFromProduct,
   loadComparisonMemo,
-  saveComparisonMemo,
   addProductArticlesToMemo,
   removeProductArticlesFromMemo,
   isProductInMemo,
 } from "../src/lib/diagnosis-comparison-memo";
-import {
-  comparisonMemoStorageKey,
-  encodeComparisonMemo,
-  type ComparisonMemoState,
-} from "../src/lib/comparison-memo";
-
-// --- localStorage mock ---
 function setupLocalStorage() {
   const store = new Map<string, string>();
   const mock = {
@@ -99,12 +91,14 @@ describe("E2E: extractArticleIdsFromProduct", () => {
 });
 
 describe("E2E: Full memo lifecycle (add → check → remove)", () => {
-  let store: Map<string, string>;
+  let _store: Map<string, string>;
   const knownIds = ["pigeon-160", "combi-240", "baby-bottle-guide"];
 
   beforeEach(() => {
     setupLocalStorage();
-    store = (globalThis.localStorage as any)._store;
+    _store = (
+      globalThis.localStorage as unknown as { _store: Map<string, string> }
+    )._store;
   });
 
   it("add product articles → check included → remove → check excluded", () => {

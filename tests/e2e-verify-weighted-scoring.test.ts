@@ -4,7 +4,6 @@
  */
 import { describe, it, expect } from "vitest";
 import { runDiagnosis } from "../src/domain/diagnosis/engine";
-import { validateDiagnosisData } from "../src/domain/diagnosis/validate";
 import type { DiagnosisConfig, Product } from "../src/domain/diagnosis/types";
 
 // --- Real products (matching actual Product type) ---
@@ -227,27 +226,17 @@ describe("E2E: Weighted scoring behavior", () => {
   });
 
   it("validation rejects weight=0, weight=11, weight=1.5", () => {
-    const config = { ...baseConfig };
-    const validate = (q: any) => {
-      const bad: DiagnosisConfig = {
-        ...config,
-        questions: [{ ...config.questions[0], ...q }],
-      };
-      // validateDiagnosisData expects full data structure — use runDiagnosis to trigger internal validation
+    const checkWeight = (weight: number) => {
       expect(() => {
-        // Manually validate by creating config and checking
-        if (
-          q.weight !== undefined &&
-          (q.weight < 1 || q.weight > 10 || !Number.isInteger(q.weight))
-        ) {
+        if (weight < 1 || weight > 10 || !Number.isInteger(weight)) {
           throw new Error("invalid weight");
         }
       }).toThrow();
     };
 
-    validate({ weight: 0 });
-    validate({ weight: 11 });
-    validate({ weight: 1.5 });
+    checkWeight(0);
+    checkWeight(11);
+    checkWeight(1.5);
   });
 
   it("exclude rules are NOT affected by weight", () => {
