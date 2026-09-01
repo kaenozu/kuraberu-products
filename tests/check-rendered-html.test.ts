@@ -25,6 +25,7 @@ import {
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
+  validateRepeatedJapanesePunctuation,
   validateTopPageCategories,
   validateTopPageFeatured,
 } from "../scripts/check-rendered-html.mjs";
@@ -1452,6 +1453,26 @@ describe("article section order (validateArticleSectionOrder)", () => {
       validateArticleSectionOrder(
         "articles/nested/index.html",
         comparisonMeta() + nested,
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects repeated Japanese punctuation in rendered body text", () => {
+    expect(
+      validateRepeatedJapanesePunctuation(
+        "dist/articles/example/index.html",
+        "<p>正常です。</p><script>const x = '。。';</script><p>破損です。。</p>",
+      ),
+    ).toEqual([
+      "dist/articles/example/index.html: [punctuation] repeated Japanese punctuation remains in rendered HTML: 。。",
+    ]);
+  });
+
+  it("accepts normal Japanese sentence punctuation", () => {
+    expect(
+      validateRepeatedJapanesePunctuation(
+        "dist/articles/example/index.html",
+        "<p>正常です。次です！疑問です？</p>",
       ),
     ).toEqual([]);
   });

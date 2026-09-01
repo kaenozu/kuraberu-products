@@ -369,6 +369,16 @@ export function validateNoUnresolvedTemplateTokens(relative, html) {
   );
 }
 
+export function validateRepeatedJapanesePunctuation(relative, html) {
+  const body = stripScriptAndStyleContents(html);
+  const matches = body.match(/[。！？]{2,}/g) ?? [];
+  return matches.length === 0
+    ? []
+    : [
+        `${relative}: [punctuation] repeated Japanese punctuation remains in rendered HTML: ${matches.slice(0, 3).join(", ")}`,
+      ];
+}
+
 // 記事ページの商品数を、BaseLayout が出力する
 // <meta name="article:product-count" content="N"> から読み取る。
 // 商品数の唯一の情報源は記事メタデータ（src/content/articles.ts の productCount）。
@@ -1240,6 +1250,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // Issue #343: 全記事ページへ拡大した検証（必須セクション有無・未解決トークン）
     errors.push(...validateRequiredSections(relative, html));
     errors.push(...validateNoUnresolvedTemplateTokens(relative, html));
+    errors.push(...validateRepeatedJapanesePunctuation(relative, html));
     errors.push(
       ...validateArticleCtas(
         relative,
