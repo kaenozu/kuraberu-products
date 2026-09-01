@@ -145,12 +145,12 @@ export const articlePurchaseLinks = {
     purchaseUrl: "https://item.rakuten.co.jp/mtgec-beauty/2009320101/",
   },
   "panasonic-eh-na0k-vs-eh-ne9n:left": {
-    name: "パナソニック EH-NA0K-K",
-    purchaseUrl: "https://a.r10.to/hk0qJc",
+    name: "パナソニック ナノケア EH-NA0K",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980975022/",
   },
   "panasonic-eh-na0k-vs-eh-ne9n:right": {
-    name: "パナソニック EH-NE9N-W",
-    purchaseUrl: "https://a.r10.to/h5SMmD",
+    name: "パナソニック EH-NE9N",
+    purchaseUrl: "https://item.rakuten.co.jp/emedama/4549980973998/",
   },
   "recolte-automatic-cooker-vs-panasonic-nf-pc400:left": {
     name: "レコルト 自動調理ポット RSY-2",
