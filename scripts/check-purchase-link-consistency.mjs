@@ -687,6 +687,11 @@ if (
   //   1. A network-resolved CTA (resolved during this run), OR
   //   2. Fresh cached evidence from a past strict audit.
   // This prevents "45 CTAs skipped → coverage 45/45 → CI PASS" fail-open.
+
+  // Condition 3 first: surface unparseable URLs and network errors immediately
+  // so the cause of failure is visible before any coverage exit.
+  if (audit.errors.length) throw new Error(audit.errors.join("\n"));
+
   const verifiedSlugs = [...statuses.entries()]
     .filter(([, status]) => status === "verified")
     .map(([slug]) => slug);
@@ -747,7 +752,4 @@ if (
       );
     }
   }
-
-  // Condition 3: Unparseable URLs are always fatal
-  if (audit.errors.length) throw new Error(audit.errors.join("\n"));
 }
