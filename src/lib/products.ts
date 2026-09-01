@@ -556,11 +556,11 @@ export const articlePurchaseLinks = {
   },
   "yamazaki-ofuda-stand-rin-vs-single:left": {
     name: "山崎実業 神札スタンド リン（6141・6142）",
-    purchaseUrl: "https://a.r10.to/hP8BTD",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz22nov22h01/",
   },
   "yamazaki-ofuda-stand-rin-vs-single:right": {
     name: "山崎実業 神札スタンド リン シングル（6144）",
-    purchaseUrl: "https://a.r10.to/h59nMJ",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz22nov22h02/",
   },
   "yamazaki-dishwasher-rack-241925-vs-241926:left": {
     name: "山崎実業 食洗機ラック タワー ロータイプ（241925）",
