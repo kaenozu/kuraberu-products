@@ -169,19 +169,20 @@ export async function flushEntriesToKV(
   entries: readonly RakutenPerfEntry[],
 ): Promise<number> {
   if (entries.length === 0) return 0;
-  try {
-    await Promise.all(
-      entries.map((entry) =>
-        kv.put(`${PERF_KV_PREFIX}${entry.timestamp}`, JSON.stringify(entry), {
-          expirationTtl: PERF_KV_TTL_SECONDS,
-        }),
-      ),
+  const results = await Promise.allSettled(
+    entries.map((entry) =>
+      kv.put(`${PERF_KV_PREFIX}${entry.timestamp}`, JSON.stringify(entry), {
+        expirationTtl: PERF_KV_TTL_SECONDS,
+      }),
+    ),
+  );
+  const saved = results.filter((r) => r.status === "fulfilled").length;
+  if (saved < entries.length) {
+    console.error(
+      `楽天APIパフォーマンスログ: ${entries.length - saved}件の保存に失敗しました`,
     );
-    return entries.length;
-  } catch {
-    console.error("楽天APIパフォーマンスログの保存に失敗しました");
-    return 0;
   }
+  return saved;
 }
 
 // ─── Summary Computation ──────────────────────────────────────────────────────
