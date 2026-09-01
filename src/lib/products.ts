@@ -386,11 +386,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
-    purchaseUrl: "https://a.r10.to/h5Y7Pe",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/mc-sb55k-a/",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:right": {
     name: "パナソニック MC-SB35K",
-    purchaseUrl: "https://a.r10.to/hPV2LX",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/mc-sb35k-c/",
   },
   "panasonic-ne-fl1a-vs-ne-fl1c:left": {
     name: "パナソニック NE-FL1A",
