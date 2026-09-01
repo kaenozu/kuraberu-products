@@ -38,11 +38,11 @@ export const onRequestPost: PagesFunction<Env> = async ({ env }) => {
 
   const entries = drainPerfEntries();
   if (entries.length === 0) {
-    return json({ ok: true, saved: 0 });
+    return json({ ok: true, saved: 0 }, 200);
   }
 
   const saved = await flushEntriesToKV(kv, entries);
-  return json({ ok: true, saved });
+  return json({ ok: true, saved }, 200);
 };
 
 // ─── GET Handler: read from KV + summary ──────────────────────────────────────
@@ -82,12 +82,15 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
     entries.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
     const summary = computeSummary(entries);
 
-    return json({
-      ok: true,
-      summary,
-      entryCount: entries.length,
-      query: { hours },
-    });
+    return json(
+      {
+        ok: true,
+        summary,
+        entryCount: entries.length,
+        query: { hours },
+      },
+      200,
+    );
   } catch (error) {
     console.error("楽天APIパフォーマンスログの取得に失敗しました", error);
     return json({ ok: false, error: "failed to read logs" }, 500);
