@@ -7,7 +7,6 @@
 
 import {
   comparisonMemoStorageKey,
-  comparisonMemoLimit,
   sanitizeComparisonMemo,
   encodeComparisonMemo,
   toggleComparisonMemo,

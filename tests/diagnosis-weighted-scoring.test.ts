@@ -223,16 +223,7 @@ describe("weighted scoring", () => {
   });
 
   it("weight=1 は既定値と同じ動作", () => {
-    // weight=1 の設定と weight なしの設定で同じ結果になる
-    const resultWeight1 = runDiagnosis(configNoWeight, allProducts, {
-      q1: "yes",
-    });
-    const resultDefault = runDiagnosis(configWithWeight, allProducts, {
-      q1: "yes",
-    });
-    // q1 のみ回答: 両方とも prod-a のスコアが 3（weight なし）or 6（weight=3）...
-    // ただし configNoWeight と configWithWeight は別設定なので、
-    // weight=1 の質問のみ比較する
+    // weight=1 の設定で weight なしと同じ結果になることを確認する
     const questionsWeightOne: DiagnosisQuestion[] = [
       {
         id: "q1",

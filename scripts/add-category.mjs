@@ -293,7 +293,7 @@ export const ${toCamelCase(slug)}PageContent: DiagnosisPageContent = {
  * 1. import: 最後の `} from "./...` 行の直後に挿入
  * 2. categories: 最後の `},` 行の直後に挿入（`];` の前）
  */
-function patchRegistry(content, slug, label) {
+function patchRegistry(content, slug) {
   const camelSlug = toCamelCase(slug);
   const camelProducts = toCamelCase(toPluralSlug(slug));
   const pluralSlug = toPluralSlug(slug);
@@ -376,7 +376,7 @@ if (dryRun) {
 
   if (!skipIndex) {
     console.log(`\n=== ${registryPath} (パッチ後) ===`);
-    console.log(patchRegistry(registryContent, slug, label));
+    console.log(patchRegistry(registryContent, slug));
   } else {
     console.log("\n⚠️  --no-index: index.ts の更新をスキップ");
   }
@@ -407,7 +407,7 @@ console.log(`✅ ${diagnosesPath} を生成`);
 
 // index.ts の自動更新
 if (!skipIndex) {
-  const updatedRegistry = patchRegistry(registryContent, slug, label);
+  const updatedRegistry = patchRegistry(registryContent, slug);
   writeFileSync(join(ROOT, registryPath), updatedRegistry, "utf-8");
   console.log(`✅ ${registryPath} を更新（import + categories 配列）`);
 } else {
