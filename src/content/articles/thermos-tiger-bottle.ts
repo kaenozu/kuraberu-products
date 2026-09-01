@@ -16,11 +16,17 @@ export const thermosTigerBottleArticle = defineArticleMetadata({
   summary:
     "「JNL-S500」と「MTA-J050」を、公式の保温・保冷効力とサイズ・お手入れ方法に分けて比較します。",
   publishedAt: "2026-08-12",
-  modifiedAt: "2026-08-17",
-  productInfoCheckedAt: "2026-08-12",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-01",
+  productInfoCheckedAt: "2026-09-01",
+  purchaseLinkStatus: "verified",
+  purchaseLinksCheckedAt: "2026-09-01",
   imagePath: "/products/thermos-jnl-s500.jpg",
   changeLog: [
+    {
+      date: "2026-09-01",
+      summary:
+        "公式ページと楽天商品単体ページ（JNL-S500・MTA-J050）のHTTP 200、商品名・型番・ショップ一致を確認し、検索ページではなく通常の商品単体URLへ更新。",
+    },
     {
       date: "2026-08-17",
       summary:

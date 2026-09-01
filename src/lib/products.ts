@@ -72,7 +72,7 @@ export const thermosJnlS500: Product = {
     handle: "なし",
   },
   officialUrl: "https://www.thermos.jp/product/series/jnl-s00.html",
-  rakutenUrl: "https://a.r10.to/hPl2PS",
+  rakutenUrl: "https://item.rakuten.co.jp/rakuten24/405671/",
   rakutenSearchUrl:
     "https://search.rakuten.co.jp/search/mall/%E3%82%B5%E3%83%BC%E3%83%A2%E3%82%B9%20JNL-S500",
   imagePath: "/products/thermos-jnl-s500.jpg",
@@ -99,7 +99,7 @@ export const tigerMtaJ050: Product = {
   },
   officialUrl:
     "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/",
-  rakutenUrl: "https://a.r10.to/hHdLbn",
+  rakutenUrl: "https://item.rakuten.co.jp/irodorich/22410151/",
   rakutenSearchUrl:
     "https://search.rakuten.co.jp/search/mall/%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC%20MTA-J050",
   imagePath: "/products/tiger-mta-j050.jpg",
@@ -490,11 +490,11 @@ export const articlePurchaseLinks = {
   },
   "thermos-tiger-bottle:left": {
     name: "サーモス JNL-S500",
-    purchaseUrl: thermosJnlS500.rakutenUrl,
+    purchaseUrl: "https://item.rakuten.co.jp/rakuten24/405671/",
   },
   "thermos-tiger-bottle:right": {
     name: "タイガー MTA-J050",
-    purchaseUrl: tigerMtaJ050.rakutenUrl,
+    purchaseUrl: "https://item.rakuten.co.jp/irodorich/22410151/",
   },
   "tiger-jpv-l100-vs-jpv-m100:left": {
     name: "タイガー JPV-L100",
