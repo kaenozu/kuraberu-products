@@ -22,7 +22,8 @@ export const roborockQrevoCurvVsDreameX50Seed: CommercialArticleSeed = {
   rightPoint: "最大6cm段差対応・100日ゴミ収集・200種障害物回避を重視する人向け",
   productInfoCheckedAt: "2026-08-18",
   modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  // No HTTP-200 Rakuten item detail page was confirmed for either model; fail closed instead of exposing search-result CTAs.
+  purchaseLinkStatus: "unavailable",
   officialSources: [
     {
       label: "Roborock Qrevo Curv 公式商品ページ",
