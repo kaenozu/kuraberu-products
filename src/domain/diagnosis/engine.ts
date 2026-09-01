@@ -48,13 +48,13 @@ export function runDiagnosis(
 ): DiagnosisResult {
   const candidates = resolveProducts(config, products);
   const scores = initializeScores(candidates);
-  const { exclusions, rulesByQuestion } = collectSelectedRules(
+  const { exclusions, rulesByQuestion, questionWeights } = collectSelectedRules(
     config.questions,
     answers,
   );
 
   applyExclusions(scores, candidates, exclusions);
-  applyScores(scores, candidates, rulesByQuestion);
+  applyScores(scores, candidates, rulesByQuestion, questionWeights);
 
   const ranked = rankProducts(candidates, scores, config.tieBreaker ?? []);
 

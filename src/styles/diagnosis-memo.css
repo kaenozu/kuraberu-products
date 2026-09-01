@@ -1,0 +1,38 @@
+/* 診断結果カードの比較メモボタン */
+.diagnosis-card__memo-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.diagnosis-card__memo-button:hover {
+  background: var(--accent);
+  color: white;
+}
+
+.diagnosis-card__memo-button[aria-pressed="true"] {
+  background: var(--accent-light, rgba(0, 123, 255, 0.1));
+  color: var(--accent);
+}
+
+.diagnosis-card__memo-button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 比較メモページからのリンク表示 */
+.diagnosis-card__memo-status {
+  font-size: 0.8rem;
+  color: var(--success, #28a745);
+  margin-top: 0.3rem;
+}
