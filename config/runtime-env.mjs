@@ -111,6 +111,35 @@ export function isAllowedRakutenUrl(value) {
   );
 }
 
+/**
+ * Amazon.co.jp の購入リンクとして許可するホストかを判定する (#558)。
+ * - amazon.co.jp (商品ページ・検索ページ・ほしい物リスト等)
+ * - amzn.to / amzn.asia / amzn.com (Amazon 公式短縮URL)
+ *
+ * 広告タグ付きのURLも許可する。aspx/asp 等のASPリダイレクトは含めない
+ * (本サイトは Amazon アソシエイト公式トラッキングのみを使う方針)。
+ */
+export function isAllowedAmazonUrl(value) {
+  if (!nonEmpty(value)) return false;
+
+  let url;
+  try {
+    url = parseHttpsUrl(value, "Amazon URL");
+  } catch {
+    return false;
+  }
+
+  const hostname = url.hostname.toLowerCase();
+  return (
+    hostname === "amazon.co.jp" ||
+    hostname.endsWith(".amazon.co.jp") ||
+    hostname === "amzn.to" ||
+    hostname.endsWith(".amzn.to") ||
+    hostname === "amzn.asia" ||
+    hostname.endsWith(".amzn.asia")
+  );
+}
+
 /** A purchase destination must identify one Ichiba item, never a search page. */
 export function isRakutenProductDetailUrl(value) {
   if (!isAllowedRakutenUrl(value)) return false;
