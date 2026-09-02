@@ -186,6 +186,10 @@ const commercialArticleImages: Readonly<
     left: "/products/sony-wh-1000xm6-vs-wh-1000xm5-left.jpg",
     right: "/products/sony-wh-1000xm6-vs-wh-1000xm5-right.jpg",
   },
+  "panasonic-ne-bs6e-vs-ne-bs5e": {
+    left: "/products/panasonic-ne-bs6e.png",
+    right: "/products/panasonic-ne-bs5e.png",
+  },
 };
 
 export { commercialArticleImages };
