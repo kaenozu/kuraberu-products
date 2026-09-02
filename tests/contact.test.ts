@@ -17,6 +17,9 @@ function postRequest(
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
+      // Origin 検証 (#551/#567) で弾かれないよう、デフォルトで SITE_URL を
+      // 付与する。Origin 検証自体を検証するテストは明示的に headers で上書き。
+      Origin: SITE_URL,
       ...headers,
     },
     body,
