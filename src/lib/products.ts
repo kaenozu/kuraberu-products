@@ -669,4 +669,12 @@ export const articlePurchaseLinks = {
     name: "パナソニック ナノケア EH-NA0G",
     purchaseUrl: "https://item.rakuten.co.jp/ekosuta/eh20819/",
   },
+  "panasonic-ne-bs6e-vs-ne-bs5e:left": {
+    name: "パナソニック NE-BS6E",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/ne-bs6e-k/",
+  },
+  "panasonic-ne-bs6e-vs-ne-bs5e:right": {
+    name: "パナソニック NE-BS5E",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/ne-bs5e-k/",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
