@@ -348,6 +348,14 @@ export const articlePurchaseLinks = {
     name: "パンパース 新生児用 さらさらケア",
     purchaseUrl: "https://a.r10.to/h5Jh9V",
   },
+  "panasonic-ne-bs9c-vs-ne-ubs10c:left": {
+    name: "パナソニック ビストロ NE-BS9C",
+    purchaseUrl: "https://item.rakuten.co.jp/outl/rc_itn265br5z9x_lta0/",
+  },
+  "panasonic-ne-bs9c-vs-ne-ubs10c:right": {
+    name: "パナソニック ビストロ NE-UBS10C",
+    purchaseUrl: "https://item.rakuten.co.jp/e-cutestyle/p000000870297/",
+  },
   "panasonic-baby-monitor-kx-hc705:card": {
     name: "パナソニック ベビーモニター KX-HC705",
     purchaseUrl:
