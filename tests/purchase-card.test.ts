@@ -110,13 +110,14 @@ describe("PurchaseCard", () => {
     expect(html).toContain('data-placement="article-end"');
   });
 
-  // href が存在するときは CTA を表示する。purchaseLinkStatus は表示判定に影響しない。
+  // H-3 (#549): verified / direct のみ CTA を表示。unverified と status 省略時は
+  // pending 文言を出し、unavailable はカード本体だけを表示する。
   it.each([
     ["omitted", undefined],
     ["unverified", "unverified"],
     ["unavailable", "unavailable"],
   ] as const)(
-    "shows CTAs when the status is %s and href exists",
+    "suppresses the purchase CTA when the status is %s and href exists (#549)",
     async (_label, purchaseLinkStatus) => {
       const container = await AstroContainer.create();
       const html = await container.renderToString(PurchaseCard, {
@@ -129,10 +130,33 @@ describe("PurchaseCard", () => {
         },
       });
 
-      expect(html).toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
-      expect(html).toContain('data-cta-event="purchase"');
+      // CTA (楽天市場で確認 / 商品ページを見る / 検索) は出ない。
+      expect(html).not.toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      if (purchaseLinkStatus === "unavailable") {
+        expect(html).not.toContain("purchase-card__pending");
+      } else {
+        expect(html).toContain("purchase-card__pending");
+      }
+      // カード本体 (商品名 / audience) は引き続き出る。
       expect(html).toContain("サーモス JNL-S500");
       expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
     },
   );
+
+  it("shows the verified CTA only when purchaseLinkStatus is verified or direct (#549)", async () => {
+    for (const status of ["verified", "direct"] as const) {
+      const container = await AstroContainer.create();
+      const html = await container.renderToString(PurchaseCard, {
+        props: {
+          name: "サーモス JNL-S500",
+          audience: "軽さ・コンパクト・食洗機対応を優先する人向け",
+          href: validRakutenUrl,
+          productId: "thermos-jnl-s500",
+          purchaseLinkStatus: status,
+        },
+      });
+      expect(html).toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      expect(html).not.toContain("purchase-card__pending");
+    }
+  });
 });

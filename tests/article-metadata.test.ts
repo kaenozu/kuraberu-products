@@ -576,7 +576,12 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
       expect(
         buyLinks?.length ?? 0,
         `${slug}: next-step has 2 purchase buttons unless unavailable`,
-      ).toBe(article?.purchaseLinkStatus === "unavailable" ? 0 : 2);
+      ).toBe(
+        article?.purchaseLinkStatus === "verified" ||
+          article?.purchaseLinkStatus === "direct"
+          ? 2
+          : 0,
+      );
       const specsIndex = html.indexOf('id="specs"');
       const blockIndex = html.indexOf('class="next-step"');
       if (specsIndex !== -1) {

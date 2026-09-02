@@ -525,6 +525,8 @@ export function validateArticleNextStep(relative, html) {
     html.match(
       /<meta name="article:purchase-link-status" content="([^"]+)">/i,
     )?.[1] ?? null;
+  const hasPurchaseCtas =
+    purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
   const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
@@ -566,7 +568,7 @@ export function validateArticleNextStep(relative, html) {
       /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
     ),
   ];
-  const expectedBuyLinks = purchaseLinkStatus === "unavailable" ? 0 : 2;
+  const expectedBuyLinks = hasPurchaseCtas ? 2 : 0;
   if (buyLinks.length !== expectedBuyLinks) {
     errors.push(
       `${relative}: next-step block must render exactly ${expectedBuyLinks} purchase buttons (next-step__buy), found ${buyLinks.length}`,
@@ -1221,26 +1223,14 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       html.match(
         /<meta name="article:purchase-link-status" content="([^"]+)">/i,
       )?.[1] ?? null;
-    const expectedCtaCount =
-      purchaseLinkStatus === "unavailable"
-        ? ARTICLE_LAYOUT.ctaSets
-            .filter((set) => !set.comparisonOnly)
-            .reduce(
-              (total, set) => total + set.cardsPerProduct * productCount,
-              0,
-            )
-        : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
-    const expectedCtasByPlacement =
-      purchaseLinkStatus === "unavailable"
-        ? Object.fromEntries(
-            ARTICLE_LAYOUT.ctaSets
-              .filter((set) => !set.comparisonOnly)
-              .map((set) => [
-                set.placement,
-                set.cardsPerProduct * productCount,
-              ]),
-          )
-        : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
+    const hasPurchaseCtas =
+      purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
+    const expectedCtaCount = !hasPurchaseCtas
+      ? 0
+      : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
+    const expectedCtasByPlacement = !hasPurchaseCtas
+      ? {}
+      : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
