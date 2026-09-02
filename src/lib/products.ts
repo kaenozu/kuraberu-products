@@ -625,11 +625,11 @@ export const articlePurchaseLinks = {
   },
   "yamajitsu-film-holder-242286-vs-242287:left": {
     name: "山崎実業 フィルムフックまな板ホルダー タワー 242286",
-    purchaseUrl: "https://a.r10.to/h5iqky",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz23mar17h04/",
   },
   "yamajitsu-film-holder-242286-vs-242287:right": {
     name: "山崎実業 フィルムフック鍋蓋ホルダー タワー 242287",
-    purchaseUrl: "https://a.r10.to/hgDVKy",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz23feb07h02/",
   },
   "zojirushi-eq-sb22-vs-eq-ah22:left": {
     name: "象印 EQ-SB22",
