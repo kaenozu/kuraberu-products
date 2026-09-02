@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-mc-jp860k-vs-mc-sb70km:left": {
+    name: "パナソニック MC-JP860K-W",
+    purchaseUrl: "https://item.rakuten.co.jp/world-free-store/4549980740361/",
+  },
+  "panasonic-mc-jp860k-vs-mc-sb70km:right": {
+    name: "パナソニック MC-SB70KM-W",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/mc-sb70km-w/",
+  },
   "panasonic-eh-nc80-vs-eh-nc50:left": {
     name: "パナソニック ナノケア EH-NC80",
     purchaseUrl: "https://item.rakuten.co.jp/biccamera/4549980767948/",
