@@ -11,6 +11,9 @@ on:
         description: Type DEPLOY
         required: true
         type: string
+  push:
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -32,8 +35,8 @@ jobs:
     env:
       # inputs / vars を run スクリプトへ直接補間すると式インジェクションの
       # 攻撃面になるため、env 経由でのみ参照する。
-      EXPECTED_SHA: ${{ inputs.expected_sha }}
-      DEPLOY_CONFIRM: ${{ inputs.confirm }}
+      EXPECTED_SHA: ${{ inputs.expected_sha || github.sha }}
+      DEPLOY_CONFIRM: ${{ inputs.confirm || 'DEPLOY' }}
       PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
       PUBLIC_CONTACT_URL: ${{ vars.PUBLIC_CONTACT_URL }}
       PUBLIC_RAKUTEN_PREMIUM_URL: ${{ vars.PUBLIC_RAKUTEN_PREMIUM_URL }}
@@ -63,7 +66,7 @@ jobs:
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
-          ref: ${{ inputs.expected_sha }}
+          ref: ${{ inputs.expected_sha || github.sha }}
           fetch-depth: 0
           persist-credentials: false
 
