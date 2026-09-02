@@ -20,9 +20,10 @@ export const panasonicMcJp860kVsMcSb70kmSeed: CommercialArticleSeed = {
   rightProduct: "パナソニック MC-SB70KM",
   leftPoint: "紙パック式・コード付きで長時間掃除したい人向け",
   rightPoint: "コードレスで軽く、ふき掃除や壁ぎわ集じんも使いたい人向け",
-  productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-09-02",
+  modifiedAt: "2026-09-02",
+  purchaseLinksCheckedAt: "2026-09-02",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（MC-JP860K）",
