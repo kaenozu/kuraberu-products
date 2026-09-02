@@ -94,18 +94,35 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     headers,
     body: limitedBody.text,
   }).formData();
-  const rawMessage = String(form.get("message") ?? "").trim();
-  const rawName = String(form.get("name") ?? "").trim();
-  const rawEmail = String(form.get("email") ?? "").trim();
+  // formData の値は File / Blob の可能性があるため、文字列以外は拒否して
+  // "[object FileBlob]" のような誤った値を Telegram に転送しないようにする
+  // (#560)。型ガードで string のみ採用し、File/Blob は空文字として扱う。
+  const readStringField = (name: string): string => {
+    const value = form.get(name);
+    if (typeof value === "string") return value.trim();
+    return "";
+  };
+  const rawMessage = readStringField("message");
+  const rawName = readStringField("name");
+  const rawEmail = readStringField("email");
+  // フィールド値の slice は size 計算の前に行う (#560)。
+  // そうしないと、4001 バイト入力の message が slice(0, 4000) で 4000 に
+  // 切り詰められたとしても、size 計算は slice 前の 4001 バイトで行われて
+  // 上限超過として誤って拒否される。
+  const body: ContactBody = {
+    name: rawName.slice(0, 80),
+    email: rawEmail.slice(0, 120),
+    message: rawMessage.slice(0, 4000),
+  };
   // UTF-16 の .length ではなく TextEncoder でバイト数を測る。多バイト文字
   //（日本語など）では .length < 実バイト数になるため、文字数ベースの判定は
   // 上限を超過許容してしまう。フィールド名も含めて実ペイロードに近い値で比較する
   // （生バイト段階の上限は過大なので、デコード後の実サイズ検証として残す）。
   const encoder = new TextEncoder();
   const formFields: ReadonlyArray<readonly [string, string]> = [
-    ["message", rawMessage],
-    ["name", rawName],
-    ["email", rawEmail],
+    ["message", body.message ?? ""],
+    ["name", body.name ?? ""],
+    ["email", body.email ?? ""],
   ];
   let totalSize = 0;
   for (const [field, value] of formFields) {
@@ -114,12 +131,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (totalSize > MAX_BODY_BYTES) {
     return json({ ok: false, error: "payload too large" }, 413);
   }
-
-  const body: ContactBody = {
-    name: rawName.slice(0, 80),
-    email: rawEmail.slice(0, 120),
-    message: rawMessage.slice(0, 4000),
-  };
 
   if (!body.message || !body.email) {
     return json({ ok: false, error: "message and email are required" }, 400);

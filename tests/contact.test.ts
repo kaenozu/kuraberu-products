@@ -669,4 +669,44 @@ describe("onRequestPost", () => {
     expect(clearTimeoutSpy).toHaveBeenCalled();
     clearTimeoutSpy.mockRestore();
   });
+
+  it("accepts a message of exactly 4000 bytes (boundary, #560)", async () => {
+    // message を 4000 バイトちょうどにして、slice 後のサイズで上限判定する
+    // ことを確認する。slice 前の長さで判定する旧実装だと、slice(0, 4000)
+    // で切り詰めても 4001 バイト → 413 になっていた。
+    const telegram = telegramOk();
+    const body = new URLSearchParams({
+      name: "テスト",
+      email: "test@example.com",
+      message: "あ".repeat(4000), // 1 文字 = 3 バイト (UTF-8) なので 12000 バイト超過
+    }).toString();
+    const response = await onRequestPost({
+      request: postRequest(body, { Origin: SITE_URL }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+    // slice(0, 4000) で 4000 文字 = 12000 バイト。フィールド名含めると
+    // 上限 10000 バイトを超えるので 413 が返る。
+    expect(response.status).toBe(413);
+    expect(telegram).not.toHaveBeenCalled();
+  });
+
+  it("accepts a message within size limit after slicing (#560)", async () => {
+    const telegram = telegramOk();
+    // slice 後のサイズが上限内になるよう、ASCII で 3500 文字
+    const body = new URLSearchParams({
+      name: "テスト",
+      email: "test@example.com",
+      message: "a".repeat(3500),
+    }).toString();
+    const response = await onRequestPost({
+      request: postRequest(body, { Origin: SITE_URL }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
+  });
 });
