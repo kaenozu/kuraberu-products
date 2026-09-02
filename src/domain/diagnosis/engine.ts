@@ -76,6 +76,9 @@ export function runDiagnosis(
       };
     });
 
+  // 「回答済み」= 1つ以上の option.id に解決できた質問 (#561)。
+  // 現状の `QuestionType: "number"` は `selectedOptionIds` が常に [] を返すため
+  // answered count には含まれない（#561 で未実装として確認）。
   const answeredQuestionCount = config.questions.filter(
     (question) => selectedOptionIds(answers[question.id]).length > 0,
   ).length;

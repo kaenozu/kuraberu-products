@@ -89,6 +89,9 @@ export function rankProducts(
       (score): score is ProductScore => score !== undefined && !score.excluded,
     );
 
+  // ECMAScript 2019+ の `Array.prototype.sort` は安定ソートのため、
+  // `eligible` の元順序 (= `products` 入力順) はタイブレーク時にも保持される。
+  // ここでもとの順番を壊したい場合は `tieBreaker` 側で決定的に決着させる。
   const sorted = [...eligible].sort((left, right) => {
     const byScore = compareNumbers(right.score, left.score);
     if (byScore !== 0) return byScore;
