@@ -243,12 +243,15 @@ describe("purchase link consistency gate (registry keys)", () => {
 
   // fail-closed 契約の監査用集計。verified / unverified / unavailable の
   // 3値のみを扱い、未分類のステータス文字列を黙って無視しないことを確認する。
-  it("keeps NextStepBlock purchase CTA href-based when status is omitted", () => {
+  it("suppresses NextStepBlock purchase CTAs when status is not verified/direct (#549)", () => {
     const source = readFileSync("src/components/NextStepBlock.astro", "utf8");
     expect(source).toContain(
       'purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable"',
     );
-    expect(source).toContain("(leftHref || rightHref) ?");
+    // showCta は verified / direct のときだけ true (H-3 仕様)。
+    expect(source).toMatch(
+      /purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
+    );
     expect(source).toContain("販売先を確認中です");
     expect(source.match(/販売先を確認中です/g)).toHaveLength(1);
   });
