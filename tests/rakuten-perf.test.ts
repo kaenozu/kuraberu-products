@@ -687,10 +687,14 @@ describe("onRequestPost authentication (#550)", () => {
   });
 
   it("returns 200 with saved=0 when auth ok and buffer empty", async () => {
+    const kv = createFakeKV();
     const { context } = makeRequest(
       "https://kuraberu-products.pages.dev",
       "expected-secret",
-      { RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret" },
+      {
+        RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret",
+        ANALYTICS_KV: kv as unknown as PerfKV,
+      },
     );
     const res = await onRequestPost(context);
     expect(res.status).toBe(200);
