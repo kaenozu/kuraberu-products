@@ -407,11 +407,11 @@ export const articlePurchaseLinks = {
   },
   "pigeon-bottle-160-240:left": {
     name: "母乳実感 160ml",
-    purchaseUrl: "https://a.r10.to/h4SQzW",
+    purchaseUrl: "https://item.rakuten.co.jp/premoa/4902508024501/",
   },
   "pigeon-bottle-160-240:right": {
     name: "母乳実感 240ml",
-    purchaseUrl: "https://a.r10.to/hk5u4n",
+    purchaseUrl: "https://item.rakuten.co.jp/premoa/4902508024518/",
   },
   "pigeon-bottle-240:left": {
     name: "母乳実感 耐熱ガラス製（240ml）",
