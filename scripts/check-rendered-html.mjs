@@ -1225,14 +1225,12 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       )?.[1] ?? null;
     const hasPurchaseCtas =
       purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
-    const expectedCtaCount =
-      !hasPurchaseCtas
-        ? 0
-        : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
-    const expectedCtasByPlacement =
-      !hasPurchaseCtas
-        ? {}
-        : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
+    const expectedCtaCount = !hasPurchaseCtas
+      ? 0
+      : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
+    const expectedCtasByPlacement = !hasPurchaseCtas
+      ? {}
+      : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
