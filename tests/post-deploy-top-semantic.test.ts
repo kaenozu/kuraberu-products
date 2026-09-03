@@ -7,11 +7,13 @@ const verifierSource = readFileSync(
 );
 
 describe("post-deploy top-page semantic gate (#602)", () => {
-  it("derives the expected latest article from the exact built top page", () => {
+  it("derives latest article from the exact built top page", () => {
     expect(verifierSource).toContain("dist/index.html");
     expect(verifierSource).toContain("$expectedLatestArticlePath");
     expect(verifierSource).toContain("data-top-latest");
-    expect(verifierSource).toContain("Expected latest article from exact build");
+    expect(verifierSource).toContain(
+      "Expected latest article from exact build",
+    );
 
     // 新着記事を検証スクリプトへ固定値で埋め込まず、exact build の
     // data-top-latest 先頭リンクから導出する契約を固定する。
@@ -23,12 +25,14 @@ describe("post-deploy top-page semantic gate (#602)", () => {
     );
   });
 
-  it("fails the same verification attempt when the public top page is stale or incomplete", () => {
+  it("fails a stale or incomplete public top page", () => {
     expect(verifierSource).toContain("Top build-sha present /");
     expect(verifierSource).toContain("Top build-sha matches /");
     expect(verifierSource).toContain("Top latest section /");
     expect(verifierSource).toContain("Top latest article matches exact build");
-    expect(verifierSource).toContain("[regex]::Escape($expectedLatestArticlePath)");
+    expect(verifierSource).toContain(
+      "[regex]::Escape($expectedLatestArticlePath)",
+    );
 
     // これらは既存の Check() を通るため、失敗時に hasFailure=true となり、
     // CDN propagation の retry 単位から外れない。
