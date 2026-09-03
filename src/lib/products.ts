@@ -358,7 +358,7 @@ export const articlePurchaseLinks = {
   },
   "pampers-newborn:left": {
     name: "パンパース 新生児用 肌へのいちばん",
-    purchaseUrl: "https://item.rakuten.co.jp/rakutensokuhaimart/4987176203229/",
+    purchaseUrl: "https://item.rakuten.co.jp/netbaby/4987176203229/",
   },
   "pampers-newborn:right": {
     name: "パンパース 新生児用 さらさらケア",
