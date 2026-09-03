@@ -1,15 +1,13 @@
 // Cloudflare Pages Function: 楽天API パフォーマンスログ
 // GET /api/rakuten-perf — 直近N時間のパフォーマンスサマリーを返す
 //
-// rakuten.ts が API 呼び出しのたびに recordPerfEntry() でエントリを蓄積し、
-// Worker がこのエンドポイントを呼ぶときに drainPerfEntries() で取り出して
-// flushEntriesToKV() で KV へ保存する。
+// rakuten.ts が API 呼び出しのたびに recordPerfEntry() でエントリを蓄積する。
+// 現在、リポジトリ内に正規の server-side flush caller は存在しないため、
+// 公開 POST から共有 KV へ書き込む経路は fail-closed で無効化する。
 
 import { clientIp, enforceRateLimit, json } from "./shared";
 import {
   computeSummary,
-  drainPerfEntries,
-  flushEntriesToKV,
   PERF_KV_PREFIX,
   type RakutenPerfEntry,
 } from "../../src/lib/rakuten-perf";
@@ -27,23 +25,21 @@ interface PerfKV {
   get(key: string, options?: { type: "json" }): Promise<unknown>;
 }
 
-// ─── POST Handler: drain + flush ──────────────────────────────────────────────
+// ─── POST Handler ──────────────────────────────────────────────────────────────
 
-/** POST /api/rakuten-perf — コレクタを drain して KV へ保存する */
-export const onRequestPost: PagesFunction<Env> = async ({ env }) => {
-  const kv = env.ANALYTICS_KV as unknown as PerfKV | undefined;
-  if (!kv) {
-    return json({ ok: false, error: "KV not configured" }, 503);
-  }
-
-  const entries = drainPerfEntries();
-  if (entries.length === 0) {
-    return json({ ok: true, saved: 0 }, 200);
-  }
-
-  const saved = await flushEntriesToKV(kv, entries);
-  return json({ ok: true, saved }, 200);
-};
+/**
+ * POST /api/rakuten-perf — disabled until a legitimate server-side caller exists.
+ *
+ * Keeping an unauthenticated public write endpoint would allow arbitrary callers
+ * to drain the in-memory collector and consume shared KV writes. Introducing a
+ * shared secret without a real caller would only add secret lifecycle and a
+ * deployment dependency. Re-enable POST only together with a documented
+ * server-to-server caller and its authentication/injection path.
+ */
+export const onRequestPost: PagesFunction<Env> = async () =>
+  json({ ok: false, error: "method not allowed" }, 405, {
+    Allow: "GET",
+  });
 
 // ─── GET Handler: read from KV + summary ──────────────────────────────────────
 
