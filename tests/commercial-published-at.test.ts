@@ -19,10 +19,7 @@ describe("commercial article publishedAt contract (#601)", () => {
 
   it("does not silently fall back to a fixed publication date", () => {
     const createSource = readFileSync(
-      new URL(
-        "../src/content/articles/commercial/create.ts",
-        import.meta.url,
-      ),
+      new URL("../src/content/articles/commercial/create.ts", import.meta.url),
       "utf8",
     );
 
