@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   CONFIGURED_ENVIRONMENT_VARIABLES,
+  isAllowedAmazonUrl,
   isAllowedRakutenUrl,
   normalizeSiteUrl,
   validateBuildEnvironment,
@@ -45,6 +46,24 @@ describe("environment variable configuration", () => {
 
   it("accepts Rakuten short affiliate subdomains", () => {
     expect(isAllowedRakutenUrl("https://a.r10.to/h5dAQI")).toBe(true);
+  });
+
+  it("accepts only approved Amazon HTTPS hosts (#558)", () => {
+    expect(isAllowedAmazonUrl("https://www.amazon.co.jp/dp/B000000000")).toBe(
+      true,
+    );
+    expect(isAllowedAmazonUrl("https://amzn.to/example")).toBe(true);
+    expect(isAllowedAmazonUrl("https://amzn.asia/example")).toBe(true);
+
+    expect(isAllowedAmazonUrl("https://amazon.co.jp.evil.example/item")).toBe(
+      false,
+    );
+    expect(isAllowedAmazonUrl("http://www.amazon.co.jp/dp/B000000000")).toBe(
+      false,
+    );
+    expect(isAllowedAmazonUrl("https://www.amazon.com/dp/B000000000")).toBe(
+      false,
+    );
   });
 
   it("accepts production with a complete Rakuten API credential set", () => {
