@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicNiFs70aVsNiFs60bSeed: CommercialArticleSeed = {
   id: "panasonic-ni-fs70a-vs-ni-fs60b",
+  publishedAt: "2026-08-17",
   title: "パナソニック NI-FS70AとNI-FS60B、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック NI-FS70AとNI-FS60B、どっち？ 公式仕様で比較。違いと選び方を整理",

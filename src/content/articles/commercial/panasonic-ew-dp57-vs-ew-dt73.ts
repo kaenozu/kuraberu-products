@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEwDp57VsEwDt73Seed: CommercialArticleSeed = {
   id: "panasonic-ew-dp57-vs-ew-dt73",
+  publishedAt: "2026-08-17",
   title: "パナソニック ドルツ EW-DP57とEW-DT73、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック ドルツ EW-DP57とEW-DT73、どっち？ 公式仕様で比較。違いと選び方を整理",

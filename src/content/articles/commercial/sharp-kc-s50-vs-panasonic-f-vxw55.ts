@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const sharpKcS50VsPanasonicFVxw55Seed: CommercialArticleSeed = {
   id: "sharp-kc-s50-vs-panasonic-f-vxw55",
+  publishedAt: "2026-08-17",
   title: "シャープ KC-S50とパナソニック F-VXW55、どっち？｜くらべる商品メモ",
   headline:
     "シャープ KC-S50とパナソニック F-VXW55を比較。適用床面積・加湿・フィルターで選ぶ",

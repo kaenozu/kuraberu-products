@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const roborockQrevoCurvVsDreameX50Seed: CommercialArticleSeed = {
   id: "roborock-qrevo-curv-vs-dreame-x50",
+  publishedAt: "2026-08-17",
   title: "ロボロック Qrevo CurvとDreame X50 Ultra、どっち？｜くらべる商品メモ",
   headline:
     "Roborock Qrevo CurvとDreame X50 Ultraを比較。段差・モップ・自動化で選ぶ",

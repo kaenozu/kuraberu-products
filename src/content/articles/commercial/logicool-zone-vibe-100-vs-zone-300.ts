@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const logicoolZoneVibe100VsZone300Seed: CommercialArticleSeed = {
   id: "logicool-zone-vibe-100-vs-zone-300",
+  publishedAt: "2026-08-17",
   title: "Logicool Zone Vibe 100とZone 300、どっち？｜くらべる商品メモ",
   headline:
     "Logicool Zone Vibe 100とZone 300、どっち？ 公式仕様で比較。違いと選び方を整理",

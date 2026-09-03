@@ -3,6 +3,7 @@ import type { CommercialArticleSeed } from "./types";
 export const recolteAutomaticCookerVsPanasonicNfPc400Seed: CommercialArticleSeed =
   {
     id: "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+    publishedAt: "2026-08-17",
     title:
       "レコルト自動調理ポットとパナソニック NF-PC400、どっち？｜くらべる商品メモ",
     headline:

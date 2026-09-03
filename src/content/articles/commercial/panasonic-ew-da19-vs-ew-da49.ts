@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEwDa19VsEwDa49Seed: CommercialArticleSeed = {
   id: "panasonic-ew-da19-vs-ew-da49",
+  publishedAt: "2026-08-17",
   title: "パナソニック ドルツ EW-DA19とEW-DA49、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック ドルツ EW-DA19とEW-DA49、どっち？ 公式仕様で比較。違いと選び方を整理",

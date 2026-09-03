@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const anessaPerfectUvVsBioreAquaRichSeed: CommercialArticleSeed = {
   id: "anessa-perfect-uv-vs-biore-aqua-rich",
+  publishedAt: "2026-08-17",
   title:
     "アネッサ パーフェクトUVとビオレUV アクアリッチ、どっち？｜くらべる商品メモ",
   headline: "日焼け止めを比較。SPF・落とし方・使用感の確認ポイント",

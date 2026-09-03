@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const sonyBravia55Xr80VsRegza55z870nSeed: CommercialArticleSeed = {
   id: "sony-bravia-55-xr80-vs-regza-55z870n",
+  publishedAt: "2026-08-17",
   title: "ソニー BRAVIA 55型とREGZA 55Z870N、どっち？｜くらべる商品メモ",
   headline: "55型テレビを比較。映像・録画・ゲーム機能で選ぶ",
   description:

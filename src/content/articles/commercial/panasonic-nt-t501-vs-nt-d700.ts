@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicNtT501VsNtD700Seed: CommercialArticleSeed = {
   id: "panasonic-nt-t501-vs-nt-d700",
+  publishedAt: "2026-08-17",
   title: "パナソニック NT-T501とNT-D700、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック NT-T501とNT-D700、どっち？ 公式仕様で比較。違いと選び方を整理",
