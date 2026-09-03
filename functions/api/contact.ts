@@ -6,13 +6,13 @@
 import {
   clientIp,
   enforceRateLimit,
-  isStrictSameSiteOrigin,
+  isSameSiteOrigin,
   json,
   readBodyTextWithLimit,
 } from "./shared";
 import type { RateLimitResult } from "./shared";
 
-export { clientIp, isStrictSameSiteOrigin } from "./shared";
+export { clientIp, isSameSiteOrigin } from "./shared";
 
 interface ContactBody {
   name?: string;
@@ -37,10 +37,11 @@ export async function enforceContactRateLimit(
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  // 送信元チェック（同一オリジンからのみ。Origin 完全一致・欠落は 403）
-  const origin = request.headers.get("Origin") ?? "";
+  // 副作用POSTは Origin 欠落も拒否する。isSameSiteOrigin 自体の既存契約
+  // （Origin欠落を許容）は他エンドポイントとの互換性のため変更しない。
+  const origin = request.headers.get("Origin");
   const siteUrl = env.PUBLIC_SITE_URL ?? "https://kuraberu-products.pages.dev";
-  if (!isStrictSameSiteOrigin(origin, siteUrl)) {
+  if (!origin || !isSameSiteOrigin(origin, siteUrl)) {
     return json({ ok: false, error: "invalid origin" }, 403);
   }
 

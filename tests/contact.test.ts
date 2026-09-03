@@ -2,10 +2,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   clientIp,
   enforceContactRateLimit,
-  isStrictSameSiteOrigin,
+  isSameSiteOrigin,
   onRequestPost,
 } from "../functions/api/contact";
-import { isSameSiteOrigin } from "../functions/api/shared";
 
 const SITE_URL = "https://kuraberu-products.pages.dev";
 
@@ -17,8 +16,6 @@ function postRequest(
     method: "POST",
     headers: {
       "Content-Type": "application/x-www-form-urlencoded",
-      // Origin 検証 (#551/#567) で弾かれないよう、デフォルトで SITE_URL を
-      // 付与する。Origin 検証自体を検証するテストは明示的に headers で上書き。
       Origin: SITE_URL,
       ...headers,
     },
@@ -113,28 +110,13 @@ describe("isSameSiteOrigin", () => {
     ).toBe(false);
   });
 
-  it("returns null when Origin header is missing (callers decide)", () => {
-    expect(isSameSiteOrigin(null, SITE_URL)).toBeNull();
-    expect(isSameSiteOrigin("", SITE_URL)).toBeNull();
+  it("allows requests without an Origin header", () => {
+    expect(isSameSiteOrigin(null, SITE_URL)).toBe(true);
+    expect(isSameSiteOrigin("", SITE_URL)).toBe(true);
   });
 
   it("rejects a malformed origin", () => {
     expect(isSameSiteOrigin("not a url", SITE_URL)).toBe(false);
-  });
-});
-
-describe("isStrictSameSiteOrigin (#551)", () => {
-  it("rejects when Origin is missing", () => {
-    expect(isStrictSameSiteOrigin(null, SITE_URL)).toBe(false);
-    expect(isStrictSameSiteOrigin("", SITE_URL)).toBe(false);
-  });
-
-  it("rejects a different origin", () => {
-    expect(isStrictSameSiteOrigin("https://evil.com", SITE_URL)).toBe(false);
-  });
-
-  it("allows the exact site origin", () => {
-    expect(isStrictSameSiteOrigin(SITE_URL, SITE_URL)).toBe(true);
   });
 });
 
@@ -281,10 +263,7 @@ describe("onRequestPost", () => {
     const telegram = telegramOk();
     const { limiter } = makeLimiter({ success: false, reset_after: 42 });
     const response = await onRequestPost({
-      request: postRequest(validForm(), {
-        "CF-Connecting-IP": "203.0.113.9",
-        Origin: SITE_URL,
-      }),
+      request: postRequest(validForm(), { "CF-Connecting-IP": "203.0.113.9" }),
       env: baseEnv(limiter),
       params: {},
       data: {},
@@ -296,18 +275,6 @@ describe("onRequestPost", () => {
       ok: false,
       error: "too many requests",
     });
-    expect(telegram).not.toHaveBeenCalled();
-  });
-
-  it("rejects requests without an Origin header (#551)", async () => {
-    const telegram = telegramOk();
-    const response = await onRequestPost({
-      request: postRequest(validForm(), { "CF-Connecting-IP": "203.0.113.9" }),
-      env: baseEnv(),
-      params: {},
-      data: {},
-    });
-    expect(response.status).toBe(403);
     expect(telegram).not.toHaveBeenCalled();
   });
 
@@ -435,7 +402,7 @@ describe("onRequestPost", () => {
     const response = await onRequestPost({
       request: new Request(`${SITE_URL}/api/contact`, {
         method: "POST",
-        headers: { "Content-Type": "text/plain" },
+        headers: { "Content-Type": "text/plain", Origin: SITE_URL },
         body: "hello",
       }),
       env: baseEnv(),
@@ -503,7 +470,10 @@ describe("onRequestPost", () => {
     const response = await onRequestPost({
       request: new Request(`${SITE_URL}/api/contact`, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Origin: SITE_URL,
+        },
         body: new URLSearchParams({
           email: "test@example.com",
           message: longMessage,
@@ -538,6 +508,7 @@ describe("onRequestPost", () => {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
+            Origin: SITE_URL,
             ...headers,
           },
           body: new URLSearchParams({

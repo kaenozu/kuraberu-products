@@ -9,27 +9,17 @@ const RATE_LIMIT_FALLBACK_RETRY_SECONDS = 60;
  * `https://kuraberu-products.pages.dev.evil.com` のような偽装オリジンは
  * 許可しない。
  *
- * 戻り値:
- * - `true`: 同一オリジン
- * - `false`: Origin が一致しない
- *
- * Origin ヘッダが欠落している場合は `null` を返す（許可も拒否もせず、
- * 呼び出し側で allow/deny を判断する）。
- * ブラウザは必ず Origin を付けるため、Origin 欠落は非ブラウザ呼び出し
- * （curl / サーバー間 / Cloudflare 内部 worker）と判断できる。許可するか
- * 拒否するかはエンドポイントの性質（read-only か副作用ありか）次第。
- *
  * 注意: これはCSRF対策の完全な代替ではない。Origin が無いリクエスト
- * （curl・サーバー間呼び出し・一部の旧クライアント）は呼び出し側が
- * 拒否しない限り通過するため、ブラウザ経由のクロスサイト送信のみを
- * 拒否する役割を担う。副作用のある API では `isStrictSameSiteOrigin`
- * を使って Origin 欠落時を拒否する。
+ * （curl・サーバー間呼び出し・一部の旧クライアント）は意図的に許可する
+ * ため、非ブラウザクライアントからの偽装は防げない。ブラウザ由来の
+ * クロスサイト送信は Origin を必ず付けるため、実質的にはブラウザ経由の
+ * 不正送信を拒否する役割を担う。
  */
 export function isSameSiteOrigin(
   originHeader: string | null,
   siteUrl: string,
-): boolean | null {
-  if (originHeader === null || originHeader === "") return null;
+): boolean {
+  if (!originHeader) return true;
   let origin: URL;
   let expected: URL;
   try {
@@ -39,23 +29,6 @@ export function isSameSiteOrigin(
     return false;
   }
   return origin.origin === expected.origin;
-}
-
-/**
- * 副作用のある API 用の厳格版 Origin 検証。
- * - Origin ヘッダが存在しない: `false` (非ブラウザ呼び出しも拒否)
- * - Origin が一致しない: `false`
- * - 同一オリジン: `true`
- *
- * `/api/contact` や `/api/events` POST など、CSRF 対策が必須な
- * エンドポイントで利用する。GET (read-only) では利用しない。
- */
-export function isStrictSameSiteOrigin(
-  originHeader: string | null,
-  siteUrl: string,
-): boolean {
-  if (originHeader === null || originHeader === "") return false;
-  return isSameSiteOrigin(originHeader, siteUrl) === true;
 }
 
 export type RateLimitResult =
