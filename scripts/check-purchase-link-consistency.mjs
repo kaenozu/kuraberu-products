@@ -173,15 +173,29 @@ export function loadRegistryKeys(srcDirectory) {
   return new Set(loadRegistryEntries(srcDirectory).keys());
 }
 
-const DEFAULT_RAKUTEN_AFFILIATE_ID = "34e76967.d5cc3ae1.34e76968.3eade5e6";
+// 楽天の検索URL生成に利用するアソシエイトID。
+// アフィリエイトID自体は機密ではないが、誰の所有でもないIDを収益化に使う形は
+// 望ましくないため、env の RAKUTEN_AFFILIATE_ID がある場合のみ使用する。
+// env 未設定時はコンソールに警告を出し、検索URL生成を空文字で返す
+// (呼び出し側はそのキーエントリを「要手動設定」として検出する)。
+function resolveRakutenAffiliateId() {
+  const id = process.env.RAKUTEN_AFFILIATE_ID;
+  if (id && id.length > 0) return id;
+  console.warn(
+    "[check-purchase-link-consistency] RAKUTEN_AFFILIATE_ID env が未設定のため、楽天検索URLを生成できません。アフィリエイトIDを設定するか、関連エントリを修正してください。",
+  );
+  return "";
+}
 
 function resolveRakutenAffiliateSearchUrl(query) {
+  const affiliateId = resolveRakutenAffiliateId();
+  if (!affiliateId) return "";
   const encodedSearchUrl = encodeURIComponent(
     "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent(query),
   );
   return (
     "https://hb.afl.rakuten.co.jp/hgc/" +
-    DEFAULT_RAKUTEN_AFFILIATE_ID +
+    affiliateId +
     "/?pc=" +
     encodedSearchUrl +
     "&link_type=text"
