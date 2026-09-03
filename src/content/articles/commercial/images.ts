@@ -190,6 +190,10 @@ const commercialArticleImages: Readonly<
     left: "/products/panasonic-ne-bs6e.png",
     right: "/products/panasonic-ne-bs5e.png",
   },
+  "panasonic-es-pv6a-vs-es-pv3a": {
+    left: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv6a.jpg",
+    right: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv3a.jpg",
+  },
 };
 
 export { commercialArticleImages };

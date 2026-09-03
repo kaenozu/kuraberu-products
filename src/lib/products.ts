@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-es-pv6a-vs-es-pv3a:left": {
+    name: "パナソニック ラムダッシュ パームイン ES-PV6A",
+    purchaseUrl: "https://item.rakuten.co.jp/shopch-r/4000777578/",
+  },
+  "panasonic-es-pv6a-vs-es-pv3a:right": {
+    name: "パナソニック ラムダッシュ パームイン ES-PV3A",
+    purchaseUrl: "https://item.rakuten.co.jp/hows01/4549980711996/",
+  },
   "panasonic-mc-jp860k-vs-mc-sb70km:left": {
     name: "パナソニック MC-JP860K-W",
     purchaseUrl: "https://item.rakuten.co.jp/world-free-store/4549980740361/",
