@@ -244,4 +244,28 @@ describe.skipIf(!hasDist)("article card thumbnails (rendered dist)", () => {
       }
     }
   });
+
+  it("statically generates all /articles/page/<N> pages (#556)", () => {
+    // 全記事数 / ページサイズ = 必要なページ数。最低2ページ以上は
+    // 生成されているはず (現在のデータは70件以上、12件/ページ)。
+    const pageDirs = readdirSync("dist/articles/page", { withFileTypes: true })
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort((a, b) => Number(a) - Number(b));
+    expect(pageDirs.length).toBeGreaterThanOrEqual(2);
+    // ページ1は /articles/index.html、ページ2以降は /articles/page/N/
+    for (const page of pageDirs) {
+      const html = readFileSync(
+        `dist/articles/page/${page}/index.html`,
+        "utf8",
+      );
+      expect(html).toContain(`<title>比較記事一覧 ${page}ページ目`);
+      // 各ページが noindex になることを確認 (Pagination は index only)
+      const isProduction =
+        (process.env.DEPLOYMENT_ENV ?? "preview") === "production";
+      if (!isProduction) {
+        expect(html).toContain('content="noindex');
+      }
+    }
+  });
 });
