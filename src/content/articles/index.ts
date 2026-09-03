@@ -63,6 +63,7 @@ export { tigerMtaJ050GuideArticle } from "./tiger-mta-j050-guide";
 export { panasonicEhNa9mVsEhNa7mArticle } from "./panasonic-eh-na9m-vs-eh-na7m";
 export { tigerKettlePcjVsPcmArticle } from "./tiger-pcj-a080-vs-pcm-a080";
 export { yamajitsuFilmHolderArticle } from "./yamajitsu-film-holder-242286-vs-242287";
+export { panasonicNeMs4cVsNeBs5cArticle } from "./panasonic-ne-ms4c-vs-ne-bs5c";
 
 // Commercial article exports
 export { commercialArticleSeeds, createCommercialArticle } from "./commercial";
@@ -115,6 +116,7 @@ import { tigerMtaJ050GuideArticle } from "./tiger-mta-j050-guide";
 import { panasonicEhNa9mVsEhNa7mArticle } from "./panasonic-eh-na9m-vs-eh-na7m";
 import { tigerKettlePcjVsPcmArticle } from "./tiger-pcj-a080-vs-pcm-a080";
 import { yamajitsuFilmHolderArticle } from "./yamajitsu-film-holder-242286-vs-242287";
+import { panasonicNeMs4cVsNeBs5cArticle } from "./panasonic-ne-ms4c-vs-ne-bs5c";
 import { commercialArticleSeeds, createCommercialArticle } from "./commercial";
 
 /** 全記事の配列（商業記事を含む） */
@@ -171,6 +173,7 @@ export const articleMetadata: readonly ArticleMetadata[] = Object.freeze([
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
   yamajitsuFilmHolderArticle,
+  panasonicNeMs4cVsNeBs5cArticle,
   yamazakiLaundryWireBasketArticle,
   yamazakiOfudaStandArticle,
   yamazakiDishwasherRackArticle,

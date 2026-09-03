@@ -379,6 +379,16 @@
         "https://shop.pigeon.co.jp/products/2000638s"
       ],
       "note": ""
+    },
+    {
+      "articleId": "panasonic-ne-ms4c-vs-ne-bs5c",
+      "checkedAt": "2026-09-03",
+      "claimsFingerprint": "sha256:33205b384188141805b28f1237337956f568e2cfcaf0390fea24e9d1e6fbfc54",
+      "officialUrls": [
+        "https://panasonic.jp/range/products/NE-BS5C.html",
+        "https://panasonic.jp/range/products/NE-MS4C.html"
+      ],
+      "note": ""
     }
   ]
 }
