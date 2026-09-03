@@ -13,7 +13,7 @@ function postRequest(
   body: string,
   headers: Record<string, string> = {},
 ): Request {
-  const requestHeaders = {
+  const requestHeaders: Record<string, string> = {
     "Content-Type": "application/x-www-form-urlencoded",
     Origin: SITE_URL,
     ...headers,
