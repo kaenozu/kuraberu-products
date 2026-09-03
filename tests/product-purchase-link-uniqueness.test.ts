@@ -13,18 +13,11 @@ import { waterBottleProducts } from "../src/data/products/water-bottles";
  * 注: 楽天 a.r10.to 短縮URLは展開が必要なため、ソース内で重複しているかを
  * 文字列レベルで確認する。短縮URLの最終的な遷移先検証は別工程で実施する。
  *
- * ドリフト検出 (PR #565 CI修正): 楽天の a.r10.to 短縮URLは環境から展開
- * できないため、現時点で実データ上重複している bo160-glass / bo160-ppsu
- * の \`https://a.r10.to/h4SQzW\` は KNOWN_DUPLICATE_URLS に登録し、ここから
- * 外れた重複が新たに発生した場合のみ fail する。これにより「新規重複を
- * ブロックしつつ、既存データの修正は別PRで段階的に進められる」状態に
- * する。
+ * KNOWN_DUPLICATE_URLS は、修正待ちの既知重複を一時的に隔離するための
+ * escape hatch。Issue #548 の哺乳びん重複はデータ修正済みのため現在は空。
+ * 新たに登録する場合は、対応Issueと解消条件を同じ変更で明記すること。
  */
-const KNOWN_DUPLICATE_URLS = new Set<string>([
-  // baby-bottle: ピジョン ボ160 ガラス/PPSU が同じ a.r10.to 短縮URLを参照中。
-  // 正しい楽天商品URLの確認は Issue #548 (data fix) で対応予定。
-  "https://a.r10.to/h4SQzW",
-]);
+const KNOWN_DUPLICATE_URLS = new Set<string>();
 
 const categories = [
   { name: "baby-bottle", products: babyBottleProducts },
