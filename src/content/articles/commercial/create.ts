@@ -18,7 +18,7 @@ const createCommercialArticle = (
     audiences: seed.audiences,
     uses: seed.uses,
     summary: seed.summary,
-    publishedAt: "2026-08-17",
+    publishedAt: seed.publishedAt ?? "2026-08-17",
     modifiedAt: seed.modifiedAt ?? "2026-08-17",
     productInfoCheckedAt: seed.productInfoCheckedAt,
     purchaseLinksCheckedAt: seed.purchaseLinksCheckedAt,

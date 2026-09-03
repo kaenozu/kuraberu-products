@@ -12,6 +12,7 @@ type CommercialArticleSeed = {
   rightProduct: string;
   leftPoint: string;
   rightPoint: string;
+  publishedAt?: string;
   productInfoCheckedAt?: string;
   modifiedAt?: string;
   purchaseLinksCheckedAt?: string;
