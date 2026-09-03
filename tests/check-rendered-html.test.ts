@@ -27,7 +27,7 @@ import {
   validateRenderedHtml,
   validateRepeatedJapanesePunctuation,
   validateTopPageCategories,
-  validateTopPageFeatured,
+  validateTopPageLatest,
 } from "../scripts/check-rendered-html.mjs";
 import {
   ARTICLE_LAYOUT,
@@ -604,53 +604,19 @@ describe("rendered empty sections", () => {
   });
 });
 
-describe("top page featured section", () => {
-  const featured = (paths: readonly string[]) =>
-    `<section data-top-featured><div class="article-list">${paths
-      .map(
-        (path) =>
-          `<article class="card article-list-card"><div class="card-body"><h2><a href="${path}">見出し</a></h2></div></article>`,
-      )
-      .join("")}</div></section>`;
-
-  it("accepts the top page when every config path is linked and nothing else", () => {
+describe("top page latest section", () => {
+  it("accepts a top page with a latest section", () => {
     expect(
-      validateTopPageFeatured(featured(ARTICLE_LAYOUT.topPage.featuredPaths)),
+      validateTopPageLatest(
+        '<section data-top-latest><div class="article-list"></div></section>',
+      ),
     ).toEqual([]);
   });
 
-  it("reports a missing featured section", () => {
-    expect(validateTopPageFeatured("<main></main>")).toEqual([
-      "top page: missing data-top-featured section",
+  it("reports a missing latest section", () => {
+    expect(validateTopPageLatest("<main></main>")).toEqual([
+      "top page: missing data-top-latest section",
     ]);
-  });
-
-  it("reports a config path that is not linked", () => {
-    const paths = [...ARTICLE_LAYOUT.topPage.featuredPaths];
-    paths.pop();
-    expect(validateTopPageFeatured(featured(paths))).toEqual([
-      `top page: featured article not linked: ${ARTICLE_LAYOUT.topPage.featuredPaths.at(-1)}`,
-    ]);
-  });
-
-  it("reports an unexpected link inside the featured section", () => {
-    expect(
-      validateTopPageFeatured(
-        featured([
-          ...ARTICLE_LAYOUT.topPage.featuredPaths,
-          "/articles/unexpected/",
-        ]),
-      ),
-    ).toContain(
-      "top page: unexpected link in data-top-featured section: /articles/unexpected/",
-    );
-  });
-
-  it("enforces the 3-4 item range in config", () => {
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
-      3,
-    );
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(4);
   });
 });
 

@@ -999,42 +999,13 @@ export function validateTopPageCategories(topHtml, articlesIndexHtml) {
   return errors;
 }
 
-// トップページ（dist/index.html）の「よく比較される商品」を検証する。
-// config の topPage.featuredPaths（3〜4件）がすべてトップにリンクされ、
-// リンク数が config と一致することを照合する。
-// 件数を絞ることで「人気（編集選定）」と「最近の比較（追加日）」の
-// 意味の違う入口として機能させる。
-export function validateTopPageFeatured(topHtml) {
-  const errors = [];
-  const featuredPaths = ARTICLE_LAYOUT.topPage.featuredPaths;
-  if (featuredPaths.length < 3 || featuredPaths.length > 4) {
-    errors.push(
-      `config/article-layout.mjs: topPage.featuredPaths must have 3-4 items, found ${featuredPaths.length}`,
-    );
-  }
-  const section = topHtml.match(
-    /<section\b[^>]*data-top-featured[^>]*>([\s\S]*?)<\/section\s*>/i,
-  );
-  if (!section) {
-    errors.push("top page: missing data-top-featured section");
-    return errors;
-  }
-  const hrefs = [...section[1].matchAll(/href="([^"]+)"/g)].map(
-    (match) => match[1],
-  );
-  const expected = new Set(featuredPaths);
-  for (const path of featuredPaths) {
-    if (!hrefs.includes(path)) {
-      errors.push(`top page: featured article not linked: ${path}`);
-    }
-  }
-  const unexpected = hrefs.filter((href) => !expected.has(href));
-  if (unexpected.length) {
-    errors.push(
-      `top page: unexpected link in data-top-featured section: ${unexpected.join(", ")}`,
-    );
-  }
-  return errors;
+// トップページ（dist/index.html）の新着比較セクションを検証する。
+export function validateTopPageLatest(topHtml) {
+  return /<section\b[^>]*data-top-latest[^>]*>[\s\S]*?<\/section\s*>/i.test(
+    topHtml,
+  )
+    ? []
+    : ["top page: missing data-top-latest section"];
 }
 
 // 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
@@ -1282,7 +1253,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       const articlesIndexHtml = fs.readFileSync(articlesIndex, "utf8");
       errors.push(
         ...validateTopPageCategories(topHtml, articlesIndexHtml),
-        ...validateTopPageFeatured(topHtml),
+        ...validateTopPageLatest(topHtml),
       );
     }
   }

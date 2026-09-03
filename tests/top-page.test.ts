@@ -46,29 +46,6 @@ const expectedCategories = [...categoryCounts.entries()]
 describe.skipIf(!hasDist)("top page (rendered dist)", () => {
   beforeAll(loadRenderedPages);
 
-  it("links every config topPage.featuredPaths article and nothing else", () => {
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
-      3,
-    );
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(4);
-
-    // config のパスはすべて publicArticleMetadata に存在する（存在しないパスはゲートも落とす）
-    for (const path of ARTICLE_LAYOUT.topPage.featuredPaths) {
-      expect(
-        publicArticleMetadata.some((article) => article.path === path),
-      ).toBe(true);
-    }
-
-    const section = topHtml.match(
-      /<section\b[^>]*data-top-featured[^>]*>([\s\S]*?)<\/section\s*>/i,
-    );
-    expect(section).not.toBeNull();
-    const hrefs = [...section![1].matchAll(/href="([^"]+)"/g)].map(
-      (match) => match[1],
-    );
-    expect(hrefs).toEqual(ARTICLE_LAYOUT.topPage.featuredPaths);
-  });
-
   it("renders the FV search form submitting to /articles/?q=", () => {
     const form = topHtml.match(
       /<form\b[^>]*data-top-search[^>]*>([\s\S]*?)<\/form>/i,
@@ -106,12 +83,6 @@ describe.skipIf(!hasDist)("top page (rendered dist)", () => {
     for (const [name] of expectedCategories) {
       expect(optionCategories).toContain(name);
     }
-  });
-
-  it("uses one explicit article-index link after the featured section", () => {
-    expect(topHtml).toMatch(
-      /<section\b[^>]*data-top-featured[^>]*>[\s\S]*?<\/section\s*>\s*<p class="meta wrap"><a href="\/articles\/">もっと見る →<\/a><\/p>/i,
-    );
   });
 
   it("renders the six newest public articles in the latest section", () => {
@@ -196,15 +167,9 @@ describe.skipIf(!hasDist)("article card content types (rendered dist)", () => {
   });
 
   it("keeps the card tag labels consistent with the article metadata", () => {
-    // 現行データではトップページの記事カードは全て比較記事（featured 4 件 +
-    // 最新 6 件）なので、比較記事ラベルが描画される。
+    // トップページの新着記事カードには比較記事ラベルが描画される。
     const comparisonLabel = ARTICLE_LAYOUT.contentTypes.comparison.label;
     expect(topHtml).toContain(`>${comparisonLabel}</span>`);
-    for (const href of ARTICLE_LAYOUT.topPage.featuredPaths) {
-      const article = articleMetadata.find((entry) => entry.path === href);
-      expect(article).toBeDefined();
-      expect(contentTypeFor(article!.productCount)).toBe("comparison");
-    }
   });
 });
 

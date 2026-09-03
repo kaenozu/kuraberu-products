@@ -33,7 +33,7 @@ test("subsection headings stack vertically on every page", () => {
 test("top section headings align with the featured card column", () => {
   const page = read("src/pages/index.astro");
 
-  expect(page).toContain("[data-top-featured] .subsection-heading");
+  expect(page).toContain("[data-top-latest] .subsection-heading");
   expect(page).toContain("[data-top-categories] .subsection-heading");
   expect(page).toContain("[data-top-diagnosis] .subsection-heading");
   expect(page).toContain("max-width: 900px;");

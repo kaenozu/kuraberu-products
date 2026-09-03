@@ -4,12 +4,6 @@ import ArticleCard from '../components/ArticleCard.astro';
 import { publicArticleMetadata } from '../content/articles';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 
-// 「注目の比較」：config/article-layout.mjs の topPage.featuredPaths が
-// 唯一の情報源。実績データではなく編集部の手動選定なので、人気とは表現しない。
-const featured = ARTICLE_LAYOUT.topPage.featuredPaths
-  .map((path) => publicArticleMetadata.find((article) => article.path === path))
-  .filter((article) => article !== undefined);
-
 // 新着比較：公開日が新しい記事を自動表示する。手動選定の注目記事とは
 // 役割を分け、新規記事を追加するだけでトップから辿れるようにする。
 const latest = [...publicArticleMetadata]
@@ -52,20 +46,6 @@ const categories = [...categoryCounts.entries()]
     </form>
   </section>
 
-  <section class="wrap section" data-top-featured>
-    <div class="subsection-heading">
-      <p class="section-label">ピックアップ</p>
-      <h2>注目の比較</h2>
-    </div>
-    <p class="lead">編集部が選んだ比較を、公式情報の確認状況と合わせて紹介します。</p>
-    <div class="article-list top-article-list">
-      {featured.map((article) => (
-        <ArticleCard article={article} />
-      ))}
-    </div>
-  </section>
-  <p class="meta wrap"><a href="/articles/">もっと見る →</a></p>
-
   <section class="wrap section" data-top-latest>
     <div class="subsection-heading">
       <p class="section-label">新着比較</p>
@@ -78,6 +58,7 @@ const categories = [...categoryCounts.entries()]
       ))}
     </div>
   </section>
+  <p class="meta wrap"><a href="/articles/">全比較記事を見る →</a></p>
 
   <section class="wrap section" data-top-categories>
     <div class="subsection-heading">
@@ -138,13 +119,13 @@ const categories = [...categoryCounts.entries()]
   }
 
   /* セクション見出しを、左寄せのカード列（max-width: 900px）に揃える。 */
-  [data-top-featured] .subsection-heading,
+  [data-top-latest] .subsection-heading,
   [data-top-categories] .subsection-heading,
   [data-top-diagnosis] .subsection-heading {
     max-width: 900px;
   }
 
-  [data-top-featured] .subsection-heading h2,
+  [data-top-latest] .subsection-heading h2,
   [data-top-categories] .subsection-heading h2,
   [data-top-diagnosis] .subsection-heading h2 {
     margin-bottom: 0.75rem;
