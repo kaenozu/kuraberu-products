@@ -13,15 +13,15 @@ function postRequest(
   body: string,
   headers: Record<string, string> = {},
 ): Request {
+  const requestHeaders = {
+    "Content-Type": "application/x-www-form-urlencoded",
+    Origin: SITE_URL,
+    ...headers,
+  };
+  if (requestHeaders.Origin === "") delete requestHeaders.Origin;
   return new Request(`${SITE_URL}/api/contact`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      // Origin 検証 (#551/#567) で弾かれないよう、デフォルトで SITE_URL を
-      // 付与する。Origin 検証自体を検証するテストは明示的に headers で上書き。
-      Origin: SITE_URL,
-      ...headers,
-    },
+    headers: requestHeaders,
     body,
   });
 }
@@ -302,7 +302,10 @@ describe("onRequestPost", () => {
   it("rejects requests without an Origin header (#551)", async () => {
     const telegram = telegramOk();
     const response = await onRequestPost({
-      request: postRequest(validForm(), { "CF-Connecting-IP": "203.0.113.9" }),
+      request: postRequest(validForm(), {
+        "CF-Connecting-IP": "203.0.113.9",
+        Origin: "",
+      }),
       env: baseEnv(),
       params: {},
       data: {},
@@ -435,7 +438,7 @@ describe("onRequestPost", () => {
     const response = await onRequestPost({
       request: new Request(`${SITE_URL}/api/contact`, {
         method: "POST",
-        headers: { "Content-Type": "text/plain" },
+        headers: { "Content-Type": "text/plain", Origin: SITE_URL },
         body: "hello",
       }),
       env: baseEnv(),
@@ -503,7 +506,10 @@ describe("onRequestPost", () => {
     const response = await onRequestPost({
       request: new Request(`${SITE_URL}/api/contact`, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Origin: SITE_URL,
+        },
         body: new URLSearchParams({
           email: "test@example.com",
           message: longMessage,
@@ -538,6 +544,7 @@ describe("onRequestPost", () => {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
+            Origin: SITE_URL,
             ...headers,
           },
           body: new URLSearchParams({
