@@ -17,8 +17,9 @@ describe("post-deploy top-page semantic gate (#602)", () => {
 
     // 新着記事を検証スクリプトへ固定値で埋め込まず、exact build の
     // data-top-latest 先頭リンクから導出する契約を固定する。
-    expect(verifierSource).toMatch(
-      /expectedLatestLink[\s\S]*\/articles\/[\s\S]*expectedLatestArticlePath\s*=\s*\$expectedLatestLink/,
+    expect(verifierSource).toContain("$expectedLatestLink = [regex]::Match(");
+    expect(verifierSource).toContain(
+      "$expectedLatestArticlePath = $expectedLatestLink.Groups['href'].Value",
     );
     expect(verifierSource).not.toMatch(
       /expectedLatestArticlePath\s*=\s*["']\/articles\/[^"']+\/["']/,
