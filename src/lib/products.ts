@@ -625,11 +625,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-nt-t501-vs-nt-d700:left": {
     name: "パナソニック NT-T501",
-    purchaseUrl: "https://a.r10.to/hF1vxG",
+    purchaseUrl: "https://item.rakuten.co.jp/world-free-store/4549980452134/",
   },
   "panasonic-nt-t501-vs-nt-d700:right": {
     name: "パナソニック NT-D700",
-    purchaseUrl: "https://a.r10.to/hg4iM4",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/nt-d700-w/",
   },
   "zojirushi-ck-pa08-vs-ck-dc08:left": {
     name: "象印 CK-PA08",
