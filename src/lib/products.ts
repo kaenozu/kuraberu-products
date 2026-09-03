@@ -144,6 +144,14 @@ export const articlePurchaseLinks = {
     name: "パナソニック ラムダッシュ パームイン ES-PV3A",
     purchaseUrl: "https://item.rakuten.co.jp/hows01/4549980711996/",
   },
+  "panasonic-ni-fs70a-vs-ni-fs60b:left": {
+    name: "パナソニック 衣類スチーマー NI-FS70A",
+    purchaseUrl: "https://item.rakuten.co.jp/auc-pcfreak/10004790/",
+  },
+  "panasonic-ni-fs70a-vs-ni-fs60b:right": {
+    name: "パナソニック 衣類スチーマー NI-FS60B",
+    purchaseUrl: "https://item.rakuten.co.jp/world-free-store/4549980882894/",
+  },
   "panasonic-mc-jp860k-vs-mc-sb70km:left": {
     name: "パナソニック MC-JP860K-W",
     purchaseUrl: "https://item.rakuten.co.jp/world-free-store/4549980740361/",
