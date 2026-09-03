@@ -92,6 +92,7 @@ const resolvedImage = resolveImage(imagePath);
     data-product-id={productId}
     data-placement={placement}
     data-cta-event={ARTICLE_LAYOUT.ctaEvent}
+    aria-label={ctaLabel}
   >
     {resolvedImage && (
       <Picture class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
