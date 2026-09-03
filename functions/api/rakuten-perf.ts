@@ -5,7 +5,7 @@
 // Worker がこのエンドポイントを呼ぶときに drainPerfEntries() で取り出して
 // flushEntriesToKV() で KV へ保存する。
 
-import { clientIp, enforceRateLimit, json } from "./shared";
+import { clientIp, enforceRateLimit, isSameSiteOrigin, json } from "./shared";
 import {
   computeSummary,
   drainPerfEntries,
@@ -29,8 +29,32 @@ interface PerfKV {
 
 // ─── POST Handler: drain + flush ──────────────────────────────────────────────
 
-/** POST /api/rakuten-perf — コレクタを drain して KV へ保存する */
-export const onRequestPost: PagesFunction<Env> = async ({ env }) => {
+/** POST /api/rakuten-perf — コレクタを drain して KV へ保存する
+ *
+ * 公開 POST だと KV 書き込み枠の浪費・偽 perf metrics の混入が起きるため、
+ * 共有シークレット + Origin 検証で保護する。
+ * シークレットは `RAKUTEN_PERF_FLUSH_TOKEN` 環境変数 (Cloudflare secret) に
+ * 設定する。未設定・不一致・Origin 不正は 403 で fail-closed。
+ */
+export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
+  const origin = request.headers.get("Origin") ?? "";
+  const siteUrl = env.PUBLIC_SITE_URL ?? "https://kuraberu-products.pages.dev";
+  if (!isSameSiteOrigin(origin, siteUrl)) {
+    return json({ ok: false, error: "invalid origin" }, 403);
+  }
+
+  const expected = env.RAKUTEN_PERF_FLUSH_TOKEN;
+  if (!expected) {
+    console.error(
+      "rakuten-perf: RAKUTEN_PERF_FLUSH_TOKEN 未設定のため fail-closed で 403 を返します",
+    );
+    return json({ ok: false, error: "forbidden" }, 403);
+  }
+  const presented = request.headers.get("X-Perf-Flush-Token") ?? "";
+  if (!constantTimeEquals(presented, expected)) {
+    return json({ ok: false, error: "forbidden" }, 403);
+  }
+
   const kv = env.ANALYTICS_KV as unknown as PerfKV | undefined;
   if (!kv) {
     return json({ ok: false, error: "KV not configured" }, 503);
@@ -44,6 +68,20 @@ export const onRequestPost: PagesFunction<Env> = async ({ env }) => {
   const saved = await flushEntriesToKV(kv, entries);
   return json({ ok: true, saved }, 200);
 };
+
+/**
+ * トークン比較をタイミング攻撃に対して安全に行う。
+ * 長さが異なる場合は早期に false を返しつつ、長さは公開情報ではないため
+ * 長さ差から内容差が推測されないよう、常に全体比較する。
+ */
+function constantTimeEquals(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i += 1) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return diff === 0;
+}
 
 // ─── GET Handler: read from KV + summary ──────────────────────────────────────
 

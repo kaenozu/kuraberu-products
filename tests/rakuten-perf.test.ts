@@ -612,3 +612,135 @@ describe("computeSummary", () => {
     expect(s.errorCount).toBe(2);
   });
 });
+
+// ─── onRequestPost 認証 (#550) ───────────────────────────────────────────────
+
+import { onRequestPost } from "../functions/api/rakuten-perf";
+
+interface FetchEnv {
+  ANALYTICS_KV?: PerfKV;
+  RAKUTEN_PERF_FLUSH_TOKEN?: string;
+  PUBLIC_SITE_URL?: string;
+}
+
+function makeRequest(
+  origin: string | null,
+  token: string | null,
+  env: FetchEnv,
+): { request: Request; context: Parameters<typeof onRequestPost>[0] } {
+  const headers = new Headers();
+  if (origin !== null) headers.set("Origin", origin);
+  if (token !== null) headers.set("X-Perf-Flush-Token", token);
+  const request = new Request("https://example.com/api/rakuten-perf", {
+    method: "POST",
+    headers,
+  });
+  return {
+    request,
+    context: { request, env, params: {}, data: {} },
+  };
+}
+
+describe("onRequestPost authentication (#550)", () => {
+  beforeEach(() => {
+    resetPerfCollectorForTests();
+  });
+
+  it("returns 403 when X-Perf-Flush-Token header is missing", async () => {
+    const { context } = makeRequest(
+      "https://kuraberu-products.pages.dev",
+      null,
+      { RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret" },
+    );
+    const res = await onRequestPost(context);
+    expect(res.status).toBe(403);
+  });
+
+  it("returns 403 when X-Perf-Flush-Token is wrong", async () => {
+    const { context } = makeRequest(
+      "https://kuraberu-products.pages.dev",
+      "wrong-token",
+      { RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret" },
+    );
+    const res = await onRequestPost(context);
+    expect(res.status).toBe(403);
+  });
+
+  it("returns 403 when RAKUTEN_PERF_FLUSH_TOKEN env is not configured", async () => {
+    const { context } = makeRequest(
+      "https://kuraberu-products.pages.dev",
+      "any-token",
+      {},
+    );
+    const res = await onRequestPost(context);
+    expect(res.status).toBe(403);
+  });
+
+  it("returns 403 when Origin is invalid", async () => {
+    const { context } = makeRequest(
+      "https://evil.example.com",
+      "expected-secret",
+      { RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret" },
+    );
+    const res = await onRequestPost(context);
+    expect(res.status).toBe(403);
+  });
+
+  it("returns 200 with saved=0 when auth ok and buffer empty", async () => {
+    const kv = createFakeKV();
+    const { context } = makeRequest(
+      "https://kuraberu-products.pages.dev",
+      "expected-secret",
+      {
+        RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret",
+        ANALYTICS_KV: kv as unknown as PerfKV,
+      },
+    );
+    const res = await onRequestPost(context);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { ok: boolean; saved: number };
+    expect(body.ok).toBe(true);
+    expect(body.saved).toBe(0);
+  });
+
+  it("persists drained entries to KV when auth ok", async () => {
+    recordPerfEntry({
+      keywordHash: "abc",
+      durationMs: 100,
+      httpStatus: 200,
+      productCount: 5,
+      cacheHit: false,
+    });
+    const kv = createFakeKV();
+    const { context } = makeRequest(
+      "https://kuraberu-products.pages.dev",
+      "expected-secret",
+      {
+        RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret",
+        ANALYTICS_KV: kv as unknown as PerfKV,
+      },
+    );
+    const res = await onRequestPost(context);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { ok: boolean; saved: number };
+    expect(body.saved).toBe(1);
+    expect(kv.store.size).toBe(1);
+  });
+
+  it("returns 503 when KV is not configured but auth ok", async () => {
+    recordPerfEntry({
+      keywordHash: "abc",
+      durationMs: 100,
+      httpStatus: 200,
+      productCount: 1,
+      cacheHit: false,
+    });
+    const { context } = makeRequest(
+      "https://kuraberu-products.pages.dev",
+      "expected-secret",
+      { RAKUTEN_PERF_FLUSH_TOKEN: "expected-secret" },
+    );
+    const res = await onRequestPost(context);
+    expect(res.status).toBe(503);
+  });
+});
