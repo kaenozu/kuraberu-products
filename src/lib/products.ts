@@ -358,11 +358,11 @@ export const articlePurchaseLinks = {
   },
   "pampers-newborn:left": {
     name: "パンパース 新生児用 肌へのいちばん",
-    purchaseUrl: "https://a.r10.to/hPtZZE",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4987176203229/",
   },
   "pampers-newborn:right": {
     name: "パンパース 新生児用 さらさらケア",
-    purchaseUrl: "https://a.r10.to/h5Jh9V",
+    purchaseUrl: "https://item.rakuten.co.jp/hikaritv/1710000040/",
   },
   "panasonic-ne-bs9c-vs-ne-ubs10c:left": {
     name: "パナソニック ビストロ NE-BS9C",
