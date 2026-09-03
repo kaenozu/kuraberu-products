@@ -173,10 +173,10 @@ export const articleMetadata: readonly ArticleMetadata[] = Object.freeze([
   panasonicEhNa9mVsEhNa7mArticle,
   tigerKettlePcjVsPcmArticle,
   yamajitsuFilmHolderArticle,
-  panasonicNeMs4cVsNeBs5cArticle,
   yamazakiLaundryWireBasketArticle,
   yamazakiOfudaStandArticle,
   yamazakiDishwasherRackArticle,
+  panasonicNeMs4cVsNeBs5cArticle,
   ...additionalCommercialArticles,
 ]);
 
