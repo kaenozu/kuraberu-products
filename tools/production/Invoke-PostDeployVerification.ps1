@@ -52,6 +52,43 @@ $checks = [System.Collections.Generic.List[object]]::new()
 $pages = [System.Collections.Generic.List[object]]::new()
 $hasFailure = $false
 
+# Production deploy と同じ exact build のトップHTMLから、期待する最新記事を導出する。
+# パスをスクリプトへハードコードすると記事追加のたびに検証側が陳腐化するため、
+# deploy job 内に残っている dist/index.html を唯一の期待値ソースにする。
+$repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+$expectedTopPagePath = Join-Path $repoRoot 'dist/index.html'
+$expectedLatestArticlePath = ''
+$expectedTopPageSourceDetail = "source=$expectedTopPagePath"
+try {
+    if (Test-Path -LiteralPath $expectedTopPagePath) {
+        $expectedTopHtml = Get-Content -LiteralPath $expectedTopPagePath -Raw -Encoding utf8
+        $expectedLatestSection = [regex]::Match(
+            $expectedTopHtml,
+            '<section\b[^>]*data-top-latest[^>]*>(?<body>[\s\S]*?)<\/section\s*>',
+            'IgnoreCase'
+        )
+        if ($expectedLatestSection.Success) {
+            $expectedLatestLink = [regex]::Match(
+                $expectedLatestSection.Groups['body'].Value,
+                'href=["''](?<href>\/articles\/[^"'']+\/)[''\"]',
+                'IgnoreCase'
+            )
+            if ($expectedLatestLink.Success) {
+                $expectedLatestArticlePath = $expectedLatestLink.Groups['href'].Value
+                $expectedTopPageSourceDetail = "source=$expectedTopPagePath latest=$expectedLatestArticlePath"
+            } else {
+                $expectedTopPageSourceDetail = "No article href found in data-top-latest: $expectedTopPagePath"
+            }
+        } else {
+            $expectedTopPageSourceDetail = "data-top-latest missing from exact build: $expectedTopPagePath"
+        }
+    } else {
+        $expectedTopPageSourceDetail = "Exact-build top page not found: $expectedTopPagePath"
+    }
+} catch {
+    $expectedTopPageSourceDetail = "Failed to read exact-build top page: $($_.Exception.Message)"
+}
+
 function Check([string]$Name, [bool]$Passed, [string]$Detail) {
     $checks.Add([ordered]@{ name = $Name; status = $(if ($Passed) { 'PASS' } else { 'FAIL' }); detail = $Detail })
     if (-not $Passed) { $script:hasFailure = $true }
@@ -107,6 +144,38 @@ function Invoke-VerificationAttempt {
                 Check "Indexable $path" ($robotsMatch.Success -and $robotsMatch.Groups['value'].Value -notmatch 'noindex') "robots=$($robotsMatch.Groups['value'].Value)"
             }
             Check "No mixed content $path" ($html -notmatch '(?i)(?:src|href)=["'']http://') 'No http:// asset or link reference.'
+
+            if ($path -eq '/') {
+                # Rootも代表記事と同じexact SHA契約で検証し、トップだけ旧edgeを掴む
+                # 部分反映を検出する。
+                if ($ExpectedCommitSha) {
+                    $rootBuildShaMatch = [regex]::Match($html, '<meta[^>]+name=["'']build-sha["''][^>]+content=["''](?<value>[^"'']+)', 'IgnoreCase')
+                    Check 'Top build-sha present /' $rootBuildShaMatch.Success 'build-sha meta tag present on top page.'
+                    if ($rootBuildShaMatch.Success) {
+                        $rootSha = $rootBuildShaMatch.Groups['value'].Value
+                        Check 'Top build-sha matches /' ($rootSha -eq $ExpectedCommitSha) "actual=$rootSha expected=$ExpectedCommitSha"
+                    }
+                }
+
+                $latestSection = [regex]::Match(
+                    $html,
+                    '<section\b[^>]*data-top-latest[^>]*>(?<body>[\s\S]*?)<\/section\s*>',
+                    'IgnoreCase'
+                )
+                Check 'Top latest section /' $latestSection.Success 'data-top-latest section present.'
+                $hasExpectedLatest = -not [string]::IsNullOrWhiteSpace($expectedLatestArticlePath)
+                Check 'Expected latest article from exact build' $hasExpectedLatest $expectedTopPageSourceDetail
+                if ($hasExpectedLatest -and $latestSection.Success) {
+                    $escapedLatestPath = [regex]::Escape($expectedLatestArticlePath)
+                    $latestArticlePresent = [regex]::IsMatch(
+                        $latestSection.Groups['body'].Value,
+                        "href=[`"']$escapedLatestPath[`"']",
+                        'IgnoreCase'
+                    )
+                    Check 'Top latest article matches exact build' $latestArticlePresent "expected=$expectedLatestArticlePath"
+                }
+            }
+
             $pages.Add([ordered]@{ path = $path; status = [int]$response.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($html) })
         }
     }
@@ -243,6 +312,7 @@ $report = [ordered]@{
     generatedAt = (Get-Date).ToString('o')
     baseUrl = $origin
     expectedCommitSha = $ExpectedCommitSha
+    expectedLatestArticlePath = $expectedLatestArticlePath
     attempts = $attempt
     resultsPerAttempt = @($resultsPerAttempt)
     pages = @($attemptResult.pages)
@@ -256,6 +326,7 @@ $lines = @(
     "- Result: **$($report.result)**",
     "- Base URL: $origin",
     "- Expected commit: $ExpectedCommitSha",
+    "- Expected latest article: $expectedLatestArticlePath",
     "- Attempts: $attempt ($($resultsPerAttempt -join ', '))",
     '',
     '## Checks'
