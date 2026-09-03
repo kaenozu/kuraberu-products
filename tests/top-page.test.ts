@@ -113,6 +113,26 @@ describe.skipIf(!hasDist)("top page (rendered dist)", () => {
       /<section\b[^>]*data-top-featured[^>]*>[\s\S]*?<\/section\s*>\s*<p class="meta wrap"><a href="\/articles\/">もっと見る →<\/a><\/p>/i,
     );
   });
+
+  it("renders the six newest public articles in the latest section", () => {
+    const expected = [...publicArticleMetadata]
+      .sort(
+        (a, b) =>
+          b.publishedAt.localeCompare(a.publishedAt) ||
+          b.modifiedAt.localeCompare(a.modifiedAt) ||
+          a.path.localeCompare(b.path),
+      )
+      .slice(0, 6)
+      .map((article) => article.path);
+    const section = topHtml.match(
+      /<section\b[^>]*data-top-latest[^>]*>([\s\S]*?)<\/section\s*>/i,
+    );
+    expect(section).not.toBeNull();
+    const hrefs = [...section![1].matchAll(/href="([^"]+)"/g)].map(
+      (match) => match[1],
+    );
+    expect(hrefs).toEqual(expected);
+  });
 });
 
 describe.skipIf(!hasDist)("article card content types (rendered dist)", () => {

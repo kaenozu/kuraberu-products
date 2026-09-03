@@ -10,6 +10,17 @@ const featured = ARTICLE_LAYOUT.topPage.featuredPaths
   .map((path) => publicArticleMetadata.find((article) => article.path === path))
   .filter((article) => article !== undefined);
 
+// 新着比較：公開日が新しい記事を自動表示する。手動選定の注目記事とは
+// 役割を分け、新規記事を追加するだけでトップから辿れるようにする。
+const latest = [...publicArticleMetadata]
+  .sort(
+    (a, b) =>
+      b.publishedAt.localeCompare(a.publishedAt) ||
+      b.modifiedAt.localeCompare(a.modifiedAt) ||
+      a.path.localeCompare(b.path),
+  )
+  .slice(0, 6);
+
 // カテゴリ入口：記事数が topPage.categoryMinArticles 以上のカテゴリを表示。
 // 件数が多い順 → 名前順。リンク先は /articles/category/…（カテゴリページの
 // クライアント側フィルタが URL パラメータを読んで絞り込む）。
@@ -54,6 +65,19 @@ const categories = [...categoryCounts.entries()]
     </div>
   </section>
   <p class="meta wrap"><a href="/articles/">もっと見る →</a></p>
+
+  <section class="wrap section" data-top-latest>
+    <div class="subsection-heading">
+      <p class="section-label">新着比較</p>
+      <h2>最近追加した記事</h2>
+    </div>
+    <p class="lead">新しく追加した比較記事を、公開日の新しい順に紹介します。</p>
+    <div class="article-list top-article-list">
+      {latest.map((article) => (
+        <ArticleCard article={article} />
+      ))}
+    </div>
+  </section>
 
   <section class="wrap section" data-top-categories>
     <div class="subsection-heading">

@@ -20,6 +20,7 @@ export const panasonicNeBs6eVsNeBs5eSeed: CommercialArticleSeed = {
   rightProduct: "パナソニック NE-BS5E",
   leftPoint: "スチーム機能・カラータッチ液晶・両面焼きトーストを重視する人向け",
   rightPoint: "14.6kgの本体と26Lの庫内を選びたい人向け",
+  publishedAt: "2026-09-02",
   productInfoCheckedAt: "2026-09-02",
   modifiedAt: "2026-09-02",
   purchaseLinksCheckedAt: "2026-09-02",
