@@ -9,7 +9,7 @@
 import {
   clientIp,
   enforceRateLimit,
-  isSameSiteOrigin,
+  isStrictSameSiteOrigin,
   json,
   readBodyTextWithLimit,
 } from "./shared";
@@ -37,10 +37,10 @@ function isValidPath(value: string): boolean {
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  // 送信元チェック（同一オリジンからのみ。Origin 完全一致）
+  // 送信元チェック（同一オリジンからのみ。Origin 完全一致・欠落は 403）
   const origin = request.headers.get("Origin") ?? "";
   const siteUrl = env.PUBLIC_SITE_URL ?? "https://kuraberu-products.pages.dev";
-  if (!isSameSiteOrigin(origin, siteUrl)) {
+  if (!isStrictSameSiteOrigin(origin, siteUrl)) {
     return json({ ok: false, error: "invalid origin" }, 403);
   }
 
