@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory)][uri]$BaseUrl,
     [string]$ExpectedCommitSha,
     [string]$OutputRoot = '.acceptance',
+    [string]$ExpectedTopPageSourcePath = '',
     # Core pages that must always be present and healthy.
     [string[]]$RequiredPaths = @(
         '/',
@@ -55,8 +56,13 @@ $hasFailure = $false
 # Production deploy と同じ exact build のトップHTMLから、期待する最新記事を導出する。
 # パスをスクリプトへハードコードすると記事追加のたびに検証側が陳腐化するため、
 # deploy job 内に残っている dist/index.html を唯一の期待値ソースにする。
+# Contract test では同じ構造のfixtureを明示注入できるが、Productionでは未指定の
+# まま必ずrepository rootのdist/index.htmlを使用する。
 $repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
-$expectedTopPagePath = Join-Path $repoRoot 'dist/index.html'
+if ([string]::IsNullOrWhiteSpace($ExpectedTopPageSourcePath)) {
+    $ExpectedTopPageSourcePath = Join-Path $repoRoot 'dist/index.html'
+}
+$expectedTopPagePath = [System.IO.Path]::GetFullPath($ExpectedTopPageSourcePath)
 $expectedLatestArticlePath = ''
 $expectedTopPageSourceDetail = "source=$expectedTopPagePath"
 try {
