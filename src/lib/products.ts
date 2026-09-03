@@ -701,4 +701,12 @@ export const articlePurchaseLinks = {
     name: "パナソニック NE-BS5E",
     purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/ne-bs5e-k/",
   },
+  "yamazaki-refrigerator-rack-240057-vs-240059:left": {
+    name: "山崎実業 冷蔵庫中棚下高さ調節ラック タワー S",
+    purchaseUrl: "https://item.rakuten.co.jp/butsueido/r240057/",
+  },
+  "yamazaki-refrigerator-rack-240057-vs-240059:right": {
+    name: "山崎実業 冷蔵庫中棚下高さ調節ラック タワー L",
+    purchaseUrl: "https://item.rakuten.co.jp/butsueido/r240059/",
+  },
 } as const satisfies Record<string, ArticlePurchaseLink>;
