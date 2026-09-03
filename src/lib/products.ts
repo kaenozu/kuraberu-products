@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-ne-ms4c-vs-ne-bs5c:left": {
+    name: "パナソニック オーブンレンジ NE-MS4C",
+    purchaseUrl: "https://item.rakuten.co.jp/akibamac/2133067121413/",
+  },
+  "panasonic-ne-ms4c-vs-ne-bs5c:right": {
+    name: "パナソニック オーブンレンジ NE-BS5C",
+    purchaseUrl: "https://item.rakuten.co.jp/akindo/ne-bs5c-w/",
+  },
   "panasonic-es-pv6a-vs-es-pv3a:left": {
     name: "パナソニック ラムダッシュ パームイン ES-PV6A",
     purchaseUrl: "https://item.rakuten.co.jp/shopch-r/4000777578/",
