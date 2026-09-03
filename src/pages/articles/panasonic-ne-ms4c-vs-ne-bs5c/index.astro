@@ -1,0 +1,48 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { panasonicNeMs4cVsNeBs5cArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://panasonic.jp/range/products/NE-MS4C.html'
+const rightOfficial = 'https://panasonic.jp/range/products/NE-BS5C.html'
+const leftImage = '/products/panasonic-ne-ms4c.png'
+const rightImage = '/products/panasonic-ne-bs5c.png'
+const leftAudience = 'シンプルな操作部と遠赤Wヒーターのレンジを選びたい人向け'
+const rightAudience = '光る文字液晶と大火力平面ヒーターを使いたい人向け'
+
+const faqEntries = [
+  { question: 'NE-MS4CとNE-BS5Cの大きな違いは？', answer: '公式仕様で確認できる主な違いは、操作部、グリルの加熱方式、庫内高さ、質量、取説掲載レシピ数、自動メニュー数です。' },
+  { question: '庫内の大きさは違う？', answer: '外形寸法はどちらも幅470mm×奥行390mm×高さ350mmです。庫内寸法はNE-MS4Cが幅370mm×奥行335mm×高さ206mm、NE-BS5Cが幅370mm×奥行335mm×高さ209mmです。' },
+  { question: 'どちらが軽い？', answer: '公式記載の質量はNE-MS4Cが14.2kg、NE-BS5Cが14.7kgです。NE-MS4Cの方が0.5kg軽いです。' },
+  { question: '楽天市場の価格は比較できる？', answer: '価格・在庫・ポイント・送料は変動するため、型番検索ページで購入時点の表示を確認してください。' },
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: '本体質量', left: '14.2kg', right: '14.7kg', highlight: 'left', highlightNote: '0.5kg軽い' },
+  { label: 'グリル加熱方式', left: '遠赤Wヒーター', right: '大火力平面ヒーター', highlight: 'right' },
+  { label: '自動メニュー数', left: '51', right: '55', highlight: 'right', highlightNote: '4メニュー多い' },
+  { label: '庫内寸法', left: '幅370×奥行335×高さ206mm', right: '幅370×奥行335×高さ209mm' },
+  { label: '操作部', left: 'グレー液晶（バックライトなし）', right: '光る文字液晶（バックライトあり）' },
+]
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{ brand: 'パナソニック', line: 'NE-MS4C', tagline: '軽さ・シンプル操作なら', image: leftImage, imageAlt: 'パナソニック オーブンレンジ NE-MS4C', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-ne-ms4c-vs-ne-bs5c:left'].purchaseUrl }}
+  right={{ brand: 'パナソニック', line: 'NE-BS5C', tagline: '表示・グリル機能なら', image: rightImage, imageAlt: 'パナソニック オーブンレンジ NE-BS5C', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-ne-ms4c-vs-ne-bs5c:right'].purchaseUrl }}
+  keyDiffRows={keyDiffRows}
+  lead={'パナソニックの26Lオーブンレンジ「NE-MS4C」と「NE-BS5C」を、公式の商品・仕様ページで確認できる庫内寸法・質量・グリル方式・自動メニュー数に分けて比較します。'}
+  summaryParagraph={'軽さとシンプルな仕様を優先するならNE-MS4C、光る文字液晶や大火力平面ヒーター、自動メニュー数を重視するならNE-BS5Cが確認候補です。価格・在庫は販売先でご確認ください。'}
+  officialDescription={'比較の根拠は、パナソニック公式の商品ページと仕様ページで確認した仕様です。両機種とも総庫内容量26L、フラット庫内、外形寸法幅470mm×奥行390mm×高さ350mmを確認しています。'}
+  officialLinks={[{ label: 'NE-MS4C 公式商品ページ', href: leftOfficial }, { label: 'NE-BS5C 公式商品ページ', href: rightOfficial }]}
+  socialProofQuery={'パナソニック NE-MS4C NE-BS5C オーブンレンジ'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'パナソニック NE-MS4C'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'パナソニック NE-BS5C'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[{ label: 'パナソニック NE-MS4C 公式商品ページ', href: leftOfficial, checkedAt: '2026-08-21' }, { label: 'パナソニック NE-BS5C 公式商品ページ', href: rightOfficial, checkedAt: '2026-08-21' }]}
+  purchaseWarning={'設置寸法、庫内寸法、グリル方式、自動メニュー数など、必要な仕様を購入前に確認してください。価格・在庫・ポイント・送料は販売先で変わります。'}
+  disclaimer={'この比較は、パナソニック公式の商品・仕様ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。'}
+/>

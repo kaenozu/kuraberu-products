@@ -108,6 +108,13 @@
 - 調査メモ: `C:\\Users\\neoen\\kuraberu-notes\\panasonic-aircleaner-f-px60c-vs-f-px70c-research-2026-08-18.md`
 - 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
 
+### パナソニック NE-MS4C vs NE-BS5C（今回実装）
+
+- 記事slug: `panasonic-ne-ms4c-vs-ne-bs5c`
+- 状態: 専用worktreeで実装中。公式商品・仕様ページ、公式画像、楽天公式UI短縮URL2本を確認済み。
+- 比較軸: 庫内寸法、質量、グリル加熱方式、操作部、自動メニュー数。
+- 公式ページ: [NE-MS4C](https://panasonic.jp/range/products/NE-MS4C.html) / [NE-BS5C](https://panasonic.jp/range/products/NE-BS5C.html)
+
 これまで「次の候補」に挙げていたパナソニック衣類乾燥除湿機・ティファール電気ケトル・シャープ空気清浄機・コンビチャイルドシートはすべて公開済みです。次は非育児カテゴリ（生活雑貨・デスク用品・キッチン家電など）から、公式ページで比較軸を裏取りできる2商品ペアを選定する。
 
 ### 実装中
