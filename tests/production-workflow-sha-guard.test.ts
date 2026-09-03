@@ -299,14 +299,14 @@ describe("production deploy SHA guard", () => {
   });
 
   describe("checkout step configuration", () => {
-    it("checks out the input SHA with full history", () => {
+    it("checks out the dispatch SHA or push commit with full history", () => {
       const checkoutStep = stepList.find(
         (s) =>
           typeof s.uses === "string" && s.uses.startsWith("actions/checkout@"),
       );
       expect(checkoutStep).toBeDefined();
       const withBlock = checkoutStep?.with as Record<string, unknown>;
-      expect(withBlock?.ref).toBe("${{ inputs.expected_sha }}");
+      expect(withBlock?.ref).toBe("${{ inputs.expected_sha || github.sha }}");
       expect(withBlock?.["fetch-depth"]).toBe(0);
     });
 
@@ -321,9 +321,10 @@ describe("production deploy SHA guard", () => {
   });
 
   describe("workflow security properties", () => {
-    it("is triggered only by workflow_dispatch", () => {
+    it("is triggered manually or after a protected main update", () => {
       const on = workflow.on as Record<string, unknown>;
-      expect(Object.keys(on)).toEqual(["workflow_dispatch"]);
+      expect(Object.keys(on)).toEqual(["workflow_dispatch", "push"]);
+      expect((on.push as Record<string, unknown>).branches).toEqual(["main"]);
     });
 
     it("uses read-only contents permission", () => {
@@ -397,8 +398,8 @@ describe("production deploy SHA guard", () => {
 
     it("routes dispatch inputs through the job environment", () => {
       const env = workflow.jobs.deploy.env as Record<string, string>;
-      expect(env.EXPECTED_SHA).toBe("${{ inputs.expected_sha }}");
-      expect(env.DEPLOY_CONFIRM).toBe("${{ inputs.confirm }}");
+      expect(env.EXPECTED_SHA).toBe("${{ inputs.expected_sha || github.sha }}");
+      expect(env.DEPLOY_CONFIRM).toBe("${{ inputs.confirm || 'DEPLOY' }}");
     });
 
     it("pins upload-artifact to a single version across workflows", () => {
