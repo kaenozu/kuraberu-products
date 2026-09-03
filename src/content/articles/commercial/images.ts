@@ -194,6 +194,10 @@ const commercialArticleImages: Readonly<
     left: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv6a.jpg",
     right: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv3a.jpg",
   },
+  "yamazaki-refrigerator-rack-240057-vs-240059": {
+    left: "/products/yamazaki-refrigerator-rack-240057.jpg",
+    right: "/products/yamazaki-refrigerator-rack-240059.jpg",
+  },
 };
 
 export { commercialArticleImages };
