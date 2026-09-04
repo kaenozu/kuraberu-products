@@ -10,7 +10,11 @@ function postRequest(
 ): Request {
   return new Request(`${SITE_URL}/api/events`, {
     method: "POST",
-    headers: { "Content-Type": "application/json", ...headers },
+    headers: {
+      "Content-Type": "application/json",
+      Origin: SITE_URL,
+      ...headers,
+    },
     body,
   });
 }
