@@ -210,11 +210,11 @@ export const articlePurchaseLinks = {
   },
   "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:left": {
     name: "Soundcore Liberty 4 NC",
-    purchaseUrl: "https://a.r10.to/hF7iGR",
+    purchaseUrl: "https://item.rakuten.co.jp/d-shop1one/4571411210181/",
   },
   "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:right": {
     name: "ソニー WF-C710N",
-    purchaseUrl: "https://a.r10.to/hgcZzy",
+    purchaseUrl: "https://item.rakuten.co.jp/e-earphone/sony-wfc710n/",
   },
   "logicool-mx-master-3s-vs-m650:left": {
     name: "Logicool MX Master 3S",
