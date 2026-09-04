@@ -236,13 +236,11 @@ export const articlePurchaseLinks = {
   },
   "logicool-k650-vs-k580:left": {
     name: "Logicool K650 Signature Wireless Keyboard",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk650gr%2F&link_type=picttext",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/k650gr/",
   },
   "logicool-k650-vs-k580:right": {
     name: "Logicool K580",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk580gr%2F&link_type=picttext",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/k580gr/",
   },
   "logicool-lift-vs-m550:left": {
     name: "Logicool LIFT Vertical Ergonomic Mouse",
