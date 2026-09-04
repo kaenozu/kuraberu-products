@@ -889,12 +889,15 @@ export function validateArticleCtas(
       // アフィリエイトでないCTA（未差し替え時の楽天検索フォールバック等）は
       // 許可済みの楽天ホストだけを許し、nofollow を必須にする。
       let isRakutenFallback = false;
+      let isRakutenItemDetail = false;
       try {
         const url = new URL(href);
         isRakutenFallback =
+          url.protocol === "https:" && url.hostname === "search.rakuten.co.jp";
+        isRakutenItemDetail =
           url.protocol === "https:" &&
-          (url.hostname === "search.rakuten.co.jp" ||
-            url.hostname.endsWith(".rakuten.co.jp"));
+          url.hostname === "item.rakuten.co.jp" &&
+          url.pathname.split("/").filter(Boolean).length >= 2;
       } catch {
         // The generic validation below reports malformed URLs.
       }
@@ -902,9 +905,9 @@ export function validateArticleCtas(
         errors.push(
           `${relative}: CTA ${index + 1} must not use a Rakuten search URL; only a confirmed item detail destination is allowed`,
         );
-      } else {
+      } else if (!isRakutenItemDetail) {
         errors.push(
-          `${relative}: CTA ${index + 1} is not a confirmed Rakuten affiliate URL`,
+          `${relative}: CTA ${index + 1} is not a confirmed Rakuten affiliate or item detail URL`,
         );
       }
     }
