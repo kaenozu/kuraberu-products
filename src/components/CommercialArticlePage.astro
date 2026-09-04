@@ -46,17 +46,22 @@ const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchase
 const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
 const isVerifiedPurchaseUrl = (value: string | undefined) => {
   if (!value) return false;
-  // a.r10.to is a complete Rakuten affiliate URL whose destination is
-  // validated separately in the queue evidence; it has no `pc` parameter.
-  if (isAffiliateRakutenUrl(value)) return true;
-  return isRakutenProductDetailUrl(value);
+  if (isRakutenProductDetailUrl(value)) return true;
+  // Affiliate URLs remain valid only when their destination is a verified
+  // Rakuten item page; otherwise the renderer must use the normal fallback.
+  if (!isAffiliateRakutenUrl(value)) return false;
+  try {
+    return isRakutenProductDetailUrl(new URL(value).searchParams.get('pc') ?? '');
+  } catch {
+    return false;
+  }
 };
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
   leftStaticPurchaseUrl && isVerifiedPurchaseUrl(leftStaticPurchaseUrl)
     ? Promise.resolve({
         href: leftStaticPurchaseUrl,
-        isAffiliate: true,
+        isAffiliate: isAffiliateRakutenUrl(leftStaticPurchaseUrl),
         product: undefined,
       })
     : resolvePurchaseHref({
@@ -67,7 +72,7 @@ const [leftResolved, rightResolved] = await Promise.all([
   rightStaticPurchaseUrl && isVerifiedPurchaseUrl(rightStaticPurchaseUrl)
     ? Promise.resolve({
         href: rightStaticPurchaseUrl,
-        isAffiliate: true,
+        isAffiliate: isAffiliateRakutenUrl(rightStaticPurchaseUrl),
         product: undefined,
       })
     : resolvePurchaseHref({
