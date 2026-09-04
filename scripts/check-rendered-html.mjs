@@ -907,7 +907,7 @@ export function validateArticleCtas(
         );
       } else if (!isRakutenItemDetail) {
         errors.push(
-          `${relative}: CTA ${index + 1} is not a confirmed Rakuten affiliate or item detail URL`,
+          `${relative}: CTA ${index + 1} is not a confirmed Rakuten affiliate URL`,
         );
       }
     }
