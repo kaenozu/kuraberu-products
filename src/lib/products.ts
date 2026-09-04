@@ -338,11 +338,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-ne-fl1a-vs-ne-fl1c:left": {
     name: "パナソニック NE-FL1A",
-    purchaseUrl: "https://a.r10.to/hFqCMV",
+    purchaseUrl: "https://item.rakuten.co.jp/jumblestore/2327627609057/",
   },
   "panasonic-ne-fl1a-vs-ne-fl1c:right": {
     name: "パナソニック NE-FL1C",
-    purchaseUrl: "https://a.r10.to/hPJAxE",
+    purchaseUrl: "https://item.rakuten.co.jp/yamada-denki/432947010/",
   },
   "pigeon-bottle-160-240:left": {
     name: "母乳実感 160ml",
