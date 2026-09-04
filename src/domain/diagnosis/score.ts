@@ -39,9 +39,15 @@ export function optionIsSelected(
 
 /**
  * 回答に含まれる選択肢IDの一覧を返す。
- * - single / boolean: [answer] （boolean は "true" / "false" に変換）
+ * - single: [answer]（前後空白は trim）
  * - multi: answer 配列そのもの
- * - number: 空配列
+ * - boolean: ["true"] or ["false"]
+ *   ⚠ QuestionType: "boolean" の質問は、option.id を "true" / "false" 文字列で
+ *   定義する必要がある。`true` / `false` 以外の option.id を持つ boolean 質問は
+ *   マッチしない（#561 で仕様として確認）。
+ * - number: 常に []
+ *   ⚠ QuestionType: "number" は未実装 (#561)。将来 `selectedOptionIds` が
+ *   number 回答を文字列化（例: String(answer)）する拡張を行うまで空配列を返す。
  */
 export function selectedOptionIds(answer: AnswerValue | undefined): string[] {
   if (!hasAnswer(answer)) return [];
@@ -54,37 +60,70 @@ export function selectedOptionIds(answer: AnswerValue | undefined): string[] {
 /** 質問IDごとに「選択肢ID → ルール群」をまとめた形 */
 export type QuestionRuleMap = Record<string, Record<string, DiagnosisRule[]>>;
 
+/** 質問ID → 重み（既定: 1） */
+export type QuestionWeightMap = Record<string, number>;
+
+const DEFAULT_QUESTION_WEIGHT = 1;
+
+/**
+ * 質問IDごとの exclude ルール。質問単位でグルーピング (#561) することで
+ * ランキング表示で「どの質問で除外されたか」を表示しやすくなる。
+ */
+export type ExclusionsByQuestion = Record<
+  string,
+  readonly {
+    match: Extract<DiagnosisRule, { type: "exclude" }>["match"];
+    reasonCode: string;
+  }[]
+>;
+
 /**
  * 回答から選択された選択肢のルールを集める。
  * exclude ルールと score ルールを分けて返す。
+ * exclude ルールは質問単位 (`exclusionsByQuestion`) でも返す (#561)。
+ * 質問ごとの重みも併せて返す（未指定は 1）。
  */
 export function collectSelectedRules(
   questions: readonly {
     id: string;
+    weight?: number;
     options?: readonly { id: string; rules: DiagnosisRule[] }[];
   }[],
   answers: DiagnosisAnswers,
 ): {
+  /** フラットな exclude ルール一覧 (後方互換)。 */
   exclusions: readonly {
     match: Extract<DiagnosisRule, { type: "exclude" }>["match"];
     reasonCode: string;
   }[];
+  /** 質問IDでグルーピングされた exclude ルール (#561)。 */
+  exclusionsByQuestion: ExclusionsByQuestion;
   rulesByQuestion: QuestionRuleMap;
+  questionWeights: QuestionWeightMap;
 } {
   const exclusions: {
     match: Extract<DiagnosisRule, { type: "exclude" }>["match"];
     reasonCode: string;
   }[] = [];
+  const exclusionsByQuestion: ExclusionsByQuestion = {};
   const rulesByQuestion: QuestionRuleMap = {};
+  const questionWeights: QuestionWeightMap = {};
 
   for (const question of questions) {
+    questionWeights[question.id] = question.weight ?? DEFAULT_QUESTION_WEIGHT;
     const answer = answers[question.id];
     const optionIds = selectedOptionIds(answer);
+    const questionExclusions: {
+      match: Extract<DiagnosisRule, { type: "exclude" }>["match"];
+      reasonCode: string;
+    }[] = [];
     for (const option of question.options ?? []) {
       if (!optionIds.includes(option.id)) continue;
       for (const rule of option.rules) {
         if (rule.type === "exclude") {
-          exclusions.push({ match: rule.match, reasonCode: rule.reasonCode });
+          const entry = { match: rule.match, reasonCode: rule.reasonCode };
+          exclusions.push(entry);
+          questionExclusions.push(entry);
         } else {
           const questionRules = rulesByQuestion[question.id] ?? {};
           const optionRules = questionRules[option.id] ?? [];
@@ -94,34 +133,46 @@ export function collectSelectedRules(
         }
       }
     }
+    if (questionExclusions.length > 0) {
+      exclusionsByQuestion[question.id] = questionExclusions;
+    }
   }
 
-  return { exclusions, rulesByQuestion };
+  return { exclusions, exclusionsByQuestion, rulesByQuestion, questionWeights };
 }
 
 /**
  * 全回答をスコアへ反映する。
- * exclude 済みの商品もスコアは記録するが、ランキングからは除外される。
+ * 実装メモ (#561): 既に `scores` Map に `excluded === true` で登録されている
+ * 商品（exclude ルールで除外済み）は `score` 未設定のため、`scores.get(product.id)` が
+ * `undefined` となり `if (!score) continue;` で skip される。これにより
+ * exclude 済み商品への重複加算は発生しない。ランキング側 (`rankProducts`) でも
+ * `!score.excluded` で二重にフィルタされる。
+ * 質問ごとの weight を適用する: 実際の加点は rule.score × weight となる。
+ * weight は ScoreRule（加点・減点）にのみ適用され、ExcludeRule には影響しない。
  */
 export function applyScores(
   scores: Map<string, ProductScore>,
   products: readonly Product[],
   rulesByQuestion: QuestionRuleMap,
+  questionWeights: QuestionWeightMap = {},
 ): void {
-  for (const options of Object.values(rulesByQuestion)) {
+  for (const [questionId, options] of Object.entries(rulesByQuestion)) {
+    const weight = questionWeights[questionId] ?? DEFAULT_QUESTION_WEIGHT;
     for (const rules of Object.values(options)) {
       for (const rule of rules) {
         if (rule.type !== "score") continue;
+        const weightedScore = rule.score * weight;
         for (const product of products) {
           if (rule.productId && rule.productId !== product.id) continue;
           if (rule.match && !matchesCondition(product, rule.match)) continue;
           const score = scores.get(product.id);
           if (!score) continue;
-          score.score += rule.score;
+          score.score += weightedScore;
           if (rule.reasonCode) {
-            if (rule.score > 0) {
+            if (weightedScore > 0) {
               score.positiveReasons.push(rule.reasonCode);
-            } else if (rule.score < 0) {
+            } else if (weightedScore < 0) {
               score.negativeReasons.push(rule.reasonCode);
             }
           }

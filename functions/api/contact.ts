@@ -6,13 +6,13 @@
 import {
   clientIp,
   enforceRateLimit,
-  isSameSiteOrigin,
+  isStrictSameSiteOrigin,
   json,
   readBodyTextWithLimit,
 } from "./shared";
 import type { RateLimitResult } from "./shared";
 
-export { clientIp, isSameSiteOrigin } from "./shared";
+export { clientIp, isStrictSameSiteOrigin } from "./shared";
 
 interface ContactBody {
   name?: string;
@@ -37,10 +37,10 @@ export async function enforceContactRateLimit(
 }
 
 export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  // 送信元チェック（同一オリジンからのみ。Origin 完全一致）
+  // 送信元チェック（同一オリジンからのみ。Origin 完全一致・欠落は 403）
   const origin = request.headers.get("Origin") ?? "";
   const siteUrl = env.PUBLIC_SITE_URL ?? "https://kuraberu-products.pages.dev";
-  if (!isSameSiteOrigin(origin, siteUrl)) {
+  if (!isStrictSameSiteOrigin(origin, siteUrl)) {
     return json({ ok: false, error: "invalid origin" }, 403);
   }
 
@@ -94,13 +94,22 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     headers,
     body: limitedBody.text,
   }).formData();
-  const rawMessage = String(form.get("message") ?? "").trim();
-  const rawName = String(form.get("name") ?? "").trim();
-  const rawEmail = String(form.get("email") ?? "").trim();
-  // UTF-16 の .length ではなく TextEncoder でバイト数を測る。多バイト文字
-  //（日本語など）では .length < 実バイト数になるため、文字数ベースの判定は
-  // 上限を超過許容してしまう。フィールド名も含めて実ペイロードに近い値で比較する
-  // （生バイト段階の上限は過大なので、デコード後の実サイズ検証として残す）。
+  // formData の値は File / Blob の可能性があるため、文字列以外は拒否して
+  // "[object FileBlob]" のような誤った値を Telegram に転送しないようにする
+  // (#560)。型ガードで string のみ採用し、File/Blob は空文字として扱う。
+  const readStringField = (name: string): string => {
+    const value = form.get(name);
+    if (typeof value === "string") return value.trim();
+    return "";
+  };
+  const rawMessage = readStringField("message");
+  const rawName = readStringField("name");
+  const rawEmail = readStringField("email");
+  // 全体のバイト数上限チェックは slice 前 (#560) の生フィールド値に対して
+  // 行う。こうすることで、攻撃者が 12000 文字の message を送ってきても
+  // slice(0, 4000) で 4000 文字に切り詰められて上限内に収まってしまい
+  // 通過する、という穴を防ぐ。
+  // その上で Telegram 送信用の truncation slice を適用する。
   const encoder = new TextEncoder();
   const formFields: ReadonlyArray<readonly [string, string]> = [
     ["message", rawMessage],
@@ -114,7 +123,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   if (totalSize > MAX_BODY_BYTES) {
     return json({ ok: false, error: "payload too large" }, 413);
   }
-
   const body: ContactBody = {
     name: rawName.slice(0, 80),
     email: rawEmail.slice(0, 120),

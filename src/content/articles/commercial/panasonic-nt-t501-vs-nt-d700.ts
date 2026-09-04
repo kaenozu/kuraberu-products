@@ -21,8 +21,8 @@ export const panasonicNtT501VsNtD700Seed: CommercialArticleSeed = {
   leftPoint: "4枚焼きと5段階の火力切換を重視する人向け",
   rightPoint: "自動メニュー・温度調節・インテリジェント制御を重視する人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-04",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（NT-T501）",

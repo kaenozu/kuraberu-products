@@ -183,10 +183,10 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
       },
     );
 
-    // 同一 JAN を掲げる複数出品は一意に定められないため、検索URLへは倒れない。
+    // 同一 JAN を掲げる複数出品は一意に定められないため、フォールバックURLへ倒れる。
     expect(result.product).toBeUndefined();
-    expect(result.href).toBe("");
-    expect(result.isAffiliate).toBe(false);
+    expect(result.href).toContain("search.rakuten.co.jp");
+    expect(result.isAffiliate).toBe(true);
   });
 
   it("fails closed with an empty href when Rakuten credentials are missing", async () => {
@@ -232,8 +232,8 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
     );
 
     expect(result.product).toBeUndefined();
-    expect(result.href).toBe("");
-    expect(result.isAffiliate).toBe(false);
+    expect(result.href).toContain("search.rakuten.co.jp");
+    expect(result.isAffiliate).toBe(true);
   });
 
   it("falls back safely when the Rakuten API response is not JSON", async () => {
@@ -253,8 +253,8 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
     );
 
     expect(result.product).toBeUndefined();
-    expect(result.href).toBe("");
-    expect(result.isAffiliate).toBe(false);
+    expect(result.href).toContain("search.rakuten.co.jp");
+    expect(result.isAffiliate).toBe(true);
   });
 });
 

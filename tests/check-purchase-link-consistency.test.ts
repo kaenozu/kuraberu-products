@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
   ALLOWED_OUTBOUND_HOSTS,
   CTA_CACHE_FILE,
@@ -33,6 +33,22 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 
 const registry = new Set(["moony-m:left", "moony-m:right"]);
+
+// PR #568 CI修正: rakutenAffiliateSearchUrl は RAKUTEN_AFFILIATE_ID を
+// 必要とする (#553 で env 必須化)。CI 環境で未設定だと '' を返し、
+// 期待URLにマッチしない。テスト実行時にダミー値を設定する。
+const TEST_AFFILIATE_ID = "34e76967.d5cc3ae1.34e76968.3eade5e6";
+const originalAffiliateId = process.env.RAKUTEN_AFFILIATE_ID;
+beforeAll(() => {
+  process.env.RAKUTEN_AFFILIATE_ID = TEST_AFFILIATE_ID;
+});
+afterAll(() => {
+  if (originalAffiliateId === undefined) {
+    delete process.env.RAKUTEN_AFFILIATE_ID;
+  } else {
+    process.env.RAKUTEN_AFFILIATE_ID = originalAffiliateId;
+  }
+});
 
 describe("purchase link consistency gate (registry keys)", () => {
   it("keeps the BabyBjorn HARMONY/MINI CTAs on verified item pages", async () => {
@@ -243,12 +259,15 @@ describe("purchase link consistency gate (registry keys)", () => {
 
   // fail-closed 契約の監査用集計。verified / unverified / unavailable の
   // 3値のみを扱い、未分類のステータス文字列を黙って無視しないことを確認する。
-  it("keeps NextStepBlock purchase CTA fail-closed when status is omitted", () => {
+  it("suppresses NextStepBlock purchase CTAs when status is not verified/direct (#549)", () => {
     const source = readFileSync("src/components/NextStepBlock.astro", "utf8");
     expect(source).toContain(
-      'purchaseLinkStatus: "verified" | "unverified" | "unavailable"',
+      'purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable"',
     );
-    expect(source).toContain("purchaseLinkStatus === 'verified' ?");
+    // showCta は verified / direct のときだけ true (H-3 仕様)。
+    expect(source).toMatch(
+      /purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
+    );
     expect(source).toContain("販売先を確認中です");
     expect(source.match(/販売先を確認中です/g)).toHaveLength(1);
   });

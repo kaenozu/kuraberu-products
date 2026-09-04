@@ -15,9 +15,10 @@
     "format:check": "prettier --check .",
     "lint": "eslint .",
     "typecheck": "astro check",
+    "pretest": "astro build",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:dist": "vitest run tests/article-metadata.test.ts tests/article-discovery.test.ts tests/top-page.test.ts tests/content-freshness.test.ts tests/official-link-separation.test.ts tests/not-found.test.ts tests/comparison-memo.test.ts tests/runtime-hardening.test.ts --bail 1",
+    "test:dist": "astro build && vitest run tests/article-metadata.test.ts tests/article-discovery.test.ts tests/top-page.test.ts tests/content-freshness.test.ts tests/official-link-separation.test.ts tests/not-found.test.ts tests/comparison-memo.test.ts tests/runtime-hardening.test.ts --bail 1",
     "test:e2e": "astro build && pnpm exec playwright test",
     "validate:env": "node scripts/validate-build-env.mjs",
     "validate:content": "node scripts/validate-content.mjs",
@@ -43,18 +44,18 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "@playwright/test": "^1.62.1",
+    "@playwright/test": "1.62.1",
     "@typescript-eslint/parser": "8.68.0",
     "@vitest/coverage-v8": "4.1.11",
     "cookie": "2.0.1",
     "eslint": "10.9.1",
     "eslint-plugin-astro": "3.1.0",
     "prettier": "3.9.6",
-    "serve": "^14.2.6",
+    "serve": "14.2.6",
     "sharp": "0.35.4",
     "typescript-eslint": "8.68.0",
     "vitest": "4.1.11",
-    "wrangler": "^4.127.1",
-    "yaml": "^2.9.0"
+    "wrangler": "4.127.1",
+    "yaml": "2.9.0"
   }
 }

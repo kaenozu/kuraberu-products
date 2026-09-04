@@ -48,13 +48,13 @@ export function runDiagnosis(
 ): DiagnosisResult {
   const candidates = resolveProducts(config, products);
   const scores = initializeScores(candidates);
-  const { exclusions, rulesByQuestion } = collectSelectedRules(
+  const { exclusions, rulesByQuestion, questionWeights } = collectSelectedRules(
     config.questions,
     answers,
   );
 
   applyExclusions(scores, candidates, exclusions);
-  applyScores(scores, candidates, rulesByQuestion);
+  applyScores(scores, candidates, rulesByQuestion, questionWeights);
 
   const ranked = rankProducts(candidates, scores, config.tieBreaker ?? []);
 
@@ -76,6 +76,9 @@ export function runDiagnosis(
       };
     });
 
+  // 「回答済み」= 1つ以上の option.id に解決できた質問 (#561)。
+  // 現状の `QuestionType: "number"` は `selectedOptionIds` が常に [] を返すため
+  // answered count には含まれない（#561 で未実装として確認）。
   const answeredQuestionCount = config.questions.filter(
     (question) => selectedOptionIds(answers[question.id]).length > 0,
   ).length;

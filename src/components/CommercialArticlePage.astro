@@ -10,6 +10,7 @@ import ExternalEmbed from './ExternalEmbed.astro';
 import RelatedArticles from './RelatedArticles.astro';
 import { articleMetadata, additionalCommercialArticleSeeds, publicArticleMetadata } from '../content/articles';
 import { articlePurchaseLinks } from '../lib/products';
+import { commercialArticleImages } from '../content/articles/commercial/images';
 import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
 import {
@@ -29,7 +30,10 @@ if (!article || !seed) {
   throw new Error(`Unknown commercial article: ${articleId}`);
 }
 
-const images = { left: seed.leftImage, right: seed.rightImage };
+const images = {
+  left: seed.leftImage ?? commercialArticleImages[articleId]?.left,
+  right: seed.rightImage ?? commercialArticleImages[articleId]?.right,
+};
 // 公開対象（publicArticleMetadata）に含まれない記事 = 商品情報の確認日が未設定の
 // 自動生成初稿。非公開の意図のため、万一参照された場合に備えてインデックスを拒否する（fail-closed）。
 const isPublicArticle = publicArticleMetadata.some((item) => item.id === article.id);
@@ -42,13 +46,10 @@ const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchase
 const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
 const isVerifiedPurchaseUrl = (value: string | undefined) => {
   if (!value) return false;
-  if (isRakutenProductDetailUrl(value)) return true;
-  if (!isAffiliateRakutenUrl(value)) return false;
-  try {
-    return isRakutenProductDetailUrl(new URL(value).searchParams.get('pc') ?? '');
-  } catch {
-    return false;
-  }
+  // a.r10.to is a complete Rakuten affiliate URL whose destination is
+  // validated separately in the queue evidence; it has no `pc` parameter.
+  if (isAffiliateRakutenUrl(value)) return true;
+  return isRakutenProductDetailUrl(value);
 };
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
 const [leftResolved, rightResolved] = await Promise.all([
@@ -75,8 +76,8 @@ const [leftResolved, rightResolved] = await Promise.all([
         fallbackUrl: rightSearchUrl,
       }),
 ]);
-const leftProductHref = leftResolved.href;
-const rightProductHref = rightResolved.href;
+const leftProductHref = article.purchaseLinkStatus === "unavailable" ? undefined : leftResolved.href;
+const rightProductHref = article.purchaseLinkStatus === "unavailable" ? undefined : rightResolved.href;
 const rows: readonly DifferenceRow[] = seed.verifiedRows?.length
   ? seed.verifiedRows
   : [

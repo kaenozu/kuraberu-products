@@ -15,11 +15,17 @@ export const sharpKcS50VsFuS50Article = defineArticleMetadata({
   summary:
     "KC-S50とFU-S50を、シャープ公式の加湿機能・サイズ・重量・適用畳数・運転音・センサーに分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-08-30",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-08-30",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/sharp-kc-s50.jpg",
   changeLog: [
+    {
+      date: "2026-08-30",
+      summary:
+        "楽天市場で型番・商品名が確認できる商品単体ページへの通常リンクを設定（HTTP 200確認、広告リンクではない）",
+    },
     {
       date: "2026-08-14",
       summary:

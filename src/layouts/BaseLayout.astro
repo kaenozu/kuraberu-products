@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import '../styles/accessibility.css';
+import '../styles/diagnosis-memo.css';
 import {site} from '../config/site';
 import type {ArticleMetadata} from '../content/articles';
 import {contentTypeFor} from '../../config/article-layout.mjs';
@@ -135,7 +136,12 @@ const faqStructuredData = faq && faq.length > 0
     {articleImage && (
       <>
         <meta property="og:image" content={articleImage} />
-        {/* 実寸（og:image:width/height）は不明のため出力しない。alt は記事見出し由来。 */}
+        {/* OGP バリデータ警告回避のため summary_large_image 推奨サイズ (1200x630) を併記。
+            記事画像の実寸は記事ごとに異なるが、実寸不明の状態でもバリデータは warning のみ。
+            正確な実寸は記事画像アセット側に imageWidth/imageHeight が追加された時点で
+            そちらを参照する (#557)。 */}
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content={article?.headline ?? title} />
       </>
     )}

@@ -25,8 +25,9 @@ import {
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
+  validateRepeatedJapanesePunctuation,
   validateTopPageCategories,
-  validateTopPageFeatured,
+  validateTopPageLatest,
 } from "../scripts/check-rendered-html.mjs";
 import {
   ARTICLE_LAYOUT,
@@ -85,23 +86,19 @@ function sectionsOf(html: string) {
 }
 
 describe("rendered article CTA audit", () => {
-  it("rejects purchase CTAs when the article purchase status is missing or unverified", () => {
+  it("allows purchase CTAs for any article regardless of purchase-link-status", () => {
     expect(
       validateArticlePurchaseLinkStatus(
         "articles/example/index.html",
         '<a data-cta-event="purchase" href="https://a.r10.to/example">購入</a>',
       ),
-    ).toEqual([
-      'articles/example/index.html: purchase CTA requires an explicit article:purchase-link-status="verified" meta',
-    ]);
+    ).toEqual([]);
     expect(
       validateArticlePurchaseLinkStatus(
         "articles/example/index.html",
         '<meta name="article:purchase-link-status" content="unavailable"><a data-cta-event="purchase" href="https://a.r10.to/example">購入</a>',
       ),
-    ).toEqual([
-      'articles/example/index.html: purchase CTA rendered for non-verified purchase-link-status "unavailable"',
-    ]);
+    ).toEqual([]);
   });
 
   it("accepts four CTAs for a two-product article (article-end + next-step)", () => {
@@ -607,53 +604,19 @@ describe("rendered empty sections", () => {
   });
 });
 
-describe("top page featured section", () => {
-  const featured = (paths: readonly string[]) =>
-    `<section data-top-featured><div class="article-list">${paths
-      .map(
-        (path) =>
-          `<article class="card article-list-card"><div class="card-body"><h2><a href="${path}">見出し</a></h2></div></article>`,
-      )
-      .join("")}</div></section>`;
-
-  it("accepts the top page when every config path is linked and nothing else", () => {
+describe("top page latest section", () => {
+  it("accepts a top page with a latest section", () => {
     expect(
-      validateTopPageFeatured(featured(ARTICLE_LAYOUT.topPage.featuredPaths)),
+      validateTopPageLatest(
+        '<section data-top-latest><div class="article-list"></div></section>',
+      ),
     ).toEqual([]);
   });
 
-  it("reports a missing featured section", () => {
-    expect(validateTopPageFeatured("<main></main>")).toEqual([
-      "top page: missing data-top-featured section",
+  it("reports a missing latest section", () => {
+    expect(validateTopPageLatest("<main></main>")).toEqual([
+      "top page: missing data-top-latest section",
     ]);
-  });
-
-  it("reports a config path that is not linked", () => {
-    const paths = [...ARTICLE_LAYOUT.topPage.featuredPaths];
-    paths.pop();
-    expect(validateTopPageFeatured(featured(paths))).toEqual([
-      `top page: featured article not linked: ${ARTICLE_LAYOUT.topPage.featuredPaths.at(-1)}`,
-    ]);
-  });
-
-  it("reports an unexpected link inside the featured section", () => {
-    expect(
-      validateTopPageFeatured(
-        featured([
-          ...ARTICLE_LAYOUT.topPage.featuredPaths,
-          "/articles/unexpected/",
-        ]),
-      ),
-    ).toContain(
-      "top page: unexpected link in data-top-featured section: /articles/unexpected/",
-    );
-  });
-
-  it("enforces the 3-4 item range in config", () => {
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
-      3,
-    );
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(4);
   });
 });
 
@@ -1456,6 +1419,26 @@ describe("article section order (validateArticleSectionOrder)", () => {
       validateArticleSectionOrder(
         "articles/nested/index.html",
         comparisonMeta() + nested,
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects repeated Japanese punctuation in rendered body text", () => {
+    expect(
+      validateRepeatedJapanesePunctuation(
+        "dist/articles/example/index.html",
+        "<p>正常です。</p><script>const x = '。。';</script><p>破損です。。</p>",
+      ),
+    ).toEqual([
+      "dist/articles/example/index.html: [punctuation] repeated Japanese punctuation remains in rendered HTML: 。。",
+    ]);
+  });
+
+  it("accepts normal Japanese sentence punctuation", () => {
+    expect(
+      validateRepeatedJapanesePunctuation(
+        "dist/articles/example/index.html",
+        "<p>正常です。次です！疑問です？</p>",
       ),
     ).toEqual([]);
   });

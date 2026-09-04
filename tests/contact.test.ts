@@ -2,9 +2,10 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   clientIp,
   enforceContactRateLimit,
-  isSameSiteOrigin,
+  isStrictSameSiteOrigin,
   onRequestPost,
 } from "../functions/api/contact";
+import { isSameSiteOrigin } from "../functions/api/shared";
 
 const SITE_URL = "https://kuraberu-products.pages.dev";
 
@@ -12,12 +13,15 @@ function postRequest(
   body: string,
   headers: Record<string, string> = {},
 ): Request {
+  const requestHeaders: Record<string, string> = {
+    "Content-Type": "application/x-www-form-urlencoded",
+    Origin: SITE_URL,
+    ...headers,
+  };
+  if (requestHeaders.Origin === "") delete requestHeaders.Origin;
   return new Request(`${SITE_URL}/api/contact`, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      ...headers,
-    },
+    headers: requestHeaders,
     body,
   });
 }
@@ -109,13 +113,28 @@ describe("isSameSiteOrigin", () => {
     ).toBe(false);
   });
 
-  it("allows requests without an Origin header", () => {
-    expect(isSameSiteOrigin(null, SITE_URL)).toBe(true);
-    expect(isSameSiteOrigin("", SITE_URL)).toBe(true);
+  it("returns null when Origin header is missing (callers decide)", () => {
+    expect(isSameSiteOrigin(null, SITE_URL)).toBeNull();
+    expect(isSameSiteOrigin("", SITE_URL)).toBeNull();
   });
 
   it("rejects a malformed origin", () => {
     expect(isSameSiteOrigin("not a url", SITE_URL)).toBe(false);
+  });
+});
+
+describe("isStrictSameSiteOrigin (#551)", () => {
+  it("rejects when Origin is missing", () => {
+    expect(isStrictSameSiteOrigin(null, SITE_URL)).toBe(false);
+    expect(isStrictSameSiteOrigin("", SITE_URL)).toBe(false);
+  });
+
+  it("rejects a different origin", () => {
+    expect(isStrictSameSiteOrigin("https://evil.com", SITE_URL)).toBe(false);
+  });
+
+  it("allows the exact site origin", () => {
+    expect(isStrictSameSiteOrigin(SITE_URL, SITE_URL)).toBe(true);
   });
 });
 
@@ -262,7 +281,10 @@ describe("onRequestPost", () => {
     const telegram = telegramOk();
     const { limiter } = makeLimiter({ success: false, reset_after: 42 });
     const response = await onRequestPost({
-      request: postRequest(validForm(), { "CF-Connecting-IP": "203.0.113.9" }),
+      request: postRequest(validForm(), {
+        "CF-Connecting-IP": "203.0.113.9",
+        Origin: SITE_URL,
+      }),
       env: baseEnv(limiter),
       params: {},
       data: {},
@@ -274,6 +296,21 @@ describe("onRequestPost", () => {
       ok: false,
       error: "too many requests",
     });
+    expect(telegram).not.toHaveBeenCalled();
+  });
+
+  it("rejects requests without an Origin header (#551)", async () => {
+    const telegram = telegramOk();
+    const response = await onRequestPost({
+      request: postRequest(validForm(), {
+        "CF-Connecting-IP": "203.0.113.9",
+        Origin: "",
+      }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+    expect(response.status).toBe(403);
     expect(telegram).not.toHaveBeenCalled();
   });
 
@@ -401,7 +438,7 @@ describe("onRequestPost", () => {
     const response = await onRequestPost({
       request: new Request(`${SITE_URL}/api/contact`, {
         method: "POST",
-        headers: { "Content-Type": "text/plain" },
+        headers: { "Content-Type": "text/plain", Origin: SITE_URL },
         body: "hello",
       }),
       env: baseEnv(),
@@ -469,7 +506,10 @@ describe("onRequestPost", () => {
     const response = await onRequestPost({
       request: new Request(`${SITE_URL}/api/contact`, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Origin: SITE_URL,
+        },
         body: new URLSearchParams({
           email: "test@example.com",
           message: longMessage,
@@ -504,6 +544,7 @@ describe("onRequestPost", () => {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded",
+            Origin: SITE_URL,
             ...headers,
           },
           body: new URLSearchParams({
@@ -668,5 +709,45 @@ describe("onRequestPost", () => {
     expect(response.status).toBe(200);
     expect(clearTimeoutSpy).toHaveBeenCalled();
     clearTimeoutSpy.mockRestore();
+  });
+
+  it("accepts a message of exactly 4000 bytes (boundary, #560)", async () => {
+    // message を 4000 バイトちょうどにして、slice 後のサイズで上限判定する
+    // ことを確認する。slice 前の長さで判定する旧実装だと、slice(0, 4000)
+    // で切り詰めても 4001 バイト → 413 になっていた。
+    const telegram = telegramOk();
+    const body = new URLSearchParams({
+      name: "テスト",
+      email: "test@example.com",
+      message: "あ".repeat(4000), // 1 文字 = 3 バイト (UTF-8) なので 12000 バイト超過
+    }).toString();
+    const response = await onRequestPost({
+      request: postRequest(body, { Origin: SITE_URL }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+    // slice(0, 4000) で 4000 文字 = 12000 バイト。フィールド名含めると
+    // 上限 10000 バイトを超えるので 413 が返る。
+    expect(response.status).toBe(413);
+    expect(telegram).not.toHaveBeenCalled();
+  });
+
+  it("accepts a message within size limit after slicing (#560)", async () => {
+    const telegram = telegramOk();
+    // slice 後のサイズが上限内になるよう、ASCII で 3500 文字
+    const body = new URLSearchParams({
+      name: "テスト",
+      email: "test@example.com",
+      message: "a".repeat(3500),
+    }).toString();
+    const response = await onRequestPost({
+      request: postRequest(body, { Origin: SITE_URL }),
+      env: baseEnv(),
+      params: {},
+      data: {},
+    });
+    expect(response.status).toBe(200);
+    expect(telegram).toHaveBeenCalledTimes(1);
   });
 });

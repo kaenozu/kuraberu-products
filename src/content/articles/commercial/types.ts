@@ -12,10 +12,11 @@ type CommercialArticleSeed = {
   rightProduct: string;
   leftPoint: string;
   rightPoint: string;
+  publishedAt?: string;
   productInfoCheckedAt?: string;
   modifiedAt?: string;
   purchaseLinksCheckedAt?: string;
-  purchaseLinkStatus?: "verified" | "unverified";
+  purchaseLinkStatus?: "verified" | "direct" | "unverified" | "unavailable";
   officialSources?: readonly {
     label: string;
     url: `https://${string}`;

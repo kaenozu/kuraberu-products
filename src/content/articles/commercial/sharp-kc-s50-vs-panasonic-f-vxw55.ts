@@ -20,9 +20,10 @@ export const sharpKcS50VsPanasonicFVxw55Seed: CommercialArticleSeed = {
   rightProduct: "パナソニック F-VXW55",
   leftPoint: "プラズマクラスターと基本性能を確認したい人向け",
   rightPoint: "ナノイーと加湿運転の仕様を確認したい人向け",
-  productInfoCheckedAt: "2026-08-20",
-  modifiedAt: "2026-08-20",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-08-31",
+  modifiedAt: "2026-08-31",
+  purchaseLinksCheckedAt: "2026-08-31",
+  purchaseLinkStatus: "verified",
   officialSources: [
     {
       label: "シャープ KC-S50 公式仕様ページ",

@@ -22,11 +22,10 @@ interface Props {
   requiredTerms?: readonly string[];
   imageUrl?: string;
   /**
-   * 購入リンクの検証状態。fail-closed 契約: verified のときだけ CTA を表示する。
-   * 未指定（undefined）は検証状態不明として扱い、unverified 同等の
-   * 「購入先の確認中です」メッセージを出す（CTA は非表示）。
+   * 購入リンクの表示判定。href が存在すれば CTA を表示する。
+   * AffiliateButton 側で URL の妥当性を検証する。
    */
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
+  purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
 
 const {
@@ -43,12 +42,18 @@ const {
   purchaseLinkStatus,
 } = Astro.props;
 
-// fail-closed: 明示的に verified のときだけ CTA を出す。undefined は「確認中」扱い。
-const isVerified = purchaseLinkStatus === "verified";
-const amazonSearchUrl = toAmazonAssociateSearchUrl(
-  name,
-  import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG,
-);
+// unverified / unavailable の購入リンクは CTA を表示しない (#549)。
+// verified / direct のみ実際の購入ボタンを表示する。
+// カード本体 (商品画像・名前・audience) は全ステータスで表示する。
+const showCta =
+  Boolean(href) &&
+  (purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct");
+const showPending =
+  !showCta && (purchaseLinkStatus === "unverified" || !purchaseLinkStatus);
+const amazonSearchUrl =
+  showCta && purchaseLinkStatus === "verified"
+    ? toAmazonAssociateSearchUrl(name, import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG)
+    : undefined;
 const resolvedImage = resolveImage(imagePath);
 ---
 
@@ -66,7 +71,7 @@ const resolvedImage = resolveImage(imagePath);
       <p class="purchase-card__audience">{audience}</p>
     </div>
   </div>
-  {isVerified ? (
+  {showCta && href ? (
     <>
       <AffiliateButton
         href={href}
@@ -91,11 +96,11 @@ const resolvedImage = resolveImage(imagePath);
         </a>
       )}
     </>
-  ) : (
-    <p class="purchase-card__pending">
+  ) : showPending ? (
+    <p class="purchase-card__pending" data-purchase-status={purchaseLinkStatus}>
       購入リンクは現在確認中です。
     </p>
-  )}
+  ) : null}
   {note && <p class="purchase-card__note">{note}</p>}
 </article>
 

@@ -32,7 +32,7 @@ interface Props {
   /** 対応する診断カテゴリページURL。未対応カテゴリでは省略する。 */
   diagnosisHref?: string;
   /** 購入リンクの検証状態。verified を明示した場合だけ CTA を表示する。 */
-  purchaseLinkStatus: "verified" | "unverified" | "unavailable";
+  purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
 }
 
 const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
@@ -44,6 +44,11 @@ const leftAffiliate = isAffiliateRakutenUrl(leftHref);
 const rightAffiliate = isAffiliateRakutenUrl(rightHref);
 const buyRel = (affiliate: boolean) =>
   affiliate ? 'sponsored nofollow noopener noreferrer' : 'nofollow noopener noreferrer';
+// unverified / unavailable の購入リンクは CTA を表示しない (#549)。
+const showCta =
+  purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
+const leftCta = showCta ? leftHref : undefined;
+const rightCta = showCta ? rightHref : undefined;
 ---
 
 <section class="next-step" aria-label="次にすること" data-next-step>
@@ -51,12 +56,12 @@ const buyRel = (affiliate: boolean) =>
     <p class="section-label">次にすること</p>
     <h2 id="next-step">迷ったら、ここから決める</h2>
   </div>
-  {purchaseLinkStatus === 'verified' ? (
+  {(leftCta || rightCta) ? (
     <div class="next-step__grid">
-      {leftHref ? (
+      {leftCta ? (
         <a
           class="next-step__buy next-step__buy--left"
-          href={leftHref}
+          href={leftCta}
           target="_blank"
           rel={buyRel(leftAffiliate)}
           data-cta-event={ARTICLE_LAYOUT.ctaEvent}
@@ -71,10 +76,10 @@ const buyRel = (affiliate: boolean) =>
           </span>
         </a>
       ) : null}
-      {rightHref ? (
+      {rightCta ? (
         <a
           class="next-step__buy next-step__buy--right"
-          href={rightHref}
+          href={rightCta}
           target="_blank"
           rel={buyRel(rightAffiliate)}
           data-cta-event={ARTICLE_LAYOUT.ctaEvent}
@@ -91,7 +96,7 @@ const buyRel = (affiliate: boolean) =>
       ) : null}
     </div>
   ) : (
-    <p class="next-step__buy next-step__buy--missing next-step__buy--single">
+    <p class="next-step__buy next-step__buy--missing next-step__buy--single" data-purchase-status={purchaseLinkStatus}>
       販売先を確認中です
     </p>
   )}

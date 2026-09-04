@@ -43,8 +43,8 @@ export const thermosJnlS500: Product = {
   purchaseLinks: [
     {
       provider: "rakuten",
-      url: "https://a.r10.to/hPl2PS",
-      affiliate: true,
+      url: "https://item.rakuten.co.jp/rakuten24/405671/",
+      affiliate: false,
     },
   ],
   sources: [source("サーモス公式 商品ページ", THERMOS_OFFICIAL, "2026-08-12")],
@@ -73,8 +73,8 @@ export const tigerMtaJ050: Product = {
   purchaseLinks: [
     {
       provider: "rakuten",
-      url: "https://a.r10.to/hHdLbn",
-      affiliate: true,
+      url: "https://item.rakuten.co.jp/irodorich/22410151/",
+      affiliate: false,
     },
   ],
   sources: [source("タイガー公式 商品ページ", TIGER_OFFICIAL, "2026-08-12")],

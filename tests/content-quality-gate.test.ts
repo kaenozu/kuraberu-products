@@ -101,18 +101,16 @@ describe("公開記事コンテンツ品質ゲート", () => {
     }
   });
 
-  it("PurchaseCardコンポーネントがfail-closed実装であること", () => {
+  it("PurchaseCardコンポーネントが verified/direct のみ CTA を表示すること (#549)", () => {
     const componentSource = readFileSync(
       join(root, "src/components/PurchaseCard.astro"),
       "utf8",
     );
+    // H-3: showCta は verified / direct のときだけ true。
     expect(componentSource).toMatch(
-      /isVerified\s*=\s*purchaseLinkStatus\s*===\s*["']verified["']/,
+      /purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
     );
-    // 旧fail-open実装（undefined を verified 扱いにする OR 節）の再混入を禁止
-    expect(componentSource).not.toMatch(
-      /purchaseLinkStatus\s*!==?\s*["'](?:unverified|unavailable)["']\s*&&/,
-    );
-    expect(componentSource).not.toMatch(/===\s*["']verified["']\s*\|\|/);
+    // unverified / unavailable 時は pending 表示。
+    expect(componentSource).toContain("purchase-card__pending");
   });
 });

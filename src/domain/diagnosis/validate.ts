@@ -65,23 +65,19 @@ function assert(condition: boolean, message: string): asserts condition {
   if (!condition) throw new TypeError(message);
 }
 
-// src/lib/rakuten.ts の isAllowedRakutenUrl 相当。domain 層から lib を
-// import すると循環するため、同等の最小チェックをここに置く。
-function isAllowedRakutenHost(url: string): boolean {
-  try {
-    const parsed = new URL(url);
-    if (parsed.protocol !== "https:") return false;
-    const hostname = parsed.hostname.toLowerCase();
-    return (
-      hostname === "rakuten.co.jp" ||
-      hostname.endsWith(".rakuten.co.jp") ||
-      hostname === "r10.to" ||
-      hostname.endsWith(".r10.to")
-    );
-  } catch {
-    return false;
-  }
-}
+// 楽天 / Amazon 許可ホストの検証は `config/runtime-env.mjs` の
+// `isAllowedRakutenUrl` / `isAllowedAmazonUrl` を正準実装として使う。
+// domain 層から lib を import すると循環するため、config 層を経由する。
+// ホスト集合を二重管理すると drift するため、build-time テストで両者が一致
+// することを担保する (#554, #558)。
+import {
+  isAllowedRakutenUrl as isAllowedRakutenUrlFromConfig,
+  isAllowedAmazonUrl as isAllowedAmazonUrlFromConfig,
+} from "../../../config/runtime-env.mjs";
+const isAllowedRakutenHost = (url: string): boolean =>
+  isAllowedRakutenUrlFromConfig(url);
+const isAllowedAmazonHost = (url: string): boolean =>
+  isAllowedAmazonUrlFromConfig(url);
 
 /**
  * 診断データの整合性を検証する。問題があれば throw する。
@@ -123,6 +119,12 @@ export function validateDiagnosisData(
           isAllowedRakutenHost(link.url),
           `product[${product.id}]: 楽天購入リンクが許可されたホストではありません（${link.url}）`,
         );
+      } else if (link.provider === "amazon") {
+        // Amazon購入リンクも許可ホストのみ (#558)
+        assert(
+          isAllowedAmazonHost(link.url),
+          `product[${product.id}]: Amazon購入リンクが許可されたホストではありません（${link.url}）`,
+        );
       }
     }
   }
@@ -157,6 +159,15 @@ export function validateDiagnosisData(
         `diagnosis[${config.id}]: 質問「${question.id}」の選択肢IDが重複しています（${option.id}）`,
       );
       optionIds.add(option.id);
+    }
+    // weight の範囲検証（未指定は既定値1として扱い、検証をスキップ）
+    if (question.weight !== undefined) {
+      assert(
+        Number.isInteger(question.weight) &&
+          question.weight >= 1 &&
+          question.weight <= 10,
+        `diagnosis[${config.id}]: 質問「${question.id}」の weight は1〜10の正の整数である必要があります（${question.weight}）`,
+      );
     }
   }
 

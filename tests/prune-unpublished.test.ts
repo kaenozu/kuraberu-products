@@ -97,7 +97,7 @@ describe("prune unpublished articles", () => {
     const directory = fixtureDist();
     writeArticle(directory, "draft-a");
 
-    expect(() => collectUnpublishedArticleDirectories(directory)).toThrowError(
+    expect(() => collectUnpublishedArticleDirectories(directory)).toThrow(
       /fail-closed/,
     );
     expect(() =>

@@ -20,8 +20,9 @@ export const recolteAutomaticCookerVsPanasonicNfPc400Seed: CommercialArticleSeed
     leftPoint: "少量調理と置き場所を優先する人向け",
     rightPoint: "家族分の調理容量と多機能さを確認したい人向け",
     productInfoCheckedAt: "2026-08-25",
-    modifiedAt: "2026-08-25",
-    purchaseLinkStatus: "unverified",
+    modifiedAt: "2026-09-01",
+    purchaseLinksCheckedAt: "2026-09-01",
+    purchaseLinkStatus: "direct",
     officialSources: [
       {
         label: "récolte 自動調理ポット 公式商品ページ",

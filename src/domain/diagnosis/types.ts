@@ -79,6 +79,15 @@ export type DiagnosisOption = {
   rules: DiagnosisRule[];
 };
 
+/**
+ * 質問の種別 (#561):
+ * - "single"  : 単一選択（現状の全ての question で使用中）
+ * - "boolean" : 質問 config で option.id を "true" / "false" として定義する単一選択
+ * - "multi"   : 複数選択（現状未使用、型で先行宣言）
+ * - "number"  : 数値回答（現状未使用、#561 で未実装として確認。
+ *               将来 `selectedOptionIds` が number を文字列化する拡張を行うまで
+ *               動作しない）
+ */
 export type QuestionType = "single" | "multi" | "boolean" | "number";
 
 /** 診断質問 */
@@ -89,6 +98,14 @@ export type DiagnosisQuestion = {
   description?: string;
   required: boolean;
   options?: DiagnosisOption[];
+  /**
+   * 質問の重要度スコア（既定: 1）。
+   * 回答された質問の全 ScoreRule にこの値を乗算する。
+   * 例: weight=2 の質問で +3 のルールが適用されると、実際の加点は +6 になる。
+   * 除外ルール（exclude）には適用されない。
+   * 範囲: 1〜10 の正の整数。validate.ts がビルド時に検証する。
+   */
+  weight?: number;
 };
 
 /** 同点時のタイブレーク規則 */

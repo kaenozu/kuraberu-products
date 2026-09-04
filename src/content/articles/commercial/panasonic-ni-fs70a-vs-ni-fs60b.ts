@@ -21,8 +21,9 @@ export const panasonicNiFs70aVsNiFs60bSeed: CommercialArticleSeed = {
   leftPoint: "立ち上がり約17秒、130mL、連続8分のスチームを重視する人向け",
   rightPoint: "約690gで基本機能を使いたい人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-03",
+  purchaseLinksCheckedAt: "2026-09-03",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（NI-FS70A）",

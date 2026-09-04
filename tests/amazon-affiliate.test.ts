@@ -92,7 +92,7 @@ describe("Amazon Associates integration", () => {
     expect(html).toContain("（広告）");
   });
 
-  it("does not render an Amazon CTA for an unverified card even when configured", async () => {
+  it("suppresses the Amazon CTA when purchaseLinkStatus is unverified (#549)", async () => {
     vi.stubEnv("PUBLIC_AMAZON_ASSOCIATE_TAG", "example-22");
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
@@ -105,8 +105,10 @@ describe("Amazon Associates integration", () => {
       },
     });
 
+    // H-3 (#549) で unverified / unavailable 時は CTA を一切表示しない
+    // (楽天・アマゾン両方とも抑制) ため、Amazon CTA もレンダリングされない。
     expect(html).not.toContain("Amazonで商品を確認");
-    expect(html).toContain("購入リンクは現在確認中です。");
+    expect(html).not.toContain("data-amazon-cta=");
   });
 
   it("tracks Amazon without changing the strict core CTA count contract", () => {

@@ -110,14 +110,14 @@ describe("PurchaseCard", () => {
     expect(html).toContain('data-placement="article-end"');
   });
 
-  // fail-closed 契約: 未指定（undefined）/ unverified / unavailable では
-  // アフィリエイトCTAを出さず、「購入先の確認中です」メッセージを表示する。
+  // H-3 (#549): verified / direct のみ CTA を表示。unverified と status 省略時は
+  // pending 文言を出し、unavailable はカード本体だけを表示する。
   it.each([
     ["omitted", undefined],
     ["unverified", "unverified"],
     ["unavailable", "unavailable"],
   ] as const)(
-    "hides CTAs and shows the pending message when the status is %s",
+    "suppresses the purchase CTA when the status is %s and href exists (#549)",
     async (_label, purchaseLinkStatus) => {
       const container = await AstroContainer.create();
       const html = await container.renderToString(PurchaseCard, {
@@ -130,13 +130,33 @@ describe("PurchaseCard", () => {
         },
       });
 
-      expect(html).not.toContain("楽天市場で確認する");
-      expect(html).not.toContain("Amazonで商品を確認");
-      expect(html).not.toContain("data-cta-event");
-      expect(html).toContain("購入リンクは現在確認中です。");
-      // カード本体（名前・対象読者）は表示を維持する
+      // CTA (楽天市場で確認 / 商品ページを見る / 検索) は出ない。
+      expect(html).not.toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      if (purchaseLinkStatus === "unavailable") {
+        expect(html).not.toContain("purchase-card__pending");
+      } else {
+        expect(html).toContain("purchase-card__pending");
+      }
+      // カード本体 (商品名 / audience) は引き続き出る。
       expect(html).toContain("サーモス JNL-S500");
       expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
     },
   );
+
+  it("shows the verified CTA only when purchaseLinkStatus is verified or direct (#549)", async () => {
+    for (const status of ["verified", "direct"] as const) {
+      const container = await AstroContainer.create();
+      const html = await container.renderToString(PurchaseCard, {
+        props: {
+          name: "サーモス JNL-S500",
+          audience: "軽さ・コンパクト・食洗機対応を優先する人向け",
+          href: validRakutenUrl,
+          productId: "thermos-jnl-s500",
+          purchaseLinkStatus: status,
+        },
+      });
+      expect(html).toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      expect(html).not.toContain("purchase-card__pending");
+    }
+  });
 });

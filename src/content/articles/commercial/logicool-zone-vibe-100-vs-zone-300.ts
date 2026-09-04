@@ -21,8 +21,9 @@ export const logicoolZoneVibe100VsZone300Seed: CommercialArticleSeed = {
   leftPoint: "公式仕様とサイズを確認して選びたい人向け",
   rightPoint: "公式仕様と用途を確認して選びたい人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-01",
+  purchaseLinkStatus: "direct",
+  purchaseLinksCheckedAt: "2026-09-01",
   officialSources: [
     {
       label: "Logicool Zone Vibe 100 Wireless 公式商品ページ",

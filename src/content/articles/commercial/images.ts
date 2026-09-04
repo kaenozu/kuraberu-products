@@ -186,6 +186,18 @@ const commercialArticleImages: Readonly<
     left: "/products/sony-wh-1000xm6-vs-wh-1000xm5-left.jpg",
     right: "/products/sony-wh-1000xm6-vs-wh-1000xm5-right.jpg",
   },
+  "panasonic-ne-bs6e-vs-ne-bs5e": {
+    left: "/products/panasonic-ne-bs6e.png",
+    right: "/products/panasonic-ne-bs5e.png",
+  },
+  "panasonic-es-pv6a-vs-es-pv3a": {
+    left: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv6a.jpg",
+    right: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv3a.jpg",
+  },
+  "yamazaki-refrigerator-rack-240057-vs-240059": {
+    left: "/products/yamazaki-refrigerator-rack-240057.jpg",
+    right: "/products/yamazaki-refrigerator-rack-240059.jpg",
+  },
 };
 
 export { commercialArticleImages };

@@ -34,6 +34,7 @@ if (-not $OutputRoot) {
 # state with 'Stub' so the param binding cannot clobber it.
 $script:StubArticleFetches = 0
 $StubBaseUrl = 'https://example.test'
+$StubLatestArticlePath = '/articles/pampers-newborn/'
 
 function New-HtmlPage {
     param([string]$Path, [string]$Sha)
@@ -45,6 +46,10 @@ function New-HtmlPage {
 <script type="application/ld+json">{"@type":"Article","headline":"Stub article","url":"$canonical","datePublished":"2026-08-01T00:00:00Z","dateModified":"2026-08-02T00:00:00Z"}</script>
 "@
     }
+    $topLatest = ''
+    if ($Path -eq '/') {
+        $topLatest = "<section data-top-latest><a href=`"$StubLatestArticlePath`">latest</a></section>"
+    }
     @"
 <!doctype html>
 <html>
@@ -55,6 +60,7 @@ function New-HtmlPage {
 $jsonLd
 </head>
 <body>
+$topLatest
 <a href="https://hb.afl.rakuten.co.jp/hgc/sample">buy</a>
 <a href="https://example.test/other">other</a>
 </body>
@@ -116,6 +122,12 @@ if (-not (Test-Path $scriptUnderTest)) {
 if (Test-Path $OutputRoot) {
     Remove-Item $OutputRoot -Recurse -Force
 }
+New-Item -ItemType Directory -Path $OutputRoot -Force | Out-Null
+$expectedTopPageFixture = Join-Path $OutputRoot 'exact-top.html'
+@"
+<!doctype html>
+<html><body><section data-top-latest><a href="$StubLatestArticlePath">latest</a></section></body></html>
+"@ | Set-Content -LiteralPath $expectedTopPageFixture -Encoding utf8
 
 # Dot-source the real verification script. In some invocation modes
 # (pwsh -File) `exit 1` inside a dot-sourced script does NOT become the
@@ -123,6 +135,7 @@ if (Test-Path $OutputRoot) {
 . $scriptUnderTest `
     -BaseUrl $StubBaseUrl `
     -ExpectedCommitSha $ExpectedCommitSha `
+    -ExpectedTopPageSourcePath $expectedTopPageFixture `
     -OutputRoot $OutputRoot `
     -MaxAttempts 4 `
     -RetryDelaySeconds 0

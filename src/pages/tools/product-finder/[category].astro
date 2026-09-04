@@ -160,6 +160,11 @@ const clientData = {
     buildResultCardData,
     type ResultCardData,
   } from '../../../lib/diagnosis-ui';
+  import {
+    addProductArticlesToMemo,
+    isProductInMemo,
+    removeProductArticlesFromMemo,
+  } from '../../../lib/diagnosis-comparison-memo';
 
   interface ClientDiagnosisData {
     diagnosis: DiagnosisConfig;
@@ -250,6 +255,13 @@ const clientData = {
         }
       }
 
+      // 比較メモ用の記事ID一覧（knownIds）
+      const knownArticleIds = data.products.flatMap((p) =>
+        p.articleUrls
+          .map((url) => url.match(/^\/articles\/([^/]+)\/?$/)?.[1])
+          .filter((id): id is string => id !== undefined),
+      );
+
       const startSection = root.querySelector('[data-diagnosis-start]') as HTMLElement;
       const questionSection = root.querySelector('[data-diagnosis-question]') as HTMLElement;
       const resultSection = root.querySelector('[data-diagnosis-result]') as HTMLElement;
@@ -282,6 +294,7 @@ const clientData = {
       function buildResultCard(cardData: ResultCardData, index: number): HTMLElement {
         const card = document.createElement('article');
         card.className = cardData.cardClass;
+        card.dataset.productId = cardData.product.id;
 
         const rank = document.createElement('p');
         rank.className = 'diagnosis-card__rank';
@@ -324,6 +337,17 @@ const clientData = {
           caseBody.textContent = cardData.caseText;
           card.append(caseLabel, caseBody);
         }
+
+        // 比較メモに追加ボタン
+        const memoButton = document.createElement('button');
+        memoButton.type = 'button';
+        memoButton.className = 'text-button diagnosis-card__memo-button';
+        memoButton.dataset.diagnosisMemoToggle = '';
+        memoButton.dataset.productId = cardData.product.id;
+        const isInMemo = isProductInMemo(cardData.product, knownArticleIds);
+        memoButton.textContent = isInMemo ? '比較メモから外す' : '比較メモに追加';
+        memoButton.setAttribute('aria-pressed', String(isInMemo));
+        card.append(memoButton);
 
         const linksContainer = document.createElement('div');
         linksContainer.className = 'diagnosis-card__links';
@@ -373,8 +397,7 @@ const clientData = {
         if (top) {
           const product = data.products.find((p) => p.id === top.productId);
           topHeading.textContent = data.diagnosis.resultConfig.topHeadingTemplate.replace(
-            '{productName}',
-            product?.name ?? '',
+            '{productName}', product?.name ?? '',
           );
         }
         const disclaimer = root.querySelector('[data-diagnosis-disclaimer]') as HTMLElement;
@@ -418,6 +441,43 @@ const clientData = {
         }
         trackDiagnosisEvent('diagnosis_complete');
       }
+
+      // 比較メモトグルボタンのクリックハンドラ
+      root.addEventListener('click', (event) => {
+        const target = event.target as Element | null;
+        const memoToggleBtn = target?.closest('[data-diagnosis-memo-toggle]') as HTMLButtonElement | null;
+        if (!memoToggleBtn) return;
+
+        const productId = memoToggleBtn.dataset.productId;
+        if (!productId) return;
+
+        const product = data.products.find((p) => p.id === productId);
+        if (!product) return;
+
+        const isInMemo = isProductInMemo(product, knownArticleIds);
+
+        if (isInMemo) {
+          // 比較メモから削除
+          const { removed } = removeProductArticlesFromMemo(product, knownArticleIds);
+          if (removed.length > 0) {
+            memoToggleBtn.textContent = '比較メモに追加';
+            memoToggleBtn.setAttribute('aria-pressed', 'false');
+          }
+        } else {
+          // 比較メモに追加
+          const { added, atLimit } = addProductArticlesToMemo(product, knownArticleIds);
+          if (added.length > 0) {
+            memoToggleBtn.textContent = '比較メモから外す';
+            memoToggleBtn.setAttribute('aria-pressed', 'true');
+          } else if (atLimit) {
+            // 上限に達した場合のフィードバック
+            memoToggleBtn.textContent = '比較メモが満杯です';
+            setTimeout(() => {
+              memoToggleBtn.textContent = '比較メモに追加';
+            }, 2000);
+          }
+        }
+      });
 
       root.querySelector('[data-diagnosis-begin]')?.addEventListener('click', () => {
         currentIndex = 0;

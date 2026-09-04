@@ -227,7 +227,15 @@ if (props.articleId) {
       keyDiffRows: specsRows,
       lead: seed?.lead ?? article.summary,
       summaryParagraph: undefined,
-      officialDescription: seed?.officialProse?.map((s) => `${s.heading}：${s.items.join('。')}`).join('\n') ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
+      officialDescription:
+        seed?.officialProse
+          ?.map((s) => {
+            const items = s.items.map((item) =>
+              /[。！？]$/.test(item) ? item : `${item}。`,
+            );
+            return `${s.heading}：${items.join('')}`;
+          })
+          .join('\n') ?? `比較の根拠は、各メーカー公式の商品ページで確認した情報です。`,
       officialLinks,
       specRows: props.specRows,
       socialProofQuery: seed?.socialProofQuery ?? `${leftSide.brand} ${leftSide.line} ${rightSide.line}`,
@@ -380,7 +388,7 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <h2>購入時の注意</h2>
     <p>{purchaseWarning}</p>
     <div class="purchase-cards">
-      {articleMetadata.purchaseLinkStatus === 'verified' ? (
+      {(left.purchaseHref || right.purchaseHref) ? (
         <>
           <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />
           <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />

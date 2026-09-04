@@ -4,6 +4,7 @@ import {
   isRakutenProductDetailUrl,
   toAffiliateRakutenUrl,
 } from "../../config/runtime-env.mjs";
+import { hashKeywordSync, recordPerfEntry } from "./rakuten-perf";
 
 export type RakutenProduct = {
   id: string;
@@ -257,32 +258,73 @@ export async function requestRakutenProducts(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
+  // パフォーマンス計測: 開始時刻とキーワードハッシュを取得
+  const startTime = performance.now();
+  const keyword = url.searchParams.get("keyword") ?? "";
+  const keywordHash = hashKeywordSync(keyword);
+
   let response: Response;
   try {
     response = await fetchImpl(url, {
       headers: { accessKey },
       signal: controller.signal,
     });
-  } catch {
+  } catch (error) {
+    const durationMs = Math.round(performance.now() - startTime);
     console.warn(
       "楽天API接続失敗またはタイムアウト: 購入リンクを未設定として続行します",
     );
+    recordPerfEntry({
+      keywordHash,
+      durationMs,
+      httpStatus: 0,
+      productCount: 0,
+      cacheHit: false,
+      error: error instanceof Error ? error.message : "connection failed",
+    });
     return [];
   } finally {
     clearTimeout(timeout);
   }
 
   if (!response.ok) {
+    const durationMs = Math.round(performance.now() - startTime);
     console.warn(`楽天APIエラー: HTTP ${response.status}`);
+    recordPerfEntry({
+      keywordHash,
+      durationMs,
+      httpStatus: response.status,
+      productCount: 0,
+      cacheHit: false,
+      error: `HTTP ${response.status}`,
+    });
     return [];
   }
 
   try {
-    return parseRakutenProducts(await response.json());
+    const products = parseRakutenProducts(await response.json());
+    const durationMs = Math.round(performance.now() - startTime);
+    recordPerfEntry({
+      keywordHash,
+      durationMs,
+      httpStatus: 200,
+      productCount: products.length,
+      cacheHit: false,
+    });
+    return products;
   } catch {
+    const durationMs = Math.round(performance.now() - startTime);
     console.warn(
       "楽天APIレスポンス解析失敗: 購入リンクを未設定として続行します",
     );
+    recordPerfEntry({
+      keywordHash,
+      durationMs,
+      httpStatus: 200,
+      productCount: 0,
+      cacheHit: false,
+      error: "parse error",
+    });
     return [];
   }
 }
@@ -297,7 +339,17 @@ export async function fetchRakutenProducts(
   const clock = options.clock ?? Date.now;
   const cached = cache.get(cacheKey);
   if (cached) {
-    if (clock() < cached.expiresAt) return cached.promise;
+    if (clock() < cached.expiresAt) {
+      // キャッシュヒット: パフォーマンスログを記録
+      recordPerfEntry({
+        keywordHash: hashKeywordSync(keyword),
+        durationMs: 0,
+        httpStatus: 200,
+        productCount: 0,
+        cacheHit: true,
+      });
+      return cached.promise;
+    }
     cache.delete(cacheKey);
   }
   const request = fetchRakutenProductsUncached(keyword, hits, options);
@@ -376,13 +428,20 @@ export async function resolvePurchaseHref(
   // Search URLs are never purchase destinations. A missing/ambiguous detail
   // page remains unset rather than becoming a misleading affiliate CTA.
   const rawHref = selected?.url;
-  const href =
+  const resolvedHref =
     rawHref && isRakutenProductDetailUrl(rawHref)
       ? (toAffiliateRakutenUrl(
           selected?.affiliateUrl ?? rawHref,
           import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
         ) ?? rawHref)
       : "";
+  const fallbackHref = options.fallbackUrl
+    ? (toAffiliateRakutenUrl(
+        options.fallbackUrl,
+        import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
+      ) ?? options.fallbackUrl)
+    : "";
+  const href = resolvedHref || fallbackHref;
   const isAffiliate = isAffiliateRakutenUrl(href);
 
   return { href, isAffiliate, product: selected };

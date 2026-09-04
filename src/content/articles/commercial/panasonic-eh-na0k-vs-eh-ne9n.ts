@@ -20,9 +20,10 @@ export const panasonicEhNa0kVsEhNe9nSeed: CommercialArticleSeed = {
   rightProduct: "パナソニック EH-NE9N",
   leftPoint: "最大風量1.6m³/分と4つの多彩なモードを重視する人向け",
   rightPoint: "風温4段階・風量3段階と温風リズムヘッドスパを重視する人向け",
-  productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-09-02",
+  modifiedAt: "2026-09-02",
+  purchaseLinksCheckedAt: "2026-09-02",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（EH-NA0K）",
