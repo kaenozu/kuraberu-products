@@ -226,6 +226,14 @@ export const articlePurchaseLinks = {
     purchaseUrl:
       "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm650mgr%2F&link_type=picttext",
   },
+  "logicool-mx-master-3s-vs-mx-anywhere-3s:left": {
+    name: "Logicool MX Master 3S Bluetooth Edition",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/mx2300cr/",
+  },
+  "logicool-mx-master-3s-vs-mx-anywhere-3s:right": {
+    name: "Logicool MX Anywhere 3S",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/mx1800gr/",
+  },
   "logicool-k650-vs-k580:left": {
     name: "Logicool K650 Signature Wireless Keyboard",
     purchaseUrl:
