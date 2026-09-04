@@ -32,6 +32,7 @@
     "check:external-link-reachability": "node scripts/check-external-link-reachability.mjs",
     "check:source-relevancy": "node scripts/check-source-relevancy.mjs check",
     "announce:draft": "node scripts/generate-x-announcements.mjs",
+    "article:add": "node scripts/article-add.mjs",
     "resize:images": "node scripts/resize-source-images.mjs",
     "verify": "pnpm build && pnpm verify:lint && pnpm verify:build",
     "verify:lint": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run --coverage",
