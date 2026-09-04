@@ -23,6 +23,21 @@
     }).catch(function () {});
   }
 
+  function linkType(cta) {
+    var href = cta.getAttribute("href") || "";
+    try {
+      var host = new URL(href, location.href).hostname;
+      if (host === "item.rakuten.co.jp") return "direct-rakuten";
+      if (host === "a.r10.to" || host === "hb.afl.rakuten.co.jp") {
+        return "affiliate-rakuten";
+      }
+      if (host === "amazon.co.jp" || host === "www.amazon.co.jp") {
+        return "affiliate-amazon";
+      }
+    } catch {}
+    return href ? "external" : "unknown";
+  }
+
   document.addEventListener("click", function (event) {
     var target = event.target;
     if (!(target instanceof Element)) return;
@@ -34,6 +49,7 @@
       event: eventName,
       productId: cta.dataset.productId || "",
       placement: cta.dataset.placement || "",
+      linkType: linkType(cta),
       path: location.pathname,
     };
     // 診断結果カードの順位（rank）は任意属性として送信する（無ければ送らない）

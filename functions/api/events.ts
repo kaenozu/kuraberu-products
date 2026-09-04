@@ -2,7 +2,7 @@
 // POST /api/events — 購入CTAクリックを同一オリジンから受け取り、任意で KV に保存する。
 //
 // プライバシー設計:
-// - 保存するのはイベント種別・商品ID・配置（placement）・ページパスのみ
+// - 保存するのはイベント種別・商品ID・配置・リンク種別（direct/affiliate等）・ページパスのみ
 // - Cookie・フィンガープリント・IP は収集・保存しない（IP はレート制限の判定に一時使用するだけ）
 // - 第三者ドメインへの送信は一切行わない（すべて同一オリジン）
 // - KV 未設定・障害時はイベントを破棄して 204 を返し続ける（計測はサイト体験の可用性より劣後）
@@ -22,6 +22,7 @@ interface AnalyticsEvent {
   event?: string;
   productId?: string;
   placement?: string;
+  linkType?: string;
   path?: string;
   rank?: string;
 }
@@ -106,6 +107,19 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return json({ ok: false, error: "invalid product id" }, 400);
   }
 
+  // CTAの遷移先を集計できるよう、リンク種別は固定値だけ受け付ける。
+  const linkType = typeof body.linkType === "string" ? body.linkType : "";
+  const allowedLinkTypes = [
+    "direct-rakuten",
+    "affiliate-rakuten",
+    "affiliate-amazon",
+    "external",
+    "unknown",
+  ];
+  if (linkType && !allowedLinkTypes.includes(linkType)) {
+    return json({ ok: false, error: "invalid link type" }, 400);
+  }
+
   // 診断結果の順位（rank）は任意。無ければ保存しない。
   const rank =
     typeof body.rank === "string" && /^[1-9]\d{0,2}$/.test(body.rank)
@@ -126,6 +140,7 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       event,
       ...(productId ? { productId } : {}),
       ...(placement ? { placement } : {}),
+      ...(linkType ? { linkType } : {}),
       ...(rank ? { rank } : {}),
       ...(path ? { path } : {}),
       at: new Date().toISOString(),
