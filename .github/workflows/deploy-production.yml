@@ -1,6 +1,9 @@
 name: Deploy production
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
     inputs:
       expected_sha:
@@ -11,9 +14,6 @@ on:
         description: Type DEPLOY
         required: true
         type: string
-  push:
-    branches:
-      - main
 
 permissions:
   contents: read
