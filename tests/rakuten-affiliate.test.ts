@@ -79,4 +79,30 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
       }
     }
   });
+
+  it("rejects search-result destinations even when wrapped by Rakuten affiliate URLs (#436)", async () => {
+    const { articlePurchaseLinks } = await import("../src/lib/products");
+
+    for (const [key, entry] of Object.entries(articlePurchaseLinks)) {
+      const url = new URL(entry.purchaseUrl);
+      const destination =
+        url.hostname === "hb.afl.rakuten.co.jp"
+          ? url.searchParams.get("pc")
+          : entry.purchaseUrl;
+
+      expect(destination, key).toBeTruthy();
+      expect(destination, key).not.toMatch(
+        /^https?:\/\/search\.rakuten\.co\.jp\//,
+      );
+      if (url.hostname === "hb.afl.rakuten.co.jp") {
+        expect(destination, key).toMatch(
+          /^https:\/\/item\.rakuten\.co\.jp\/[^/]+\/[^/?#]+\/?(?:[?#].*)?$/,
+        );
+      } else {
+        expect(url.hostname, key).toMatch(
+          /^(?:item\.rakuten\.co\.jp|a\.r10\.to)$/,
+        );
+      }
+    }
+  });
 });
