@@ -233,9 +233,7 @@ export function collectArticleClaims(articleId) {
       try {
         const articleText = readFileSync(articleFile, "utf8");
         claims = claims.concat(extractSpecClaims(articleText));
-        officialUrls = officialUrls.concat(
-          extractOfficialUrls(articleText),
-        );
+        officialUrls = officialUrls.concat(extractOfficialUrls(articleText));
       } catch {
         // No article metadata file (e.g., commercial-only slug).
       }

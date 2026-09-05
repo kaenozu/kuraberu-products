@@ -56,8 +56,16 @@ export const panasonicHairDryerArticle = defineArticleMetadata({
       highlight: "left",
       highlightNote: "Wミネラル",
     },
-    { label: "低温ケアモード", left: "公式ページで案内あり", right: "公式ページで案内あり" },
-    { label: "大風量・速乾", left: "公式ページで案内あり", right: "公式ページで案内あり" },
+    {
+      label: "低温ケアモード",
+      left: "公式ページで案内あり",
+      right: "公式ページで案内あり",
+    },
+    {
+      label: "大風量・速乾",
+      left: "公式ページで案内あり",
+      right: "公式ページで案内あり",
+    },
     { label: "価格", left: "オープン価格", right: "オープン価格" },
   ],
   lead: "パナソニックのイオニティ EH-NE7MとEH-NE5Mを、公式ページで確認できるミネラル機能、マイナスイオン、低温ケアモード、大風量・速乾の案内に分けて比較します。",
@@ -67,8 +75,14 @@ export const panasonicHairDryerArticle = defineArticleMetadata({
     "パナソニック公式ページでは、EH-NE7MにWミネラル＆マイナスイオン、低温ケアモード、大風量速乾が案内されています。EH-NE5Mにもマイナスイオン、低温ケアモード、大風量・速乾の案内があります。",
   socialProofQuery: "パナソニック EH-NE7M EH-NE5M ドライヤー",
   officialSources: [
-    { label: "パナソニック EH-NE7M 公式商品ページ", url: "https://panasonic.jp/hair/products/EH-NE7M-W.html" },
-    { label: "パナソニック EH-NE5M 公式商品ページ", url: "https://panasonic.jp/hair/products/EH-NE5M-W.html" },
+    {
+      label: "パナソニック EH-NE7M 公式商品ページ",
+      url: "https://panasonic.jp/hair/products/EH-NE7M-W.html",
+    },
+    {
+      label: "パナソニック EH-NE5M 公式商品ページ",
+      url: "https://panasonic.jp/hair/products/EH-NE5M-W.html",
+    },
   ],
   faqEntries: [
     {

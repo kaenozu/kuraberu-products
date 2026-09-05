@@ -62,14 +62,36 @@
 ```ts
 // src/content/articles/<slug>.ts
 export const fooBarArticle = defineArticleMetadata({
-  id: "<slug>", productCount: 2, path: "/articles/<slug>/", /* title, headline, ... */
-  leftModel:  { brand, line, tagline, image, imageAlt, officialHref, guidePoints },
-  rightModel: { brand, line, tagline, image, imageAlt, officialHref, guidePoints },
-  keyDiffRows: [ /* 比較行 */ ],
-  lead: "...", summaryParagraph: "..." /* optional */,
+  id: "<slug>",
+  productCount: 2,
+  path: "/articles/<slug>/" /* title, headline, ... */,
+  leftModel: {
+    brand,
+    line,
+    tagline,
+    image,
+    imageAlt,
+    officialHref,
+    guidePoints,
+  },
+  rightModel: {
+    brand,
+    line,
+    tagline,
+    image,
+    imageAlt,
+    officialHref,
+    guidePoints,
+  },
+  keyDiffRows: [/* 比較行 */],
+  lead: "...",
+  summaryParagraph: "..." /* optional */,
   officialDescription: "..." /* optional, articleId ルートで優先表示 */,
-  officialSources: [ /* {label, url} 情報源一覧。checkedAt は productInfoCheckedAt から自動付与 */ ],
-  socialProofQuery: "...", faqEntries: [ /* ... */ ],
+  officialSources: [
+    /* {label, url} 情報源一覧。checkedAt は productInfoCheckedAt から自動付与 */
+  ],
+  socialProofQuery: "...",
+  faqEntries: [/* ... */],
   purchaseWarning: "..." /* optional, article.purchaseWarning ?? default */,
   disclaimer: "..." /* optional, article.disclaimer ?? default */,
 });
