@@ -143,7 +143,7 @@ export function buildMissingReportBody({
   runId,
   expectedSha,
   siteUrl,
-  diagnosticsSection,
+  diagnosticsSection = null,
 }) {
   return [
     "## ⚠️ Evidence issue (auto-generated — no report.json found)",
