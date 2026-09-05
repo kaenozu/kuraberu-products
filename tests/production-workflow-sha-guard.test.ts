@@ -402,6 +402,14 @@ describe("production deploy SHA guard", () => {
       expect(env.DEPLOY_CONFIRM).toBe("${{ inputs.confirm || 'DEPLOY' }}");
     });
 
+    it("routes the AUTO_CLOSE_PASS variable through the job environment", () => {
+      // The evidence-issue script reads the opt-in auto-close policy flag via
+      // the job-level env mapping (never interpolated into run: scripts),
+      // with default off when the variable is unset.
+      const env = workflow.jobs.deploy.env as Record<string, string>;
+      expect(env.AUTO_CLOSE_PASS).toBe("${{ vars.AUTO_CLOSE_PASS }}");
+    });
+
     it("pins upload-artifact to a single version across workflows", () => {
       const pins = stepList
         .filter(

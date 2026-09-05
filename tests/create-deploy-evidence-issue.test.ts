@@ -3,9 +3,12 @@ import {
   CHECK_RUN_NAME,
   ISSUE_TITLE_PREFIX,
   buildAttemptsLine,
+  buildAutoCloseComment,
   buildIssueBody,
   buildReportChecklist,
   buildStepLogExcerpt,
+  isAutoCloseEnabled,
+  isFullyPassed,
 } from "../scripts/create-deploy-evidence-issue.mjs";
 import {
   buildFailedStepsSection,
@@ -350,5 +353,131 @@ describe("NO REPORT run self-diagnostics (issue #611/#612/#613 class)", () => {
 
   it("renders nothing without diagnostics input", () => {
     expect(buildFailedStepsSection(null)).toBeNull();
+  });
+});
+
+describe("isFullyPassed (auto-close gate)", () => {
+  it("is true for a fully-passed verification", () => {
+    expect(isFullyPassed(REPORT)).toBe(true);
+  });
+
+  it("is false for BLOCKER", () => {
+    expect(isFullyPassed({ ...REPORT, result: "BLOCKER" })).toBe(false);
+  });
+
+  it("is false when any check fails", () => {
+    const report = {
+      ...REPORT,
+      checks: [
+        { name: "HTTP /", status: "PASS" },
+        { name: "x", status: "FAIL" },
+      ],
+    };
+    expect(isFullyPassed(report)).toBe(false);
+  });
+
+  it("is false with no checks at all", () => {
+    expect(isFullyPassed({ ...REPORT, checks: [] })).toBe(false);
+    expect(isFullyPassed({ result: "PASS" })).toBe(false);
+  });
+
+  it("is false for null/undefined input", () => {
+    expect(isFullyPassed(null)).toBe(false);
+    expect(isFullyPassed(undefined)).toBe(false);
+  });
+});
+
+describe("isAutoCloseEnabled (flag parsing)", () => {
+  it("accepts only the string true (case/whitespace insensitive)", () => {
+    expect(isAutoCloseEnabled("true")).toBe(true);
+    expect(isAutoCloseEnabled("TRUE")).toBe(true);
+    expect(isAutoCloseEnabled(" true ")).toBe(true);
+  });
+
+  it("treats unset, empty, and any other value as disabled (default off)", () => {
+    expect(isAutoCloseEnabled(undefined)).toBe(false);
+    expect(isAutoCloseEnabled("")).toBe(false);
+    expect(isAutoCloseEnabled("false")).toBe(false);
+    expect(isAutoCloseEnabled("1")).toBe(false);
+    expect(isAutoCloseEnabled("yes")).toBe(false);
+  });
+});
+
+describe("AUTO_CLOSE_PASS policy (opt-in auto-close of fully-passed issues)", () => {
+  const AUTO_CLOSED_BODY_ARGS = {
+    report: REPORT,
+    checkRun: CHECK_RUN,
+    runId: "32090894278",
+    expectedSha: EXPECTED_SHA,
+    deployedAt: "2026-08-18T02:10:00Z",
+    siteUrl: "https://kuraberu-products.pages.dev",
+  } as const;
+
+  it("keeps the manual sign-off instruction by default (flag off)", () => {
+    const body = buildIssueBody(AUTO_CLOSED_BODY_ARGS);
+    expect(body).toContain(
+      "検証者・検証日を記入し、内容を確認してから Close してください。",
+    );
+    expect(body).not.toContain("自動 Close されます");
+  });
+
+  it("swaps in the auto-close instruction when autoClosed is set on a PASS report", () => {
+    const body = buildIssueBody({
+      ...AUTO_CLOSED_BODY_ARGS,
+      autoClosed: true,
+    });
+    expect(body).toContain(
+      "この issue は report.json が完全 PASS だったため自動 Close されます（AUTO_CLOSE_PASS）",
+    );
+    expect(body).toContain("Reopen して検証者・検証日を記入");
+    expect(body).not.toContain(
+      "検証者・検証日を記入し、内容を確認してから Close してください。",
+    );
+  });
+
+  it("never shows the auto-close instruction for BLOCKER reports", () => {
+    const body = buildIssueBody({
+      ...AUTO_CLOSED_BODY_ARGS,
+      report: {
+        ...REPORT,
+        result: "BLOCKER",
+        attempts: 2,
+        resultsPerAttempt: ["BLOCKER", "PASS"],
+        checks: [{ name: "HTTP /", status: "PASS" }],
+      },
+      autoClosed: true,
+    });
+    expect(body).toContain(
+      "検証者・検証日を記入し、内容を確認してから Close してください。",
+    );
+    expect(body).not.toContain("自動 Close されます");
+  });
+
+  it("builds a close comment with the verification counts and reopen hint", () => {
+    const comment = buildAutoCloseComment({
+      report: REPORT,
+      runId: "32090894278",
+      siteUrl: "https://kuraberu-products.pages.dev",
+    });
+    expect(comment).toContain("自動 Close（AUTO_CLOSE_PASS ポリシー）");
+    expect(comment).toContain("result: **PASS**");
+    expect(comment).toContain("attempts: **1**");
+    expect(comment).toContain("checks: **3 件 / FAIL 0**");
+    expect(comment).toContain("`32090894278`");
+    expect(comment).toContain("`acceptance-reports-32090894278`");
+    expect(comment).toContain("`AUTO_CLOSE_PASS=true`");
+    expect(comment).toContain(
+      "BLOCKER・report.json なしの run は従来どおり人間確認のため OPEN のまま",
+    );
+    expect(comment).toContain("Reopen して");
+  });
+
+  it("keeps the verifier fields in the body for auditability after auto-close", () => {
+    const body = buildIssueBody({
+      ...AUTO_CLOSED_BODY_ARGS,
+      autoClosed: true,
+    });
+    expect(body).toContain("検証者: （未記入）");
+    expect(body).toContain("検証日: （未記入）");
   });
 });

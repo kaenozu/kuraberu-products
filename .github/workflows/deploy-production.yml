@@ -43,6 +43,10 @@ jobs:
       PUBLIC_RAKUTEN_SARASARA_URL: ${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}
       DEPLOYMENT_ENV_VAR: ${{ vars.DEPLOYMENT_ENV }}
       PURCHASE_LINK_MODE: ${{ vars.PURCHASE_LINK_MODE }}
+      # Optional policy flag: when set to "true", evidence issues whose
+      # report.json is a fully-passed verification are auto-closed after
+      # creation (BLOCKER / NO REPORT issues always stay OPEN). Unset = off.
+      AUTO_CLOSE_PASS: ${{ vars.AUTO_CLOSE_PASS }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
@@ -234,8 +238,12 @@ jobs:
       - name: Create deploy verification evidence issue
         # Auto-file the evidence issue (pre-filled from report.json + Check Run)
         # right after the deploy, so every production run leaves an auditable
-        # record. Idempotent: re-runs of the same run ID skip creation. The
-        # issue stays OPEN for the human reviewer to verify and Close.
+        # record. Idempotent: re-runs of the same run ID skip creation.
+        # By default the issue stays OPEN for the human reviewer to verify and
+        # Close. If the repository variable AUTO_CLOSE_PASS is set to "true",
+        # issues whose report.json is a fully-passed verification are closed
+        # automatically right after creation (BLOCKER and NO REPORT issues
+        # always stay OPEN for human review).
         if: always()
         shell: bash
         env:
