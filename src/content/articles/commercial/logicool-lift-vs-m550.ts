@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const logicoolLiftVsM550Seed: CommercialArticleSeed = {
   id: "logicool-lift-vs-m550",
+  publishedAt: "2026-08-17",
   title: "Logicool LIFTとM550、どっち？｜くらべる商品メモ",
   headline: "Logicool LIFTとM550、どっち？ 公式仕様で比較。違いと選び方を整理",
   description:

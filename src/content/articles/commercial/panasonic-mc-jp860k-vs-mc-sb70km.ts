@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicMcJp860kVsMcSb70kmSeed: CommercialArticleSeed = {
   id: "panasonic-mc-jp860k-vs-mc-sb70km",
+  publishedAt: "2026-08-17",
   title: "パナソニック MC-JP860KとMC-SB70KM、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック MC-JP860KとMC-SB70KM、どっち？ 公式仕様で比較。違いと選び方を整理",

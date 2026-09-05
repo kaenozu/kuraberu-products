@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEhNa0jVsEhNa0gSeed: CommercialArticleSeed = {
   id: "panasonic-eh-na0j-vs-eh-na0g",
+  publishedAt: "2026-08-17",
   title: "パナソニック EH-NA0JとEH-NA0G、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック EH-NA0JとEH-NA0G、どっち？ 公式仕様で比較。違いと選び方を整理",

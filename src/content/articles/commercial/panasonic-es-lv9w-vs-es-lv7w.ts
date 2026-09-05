@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEsLv9wVsEsLv7wSeed: CommercialArticleSeed = {
   id: "panasonic-es-lv9w-vs-es-lv7w",
+  publishedAt: "2026-08-17",
   title:
     "パナソニック ラムダッシュPRO ES-LV9WとES-LV7W、どっち？｜くらべる商品メモ",
   headline:

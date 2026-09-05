@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const sonyWh1000xm6VsWh1000xm5Seed: CommercialArticleSeed = {
   id: "sony-wh-1000xm6-vs-wh-1000xm5",
+  publishedAt: "2026-08-17",
   title: "ソニー WH-1000XM6とWH-1000XM5、どっち？｜くらべる商品メモ",
   headline:
     "ソニーのワイヤレスヘッドホンを比較。電池持続時間・Bluetooth仕様で選ぶ",

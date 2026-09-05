@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const appleWatchSeVsXiaomiRedmiWatch5Seed: CommercialArticleSeed = {
   id: "apple-watch-se-vs-xiaomi-redmi-watch-5",
+  publishedAt: "2026-08-17",
   title: "Apple Watch SEとRedmi Watch 5、どっち？｜くらべる商品メモ",
   headline: "スマートウォッチを比較。対応スマホ・通知・健康記録で選ぶ",
   description:

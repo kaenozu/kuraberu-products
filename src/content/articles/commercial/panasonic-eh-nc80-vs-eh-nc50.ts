@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEhNc80VsEhNc50Seed: CommercialArticleSeed = {
   id: "panasonic-eh-nc80-vs-eh-nc50",
+  publishedAt: "2026-08-17",
   title: "パナソニック ナノケア EH-NC80とEH-NC50、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック ナノケア EH-NC80とEH-NC50、どっち？ 公式仕様で比較。違いと選び方を整理",

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const philipsS9000VsBraunSeries9proSeed: CommercialArticleSeed = {
   id: "philips-s9000-vs-braun-series9pro",
+  publishedAt: "2026-08-17",
   title:
     "フィリップス S9000とブラウン Series 9 Pro、どっち？｜くらべる商品メモ",
   headline: "電動シェーバーを比較。刃の方式・防水・充電で選ぶ",

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const dysonV12DetectSlimVsSharkEvoPowerSeed: CommercialArticleSeed = {
   id: "dyson-v12-detect-slim-vs-shark-evo-power",
+  publishedAt: "2026-08-17",
   title: "ダイソン V12 Detect SlimとShark EVOPOWER、どっち？｜くらべる商品メモ",
   headline: "コードレス掃除機を比較。吸引・軽さ・ゴミ捨てで選ぶ",
   description:
