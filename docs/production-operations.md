@@ -57,6 +57,8 @@ Inputs:
 
 The job uses the protected `production` environment, checks out the exact SHA, builds with protected secrets, runs all production gates, deploys with Wrangler, waits for propagation, then verifies the public site. Environment approval can be enabled in GitHub settings so a human approval is the last irreversible action.
 
+**CI green gate (push-triggered deploys).** When the deploy fires on a `main` push, the workflow first polls the aggregate `verify` check run of the pushed SHA (30-second interval, up to 30 minutes) and aborts **before checkout** unless it is `completed` with conclusion `success`. This is fail-closed: no check runs for the SHA, a non-success conclusion (`failure` / `cancelled` / `timed_out`), a pending check beyond the budget, or a timeout all block the deploy attempt. The gate exists because on 2026-09-03 a red main (broken build/tests) still triggered three push-deploy attempts (#611/#612/#613) that failed pre-deploy and produced NO REPORT evidence issues. `workflow_dispatch` runs skip the gate by design: the operator must supply the exact default-branch HEAD SHA with `confirm: DEPLOY`, and the SHA guards reject stale SHAs, so the operator's explicit confirmation is the gate for manual deploys.
+
 The local script can also deploy with `-Apply`, but only when `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` are present in the process environment.
 
 ## 4. Public verification
