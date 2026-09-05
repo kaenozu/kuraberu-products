@@ -52,3 +52,46 @@ describe("post-deploy top-page semantic gate (#602)", () => {
     expect(verifierSource).toContain("Expected latest article:");
   });
 });
+
+describe("post-deploy newest-article smoke check", () => {
+  it("fetches the exact-build-derived newest article page, never a hardcoded path", () => {
+    expect(verifierSource).toContain("Newest article HTTP");
+    expect(verifierSource).toContain("Newest article HTML content type");
+    // 新着記事は静的リスト $ArticlePaths に依存せず、exact build の
+    // data-top-latest から導出したパスを必ず fetch する契約を固定する。
+    expect(verifierSource).toContain(
+      "$ArticlePaths -contains $expectedLatestArticlePath",
+    );
+    expect(verifierSource).toMatch(
+      /\$latestUri = \[uri\]::new\(\$BaseUrl, \$expectedLatestArticlePath\)/,
+    );
+  });
+
+  it("asserts the page actually renders and comes from the exact build", () => {
+    // 「render している」= 空シェルでない実体 HTML が返っていること。
+    expect(verifierSource).toContain("Newest article renders");
+    expect(verifierSource).toMatch(
+      /Check 'Newest article renders' \$hasBody "htmlLength=/,
+    );
+    expect(verifierSource).toContain("Newest article build-sha present");
+    expect(verifierSource).toContain("Newest article build-sha matches");
+  });
+
+  it("fails the run when the newest article does not render", () => {
+    // 失敗は Check() → hasFailure=true → 最終試行 BLOCKER → exit 1 で
+    // run 全体を失敗させる。
+    expect(verifierSource).toContain("Newest article renders");
+    expect(verifierSource).toMatch(
+      /function Check[\s\S]*\$script:hasFailure\s*=\s*\$true/,
+    );
+    expect(verifierSource).toMatch(
+      /if \(\$attemptResult\.hasFailure\) \{ exit 1 \}/,
+    );
+  });
+
+  it("records the newest article in the pages evidence", () => {
+    expect(verifierSource).toContain(
+      "$pages.Add([ordered]@{ path = $expectedLatestArticlePath",
+    );
+  });
+});

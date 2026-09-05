@@ -259,6 +259,44 @@ function Invoke-VerificationAttempt {
         $pages.Add([ordered]@{ path = $articlePath; status = [int]$response.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($articleHtml) })
     }
 
+    # --- Newest-article smoke check (#651). ---
+    # $ArticlePaths は静的リストなので、デプロイごとに変わる「最新記事」は
+    # これまで 200 確認の対象外だった（トップが data-top-latest でリンクする
+    # ことまでは検証済みだが、ページ自体の render は未検証）。
+    # exact build の dist/index.html から導出した $expectedLatestArticlePath を
+    # 必ず fetch し、(1) 200 + text/html で実体 HTML が配信されていること
+    # 「render している」= 空シェルでない本文があること、(2) build-sha が期待
+    # SHA と一致すること（新着記事が欠落 / 旧 edge を掴んでいないこと）を検証する。
+    # 失敗は Check() 経由で hasFailure=true となり、最終試行の BLOCKER → exit 1
+    # で run を失敗させる。
+    if (-not [string]::IsNullOrWhiteSpace($expectedLatestArticlePath)) {
+        if ($ArticlePaths -contains $expectedLatestArticlePath) {
+            Check 'Newest article smoke check' $true "already covered by ArticlePaths: $expectedLatestArticlePath"
+        } else {
+            $latestUri = [uri]::new($BaseUrl, $expectedLatestArticlePath)
+            $latestResponse = Fetch $latestUri
+            if ($null -eq $latestResponse) {
+                Check 'Newest article HTTP' $false "Failed to fetch newest article: $($script:lastFetchError)"
+            } else {
+                $latestOk = [int]$latestResponse.StatusCode -eq 200
+                Check 'Newest article HTTP' $latestOk "status=$([int]$latestResponse.StatusCode) path=$expectedLatestArticlePath"
+                $latestHtml = [string]$latestResponse.Content
+                Check 'Newest article HTML content type' ([string]$latestResponse.Headers.'Content-Type' -match 'text/html') "Content-Type=$([string]$latestResponse.Headers.'Content-Type')"
+                $hasBody = $latestHtml -match '(?is)<html' -and $latestHtml.Length -gt 1000
+                Check 'Newest article renders' $hasBody "htmlLength=$($latestHtml.Length)"
+                if ($ExpectedCommitSha) {
+                    $buildShaMatch = [regex]::Match($latestHtml, '<meta[^>]+name=["'']build-sha["''][^>]+content=["''](?<value>[^"'']+)', 'IgnoreCase')
+                    Check 'Newest article build-sha present' $buildShaMatch.Success 'build-sha meta tag present.'
+                    if ($buildShaMatch.Success) {
+                        $sha = $buildShaMatch.Groups['value'].Value
+                        Check 'Newest article build-sha matches' ($sha -eq $ExpectedCommitSha) "actual=$sha expected=$ExpectedCommitSha"
+                    }
+                }
+                $pages.Add([ordered]@{ path = $expectedLatestArticlePath; status = [int]$latestResponse.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($latestHtml) })
+            }
+        }
+    }
+
     # Stale artifact detection: all articles must have the same build-sha
     if ($articleBuildShas.Count -gt 1) {
         $uniqueShas = @($articleBuildShas | Sort-Object -Unique)
