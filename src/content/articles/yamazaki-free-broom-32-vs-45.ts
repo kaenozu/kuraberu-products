@@ -25,4 +25,94 @@ export const yamazakiFreeBroomArticle = defineArticleMetadata({
       summary: "初回公開。山崎産業公式の商品ページと楽天公式生成リンクを確認。",
     },
   ],
+  leftModel: {
+    brand: "山崎産業 JS自由箒",
+    line: "32（BR952-032J-MB）",
+    tagline: "軽さ・扱いやすさなら",
+    image: "/products/yamazaki-free-broom-32.jpg",
+    imageAlt: "山崎産業 JS自由箒32 BR952-032J-MB",
+    officialHref: "https://product.yamazaki-sangyo.co.jp/product/209613",
+    guidePoints: [
+      "狭い場所や持ち運びやすさを優先して、幅330mmのほうきを選びたい人向け",
+    ],
+  },
+  rightModel: {
+    brand: "山崎産業 JS自由箒",
+    line: "45（BR952-045J-MB）",
+    tagline: "幅広く掃くなら",
+    image: "/products/yamazaki-free-broom-45.jpg",
+    imageAlt: "山崎産業 JS自由箒45 BR952-045J-MB",
+    officialHref: "https://product.yamazaki-sangyo.co.jp/product/209620",
+    guidePoints: ["一度に広い範囲を掃きたい人向け"],
+  },
+  keyDiffRows: [
+    {
+      label: "商品名",
+      left: "JS自由箒 32",
+      right: "JS自由箒 45",
+      highlight: null,
+    },
+    {
+      label: "使用サイズ（幅×全長）",
+      left: "330×1320mm",
+      right: "460×1320mm",
+      highlight: "right",
+      highlightNote: "幅が広い",
+    },
+    {
+      label: "重量",
+      left: "約320g",
+      right: "約370g",
+      highlight: "left",
+      highlightNote: "約50g軽い",
+    },
+    {
+      label: "ハンドル",
+      left: "アルミパイプ（φ約22mm）",
+      right: "アルミパイプ（φ約22mm）",
+      highlight: null,
+    },
+    {
+      label: "毛の材質",
+      left: "PP・再生PET・馬毛・除電材",
+      right: "PP・再生PET・馬毛・除電材",
+      highlight: null,
+    },
+  ],
+  lead: "山崎産業のJS自由箒32と45を、メーカー公式ページで確認できる商品名・サイズ・重量・材質の範囲で比較します。",
+  officialDescription:
+    "仕様の根拠は、山崎産業公式の商品ページで2026年8月16日に確認しました。両製品とも公式ページに「防災備蓄保管に適した省スペースパッケージで持ち運びにも最適」「ネジ込み式 組立ハンドル」と記載されています。",
+  officialSources: [
+    {
+      label: "山崎産業公式：JS自由箒32 BR952-032J-MB",
+      url: "https://product.yamazaki-sangyo.co.jp/product/209613",
+    },
+    {
+      label: "山崎産業公式：JS自由箒45 BR952-045J-MB",
+      url: "https://product.yamazaki-sangyo.co.jp/product/209620",
+    },
+  ],
+  socialProofQuery: "山崎産業 JS自由箒 BR952-032J-MB BR952-045J-MB",
+  faqEntries: [
+    {
+      question: "JS自由箒32と45の違いは？",
+      answer:
+        "山崎産業公式ページで確認できる主な違いは、使用サイズの幅が32は330mm、45は460mmであることと、重量が32は約320g、45は約370gであることです。全長はいずれも1320mmです。",
+    },
+    {
+      question: "軽いのはどちら？",
+      answer:
+        "公式の重量表記では、JS自由箒32が約320g、JS自由箒45が約370gです。数値上はJS自由箒32が約50g軽いです。",
+    },
+    {
+      question: "毛の材質は違いますか？",
+      answer:
+        "公式ページの材質表記は、どちらもハンドルがアルミパイプ、甲がPP、毛がPP・再生PET・馬毛・除電材です。",
+    },
+    {
+      question: "楽天市場の価格は掲載していますか？",
+      answer:
+        "価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。",
+    },
+  ],
 });

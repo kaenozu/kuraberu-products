@@ -55,6 +55,70 @@
 
 ## 4. 実装チェック
 
+### 4.1 比較記事（editorial）の新規作成 — メタ1本 + 1行ラッパ（推奨）
+
+新規の比較記事は `src/pages/articles/<slug>/index.astro` に 50〜80 行を手書きしない。`src/content/articles/<slug>.ts` に全データを集約し、ページは 1 行ラッパにする（`combi-the-s-plus-vs-premium` 等が雛形）。
+
+```ts
+// src/content/articles/<slug>.ts
+export const fooBarArticle = defineArticleMetadata({
+  id: "<slug>",
+  productCount: 2,
+  path: "/articles/<slug>/" /* title, headline, ... */,
+  leftModel: {
+    brand,
+    line,
+    tagline,
+    image,
+    imageAlt,
+    officialHref,
+    guidePoints,
+  },
+  rightModel: {
+    brand,
+    line,
+    tagline,
+    image,
+    imageAlt,
+    officialHref,
+    guidePoints,
+  },
+  keyDiffRows: [/* 比較行 */],
+  lead: "...",
+  summaryParagraph: "..." /* optional */,
+  officialDescription: "..." /* optional, articleId ルートで優先表示 */,
+  officialSources: [
+    /* {label, url} 情報源一覧。checkedAt は productInfoCheckedAt から自動付与 */
+  ],
+  socialProofQuery: "...",
+  faqEntries: [/* ... */],
+  purchaseWarning: "..." /* optional, article.purchaseWarning ?? default */,
+  disclaimer: "..." /* optional, article.disclaimer ?? default */,
+});
+```
+
+```astro
+---
+// src/pages/articles/<slug>/index.astro
+import ArticleComparisonPage from "../../../components/ArticleComparisonPage.astro";
+---
+<ArticleComparisonPage articleId="<slug>" />
+```
+
+- [ ] メタ (`src/content/articles/<slug>.ts`) に `leftModel` / `rightModel` / `keyDiffRows` / `lead` / `faqEntries` を追加（`combi-the-s-plus-vs-premium.ts` を参照）
+- [ ] 必要に応じて `officialSources` / `purchaseWarning` / `disclaimer` / `officialDescription` / `summaryParagraph` / `socialProofQuery` を追加（`ArticleComparisonPage` の `articleId` ルートで `article.* ?? default` される）
+- [ ] `src/lib/products.ts` の `articlePurchaseLinks["<slug>:left" | ":right"]` に左右の商品詳細成果URLを追加
+- [ ] `src/pages/articles/<slug>/index.astro` は上記 1 行ラッパのみ（`combi` / `yamazaki-free-broom` / `zojirushi-ck-pa08` が雛形）
+- [ ] CTAに商品画像を含めた（`leftModel.image` / `rightModel.image` は `purchaseHref` とともに自動で CTA へ渡る）
+- [ ] 未確認商品はfail-closedでCTA非表示（`articlePurchaseLinks` 未登録 or 到達ホスト不正なら表示されない）
+- [ ] `articleMetadata` / canonical / sitemap / 一覧へ反映（`articles/index.ts` の re-export と `articleMetadata` 配列に追加）
+- [ ] 価格・在庫・人気・口コミを公式根拠なしに記載していない
+- [ ] SNS情報を比較根拠にしていない
+
+> 旧 `explicit` 方式（`ArticleComparisonPage articleMetadata={…} left={…} right={…}` をページ側で 50+ 行組み立て）は新規作成では使わない。既存 25 件の `explicit` ページは本テンプレートへ段階的に移行中（`combi-the-s-plus-vs-premium` / `yamazaki-free-broom-32-vs-45` / `zojirushi-ck-pa08-vs-ck-dc08` が移行済みの雛形）。
+
+### 4.2 商業記事（commercial）の新規作成
+
 - [ ] `CommercialArticleSeed`へ商品名・公式URL・確認日・仕様を追加
 - [ ] `articlePurchaseLinks`へ左右の商品詳細成果URLを追加
 - [ ] CTAに商品画像を含めた
