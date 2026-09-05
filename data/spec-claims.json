@@ -65,7 +65,7 @@
     {
       "articleId": "combi-the-s-plus-vs-premium",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:d7d2b63bbc4ce44a5c6af0ea7ae28716c892446d5e0f71b9297c6393b8e96f47",
+      "claimsFingerprint": "sha256:01869c42eb0a213f877d521720b667bc28fb52dead10650de950ad21eab22048",
       "officialUrls": [
         "https://www.combi.co.jp/store/carseat/thesplus/g/g120066/",
         "https://www.combi.co.jp/store/carseat/thespremium/g/g118991/"
@@ -105,7 +105,7 @@
     {
       "articleId": "sharp-kc-s50-vs-fu-s50",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:8a55f6796b3bc96f91d8b9376bc15cb1718e37ffc798054fffc41242fefaf6b7",
+      "claimsFingerprint": "sha256:4ced550c72ff346ed4029e70f895b91e4633f46e6de60bfc7664721276512fad",
       "officialUrls": [
         "https://jp.sharp/kuusei/products/fus50/",
         "https://jp.sharp/kuusei/products/kcs50/"
@@ -154,7 +154,7 @@
     },
     {
       "articleId": "zojirushi-ck-pa08-vs-ck-dc08",
-      "checkedAt": "2026-08-16",
+      "checkedAt": "2026-08-13",
       "claimsFingerprint": "sha256:77cc962f5163698aece725f209876865154654ecd824a4546df3842688c80d24",
       "officialUrls": [
         "https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/",
@@ -195,7 +195,7 @@
     {
       "articleId": "yamazaki-free-broom-32-vs-45",
       "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:28950bd696551b274e339f91fa1435ff5e7e5af9137334a1ccf2bf2176e39bf5",
+      "claimsFingerprint": "sha256:83234d0d3d087e07ce74755888439ea60066310c9b0aec760ee5b6996203ed77",
       "officialUrls": [
         "https://product.yamazaki-sangyo.co.jp/product/209613",
         "https://product.yamazaki-sangyo.co.jp/product/209620"
@@ -377,6 +377,16 @@
       "officialUrls": [
         "https://shop.pigeon.co.jp/products/1032018",
         "https://shop.pigeon.co.jp/products/2000638s"
+      ],
+      "note": ""
+    },
+    {
+      "articleId": "panasonic-ne-ms4c-vs-ne-bs5c",
+      "checkedAt": "2026-09-03",
+      "claimsFingerprint": "sha256:33205b384188141805b28f1237337956f568e2cfcaf0390fea24e9d1e6fbfc54",
+      "officialUrls": [
+        "https://panasonic.jp/range/products/NE-BS5C.html",
+        "https://panasonic.jp/range/products/NE-MS4C.html"
       ],
       "note": ""
     }

@@ -128,6 +128,14 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "panasonic-ne-ms4c-vs-ne-bs5c:left": {
+    name: "パナソニック オーブンレンジ NE-MS4C",
+    purchaseUrl: "https://item.rakuten.co.jp/akibamac/2133067121413/",
+  },
+  "panasonic-ne-ms4c-vs-ne-bs5c:right": {
+    name: "パナソニック オーブンレンジ NE-BS5C",
+    purchaseUrl: "https://item.rakuten.co.jp/akindo/ne-bs5c-w/",
+  },
   "panasonic-es-pv6a-vs-es-pv3a:left": {
     name: "パナソニック ラムダッシュ パームイン ES-PV6A",
     purchaseUrl: "https://item.rakuten.co.jp/shopch-r/4000777578/",
@@ -135,6 +143,14 @@ export const articlePurchaseLinks = {
   "panasonic-es-pv6a-vs-es-pv3a:right": {
     name: "パナソニック ラムダッシュ パームイン ES-PV3A",
     purchaseUrl: "https://item.rakuten.co.jp/hows01/4549980711996/",
+  },
+  "panasonic-ni-fs70a-vs-ni-fs60b:left": {
+    name: "パナソニック 衣類スチーマー NI-FS70A",
+    purchaseUrl: "https://item.rakuten.co.jp/auc-pcfreak/10004790/",
+  },
+  "panasonic-ni-fs70a-vs-ni-fs60b:right": {
+    name: "パナソニック 衣類スチーマー NI-FS60B",
+    purchaseUrl: "https://item.rakuten.co.jp/world-free-store/4549980882894/",
   },
   "panasonic-mc-jp860k-vs-mc-sb70km:left": {
     name: "パナソニック MC-JP860K-W",
@@ -194,11 +210,11 @@ export const articlePurchaseLinks = {
   },
   "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:left": {
     name: "Soundcore Liberty 4 NC",
-    purchaseUrl: "https://a.r10.to/hF7iGR",
+    purchaseUrl: "https://item.rakuten.co.jp/d-shop1one/4571411210181/",
   },
   "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n:right": {
     name: "ソニー WF-C710N",
-    purchaseUrl: "https://a.r10.to/hgcZzy",
+    purchaseUrl: "https://item.rakuten.co.jp/e-earphone/sony-wfc710n/",
   },
   "logicool-mx-master-3s-vs-m650:left": {
     name: "Logicool MX Master 3S",
@@ -210,15 +226,21 @@ export const articlePurchaseLinks = {
     purchaseUrl:
       "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fm650mgr%2F&link_type=picttext",
   },
+  "logicool-mx-master-3s-vs-mx-anywhere-3s:left": {
+    name: "Logicool MX Master 3S Bluetooth Edition",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/mx2300cr/",
+  },
+  "logicool-mx-master-3s-vs-mx-anywhere-3s:right": {
+    name: "Logicool MX Anywhere 3S",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/mx1800gr/",
+  },
   "logicool-k650-vs-k580:left": {
     name: "Logicool K650 Signature Wireless Keyboard",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk650gr%2F&link_type=picttext",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/k650gr/",
   },
   "logicool-k650-vs-k580:right": {
     name: "Logicool K580",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/ichiba/56ec17c0.0a9efc51.56ec17c1.98a500d4/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Flogicool%2Fk580gr%2F&link_type=picttext",
+    purchaseUrl: "https://item.rakuten.co.jp/logicool/k580gr/",
   },
   "logicool-lift-vs-m550:left": {
     name: "Logicool LIFT Vertical Ergonomic Mouse",
@@ -350,11 +372,11 @@ export const articlePurchaseLinks = {
   },
   "pampers-newborn:left": {
     name: "パンパース 新生児用 肌へのいちばん",
-    purchaseUrl: "https://a.r10.to/hPtZZE",
+    purchaseUrl: "https://item.rakuten.co.jp/netbaby/4987176203229/",
   },
   "pampers-newborn:right": {
     name: "パンパース 新生児用 さらさらケア",
-    purchaseUrl: "https://a.r10.to/h5Jh9V",
+    purchaseUrl: "https://item.rakuten.co.jp/hikaritv/1710000040/",
   },
   "panasonic-ne-bs9c-vs-ne-ubs10c:left": {
     name: "パナソニック ビストロ NE-BS9C",
@@ -415,11 +437,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-ne-fl1a-vs-ne-fl1c:left": {
     name: "パナソニック NE-FL1A",
-    purchaseUrl: "https://a.r10.to/hFqCMV",
+    purchaseUrl: "https://item.rakuten.co.jp/jumblestore/2327627609057/",
   },
   "panasonic-ne-fl1a-vs-ne-fl1c:right": {
     name: "パナソニック NE-FL1C",
-    purchaseUrl: "https://a.r10.to/hPJAxE",
+    purchaseUrl: "https://item.rakuten.co.jp/yamada-denki/432947010/",
   },
   "pigeon-bottle-160-240:left": {
     name: "母乳実感 160ml",
@@ -609,11 +631,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-nt-t501-vs-nt-d700:left": {
     name: "パナソニック NT-T501",
-    purchaseUrl: "https://a.r10.to/hF1vxG",
+    purchaseUrl: "https://item.rakuten.co.jp/world-free-store/4549980452134/",
   },
   "panasonic-nt-t501-vs-nt-d700:right": {
     name: "パナソニック NT-D700",
-    purchaseUrl: "https://a.r10.to/hg4iM4",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/nt-d700-w/",
   },
   "zojirushi-ck-pa08-vs-ck-dc08:left": {
     name: "象印 CK-PA08",

@@ -42,6 +42,7 @@ import {
   panasonicMcNx810kmVsMcNx700kArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicNeFl1aVsNeFl1cArticle,
+  panasonicNeMs4cVsNeBs5cArticle,
   panasonicAirCleanerArticle,
   panasonicShaverEsLt4bVsEsLv7jArticle,
   thermosKfm020VsKfi020Article,
@@ -87,7 +88,7 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(77);
+    expect(publicArticleMetadata).toHaveLength(79);
     const newlyPublishedIds = [
       "yamazaki-dishwasher-rack-241925-vs-241926",
       "panasonic-mc-nx810km-vs-mc-nx700k",
@@ -108,6 +109,7 @@ describe("article metadata", () => {
       "panasonic-ne-bs6e-vs-ne-bs5e",
       "panasonic-es-pv6a-vs-es-pv3a",
       "yamazaki-refrigerator-rack-240057-vs-240059",
+      "logicool-mx-master-3s-vs-mx-anywhere-3s",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -215,6 +217,7 @@ describe("article metadata", () => {
       yamazakiLaundryWireBasketArticle,
       yamazakiOfudaStandArticle,
       yamazakiDishwasherRackArticle,
+      panasonicNeMs4cVsNeBs5cArticle,
       ...additionalCommercialArticles,
     ]);
     expect(pampersNewbornArticle.path).toBe("/articles/pampers-newborn/");
@@ -244,7 +247,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(89);
+    ).toHaveLength(91);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);

@@ -30,7 +30,8 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # 45min = up to 30min CI green-gate wait + a normal ~15min build/deploy.
+    timeout-minutes: 45
     environment: production
     env:
       # inputs / vars を run スクリプトへ直接補間すると式インジェクションの
@@ -43,6 +44,10 @@ jobs:
       PUBLIC_RAKUTEN_SARASARA_URL: ${{ vars.PUBLIC_RAKUTEN_SARASARA_URL }}
       DEPLOYMENT_ENV_VAR: ${{ vars.DEPLOYMENT_ENV }}
       PURCHASE_LINK_MODE: ${{ vars.PURCHASE_LINK_MODE }}
+      # Optional policy flag: when set to "true", evidence issues whose
+      # report.json is a fully-passed verification are auto-closed after
+      # creation (BLOCKER / NO REPORT issues always stay OPEN). Unset = off.
+      AUTO_CLOSE_PASS: ${{ vars.AUTO_CLOSE_PASS }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       RAKUTEN_APPLICATION_ID: ${{ secrets.RAKUTEN_APPLICATION_ID }}
@@ -63,6 +68,68 @@ jobs:
           test -n "$PUBLIC_SITE_URL"
           test "$DEPLOYMENT_ENV_VAR" = "production"
           test "$PURCHASE_LINK_MODE" = "api" -o "$PURCHASE_LINK_MODE" = "direct"
+
+      - name: Block deploy when main is red (CI green gate)
+        # A production deploy attempt must never run on a commit whose CI
+        # (the verify workflow's aggregate "verify" check run) is red or not
+        # yet green. On 2026-09-03 three deploy runs (#611/#612/#613) fired
+        # against a red main (broken tests / build) and failed pre-deploy,
+        # producing NO REPORT evidence issues for no reason. This gate runs
+        # on push-triggered deploys before checkout and fails closed: missing
+        # check run, pending beyond the budget, or any non-success conclusion
+        # (failure / cancelled / timed_out) blocks the deploy attempt.
+        # workflow_dispatch runs skip this gate: dispatch requires an exact
+        # default-branch-HEAD SHA plus confirm=DEPLOY, and the SHA guards
+        # below already reject stale SHAs, so the operator is the signer.
+        if: github.event_name == 'push'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          budget=1800
+          deadline=$(( $(date +%s) + budget ))
+          while :; do
+            # Transient API errors are retried until the deadline; only a
+            # definitive verdict (green / red / no-check-runs) or timeout
+            # exits the loop. Every exit path except green blocks the deploy.
+            if ! verdict=$(gh api "repos/${{ github.repository }}/commits/${EXPECTED_SHA}/check-runs" \
+              --jq '{
+                count: (.total_count // 0),
+                verify: ([.check_runs[] | select(.name == "verify") | {id, status, conclusion}] | sort_by(.id) | last)
+              }' 2>/dev/null); then
+              if [ "$(date +%s)" -ge "$deadline" ]; then
+                echo "::error::CI green gate timed out after ${budget}s (API errors) waiting for the verify check run on ${EXPECTED_SHA}. Blocking deploy (fail closed)."
+                exit 1
+              fi
+              echo "CI green gate: transient API error; retrying..."
+              sleep 30
+              continue
+            fi
+            count=$(jq -r '.count' <<<"$verdict")
+            status=$(jq -r '.verify.status // "missing"' <<<"$verdict")
+            conclusion=$(jq -r '.verify.conclusion // "none"' <<<"$verdict")
+            if [ "$count" -gt 0 ] && [ "$status" = "completed" ] && [ "$conclusion" = "success" ]; then
+              echo "CI green gate passed: verify check run is completed/success for ${EXPECTED_SHA}."
+              break
+            fi
+            if [ "$count" -eq 0 ]; then
+              echo "::error::No check runs found for ${EXPECTED_SHA} — cannot confirm CI is green. Blocking deploy (fail closed)."
+              exit 1
+            fi
+            if [ "$status" = "completed" ]; then
+              echo "::error::CI green gate failed: verify check run concluded '${conclusion}' for ${EXPECTED_SHA}. Main is red — deploy blocked."
+              exit 1
+            else
+              echo "CI green gate: verify is '${status}' (conclusion: ${conclusion}); waiting..."
+            fi
+            if [ "$(date +%s)" -ge "$deadline" ]; then
+              echo "::error::CI green gate timed out after ${budget}s waiting for the verify check run on ${EXPECTED_SHA}. Blocking deploy (fail closed)."
+              exit 1
+            fi
+            sleep 30
+          done
 
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
         with:
@@ -234,8 +301,12 @@ jobs:
       - name: Create deploy verification evidence issue
         # Auto-file the evidence issue (pre-filled from report.json + Check Run)
         # right after the deploy, so every production run leaves an auditable
-        # record. Idempotent: re-runs of the same run ID skip creation. The
-        # issue stays OPEN for the human reviewer to verify and Close.
+        # record. Idempotent: re-runs of the same run ID skip creation.
+        # By default the issue stays OPEN for the human reviewer to verify and
+        # Close. If the repository variable AUTO_CLOSE_PASS is set to "true",
+        # issues whose report.json is a fully-passed verification are closed
+        # automatically right after creation (BLOCKER and NO REPORT issues
+        # always stay OPEN for human review).
         if: always()
         shell: bash
         env:

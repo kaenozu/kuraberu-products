@@ -12,7 +12,15 @@
  *
  * 冪等: 同じ run ID の `[deploy-verification]` issue が既にあれば何もしない
  * （デプロイの再実行・リトライで重複起票しない）。
- * 検証者・検証日の記入と Close は人間が行う（自動 Close しない）。
+ * 検証者・検証日の記入と Close は人間が行う（既定では自動 Close しない）。
+ *
+ * 自動 Close ポリシー（オプション・既定 OFF）:
+ *   リポジトリ変数 `AUTO_CLOSE_PASS` に `true` を設定すると、report.json が
+ *   完全 PASS（result=PASS かつ全 checks PASS）の evidence issue は、起票直後に
+ *   説明コメント付きで自動 Close される（`--reason completed`）。BLOCKER や
+ *   report.json なし（UNKNOWN）の issue は常に人間確認のため OPEN のまま。
+ *   変数は Settings → Secrets and variables → Actions → Variables、または
+ *   `gh variable set AUTO_CLOSE_PASS --body true` でオーナーが切り替える。
  *
  * 使い方:
  *   node scripts/create-deploy-evidence-issue.mjs \
@@ -100,6 +108,48 @@ export function buildReportChecklist(report, expectedSha) {
   ].join("\n");
 }
 
+/**
+ * report.json が「検証済みの完全 PASS」かを判定する（純粋関数・テスト対象）。
+ * result=PASS かつ最終 attempt の checks が 1 件以上全て PASS。
+ * buildIssueBody の allPass と shouldAutoClose の両方の単一の真理源。
+ */
+export function isFullyPassed(report) {
+  return (
+    report?.result === "PASS" &&
+    (report?.checks ?? []).length > 0 &&
+    report.checks.every((check) => check.status === "PASS")
+  );
+}
+
+/**
+ * AUTO_CLOSE_PASS env 値の解釈（純粋関数・テスト対象）。
+ * "true"（大文字小文字を問わない）のみ有効。未設定・空・その他の値は
+ * 既定動作（人間が Close）を意味する。
+ */
+export function isAutoCloseEnabled(raw) {
+  return typeof raw === "string" && raw.trim().toLowerCase() === "true";
+}
+
+/** 自動 Close 時に issue へ投稿する説明コメントを組み立てる。 */
+export function buildAutoCloseComment({ report, runId, siteUrl }) {
+  const checks = report.checks ?? [];
+  const failed = checks.filter((check) => check.status === "FAIL").length;
+  return [
+    `## 自動 Close（AUTO_CLOSE_PASS ポリシー）`,
+    "",
+    `report.json が検証済みの完全 PASS だったため、この issue を自動 Close しました（result: **${report.result}**, attempts: **${report.attempts}**, checks: **${checks.length} 件 / FAIL ${failed}**）。`,
+    "",
+    `- 実行 run: \`${runId}\``,
+    `- deployed SHA: \`${report.expectedCommitSha ?? "(不明)"}\``,
+    `- 対象 URL: \`${siteUrl}\``,
+    `- artifact: \`acceptance-reports-${runId}\`（report.json 本文はこの issue に記載済み）`,
+    "",
+    "このポリシー（リポジトリ変数 `AUTO_CLOSE_PASS=true`）では、機械検証済みの PASS デプロイは自動 Close され、**BLOCKER・report.json なしの run は従来どおり人間確認のため OPEN のまま**になります。",
+    "",
+    "判定に異議がある場合は **Reopen して** 検証者・検証日を記入してください（Rollback 手順は `docs/production-operations.md`）。",
+  ].join("\n");
+}
+
 /** テンプレートに沿った issue body を組み立てる。 */
 export function buildIssueBody({
   report,
@@ -108,6 +158,7 @@ export function buildIssueBody({
   expectedSha,
   deployedAt,
   siteUrl,
+  autoClosed = false,
 }) {
   const artifactName = `acceptance-reports-${runId}`;
   const checkRunSummary = checkRun?.output?.summary ?? null;
@@ -121,10 +172,11 @@ export function buildIssueBody({
     null,
     2,
   );
-  const allPass =
-    report.result === "PASS" &&
-    (report.checks ?? []).length > 0 &&
-    report.checks.every((check) => check.status === "PASS");
+  const allPass = isFullyPassed(report);
+  const usageInstruction =
+    allPass && autoClosed
+      ? "- **この issue は report.json が完全 PASS だったため自動 Close されます（AUTO_CLOSE_PASS）。** 異議がある場合は Reopen して検証者・検証日を記入してください。"
+      : "- **検証者・検証日を記入し、内容を確認してから Close してください。**";
   const lines = [
     ...(report.result === "UNKNOWN"
       ? [
@@ -136,7 +188,7 @@ export function buildIssueBody({
     "",
     "- この issue は本番デプロイ workflow が自動起票したものです。",
     "  各フィールドは実行 job 内の report.json と Check Run から埋めています。",
-    "- **検証者・検証日を記入し、内容を確認してから Close してください。**",
+    usageInstruction,
     "- 手順の詳細は `docs/production-operations.md` の **Section 4「Public verification」/「Confirm the attempts history after a production run」** を参照。",
     "",
     "---",
@@ -260,6 +312,7 @@ function main() {
       )
       .sort((a, b) => b.id - a.id)[0] ?? null;
 
+  const autoClose = isAutoCloseEnabled(process.env.AUTO_CLOSE_PASS ?? "");
   const body = buildIssueBody({
     report,
     checkRun,
@@ -267,6 +320,7 @@ function main() {
     expectedSha,
     deployedAt,
     siteUrl,
+    autoClosed: autoClose && isFullyPassed(report),
   });
   const date = String(deployedAt ?? report.generatedAt ?? "").slice(0, 10);
   const title = `${ISSUE_TITLE_PREFIX} ${runId} (${date})`;
@@ -313,6 +367,41 @@ function main() {
       bodyPath,
     ]);
     console.log(`Created evidence issue: ${created}`);
+
+    // 自動 Close ポリシー: AUTO_CLOSE_PASS=true かつ完全 PASS のときのみ。
+    // BLOCKER / UNKNOWN は人間確認のため常に OPEN のまま（#361 契約）。
+    if (autoClose && isFullyPassed(report)) {
+      const issueNumber = created.match(/#(\d+)/)?.[1];
+      if (!issueNumber) {
+        throw new Error(
+          `Could not parse issue number from gh output: ${created}`,
+        );
+      }
+      const comment = buildAutoCloseComment({ report, runId, siteUrl });
+      const commentPath = path.join(tempDir, "auto-close-comment.md");
+      writeFileSync(commentPath, comment, "utf8");
+      ghText([
+        "issue",
+        "comment",
+        issueNumber,
+        "--repo",
+        repo,
+        "--body-file",
+        commentPath,
+      ]);
+      ghText([
+        "issue",
+        "close",
+        issueNumber,
+        "--repo",
+        repo,
+        "--reason",
+        "completed",
+      ]);
+      console.log(
+        `Auto-closed #${issueNumber} (AUTO_CLOSE_PASS policy; report was a fully-passed verification).`,
+      );
+    }
   } finally {
     rmSync(tempDir, { recursive: true, force: true });
   }

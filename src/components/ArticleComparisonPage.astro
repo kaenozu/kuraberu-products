@@ -129,10 +129,12 @@ if (props.articleId) {
     const leftAudiences = lm.guidePoints.length > 0 ? lm.guidePoints[0] : `${lm.line}を選ぶ人向け`;
     const rightAudiences = rm.guidePoints.length > 0 ? rm.guidePoints[0] : `${rm.line}を選ぶ人向け`;
 
-    const officialLinks = [
-      { label: `${lm.line} 公式商品ページ`, href: lm.officialHref },
-      { label: `${rm.line} 公式商品ページ`, href: rm.officialHref },
-    ];
+    const officialLinks: readonly { label: string; href: string }[] =
+      article.officialLinks ??
+      ([
+        { label: `${lm.line} 公式商品ページ`, href: lm.officialHref },
+        { label: `${rm.line} 公式商品ページ`, href: rm.officialHref },
+      ] as const);
 
     const sourceLinks: SourceLink[] = [
       { label: `${lm.line} 公式商品ページ`, href: lm.officialHref, checkedAt: article.productInfoCheckedAt },
@@ -159,8 +161,14 @@ if (props.articleId) {
       sourceLinks: article.officialSources
         ? article.officialSources.map((s) => ({ label: s.label, href: s.url, checkedAt: article.productInfoCheckedAt }))
         : sourceLinks,
-      purchaseWarning: props.purchaseWarning ?? '価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。',
-      disclaimer: props.disclaimer ?? 'この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。',
+      purchaseWarning:
+        article.purchaseWarning ??
+        props.purchaseWarning ??
+        "価格・在庫・仕様は変更される可能性があります。購入時点の公式ページと販売ページを確認してください。",
+      disclaimer:
+        article.disclaimer ??
+        props.disclaimer ??
+        "この比較は、メーカー公式の商品ページで確認できる情報を根拠にしています。個人の感想や口コミは比較の根拠にしていません。",
       diagnosisHref: props.diagnosisHref,
     };
   } else {

@@ -18,8 +18,8 @@ describe("content freshness", () => {
 
   it("keeps product-info and purchase-link check dates separate", () => {
     expect(pampersNewbornArticle.productInfoCheckedAt).toBe("2026-07-31");
-    expect(pampersNewbornArticle.purchaseLinkStatus).toBe("unverified");
-    expect(pampersNewbornArticle.purchaseLinksCheckedAt).toBe("2026-08-16");
+    expect(pampersNewbornArticle.purchaseLinkStatus).toBe("verified");
+    expect(pampersNewbornArticle.purchaseLinksCheckedAt).toBe("2026-09-03");
   });
 });
 

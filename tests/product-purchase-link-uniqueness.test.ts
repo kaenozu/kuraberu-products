@@ -20,11 +20,7 @@ import { waterBottleProducts } from "../src/data/products/water-bottles";
  * ブロックしつつ、既存データの修正は別PRで段階的に進められる」状態に
  * する。
  */
-const KNOWN_DUPLICATE_URLS = new Set<string>([
-  // baby-bottle: ピジョン ボ160 ガラス/PPSU が同じ a.r10.to 短縮URLを参照中。
-  // 正しい楽天商品URLの確認は Issue #548 (data fix) で対応予定。
-  "https://a.r10.to/h4SQzW",
-]);
+const KNOWN_DUPLICATE_URLS = new Set<string>();
 
 const categories = [
   { name: "baby-bottle", products: babyBottleProducts },
