@@ -8,8 +8,10 @@ import {
   buildStepLogExcerpt,
 } from "../scripts/create-deploy-evidence-issue.mjs";
 import {
+  buildFailedStepsSection,
   buildIssueCreateArgs,
   buildMissingReportBody,
+  collectFailedSteps,
 } from "../scripts/create-missing-evidence-issue.mjs";
 
 const EXPECTED_SHA = "7f54044e44872f8874f5c4e38da7ea48003ebefc";
@@ -262,5 +264,91 @@ describe("missing deploy evidence fallback", () => {
         siteUrl: "https://kuraberu-products.pages.dev",
       }),
     ).toContain("Evidence issue");
+  });
+});
+
+describe("NO REPORT run self-diagnostics (issue #611/#612/#613 class)", () => {
+  it("collects failed steps from the run's jobs", () => {
+    const jobs = [
+      {
+        name: "deploy",
+        conclusion: "failure",
+        steps: [
+          { name: "Validate dispatch contract", conclusion: "success" },
+          { name: "Build and deploy exact HEAD", conclusion: "failure" },
+        ],
+      },
+    ];
+    expect(collectFailedSteps(jobs)).toEqual([
+      {
+        job: "deploy",
+        step: "Build and deploy exact HEAD",
+        startedAt: null,
+        completedAt: null,
+      },
+    ]);
+  });
+
+  it("falls back to job-level failure when no step failed", () => {
+    const jobs = [{ name: "deploy", conclusion: "startup_failure", steps: [] }];
+    expect(collectFailedSteps(jobs)).toEqual([
+      {
+        job: "deploy",
+        step: null,
+        startedAt: null,
+        completedAt: null,
+      },
+    ]);
+  });
+
+  it("ignores successful and skipped jobs", () => {
+    const jobs = [
+      {
+        name: "deploy",
+        conclusion: "success",
+        steps: [{ name: "Build", conclusion: "success" }],
+      },
+      { name: "unused", conclusion: "skipped", steps: [] },
+    ];
+    expect(collectFailedSteps(jobs)).toEqual([]);
+  });
+
+  it("omits the diagnostics section when diagnostics are unavailable", () => {
+    const body = buildMissingReportBody({
+      runId: "123",
+      expectedSha: "a".repeat(40),
+      siteUrl: "https://kuraberu-products.pages.dev",
+      diagnosticsSection: null,
+    });
+    expect(body).not.toContain("Run diagnostics");
+    expect(body).toContain("Run ID: `123`");
+  });
+
+  it("embeds failed steps and the run URL so no log re-derivation is needed", () => {
+    const section = buildFailedStepsSection({
+      runId: "33719544484",
+      runUrl:
+        "https://github.com/kaenozu/kuraberu-products/actions/runs/33719544484",
+      runConclusion: "failure",
+      failedSteps: [{ job: "deploy", step: "Build and deploy exact HEAD" }],
+    });
+    expect(section).toContain("Run conclusion: `failure`");
+    expect(section).toContain("actions/runs/33719544484");
+    expect(section).toContain("`deploy` → `Build and deploy exact HEAD`");
+    expect(section).toContain("did **not** update production");
+  });
+
+  it("warns when the run failed but no failed step was reported", () => {
+    const section = buildFailedStepsSection({
+      runId: "1",
+      runUrl: null,
+      runConclusion: "failure",
+      failedSteps: [],
+    });
+    expect(section).toContain("inspect the run log directly");
+  });
+
+  it("renders nothing without diagnostics input", () => {
+    expect(buildFailedStepsSection(null)).toBeNull();
   });
 });
