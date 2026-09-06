@@ -128,6 +128,15 @@ export interface ArticlePurchaseLink {
 }
 
 export const articlePurchaseLinks = {
+  "roborock-qrevo-curv-vs-dreame-x50:left": {
+    name: "Roborock Qrevo Curv",
+    purchaseUrl:
+      "https://item.rakuten.co.jp/roborockjapandirect/6936905903426/",
+  },
+  "roborock-qrevo-curv-vs-dreame-x50:right": {
+    name: "Dreame X50 Ultra",
+    purchaseUrl: "https://item.rakuten.co.jp/dreame-shop/x50-ultra/",
+  },
   "panasonic-ne-ms4c-vs-ne-bs5c:left": {
     name: "パナソニック オーブンレンジ NE-MS4C",
     purchaseUrl: "https://item.rakuten.co.jp/akibamac/2133067121413/",
