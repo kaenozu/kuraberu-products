@@ -8,6 +8,7 @@ body:
         ## 使い方
 
         - 本番デプロイ（`Deploy production` workflow、`expected_sha` + `confirm: DEPLOY`）の完了後、**デプロイ workflow がこのテンプレートの全フィールドを埋めた issue を自動起票**する（`[deploy-verification] <run-id> (YYYY-MM-DD)`）。人間は埋められた内容を確認して**検証者・検証日**を記入し Close する。
+        - ただしリポジトリ変数 `AUTO_CLOSE_PASS` が `true` の場合、report.json が完全 PASS（result=PASS かつ全 checks PASS）の issue は起票直後に自動 Close される（自動 Close コメント参照）。BLOCKER・report.json なしの issue は常に人間確認のため OPEN のまま。変数は `gh variable set AUTO_CLOSE_PASS --body true` で切り替え。
         - 手動で立てる場合は下記を埋めて**検証者・検証日**を記入して Close する。
         - 手順の詳細は `docs/production-operations.md` の **Section 4「Public verification」/「Confirm the attempts history after a production run」** を参照。
         - 検証スクリプト: `Invoke-PostDeployVerification.ps1`（既定値 `-MaxAttempts 4 -RetryDelaySeconds 15`、検証前に 20 秒の伝播待ち）。

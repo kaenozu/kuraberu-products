@@ -66,6 +66,7 @@
 | `logicool-mx-keys-s-for-mac-vs-k780`             | 公開済み                       |
 | `logicool-k650-vs-k580`                          | 公開済み                       |
 | `logicool-mx-master-3s-vs-m650`                  | 公開済み                       |
+| `logicool-mx-master-3s-vs-mx-anywhere-3s`        | 公開済み                       |
 | `logicool-lift-vs-m550`                          | 公開済み                       |
 | `logicool-zone-vibe-100-vs-zone-300`             | 公開済み                       |
 | `roborock-qrevo-curv-vs-dreame-x50`              | 公開済み                       |

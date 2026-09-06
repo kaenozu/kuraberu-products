@@ -133,6 +133,9 @@ describe("Amazon Associates integration", () => {
     expect(beaconSource).toContain(
       "cta.dataset.ctaEvent || cta.dataset.amazonCta",
     );
+    expect(beaconSource).toContain("linkType: linkType(cta)");
+    expect(beaconSource).toContain('return "direct-rakuten"');
+    expect(beaconSource).toContain('return "affiliate-rakuten"');
   });
 
   it("keeps the required Associates identification statement on the shared layout", () => {
