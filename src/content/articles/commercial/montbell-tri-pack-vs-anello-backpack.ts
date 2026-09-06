@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const montbellTriPackVsAnelloBackpackSeed: CommercialArticleSeed = {
   id: "montbell-tri-pack-vs-anello-backpack",
+  publishedAt: "2026-08-17",
   title: "モンベル トライパックとanelloリュック、どっち？｜くらべる商品メモ",
   headline: "通勤・通学リュックを比較。容量・PC収納・背負いやすさで選ぶ",
   description:

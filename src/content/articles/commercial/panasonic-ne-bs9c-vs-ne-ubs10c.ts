@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicNeBs9cVsNeUbs10cSeed: CommercialArticleSeed = {
   id: "panasonic-ne-bs9c-vs-ne-ubs10c",
+  publishedAt: "2026-08-17",
   title: "パナソニック NE-BS9CとNE-UBS10C、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック NE-BS9CとNE-UBS10C、どっち？ 公式仕様で比較。違いと選び方を整理",

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicSqLd560VsSqLd540Seed: CommercialArticleSeed = {
   id: "panasonic-sq-ld560-vs-sq-ld540",
+  publishedAt: "2026-08-17",
   title: "パナソニック SQ-LD560とSQ-LD540、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック SQ-LD560とSQ-LD540、どっち？ 公式仕様で比較。違いと選び方を整理",

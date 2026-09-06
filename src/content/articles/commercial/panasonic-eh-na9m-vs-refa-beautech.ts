@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEhNa9mVsRefaBeautechSeed: CommercialArticleSeed = {
   id: "panasonic-eh-na9m-vs-refa-beautech",
+  publishedAt: "2026-08-17",
   title: "パナソニック EH-NA9MとReFa BEAUTECH、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック EH-NA9MとReFa BEAUTECH DRYERを比較。ケア機能・風量・重さで選ぶ",

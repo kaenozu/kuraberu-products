@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const sharpHeaterHvR55VsIrisUhk500Seed: CommercialArticleSeed = {
   id: "sharp-heater-hv-r55-vs-iris-uhk500",
+  publishedAt: "2026-08-17",
   title:
     "シャープ HV-R55とアイリスオーヤマ UHK-500、どっち？｜くらべる商品メモ",
   headline: "加湿器を比較。加湿方式・適用床面積・給水で選ぶ",

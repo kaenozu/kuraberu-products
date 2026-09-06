@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEpMa110VsEpMa121Seed: CommercialArticleSeed = {
   id: "panasonic-ep-ma110-vs-ep-ma121",
+  publishedAt: "2026-08-17",
   title:
     "パナソニック リアルプロ EP-MA110とEP-MA121、どっち？｜くらべる商品メモ",
   headline:

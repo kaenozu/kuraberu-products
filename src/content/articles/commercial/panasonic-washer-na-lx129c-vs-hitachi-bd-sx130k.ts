@@ -3,6 +3,7 @@ import type { CommercialArticleSeed } from "./types";
 export const panasonicWasherNaLx129cVsHitachiBdSx130kSeed: CommercialArticleSeed =
   {
     id: "panasonic-washer-na-lx129c-vs-hitachi-bd-sx130k",
+    publishedAt: "2026-08-17",
     title: "パナソニック NA-LX129Cと日立 BD-SX130K、どっち？｜くらべる商品メモ",
     headline: "ドラム式洗濯乾燥機を比較。容量・乾燥・自動投入で選ぶ",
     description:

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const hitachiBdSx130kVsBdStx130kSeed: CommercialArticleSeed = {
   id: "hitachi-bd-sx130k-vs-bd-stx130k",
+  publishedAt: "2026-08-17",
   title: "日立 BD-SX130KとBD-STX130K、どっち？｜くらべる商品メモ",
   headline: "日立のドラム式洗濯乾燥機を比較。操作パネル・温水・乾燥で選ぶ",
   description:

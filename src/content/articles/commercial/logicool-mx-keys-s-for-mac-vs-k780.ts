@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const logicoolMxKeysSForMacVsK780Seed: CommercialArticleSeed = {
   id: "logicool-mx-keys-s-for-mac-vs-k780",
+  publishedAt: "2026-08-17",
   title: "Logicool MX Keys S for MacとK780、どっち？｜くらべる商品メモ",
   headline:
     "Logicool MX Keys S for MacとK780、どっち？ 公式仕様で比較。違いと選び方を整理",
