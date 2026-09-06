@@ -137,6 +137,17 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
 
+      # X 告知の差分検出は HEAD^（親コミット）を必要とするため、後段の
+      # git fetch --depth=1（シャロウ化して HEAD^ が解決不能になる）より
+      # 先に、フルヒストリーの checkout 直後に実行する必要がある。
+      # 2026-09-06 のランナーログで "Not a valid object name HEAD^" を確認。
+      - name: Generate X announcement drafts
+        shell: bash
+        run: |
+          node scripts/generate-x-announcements.mjs \
+            --site-url "$PUBLIC_SITE_URL" \
+            --previous-sha 'HEAD^'
+
       - name: Verify SHA matches default branch HEAD
         shell: bash
         env:
@@ -216,13 +227,6 @@ jobs:
             -ExpectedCommitSha $env:EXPECTED_SHA `
             -MaxAttempts 4 `
             -RetryDelaySeconds 15
-
-      - name: Generate X announcement drafts
-        shell: bash
-        run: |
-          node scripts/generate-x-announcements.mjs \
-            --site-url "$PUBLIC_SITE_URL" \
-            --previous-sha 'HEAD^'
 
       - name: Publish privacy-safe summary
         if: always()

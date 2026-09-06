@@ -145,40 +145,34 @@ export function readPreviousArticles(previousSha, previousFile) {
   }
   const sha = previousSha ?? "HEAD^";
   try {
-    // -r で再帰列挙し、トップレベルの .ts のみ（現在ツリーの
-    // collectArticleSources が非再帰であることと対応）をフルパスのまま読む。
-    // basename に潰すと commercial/ 等のサブディレクトリ配下まで
-    // フラット化されて git show が失敗し、全記事が「新規」扱いになる。
-    const dirFiles = execFileSync(
-      "git",
-      ["ls-tree", "--name-only", "-r", sha, "--", ARTICLES_DIR],
-      { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] },
-    )
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .filter((fullPath) => {
-        const rest = fullPath.slice(ARTICLES_DIR.length + 1);
-        return (
-          rest.endsWith(".ts") &&
-          !rest.includes("/") &&
-          !ARTICLES_EXCLUDE.has(rest)
-        );
-      })
+    // ファイル一覧は現在ツリー（readdirSync）から取り、各ファイルを
+    // git show <sha>:<path> で previous SHA から読む。git ls-tree は
+    // CI ランナー上で失敗するケースがあり、一覧取得を git に頼ると
+    // 全記事が「新規」扱いになるため、実績のある git show のみに統一する。
+    // previous 以降に追加されたファイルは show が失敗するので個別にスキップ
+    // （previous で削除済みの記事は現在ツリーに無いため列挙されないが、
+    // 差分検出には影響しない）。
+    const names = readdirSync(ARTICLES_DIR)
+      .filter((name) => name.endsWith(".ts") && !ARTICLES_EXCLUDE.has(name))
       .sort();
-    const dirText = dirFiles
-      .map((fullPath) =>
-        execFileSync("git", ["show", `${sha}:${fullPath}`], {
-          encoding: "utf8",
-          stdio: ["ignore", "pipe", "pipe"],
-        }),
-      )
-      .join("\n");
+    const parts = [];
+    for (const name of names) {
+      try {
+        parts.push(
+          execFileSync("git", ["show", `${sha}:${ARTICLES_DIR}/${name}`], {
+            encoding: "utf8",
+            stdio: ["ignore", "pipe", "pipe"],
+          }),
+        );
+      } catch {
+        // previous 時点で未存在のファイル → スキップ
+      }
+    }
     const shimText = execFileSync("git", ["show", `${sha}:${ARTICLES_PATH}`], {
       encoding: "utf8",
       stdio: ["ignore", "pipe", "pipe"],
     });
-    return `${shimText}\n${dirText}`;
+    return `${shimText}\n${parts.join("\n")}`;
   } catch (error) {
     // 親コミットが無い（初回デプロイ）など → 全記事を新規扱い
     console.error(
