@@ -258,6 +258,37 @@ export function buildIssueBody({
   return lines.join("\n");
 }
 
+/**
+ * `gh issue create` の標準出力から issue 番号を取り出す。
+ * 現行の gh は URL（.../issues/<n>）を返すが、旧形式の `#<n>` 表記も許容する。
+ */
+export function parseCreatedIssueNumber(output) {
+  return (
+    output.match(/#(\d+)\b/)?.[1] ??
+    output.match(/\/issues\/(\d+)/)?.[1] ??
+    null
+  );
+}
+
+function findExistingIssueNumber(repo, runId) {
+  return (
+    ghText([
+      "issue",
+      "list",
+      "--repo",
+      repo,
+      "--state",
+      "all",
+      "--search",
+      `in:title ${ISSUE_TITLE_PREFIX} ${runId}`,
+      "--json",
+      "number",
+      "--jq",
+      ".[0].number // empty",
+    ]) || null
+  );
+}
+
 function ghJson(args) {
   return JSON.parse(execFileSync("gh", ["api", ...args], { encoding: "utf8" }));
 }
@@ -331,20 +362,7 @@ function main() {
     return;
   }
 
-  const existing = ghText([
-    "issue",
-    "list",
-    "--repo",
-    repo,
-    "--state",
-    "all",
-    "--search",
-    `in:title ${ISSUE_TITLE_PREFIX} ${runId}`,
-    "--json",
-    "number",
-    "--jq",
-    ".[0].number // empty",
-  ]);
+  const existing = findExistingIssueNumber(repo, runId);
   if (existing) {
     console.log(
       `Evidence issue #${existing} already exists; skipping creation.`,
@@ -371,7 +389,9 @@ function main() {
     // 自動 Close ポリシー: AUTO_CLOSE_PASS=true かつ完全 PASS のときのみ。
     // BLOCKER / UNKNOWN は人間確認のため常に OPEN のまま（#361 契約）。
     if (autoClose && isFullyPassed(report)) {
-      const issueNumber = created.match(/#(\d+)/)?.[1];
+      const issueNumber =
+        parseCreatedIssueNumber(created) ??
+        findExistingIssueNumber(repo, runId);
       if (!issueNumber) {
         throw new Error(
           `Could not parse issue number from gh output: ${created}`,
