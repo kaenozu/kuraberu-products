@@ -8,6 +8,7 @@ import {
   generateAnnouncements,
   parseArticles,
   readCurrentArticles,
+  readPreviousArticles,
 } from "../scripts/generate-x-announcements.mjs";
 
 const fixture = `
@@ -201,5 +202,20 @@ describe("regression: registry split must not silence announcements (2026-09-06)
     expect(announcements.map((entry) => entry.article.id)).toContain(
       "babybjorn",
     );
+  });
+
+  it("announces nothing when the previous tree already has every current article", () => {
+    const previous = readPreviousArticles("HEAD^", undefined);
+    // HEAD^ が解決できる環境（フルヒストリーの checkout）でのみ実行。
+    if (previous === "") {
+      console.warn("skipping: HEAD^ is not available in this checkout");
+      return;
+    }
+    const announcements = generateAnnouncements(
+      readCurrentArticles(),
+      previous,
+      "https://example.com",
+    );
+    expect(announcements).toEqual([]);
   });
 });
