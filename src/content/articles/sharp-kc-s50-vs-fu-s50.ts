@@ -19,7 +19,7 @@ export const sharpKcS50VsFuS50Article = defineArticleMetadata({
   productInfoCheckedAt: "2026-08-13",
   purchaseLinksCheckedAt: "2026-08-30",
   purchaseLinkStatus: "direct",
-  imagePath: "/products/sharp-kc-s50.jpg",
+  imagePath: "/products/sharp-kc-s50.webp",
   changeLog: [
     {
       date: "2026-08-30",
@@ -40,7 +40,7 @@ export const sharpKcS50VsFuS50Article = defineArticleMetadata({
     brand: "シャープ",
     line: "KC-S50",
     tagline: "加湿も使うなら",
-    image: "/products/sharp-kc-s50.jpg",
+    image: "/products/sharp-kc-s50.webp",
     imageAlt: "シャープ 加湿空気清浄機 KC-S50",
     officialHref: "https://jp.sharp/kuusei/products/kcs50/",
     guidePoints: ["加湿機能も使いたく、空気清浄と加湿を1台でまとめたい人向け"],
@@ -49,7 +49,7 @@ export const sharpKcS50VsFuS50Article = defineArticleMetadata({
     brand: "シャープ",
     line: "FU-S50",
     tagline: "小型・軽量なら",
-    image: "/products/sharp-fu-s50.jpg",
+    image: "/products/sharp-fu-s50.webp",
     imageAlt: "シャープ 空気清浄機 FU-S50",
     officialHref: "https://jp.sharp/kuusei/products/fus50/",
     guidePoints: [

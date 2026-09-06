@@ -23,7 +23,6 @@ interface Env {
   TELEGRAM_BOT_TOKEN?: string;
   TELEGRAM_CHAT_ID?: string;
   PUBLIC_SITE_URL?: string;
-  RAKUTEN_PERF_FLUSH_TOKEN?: string;
   CONTACT_RATE_LIMITER?: ContactRateLimiter;
   ANALYTICS_RATE_LIMITER?: ContactRateLimiter;
   ANALYTICS_KV?: AnalyticsKv;

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const logicoolMxMaster3sVsM650Seed: CommercialArticleSeed = {
   id: "logicool-mx-master-3s-vs-m650",
+  publishedAt: "2026-08-17",
   title: "Logicool MX Master 3SとM650、どっち？｜くらべる商品メモ",
   headline:
     "Logicool MX Master 3SとM650、どっち？ 公式仕様で比較。違いと選び方を整理",

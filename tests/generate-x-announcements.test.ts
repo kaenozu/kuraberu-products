@@ -4,8 +4,11 @@ import { describe, expect, it } from "vitest";
 import {
   MAX_POST_LENGTH,
   buildDraft,
+  collectArticleSources,
   generateAnnouncements,
   parseArticles,
+  readCurrentArticles,
+  readPreviousArticles,
 } from "../scripts/generate-x-announcements.mjs";
 
 const fixture = `
@@ -152,6 +155,65 @@ export const betaArticle = defineArticleMetadata({
     const announcements = generateAnnouncements(
       fixture,
       fixture,
+      "https://example.com",
+    );
+    expect(announcements).toEqual([]);
+  });
+
+  it("deduplicates an article declared in both the shim and a per-article file", () => {
+    const combined = `${fixture}\n${fixture.replace("alphaArticle", "alphaArticleAlias")}`;
+    const announcements = generateAnnouncements(
+      combined,
+      "",
+      "https://example.com",
+    );
+    expect(announcements.map((entry) => entry.article.id)).toEqual([
+      "alpha-vs-beta",
+    ]);
+  });
+});
+
+describe("regression: registry split must not silence announcements (2026-09-06)", () => {
+  it("collects sources from the per-article directory", () => {
+    const source = collectArticleSources();
+    expect(source).toContain("defineArticleMetadata");
+  });
+
+  it("combines shim and per-article sources; shim alone yields zero", () => {
+    const shimOnly = parseArticles(
+      readFileSync("src/content/articles.ts", "utf8"),
+    );
+    const combined = parseArticles(readCurrentArticles());
+    // The old behavior: the shim is a pure re-export, so parsing it alone
+    // found zero articles and every deploy skipped announcement drafting.
+    expect(shimOnly.length).toBe(0);
+    expect(combined.length).toBeGreaterThan(shimOnly.length);
+    expect(combined.map((article) => article.id)).toContain("babybjorn");
+  });
+
+  it("announces an article that exists only in a per-article file", () => {
+    const perArticleOnly = collectArticleSources();
+    const announcements = generateAnnouncements(
+      perArticleOnly,
+      "",
+      "https://example.com",
+    );
+    expect(announcements.length).toBeGreaterThan(0);
+    expect(announcements.map((entry) => entry.article.id)).toContain(
+      "babybjorn",
+    );
+  });
+
+  it("announces nothing when the previous tree already has every current article", () => {
+    const previous = readPreviousArticles("HEAD^", undefined);
+    // HEAD^ が解決できる環境（フルヒストリーの checkout）でのみ実行。
+    if (previous === "") {
+      console.warn("skipping: HEAD^ is not available in this checkout");
+      return;
+    }
+    const announcements = generateAnnouncements(
+      readCurrentArticles(),
+      previous,
       "https://example.com",
     );
     expect(announcements).toEqual([]);

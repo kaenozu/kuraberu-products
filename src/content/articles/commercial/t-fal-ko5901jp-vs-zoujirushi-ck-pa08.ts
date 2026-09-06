@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const tFalKo5901jpVsZoujirushiCkPa08Seed: CommercialArticleSeed = {
   id: "t-fal-ko5901jp-vs-zoujirushi-ck-pa08",
+  publishedAt: "2026-08-17",
   title: "ティファール KO5901JPと象印 CK-PA08、どっち？｜くらべる商品メモ",
   headline: "電気ケトルを比較。容量・沸騰時間・安全機能で選ぶ",
   description:

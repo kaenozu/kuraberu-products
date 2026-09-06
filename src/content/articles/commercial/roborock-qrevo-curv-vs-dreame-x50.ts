@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const roborockQrevoCurvVsDreameX50Seed: CommercialArticleSeed = {
   id: "roborock-qrevo-curv-vs-dreame-x50",
+  publishedAt: "2026-08-17",
   title: "ロボロック Qrevo CurvとDreame X50 Ultra、どっち？｜くらべる商品メモ",
   headline:
     "Roborock Qrevo CurvとDreame X50 Ultraを比較。段差・モップ・自動化で選ぶ",
@@ -21,9 +22,9 @@ export const roborockQrevoCurvVsDreameX50Seed: CommercialArticleSeed = {
   leftPoint: "毛絡まりゼロ・75℃温水ドック・モップリフト20mmを重視する人向け",
   rightPoint: "最大6cm段差対応・100日ゴミ収集・200種障害物回避を重視する人向け",
   productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  // No HTTP-200 Rakuten item detail page was confirmed for either model; fail closed instead of exposing search-result CTAs.
-  purchaseLinkStatus: "unavailable",
+  modifiedAt: "2026-09-05",
+  purchaseLinksCheckedAt: "2026-09-05",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Roborock Qrevo Curv 公式商品ページ",

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const samsoniteCLiteVsProtecaMaxpassSeed: CommercialArticleSeed = {
   id: "samsonite-c-lite-vs-proteca-maxpass",
+  publishedAt: "2026-08-17",
   title:
     "サムソナイト C-Liteとプロテカ マックスパス、どっち？｜くらべる商品メモ",
   headline: "人気スーツケースを比較。軽さ・容量・機内持ち込みで選ぶ",

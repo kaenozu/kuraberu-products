@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const logicoolMxKeysSVsMxKeysMiniSeed: CommercialArticleSeed = {
   id: "logicool-mx-keys-s-vs-mx-keys-mini",
+  publishedAt: "2026-08-17",
   title: "Logicool MX Keys SとMX Keys Mini、どっち？｜くらべる商品メモ",
   headline:
     "Logicool MX Keys SとMX Keys Mini、どっち？ 公式仕様で比較。違いと選び方を整理",
