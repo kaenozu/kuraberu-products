@@ -266,7 +266,8 @@ function Invoke-VerificationAttempt {
     # exact build の dist/index.html から導出した $expectedLatestArticlePath を
     # 必ず fetch し、(1) 200 + text/html で実体 HTML が配信されていること
     # 「render している」= 空シェルでない本文があること、(2) build-sha が期待
-    # SHA と一致すること（新着記事が欠落 / 旧 edge を掴んでいないこと）を検証する。
+    # SHA と一致すること（新着記事が欠落 / 旧 edge を掴んでいないこと）、
+    # (3) ライブ sitemap.xml に同じ URL が <loc> 列挙されていることを検証する。
     # 失敗は Check() 経由で hasFailure=true となり、最終試行の BLOCKER → exit 1
     # で run を失敗させる。
     if (-not [string]::IsNullOrWhiteSpace($expectedLatestArticlePath)) {
@@ -292,6 +293,25 @@ function Invoke-VerificationAttempt {
                         Check 'Newest article build-sha matches' ($sha -eq $ExpectedCommitSha) "actual=$sha expected=$ExpectedCommitSha"
                     }
                 }
+                # ライブ sitemap.xml にも同じ最新記事が列挙されていること。
+                # ページは render しても sitemap 生成が旧ビルドのまま取り残される
+                # 状態（検索エンジンに新記事が見つからない）を検出する。
+                # sitemap は RequiredPaths の 200 確認済みだが、内容までは見ていないため
+                # ここで初めて <loc> を解析する。
+                $sitemapResponse = Fetch ([uri]::new($BaseUrl, '/sitemap.xml'))
+                if ($null -eq $sitemapResponse) {
+                    Check 'Newest article in sitemap' $false "Failed to fetch sitemap.xml: $($script:lastFetchError)"
+                } else {
+                    $sitemapOk = [int]$sitemapResponse.StatusCode -eq 200
+                    Check 'Sitemap HTTP' $sitemapOk "status=$([int]$sitemapResponse.StatusCode)"
+                    if ($sitemapOk) {
+                        $sitemapXml = [string]$sitemapResponse.Content
+                        $sitemapEscaped = [regex]::Escape($origin + $expectedLatestArticlePath)
+                        $latestInSitemap = [regex]::IsMatch($sitemapXml, "<loc>\s*$sitemapEscaped\s*</loc>", 'IgnoreCase')
+                        Check 'Newest article in sitemap' $latestInSitemap "expected loc=$origin$expectedLatestArticlePath"
+                    }
+                }
+
                 $pages.Add([ordered]@{ path = $expectedLatestArticlePath; status = [int]$latestResponse.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($latestHtml) })
             }
         }

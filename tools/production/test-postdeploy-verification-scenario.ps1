@@ -33,8 +33,18 @@ if (-not $OutputRoot) {
 # verification script binds its `$BaseUrl` param in THIS scope. Prefix stub
 # state with 'Stub' so the param binding cannot clobber it.
 $script:StubArticleFetches = 0
+# 実際に配信された記事パスのレジストリ。/sitemap.xml はこれから動的に
+# 生成するため、本物のように「配信済み URL のみ」を列挙する（新記事が
+# sitemap に列挙されない退化を再現できる）。
+$script:StubArticleRegistry = [System.Collections.Generic.HashSet[string]]::new([string[]]@(
+    '/articles/thermos-tiger-bottle/',
+    '/articles/babybjorn/'
+))
 $StubBaseUrl = 'https://example.test'
-$StubLatestArticlePath = '/articles/pampers-newborn/'
+# 新着記事は静的 $ArticlePaths に含まれないパスにする。本番と同じ形（新記事は
+# 代表リスト外）にしないと、verifier の "already covered by ArticlePaths"
+# 短絡経路に入り、新着記事 fetch / sitemap チェックが一度も実行されない。
+$StubLatestArticlePath = '/articles/stub-newest-article/'
 
 function New-HtmlPage {
     param([string]$Path, [string]$Sha)
@@ -50,6 +60,9 @@ function New-HtmlPage {
     if ($Path -eq '/') {
         $topLatest = "<section data-top-latest><a href=`"$StubLatestArticlePath`">latest</a></section>"
     }
+    # verifier の 'renders' チェックは空シェル検出のため本文 > 1000 バイトを
+    # 要求する（実ページは ~28KB）。スタブも現実のサイズに合わせて埋める。
+    $filler = (1..30 | ForEach-Object { "<p>filler paragraph $_ with enough text to approximate a real article body.</p>" }) -join "`n"
     @"
 <!doctype html>
 <html>
@@ -61,6 +74,7 @@ $jsonLd
 </head>
 <body>
 $topLatest
+$filler
 <a href="https://hb.afl.rakuten.co.jp/hgc/sample">buy</a>
 <a href="https://example.test/other">other</a>
 </body>
@@ -94,13 +108,16 @@ function Invoke-WebRequest {
         $contentType = 'text/plain; charset=utf-8'
         $content = "User-agent: *`nAllow: /`n"
     } elseif ($path -eq '/sitemap.xml') {
+        # 本物の sitemap 生成と同じ契約: 配信済み記事のみを <loc> 列挙する。
+        $locs = @($script:StubArticleRegistry | Sort-Object | ForEach-Object { "<loc>$StubBaseUrl$_</loc>" })
         $contentType = 'application/xml; charset=utf-8'
-        $content = '<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>'
+        $content = "<?xml version=`"1.0`" encoding=`"UTF-8`"?><urlset xmlns=`"http://www.sitemaps.org/schemas/sitemap/0.9`">$($locs -join '')</urlset>"
     } elseif ($path -match '^/__acceptance_missing_') {
         $statusCode = 404
         $content = '<!doctype html><html><head><meta name="robots" content="noindex"></head><body>missing</body></html>'
-    } elseif ($path -eq '/articles/pampers-newborn/') {
+    } elseif ($path -eq '/articles/pampers-newborn/' -or $path -eq $StubLatestArticlePath) {
         $script:StubArticleFetches++
+        [void]$script:StubArticleRegistry.Add($path)
         $content = New-HtmlPage -Path $path -Sha (Get-ShaForArticle)
     } else {
         $content = New-HtmlPage -Path $path -Sha $ExpectedCommitSha
