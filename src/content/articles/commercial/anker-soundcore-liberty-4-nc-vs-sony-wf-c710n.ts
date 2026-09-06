@@ -3,6 +3,7 @@ import type { CommercialArticleSeed } from "./types";
 export const ankerSoundcoreLiberty4NcVsSonyWfC710nSeed: CommercialArticleSeed =
   {
     id: "anker-soundcore-liberty-4-nc-vs-sony-wf-c710n",
+    publishedAt: "2026-08-17",
     title:
       "Soundcore Liberty 4 NCとソニー WF-C710N、どっち？｜くらべる商品メモ",
     headline: "ノイズキャンセリングイヤホンを比較。再生時間・接続機能で選ぶ",

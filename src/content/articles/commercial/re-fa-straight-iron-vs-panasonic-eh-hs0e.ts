@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const reFaStraightIronVsPanasonicEhHs0eSeed: CommercialArticleSeed = {
   id: "re-fa-straight-iron-vs-panasonic-eh-hs0e",
+  publishedAt: "2026-08-17",
   title:
     "ReFaストレートアイロンとパナソニック EH-HS0E、どっち？｜くらべる商品メモ",
   headline: "ストレートアイロンを比較。温度・プレート・立ち上がりで選ぶ",

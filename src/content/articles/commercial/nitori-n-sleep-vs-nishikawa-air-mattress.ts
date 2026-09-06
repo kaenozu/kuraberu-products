@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const nitoriNSleepVsNishikawaAirMattressSeed: CommercialArticleSeed = {
   id: "nitori-n-sleep-vs-nishikawa-air-mattress",
+  publishedAt: "2026-08-17",
   title: "ニトリ Nスリープと西川 AiRマットレス、どっち？｜くらべる商品メモ",
   headline: "人気マットレスを比較。硬さ・構造・サイズ・手入れで選ぶ",
   description:

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicEsPv6aVsEsPv3aSeed: CommercialArticleSeed = {
   id: "panasonic-es-pv6a-vs-es-pv3a",
+  publishedAt: "2026-09-03",
   title: "パナソニック ES-PV6AとES-PV3A、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック ES-PV6AとES-PV3A、どっち？ 公式仕様で比較。違いと選び方を整理",
