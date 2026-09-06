@@ -158,7 +158,10 @@ export function readPreviousArticles(previousSha, previousFile) {
     // 各ファイルを個別に git show すると記事数に比例してプロセス起動が増え、
     // Windows のフル履歴 checkout ではテストのタイムアウトを招く。batch API
     // で一度に読み、未存在ファイルは従来どおりスキップする。
-    const paths = [ARTICLES_PATH, ...names.map((name) => `${ARTICLES_DIR}/${name}`)];
+    const paths = [
+      ARTICLES_PATH,
+      ...names.map((name) => `${ARTICLES_DIR}/${name}`),
+    ];
     const output = execFileSync("git", ["cat-file", "--batch"], {
       input: `${paths.map((file) => `${sha}:${file}`).join("\\n")}\\n`,
       encoding: null,
@@ -174,7 +177,10 @@ export function readPreviousArticles(previousSha, previousFile) {
       const [, type, sizeText] = header.split(" ");
       const size = Number(sizeText);
       if (type === "missing") continue;
-      contents.set(file, output.subarray(offset, offset + size).toString("utf8"));
+      contents.set(
+        file,
+        output.subarray(offset, offset + size).toString("utf8"),
+      );
       offset += size + 1;
     }
     const shimText = contents.get(ARTICLES_PATH);
