@@ -9,6 +9,7 @@ import {
   buildStepLogExcerpt,
   isAutoCloseEnabled,
   isFullyPassed,
+  parseCreatedIssueNumber,
 } from "../scripts/create-deploy-evidence-issue.mjs";
 import {
   buildFailedStepsSection,
@@ -353,6 +354,30 @@ describe("NO REPORT run self-diagnostics (issue #611/#612/#613 class)", () => {
 
   it("renders nothing without diagnostics input", () => {
     expect(buildFailedStepsSection(null)).toBeNull();
+  });
+});
+
+describe("parseCreatedIssueNumber (gh output parsing)", () => {
+  it("parses the URL form gh issue create actually prints (regression: #660)", () => {
+    expect(
+      parseCreatedIssueNumber(
+        "https://github.com/kaenozu/kuraberu-products/issues/660",
+      ),
+    ).toBe("660");
+  });
+
+  it("still parses the legacy `#<n>` form for robustness", () => {
+    expect(parseCreatedIssueNumber("Created issue #123")).toBe("123");
+    expect(parseCreatedIssueNumber("#456")).toBe("456");
+  });
+
+  it("returns null when no issue number is present", () => {
+    expect(parseCreatedIssueNumber("")).toBeNull();
+    expect(parseCreatedIssueNumber("no number here")).toBeNull();
+  });
+
+  it("prefers a `#<n>` mention over a URL path segment", () => {
+    expect(parseCreatedIssueNumber("see #1 then https://x/issues/2")).toBe("1");
   });
 });
 
