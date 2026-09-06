@@ -1,0 +1,43 @@
+name: Stale PR updater
+
+# main に behind した PR を定期整備する:
+#   - 24h 以上 head が動かず behind し続けている open PR（draft と
+#     CONFLICTING を除く）のブランチを main で更新し、告知コメントを投稿する。
+#   - 長期間放置された behind PR が #614/#621/#620/#624 のように main の進化に
+#     取り残される（最悪の場合、内容を main に吸収されて陳腐化する）のを防ぐ。
+#
+# 詳細ロジックは scripts/update-stale-prs.mjs を参照（テスト:
+# tests/update-stale-prs.test.ts）。
+
+on:
+  schedule:
+    # 毎日 03:20 UTC（日本時間 12:20）。ピーク時間帯を避け、
+    # deploy-production（03:20 台は走らない）と干渉しない時刻。
+    - cron: "20 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write # gh pr update-branch（main のマージコミットを push）
+  pull-requests: write # 告知コメントの投稿
+
+concurrency:
+  group: stale-pr-updater
+  cancel-in-progress: false
+
+jobs:
+  update-stale-prs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # releases/v7.0.1
+        with:
+          persist-credentials: false
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # releases/v7.0.0
+        with:
+          node-version-file: .node-version
+      - name: Update stale PRs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/update-stale-prs.mjs
