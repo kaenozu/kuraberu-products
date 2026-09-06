@@ -84,6 +84,9 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
     const { articlePurchaseLinks } = await import("../src/lib/products");
 
     for (const [key, entry] of Object.entries(articlePurchaseLinks)) {
+      // #436 fail-closed: 未設定（検索リンク廃止で空）のエントリは CTA を
+      // レンダリングしないため、URL 検査の対象外。
+      if (!entry.purchaseUrl) continue;
       const url = new URL(entry.purchaseUrl);
       const destination =
         url.hostname === "hb.afl.rakuten.co.jp"
@@ -99,9 +102,8 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
           /^https:\/\/item\.rakuten\.co\.jp\/[^/]+\/[^/?#]+\/?(?:[?#].*)?$/,
         );
       } else {
-        expect(url.hostname, key).toMatch(
-          /^(?:item\.rakuten\.co\.jp|a\.r10\.to)$/,
-        );
+        // 不透明ショートリンク（a.r10.to）は到達先検証ができないため禁止。
+        expect(url.hostname, key).toBe("item.rakuten.co.jp");
       }
     }
   });

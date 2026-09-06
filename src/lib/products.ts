@@ -430,11 +430,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
-    purchaseUrl: "https://a.r10.to/hkSSwB",
+    purchaseUrl: "",
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:right": {
     name: "パナソニック F-YHVX90",
-    purchaseUrl: "https://a.r10.to/hghANA",
+    purchaseUrl: "",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
@@ -462,19 +462,19 @@ export const articlePurchaseLinks = {
   },
   "pigeon-bottle-240:left": {
     name: "母乳実感 耐熱ガラス製（240ml）",
-    purchaseUrl: "https://a.r10.to/hR4mwU",
+    purchaseUrl: "",
   },
   "pigeon-bottle-240:right": {
     name: "母乳実感 プラスチック製（PPSU）（240ml）",
-    purchaseUrl: "https://a.r10.to/hk5urF",
+    purchaseUrl: "",
   },
   "pigeon-slim-240:left": {
     name: "ピジョン 母乳実感 240ml",
-    purchaseUrl: "https://a.r10.to/hgLggX",
+    purchaseUrl: "",
   },
   "pigeon-slim-240:right": {
     name: "ピジョン スリムタイプ 240ml",
-    purchaseUrl: "https://a.r10.to/h586fn",
+    purchaseUrl: "",
   },
   "sharp-kc-s50-vs-fu-s50:left": {
     name: "シャープ KC-S50",
@@ -494,51 +494,51 @@ export const articlePurchaseLinks = {
   },
   "panasonic-f-px60c-vs-f-px70c:left": {
     name: "パナソニック F-PX60C",
-    purchaseUrl: "https://a.r10.to/h8GBq2",
+    purchaseUrl: "",
   },
   "panasonic-f-px60c-vs-f-px70c:right": {
     name: "パナソニック F-PX70C",
-    purchaseUrl: "https://a.r10.to/h5bABV",
+    purchaseUrl: "",
   },
   "panasonic-es-lt4b-vs-es-lv7j:left": {
     name: "パナソニック ES-LT4B",
-    purchaseUrl: "https://a.r10.to/heFGiH",
+    purchaseUrl: "",
   },
   "panasonic-es-lt4b-vs-es-lv7j:right": {
     name: "パナソニック ES-LV7J",
-    purchaseUrl: "https://a.r10.to/hg2U2Z",
+    purchaseUrl: "",
   },
   "shupot:left": {
     name: "ピジョン 電動鼻吸い器 シュポット 電動 シュポット",
-    purchaseUrl: "https://a.r10.to/hglrVW",
+    purchaseUrl: "",
   },
   "shupot:right": {
     name: "ピジョン 手動鼻吸い器 シュポットポンプ＋フィット鼻ノズル 手動 シュポットポンプ",
-    purchaseUrl: "https://a.r10.to/hP1cll",
+    purchaseUrl: "",
   },
   "tefal-dv4030j0-vs-dv8070j0:left": {
     name: "ティファール DV4030J0",
-    purchaseUrl: "https://a.r10.to/hPgKfj",
+    purchaseUrl: "",
   },
   "tefal-dv4030j0-vs-dv8070j0:right": {
     name: "ティファール DV8070J0",
-    purchaseUrl: "https://a.r10.to/hgIiiI",
+    purchaseUrl: "",
   },
   "tefal-ko5901jp-vs-ko8601j0:left": {
     name: "ティファール KO5901JP",
-    purchaseUrl: "https://a.r10.to/hgJSgN",
+    purchaseUrl: "https://item.rakuten.co.jp/ksdenki/3045387293086/",
   },
   "tefal-ko5901jp-vs-ko8601j0:right": {
     name: "ティファール KO8601J0",
-    purchaseUrl: "https://a.r10.to/hPYDq2",
+    purchaseUrl: "https://item.rakuten.co.jp/toolandmeal/105100525/",
   },
   "thermos-kfm-020-vs-kfi-020:left": {
     name: "サーモス KFM-020",
-    purchaseUrl: "https://a.r10.to/h5dcek",
+    purchaseUrl: "",
   },
   "thermos-kfm-020-vs-kfi-020:right": {
     name: "サーモス KFI-020",
-    purchaseUrl: "https://a.r10.to/h90Ny1",
+    purchaseUrl: "",
   },
   "thermos-tiger-bottle:left": {
     name: "サーモス JNL-S500",
@@ -550,11 +550,11 @@ export const articlePurchaseLinks = {
   },
   "tiger-jpv-l100-vs-jpv-m100:left": {
     name: "タイガー JPV-L100",
-    purchaseUrl: "https://a.r10.to/hYk0zA",
+    purchaseUrl: "",
   },
   "tiger-jpv-l100-vs-jpv-m100:right": {
     name: "タイガー JPV-M100",
-    purchaseUrl: "https://a.r10.to/hPCd5O",
+    purchaseUrl: "",
   },
   "tiger-mta-j050-guide:left": {
     name: "タイガー MTA-J050",
@@ -568,75 +568,75 @@ export const articlePurchaseLinks = {
   },
   "tiger-pcj-a080-vs-pcm-a080:left": {
     name: "タイガー 電気ケトル PCJ-A080",
-    purchaseUrl: "https://a.r10.to/h51Rfo",
+    purchaseUrl: "",
   },
   "tiger-pcj-a080-vs-pcm-a080:right": {
     name: "タイガー 電気ケトル PCM-A080",
-    purchaseUrl: "https://a.r10.to/hklMDi",
+    purchaseUrl: "",
   },
   "tiger-pct-a120-vs-pct-a150:left": {
     name: "タイガー PCT-A120",
-    purchaseUrl: "https://a.r10.to/hFYUbM",
+    purchaseUrl: "https://item.rakuten.co.jp/r-kojima/4904710443538/",
   },
   "tiger-pct-a120-vs-pct-a150:right": {
     name: "タイガー PCT-A150",
-    purchaseUrl: "https://a.r10.to/h57s1i",
+    purchaseUrl: "https://item.rakuten.co.jp/r-kojima/4904710443569/",
   },
   "yamazaki-condor-wagon-vs-self-wagon:left": {
     name: "山崎産業 コンドル FU943-000X-MB",
-    purchaseUrl: "https://a.r10.to/heE5GH",
+    purchaseUrl: "",
   },
   "yamazaki-condor-wagon-vs-self-wagon:right": {
     name: "山崎産業 コンドル FU944-000X-MB",
-    purchaseUrl: "https://a.r10.to/hgTHoJ",
+    purchaseUrl: "",
   },
   "yamazaki-dust-wagon-45l-2division-vs-3division:left": {
     name: "山崎実業 45L 2分別",
-    purchaseUrl: "https://a.r10.to/h5XDqK",
+    purchaseUrl: "",
   },
   "yamazaki-dust-wagon-45l-2division-vs-3division:right": {
     name: "山崎実業 45L 3分別",
-    purchaseUrl: "https://a.r10.to/hPN3m0",
+    purchaseUrl: "",
   },
   "yamazaki-laundry-wire-basket-m-vs-l:left": {
     name: "山崎実業 ランドリーワイヤーバスケット タワー スリム M（240001）",
-    purchaseUrl: "https://a.r10.to/hgb9Ho",
+    purchaseUrl: "",
   },
   "yamazaki-laundry-wire-basket-m-vs-l:right": {
     name: "山崎実業 ランドリーワイヤーバスケット タワー スリム L（240002）",
-    purchaseUrl: "https://a.r10.to/hPyefh",
+    purchaseUrl: "",
   },
   "yamazaki-ofuda-stand-rin-vs-single:left": {
     name: "山崎実業 神札スタンド リン（6141・6142）",
-    purchaseUrl: "https://a.r10.to/h5gRSW",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz22nov22h01/",
   },
   "yamazaki-ofuda-stand-rin-vs-single:right": {
     name: "山崎実業 神札スタンド リン シングル（6144）",
-    purchaseUrl: "https://a.r10.to/hPCi3h",
+    purchaseUrl: "https://item.rakuten.co.jp/roomy/ymz22nov22h02/",
   },
   "yamazaki-dishwasher-rack-241925-vs-241926:left": {
     name: "山崎実業 食洗機ラック タワー ロータイプ（241925）",
-    purchaseUrl: "https://a.r10.to/T3hEWa",
+    purchaseUrl: "",
   },
   "yamazaki-dishwasher-rack-241925-vs-241926:right": {
     name: "山崎実業 食洗機ラック タワー ハイタイプ（241926）",
-    purchaseUrl: "https://a.r10.to/hg9gYo",
+    purchaseUrl: "",
   },
   "yamazaki-free-broom-32-vs-45:left": {
     name: "山崎産業 JS自由箒 32（BR952-032J-MB）",
-    purchaseUrl: "https://a.r10.to/hP00rN",
+    purchaseUrl: "",
   },
   "yamazaki-free-broom-32-vs-45:right": {
     name: "山崎産業 JS自由箒 45（BR952-045J-MB）",
-    purchaseUrl: "https://a.r10.to/hYYwcU",
+    purchaseUrl: "",
   },
   "yamazaki-tower-desk-panel-vs-pen-stand:left": {
     name: "山崎実業 tower デスク横トレー付きスチールパネル（10066 / 10067）",
-    purchaseUrl: "https://a.r10.to/hPRhhu",
+    purchaseUrl: "",
   },
   "yamazaki-tower-desk-panel-vs-pen-stand:right": {
     name: "山崎実業 tower マグネットペンスタンド（10096 / 10097）",
-    purchaseUrl: "https://a.r10.to/hkdB9e",
+    purchaseUrl: "",
   },
   "panasonic-nt-t501-vs-nt-d700:left": {
     name: "パナソニック NT-T501",
@@ -648,19 +648,19 @@ export const articlePurchaseLinks = {
   },
   "zojirushi-ck-pa08-vs-ck-dc08:left": {
     name: "象印 CK-PA08",
-    purchaseUrl: "https://a.r10.to/hPwhA2",
+    purchaseUrl: "",
   },
   "zojirushi-ck-pa08-vs-ck-dc08:right": {
     name: "象印 CK-DC08",
-    purchaseUrl: "https://a.r10.to/hPdpn7",
+    purchaseUrl: "",
   },
   "zojirushi-ec-kv50-vs-ec-ma60:left": {
     name: "象印 EC-KV50",
-    purchaseUrl: "https://a.r10.to/hg1Lco",
+    purchaseUrl: "https://item.rakuten.co.jp/edion/4974305220073/",
   },
   "zojirushi-ec-kv50-vs-ec-ma60:right": {
     name: "象印 EC-MA60",
-    purchaseUrl: "https://a.r10.to/h5tron",
+    purchaseUrl: "https://item.rakuten.co.jp/r-kojima/4974305224385/",
   },
   "yamajitsu-film-holder-242286-vs-242287:left": {
     name: "山崎実業 フィルムフックまな板ホルダー タワー 242286",
@@ -672,19 +672,19 @@ export const articlePurchaseLinks = {
   },
   "zojirushi-eq-sb22-vs-eq-ah22:left": {
     name: "象印 EQ-SB22",
-    purchaseUrl: "https://a.r10.to/hkSuEP",
+    purchaseUrl: "",
   },
   "zojirushi-eq-sb22-vs-eq-ah22:right": {
     name: "象印 EQ-AH22",
-    purchaseUrl: "https://a.r10.to/h5VdYE",
+    purchaseUrl: "",
   },
   "zojirushi-eq-aa22-vs-eq-sa22:left": {
     name: "象印 EQ-AA22",
-    purchaseUrl: "https://a.r10.to/hFR6ju",
+    purchaseUrl: "",
   },
   "zojirushi-eq-aa22-vs-eq-sa22:right": {
     name: "象印 EQ-SA22",
-    purchaseUrl: "https://a.r10.to/h5DVzd",
+    purchaseUrl: "",
   },
   "sony-wh-1000xm6-vs-wh-1000xm5:left": {
     name: "ソニー WH-1000XM6",

@@ -1,6 +1,6 @@
 ---
 import { Picture } from 'astro:assets';
-import {isAffiliateRakutenUrl, isRakutenProductDetailUrl, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
+import {isAffiliateRakutenUrl, isRakutenProductDetailUrl, isVerifiedRakutenPurchaseDestination, toAffiliateRakutenUrl} from '../../config/runtime-env.mjs';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
 import {resolvePurchaseHref} from '../lib/rakuten';
 import {productQueries} from '../lib/purchase-queries';
@@ -22,9 +22,11 @@ interface Props {
 // interface Props により Astro.props は型付きで受ける。
 const {href,label,productId,placement,imagePath,subLabel,searchQuery,requiredTerms} = Astro.props;
 
+// #436: 検証済みアフィリエイトURLは「pc 到達先が商品詳細ページ」のものだけ。
+// 検索結果ページへのリダイレクトや裸の短縮URLは未確認として CTA に出さない。
 const isVerifiedAffiliateHref =
   typeof href === 'string' &&
-  isAffiliateRakutenUrl(href);
+  isVerifiedRakutenPurchaseDestination(href);
 const directHref =
   typeof href === 'string' && (isRakutenProductDetailUrl(href) || isVerifiedAffiliateHref)
     ? href
@@ -61,26 +63,23 @@ const resolved = query
       keyword: query.keyword,
       requiredTerms: query.requiredTerms,
       selection: 'selection' in query ? query.selection : undefined,
-      fallbackUrl: directHref,
     })
   : { href: fallbackHref ?? '', isAffiliate: isAffiliateRakutenUrl(fallbackHref) };
+// #436: CTA の表示先は商品詳細ページのみ。フォールバック URL が検索ページでも
+// アフィリエイト変換した段階で「商品ページを見る」表示になるのは誤導なので、
+// 到達先が確認できない場合は CTA 自体を表示しない（AffiliateButton 契約）。
 const resolvedHref = resolved.href || directHref || '';
 const isAffiliateHref = resolved.href ? resolved.isAffiliate : isAffiliateRakutenUrl(resolvedHref);
-const valid = isRakutenProductDetailUrl(resolvedHref) || isAffiliateHref;
-const isProductDetail = isRakutenProductDetailUrl(resolvedHref);
+const valid = isVerifiedRakutenPurchaseDestination(resolvedHref) && (isRakutenProductDetailUrl(resolvedHref) || isAffiliateHref);
 const ctaRel = isAffiliateHref
   ? 'sponsored nofollow noopener noreferrer'
   : 'nofollow noopener noreferrer';
 const ctaLabel = isAffiliateHref
   ? label
-  : isProductDetail
-    ? '楽天市場で商品ページを見る'
-    : '楽天市場で検索';
+  : '楽天市場で商品ページを見る';
 const ctaSubLabel = isAffiliateHref
   ? (subLabel ?? '商品ページを確認する')
-  : isProductDetail
-    ? '商品ページを確認する'
-    : '検索結果を確認する';
+  : '商品ページを確認する';
 const resolvedImage = resolveImage(imagePath);
 ---
 {valid ? (

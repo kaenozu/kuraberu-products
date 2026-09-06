@@ -47,17 +47,14 @@ describe("resolvePurchaseHref", () => {
     expect(result.product?.id).toBe("4987176203229");
   });
 
-  it("returns affiliate-converted fallback URL when no product is selected (ambiguous candidates)", async () => {
+  it("fails closed with an empty href when candidates stay ambiguous (#436)", async () => {
     vi.stubEnv("RAKUTEN_APPLICATION_ID", "test-app");
     vi.stubEnv("RAKUTEN_ACCESS_KEY", "test-key");
     vi.stubEnv("RAKUTEN_AFFILIATE_ID", "test-affiliate");
-    const fallback =
-      "https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9/";
     const result = await resolvePurchaseHref(
       {
         keyword: "パンパース",
         requiredTerms: ["パンパース"],
-        fallbackUrl: fallback,
       },
       {
         fetchImpl: async () =>
@@ -88,9 +85,11 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
+    // 曖昧候補のとき検索結果URLへフォールバックするのは禁止（#436）。
+    // 確認できない到達先は空 href とし、CTA表示側で fail-closed にする。
     expect(result.product).toBeUndefined();
-    expect(result.href).toContain("search.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 
   it("returns product URL when no affiliate URL is available", async () => {
@@ -149,7 +148,7 @@ describe("resolvePurchaseHref", () => {
     expect(result.product).toBeUndefined();
   });
 
-  it("converts search.rakuten.co.jp fallback to affiliate redirect", async () => {
+  it("returns an empty href and no product when no candidate matches the required terms (#436)", async () => {
     vi.stubEnv("RAKUTEN_APPLICATION_ID", "test-app");
     vi.stubEnv("RAKUTEN_ACCESS_KEY", "test-key");
     vi.stubEnv("RAKUTEN_AFFILIATE_ID", "test-affiliate");
@@ -157,8 +156,6 @@ describe("resolvePurchaseHref", () => {
       {
         keyword: "テスト",
         requiredTerms: ["存在しない"],
-        fallbackUrl:
-          "https://search.rakuten.co.jp/search/mall/%E3%83%86%E3%82%B9%E3%83%88/",
       },
       {
         fetchImpl: async () =>
@@ -167,20 +164,19 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toContain("search.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
+    // 検索結果ページへのフォールバック口は廃止（#436）。候補が無ければ空。
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 
-  it("passes through already-affiliate fallback URLs unchanged", async () => {
+  it("does not adopt a bare affiliate shortlink as the destination (#436)", async () => {
     vi.stubEnv("RAKUTEN_APPLICATION_ID", "test-app");
     vi.stubEnv("RAKUTEN_ACCESS_KEY", "test-key");
     vi.stubEnv("RAKUTEN_AFFILIATE_ID", "test-affiliate");
-    const affiliateUrl = "https://a.r10.to/hPtZZE";
     const result = await resolvePurchaseHref(
       {
         keyword: "テスト",
         requiredTerms: ["存在しない"],
-        fallbackUrl: affiliateUrl,
       },
       {
         fetchImpl: async () =>
@@ -189,21 +185,19 @@ describe("resolvePurchaseHref", () => {
       },
     );
 
-    expect(result.href).toBe(affiliateUrl);
-    expect(result.isAffiliate).toBe(true);
+    // 裸の短縮URL（pc 到達先を確認できない）は購入CTAに使えない（#436）。
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 
-  it("selects product over fallback when API returns a match", async () => {
+  it("selects the verified product when the API returns a match", async () => {
     vi.stubEnv("RAKUTEN_APPLICATION_ID", "test-app");
     vi.stubEnv("RAKUTEN_ACCESS_KEY", "test-key");
     vi.stubEnv("RAKUTEN_AFFILIATE_ID", "test-affiliate");
-    const fallback =
-      "https://search.rakuten.co.jp/search/mall/%E3%83%86%E3%82%B9%E3%83%88/";
     const result = await resolvePurchaseHref(
       {
         keyword: "テスト",
         requiredTerms: ["テスト"],
-        fallbackUrl: fallback,
       },
       {
         fetchImpl: async () =>
