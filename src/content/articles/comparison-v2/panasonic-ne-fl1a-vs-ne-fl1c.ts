@@ -18,7 +18,7 @@ export const entry = defineComparisonV2("panasonic-ne-fl1a-vs-ne-fl1c", {
     brand: "パナソニック",
     line: "NE-FL1C",
     tagline: "軽さ・庫内幅なら",
-    image: "/products/panasonic-ne-fl1c.png",
+    image: "/products/panasonic-ne-fl1c.jpg",
     imageAlt: "パナソニック NE-FL1C",
     officialHref: "https://panasonic.jp/range/products/NE-FL1C.html",
     guidePoints: [

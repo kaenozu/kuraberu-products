@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicNeBs9cVsNeUbs10cSeed: CommercialArticleSeed = {
   id: "panasonic-ne-bs9c-vs-ne-ubs10c",
+  publishedAt: "2026-08-17",
   title: "パナソニック NE-BS9CとNE-UBS10C、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック NE-BS9CとNE-UBS10C、どっち？ 公式仕様で比較。違いと選び方を整理",
@@ -20,9 +21,10 @@ export const panasonicNeBs9cVsNeUbs10cSeed: CommercialArticleSeed = {
   rightProduct: "パナソニック ビストロ NE-UBS10C",
   leftPoint: "基本機能とホワイトバックライト液晶、215レシピを重視する人向け",
   rightPoint: "カラータッチ液晶・ソフトダンパー・267レシピを重視する人向け",
-  productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-09-03",
+  modifiedAt: "2026-09-03",
+  purchaseLinksCheckedAt: "2026-09-03",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（NE-BS9C）",

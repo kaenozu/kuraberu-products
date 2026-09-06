@@ -39,13 +39,21 @@ const {
   searchQuery,
   requiredTerms,
   imageUrl,
+  purchaseLinkStatus,
 } = Astro.props;
 
-const hasHref = Boolean(href);
-const amazonSearchUrl = toAmazonAssociateSearchUrl(
-  name,
-  import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG,
-);
+// unverified / unavailable の購入リンクは CTA を表示しない (#549)。
+// verified / direct のみ実際の購入ボタンを表示する。
+// カード本体 (商品画像・名前・audience) は全ステータスで表示する。
+const showCta =
+  Boolean(href) &&
+  (purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct");
+const showPending =
+  !showCta && (purchaseLinkStatus === "unverified" || !purchaseLinkStatus);
+const amazonSearchUrl =
+  showCta && purchaseLinkStatus === "verified"
+    ? toAmazonAssociateSearchUrl(name, import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG)
+    : undefined;
 const resolvedImage = resolveImage(imagePath);
 ---
 
@@ -63,7 +71,7 @@ const resolvedImage = resolveImage(imagePath);
       <p class="purchase-card__audience">{audience}</p>
     </div>
   </div>
-  {hasHref ? (
+  {showCta && href ? (
     <>
       <AffiliateButton
         href={href}
@@ -88,11 +96,11 @@ const resolvedImage = resolveImage(imagePath);
         </a>
       )}
     </>
-  ) : (
-    <p class="purchase-card__pending">
+  ) : showPending ? (
+    <p class="purchase-card__pending" data-purchase-status={purchaseLinkStatus}>
       購入リンクは現在確認中です。
     </p>
-  )}
+  ) : null}
   {note && <p class="purchase-card__note">{note}</p>}
 </article>
 

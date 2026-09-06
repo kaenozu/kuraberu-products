@@ -383,16 +383,10 @@ export type ResolvePurchaseHrefOptions = {
   requiredTerms: readonly string[];
   /** Rakuten selection options (excluded terms, exact identifiers, etc.) */
   selection?: RakutenSelectionOptions;
-  /**
-   * Fallback URL when no product is selected.
-   * Typically a Rakuten search URL that toAffiliateRakutenUrl will convert
-   * to an hb.afl affiliate redirect.
-   */
-  fallbackUrl?: string;
 };
 
 export type ResolvedPurchaseHref = {
-  /** The resolved URL (affiliate > product URL > fallback, normalized) */
+  /** The resolved URL (affiliate > product detail URL, empty when unconfirmed) */
   href: string;
   /** Whether the resolved URL is an affiliate link (for ad disclosure) */
   isAffiliate: boolean;
@@ -404,7 +398,7 @@ export type ResolvedPurchaseHref = {
  * 統一購入リンクリゾルバー。
  *
  * 楽天APIで商品を検索 → selectRakutenProduct で最適な候補を選択 →
- * affiliate URL > product URL > fallback URL の順で解決する。
+ * affiliate URL > product URL の順で解決する。
  *
  * AffiliateButton と CommercialArticlePage の両方が使う。
  * articlePurchaseLinks レジストリは静的でAPI呼び出し不要のため、
@@ -425,8 +419,9 @@ export async function resolvePurchaseHref(
     options.selection ?? {},
   );
 
-  // Search URLs are never purchase destinations. A missing/ambiguous detail
-  // page remains unset rather than becoming a misleading affiliate CTA.
+  // Search URLs are never purchase destinations (#436). A missing/ambiguous
+  // detail page stays empty — no affiliate-wrapped search fallback — so the
+  // renderer's purchaseLinkStatus contract can fail closed and hide the CTA.
   const rawHref = selected?.url;
   const resolvedHref =
     rawHref && isRakutenProductDetailUrl(rawHref)
@@ -435,13 +430,7 @@ export async function resolvePurchaseHref(
           import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
         ) ?? rawHref)
       : "";
-  const fallbackHref = options.fallbackUrl
-    ? (toAffiliateRakutenUrl(
-        options.fallbackUrl,
-        import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT,
-      ) ?? options.fallbackUrl)
-    : "";
-  const href = resolvedHref || fallbackHref;
+  const href = resolvedHref;
   const isAffiliate = isAffiliateRakutenUrl(href);
 
   return { href, isAffiliate, product: selected };

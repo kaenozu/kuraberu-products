@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicMcSb53kVsMcSb33jSeed: CommercialArticleSeed = {
   id: "panasonic-mc-sb53k-vs-mc-sb33j",
+  publishedAt: "2026-08-17",
   title: "パナソニック MC-SB53KとMC-SB33J、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック MC-SB53KとMC-SB33J、どっち？ 公式仕様で比較。違いと選び方を整理",

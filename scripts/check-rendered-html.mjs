@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
+import { isVerifiedRakutenPurchaseDestination } from "../config/runtime-env.mjs";
 import {
   ARTICLE_LAYOUT,
   contentTypeFor,
@@ -369,6 +370,16 @@ export function validateNoUnresolvedTemplateTokens(relative, html) {
   );
 }
 
+export function validateRepeatedJapanesePunctuation(relative, html) {
+  const body = stripScriptAndStyleContents(html);
+  const matches = body.match(/[。！？]{2,}/g) ?? [];
+  return matches.length === 0
+    ? []
+    : [
+        `${relative}: [punctuation] repeated Japanese punctuation remains in rendered HTML: ${matches.slice(0, 3).join(", ")}`,
+      ];
+}
+
 // 記事ページの商品数を、BaseLayout が出力する
 // <meta name="article:product-count" content="N"> から読み取る。
 // 商品数の唯一の情報源は記事メタデータ（src/content/articles.ts の productCount）。
@@ -515,6 +526,8 @@ export function validateArticleNextStep(relative, html) {
     html.match(
       /<meta name="article:purchase-link-status" content="([^"]+)">/i,
     )?.[1] ?? null;
+  const hasPurchaseCtas =
+    purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
   const legacyCtas = [
     ...html.matchAll(
       /<section\b[^>]*class="[^"]*\bdiagnosis-cta\b[^"]*"[^>]*>/gi,
@@ -556,7 +569,7 @@ export function validateArticleNextStep(relative, html) {
       /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
     ),
   ];
-  const expectedBuyLinks = purchaseLinkStatus === "unavailable" ? 0 : 2;
+  const expectedBuyLinks = hasPurchaseCtas ? 2 : 0;
   if (buyLinks.length !== expectedBuyLinks) {
     errors.push(
       `${relative}: next-step block must render exactly ${expectedBuyLinks} purchase buttons (next-step__buy), found ${buyLinks.length}`,
@@ -863,7 +876,9 @@ export function validateArticleCtas(
       );
     }
     if (AFFILIATE_URL_PATTERN.test(href)) {
-      // アフィリエイトCTA: スポンサー表記・nofollow・広告表示を必須にする。
+      // アフィリエイトCTA: スポンサー表記・nofollow・広告表示を必須にし、
+      // pc パラメータの最終到達先が商品詳細ページであることを検証する（#436）。
+      // 検索結果ページへのリダイレクトは「商品ページを見る」表示でも誤導になるため禁止。
       if (!/\bsponsored\b/i.test(rel) || !/\bnofollow\b/i.test(rel)) {
         errors.push(
           `${relative}: CTA ${index + 1} is missing sponsored/nofollow rel attributes`,
@@ -874,31 +889,37 @@ export function validateArticleCtas(
           `${relative}: CTA ${index + 1} is missing advertising disclosure`,
         );
       }
+      if (!isVerifiedRakutenPurchaseDestination(href)) {
+        errors.push(
+          `${relative}: CTA ${index + 1} affiliate URL must point at a confirmed item detail page (pc parameter), not a search page or opaque shortlink`,
+        );
+      }
     } else {
       // アフィリエイトでないCTA（未差し替え時の楽天検索フォールバック等）は
       // 許可済みの楽天ホストだけを許し、nofollow を必須にする。
       let isRakutenFallback = false;
-      let isItemDetail = false;
+      let isRakutenItemDetail = false;
       try {
         const url = new URL(href);
-        isItemDetail =
+        isRakutenItemDetail =
+          url.protocol === "https:" &&
           url.hostname === "item.rakuten.co.jp" &&
           /^\/[^/]+\/[^/]+\/?$/.test(url.pathname);
         isRakutenFallback =
           url.protocol === "https:" &&
           (url.hostname === "search.rakuten.co.jp" ||
-            url.hostname.endsWith(".rakuten.co.jp"));
+            (url.hostname.endsWith(".rakuten.co.jp") && !isRakutenItemDetail));
       } catch {
         // The generic validation below reports malformed URLs.
       }
-      if (isItemDetail) {
+      if (isRakutenItemDetail) {
         continue;
       }
       if (isRakutenFallback) {
         errors.push(
           `${relative}: CTA ${index + 1} must not use a Rakuten search URL; only a confirmed item detail destination is allowed`,
         );
-      } else {
+      } else if (!isRakutenItemDetail) {
         errors.push(
           `${relative}: CTA ${index + 1} is not a confirmed Rakuten affiliate URL`,
         );
@@ -987,42 +1008,13 @@ export function validateTopPageCategories(topHtml, articlesIndexHtml) {
   return errors;
 }
 
-// トップページ（dist/index.html）の「よく比較される商品」を検証する。
-// config の topPage.featuredPaths（3〜4件）がすべてトップにリンクされ、
-// リンク数が config と一致することを照合する。
-// 件数を絞ることで「人気（編集選定）」と「最近の比較（追加日）」の
-// 意味の違う入口として機能させる。
-export function validateTopPageFeatured(topHtml) {
-  const errors = [];
-  const featuredPaths = ARTICLE_LAYOUT.topPage.featuredPaths;
-  if (featuredPaths.length < 3 || featuredPaths.length > 4) {
-    errors.push(
-      `config/article-layout.mjs: topPage.featuredPaths must have 3-4 items, found ${featuredPaths.length}`,
-    );
-  }
-  const section = topHtml.match(
-    /<section\b[^>]*data-top-featured[^>]*>([\s\S]*?)<\/section\s*>/i,
-  );
-  if (!section) {
-    errors.push("top page: missing data-top-featured section");
-    return errors;
-  }
-  const hrefs = [...section[1].matchAll(/href="([^"]+)"/g)].map(
-    (match) => match[1],
-  );
-  const expected = new Set(featuredPaths);
-  for (const path of featuredPaths) {
-    if (!hrefs.includes(path)) {
-      errors.push(`top page: featured article not linked: ${path}`);
-    }
-  }
-  const unexpected = hrefs.filter((href) => !expected.has(href));
-  if (unexpected.length) {
-    errors.push(
-      `top page: unexpected link in data-top-featured section: ${unexpected.join(", ")}`,
-    );
-  }
-  return errors;
+// トップページ（dist/index.html）の新着比較セクションを検証する。
+export function validateTopPageLatest(topHtml) {
+  return /<section\b[^>]*data-top-latest[^>]*>[\s\S]*?<\/section\s*>/i.test(
+    topHtml,
+  )
+    ? []
+    : ["top page: missing data-top-latest section"];
 }
 
 // 見出しの直後に本文（テキスト・要素）が無い「空セクション」を検出する。
@@ -1211,26 +1203,14 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       html.match(
         /<meta name="article:purchase-link-status" content="([^"]+)">/i,
       )?.[1] ?? null;
-    const expectedCtaCount =
-      purchaseLinkStatus === "unavailable"
-        ? ARTICLE_LAYOUT.ctaSets
-            .filter((set) => !set.comparisonOnly)
-            .reduce(
-              (total, set) => total + set.cardsPerProduct * productCount,
-              0,
-            )
-        : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
-    const expectedCtasByPlacement =
-      purchaseLinkStatus === "unavailable"
-        ? Object.fromEntries(
-            ARTICLE_LAYOUT.ctaSets
-              .filter((set) => !set.comparisonOnly)
-              .map((set) => [
-                set.placement,
-                set.cardsPerProduct * productCount,
-              ]),
-          )
-        : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
+    const hasPurchaseCtas =
+      purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
+    const expectedCtaCount = !hasPurchaseCtas
+      ? 0
+      : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
+    const expectedCtasByPlacement = !hasPurchaseCtas
+      ? {}
+      : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));
@@ -1240,6 +1220,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     // Issue #343: 全記事ページへ拡大した検証（必須セクション有無・未解決トークン）
     errors.push(...validateRequiredSections(relative, html));
     errors.push(...validateNoUnresolvedTemplateTokens(relative, html));
+    errors.push(...validateRepeatedJapanesePunctuation(relative, html));
     errors.push(
       ...validateArticleCtas(
         relative,
@@ -1281,7 +1262,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       const articlesIndexHtml = fs.readFileSync(articlesIndex, "utf8");
       errors.push(
         ...validateTopPageCategories(topHtml, articlesIndexHtml),
-        ...validateTopPageFeatured(topHtml),
+        ...validateTopPageLatest(topHtml),
       );
     }
   }

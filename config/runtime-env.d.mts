@@ -29,7 +29,14 @@ export function toAmazonAssociateSearchUrl(
   associateTag: string | undefined,
 ): string | undefined;
 export function isAllowedRakutenUrl(value: unknown): boolean;
+export function isAllowedAmazonUrl(value: unknown): boolean;
 export function isRakutenProductDetailUrl(value: unknown): boolean;
+/**
+ * #436: 購入導線の最終到達先が「確認済みの商品詳細ページ」かどうか。
+ * 直リンク（item.rakuten.co.jp/<shop>/<item>/）か、pc パラメータの
+ * 到達先が商品詳細ページであるアフィリエイトURLのみ true。
+ */
+export function isVerifiedRakutenPurchaseDestination(value: unknown): boolean;
 export function toAffiliateRakutenUrl(
   value: string | undefined,
   redirectPrefix?: string,

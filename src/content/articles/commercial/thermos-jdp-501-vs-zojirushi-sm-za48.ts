@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const thermosJdp501VsZojirushiSmZa48Seed: CommercialArticleSeed = {
   id: "thermos-jdp-501-vs-zojirushi-sm-za48",
+  publishedAt: "2026-08-17",
   title: "サーモス JDP-501と象印 SM-ZA48、どっち？｜くらべる商品メモ",
   headline: "保温保冷マグを比較。容量・飲み口・洗いやすさで選ぶ",
   description:

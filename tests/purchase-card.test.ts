@@ -60,21 +60,26 @@ describe("PurchaseCard", () => {
     expect(html).toContain('rel="nofollow noopener noreferrer"');
   });
 
-  it("renders a Rakuten short URL when status is verified", async () => {
+  it("renders no CTA for a Rakuten short URL even when status is verified (#436)", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
       props: {
         name: "ベビービョルン バウンサー Bliss",
         audience: "公式商品ページを確認したい人向け",
-        // short URLs are rejected even when the caller claims verified
+        // #436 fail-closed: 不透明ショートリンクは到達先を検証できないため、
+        // verified を名乗っても CTA はレンダリングしない（カード本体は表示）。
         href: "https://a.r10.to/hPtZZE",
         productId: "babybjorn-bouncer-bliss",
         purchaseLinkStatus: "verified",
       },
     });
 
-    expect(html).toContain("楽天市場で確認する");
-    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
+    expect(html).not.toContain("楽天市場で確認する");
+    expect(html).not.toContain("data-cta-event");
+    expect(html).toContain("ベビービョルン バウンサー Bliss");
+    expect(html).toContain(
+      "公式サイトまたは販売ページで商品を確認してください。",
+    );
   });
 
   it("defaults to article-end placement (v3 principle) and renders image", async () => {
@@ -110,13 +115,14 @@ describe("PurchaseCard", () => {
     expect(html).toContain('data-placement="article-end"');
   });
 
-  // href が存在するときは CTA を表示する。purchaseLinkStatus は表示判定に影響しない。
+  // H-3 (#549): verified / direct のみ CTA を表示。unverified と status 省略時は
+  // pending 文言を出し、unavailable はカード本体だけを表示する。
   it.each([
     ["omitted", undefined],
     ["unverified", "unverified"],
     ["unavailable", "unavailable"],
   ] as const)(
-    "shows CTAs when the status is %s and href exists",
+    "suppresses the purchase CTA when the status is %s and href exists (#549)",
     async (_label, purchaseLinkStatus) => {
       const container = await AstroContainer.create();
       const html = await container.renderToString(PurchaseCard, {
@@ -129,10 +135,33 @@ describe("PurchaseCard", () => {
         },
       });
 
-      expect(html).toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
-      expect(html).toContain('data-cta-event="purchase"');
+      // CTA (楽天市場で確認 / 商品ページを見る / 検索) は出ない。
+      expect(html).not.toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      if (purchaseLinkStatus === "unavailable") {
+        expect(html).not.toContain("purchase-card__pending");
+      } else {
+        expect(html).toContain("purchase-card__pending");
+      }
+      // カード本体 (商品名 / audience) は引き続き出る。
       expect(html).toContain("サーモス JNL-S500");
       expect(html).toContain("軽さ・コンパクト・食洗機対応を優先する人向け");
     },
   );
+
+  it("shows the verified CTA only when purchaseLinkStatus is verified or direct (#549)", async () => {
+    for (const status of ["verified", "direct"] as const) {
+      const container = await AstroContainer.create();
+      const html = await container.renderToString(PurchaseCard, {
+        props: {
+          name: "サーモス JNL-S500",
+          audience: "軽さ・コンパクト・食洗機対応を優先する人向け",
+          href: validRakutenUrl,
+          productId: "thermos-jnl-s500",
+          purchaseLinkStatus: status,
+        },
+      });
+      expect(html).toMatch(/楽天市場で(確認する|商品ページを見る|検索)/);
+      expect(html).not.toContain("purchase-card__pending");
+    }
+  });
 });

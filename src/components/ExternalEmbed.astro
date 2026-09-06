@@ -475,6 +475,8 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
   }
 
 
+  // embed が無いページでは DOM 走査をスキップ (#563)。
+  if (document.querySelector("[data-external-embed]")) {
   for (const root of document.querySelectorAll<HTMLElement>("[data-external-embed]")) {
     if (root.dataset.initialized === "true") continue;
     root.dataset.initialized = "true";
@@ -609,6 +611,7 @@ const toneLabel: Record<NonNullable<Props["tone"]>, string> = {
         showWithdrawControl();
       }
     }
+  }
   }
 </script>
 

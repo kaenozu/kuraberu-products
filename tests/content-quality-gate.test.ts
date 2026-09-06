@@ -101,15 +101,16 @@ describe("公開記事コンテンツ品質ゲート", () => {
     }
   });
 
-  it("PurchaseCardコンポーネントがhref存在時にCTAを表示すること", () => {
+  it("PurchaseCardコンポーネントが verified/direct のみ CTA を表示すること (#549)", () => {
     const componentSource = readFileSync(
       join(root, "src/components/PurchaseCard.astro"),
       "utf8",
     );
-    expect(componentSource).toMatch(/hasHref\s*=\s*Boolean\(href\)/);
-    expect(componentSource).toMatch(/\{hasHref\s*\?\s*\(/);
-    expect(componentSource).not.toMatch(
+    // H-3: showCta は verified / direct のときだけ true。
+    expect(componentSource).toMatch(
       /purchaseLinkStatus\s*===\s*["']verified["']\s*\|\|\s*purchaseLinkStatus\s*===\s*["']direct["']/,
     );
+    // unverified / unavailable 時は pending 表示。
+    expect(componentSource).toContain("purchase-card__pending");
   });
 });

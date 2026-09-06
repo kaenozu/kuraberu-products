@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const panasonicMcJp860kVsMcSb70kmSeed: CommercialArticleSeed = {
   id: "panasonic-mc-jp860k-vs-mc-sb70km",
+  publishedAt: "2026-08-17",
   title: "パナソニック MC-JP860KとMC-SB70KM、どっち？｜くらべる商品メモ",
   headline:
     "パナソニック MC-JP860KとMC-SB70KM、どっち？ 公式仕様で比較。違いと選び方を整理",
@@ -20,9 +21,10 @@ export const panasonicMcJp860kVsMcSb70kmSeed: CommercialArticleSeed = {
   rightProduct: "パナソニック MC-SB70KM",
   leftPoint: "紙パック式・コード付きで長時間掃除したい人向け",
   rightPoint: "コードレスで軽く、ふき掃除や壁ぎわ集じんも使いたい人向け",
-  productInfoCheckedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  productInfoCheckedAt: "2026-09-02",
+  modifiedAt: "2026-09-02",
+  purchaseLinksCheckedAt: "2026-09-02",
+  purchaseLinkStatus: "direct",
   officialSources: [
     {
       label: "Panasonic公式商品ページ（MC-JP860K）",

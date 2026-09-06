@@ -83,7 +83,9 @@ describe("article CTA layout vs metadata productCount", () => {
             contentTypeFor(article.productCount) === "comparison";
           const expected =
             set.comparisonOnly &&
-            (article.purchaseLinkStatus === "unavailable" || !isComparison)
+            (article.purchaseLinkStatus === "unavailable" ||
+              article.purchaseLinkStatus === "unverified" ||
+              !isComparison)
               ? 0
               : set.cardsPerProduct * article.productCount;
           if (set.comparisonOnly) {
@@ -103,18 +105,19 @@ describe("article CTA layout vs metadata productCount", () => {
           blocks.length + nextStepBuyCount,
           `${article.id}: total CTAs should match expectedPurchaseCtasPerArticle(${article.productCount}, layout)`,
         ).toBe(
-          article.purchaseLinkStatus === "unavailable"
-            ? ARTICLE_LAYOUT.ctaSets
+          article.purchaseLinkStatus === "verified" ||
+            article.purchaseLinkStatus === "direct"
+            ? expectedPurchaseCtasPerArticle(
+                article.productCount,
+                ARTICLE_LAYOUT,
+              )
+            : ARTICLE_LAYOUT.ctaSets
                 .filter((set) => !set.comparisonOnly)
                 .reduce(
                   (total, set) =>
                     total + set.cardsPerProduct * article.productCount,
                   0,
-                )
-            : expectedPurchaseCtasPerArticle(
-                article.productCount,
-                ARTICLE_LAYOUT,
-              ),
+                ),
         );
       }
     },

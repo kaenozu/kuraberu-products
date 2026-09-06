@@ -5,6 +5,10 @@
  * 仕様（21節）に従い、属性比較（公式仕様上の差）→ editorialPriority の順に
  * 試す。editorialPriority は常に最後のタイブレークとして扱い、恣意的な
  * 順位操作には使わない。
+ *
+ * ソート比較器内で products.find を呼ぶと O(n²) になるため、
+ * productId → Product の Map を1度構築して参照する (#555)。
+ * ソートの安定性は V8 (Node.js) の TimSort を前提とする。
  */
 
 import type { Product, ProductScore, TieBreakerRule } from "./types";
@@ -89,16 +93,18 @@ export function rankProducts(
       (score): score is ProductScore => score !== undefined && !score.excluded,
     );
 
+  // ソート比較器内で productId → Product の参照を O(1) で行うための Map。
+  // products.find を比較ごとに呼ぶと O(n²) になる。
+  const productById = new Map<string, Product>(
+    products.map((product) => [product.id, product]),
+  );
+
   const sorted = [...eligible].sort((left, right) => {
     const byScore = compareNumbers(right.score, left.score);
     if (byScore !== 0) return byScore;
     if (tieBreaker.length === 0) return 0;
-    const leftProduct = products.find(
-      (product) => product.id === left.productId,
-    );
-    const rightProduct = products.find(
-      (product) => product.id === right.productId,
-    );
+    const leftProduct = productById.get(left.productId);
+    const rightProduct = productById.get(right.productId);
     if (!leftProduct || !rightProduct) return 0;
     return tieBreakCompare(leftProduct, rightProduct, tieBreaker);
   });

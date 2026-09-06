@@ -41,10 +41,14 @@ import { logicoolMxKeysSVsMxKeysMiniSeed } from "./logicool-mx-keys-s-vs-mx-keys
 import { logicoolMxKeysSForMacVsK780Seed } from "./logicool-mx-keys-s-for-mac-vs-k780";
 import { logicoolK650VsK580Seed } from "./logicool-k650-vs-k580";
 import { logicoolMxMaster3sVsM650Seed } from "./logicool-mx-master-3s-vs-m650";
+import { logicoolMxMaster3sVsMxAnywhere3sSeed } from "./logicool-mx-master-3s-vs-mx-anywhere-3s";
 import { logicoolLiftVsM550Seed } from "./logicool-lift-vs-m550";
 import { logicoolZoneVibe100VsZone300Seed } from "./logicool-zone-vibe-100-vs-zone-300";
 import { sonyWh1000xm6VsWh1000xm5Seed } from "./sony-wh-1000xm6-vs-wh-1000xm5";
 import { ankerSoundcoreLiberty4NcVsSonyWfC710nSeed } from "./anker-soundcore-liberty-4-nc-vs-sony-wf-c710n";
+import { panasonicNeBs6eVsNeBs5eSeed } from "./panasonic-ne-bs6e-vs-ne-bs5e";
+import { panasonicEsPv6aVsEsPv3aSeed } from "./panasonic-es-pv6a-vs-es-pv3a";
+import { yamazakiRefrigeratorRack240057Vs240059Seed } from "./yamazaki-refrigerator-rack-240057-vs-240059";
 
 export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   roborockQrevoCurvVsDreameX50Seed,
@@ -85,8 +89,12 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   logicoolMxKeysSForMacVsK780Seed,
   logicoolK650VsK580Seed,
   logicoolMxMaster3sVsM650Seed,
+  logicoolMxMaster3sVsMxAnywhere3sSeed,
   logicoolLiftVsM550Seed,
   logicoolZoneVibe100VsZone300Seed,
   sonyWh1000xm6VsWh1000xm5Seed,
   ankerSoundcoreLiberty4NcVsSonyWfC710nSeed,
+  panasonicNeBs6eVsNeBs5eSeed,
+  panasonicEsPv6aVsEsPv3aSeed,
+  yamazakiRefrigeratorRack240057Vs240059Seed,
 ];

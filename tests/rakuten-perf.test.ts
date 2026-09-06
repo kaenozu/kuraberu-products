@@ -612,3 +612,6 @@ describe("computeSummary", () => {
     expect(s.errorCount).toBe(2);
   });
 });
+
+// POST is intentionally disabled until a documented server-side caller exists.
+// Its fail-closed contract is covered by tests/rakuten-perf-post-disabled.test.ts.

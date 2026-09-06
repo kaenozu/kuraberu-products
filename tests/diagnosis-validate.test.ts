@@ -160,6 +160,30 @@ describe("validateDiagnosisData", () => {
     ).toThrow(/許可されたホストではありません/);
   });
 
+  it("Amazon購入リンクが許可されたホストでなければ throw する (#558)", () => {
+    const products = babyBottleProducts.map((product) =>
+      product.id === "bo160-glass"
+        ? {
+            ...product,
+            purchaseLinks: [
+              {
+                provider: "amazon" as const,
+                url: "https://amazon.co.jp.evil.example/item",
+                affiliate: false,
+              },
+            ],
+          }
+        : product,
+    );
+    expect(() =>
+      validateDiagnosisData(
+        babyBottleDiagnosis,
+        products,
+        babyBottleReasonDictionary,
+      ),
+    ).toThrow(/Amazon購入リンクが許可されたホストではありません/);
+  });
+
   // ---- articleUrls / relatedArticles.path の実在チェック ----
 
   it("articleUrls が実在記事と一致すれば options を渡しても通過する", () => {

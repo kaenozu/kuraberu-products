@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory)][uri]$BaseUrl,
     [string]$ExpectedCommitSha,
     [string]$OutputRoot = '.acceptance',
+    [string]$ExpectedTopPageSourcePath = '',
     # Core pages that must always be present and healthy.
     [string[]]$RequiredPaths = @(
         '/',
@@ -51,6 +52,48 @@ New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
 $checks = [System.Collections.Generic.List[object]]::new()
 $pages = [System.Collections.Generic.List[object]]::new()
 $hasFailure = $false
+
+# Production deploy と同じ exact build のトップHTMLから、期待する最新記事を導出する。
+# パスをスクリプトへハードコードすると記事追加のたびに検証側が陳腐化するため、
+# deploy job 内に残っている dist/index.html を唯一の期待値ソースにする。
+# Contract test では同じ構造のfixtureを明示注入できるが、Productionでは未指定の
+# まま必ずrepository rootのdist/index.htmlを使用する。
+$repoRoot = [System.IO.Path]::GetFullPath((Join-Path $PSScriptRoot '../..'))
+if ([string]::IsNullOrWhiteSpace($ExpectedTopPageSourcePath)) {
+    $ExpectedTopPageSourcePath = Join-Path $repoRoot 'dist/index.html'
+}
+$expectedTopPagePath = [System.IO.Path]::GetFullPath($ExpectedTopPageSourcePath)
+$expectedLatestArticlePath = ''
+$expectedTopPageSourceDetail = "source=$expectedTopPagePath"
+try {
+    if (Test-Path -LiteralPath $expectedTopPagePath) {
+        $expectedTopHtml = Get-Content -LiteralPath $expectedTopPagePath -Raw -Encoding utf8
+        $expectedLatestSection = [regex]::Match(
+            $expectedTopHtml,
+            '<section\b[^>]*data-top-latest[^>]*>(?<body>[\s\S]*?)<\/section\s*>',
+            'IgnoreCase'
+        )
+        if ($expectedLatestSection.Success) {
+            $expectedLatestLink = [regex]::Match(
+                $expectedLatestSection.Groups['body'].Value,
+                'href=["''](?<href>\/articles\/[^"'']+\/)[''\"]',
+                'IgnoreCase'
+            )
+            if ($expectedLatestLink.Success) {
+                $expectedLatestArticlePath = $expectedLatestLink.Groups['href'].Value
+                $expectedTopPageSourceDetail = "source=$expectedTopPagePath latest=$expectedLatestArticlePath"
+            } else {
+                $expectedTopPageSourceDetail = "No article href found in data-top-latest: $expectedTopPagePath"
+            }
+        } else {
+            $expectedTopPageSourceDetail = "data-top-latest missing from exact build: $expectedTopPagePath"
+        }
+    } else {
+        $expectedTopPageSourceDetail = "Exact-build top page not found: $expectedTopPagePath"
+    }
+} catch {
+    $expectedTopPageSourceDetail = "Failed to read exact-build top page: $($_.Exception.Message)"
+}
 
 function Check([string]$Name, [bool]$Passed, [string]$Detail) {
     $checks.Add([ordered]@{ name = $Name; status = $(if ($Passed) { 'PASS' } else { 'FAIL' }); detail = $Detail })
@@ -107,6 +150,38 @@ function Invoke-VerificationAttempt {
                 Check "Indexable $path" ($robotsMatch.Success -and $robotsMatch.Groups['value'].Value -notmatch 'noindex') "robots=$($robotsMatch.Groups['value'].Value)"
             }
             Check "No mixed content $path" ($html -notmatch '(?i)(?:src|href)=["'']http://') 'No http:// asset or link reference.'
+
+            if ($path -eq '/') {
+                # Rootも代表記事と同じexact SHA契約で検証し、トップだけ旧edgeを掴む
+                # 部分反映を検出する。
+                if ($ExpectedCommitSha) {
+                    $rootBuildShaMatch = [regex]::Match($html, '<meta[^>]+name=["'']build-sha["''][^>]+content=["''](?<value>[^"'']+)', 'IgnoreCase')
+                    Check 'Top build-sha present /' $rootBuildShaMatch.Success 'build-sha meta tag present on top page.'
+                    if ($rootBuildShaMatch.Success) {
+                        $rootSha = $rootBuildShaMatch.Groups['value'].Value
+                        Check 'Top build-sha matches /' ($rootSha -eq $ExpectedCommitSha) "actual=$rootSha expected=$ExpectedCommitSha"
+                    }
+                }
+
+                $latestSection = [regex]::Match(
+                    $html,
+                    '<section\b[^>]*data-top-latest[^>]*>(?<body>[\s\S]*?)<\/section\s*>',
+                    'IgnoreCase'
+                )
+                Check 'Top latest section /' $latestSection.Success 'data-top-latest section present.'
+                $hasExpectedLatest = -not [string]::IsNullOrWhiteSpace($expectedLatestArticlePath)
+                Check 'Expected latest article from exact build' $hasExpectedLatest $expectedTopPageSourceDetail
+                if ($hasExpectedLatest -and $latestSection.Success) {
+                    $escapedLatestPath = [regex]::Escape($expectedLatestArticlePath)
+                    $latestArticlePresent = [regex]::IsMatch(
+                        $latestSection.Groups['body'].Value,
+                        "href=[`"']$escapedLatestPath[`"']",
+                        'IgnoreCase'
+                    )
+                    Check 'Top latest article matches exact build' $latestArticlePresent "expected=$expectedLatestArticlePath"
+                }
+            }
+
             $pages.Add([ordered]@{ path = $path; status = [int]$response.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($html) })
         }
     }
@@ -184,6 +259,64 @@ function Invoke-VerificationAttempt {
         $pages.Add([ordered]@{ path = $articlePath; status = [int]$response.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($articleHtml) })
     }
 
+    # --- Newest-article smoke check (#651). ---
+    # $ArticlePaths は静的リストなので、デプロイごとに変わる「最新記事」は
+    # これまで 200 確認の対象外だった（トップが data-top-latest でリンクする
+    # ことまでは検証済みだが、ページ自体の render は未検証）。
+    # exact build の dist/index.html から導出した $expectedLatestArticlePath を
+    # 必ず fetch し、(1) 200 + text/html で実体 HTML が配信されていること
+    # 「render している」= 空シェルでない本文があること、(2) build-sha が期待
+    # SHA と一致すること（新着記事が欠落 / 旧 edge を掴んでいないこと）、
+    # (3) ライブ sitemap.xml に同じ URL が <loc> 列挙されていることを検証する。
+    # 失敗は Check() 経由で hasFailure=true となり、最終試行の BLOCKER → exit 1
+    # で run を失敗させる。
+    if (-not [string]::IsNullOrWhiteSpace($expectedLatestArticlePath)) {
+        if ($ArticlePaths -contains $expectedLatestArticlePath) {
+            Check 'Newest article smoke check' $true "already covered by ArticlePaths: $expectedLatestArticlePath"
+        } else {
+            $latestUri = [uri]::new($BaseUrl, $expectedLatestArticlePath)
+            $latestResponse = Fetch $latestUri
+            if ($null -eq $latestResponse) {
+                Check 'Newest article HTTP' $false "Failed to fetch newest article: $($script:lastFetchError)"
+            } else {
+                $latestOk = [int]$latestResponse.StatusCode -eq 200
+                Check 'Newest article HTTP' $latestOk "status=$([int]$latestResponse.StatusCode) path=$expectedLatestArticlePath"
+                $latestHtml = [string]$latestResponse.Content
+                Check 'Newest article HTML content type' ([string]$latestResponse.Headers.'Content-Type' -match 'text/html') "Content-Type=$([string]$latestResponse.Headers.'Content-Type')"
+                $hasBody = $latestHtml -match '(?is)<html' -and $latestHtml.Length -gt 1000
+                Check 'Newest article renders' $hasBody "htmlLength=$($latestHtml.Length)"
+                if ($ExpectedCommitSha) {
+                    $buildShaMatch = [regex]::Match($latestHtml, '<meta[^>]+name=["'']build-sha["''][^>]+content=["''](?<value>[^"'']+)', 'IgnoreCase')
+                    Check 'Newest article build-sha present' $buildShaMatch.Success 'build-sha meta tag present.'
+                    if ($buildShaMatch.Success) {
+                        $sha = $buildShaMatch.Groups['value'].Value
+                        Check 'Newest article build-sha matches' ($sha -eq $ExpectedCommitSha) "actual=$sha expected=$ExpectedCommitSha"
+                    }
+                }
+                # ライブ sitemap.xml にも同じ最新記事が列挙されていること。
+                # ページは render しても sitemap 生成が旧ビルドのまま取り残される
+                # 状態（検索エンジンに新記事が見つからない）を検出する。
+                # sitemap は RequiredPaths の 200 確認済みだが、内容までは見ていないため
+                # ここで初めて <loc> を解析する。
+                $sitemapResponse = Fetch ([uri]::new($BaseUrl, '/sitemap.xml'))
+                if ($null -eq $sitemapResponse) {
+                    Check 'Newest article in sitemap' $false "Failed to fetch sitemap.xml: $($script:lastFetchError)"
+                } else {
+                    $sitemapOk = [int]$sitemapResponse.StatusCode -eq 200
+                    Check 'Sitemap HTTP' $sitemapOk "status=$([int]$sitemapResponse.StatusCode)"
+                    if ($sitemapOk) {
+                        $sitemapXml = [string]$sitemapResponse.Content
+                        $sitemapEscaped = [regex]::Escape($origin + $expectedLatestArticlePath)
+                        $latestInSitemap = [regex]::IsMatch($sitemapXml, "<loc>\s*$sitemapEscaped\s*</loc>", 'IgnoreCase')
+                        Check 'Newest article in sitemap' $latestInSitemap "expected loc=$origin$expectedLatestArticlePath"
+                    }
+                }
+
+                $pages.Add([ordered]@{ path = $expectedLatestArticlePath; status = [int]$latestResponse.StatusCode; bytes = [Text.Encoding]::UTF8.GetByteCount($latestHtml) })
+            }
+        }
+    }
+
     # Stale artifact detection: all articles must have the same build-sha
     if ($articleBuildShas.Count -gt 1) {
         $uniqueShas = @($articleBuildShas | Sort-Object -Unique)
@@ -243,6 +376,7 @@ $report = [ordered]@{
     generatedAt = (Get-Date).ToString('o')
     baseUrl = $origin
     expectedCommitSha = $ExpectedCommitSha
+    expectedLatestArticlePath = $expectedLatestArticlePath
     attempts = $attempt
     resultsPerAttempt = @($resultsPerAttempt)
     pages = @($attemptResult.pages)
@@ -256,6 +390,7 @@ $lines = @(
     "- Result: **$($report.result)**",
     "- Base URL: $origin",
     "- Expected commit: $ExpectedCommitSha",
+    "- Expected latest article: $expectedLatestArticlePath",
     "- Attempts: $attempt ($($resultsPerAttempt -join ', '))",
     '',
     '## Checks'

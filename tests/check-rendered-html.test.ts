@@ -25,8 +25,9 @@ import {
   validateRelatedArticleSection,
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
+  validateRepeatedJapanesePunctuation,
   validateTopPageCategories,
-  validateTopPageFeatured,
+  validateTopPageLatest,
 } from "../scripts/check-rendered-html.mjs";
 import {
   ARTICLE_LAYOUT,
@@ -41,19 +42,22 @@ const embed = '<div data-external-embed="x"></div>';
 const validCta = (href: string, placement = "article-end") =>
   `<a href="${href}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="${placement}">商品を確認（広告）</a>`;
 
+// #436: アフィリエイトCTAは pc パラメータの到達先が商品詳細ページであることを
+// ゲートが要求するため、フィクスチャも不透明ショートリンクではなく実URL形式にする。
+const affiliateItem = (n: number) =>
+  `https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshop%2Fitem${n}%2F&link_type=text`;
+
 // 通常の 2 商品記事: 末尾のみ 1×2 = 2 枚
-const twoEndCtas = `${validCta("https://a.r10.to/one")}${validCta(
-  "https://a.r10.to/two",
-)}`;
+const twoEndCtas = `${validCta(affiliateItem(1))}${validCta(affiliateItem(2))}`;
 
 // 通常の 2 商品記事の CTA 一式: 末尾 2 枚 + 結論直後（next-step）2 枚 = 4 枚
 const fourCtas =
-  `${validCta("https://a.r10.to/one", "article-end")}${validCta(
-    "https://a.r10.to/two",
+  `${validCta(affiliateItem(1), "article-end")}${validCta(
+    affiliateItem(2),
     "article-end",
   )}` +
-  `${validCta("https://a.r10.to/three", "next-step")}${validCta(
-    "https://a.r10.to/four",
+  `${validCta(affiliateItem(3), "next-step")}${validCta(
+    affiliateItem(4),
     "next-step",
   )}`;
 
@@ -61,10 +65,10 @@ const fourCtas =
 // 購入ボタン2つ（next-step__buy）と診断リンク（next-step__diagnosis-link）を1つの
 // section.next-step[data-next-step] に持つ。
 const nextStepBlockFixture = (diagnosisHref = "/tools/product-finder/") =>
-  `<section class="next-step" data-next-step aria-label="次にすること"><div class="next-step__grid"><a class="next-step__buy next-step__buy--left" href="https://a.r10.to/one" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="next-step">Aを見る（広告）</a><a class="next-step__buy next-step__buy--right" href="https://a.r10.to/two" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="next-step">Bを見る（広告）</a></div><p class="next-step__diagnosis">まだ迷っている？<a class="next-step__diagnosis-link" href="${diagnosisHref}">30秒で診断する →</a></p></section>`;
+  `<section class="next-step" data-next-step aria-label="次にすること"><div class="next-step__grid"><a class="next-step__buy next-step__buy--left" href="${affiliateItem(1)}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="next-step">Aを見る（広告）</a><a class="next-step__buy next-step__buy--right" href="${affiliateItem(2)}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="next-step">Bを見る（広告）</a></div><p class="next-step__diagnosis">まだ迷っている？<a class="next-step__diagnosis-link" href="${diagnosisHref}">30秒で診断する →</a></p></section>`;
 
 // 通常の単一商品記事: 末尾 1 枚
-const oneEndCta = validCta("https://a.r10.to/one");
+const oneEndCta = validCta(affiliateItem(1));
 
 function validPage(body: string) {
   // BaseLayout 相当のヘッダー（ロゴ + details.nav-toggle + nav.navlinks）と
@@ -103,8 +107,8 @@ describe("rendered article CTA audit", () => {
   it("accepts four CTAs for a two-product article (article-end + next-step)", () => {
     const standardComparisonCtas =
       twoEndCtas +
-      `${validCta("https://a.r10.to/three", "next-step")}${validCta(
-        "https://a.r10.to/four",
+      `${validCta(affiliateItem(3), "next-step")}${validCta(
+        affiliateItem(4),
         "next-step",
       )}`;
     expect(
@@ -168,8 +172,12 @@ describe("rendered article CTA audit", () => {
   });
 
   it("rejects a placeholder affiliate URL", () => {
-    const placeholderCta =
-      '<a href="https://a.r10.to/placeholder-kx-hc705" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="article-end">商品を確認（広告）</a>';
+    // #436 以降のアフィリエイトCTAは商品詳細ページへの URL 形式が必須なので、
+    // プレースホルダー検知が「形式は正しいが中身がプレースホルダー」な URL も
+    // 捉えることをフィクスチャで担保する。
+    const placeholderCta = validCta(
+      "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshop%2Fplaceholder-kx-hc705%2F&link_type=text",
+    );
     expect(
       validateArticleCtas(
         "articles/example/index.html",
@@ -183,10 +191,10 @@ describe("rendered article CTA audit", () => {
 
   it("rejects a CTA whose placement is not allowed by the layout config", () => {
     const html =
-      `${validCta("https://a.r10.to/one", "article-end")}` +
-      `<a href="https://a.r10.to/three" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>` +
-      `${validCta("https://a.r10.to/four", "next-step")}${validCta(
-        "https://a.r10.to/five",
+      `${validCta(affiliateItem(1), "article-end")}` +
+      `<a href="${affiliateItem(3)}" rel="sponsored nofollow noopener noreferrer" data-cta-event="purchase" data-placement="bogus">商品を確認（広告）</a>` +
+      `${validCta(affiliateItem(4), "next-step")}${validCta(
+        affiliateItem(5),
         "next-step",
       )}`;
     expect(
@@ -202,9 +210,7 @@ describe("rendered article CTA audit", () => {
 
   it("rejects a mismatched per-placement CTA layout via expectedPlacementCounts", () => {
     // 総数は合わない（2 枚 vs 期待 4 枚）上に、next-step が無い混在パターン
-    const mixed = `${validCta("https://a.r10.to/one")}${validCta(
-      "https://a.r10.to/two",
-    )}`;
+    const mixed = `${validCta(affiliateItem(1))}${validCta(affiliateItem(2))}`;
     expect(
       validateArticleCtas(
         "articles/example/index.html",
@@ -603,53 +609,19 @@ describe("rendered empty sections", () => {
   });
 });
 
-describe("top page featured section", () => {
-  const featured = (paths: readonly string[]) =>
-    `<section data-top-featured><div class="article-list">${paths
-      .map(
-        (path) =>
-          `<article class="card article-list-card"><div class="card-body"><h2><a href="${path}">見出し</a></h2></div></article>`,
-      )
-      .join("")}</div></section>`;
-
-  it("accepts the top page when every config path is linked and nothing else", () => {
+describe("top page latest section", () => {
+  it("accepts a top page with a latest section", () => {
     expect(
-      validateTopPageFeatured(featured(ARTICLE_LAYOUT.topPage.featuredPaths)),
+      validateTopPageLatest(
+        '<section data-top-latest><div class="article-list"></div></section>',
+      ),
     ).toEqual([]);
   });
 
-  it("reports a missing featured section", () => {
-    expect(validateTopPageFeatured("<main></main>")).toEqual([
-      "top page: missing data-top-featured section",
+  it("reports a missing latest section", () => {
+    expect(validateTopPageLatest("<main></main>")).toEqual([
+      "top page: missing data-top-latest section",
     ]);
-  });
-
-  it("reports a config path that is not linked", () => {
-    const paths = [...ARTICLE_LAYOUT.topPage.featuredPaths];
-    paths.pop();
-    expect(validateTopPageFeatured(featured(paths))).toEqual([
-      `top page: featured article not linked: ${ARTICLE_LAYOUT.topPage.featuredPaths.at(-1)}`,
-    ]);
-  });
-
-  it("reports an unexpected link inside the featured section", () => {
-    expect(
-      validateTopPageFeatured(
-        featured([
-          ...ARTICLE_LAYOUT.topPage.featuredPaths,
-          "/articles/unexpected/",
-        ]),
-      ),
-    ).toContain(
-      "top page: unexpected link in data-top-featured section: /articles/unexpected/",
-    );
-  });
-
-  it("enforces the 3-4 item range in config", () => {
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeGreaterThanOrEqual(
-      3,
-    );
-    expect(ARTICLE_LAYOUT.topPage.featuredPaths.length).toBeLessThanOrEqual(4);
   });
 });
 
@@ -1452,6 +1424,26 @@ describe("article section order (validateArticleSectionOrder)", () => {
       validateArticleSectionOrder(
         "articles/nested/index.html",
         comparisonMeta() + nested,
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects repeated Japanese punctuation in rendered body text", () => {
+    expect(
+      validateRepeatedJapanesePunctuation(
+        "dist/articles/example/index.html",
+        "<p>正常です。</p><script>const x = '。。';</script><p>破損です。。</p>",
+      ),
+    ).toEqual([
+      "dist/articles/example/index.html: [punctuation] repeated Japanese punctuation remains in rendered HTML: 。。",
+    ]);
+  });
+
+  it("accepts normal Japanese sentence punctuation", () => {
+    expect(
+      validateRepeatedJapanesePunctuation(
+        "dist/articles/example/index.html",
+        "<p>正常です。次です！疑問です？</p>",
       ),
     ).toEqual([]);
   });

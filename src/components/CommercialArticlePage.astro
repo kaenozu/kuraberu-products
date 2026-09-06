@@ -15,7 +15,7 @@ import type { DifferenceRow } from '../lib/comparison';
 import { resolvePurchaseHref } from '../lib/rakuten';
 import {
   isAffiliateRakutenUrl,
-  isRakutenProductDetailUrl,
+  isVerifiedRakutenPurchaseDestination,
 } from '../../config/runtime-env.mjs';
 
 interface Props {
@@ -39,41 +39,38 @@ const images = {
 const isPublicArticle = publicArticleMetadata.some((item) => item.id === article.id);
 const leftTerms = seed.leftProduct.split(/\s+/).filter(Boolean);
 const rightTerms = seed.rightProduct.split(/\s+/).filter(Boolean);
-const leftSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.leftProduct)}/`;
-const rightSearchUrl = `https://search.rakuten.co.jp/search/mall/${encodeURIComponent(seed.rightProduct)}/`;
 const staticPurchaseLinks = articlePurchaseLinks as Record<string, { purchaseUrl: string }>;
 const leftStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:left`]?.purchaseUrl;
 const rightStaticPurchaseUrl = staticPurchaseLinks[`${articleId}:right`]?.purchaseUrl;
-const isVerifiedPurchaseUrl = (value: string | undefined) => {
-  if (!value) return false;
-  // a.r10.to is a complete Rakuten affiliate URL whose destination is
-  // validated separately in the queue evidence; it has no `pc` parameter.
-  if (isAffiliateRakutenUrl(value)) return true;
-  return isRakutenProductDetailUrl(value);
-};
+// 検証済み購入URLの判定は1関数へ集約する（#436）: item.rakuten.co.jp 直リンク、
+// または pc 到達先が商品詳細ページのアフィリエイトURLのみ許可する。
+// 検索結果ページへのリダイレクト・裸の短縮URLは未確認扱いとする。
+const isVerifiedPurchaseUrl = (value: string | undefined) =>
+  Boolean(value) && isVerifiedRakutenPurchaseDestination(value);
 // 商品URLを一度だけresolveし、NextStepBlock と PurchaseCard で共有する。
+// #436: 検索結果ページは購入導線にならないため、フォールバックURLは渡さない。
+// 確認済み商品詳細URL（レジストリ or API選択）が無い場合は href を空にし、
+// purchaseLinkStatus の契約（verified/direct以外はCTA非表示）で fail-closed にする。
 const [leftResolved, rightResolved] = await Promise.all([
   leftStaticPurchaseUrl && isVerifiedPurchaseUrl(leftStaticPurchaseUrl)
     ? Promise.resolve({
         href: leftStaticPurchaseUrl,
-        isAffiliate: true,
+        isAffiliate: isAffiliateRakutenUrl(leftStaticPurchaseUrl),
         product: undefined,
       })
     : resolvePurchaseHref({
         keyword: seed.leftProduct,
         requiredTerms: leftTerms,
-        fallbackUrl: leftSearchUrl,
       }),
   rightStaticPurchaseUrl && isVerifiedPurchaseUrl(rightStaticPurchaseUrl)
     ? Promise.resolve({
         href: rightStaticPurchaseUrl,
-        isAffiliate: true,
+        isAffiliate: isAffiliateRakutenUrl(rightStaticPurchaseUrl),
         product: undefined,
       })
     : resolvePurchaseHref({
         keyword: seed.rightProduct,
         requiredTerms: rightTerms,
-        fallbackUrl: rightSearchUrl,
       }),
 ]);
 const leftProductHref = article.purchaseLinkStatus === "unavailable" ? undefined : leftResolved.href;

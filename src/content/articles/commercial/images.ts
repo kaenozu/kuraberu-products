@@ -120,7 +120,7 @@ const commercialArticleImages: Readonly<
   },
   "panasonic-ni-fs70a-vs-ni-fs60b": {
     left: "/products/panasonic-ni-fs70a-vs-ni-fs60b-left.jpg",
-    right: "/products/panasonic-ni-fs70a-vs-ni-fs60b-right.jpg",
+    right: "/products/panasonic-ni-fs70a-vs-ni-fs60b-right.png",
   },
   "panasonic-eh-na0j-vs-eh-na0g": {
     left: "/products/panasonic-eh-na0j-vs-eh-na0g-left.jpg",
@@ -135,8 +135,8 @@ const commercialArticleImages: Readonly<
     right: "/products/panasonic-ew-dp57-vs-ew-dt73-right.jpg",
   },
   "panasonic-ew-da19-vs-ew-da49": {
-    left: "/products/panasonic-ew-da19-vs-ew-da49-left.jpg",
-    right: "/products/panasonic-ew-da19-vs-ew-da49-right.jpg",
+    left: "/products/panasonic-ew-da19-vs-ew-da49-left.png",
+    right: "/products/panasonic-ew-da19-vs-ew-da49-right.png",
   },
   "panasonic-es-lv9w-vs-es-lv7w": {
     left: "/products/panasonic-es-lv9w-vs-es-lv7w-left.jpg",
@@ -147,8 +147,8 @@ const commercialArticleImages: Readonly<
     right: "/products/panasonic-eh-nc80-vs-eh-nc50-right.jpg",
   },
   "panasonic-eh-na0k-vs-eh-ne9n": {
-    left: "/products/panasonic-eh-na0k-vs-eh-ne9n-left.jpg",
-    right: "/products/panasonic-eh-na0k-vs-eh-ne9n-right.jpg",
+    left: "/products/panasonic-eh-na0k-vs-eh-ne9n-left.png",
+    right: "/products/panasonic-eh-na0k-vs-eh-ne9n-right.png",
   },
   "panasonic-ep-ma110-vs-ep-ma121": {
     left: "/products/panasonic-ep-ma110-vs-ep-ma121-left.jpg",
@@ -174,6 +174,10 @@ const commercialArticleImages: Readonly<
     left: "/products/logicool-mx-master-3s-vs-m650-left.jpg",
     right: "/products/logicool-mx-master-3s-vs-m650-right.jpg",
   },
+  "logicool-mx-master-3s-vs-mx-anywhere-3s": {
+    left: "/products/logicool-mx-master-3s-vs-mx-anywhere-3s-left.png",
+    right: "/products/logicool-mx-master-3s-vs-mx-anywhere-3s-right.png",
+  },
   "logicool-lift-vs-m550": {
     left: "/products/logicool-lift-vs-m550-left.jpg",
     right: "/products/logicool-lift-vs-m550-right.jpg",
@@ -185,6 +189,18 @@ const commercialArticleImages: Readonly<
   "sony-wh-1000xm6-vs-wh-1000xm5": {
     left: "/products/sony-wh-1000xm6-vs-wh-1000xm5-left.jpg",
     right: "/products/sony-wh-1000xm6-vs-wh-1000xm5-right.jpg",
+  },
+  "panasonic-ne-bs6e-vs-ne-bs5e": {
+    left: "/products/panasonic-ne-bs6e.png",
+    right: "/products/panasonic-ne-bs5e.png",
+  },
+  "panasonic-es-pv6a-vs-es-pv3a": {
+    left: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv6a.jpg",
+    right: "/products/panasonic-es-pv6a-vs-es-pv3a-es-pv3a.jpg",
+  },
+  "yamazaki-refrigerator-rack-240057-vs-240059": {
+    left: "/products/yamazaki-refrigerator-rack-240057.jpg",
+    right: "/products/yamazaki-refrigerator-rack-240059.jpg",
   },
 };
 

@@ -26,7 +26,11 @@ const baseProduct: Product = {
   attributes: {},
   articleUrls: ["/articles/test-article/"],
   purchaseLinks: [
-    { provider: "rakuten", url: "https://a.r10.to/test", affiliate: true },
+    {
+      provider: "rakuten",
+      url: "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshop%2Ftest%2F&link_type=text",
+      affiliate: true,
+    },
   ],
   sources: [],
   verifiedAt: "2026-01-01",
@@ -271,7 +275,7 @@ describe("buildResultCardData", () => {
     expect(data.articleLinks[0].label).toBe("詳しい比較を見る");
 
     expect(data.purchaseLinks).toHaveLength(1);
-    expect(data.purchaseLinks[0].href).toBe("https://a.r10.to/test");
+    expect(data.purchaseLinks[0].href).toContain("item.rakuten.co.jp");
     expect(data.purchaseLinks[0].rel).toContain("sponsored");
   });
 });
@@ -290,7 +294,7 @@ describe("buildArticleLinkData", () => {
 describe("buildPurchaseLinkData", () => {
   const affiliateLink: PurchaseLink = {
     provider: "rakuten",
-    url: "https://a.r10.to/test",
+    url: "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fshop%2Ftest%2F&link_type=text",
     affiliate: true,
   };
 
@@ -302,20 +306,20 @@ describe("buildPurchaseLinkData", () => {
 
   it("builds affiliate purchase link with sponsored rel", () => {
     const data = buildPurchaseLinkData(affiliateLink, baseProduct, 0);
-    expect(data.href).toBe("https://a.r10.to/test");
-    expect(data.target).toBe("_blank");
-    expect(data.rel).toBe("sponsored nofollow noopener noreferrer");
-    expect(data.label).toBe("楽天で商品を見る");
-    expect(data.dataset.ctaEvent).toBe("purchase");
-    expect(data.dataset.placement).toBe("diagnosis-result");
-    expect(data.dataset.rank).toBe("1");
+    expect(data?.href).toContain("item.rakuten.co.jp");
+    expect(data?.target).toBe("_blank");
+    expect(data?.rel).toBe("sponsored nofollow noopener noreferrer");
+    expect(data?.label).toBe("楽天で商品を見る");
+    expect(data?.dataset.ctaEvent).toBe("purchase");
+    expect(data?.dataset.placement).toBe("diagnosis-result");
+    expect(data?.dataset.rank).toBe("1");
   });
 
   it("builds non-affiliate purchase link without sponsored", () => {
     const data = buildPurchaseLinkData(nonAffiliateLink, baseProduct, 1);
-    expect(data.rel).toBe("noopener noreferrer");
-    expect(data.label).toBe("公式サイトで確認する");
-    expect(data.dataset.rank).toBe("2");
+    expect(data?.rel).toBe("noopener noreferrer");
+    expect(data?.label).toBe("公式サイトで確認する");
+    expect(data?.dataset.rank).toBe("2");
   });
 
   it("falls back to generic label for unknown provider", () => {
@@ -325,7 +329,25 @@ describe("buildPurchaseLinkData", () => {
       affiliate: false,
     };
     const data = buildPurchaseLinkData(unknownLink, baseProduct, 0);
-    expect(data.label).toBe("販売ページを見る");
+    expect(data?.label).toBe("販売ページを見る");
+  });
+
+  it("returns undefined for an affiliate-wrapped search destination (#436)", () => {
+    const searchLink: PurchaseLink = {
+      provider: "rakuten",
+      url: "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FTEST&link_type=text",
+      affiliate: true,
+    };
+    expect(buildPurchaseLinkData(searchLink, baseProduct, 0)).toBeUndefined();
+  });
+
+  it("returns undefined for an opaque shortlink (#436)", () => {
+    const shortLink: PurchaseLink = {
+      provider: "rakuten",
+      url: "https://a.r10.to/test",
+      affiliate: true,
+    };
+    expect(buildPurchaseLinkData(shortLink, baseProduct, 0)).toBeUndefined();
   });
 });
 

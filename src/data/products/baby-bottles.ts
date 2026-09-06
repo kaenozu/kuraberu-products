@@ -47,8 +47,8 @@ export const babyBottle160Glass: Product = {
   purchaseLinks: [
     {
       provider: "rakuten",
-      url: "https://a.r10.to/h4SQzW",
-      affiliate: true,
+      url: "https://item.rakuten.co.jp/premoa/4902508024471/",
+      affiliate: false,
     },
   ],
   sources: [pigeonSource(PIGEON_160_GLASS)],
@@ -74,8 +74,8 @@ export const babyBottle160Ppsu: Product = {
   purchaseLinks: [
     {
       provider: "rakuten",
-      url: "https://a.r10.to/h4SQzW",
-      affiliate: true,
+      url: "https://item.rakuten.co.jp/premoa/4902508024501/",
+      affiliate: false,
     },
   ],
   sources: [pigeonSource(PIGEON_160_PPSU)],

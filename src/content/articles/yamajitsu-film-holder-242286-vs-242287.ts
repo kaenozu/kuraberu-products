@@ -20,10 +20,10 @@ export const yamajitsuFilmHolderArticle = defineArticleMetadata({
   summary:
     "山崎実業のフィルムフックまな板ホルダー242286とフィルムフック鍋蓋ホルダー242287を、収納対象・対応サイズ・寸法・重量・耐荷重で比較します。",
   publishedAt: "2026-08-19",
-  modifiedAt: "2026-08-19",
-  productInfoCheckedAt: "2026-08-19",
-  purchaseLinksCheckedAt: "2026-08-19",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-03",
+  productInfoCheckedAt: "2026-09-03",
+  purchaseLinksCheckedAt: "2026-09-03",
+  purchaseLinkStatus: "verified",
   imagePath: "/products/yamazaki-film-holder-242286.jpg",
   aboutProductNames: [
     "山崎実業 フィルムフックまな板ホルダー タワー 242286",

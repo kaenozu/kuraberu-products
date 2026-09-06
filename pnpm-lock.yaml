@@ -24,7 +24,7 @@ importers:
         specifier: 0.9.10
         version: 0.9.10(prettier@3.9.6)(typescript@6.0.3)
       '@playwright/test':
-        specifier: ^1.62.1
+        specifier: 1.62.1
         version: 1.62.1
       '@typescript-eslint/parser':
         specifier: 8.68.0
@@ -45,7 +45,7 @@ importers:
         specifier: 3.9.6
         version: 3.9.6
       serve:
-        specifier: ^14.2.6
+        specifier: 14.2.6
         version: 14.2.6
       sharp:
         specifier: 0.35.4
@@ -57,10 +57,10 @@ importers:
         specifier: 4.1.11
         version: 4.1.11(@types/node@24.13.3)(@vitest/coverage-v8@4.1.11)(vite@8.2.2(@types/node@24.13.3)(esbuild@0.28.2)(yaml@2.9.0))
       wrangler:
-        specifier: ^4.127.1
+        specifier: 4.127.1
         version: 4.127.1(@types/node@24.13.3)
       yaml:
-        specifier: ^2.9.0
+        specifier: 2.9.0
         version: 2.9.0
 
 packages:

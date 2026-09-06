@@ -111,6 +111,35 @@ export function isAllowedRakutenUrl(value) {
   );
 }
 
+/**
+ * Amazon.co.jp の購入リンクとして許可するホストかを判定する (#558)。
+ * - amazon.co.jp (商品ページ・検索ページ・ほしい物リスト等)
+ * - amzn.to / amzn.asia / amzn.com (Amazon 公式短縮URL)
+ *
+ * 広告タグ付きのURLも許可する。aspx/asp 等のASPリダイレクトは含めない
+ * (本サイトは Amazon アソシエイト公式トラッキングのみを使う方針)。
+ */
+export function isAllowedAmazonUrl(value) {
+  if (!nonEmpty(value)) return false;
+
+  let url;
+  try {
+    url = parseHttpsUrl(value, "Amazon URL");
+  } catch {
+    return false;
+  }
+
+  const hostname = url.hostname.toLowerCase();
+  return (
+    hostname === "amazon.co.jp" ||
+    hostname.endsWith(".amazon.co.jp") ||
+    hostname === "amzn.to" ||
+    hostname.endsWith(".amzn.to") ||
+    hostname === "amzn.asia" ||
+    hostname.endsWith(".amzn.asia")
+  );
+}
+
 /** A purchase destination must identify one Ichiba item, never a search page. */
 export function isRakutenProductDetailUrl(value) {
   if (!isAllowedRakutenUrl(value)) return false;
@@ -119,6 +148,29 @@ export function isRakutenProductDetailUrl(value) {
     return (
       url.hostname.toLowerCase() === "item.rakuten.co.jp" &&
       url.pathname.split("/").filter(Boolean).length >= 2
+    );
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 商品詳細ページへの到達が確認できる購入URLかどうか（#436）。
+ *
+ * - item.rakuten.co.jp の商品詳細URL: そのまま許可
+ * - アフィリエイトURL（hb.afl / r10.to / a.r10.to）: pc パラメータの最終到達先が
+ *   商品詳細URLのときだけ許可する。検索結果ページへのリダイレクトは購入CTAとして
+ *   使えない（fail-closed）。pc を持たない裸の短縮URLも到達先を確認できないため不許可。
+ *
+ * CommercialArticlePage / AffiliateButton / NextStepBlock の表示判定と、
+ * scripts/check-rendered-html.mjs の CTA 監査がこの1関数を共有する。
+ */
+export function isVerifiedRakutenPurchaseDestination(value) {
+  if (isRakutenProductDetailUrl(value)) return true;
+  if (!isAffiliateRakutenUrl(value)) return false;
+  try {
+    return isRakutenProductDetailUrl(
+      new URL(value).searchParams.get("pc") ?? "",
     );
   } catch {
     return false;

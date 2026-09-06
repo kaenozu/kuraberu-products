@@ -79,4 +79,32 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
       }
     }
   });
+
+  it("rejects search-result destinations even when wrapped by Rakuten affiliate URLs (#436)", async () => {
+    const { articlePurchaseLinks } = await import("../src/lib/products");
+
+    for (const [key, entry] of Object.entries(articlePurchaseLinks)) {
+      // #436 fail-closed: 未設定（検索リンク廃止で空）のエントリは CTA を
+      // レンダリングしないため、URL 検査の対象外。
+      if (!entry.purchaseUrl) continue;
+      const url = new URL(entry.purchaseUrl);
+      const destination =
+        url.hostname === "hb.afl.rakuten.co.jp"
+          ? url.searchParams.get("pc")
+          : entry.purchaseUrl;
+
+      expect(destination, key).toBeTruthy();
+      expect(destination, key).not.toMatch(
+        /^https?:\/\/search\.rakuten\.co\.jp\//,
+      );
+      if (url.hostname === "hb.afl.rakuten.co.jp") {
+        expect(destination, key).toMatch(
+          /^https:\/\/item\.rakuten\.co\.jp\/[^/]+\/[^/?#]+\/?(?:[?#].*)?$/,
+        );
+      } else {
+        // 不透明ショートリンク（a.r10.to）は到達先検証ができないため禁止。
+        expect(url.hostname, key).toBe("item.rakuten.co.jp");
+      }
+    }
+  });
 });

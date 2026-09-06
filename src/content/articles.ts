@@ -36,6 +36,7 @@ export {
   panasonicHairDryerArticle,
   panasonicMcNx810kmVsMcNx700kArticle,
   panasonicNeFl1aVsNeFl1cArticle,
+  panasonicNeMs4cVsNeBs5cArticle,
   panasonicShaverEsLt4bVsEsLv7jArticle,
   panasonicVacuumArticle,
   pigeonBottle240Article,

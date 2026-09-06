@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const makitaCl107VsCl286Seed: CommercialArticleSeed = {
   id: "makita-cl107-vs-cl286",
+  publishedAt: "2026-08-17",
   title: "マキタ CL107FDSHWとCL286FD、どっち？｜くらべる商品メモ",
   headline: "マキタのコードレス掃除機を比較。軽さ・吸引・紙パックで選ぶ",
   description:

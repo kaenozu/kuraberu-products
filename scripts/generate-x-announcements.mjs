@@ -20,12 +20,22 @@
  */
 
 import { execFileSync } from "node:child_process";
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 
 export const MAX_POST_LENGTH = 280;
 
-const ARTICLES_PATH = "src/content/articles.ts";
+// 記事メタデータの情報源は 2 種類: 互換 shim（articles.ts・現在は純粋な再エクスポート）
+// と、分割後の個別記事ファイル（articles/<slug>.ts）。shim 単独で解析すると
+// defineArticleMetadata ブロックが 0 件になり、全デプロイで「新規記事なし」と
+// 誤判定する（分割以降の実際のバグ）。そのため常時両方を読む。
+export const ARTICLES_PATH = "src/content/articles.ts";
+export const ARTICLES_DIR = "src/content/articles";
+export const ARTICLES_EXCLUDE = new Set([
+  "index.ts",
+  "commercial.ts",
+  "types.ts",
+]);
 
 const ARTICLE_BLOCK =
   /export const \w+\s*=\s*defineArticleMetadata\(\{([\s\S]*?)\n\}\);/g;
@@ -94,7 +104,12 @@ export function buildDraft(article, siteUrl) {
 
 /** 現在の記事一覧から、previous 時点に無かった記事の下書きを生成する。 */
 export function generateAnnouncements(currentText, previousText, siteUrl) {
-  const current = parseArticles(currentText);
+  // shim と個別ファイルの両方を解析するため、同一 id の二重宣言が混入しても
+  // 最初の 1 件だけを採用する（二重告知の防止）。
+  const current = parseArticles(currentText).filter(
+    (article, index, all) =>
+      all.findIndex((entry) => entry.id === article.id) === index,
+  );
   const previousIds = new Set(
     parseArticles(previousText).map((article) => article.id),
   );
@@ -106,18 +121,79 @@ export function generateAnnouncements(currentText, previousText, siteUrl) {
     }));
 }
 
-function readPreviousArticles(previousSha, previousFile) {
+/** 個別記事ディレクトリの .ts ソースを連結する（除外リスト・ソート済みで決定的）。 */
+export function collectArticleSources(
+  dir = ARTICLES_DIR,
+  exclude = ARTICLES_EXCLUDE,
+) {
+  return readdirSync(dir)
+    .filter((file) => file.endsWith(".ts") && !exclude.has(file))
+    .sort()
+    .map((file) => readFileSync(path.join(dir, file), "utf8"))
+    .join("\n");
+}
+
+/** 現ツリーの記事ソース（shim + 個別ファイル）。 */
+export function readCurrentArticles() {
+  return `${readFileSync(ARTICLES_PATH, "utf8")}\n${collectArticleSources()}`;
+}
+
+/** previous ツリーの記事ソース。git が使えない場合は ""（全記事を新規扱い）。 */
+export function readPreviousArticles(previousSha, previousFile) {
   if (previousFile) {
     return readFileSync(previousFile, "utf8");
   }
   const sha = previousSha ?? "HEAD^";
   try {
-    return execFileSync("git", ["show", `${sha}:${ARTICLES_PATH}`], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
+    // ファイル一覧は現在ツリー（readdirSync）から取り、各ファイルを
+    // git show <sha>:<path> で previous SHA から読む。git ls-tree は
+    // CI ランナー上で失敗するケースがあり、一覧取得を git に頼ると
+    // 全記事が「新規」扱いになるため、実績のある git show のみに統一する。
+    // previous 以降に追加されたファイルは show が失敗するので個別にスキップ
+    // （previous で削除済みの記事は現在ツリーに無いため列挙されないが、
+    // 差分検出には影響しない）。
+    const names = readdirSync(ARTICLES_DIR)
+      .filter((name) => name.endsWith(".ts") && !ARTICLES_EXCLUDE.has(name))
+      .sort();
+    // 各ファイルを個別に git show すると記事数に比例してプロセス起動が増え、
+    // Windows のフル履歴 checkout ではテストのタイムアウトを招く。batch API
+    // で一度に読み、未存在ファイルは従来どおりスキップする。
+    const paths = [
+      ARTICLES_PATH,
+      ...names.map((name) => `${ARTICLES_DIR}/${name}`),
+    ];
+    const output = execFileSync("git", ["cat-file", "--batch"], {
+      input: `${paths.map((file) => `${sha}:${file}`).join("\\n")}\\n`,
+      encoding: null,
+      stdio: ["pipe", "pipe", "pipe"],
     });
-  } catch {
+    const contents = new Map();
+    let offset = 0;
+    for (const file of paths) {
+      const headerEnd = output.indexOf(0x0a, offset);
+      if (headerEnd < 0) break;
+      const header = output.subarray(offset, headerEnd).toString("utf8");
+      offset = headerEnd + 1;
+      const [, type, sizeText] = header.split(" ");
+      const size = Number(sizeText);
+      if (type === "missing") continue;
+      contents.set(
+        file,
+        output.subarray(offset, offset + size).toString("utf8"),
+      );
+      offset += size + 1;
+    }
+    const shimText = contents.get(ARTICLES_PATH);
+    if (!shimText) return "";
+    const parts = names
+      .map((name) => contents.get(`${ARTICLES_DIR}/${name}`))
+      .filter(Boolean);
+    return `${shimText}\n${parts.join("\n")}`;
+  } catch (error) {
     // 親コミットが無い（初回デプロイ）など → 全記事を新規扱い
+    console.error(
+      `[previous-articles] falling back to "all new": ${error?.message ?? error}`,
+    );
     return "";
   }
 }
@@ -196,7 +272,7 @@ function main() {
     process.exitCode = 2;
     return;
   }
-  const currentText = readFileSync(ARTICLES_PATH, "utf8");
+  const currentText = readCurrentArticles();
   const previousText = readPreviousArticles(
     options.previousSha,
     options.previousFile,
