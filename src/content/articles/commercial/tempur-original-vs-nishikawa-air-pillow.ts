@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const tempurOriginalVsNishikawaAirPillowSeed: CommercialArticleSeed = {
   id: "tempur-original-vs-nishikawa-air-pillow",
+  publishedAt: "2026-08-17",
   title: "テンピュール オリジナルと西川 AiR枕、どっち？｜くらべる商品メモ",
   headline: "人気の枕を比較。素材・高さ調整・手入れで選ぶ",
   description: "枕の候補を、素材・高さ・寝姿勢・カバーのお手入れで比較します。",

@@ -2,6 +2,7 @@ import type { CommercialArticleSeed } from "./types";
 
 export const logicoolK650VsK580Seed: CommercialArticleSeed = {
   id: "logicool-k650-vs-k580",
+  publishedAt: "2026-08-17",
   title: "Logicool K650とK580、どっち？｜くらべる商品メモ",
   headline: "Logicool K650とK580、どっち？ 公式仕様で比較。違いと選び方を整理",
   description:
