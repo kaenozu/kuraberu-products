@@ -26,6 +26,7 @@
     "check:spec-claims": "node scripts/spec-claims.mjs check",
     "check:official-links": "node scripts/check-official-links.mjs check",
     "check:rendered": "node scripts/check-rendered-html.mjs",
+    "check:image-magic": "node scripts/check-image-magic.mjs",
     "check:deployment": "node scripts/check-deployment-html.mjs",
     "check:post-deploy": "node scripts/test-post-deploy-verification.mjs",
     "check:external-link-syntax": "node scripts/check-external-links.mjs",
@@ -37,7 +38,7 @@
     "verify": "pnpm build && pnpm verify:lint && pnpm verify:build",
     "verify:lint": "node scripts/verify-pnpm-version.mjs && prettier --check . && eslint . && astro check && node scripts/validate-build-env.mjs && node scripts/validate-content.mjs && node scripts/check-radius-tokens.mjs && node scripts/check-purchase-link-consistency.mjs && vitest run --coverage",
     "verify:cta-strict": "node scripts/generate-cta-audit-cache.mjs",
-    "verify:build": "astro build && node scripts/report-css-usage.mjs --fail-on-unused && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/check-article-factual-integrity.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check"
+    "verify:build": "astro build && node scripts/check-image-magic.mjs && node scripts/report-css-usage.mjs --fail-on-unused && node scripts/check-rendered-html.mjs && node scripts/check-deployment-html.mjs && node scripts/test-post-deploy-verification.mjs && node scripts/check-external-links.mjs && node scripts/check-official-links.mjs check && node scripts/check-article-factual-integrity.mjs check && node scripts/spec-claims.mjs check && node scripts/validate-sns-ranks.mjs check"
   },
   "dependencies": {
     "astro": "7.2.9",

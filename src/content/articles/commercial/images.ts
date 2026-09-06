@@ -120,7 +120,7 @@ const commercialArticleImages: Readonly<
   },
   "panasonic-ni-fs70a-vs-ni-fs60b": {
     left: "/products/panasonic-ni-fs70a-vs-ni-fs60b-left.jpg",
-    right: "/products/panasonic-ni-fs70a-vs-ni-fs60b-right.jpg",
+    right: "/products/panasonic-ni-fs70a-vs-ni-fs60b-right.png",
   },
   "panasonic-eh-na0j-vs-eh-na0g": {
     left: "/products/panasonic-eh-na0j-vs-eh-na0g-left.jpg",
@@ -135,8 +135,8 @@ const commercialArticleImages: Readonly<
     right: "/products/panasonic-ew-dp57-vs-ew-dt73-right.jpg",
   },
   "panasonic-ew-da19-vs-ew-da49": {
-    left: "/products/panasonic-ew-da19-vs-ew-da49-left.jpg",
-    right: "/products/panasonic-ew-da19-vs-ew-da49-right.jpg",
+    left: "/products/panasonic-ew-da19-vs-ew-da49-left.png",
+    right: "/products/panasonic-ew-da19-vs-ew-da49-right.png",
   },
   "panasonic-es-lv9w-vs-es-lv7w": {
     left: "/products/panasonic-es-lv9w-vs-es-lv7w-left.jpg",
@@ -147,8 +147,8 @@ const commercialArticleImages: Readonly<
     right: "/products/panasonic-eh-nc80-vs-eh-nc50-right.jpg",
   },
   "panasonic-eh-na0k-vs-eh-ne9n": {
-    left: "/products/panasonic-eh-na0k-vs-eh-ne9n-left.jpg",
-    right: "/products/panasonic-eh-na0k-vs-eh-ne9n-right.jpg",
+    left: "/products/panasonic-eh-na0k-vs-eh-ne9n-left.png",
+    right: "/products/panasonic-eh-na0k-vs-eh-ne9n-right.png",
   },
   "panasonic-ep-ma110-vs-ep-ma121": {
     left: "/products/panasonic-ep-ma110-vs-ep-ma121-left.jpg",
