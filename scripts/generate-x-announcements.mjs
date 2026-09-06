@@ -155,23 +155,33 @@ export function readPreviousArticles(previousSha, previousFile) {
     const names = readdirSync(ARTICLES_DIR)
       .filter((name) => name.endsWith(".ts") && !ARTICLES_EXCLUDE.has(name))
       .sort();
-    const parts = [];
-    for (const name of names) {
-      try {
-        parts.push(
-          execFileSync("git", ["show", `${sha}:${ARTICLES_DIR}/${name}`], {
-            encoding: "utf8",
-            stdio: ["ignore", "pipe", "pipe"],
-          }),
-        );
-      } catch {
-        // previous 時点で未存在のファイル → スキップ
-      }
-    }
-    const shimText = execFileSync("git", ["show", `${sha}:${ARTICLES_PATH}`], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
+    // 各ファイルを個別に git show すると記事数に比例してプロセス起動が増え、
+    // Windows のフル履歴 checkout ではテストのタイムアウトを招く。batch API
+    // で一度に読み、未存在ファイルは従来どおりスキップする。
+    const paths = [ARTICLES_PATH, ...names.map((name) => `${ARTICLES_DIR}/${name}`)];
+    const output = execFileSync("git", ["cat-file", "--batch"], {
+      input: `${paths.map((file) => `${sha}:${file}`).join("\\n")}\\n`,
+      encoding: null,
+      stdio: ["pipe", "pipe", "pipe"],
     });
+    const contents = new Map();
+    let offset = 0;
+    for (const file of paths) {
+      const headerEnd = output.indexOf(0x0a, offset);
+      if (headerEnd < 0) break;
+      const header = output.subarray(offset, headerEnd).toString("utf8");
+      offset = headerEnd + 1;
+      const [, type, sizeText] = header.split(" ");
+      const size = Number(sizeText);
+      if (type === "missing") continue;
+      contents.set(file, output.subarray(offset, offset + size).toString("utf8"));
+      offset += size + 1;
+    }
+    const shimText = contents.get(ARTICLES_PATH);
+    if (!shimText) return "";
+    const parts = names
+      .map((name) => contents.get(`${ARTICLES_DIR}/${name}`))
+      .filter(Boolean);
     return `${shimText}\n${parts.join("\n")}`;
   } catch (error) {
     // 親コミットが無い（初回デプロイ）など → 全記事を新規扱い
