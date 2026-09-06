@@ -43,13 +43,13 @@ export const CTA_CACHE_MAX_AGE_DAYS = 7;
 // verified CTA の**最終到達先**ホスト（リダイレクト追従後の最終ホスト）。
 // 商品詳細ページ（item.rakuten.co.jp）も確認済みの正規到達先として許可する。
 // a.r10.to 等の短縮リンクホストはここに含めない。
+// #436: 検索結果ページは購入導線の到達先にならないため許可しない。
 // リダイレクト追従は全 CTA に対して必須。
 export const ALLOWED_OUTBOUND_HOSTS = Object.freeze([
   "hb.afl.rakuten.co.jp",
   "item.rakuten.co.jp",
   "www.rakuten.co.jp",
   "www.amazon.co.jp",
-  "search.rakuten.co.jp",
 ]);
 
 // リダイレクト追従の上限 hop 数と 1 リクエストあたりのタイムアウト（ms）。
@@ -173,35 +173,8 @@ export function loadRegistryKeys(srcDirectory) {
   return new Set(loadRegistryEntries(srcDirectory).keys());
 }
 
-// 楽天の検索URL生成に利用するアソシエイトID。
-// アフィリエイトID自体は機密ではないが、誰の所有でもないIDを収益化に使う形は
-// 望ましくないため、env の RAKUTEN_AFFILIATE_ID がある場合のみ使用する。
-// env 未設定時はコンソールに警告を出し、検索URL生成を空文字で返す
-// (呼び出し側はそのキーエントリを「要手動設定」として検出する)。
-function resolveRakutenAffiliateId() {
-  const id = process.env.RAKUTEN_AFFILIATE_ID;
-  if (id && id.length > 0) return id;
-  console.warn(
-    "[check-purchase-link-consistency] RAKUTEN_AFFILIATE_ID env が未設定のため、楽天検索URLを生成できません。アフィリエイトIDを設定するか、関連エントリを修正してください。",
-  );
-  return "";
-}
-
-function resolveRakutenAffiliateSearchUrl(query) {
-  const affiliateId = resolveRakutenAffiliateId();
-  if (!affiliateId) return "";
-  const encodedSearchUrl = encodeURIComponent(
-    "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent(query),
-  );
-  return (
-    "https://hb.afl.rakuten.co.jp/hgc/" +
-    affiliateId +
-    "/?pc=" +
-    encodedSearchUrl +
-    "&link_type=text"
-  );
-}
-
+// #436: 検索結果ページは購入導線にならないため、検索URLの生成口は廃止した。
+// rakutenAffiliateSearchUrl(...) を参照するエントリは「未設定」として扱われる。
 /**
  * articlePurchaseLinks を「キー → purchaseUrl」マップで読み込む。
  * purchaseUrl の値は文字列リテラルか `thermosJnlS500.rakutenUrl` のような
@@ -246,9 +219,8 @@ export function loadRegistryEntries(srcDirectory) {
       entries.set(key, productUrls.get(reference[1]));
       continue;
     }
-    const search =
-      /\brakutenAffiliateSearchUrl\(\s*\"([^\"]*)\"\s*,?\s*\)/s.exec(body);
-    if (search) entries.set(key, resolveRakutenAffiliateSearchUrl(search[1]));
+    // rakutenAffiliateSearchUrl(...) 参照は #436 で廃止（検索URLは購入導線にならない）。
+    // 未設定エントリとして扱われる。
   }
   return entries;
 }

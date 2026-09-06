@@ -5,6 +5,7 @@
  * DOM構築は呼び出し側（Astro script）が行い、このモジュールはデータ構造のみを返す。
  */
 
+import { isVerifiedRakutenPurchaseDestination } from "../../config/runtime-env.mjs";
 import { reasonMessages } from "../domain/diagnosis/reasons";
 import type {
   DiagnosisResult,
@@ -109,6 +110,11 @@ export type PurchaseLinkData = {
 };
 
 /**
+ * #436: 楽天の購入 CTA は到達先を検証できる商品詳細ページのみ。
+ * 検証できないリンクは buildPurchaseLinkData が undefined を返し表示しない。
+ */
+
+/**
  * プロバイダー別の購入リンク表示ラベル。
  */
 export const PROVIDER_LABELS: Record<string, string> = {
@@ -148,9 +154,9 @@ export function buildResultCardData(
   const articleLinks = product.articleUrls.map((url) =>
     buildArticleLinkData(url, product, index),
   );
-  const purchaseLinks = product.purchaseLinks.map((link) =>
-    buildPurchaseLinkData(link, product, index),
-  );
+  const purchaseLinks = product.purchaseLinks
+    .map((link) => buildPurchaseLinkData(link, product, index))
+    .filter((link): link is PurchaseLinkData => link !== undefined);
 
   return {
     product,
@@ -186,12 +192,22 @@ export function buildArticleLinkData(
 
 /**
  * 購入リンクのデータを構築する。
+ * #436: 楽天リンクは最終到達先が確認できる商品詳細ページ（直リンクまたは
+ * pc パラメータが商品詳細ページのアフィリエイトURL）のみ CTA にする。
+ * 検索結果ページへのリダイレクトや不透明ショートリンクは
+ * 「商品ページを見る」表示で誤導になるため undefined（表示しない）を返す。
  */
 export function buildPurchaseLinkData(
   link: PurchaseLink,
   product: Product,
   index: number,
-): PurchaseLinkData {
+): PurchaseLinkData | undefined {
+  if (
+    link.provider === "rakuten" &&
+    !isVerifiedRakutenPurchaseDestination(link.url)
+  ) {
+    return undefined;
+  }
   return {
     href: link.url,
     target: "_blank",

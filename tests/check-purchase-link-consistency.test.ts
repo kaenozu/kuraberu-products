@@ -134,11 +134,11 @@ describe("purchase link consistency gate (registry keys)", () => {
         `export const articlePurchaseLinks = {\n  "a:left": { name: "A", purchaseUrl: "https://a.r10.to/x" },\n  "a:right": { name: "B", purchaseUrl: "https://a.r10.to/y" },\n  "a:search": { name: "A search", purchaseUrl: rakutenAffiliateSearchUrl("A search") },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
       );
       expect(loadRegistryKeys(directory)).toEqual(
-        new Set(["a:left", "a:right", "a:search"]),
+        new Set(["a:left", "a:right"]),
       );
-      expect(loadRegistryEntries(directory).get("a:search")).toBe(
-        "https://hb.afl.rakuten.co.jp/hgc/34e76967.d5cc3ae1.34e76968.3eade5e6/?pc=https%3A%2F%2Fsearch.rakuten.co.jp%2Fsearch%2Fmall%2FA%2520search&link_type=text",
-      );
+      // #436: rakutenAffiliateSearchUrl(...) を参照するエントリは検索結果ページを
+      // 購入導線にできないため「未設定」として扱われる（キーにも現れない）。
+      expect(loadRegistryEntries(directory).has("a:search")).toBe(false);
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }

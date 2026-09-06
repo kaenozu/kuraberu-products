@@ -149,17 +149,14 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
     expect(result.isAffiliate).toBe(true);
   });
 
-  it("falls back to the affiliate-converted search URL when candidates stay ambiguous", async () => {
+  it("fails closed with an empty href when candidates stay ambiguous", async () => {
     stubRakutenCredentials();
     const entry = productQueries["pampers-premium-newborn"];
-    const fallback =
-      "https://search.rakuten.co.jp/search/mall/%E3%83%91%E3%83%B3%E3%83%91%E3%83%BC%E3%82%B9/";
     const result = await resolvePurchaseHref(
       {
         keyword: "パンパース 肌へのいちばん 新生児 同時出品", // キャッシュ分離のため専用キー
         requiredTerms: entry.requiredTerms,
         selection: entry.selection,
-        fallbackUrl: fallback,
       },
       {
         fetchImpl: async () =>
@@ -183,10 +180,11 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
       },
     );
 
-    // 同一 JAN を掲げる複数出品は一意に定められないため、フォールバックURLへ倒れる。
+    // 同一 JAN を掲げる複数出品は一意に定められないため、検索URLへ倒れず
+    // fail-closed で空 href（#436）。
     expect(result.product).toBeUndefined();
-    expect(result.href).toContain("search.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 
   it("fails closed with an empty href when Rakuten credentials are missing", async () => {
@@ -216,14 +214,12 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
     expect(result.isAffiliate).toBe(false);
   });
 
-  it("falls back safely when the Rakuten API responds with an HTTP error", async () => {
+  it("fails closed when the Rakuten API responds with an HTTP error", async () => {
     stubRakutenCredentials();
     const result = await resolvePurchaseHref(
       {
         ...productQueries["merries-fp-newborn"],
         keyword: "メリーズ APIエラー応答",
-        fallbackUrl:
-          "https://search.rakuten.co.jp/search/mall/%E3%83%A1%E3%83%AA%E3%83%BC%E3%82%BA/",
       },
       {
         fetchImpl: async () => new Response("gateway error", { status: 502 }),
@@ -231,19 +227,18 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
       },
     );
 
+    // API 障害時も検索結果URLへフォールバックしない（#436 fail-closed）。
     expect(result.product).toBeUndefined();
-    expect(result.href).toContain("search.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 
-  it("falls back safely when the Rakuten API response is not JSON", async () => {
+  it("fails closed when the Rakuten API response is not JSON", async () => {
     stubRakutenCredentials();
     const result = await resolvePurchaseHref(
       {
         ...productQueries["shupot-dendo"],
         keyword: "シュポット 不正JSON応答",
-        fallbackUrl:
-          "https://search.rakuten.co.jp/search/mall/%E3%82%B7%E3%83%A5%E3%83%9D%E3%83%83%E3%83%88/",
       },
       {
         fetchImpl: async () =>
@@ -252,9 +247,10 @@ describe("productQueries resolution via resolvePurchaseHref", () => {
       },
     );
 
+    // 不正レスポンス時も検索結果URLへフォールバックしない（#436 fail-closed）。
     expect(result.product).toBeUndefined();
-    expect(result.href).toContain("search.rakuten.co.jp");
-    expect(result.isAffiliate).toBe(true);
+    expect(result.href).toBe("");
+    expect(result.isAffiliate).toBe(false);
   });
 });
 

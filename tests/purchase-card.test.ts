@@ -60,21 +60,26 @@ describe("PurchaseCard", () => {
     expect(html).toContain('rel="nofollow noopener noreferrer"');
   });
 
-  it("renders a Rakuten short URL when status is verified", async () => {
+  it("renders no CTA for a Rakuten short URL even when status is verified (#436)", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(PurchaseCard, {
       props: {
         name: "ベビービョルン バウンサー Bliss",
         audience: "公式商品ページを確認したい人向け",
-        // short URLs are rejected even when the caller claims verified
+        // #436 fail-closed: 不透明ショートリンクは到達先を検証できないため、
+        // verified を名乗っても CTA はレンダリングしない（カード本体は表示）。
         href: "https://a.r10.to/hPtZZE",
         productId: "babybjorn-bouncer-bliss",
         purchaseLinkStatus: "verified",
       },
     });
 
-    expect(html).toContain("楽天市場で確認する");
-    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
+    expect(html).not.toContain("楽天市場で確認する");
+    expect(html).not.toContain("data-cta-event");
+    expect(html).toContain("ベビービョルン バウンサー Bliss");
+    expect(html).toContain(
+      "公式サイトまたは販売ページで商品を確認してください。",
+    );
   });
 
   it("defaults to article-end placement (v3 principle) and renders image", async () => {

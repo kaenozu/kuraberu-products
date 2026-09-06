@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_EXTERNAL_EMBEDS_PER_PAGE } from "./external-embed-limit.mjs";
+import { isVerifiedRakutenPurchaseDestination } from "../config/runtime-env.mjs";
 import {
   ARTICLE_LAYOUT,
   contentTypeFor,
@@ -875,7 +876,9 @@ export function validateArticleCtas(
       );
     }
     if (AFFILIATE_URL_PATTERN.test(href)) {
-      // アフィリエイトCTA: スポンサー表記・nofollow・広告表示を必須にする。
+      // アフィリエイトCTA: スポンサー表記・nofollow・広告表示を必須にし、
+      // pc パラメータの最終到達先が商品詳細ページであることを検証する（#436）。
+      // 検索結果ページへのリダイレクトは「商品ページを見る」表示でも誤導になるため禁止。
       if (!/\bsponsored\b/i.test(rel) || !/\bnofollow\b/i.test(rel)) {
         errors.push(
           `${relative}: CTA ${index + 1} is missing sponsored/nofollow rel attributes`,
@@ -884,6 +887,11 @@ export function validateArticleCtas(
       if (!/広告/.test(tag)) {
         errors.push(
           `${relative}: CTA ${index + 1} is missing advertising disclosure`,
+        );
+      }
+      if (!isVerifiedRakutenPurchaseDestination(href)) {
+        errors.push(
+          `${relative}: CTA ${index + 1} affiliate URL must point at a confirmed item detail page (pc parameter), not a search page or opaque shortlink`,
         );
       }
     } else {

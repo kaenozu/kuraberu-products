@@ -154,6 +154,29 @@ export function isRakutenProductDetailUrl(value) {
   }
 }
 
+/**
+ * 商品詳細ページへの到達が確認できる購入URLかどうか（#436）。
+ *
+ * - item.rakuten.co.jp の商品詳細URL: そのまま許可
+ * - アフィリエイトURL（hb.afl / r10.to / a.r10.to）: pc パラメータの最終到達先が
+ *   商品詳細URLのときだけ許可する。検索結果ページへのリダイレクトは購入CTAとして
+ *   使えない（fail-closed）。pc を持たない裸の短縮URLも到達先を確認できないため不許可。
+ *
+ * CommercialArticlePage / AffiliateButton / NextStepBlock の表示判定と、
+ * scripts/check-rendered-html.mjs の CTA 監査がこの1関数を共有する。
+ */
+export function isVerifiedRakutenPurchaseDestination(value) {
+  if (isRakutenProductDetailUrl(value)) return true;
+  if (!isAffiliateRakutenUrl(value)) return false;
+  try {
+    return isRakutenProductDetailUrl(
+      new URL(value).searchParams.get("pc") ?? "",
+    );
+  } catch {
+    return false;
+  }
+}
+
 // 楽天アフィリエイトリダイレクトの共通プレフィックス（hb.afl 経由）。
 // AffiliateButton と NextStepBlock の両方が購入リンクの変換に使う。
 // リダイレクトIDは RAKUTEN_AFFILIATE_ID 環境変数を優先して組み立て、
