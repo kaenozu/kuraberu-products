@@ -406,12 +406,12 @@ export const articlePurchaseLinks = {
     purchaseUrl: "https://a.r10.to/hk5u4n",
   },
   "pigeon-bottle-240:left": {
-    name: "母乳実感 耐熱ガラス製（240ml）",
-    purchaseUrl: "https://a.r10.to/hR4mwU",
+    name: "ピジョン 母乳実感 耐熱ガラス製 240ml",
+    purchaseUrl: "https://item.rakuten.co.jp/pigeon-shop/1026732/",
   },
   "pigeon-bottle-240:right": {
-    name: "母乳実感 プラスチック製（PPSU）（240ml）",
-    purchaseUrl: "https://a.r10.to/hk5urF",
+    name: "ピジョン 母乳実感 PPSU 240ml",
+    purchaseUrl: "https://item.rakuten.co.jp/pigeon-shop/1048874/",
   },
   "pigeon-slim-240:left": {
     name: "ピジョン 母乳実感 240ml",

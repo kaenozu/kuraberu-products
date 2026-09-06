@@ -16,11 +16,16 @@ export const pigeonBottle240Article = defineArticleMetadata({
   summary:
     "「耐熱ガラス製」と「プラスチック製（PPSU）」を、公式情報・素材の特長・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-17",
-  productInfoCheckedAt: "2026-08-09",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-07",
+  productInfoCheckedAt: "2026-09-07",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-09-07",
+      summary:
+        "公式商品ページと型番が一致する楽天市場の商品単体ページを確認し、購入導線を追加。",
+    },
     {
       date: "2026-08-17",
       summary:

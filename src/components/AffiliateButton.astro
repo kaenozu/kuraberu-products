@@ -52,10 +52,15 @@ function findRegistryQuery(id: string | undefined) {
 
 // productId 未指定のときはレジストリを参照しない。登録済みならレジストリを優先し、
 // 無ければ genericQuery へフォールバックする。
-const query = isAffiliateRakutenUrl(directHref)
+const query = directHref
   ? undefined
   : findRegistryQuery(productId) ?? genericQuery;
-const fallbackHref = toAffiliateRakutenUrl(directHref, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
+// A confirmed item.rakuten.co.jp detail URL is an ordinary product link. Keep it
+// intact even when the affiliate redirect environment is configured; only
+// affiliate URLs or search fallbacks may be converted.
+const fallbackHref = isRakutenProductDetailUrl(directHref)
+  ? directHref
+  : toAffiliateRakutenUrl(directHref, import.meta.env.PUBLIC_RAKUTEN_AFFILIATE_REDIRECT);
 const resolved = query
   ? await resolvePurchaseHref({
       keyword: query.keyword,
