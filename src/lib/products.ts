@@ -364,8 +364,7 @@ export const articlePurchaseLinks = {
   },
   "merries-pants:right": {
     name: "メリーズ パンツタイプ ずっと肌さらエアスルー",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/ichiba/56ea557f.e01de687.56ea5580.6eb3aa89/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fjandcshop%2Fahkaopm58%2F&link_type=picttext",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4901301419170/",
   },
   "moony-m:left": {
     name: "ムーニー 低刺激であんしん",
@@ -574,7 +573,7 @@ export const articlePurchaseLinks = {
   },
   "tiger-pct-a120-vs-pct-a150:left": {
     name: "タイガー PCT-A120",
-    purchaseUrl: "https://item.rakuten.co.jp/r-kojima/4904710443538/",
+    purchaseUrl: "https://item.rakuten.co.jp/denkichiweb/4904710443538/",
   },
   "tiger-pct-a120-vs-pct-a150:right": {
     name: "タイガー PCT-A150",
