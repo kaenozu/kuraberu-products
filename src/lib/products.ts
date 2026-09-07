@@ -470,11 +470,11 @@ export const articlePurchaseLinks = {
   },
   "pigeon-slim-240:left": {
     name: "ピジョン 母乳実感 240ml",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/pigeon-shop/1048874/",
   },
   "pigeon-slim-240:right": {
     name: "ピジョン スリムタイプ 240ml",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/pigeon-shop/1031586/",
   },
   "sharp-kc-s50-vs-fu-s50:left": {
     name: "シャープ KC-S50",

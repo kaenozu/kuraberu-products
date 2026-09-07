@@ -16,11 +16,17 @@ export const pigeonSlim240Article = defineArticleMetadata({
   summary:
     "「母乳実感」と「スリムタイプ」の240mlを、公式情報・乳首体系・形状・確認状況に分けて比較します。",
   publishedAt: "2026-08-09",
-  modifiedAt: "2026-08-17",
-  productInfoCheckedAt: "2026-08-09",
-  purchaseLinkStatus: "unverified",
+  modifiedAt: "2026-09-07",
+  productInfoCheckedAt: "2026-09-07",
+  purchaseLinksCheckedAt: "2026-09-07",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/pigeon-bottle-glass240.jpg",
   changeLog: [
+    {
+      date: "2026-09-07",
+      summary:
+        "公式個別ページと商品名・型番が一致する楽天市場の商品単体ページ（ピジョン公式ショップ）を確認し、購入導線を追加。楽天アフィリエイトUIが未認証でも通常の商品単体URLを掲載。",
+    },
     {
       date: "2026-08-17",
       summary:
