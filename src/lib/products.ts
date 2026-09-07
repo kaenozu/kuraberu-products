@@ -494,11 +494,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-f-px60c-vs-f-px70c:left": {
     name: "パナソニック F-PX60C",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/ebest/4550719027448/",
   },
   "panasonic-f-px60c-vs-f-px70c:right": {
     name: "パナソニック F-PX70C",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/panasonic-store/f-px70c-w/",
   },
   "panasonic-es-lt4b-vs-es-lv7j:left": {
     name: "パナソニック ES-LT4B",
