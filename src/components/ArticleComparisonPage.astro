@@ -412,7 +412,7 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <h2>情報源一覧</h2>
     <ul class="source-list">
       {sourceLinks.map((link) => (
-        <li><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{link.checkedAt && "（" + link.checkedAt + "確認）"}</li>
+        <li><a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>{link.checkedAt && "（" + link.checkedAt + (link.checkedAt.endsWith('確認') ? '' : '確認') + "）"}</li>
       ))}
     </ul>
     <h2>調査方法・免責事項</h2>

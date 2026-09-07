@@ -380,6 +380,18 @@ export function validateRepeatedJapanesePunctuation(relative, html) {
       ];
 }
 
+const REPEATED_JAPANESE_WORDS = /(確認|公式|商品|購入|楽天|情報源|ページ)\1+/g;
+
+export function validateRepeatedJapaneseWords(relative, html) {
+  const body = stripScriptAndStyleContents(html);
+  const matches = body.match(REPEATED_JAPANESE_WORDS) ?? [];
+  return matches.length === 0
+    ? []
+    : [
+        `${relative}: [word-duplication] repeated Japanese wording remains in rendered HTML: ${matches.slice(0, 5).join(", ")}`,
+      ];
+}
+
 // 記事ページの商品数を、BaseLayout が出力する
 // <meta name="article:product-count" content="N"> から読み取る。
 // 商品数の唯一の情報源は記事メタデータ（src/content/articles.ts の productCount）。
@@ -1221,6 +1233,7 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
     errors.push(...validateRequiredSections(relative, html));
     errors.push(...validateNoUnresolvedTemplateTokens(relative, html));
     errors.push(...validateRepeatedJapanesePunctuation(relative, html));
+    errors.push(...validateRepeatedJapaneseWords(relative, html));
     errors.push(
       ...validateArticleCtas(
         relative,
