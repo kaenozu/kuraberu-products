@@ -15,10 +15,10 @@ export const panasonicAirCleanerArticle = defineArticleMetadata({
   summary:
     "F-PX60CとF-PX70Cを、パナソニック公式の適用床面積・清浄時間・寸法・重量・運転音・消費電力に分けて比較します。",
   publishedAt: "2026-08-18",
-  modifiedAt: "2026-08-18",
+  modifiedAt: "2026-09-07",
   productInfoCheckedAt: "2026-08-18",
-  purchaseLinksCheckedAt: "2026-08-18",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-09-07",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/panasonic-f-px60c.png",
   aboutProductNames: ["パナソニック F-PX60C", "パナソニック F-PX70C"],
   changeLog: [
