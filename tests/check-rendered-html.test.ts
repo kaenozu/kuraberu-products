@@ -26,6 +26,7 @@ import {
   validateRenderedExternalEmbedCounts,
   validateRenderedHtml,
   validateRepeatedJapanesePunctuation,
+  validateRepeatedJapaneseWords,
   validateTopPageCategories,
   validateTopPageLatest,
 } from "../scripts/check-rendered-html.mjs";
@@ -1444,6 +1445,26 @@ describe("article section order (validateArticleSectionOrder)", () => {
       validateRepeatedJapanesePunctuation(
         "dist/articles/example/index.html",
         "<p>正常です。次です！疑問です？</p>",
+      ),
+    ).toEqual([]);
+  });
+
+  it("rejects repeated Japanese words in rendered body text", () => {
+    expect(
+      validateRepeatedJapaneseWords(
+        "dist/articles/example/index.html",
+        "<p>商品単体ページ確認確認</p><script>const x = '公式公式';</script>",
+      ),
+    ).toEqual([
+      "dist/articles/example/index.html: [word-duplication] repeated Japanese wording remains in rendered HTML: 確認確認",
+    ]);
+  });
+
+  it("accepts normal Japanese wording", () => {
+    expect(
+      validateRepeatedJapaneseWords(
+        "dist/articles/example/index.html",
+        "<p>公式商品ページを確認しました。</p>",
       ),
     ).toEqual([]);
   });
