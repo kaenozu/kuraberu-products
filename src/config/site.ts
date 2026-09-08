@@ -1,3 +1,11 @@
+/**
+ * Astro 側のサイト設定（Astro コンポーネント向けの薄いラッパー）。
+ *
+ * 実行環境・公開URL の正規化ロジック自体は、リポジトリ直下の
+ * config/runtime-env.mjs（node スクリプトと Astro の共有モジュール）に置く。
+ * 新しい環境変数を足すときは config/runtime-env.mjs が正規の編集対象で、
+ * こちらは表示用の組み立てだけを行う。
+ */
 import {
   DEFAULT_SITE_URL,
   normalizeOptionalPublicUrl,
