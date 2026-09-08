@@ -81,7 +81,7 @@ $env:GITHUB_ACTIONS = 'true' # makes Resolve-SecretValue fail fast instead of pr
 # --- snapshot process env (the script must restore it in finally) -----------
 $script:StubEnvNames = @(
     'DEPLOYMENT_ENV', 'PUBLIC_SITE_URL', 'PUBLIC_RAKUTEN_PREMIUM_URL',
-    'PUBLIC_RAKUTEN_SARASARA_URL', 'PUBLIC_CONTACT_URL', 'RAKUTEN_APPLICATION_ID',
+    'PUBLIC_RAKUTEN_SARASARA_URL', 'PUBLIC_CONTACT_URL', 'PUBLIC_AMAZON_ASSOCIATE_TAG', 'RAKUTEN_APPLICATION_ID',
     'RAKUTEN_ACCESS_KEY', 'RAKUTEN_AFFILIATE_ID', 'PUBLIC_BUILD_SHA'
 )
 $script:StubEnvBefore = @{}
