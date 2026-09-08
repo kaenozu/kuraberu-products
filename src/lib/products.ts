@@ -425,11 +425,11 @@ export const articlePurchaseLinks = {
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:left": {
     name: "パナソニック F-YHVX120",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/e-cutestyle/p000000789265/",
   },
   "panasonic-f-yhvx120-vs-f-yhvx90:right": {
     name: "パナソニック F-YHVX90",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/jumblestore/2329814814282/",
   },
   "panasonic-mc-sb55k-vs-mc-sb35k:left": {
     name: "パナソニック MC-SB55K",
