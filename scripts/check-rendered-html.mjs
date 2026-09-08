@@ -1,10 +1,11 @@
-// 生成HTML検査のオーケストレータ（#702 で validators/ に分割）。
-//
-// 各検査の実装は scripts/validators/*.mjs に置き、ここには全体駆動の
-// validateRenderedHtml と CLI エントリだけを残す。
-// 後方互換のため、従来の公開名はすべて再公開する（テスト・他ゲートの
-// import 先は変更不要）。自作HTMLパーサの置換は別途対応する。
-
+/**
+ * scripts/check-rendered-html.mjs
+ *
+ * レンダリング済み HTML の品質ゲート（オーケストレータ）。
+ * 実装は scripts/validators/*.mjs に分割し、このファイルは
+ * 後方互換の再exportと全体検証・CLIだけを担う。
+ * （Issue #702: 53KB 単一ファイルの分割＋自作トークナイザの置換）
+ */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -13,25 +14,37 @@ import {
   expectedPlacementCounts,
   expectedPurchaseCtasPerArticle,
 } from "../config/article-layout.mjs";
-import { internalTarget, walk } from "./validators/html-parse.mjs";
-import { validateRenderedExternalEmbedCounts } from "./validators/external-embeds.mjs";
+import {
+  countRenderedExternalEmbeds,
+  validateRenderedExternalEmbedCounts,
+} from "./validators/embeds.mjs";
 import {
   ARTICLE_PAGE_PATTERN,
+  detectArticleTemplate,
   validateArticleSectionOrder,
   validateRequiredSections,
-} from "./validators/article-sections.mjs";
+} from "./validators/sections.mjs";
 import {
+  findUnresolvedTemplateTokens,
   validateNoUnresolvedTemplateTokens,
   validateRepeatedJapanesePunctuation,
   validateRepeatedJapaneseWords,
-} from "./validators/article-text.mjs";
+} from "./validators/tokens.mjs";
 import {
+  readArticleContentType,
   readArticleProductCount,
+  readArticlePurchaseLinkStatus,
   validateArticleContentType,
-  validateArticleNextStep,
-  validateArticlePurchaseLinkStatus,
   validateArticleTrustLine,
-} from "./validators/article-meta.mjs";
+} from "./validators/meta.mjs";
+import { validateArticleNextStep } from "./validators/nextstep.mjs";
+import {
+  countOtherArticleLinks,
+  countRelatedArticleCards,
+  validateRelatedArticleSection,
+  validateTopPageCategories,
+  validateTopPageLatest,
+} from "./validators/pages.mjs";
 import {
   validateArticleCardAudiences,
   validateArticleCardSubjects,
@@ -40,19 +53,72 @@ import {
   validateHeaderNav,
   validateSourceToggle,
   validateTopSearch,
-} from "./validators/article-cards.mjs";
-import { validateArticleCtas } from "./validators/article-ctas.mjs";
-import { validateRelatedArticleSection } from "./validators/related.mjs";
-import {
-  validateTopPageCategories,
-  validateTopPageLatest,
-} from "./validators/top-page.mjs";
+} from "./validators/cards.mjs";
+import { validateArticleCtas } from "./validators/ctas.mjs";
 import { findEmptySections } from "./validators/empty-sections.mjs";
+import { validateArticlePurchaseLinkStatus } from "./validators/meta.mjs";
 import {
   ALLOWLIST_FILE,
   applyRenderedGateAllowlist,
   loadRenderedGateAllowlist,
+  parseRenderedGateAllowlist,
 } from "./validators/allowlist.mjs";
+
+export {
+  countRenderedExternalEmbeds,
+  validateRenderedExternalEmbedCounts,
+  detectArticleTemplate,
+  validateArticleSectionOrder,
+  validateRequiredSections,
+  findUnresolvedTemplateTokens,
+  validateNoUnresolvedTemplateTokens,
+  validateRepeatedJapanesePunctuation,
+  validateRepeatedJapaneseWords,
+  readArticleContentType,
+  readArticleProductCount,
+  readArticlePurchaseLinkStatus,
+  validateArticleContentType,
+  validateArticleTrustLine,
+  validateArticleNextStep,
+  validateArticleCardAudiences,
+  validateArticleCardSubjects,
+  validateArticleCardThumbnails,
+  validateComparisonCardLabels,
+  validateHeaderNav,
+  validateSourceToggle,
+  validateTopSearch,
+  countOtherArticleLinks,
+  countRelatedArticleCards,
+  validateRelatedArticleSection,
+  validateTopPageCategories,
+  validateTopPageLatest,
+  validateArticleCtas,
+  findEmptySections,
+  validateArticlePurchaseLinkStatus,
+  parseRenderedGateAllowlist,
+  applyRenderedGateAllowlist,
+};
+
+function walk(directory, htmlFiles) {
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const current = path.join(directory, entry.name);
+    if (entry.isDirectory()) walk(current, htmlFiles);
+    else if (current.endsWith(".html")) htmlFiles.push(current);
+  }
+}
+
+function internalTarget(href, distDirectory) {
+  let pathname = href.split("#")[0].split("?")[0];
+  try {
+    pathname = decodeURIComponent(pathname);
+  } catch {
+    /* ignore malformed URIs */
+  }
+  if (!pathname || !pathname.startsWith("/")) return null;
+  if (pathname === "/") return path.join(distDirectory, "index.html");
+  if (path.extname(pathname)) return path.join(distDirectory, pathname);
+  return path.join(distDirectory, pathname, "index.html");
+}
 
 export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
   const htmlFiles = [];
@@ -237,63 +303,6 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
 
   return { errors, pageCount: htmlFiles.length };
 }
-
-// ---- 許可リスト（docs/rendered-gate-allowlist.md, Issue #343）----
-//
-// 全ページへゲートを拡大した結果、既存データ由来の違反が見つかった場合、
-// ゲートを緩めずに例外だけを docs/rendered-gate-allowlist.md の表で
-// 明示する。形式:
-//   | path | rule | reason |
-//   | `articles/<slug>/index.html` | `required-section:<id>` / `template-token` | 理由 |
-
-export {
-  countRenderedExternalEmbeds,
-  validateRenderedExternalEmbedCounts,
-} from "./validators/external-embeds.mjs";
-export {
-  detectArticleTemplate,
-  validateArticleSectionOrder,
-  validateRequiredSections,
-} from "./validators/article-sections.mjs";
-export {
-  findUnresolvedTemplateTokens,
-  validateNoUnresolvedTemplateTokens,
-  validateRepeatedJapanesePunctuation,
-  validateRepeatedJapaneseWords,
-} from "./validators/article-text.mjs";
-export {
-  readArticleContentType,
-  readArticleProductCount,
-  readArticlePurchaseLinkStatus,
-  validateArticleContentType,
-  validateArticleNextStep,
-  validateArticlePurchaseLinkStatus,
-  validateArticleTrustLine,
-} from "./validators/article-meta.mjs";
-export {
-  validateArticleCardAudiences,
-  validateArticleCardSubjects,
-  validateArticleCardThumbnails,
-  validateComparisonCardLabels,
-  validateHeaderNav,
-  validateSourceToggle,
-  validateTopSearch,
-} from "./validators/article-cards.mjs";
-export { validateArticleCtas } from "./validators/article-ctas.mjs";
-export {
-  countOtherArticleLinks,
-  countRelatedArticleCards,
-  validateRelatedArticleSection,
-} from "./validators/related.mjs";
-export {
-  validateTopPageCategories,
-  validateTopPageLatest,
-} from "./validators/top-page.mjs";
-export { findEmptySections } from "./validators/empty-sections.mjs";
-export {
-  applyRenderedGateAllowlist,
-  parseRenderedGateAllowlist,
-} from "./validators/allowlist.mjs";
 
 if (
   path.resolve(process.argv[1] ?? "") ===

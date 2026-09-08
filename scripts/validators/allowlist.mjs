@@ -1,5 +1,9 @@
-// rendered gate 許可リスト（docs/rendered-gate-allowlist.md）（#702 で分離）。
-
+/**
+ * scripts/validators/allowlist.mjs
+ *
+ * rendered-gate-allowlist.md のパースと適用。
+ * 形式: | path | rule | reason |（先頭3列だけ読む。壊れた行は無視）
+ */
 import fs from "node:fs";
 import path from "node:path";
 
