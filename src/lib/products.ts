@@ -225,15 +225,6 @@ export const articlePurchaseLinks = {
     name: "ソニー WF-C710N",
     purchaseUrl: "https://item.rakuten.co.jp/e-earphone/sony-wfc710n/",
   },
-  "sony-wh-1000xm6-vs-wh-1000xm5:left": {
-    name: "ソニー WH-1000XM6",
-    purchaseUrl:
-      "https://item.rakuten.co.jp/alljapan-online-shop/4548736162600/",
-  },
-  "sony-wh-1000xm6-vs-wh-1000xm5:right": {
-    name: "ソニー WH-1000XM5",
-    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4548736132566/",
-  },
   "logicool-mx-master-3s-vs-m650:left": {
     name: "Logicool MX Master 3S",
     purchaseUrl:
@@ -693,12 +684,11 @@ export const articlePurchaseLinks = {
   "sony-wh-1000xm6-vs-wh-1000xm5:left": {
     name: "ソニー WH-1000XM6",
     purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/ichiba/56efb198.78b56db2.56efb199.4a5fe96d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fa-price%2F4548736162600%2F&link_type=picttext",
+      "https://item.rakuten.co.jp/alljapan-online-shop/4548736162600/",
   },
   "sony-wh-1000xm6-vs-wh-1000xm5:right": {
     name: "ソニー WH-1000XM5",
-    purchaseUrl:
-      "https://hb.afl.rakuten.co.jp/ichiba/56efb198.78b56db2.56efb199.4a5fe96d/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fa-price%2F4548736132566%2F&link_type=picttext",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4548736132566/",
   },
   "logicool-mx-keys-s-vs-mx-keys-mini:left": {
     name: "Logicool MX Keys S",
