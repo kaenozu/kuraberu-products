@@ -65,8 +65,10 @@ jobs:
       - name: Verify production configuration and output
         env:
           DEPLOYMENT_ENV: production
-          # CI-only test affiliate ID (valid format, not a secret).
-          # Required because production builds fail-closed when RAKUTEN_AFFILIATE_ID is missing.
+          # CI-only test credentials (valid format, not secrets).
+          # Production validation rejects partially configured Rakuten API credentials.
+          RAKUTEN_APPLICATION_ID: ci-application-id
+          RAKUTEN_ACCESS_KEY: ci-access-key
           RAKUTEN_AFFILIATE_ID: 0123456789abcdef.01234567.fedcba9876543210.89abcdef
           PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
           PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
