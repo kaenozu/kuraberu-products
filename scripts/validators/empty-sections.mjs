@@ -91,6 +91,9 @@ export function findEmptySections(html) {
   const sections = [];
   const headings = root.querySelectorAll("h1,h2,h3,h4,h5,h6");
   for (const heading of headings) {
+    // h1 is the document title, not a content section. The legacy scanner
+    // only reported empty subordinate sections and intentionally ignored it.
+    if (heading.tagName.toLowerCase() === "h1") continue;
     if (isInSummary(heading)) continue;
     const token = nextMeaningfulSibling(heading);
     const isEmpty =

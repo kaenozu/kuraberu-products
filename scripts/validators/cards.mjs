@@ -25,7 +25,7 @@ function collectArticleCards(html) {
 export function validateArticleCardThumbnails(relative, html) {
   const errors = [];
   for (const card of collectArticleCards(html)) {
-    const thumb = card.getAttribute("data-thumb");
+    const thumb = card.getAttribute("data-thumb") ?? null;
     const hasImg = card.querySelector("img.card-thumb") !== null;
     const tile = card.querySelector("div.card-tile");
     const hasTile = tile !== null;
@@ -169,7 +169,7 @@ export function validateComparisonCardLabels(relative, html) {
     for (const row of rows) {
       const cells = row.querySelectorAll("td");
       for (const cell of cells) {
-        if (cell.getAttribute("data-label") === null) {
+        if ((cell.getAttribute("data-label") ?? null) === null) {
           errors.push(
             `${relative}: comparison table cells must carry a data-label (mobile card view needs it)`,
           );
