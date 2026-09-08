@@ -225,6 +225,15 @@ export const articlePurchaseLinks = {
     name: "ソニー WF-C710N",
     purchaseUrl: "https://item.rakuten.co.jp/e-earphone/sony-wfc710n/",
   },
+  "sony-wh-1000xm6-vs-wh-1000xm5:left": {
+    name: "ソニー WH-1000XM6",
+    purchaseUrl:
+      "https://item.rakuten.co.jp/alljapan-online-shop/4548736162600/",
+  },
+  "sony-wh-1000xm6-vs-wh-1000xm5:right": {
+    name: "ソニー WH-1000XM5",
+    purchaseUrl: "https://item.rakuten.co.jp/biccamera/4548736132566/",
+  },
   "logicool-mx-master-3s-vs-m650:left": {
     name: "Logicool MX Master 3S",
     purchaseUrl:
