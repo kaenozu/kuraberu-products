@@ -1,5 +1,8 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { onRequestPost } from "../functions/api/events";
+import {
+  onRequestPost,
+  __resetEventsFallbackForTesting,
+} from "../functions/api/events";
 import { ARTICLE_LAYOUT } from "../config/article-layout.mjs";
 
 const SITE_URL = "https://kuraberu-products.pages.dev";
@@ -73,6 +76,7 @@ function context(request: Request, env: Env) {
 
 afterEach(() => {
   vi.restoreAllMocks();
+  __resetEventsFallbackForTesting();
 });
 
 describe("click analytics endpoint", () => {
@@ -283,6 +287,23 @@ describe("click analytics endpoint", () => {
       context(postRequest(validPayload()), baseEnv()),
     );
     expect(response.status).toBe(204);
+  });
+
+  it("throttles floods with the in-memory fallback when no limiter is bound", async () => {
+    const { kv } = makeKv();
+    let lastStatus = 0;
+    for (let i = 0; i < 65; i++) {
+      const response = await onRequestPost(
+        context(
+          postRequest(validPayload(), {
+            "CF-Connecting-IP": "198.51.100.77",
+          }),
+          baseEnv(undefined, kv),
+        ),
+      );
+      lastStatus = response.status;
+    }
+    expect(lastStatus).toBe(429);
   });
 
   it("still accepts events when the rate limiter fails", async () => {

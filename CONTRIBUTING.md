@@ -57,10 +57,17 @@ pnpm build
 pnpm check:rendered
 pnpm check:deployment
 pnpm check:external-link-syntax
+pnpm check:official-links
+pnpm check:source-relevancy
+pnpm check:price-claims
+pnpm check:csp-embed
+pnpm check:spec-claims
 pnpm test
 ```
 
 `check:external-link-syntax` はネットワーク到達性を保証しません。公開前のリンク到達性は別の受入確認として実施します。
+
+`check:source-relevancy` と `check:price-claims` は warn-first 運用です（`--strict` 付きでのみ違反を失敗にします）。公式正規ページの例外は `docs/source-relevancy-allowlist.md` に登録します。
 
 ### Browser / network E2E
 
