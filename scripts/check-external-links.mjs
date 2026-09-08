@@ -15,7 +15,10 @@ const externalUrls = new Set();
 const errors = [];
 for (const file of htmlFiles) {
   const html = fs.readFileSync(file, "utf8");
-  for (const match of html.matchAll(/href="([^"]+)"/g)) {
+  // href だけでなく src（iframe/script/img）も検査する。
+  // ランタイム注入用の data-config 内 JSON（ExternalEmbed.astro）など、
+  // 属性名に依らない埋め込み URL は次の素朴な https トークン走査で拾う。
+  for (const match of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
     const value = match[1];
     if (/^(?:javascript|data):/i.test(value)) {
       errors.push(`${file}: unsafe link scheme: ${value.split(":", 1)[0]}`);
@@ -30,6 +33,21 @@ for (const file of htmlFiles) {
       continue;
     }
     if (/^https:\/\//i.test(value)) externalUrls.add(value);
+  }
+  const decoded = html.replaceAll("&amp;", "&");
+  for (const match of decoded.matchAll(
+    /(https?|javascript|data):[^\s"'<>\\]+/g,
+  )) {
+    const token = match[0].replace(/[.,;)\]]+$/, "");
+    if (/^(?:javascript|data):/i.test(token)) {
+      errors.push(`${file}: unsafe embedded URL scheme: ${token.slice(0, 60)}`);
+      continue;
+    }
+    if (/^http:\/\//i.test(token)) {
+      errors.push(`${file}: non-HTTPS embedded URL: ${token.slice(0, 120)}`);
+      continue;
+    }
+    externalUrls.add(token);
   }
 }
 

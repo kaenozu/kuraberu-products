@@ -9,10 +9,14 @@
  *
  * ロールアウト方針（warn-first）:
  *   - 違反は記事ごとにグループ化して報告する
- *   - exit 1 になるのは「違反が存在しかつ STRICT_SOURCE_RELEVANCY=1」のときのみ
+ *   - exit 1 になるのは「違反が存在しかつ STRICT_SOURCE_RELEVANCY=1」
+ *     または --strict のときのみ
+ *   - 公式ページ自体は正しいが型番トークンを含まない URL は、
+ *     docs/source-relevancy-allowlist.md の表に id × url で登録して除外する
+ *     （rendered-gate-allowlist と同じ運用。行を削除すれば即時に復帰する）
  *
  * 使い方:
- *   node scripts/check-source-relevancy.mjs check
+ *   node scripts/check-source-relevancy.mjs check [--strict]
  */
 
 import fs from "node:fs";
@@ -160,6 +164,51 @@ export function checkSourceRelevancy({ srcDirectory = "src" } = {}) {
   return { findings, checkedSources, file: articlesDir };
 }
 
+/**
+ * docs/source-relevancy-allowlist.md の表部分をパースする。
+ * 形式: | id | url | reason |（先頭3列だけ読む。壊れた行は無視）
+ */
+export function parseSourceRelevancyAllowlist(markdown) {
+  const entries = [];
+  for (const line of markdown.split(/\r?\n/)) {
+    if (!line.trim().startsWith("|")) continue;
+    const cells = line
+      .split("|")
+      .slice(1, -1)
+      .map((cell) => cell.trim().replace(/^`|`$/g, ""));
+    if (cells.length < 3) continue;
+    const [id, url, reason] = cells;
+    if (!id || !url || id === "id" || /^-+$/.test(id)) continue;
+    entries.push({ id, url, reason: reason ?? "" });
+  }
+  return entries;
+}
+
+/** 許可リストに載った id × url の違反を取り除く。 */
+export function applySourceRelevancyAllowlist(findings, entries) {
+  if (entries.length === 0) return findings;
+  const allowed = new Set(entries.map((entry) => `${entry.id}\n${entry.url}`));
+  return findings
+    .map((finding) => ({
+      ...finding,
+      violations: finding.violations.filter(
+        (violation) => !allowed.has(`${finding.id}\n${violation.url}`),
+      ),
+    }))
+    .filter(
+      (finding) => finding.violations.length > 0 || finding.unverifiable > 0,
+    );
+}
+
+const ALLOWLIST_FILE = "docs/source-relevancy-allowlist.md";
+
+function loadSourceRelevancyAllowlist() {
+  const candidate = path.join(process.cwd(), ALLOWLIST_FILE);
+  return fs.existsSync(candidate)
+    ? parseSourceRelevancyAllowlist(fs.readFileSync(candidate, "utf8"))
+    : [];
+}
+
 function formatReport({ findings, checkedSources, file }) {
   const lines = [];
   lines.push(`source relevancy check: ${file}`);
@@ -191,12 +240,23 @@ if (
     console.error(`ERROR: unknown mode: ${mode}`);
     process.exitCode = 2;
   } else {
-    const { findings, checkedSources, file } = checkSourceRelevancy();
+    const {
+      findings: rawFindings,
+      checkedSources,
+      file,
+    } = checkSourceRelevancy();
+    const allowlistEntries = loadSourceRelevancyAllowlist();
+    const findings = applySourceRelevancyAllowlist(
+      rawFindings,
+      allowlistEntries,
+    );
     const totalViolations = findings.reduce(
       (sum, finding) => sum + finding.violations.length,
       0,
     );
-    const strict = process.env.STRICT_SOURCE_RELEVANCY === "1";
+    const strict =
+      process.env.STRICT_SOURCE_RELEVANCY === "1" ||
+      process.argv.includes("--strict");
     const lines = formatReport({ findings, checkedSources, file });
     if (totalViolations > 0) {
       const header = strict
