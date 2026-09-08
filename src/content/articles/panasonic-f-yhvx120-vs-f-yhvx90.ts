@@ -19,12 +19,17 @@ export const panasonicFyhvx120VsFyhvx90Article = defineArticleMetadata({
   summary:
     "F-YHVX120とF-YHVX90を、パナソニック公式のタンク容量・木造対応畳数・重量・寸法・強運転音に分けて比較します。",
   publishedAt: "2026-08-15",
-  modifiedAt: "2026-08-15",
+  modifiedAt: "2026-09-08",
   productInfoCheckedAt: "2026-08-15",
-  purchaseLinksCheckedAt: "2026-08-15",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-09-08",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/f-yhvx120.jpg",
   changeLog: [
+    {
+      date: "2026-09-08",
+      summary:
+        "楽天の商品単体ページを確認し、F-YHVX120・F-YHVX90の通常リンクを購入導線へ設定。",
+    },
     {
       date: "2026-08-15",
       summary:
