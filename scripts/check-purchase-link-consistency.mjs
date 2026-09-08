@@ -48,6 +48,7 @@ export const CTA_CACHE_MAX_AGE_DAYS = 7;
 export const ALLOWED_OUTBOUND_HOSTS = Object.freeze([
   "hb.afl.rakuten.co.jp",
   "item.rakuten.co.jp",
+  "biccamera.rakuten.co.jp",
   "www.rakuten.co.jp",
   "www.amazon.co.jp",
 ]);
