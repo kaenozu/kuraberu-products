@@ -2,7 +2,7 @@
  * unverified-cta.e2e.ts — E2E test for the purchase-CTA fail-closed contract.
  *
  * - unverified の記事では購入ボタン (a.next-step__buy) を出さず、
- *   「購入先の確認中です」表示に倒すこと（実ブラウザでの確認）。
+ *   「販売先を確認中です」表示に倒すこと（実ブラウザでの確認）。
  * - verified の記事では購入ボタンが2件出ること（対照実験）。
  * - モバイル幅 (390px) では横スクロールが発生せず、購入ボタンが
  *   タップしやすい大きさを保つこと。
@@ -16,7 +16,7 @@ import { test, expect } from "@playwright/test";
 
 const UNVERIFIED_PATH = "/articles/thermos-kfm-020-vs-kfi-020/";
 const VERIFIED_PATH = "/articles/pampers-newborn/";
-const NOTICE_TEXT = "購入先の確認中です";
+const NOTICE_TEXT = "販売先を確認中です";
 
 test.describe("unverified purchase CTA (desktop)", () => {
   test("shows no purchase buttons and falls back to notice text", async ({
@@ -27,7 +27,7 @@ test.describe("unverified purchase CTA (desktop)", () => {
 
     await expect(page.locator("a.next-step__buy")).toHaveCount(0);
     const missing = page.locator(".next-step__buy--missing");
-    await expect(missing).toHaveCount(2);
+    await expect(missing).toHaveCount(1);
     for (const element of await missing.all()) {
       await expect(element).toContainText(NOTICE_TEXT);
     }
