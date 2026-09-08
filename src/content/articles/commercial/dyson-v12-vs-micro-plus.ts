@@ -22,7 +22,7 @@ export const dysonV12VsMicroPlusSeed: CommercialArticleSeed = {
   leftPoint: "最長60分の運転と2種ヘッドで家中まとめて掃除したい人向け",
   rightPoint: "本体質量1.54kgの軽さとLEDヘッドを優先する人向け",
   productInfoCheckedAt: "2026-09-07",
-  modifiedAt: "2026-09-07",
+  modifiedAt: "2026-09-08",
   purchaseLinkStatus: "unverified",
   officialSources: [
     {

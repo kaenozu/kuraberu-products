@@ -22,7 +22,7 @@ export const delonghiEcam22112bVsEcam25023sbSeed: CommercialArticleSeed = {
   leftPoint: "コンパクトさと基本メニューを確認したい人向け",
   rightPoint: "追加メニューと見やすい操作部を確認したい人向け",
   productInfoCheckedAt: "2026-09-07",
-  modifiedAt: "2026-09-07",
+  modifiedAt: "2026-09-08",
   purchaseLinkStatus: "unverified",
   officialSources: [
     {

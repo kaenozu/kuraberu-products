@@ -22,7 +22,7 @@ export const braunSeries9proVsSeries7Seed: CommercialArticleSeed = {
   leftPoint: "深剃り性能の上限と6in1洗浄を確認したい人向け",
   rightPoint: "360°密着と3モード切替のバランスを確認したい人向け",
   productInfoCheckedAt: "2026-09-07",
-  modifiedAt: "2026-09-07",
+  modifiedAt: "2026-09-08",
   purchaseLinkStatus: "unverified",
   officialSources: [
     {
