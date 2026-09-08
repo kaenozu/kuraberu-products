@@ -292,8 +292,16 @@ export function validateBuildEnvironment(environment = process.env) {
   );
   const rakutenApiReady =
     configuredApiCredentials.length === RAKUTEN_API_CREDENTIALS.length;
+  // RAKUTEN_AFFILIATE_ID is also the required redirect identifier for
+  // static affiliate URLs. It may therefore be present without the API
+  // credentials when direct purchase URLs are configured. Only a partial
+  // API core (Application ID / Access Key) is invalid by itself.
+  const configuredApiCoreCredentials = [
+    "RAKUTEN_APPLICATION_ID",
+    "RAKUTEN_ACCESS_KEY",
+  ].filter((name) => nonEmpty(environment[name]));
   if (
-    configuredApiCredentials.length > 0 &&
+    configuredApiCoreCredentials.length > 0 &&
     configuredApiCredentials.length < RAKUTEN_API_CREDENTIALS.length
   ) {
     throw new Error(
