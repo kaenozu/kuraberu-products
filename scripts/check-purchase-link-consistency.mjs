@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 // 購入リンクの単一情報源ゲート（購入URL集約の恒久化）。
 //
-// 全購入（アフィリエイト）URL は src/lib/products.ts の articlePurchaseLinks
-// レジストリにのみ存在する。記事ページの「次にすること」ブロック
+// 全購入（アフィリエイト）URL は src/content/products/purchase-links.ts の
+// articlePurchaseLinks レジストリにのみ存在する。記事ページの「次にすること」ブロック
 // （NextStepBlock / ArticleComparisonV2 の purchaseHref）と記事末尾の
 // PurchaseCard は、すべて articlePurchaseLinks['<記事>:<side>'].purchaseUrl を
 // 参照しなければならない。本ゲートは:
@@ -30,7 +30,7 @@ import { fileURLToPath } from "node:url";
 //   - ネットワークエラーは fail-closed。環境変数 ALLOW_NETWORK_SKIP=1 のときのみ
 //     warn-only（オフライン CI を決定的に通すため）
 const PAGES_GLOB = "pages/articles";
-const REGISTRY_FILE = "lib/products.ts";
+const REGISTRY_MODULE = ["content", "products", "purchase-links.ts"];
 const ARTICLES_FILE = "content/articles.ts";
 const MODULAR_ARTICLES_DIR = "content/articles";
 
@@ -169,59 +169,42 @@ export function keyFromRef(expr) {
   return match ? match[1] : null;
 }
 
-// src/lib/products.ts の articlePurchaseLinks からキー集合を読み込む。
-export function loadRegistryKeys(srcDirectory) {
-  return new Set(loadRegistryEntries(srcDirectory).keys());
+// src/content/products/purchase-links.ts の articlePurchaseLinks からキー集合を読み込む。
+// 正規 import のため、整形・構文変化に強い。TypeScript の直接 import には
+// Node >=22.18 の型除去が必要（engines と .node-version は Node 24 系）。
+export async function loadRegistryKeys(srcDirectory) {
+  return new Set((await loadRegistryEntries(srcDirectory)).keys());
 }
 
 // #436: 検索結果ページは購入導線にならないため、検索URLの生成口は廃止した。
-// rakutenAffiliateSearchUrl(...) を参照するエントリは「未設定」として扱われる。
+// 空・非文字列の purchaseUrl は「未設定」として扱われる。
 /**
  * articlePurchaseLinks を「キー → purchaseUrl」マップで読み込む。
- * purchaseUrl の値は文字列リテラルか `thermosJnlS500.rakutenUrl` のような
- * 商品定数参照の両方があり得るため、商品定数の rakutenUrl を解決する。
+ * 正規 import のため、商品定数参照（thermosJnlS500.rakutenUrl 等）は
+ * 実行時に解決される。整形・構文変化で壊れない。
  */
-export function loadRegistryEntries(srcDirectory) {
-  const file = path.join(srcDirectory, REGISTRY_FILE);
-  const source = fs.readFileSync(file, "utf8");
-  const block =
-    /export const articlePurchaseLinks = \{([\s\S]*?)\} as const satisfies/.exec(
-      source,
+export async function loadRegistryEntries(srcDirectory) {
+  const file = path.join(path.resolve(srcDirectory), ...REGISTRY_MODULE);
+  let registry;
+  try {
+    ({ articlePurchaseLinks: registry } = await import(
+      pathToFileURL(file).href
+    ));
+  } catch (error) {
+    throw new Error(
+      `articlePurchaseLinks registry not found in ${file}: ${error.message}`,
     );
-  if (!block)
-    throw new Error(`articlePurchaseLinks registry not found in ${file}`);
-  // 商品定数（export const xxx: Product = { ... rakutenUrl: "https://..." }）の解決表
-  const productUrls = new Map();
-  for (const match of source.matchAll(
-    /export const (\w+): Product = \{[\s\S]*?\n\};/g,
-  )) {
-    const url = /(?:^|\n)\s*rakutenUrl:\s*"([^"]+)"/.exec(match[0]);
-    if (url) productUrls.set(match[1], url[1]);
+  }
+  if (!registry || typeof registry !== "object") {
+    throw new Error(
+      `articlePurchaseLinks registry not found in ${file}: missing export`,
+    );
   }
   const entries = new Map();
-  for (const match of block[1].matchAll(/"([^"]+)":\s*\{/g)) {
-    const key = match[1];
-    const entryStart = match.index + match[0].length;
-    let depth = 1;
-    let end = entryStart;
-    while (end < block[1].length && depth > 0) {
-      if (block[1][end] === "{") depth += 1;
-      else if (block[1][end] === "}") depth -= 1;
-      end += 1;
-    }
-    const body = block[1].slice(entryStart, end - 1);
-    const literal = /\bpurchaseUrl:\s*"([^"]*)"/.exec(body);
-    if (literal) {
-      entries.set(key, literal[1]);
-      continue;
-    }
-    const reference = /\bpurchaseUrl:\s*(\w+)\.rakutenUrl/.exec(body);
-    if (reference && productUrls.has(reference[1])) {
-      entries.set(key, productUrls.get(reference[1]));
-      continue;
-    }
-    // rakutenAffiliateSearchUrl(...) 参照は #436 で廃止（検索URLは購入導線にならない）。
-    // 未設定エントリとして扱われる。
+  for (const [key, entry] of Object.entries(registry)) {
+    const url = entry?.purchaseUrl;
+    if (typeof url !== "string" || !url) continue;
+    entries.set(key, url);
   }
   return entries;
 }
@@ -287,7 +270,9 @@ export function checkArticleSource(source, relative, errors, registryKeys) {
   }
 }
 
-export function checkPurchaseLinkConsistency({ srcDirectory = "src" } = {}) {
+export async function checkPurchaseLinkConsistency({
+  srcDirectory = "src",
+} = {}) {
   const errors = [];
   const articleDir = path.join(srcDirectory, PAGES_GLOB);
   if (!fs.existsSync(articleDir)) {
@@ -296,7 +281,7 @@ export function checkPurchaseLinkConsistency({ srcDirectory = "src" } = {}) {
   }
   let registryKeys;
   try {
-    registryKeys = loadRegistryKeys(srcDirectory);
+    registryKeys = await loadRegistryKeys(srcDirectory);
   } catch (error) {
     errors.push(String(error.message));
     return errors;
@@ -393,8 +378,8 @@ export function loadArticleStatuses(srcDirectory = "src") {
  * 商用テンプレート記事（CommercialArticlePage）はビルド時 API 解決のため対象外。
  * 戻り値: [{ article, key, url }]（URL 重複あり・出現順）
  */
-export function collectVerifiedCtaUrls({ srcDirectory = "src" } = {}) {
-  const registry = loadRegistryEntries(srcDirectory);
+export async function collectVerifiedCtaUrls({ srcDirectory = "src" } = {}) {
+  const registry = await loadRegistryEntries(srcDirectory);
   const statuses = loadArticleStatuses(srcDirectory);
   const articleDir = path.join(srcDirectory, PAGES_GLOB);
   const ctas = [];
@@ -641,7 +626,7 @@ if (
   path.resolve(process.argv[1] ?? "") ===
   path.resolve(fileURLToPath(import.meta.url))
 ) {
-  const errors = checkPurchaseLinkConsistency();
+  const errors = await checkPurchaseLinkConsistency();
   if (errors.length) throw new Error(errors.join("\n"));
   console.log(
     "purchase link consistency ok: all purchase links reference the articlePurchaseLinks registry; block keys match article-end PurchaseCards in every comparison article",
@@ -649,7 +634,7 @@ if (
   const counts = countPurchaseLinkStatuses();
   console.log(`purchase link status audit: ${JSON.stringify(counts)}`);
 
-  const { ctas, statuses } = collectVerifiedCtaUrls();
+  const { ctas, statuses } = await collectVerifiedCtaUrls();
   const allowlist = outboundHostAllowlist();
   const allowNetworkSkip = process.env.ALLOW_NETWORK_SKIP === "1";
   const audit = await auditVerifiedCtaDestinations({

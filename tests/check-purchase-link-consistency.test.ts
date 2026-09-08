@@ -125,20 +125,19 @@ describe("purchase link consistency gate (registry keys)", () => {
     expect(extractNextStepHrefs(source)).toBeNull();
   });
 
-  it("loads registry keys from lib/products.ts", () => {
+  it("loads registry keys from content/products/purchase-links.ts", async () => {
     const directory = mkdtempSync(join(tmpdir(), "purchase-link-gate-"));
     try {
-      mkdirSync(join(directory, "lib"), { recursive: true });
+      mkdirSync(join(directory, "content", "products"), { recursive: true });
       writeFileSync(
-        join(directory, "lib", "products.ts"),
-        `export const articlePurchaseLinks = {\n  "a:left": { name: "A", purchaseUrl: "https://a.r10.to/x" },\n  "a:right": { name: "B", purchaseUrl: "https://a.r10.to/y" },\n  "a:search": { name: "A search", purchaseUrl: rakutenAffiliateSearchUrl("A search") },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
+        join(directory, "content", "products", "purchase-links.ts"),
+        `export const articlePurchaseLinks = {\n  "a:left": { name: "A", purchaseUrl: "https://a.r10.to/x" },\n  "a:right": { name: "B", purchaseUrl: "https://a.r10.to/y" },\n  "a:empty": { name: "A empty", purchaseUrl: "" },\n} as const;\n`,
       );
-      expect(loadRegistryKeys(directory)).toEqual(
+      expect(await loadRegistryKeys(directory)).toEqual(
         new Set(["a:left", "a:right"]),
       );
-      // #436: rakutenAffiliateSearchUrl(...) を参照するエントリは検索結果ページを
-      // 購入導線にできないため「未設定」として扱われる（キーにも現れない）。
-      expect(loadRegistryEntries(directory).has("a:search")).toBe(false);
+      // 空URLのエントリは「未設定」として扱われる（キーに現れない）。
+      expect((await loadRegistryEntries(directory)).has("a:empty")).toBe(false);
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
@@ -245,11 +244,13 @@ describe("purchase link consistency gate (registry keys)", () => {
     expect(errors).toEqual([]);
   });
 
-  it("reports a missing registry when running the full check", () => {
+  it("reports a missing registry when running the full check", async () => {
     const directory = mkdtempSync(join(tmpdir(), "purchase-link-gate-full-"));
     try {
       mkdirSync(join(directory, "pages", "articles"), { recursive: true });
-      const errors = checkPurchaseLinkConsistency({ srcDirectory: directory });
+      const errors = await checkPurchaseLinkConsistency({
+        srcDirectory: directory,
+      });
       expect(errors.length).toBeGreaterThan(0);
       expect(errors.join(" ")).toContain("products.ts");
     } finally {
@@ -312,8 +313,8 @@ const redirect = (location: string): StubResponse => ({
 });
 
 describe("verified CTA destination audit (issue #342)", () => {
-  it("keeps every registry purchase URL resolvable, including constant references", () => {
-    const entries = loadRegistryEntries("src");
+  it("keeps every registry purchase URL resolvable, including constant references", async () => {
+    const entries = await loadRegistryEntries("src");
     expect(entries.size).toBeGreaterThan(40);
     for (const [key, url] of entries) {
       expect(key).toMatch(/:(left|right|card)$/);
@@ -322,7 +323,7 @@ describe("verified CTA destination audit (issue #342)", () => {
     }
     // 商品定数参照（thermosJnlS500.rakutenUrl 等）も解決できる
     expect(entries.get("thermos-tiger-bottle:left")).toMatch(/^https:\/\//);
-    expect(loadRegistryKeys("src").size).toBe(entries.size);
+    expect((await loadRegistryKeys("src")).size).toBe(entries.size);
   });
 
   it("parses id → purchaseLinkStatus pairs from registry source", () => {
@@ -332,7 +333,7 @@ describe("verified CTA destination audit (issue #342)", () => {
     expect(statuses.get("c")).toBe("unverified");
   });
 
-  it("collects outbound URLs only from verified articles via registry references", () => {
+  it("collects outbound URLs only from verified articles via registry references", async () => {
     const directory = mkdtempSync(join(tmpdir(), "cta-dest-"));
     try {
       writeSrcTree(directory, [
@@ -350,7 +351,9 @@ describe("verified CTA destination audit (issue #342)", () => {
           source: `<PurchaseCard href={articlePurchaseLinks['sample-vs-other:left'].purchaseUrl} />`,
         },
       ]);
-      const { ctas } = collectVerifiedCtaUrls({ srcDirectory: directory });
+      const { ctas } = await collectVerifiedCtaUrls({
+        srcDirectory: directory,
+      });
       // draft-vs-other は unverified のため除外、重複キーは 1 度だけ
       expect(ctas).toEqual([
         {
@@ -682,12 +685,11 @@ function writeSrcTree(
   directory: string,
   articles: { slug: string; source: string }[],
 ) {
-  mkdirSync(join(directory, "lib"), { recursive: true });
-  mkdirSync(join(directory, "content"), { recursive: true });
+  mkdirSync(join(directory, "content", "products"), { recursive: true });
   mkdirSync(join(directory, "pages", "articles"), { recursive: true });
   writeFileSync(
-    join(directory, "lib", "products.ts"),
-    `export interface ArticlePurchaseLink {\n  name: string;\n  purchaseUrl: string;\n}\nexport const sampleProduct: Product = {\n  rakutenUrl: "https://a.r10.to/AAA",\n};\nexport const articlePurchaseLinks = {\n  "sample-vs-other:left": { name: "A", purchaseUrl: sampleProduct.rakutenUrl },\n  "sample-vs-other:right": { name: "B", purchaseUrl: "https://ext.example.com/go" },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
+    join(directory, "content", "products", "purchase-links.ts"),
+    `export const sampleProduct = {\n  rakutenUrl: "https://a.r10.to/AAA",\n};\nexport const articlePurchaseLinks = {\n  "sample-vs-other:left": { name: "A", purchaseUrl: sampleProduct.rakutenUrl },\n  "sample-vs-other:right": { name: "B", purchaseUrl: "https://ext.example.com/go" },\n} as const;\n`,
   );
   writeFileSync(
     join(directory, "content", "articles.ts"),

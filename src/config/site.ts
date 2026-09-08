@@ -4,6 +4,12 @@ import {
   normalizeSiteUrl,
 } from "../../config/runtime-env.mjs";
 
+// config 配置の原則（Issue #703）:
+// - リポジトリ直下の config/*.mjs は環境・ビルド由来のプリミティブ
+//   （Astro コンポーネント・scripts・Functions のいずれからも import 可）。
+// - src/config/site.ts はサイト固有の合成層（サイト名・説明・URL 解決）。
+// 新しい設定はこの2層のどちらかに置き、直下と src の両方に分散させない。
+
 export { DEFAULT_SITE_URL };
 
 export const site = {

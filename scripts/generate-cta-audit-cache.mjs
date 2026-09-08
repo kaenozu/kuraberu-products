@@ -28,7 +28,7 @@ const CACHE_PATH = path.resolve(CTA_CACHE_FILE);
 async function main() {
   console.log("Generating CTA audit cache (strict mode, no network skip)...");
 
-  const { ctas, statuses } = collectVerifiedCtaUrls();
+  const { ctas, statuses } = await collectVerifiedCtaUrls();
   const verifiedSlugs = [...statuses.entries()]
     .filter(([, status]) => status === "verified")
     .map(([slug]) => slug);
