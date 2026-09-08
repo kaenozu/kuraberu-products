@@ -545,11 +545,11 @@ export const articlePurchaseLinks = {
   },
   "tiger-jpv-l100-vs-jpv-m100:left": {
     name: "タイガー JPV-L100",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/akindo/jpv-l100-ko/",
   },
   "tiger-jpv-l100-vs-jpv-m100:right": {
     name: "タイガー JPV-M100",
-    purchaseUrl: "",
+    purchaseUrl: "https://item.rakuten.co.jp/gbft-ltd/m1-jpvm-100g/",
   },
   "tiger-mta-j050-guide:left": {
     name: "タイガー MTA-J050",

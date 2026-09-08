@@ -15,11 +15,17 @@ export const tigerRiceArticle = defineArticleMetadata({
   summary:
     "JPV-L100とJPV-M100を、タイガー公式の加熱方式・容量・サイズ・質量・価格に分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
+  modifiedAt: "2026-09-08",
   productInfoCheckedAt: "2026-08-13",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-09-08",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/tiger-jpv-l100.jpg",
   changeLog: [
+    {
+      date: "2026-09-08",
+      summary:
+        "楽天アフィリエイト短縮URLが検索結果へ遷移したため、型番一致を確認した楽天商品詳細ページへ購入導線を切り替え。",
+    },
     {
       date: "2026-08-14",
       summary:
