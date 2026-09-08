@@ -66,6 +66,18 @@ describe("environment variable configuration", () => {
     );
   });
 
+  it("accepts direct Rakuten URLs with only the affiliate redirect ID", () => {
+    const result = validateBuildEnvironment({
+      ...productionBase,
+      RAKUTEN_AFFILIATE_ID:
+        "0123456789abcdef.01234567.fedcba9876543210.89abcdef",
+      PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
+      PUBLIC_RAKUTEN_SARASARA_URL: "https://hb.afl.rakuten.co.jp/ci/sarasara",
+    });
+
+    expect(result.rakutenApiReady).toBe(false);
+  });
+
   it("accepts production with a complete Rakuten API credential set", () => {
     const result = validateBuildEnvironment({
       ...productionBase,

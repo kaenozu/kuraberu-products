@@ -71,6 +71,21 @@
 - canonical、robots、sitemap、Article/FAQ JSON-LD
 - 390px前後での横スクロール・文字のはみ出し・CTAの押しやすさ
 - Consoleエラーと外部埋め込みの失敗
+- spec-claims の人手監査（値一致は機械検証できないため月次でサンプリング）
+  - `data/spec-claims.json` からランダムに3件抽出する
+  - 各主張の数値を公式ページの現行表示と突合する
+  - 一致: `checkedAt` を確認日へ更新する
+  - 不一致・ページ廃止: 主張を修正または削除し、記事本文も同時に直す
+
+## 価格・購入リンク・出典鮮度の運用基準
+
+価格・購入リンク・出典の扱いは次の基準に集約する（個別記事の慣行ではなく本書を正とする）。
+
+- 価格の書き方: 金額には確認日を併記する（例: `2026-08-10確認`、`2026-08-10時点の確認では`）。確認日のない裸の金額は書かない。機械検査は `pnpm check:price-claims`（warn-first、`--strict` で厳格化）。
+- 在庫の書き方: 在庫は断定しない（`在庫あり` 等の記載禁止）。購入時点の販売ページ確認へ誘導する。
+- 購入リンクの3値運用（`purchaseLinkStatus`）: `verified` のときだけ CTA を表示する。`unverified` / `unavailable` では購入ボタンを出さず「購入先の確認中です」に倒す。機械検査は `check-purchase-link-consistency` と `check-rendered-html`、実ブラウザ確認は `pnpm test:e2e`。
+- スペック主張の鮮度: `data/spec-claims.json` の各主張は `checkedAt` を持ち、180日で鮮度切れとして検出する（`pnpm check:spec-claims`）。巡回主体は月次の既存記事巡回とし、鮮度切れは公式再確認か主張の削除で解消する。
+- 出典関連性: 型番トークンと出典 URL の照合は `pnpm check:source-relevancy`（warn-first、`--strict` で厳格化）。
 
 ## リリース基準
 

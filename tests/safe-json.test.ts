@@ -7,12 +7,19 @@ describe("safeJsonForScript (#388)", () => {
       summary: "比較</script><script>alert(1)</script>",
     });
     expect(json).not.toContain("<");
-    expect(json).toContain("\\u003c/script>");
+    expect(json).not.toContain(">");
+    expect(json).toContain("\\u003c/script\\u003e");
     expect(json).toContain("alert(1)");
     // JSON として復元できること
     expect(JSON.parse(json)).toEqual({
       summary: "比較</script><script>alert(1)</script>",
     });
+  });
+
+  it("escapes ampersands so entity references cannot be smuggled in", () => {
+    const json = safeJsonForScript({ summary: "A&B <!-- note -->" });
+    expect(json).not.toContain("&");
+    expect(JSON.parse(json)).toEqual({ summary: "A&B <!-- note -->" });
   });
 
   it("keeps Japanese text and structural characters intact", () => {
@@ -31,7 +38,10 @@ describe("safeJsonForScript (#388)", () => {
       { id: "b", path: "/articles/b/", modifiedAt: "2026-08-02" },
     ];
     expect(safeJsonForScript(discovery)).toBe(
-      JSON.stringify(discovery).replaceAll("<", "\\u003c"),
+      JSON.stringify(discovery)
+        .replaceAll("<", "\\u003c")
+        .replaceAll(">", "\\u003e")
+        .replaceAll("&", "\\u0026"),
     );
   });
 });

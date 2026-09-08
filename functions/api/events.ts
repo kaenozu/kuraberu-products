@@ -18,6 +18,34 @@ import { ARTICLE_LAYOUT } from "../../config/article-layout.mjs";
 const MAX_BODY_BYTES = 4096;
 const KV_TTL_SECONDS = 90 * 24 * 60 * 60; // 90日
 
+// ANALYTICS_RATE_LIMITER 未束縛時の best-effort フォールバック。
+// Workers の Rate Limiting API が無い構成でも、単一 isolate 内の連打による
+// KV 書き込み増幅を抑える。分散環境では厳密な会計にならないため、
+// バインディング設定が正規の防御線であることに変わりはない。
+// 計測はサイト体験より劣後させない方針のため、フォールバック超過も 429
+// （contact のような 503 fail-closed にはしない）。
+const FALLBACK_WINDOW_MS = 60_000;
+const FALLBACK_LIMIT = 60;
+const FALLBACK_MAX_KEYS = 1000;
+const fallbackHits = new Map<string, { count: number; resetAt: number }>();
+
+function fallbackRateLimitAllowed(key: string): boolean {
+  const now = Date.now();
+  const entry = fallbackHits.get(key);
+  if (!entry || now >= entry.resetAt) {
+    if (fallbackHits.size >= FALLBACK_MAX_KEYS) fallbackHits.clear();
+    fallbackHits.set(key, { count: 1, resetAt: now + FALLBACK_WINDOW_MS });
+    return true;
+  }
+  entry.count += 1;
+  return entry.count <= FALLBACK_LIMIT;
+}
+
+/** テスト用のフォールバック初期化。本番挙動には影響しない。 */
+export function __resetEventsFallbackForTesting(): void {
+  fallbackHits.clear();
+}
+
 interface AnalyticsEvent {
   event?: string;
   productId?: string;
@@ -46,15 +74,29 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   // 同一IPからの連続送信を制限する（例: 1分あたり60件）。
-  const rate = await enforceRateLimit(
-    env.ANALYTICS_RATE_LIMITER,
-    `kuraberu-events:${clientIp(request)}`,
-    "クリック計測レート制限",
-  );
-  if (!rate.allowed) {
-    return json({ ok: false, error: "too many requests" }, 429, {
-      "Retry-After": String(rate.retryAfterSeconds),
-    });
+  // バインディング未設定時は上記の isolate 内フォールバックで best-effort に制限し、
+  // 無制限の KV 書き込みはさせない（可用性は維持し 503 にはしない）。
+  const ip = clientIp(request);
+  if (!env.ANALYTICS_RATE_LIMITER) {
+    console.warn(
+      "クリック計測レート制限: バインディング未設定のため isolate 内フォールバックで制限します",
+    );
+    if (!fallbackRateLimitAllowed(`kuraberu-events:${ip}`)) {
+      return json({ ok: false, error: "too many requests" }, 429, {
+        "Retry-After": "60",
+      });
+    }
+  } else {
+    const rate = await enforceRateLimit(
+      env.ANALYTICS_RATE_LIMITER,
+      `kuraberu-events:${ip}`,
+      "クリック計測レート制限",
+    );
+    if (!rate.allowed) {
+      return json({ ok: false, error: "too many requests" }, 429, {
+        "Retry-After": String(rate.retryAfterSeconds),
+      });
+    }
   }
 
   // サイズ上限（累積バイト数、超過時は読み込みを中断）と JSON パース。

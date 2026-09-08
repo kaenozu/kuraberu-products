@@ -5,6 +5,10 @@ import {
   toAffiliateRakutenUrl,
 } from "../config/runtime-env.mjs";
 import { rakutenAffiliateSearchUrl } from "../src/lib/rakuten-affiliate";
+// 重いレジストリは収集時に静的importする。テスト内の動的 import は高負荷の
+// フルランで 5 秒タイムアウトを起こすため（動的 import 自体の問題ではない）。
+import { articlePurchaseLinks } from "../src/lib/products";
+import { hairDryerProducts } from "../src/data/products/hair-dryers";
 
 const DEFAULT_ID = "34e76967.d5cc3ae1.34e76968.3eade5e6";
 
@@ -28,6 +32,30 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
       )}&link_type=text`,
     );
     expect(isAffiliateRakutenUrl(url!)).toBe(true);
+  });
+
+  it("throws in production when the affiliate ID is missing instead of baking in the default", () => {
+    expect(() =>
+      toAffiliateRakutenSearchUrl(
+        "EH-NA9M",
+        envWith({ DEPLOYMENT_ENV: "production", RAKUTEN_AFFILIATE_ID: "" }),
+      ),
+    ).toThrow(/RAKUTEN_AFFILIATE_ID/);
+  });
+
+  it("throws in production when the affiliate ID is malformed", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    expect(() =>
+      toAffiliateRakutenUrl(
+        "https://search.rakuten.co.jp/search/mall/F-YHVX120",
+        undefined,
+        envWith({
+          DEPLOYMENT_ENV: "production",
+          RAKUTEN_AFFILIATE_ID: "not-an-affiliate-id",
+        }),
+      ),
+    ).toThrow(/RAKUTEN_AFFILIATE_ID/);
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it("prefers RAKUTEN_AFFILIATE_ID when it is a well-formed affiliate ID", () => {
@@ -63,15 +91,14 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
     expect(() => rakutenAffiliateSearchUrl("")).toThrow(/affiliate URL/);
   });
 
-  it("keeps every generated purchase link in the registry on approved Rakuten hosts", async () => {
-    const { articlePurchaseLinks } = await import("../src/lib/products");
-    for (const entry of Object.values(articlePurchaseLinks)) {
+  it("keeps every generated purchase link in the registry on approved Rakuten hosts", () => {
+    for (const entry of Object.values(articlePurchaseLinks) as {
+      purchaseUrl: string;
+    }[]) {
       expect(entry.purchaseUrl).not.toMatch(/search\.rakuten\.co\.jp/);
       expect(entry.purchaseUrl).not.toContain("<");
       expect(entry.purchaseUrl).not.toContain("<");
     }
-    const { hairDryerProducts } =
-      await import("../src/data/products/hair-dryers");
     for (const product of hairDryerProducts) {
       for (const link of product.purchaseLinks) {
         if (link.provider !== "rakuten") continue;
@@ -80,10 +107,11 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
     }
   });
 
-  it("rejects search-result destinations even when wrapped by Rakuten affiliate URLs (#436)", async () => {
-    const { articlePurchaseLinks } = await import("../src/lib/products");
-
-    for (const [key, entry] of Object.entries(articlePurchaseLinks)) {
+  it("rejects search-result destinations even when wrapped by Rakuten affiliate URLs (#436)", () => {
+    for (const [key, entry] of Object.entries(articlePurchaseLinks) as [
+      string,
+      { purchaseUrl: string },
+    ][]) {
       // #436 fail-closed: 未設定（検索リンク廃止で空）のエントリは CTA を
       // レンダリングしないため、URL 検査の対象外。
       if (!entry.purchaseUrl) continue;
