@@ -59,9 +59,11 @@ jobs:
           DEPLOYMENT_ENV: preview
         run: pnpm verify:build
       - name: Run dist-dependent tests (post-build)
+        # dist は直前の verify:build で生成済みのため再ビルドしない（#701）。
+        # ローカル実行はビルド付きの pnpm test:dist を使うこと。
         env:
           DEPLOYMENT_ENV: preview
-        run: pnpm test:dist
+        run: pnpm test:dist:built
       - name: Verify production configuration and output
         env:
           DEPLOYMENT_ENV: production

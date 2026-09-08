@@ -45,7 +45,8 @@ pnpm verify
 git diff --check
 ```
 
-個別確認が必要な場合:
+個別確認が必要な場合（正本は `package.json` の scripts。CI の段階構成は
+`.github/workflows/verify.yml` を参照）:
 
 ```bash
 pnpm format:check
@@ -57,8 +58,17 @@ pnpm build
 pnpm check:rendered
 pnpm check:deployment
 pnpm check:external-link-syntax
+pnpm check:official-links
+pnpm check:source-relevancy
+pnpm check:price-claims
+pnpm check:csp-embed
+pnpm check:spec-claims
 pnpm test
 ```
+
+`test:dist` はビルド付き、`test:dist:built` はビルド済み dist に対する実行です。
+CI の build-and-verify ジョブ内では後者を使い、同一ワークスペースの再ビルドを
+避けます（#701）。ローカルでは `pnpm test:dist` を使ってください。
 
 `check:external-link-syntax` はネットワーク到達性を保証しません。公開前のリンク到達性は別の受入確認として実施します。
 
