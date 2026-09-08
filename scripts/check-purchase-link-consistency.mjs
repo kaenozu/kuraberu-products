@@ -4,8 +4,8 @@ import { fileURLToPath } from "node:url";
 
 // 購入リンクの単一情報源ゲート（購入URL集約の恒久化）。
 //
-// 全購入（アフィリエイト）URL は src/lib/products.ts の articlePurchaseLinks
-// レジストリにのみ存在する。記事ページの「次にすること」ブロック
+// 全購入（アフィリエイト）URL は src/data/article-purchase-links.json の
+// articlePurchaseLinks レジストリにのみ存在する。記事ページの「次にすること」ブロック
 // （NextStepBlock / ArticleComparisonV2 の purchaseHref）と記事末尾の
 // PurchaseCard は、すべて articlePurchaseLinks['<記事>:<side>'].purchaseUrl を
 // 参照しなければならない。本ゲートは:
@@ -30,7 +30,7 @@ import { fileURLToPath } from "node:url";
 //   - ネットワークエラーは fail-closed。環境変数 ALLOW_NETWORK_SKIP=1 のときのみ
 //     warn-only（オフライン CI を決定的に通すため）
 const PAGES_GLOB = "pages/articles";
-const REGISTRY_FILE = "lib/products.ts";
+const REGISTRY_FILE = "data/article-purchase-links.json";
 const ARTICLES_FILE = "content/articles.ts";
 const MODULAR_ARTICLES_DIR = "content/articles";
 
@@ -169,59 +169,39 @@ export function keyFromRef(expr) {
   return match ? match[1] : null;
 }
 
-// src/lib/products.ts の articlePurchaseLinks からキー集合を読み込む。
+// src/data/article-purchase-links.json のキー集合を読み込む。
 export function loadRegistryKeys(srcDirectory) {
   return new Set(loadRegistryEntries(srcDirectory).keys());
 }
 
-// #436: 検索結果ページは購入導線にならないため、検索URLの生成口は廃止した。
-// rakutenAffiliateSearchUrl(...) を参照するエントリは「未設定」として扱われる。
+// #436: 検索結果ページは購入導線にならない。レジストリは JSON のみを
+// 正規の編集対象とするため、文字列リテラル以外の参照（旧来の商品定数参照・
+// rakutenAffiliateSearchUrl(...) 等）は構造的に存在し得ない。
 /**
  * articlePurchaseLinks を「キー → purchaseUrl」マップで読み込む。
- * purchaseUrl の値は文字列リテラルか `thermosJnlS500.rakutenUrl` のような
- * 商品定数参照の両方があり得るため、商品定数の rakutenUrl を解決する。
+ * purchaseUrl が文字列でないエントリは防御的に読み飛ばす。
  */
 export function loadRegistryEntries(srcDirectory) {
   const file = path.join(srcDirectory, REGISTRY_FILE);
-  const source = fs.readFileSync(file, "utf8");
-  const block =
-    /export const articlePurchaseLinks = \{([\s\S]*?)\} as const satisfies/.exec(
-      source,
-    );
-  if (!block)
+  let registry;
+  try {
+    registry = JSON.parse(fs.readFileSync(file, "utf8"));
+  } catch {
     throw new Error(`articlePurchaseLinks registry not found in ${file}`);
-  // 商品定数（export const xxx: Product = { ... rakutenUrl: "https://..." }）の解決表
-  const productUrls = new Map();
-  for (const match of source.matchAll(
-    /export const (\w+): Product = \{[\s\S]*?\n\};/g,
-  )) {
-    const url = /(?:^|\n)\s*rakutenUrl:\s*"([^"]+)"/.exec(match[0]);
-    if (url) productUrls.set(match[1], url[1]);
+  }
+  if (typeof registry !== "object" || registry === null) {
+    throw new Error(`articlePurchaseLinks registry not found in ${file}`);
   }
   const entries = new Map();
-  for (const match of block[1].matchAll(/"([^"]+)":\s*\{/g)) {
-    const key = match[1];
-    const entryStart = match.index + match[0].length;
-    let depth = 1;
-    let end = entryStart;
-    while (end < block[1].length && depth > 0) {
-      if (block[1][end] === "{") depth += 1;
-      else if (block[1][end] === "}") depth -= 1;
-      end += 1;
-    }
-    const body = block[1].slice(entryStart, end - 1);
-    const literal = /\bpurchaseUrl:\s*"([^"]*)"/.exec(body);
-    if (literal) {
-      entries.set(key, literal[1]);
+  for (const [key, value] of Object.entries(registry)) {
+    if (
+      typeof value !== "object" ||
+      value === null ||
+      typeof value.purchaseUrl !== "string"
+    ) {
       continue;
     }
-    const reference = /\bpurchaseUrl:\s*(\w+)\.rakutenUrl/.exec(body);
-    if (reference && productUrls.has(reference[1])) {
-      entries.set(key, productUrls.get(reference[1]));
-      continue;
-    }
-    // rakutenAffiliateSearchUrl(...) 参照は #436 で廃止（検索URLは購入導線にならない）。
-    // 未設定エントリとして扱われる。
+    entries.set(key, value.purchaseUrl);
   }
   return entries;
 }
