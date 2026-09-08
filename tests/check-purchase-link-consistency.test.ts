@@ -125,19 +125,24 @@ describe("purchase link consistency gate (registry keys)", () => {
     expect(extractNextStepHrefs(source)).toBeNull();
   });
 
-  it("loads registry keys from lib/products.ts", () => {
+  it("loads registry keys from data/article-purchase-links.json", () => {
     const directory = mkdtempSync(join(tmpdir(), "purchase-link-gate-"));
     try {
-      mkdirSync(join(directory, "lib"), { recursive: true });
+      mkdirSync(join(directory, "data"), { recursive: true });
       writeFileSync(
-        join(directory, "lib", "products.ts"),
-        `export const articlePurchaseLinks = {\n  "a:left": { name: "A", purchaseUrl: "https://a.r10.to/x" },\n  "a:right": { name: "B", purchaseUrl: "https://a.r10.to/y" },\n  "a:search": { name: "A search", purchaseUrl: rakutenAffiliateSearchUrl("A search") },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
+        join(directory, "data", "article-purchase-links.json"),
+        JSON.stringify({
+          "a:left": { name: "A", purchaseUrl: "https://a.r10.to/x" },
+          "a:right": { name: "B", purchaseUrl: "https://a.r10.to/y" },
+          "a:search": { name: "A search", purchaseUrl: 42 },
+        }),
       );
       expect(loadRegistryKeys(directory)).toEqual(
         new Set(["a:left", "a:right"]),
       );
-      // #436: rakutenAffiliateSearchUrl(...) を参照するエントリは検索結果ページを
-      // 購入導線にできないため「未設定」として扱われる（キーにも現れない）。
+      // #436: purchaseUrl が文字列でないエントリ（旧来の検索URL生成参照に
+      // 相当）はレジストリに現れない。JSON 化により関数参照の混入は
+      // 構造的に起きない。
       expect(loadRegistryEntries(directory).has("a:search")).toBe(false);
     } finally {
       rmSync(directory, { recursive: true, force: true });
@@ -251,7 +256,7 @@ describe("purchase link consistency gate (registry keys)", () => {
       mkdirSync(join(directory, "pages", "articles"), { recursive: true });
       const errors = checkPurchaseLinkConsistency({ srcDirectory: directory });
       expect(errors.length).toBeGreaterThan(0);
-      expect(errors.join(" ")).toContain("products.ts");
+      expect(errors.join(" ")).toContain("article-purchase-links.json");
     } finally {
       rmSync(directory, { recursive: true, force: true });
     }
@@ -312,7 +317,7 @@ const redirect = (location: string): StubResponse => ({
 });
 
 describe("verified CTA destination audit (issue #342)", () => {
-  it("keeps every registry purchase URL resolvable, including constant references", () => {
+  it("keeps every registry purchase URL resolvable", () => {
     const entries = loadRegistryEntries("src");
     expect(entries.size).toBeGreaterThan(40);
     for (const [key, url] of entries) {
@@ -320,7 +325,8 @@ describe("verified CTA destination audit (issue #342)", () => {
       // 商品詳細URLを確認できない項目は空URLでfail-closedにする。
       if (url) expect(url).toMatch(/^https:\/\//);
     }
-    // 商品定数参照（thermosJnlS500.rakutenUrl 等）も解決できる
+    // レジストリは JSON のみが正規の編集対象のため、旧来のような
+    // 商品定数参照・関数参照は構造的に存在し得ない。全エントリは文字列リテラル。
     expect(entries.get("thermos-tiger-bottle:left")).toMatch(/^https:\/\//);
     expect(loadRegistryKeys("src").size).toBe(entries.size);
   });
@@ -685,9 +691,19 @@ function writeSrcTree(
   mkdirSync(join(directory, "lib"), { recursive: true });
   mkdirSync(join(directory, "content"), { recursive: true });
   mkdirSync(join(directory, "pages", "articles"), { recursive: true });
+  mkdirSync(join(directory, "data"), { recursive: true });
   writeFileSync(
-    join(directory, "lib", "products.ts"),
-    `export interface ArticlePurchaseLink {\n  name: string;\n  purchaseUrl: string;\n}\nexport const sampleProduct: Product = {\n  rakutenUrl: "https://a.r10.to/AAA",\n};\nexport const articlePurchaseLinks = {\n  "sample-vs-other:left": { name: "A", purchaseUrl: sampleProduct.rakutenUrl },\n  "sample-vs-other:right": { name: "B", purchaseUrl: "https://ext.example.com/go" },\n} as const satisfies Record<string, ArticlePurchaseLink>;\n`,
+    join(directory, "data", "article-purchase-links.json"),
+    JSON.stringify({
+      "sample-vs-other:left": {
+        name: "A",
+        purchaseUrl: "https://a.r10.to/AAA",
+      },
+      "sample-vs-other:right": {
+        name: "B",
+        purchaseUrl: "https://ext.example.com/go",
+      },
+    }),
   );
   writeFileSync(
     join(directory, "content", "articles.ts"),
