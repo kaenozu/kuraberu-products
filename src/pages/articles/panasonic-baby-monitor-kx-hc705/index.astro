@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import TrustLine from '../../../components/TrustLine.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import {panasonicBabyMonitorArticle as articleMetadata} from '../../../content/articles';
 import { articlePurchaseLinks } from '../../../lib/products';
 
@@ -78,6 +79,8 @@ const faqEntries = [
       <li>本システムは、育児・介護・医療等や侵入・盗難の防止等をサポートするものであり、セキュリティを保証するものではありません。</li>
       <li>おやすみ音の自動再生は設定が必要で、本機能は赤ちゃんの睡眠を保証するものではありません。</li>
     </ul>
+
+    <ArticleSocialProof query="パナソニック ベビーモニター KX-HC705" />
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">

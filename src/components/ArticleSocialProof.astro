@@ -1,9 +1,6 @@
 ---
-// SNS セクション（参考情報）。hasPosts=true かつ bestMatch が brand 以外のときだけ描画する。
-// 投稿が見つからなかった記事、または C（ブランド一般）の投稿しか無い記事では
-// セクションごと非表示にする。bestMatch は埋め込み投稿の採用基準ランクの最上位
-// （model > series > brand）を宣言し、品質ゲート scripts/validate-sns-ranks.mjs が
-// 実際の埋め込みと突合する。
+// SNS投稿がある場合は埋め込みを表示し、ない場合も参考情報欄の空状態を表示する。
+// 比較の根拠は常にメーカー公式情報であり、SNSは参考情報に限定する。
 import type { ExternalEmbedMatchRank } from "../lib/external-embeds";
 
 interface Props {
@@ -15,7 +12,7 @@ interface Props {
 }
 
 const { hasPosts = false, bestMatch } = Astro.props;
-const visible = hasPosts && bestMatch !== undefined && bestMatch !== "brand";
+const visible = Boolean(Astro.props.query?.trim());
 ---
 {visible ? (
   <section
@@ -27,7 +24,11 @@ const visible = hasPosts && bestMatch !== undefined && bestMatch !== "brand";
     <p>
       SNS投稿は実際の利用者の感想を知るための参考情報です。商品の仕様や比較結論の根拠には使用していません。比較の根拠はメーカー公式情報のみです。
     </p>
-    <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
+    {hasPosts && bestMatch && bestMatch !== "brand" ? (
+      <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
+    ) : (
+      <p class="sns-posts-note">今回の検索では、対象商品を明確に確認できる投稿は見つかりませんでした。</p>
+    )}
     <slot />
   </section>
 ) : null}
