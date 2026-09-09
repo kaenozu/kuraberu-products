@@ -8,7 +8,11 @@ export interface ComparisonMemoState {
 
 export function sanitizeComparisonMemo(
   raw: string | null,
-  knownIds: readonly string[],
+  /**
+   * @param knownIds 記事IDの許可リスト。省略時はIDの存在確認を行わず、
+   * 診断画面のように部分集合しか持たない呼び出し元でも既存IDを保持する。
+   */
+  knownIds?: readonly string[],
 ): ComparisonMemoState {
   if (!raw) return { version: 1, ids: [] };
   try {
@@ -18,12 +22,12 @@ export function sanitizeComparisonMemo(
     if (candidate.version !== 1 || !Array.isArray(candidate.ids)) {
       return { version: 1, ids: [] };
     }
-    const allowed = new Set(knownIds);
+    const allowed = knownIds === undefined ? null : new Set(knownIds);
     const ids: string[] = [];
     for (const value of candidate.ids) {
       if (
         typeof value !== "string" ||
-        !allowed.has(value) ||
+        (allowed !== null && !allowed.has(value)) ||
         ids.includes(value)
       )
         continue;

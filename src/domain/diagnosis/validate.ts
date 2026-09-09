@@ -104,6 +104,17 @@ export function validateDiagnosisData(
       product.sources.length > 0,
       `product[${product.id}]: 公式ソースが最低1件必要です`,
     );
+    for (const source of product.sources) {
+      assert(
+        /^https:\/\//.test(source.url),
+        `product[${product.id}]: 公式ソースURLはhttpsである必要があります`,
+      );
+      assert(
+        /^\d{4}-\d{2}-\d{2}$/.test(source.checkedAt) &&
+          !Number.isNaN(Date.parse(`${source.checkedAt}T00:00:00Z`)),
+        `product[${product.id}]: 公式ソースのcheckedAtが不正です（${source.checkedAt}）`,
+      );
+    }
     assert(
       /^\d{4}-\d{2}-\d{2}$/.test(product.verifiedAt),
       `product[${product.id}]: verifiedAt が不正です（${product.verifiedAt}）`,
@@ -152,6 +163,10 @@ export function validateDiagnosisData(
       `diagnosis[${config.id}]: 質問IDが重複しています（${question.id}）`,
     );
     questionIds.add(question.id);
+    assert(
+      question.type === "single" || question.type === "boolean",
+      `diagnosis[${config.id}]: 質問「${question.id}」のtype「${question.type}」は現在のUIで未対応です（single/booleanのみ）`,
+    );
     const optionIds = new Set<string>();
     for (const option of question.options ?? []) {
       assert(

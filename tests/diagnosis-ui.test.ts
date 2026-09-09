@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buttonDisabled,
   hasAnswer,
+  sanitizeDiagnosisAnswers,
   buildProgressText,
   buildNextButtonText,
   computeVisibleProducts,
@@ -356,5 +357,46 @@ describe("PROVIDER_LABELS", () => {
     expect(PROVIDER_LABELS.rakuten).toBe("楽天で商品を見る");
     expect(PROVIDER_LABELS.amazon).toBe("Amazonで商品を見る");
     expect(PROVIDER_LABELS.official).toBe("公式サイトで確認する");
+  });
+});
+
+describe("sanitizeDiagnosisAnswers", () => {
+  const questions = [
+    {
+      id: "size",
+      type: "single" as const,
+      label: "サイズ",
+      required: true,
+      options: [
+        { id: "small", label: "小さい", rules: [] },
+        { id: "large", label: "大きい", rules: [] },
+      ],
+    },
+    {
+      id: "color",
+      type: "single" as const,
+      label: "色",
+      required: true,
+      options: [{ id: "white", label: "白", rules: [] }],
+    },
+  ];
+
+  it("drops removed options and unknown questions", () => {
+    const result = sanitizeDiagnosisAnswers(questions, {
+      size: "removed-option",
+      color: "white",
+      oldQuestion: "stale",
+    });
+    expect(result.answers).toEqual({ color: "white" });
+    expect(result.firstInvalidRequiredIndex).toBe(0);
+  });
+
+  it("keeps valid answers when all required questions are complete", () => {
+    const result = sanitizeDiagnosisAnswers(questions, {
+      size: "small",
+      color: "white",
+    });
+    expect(result.answers).toEqual({ size: "small", color: "white" });
+    expect(result.firstInvalidRequiredIndex).toBeNull();
   });
 });

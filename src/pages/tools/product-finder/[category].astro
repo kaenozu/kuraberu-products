@@ -154,6 +154,7 @@ const clientData = {
   import {
     buttonDisabled,
     hasAnswer,
+    sanitizeDiagnosisAnswers,
     buildProgressText,
     buildNextButtonText,
     computeVisibleProducts,
@@ -232,16 +233,18 @@ const clientData = {
           if (!saved) return;
           const state = JSON.parse(saved);
           if (state && typeof state === 'object' && state.answers) {
-            for (const key of Object.keys(state.answers)) {
-              answers[key] = state.answers[key];
-            }
-            if (
+            const restored = sanitizeDiagnosisAnswers(
+              data.diagnosis.questions,
+              state.answers,
+            );
+            Object.assign(answers, restored.answers);
+            const savedIndex =
               Number.isInteger(state.currentQuestionIndex) &&
               state.currentQuestionIndex >= 0 &&
               state.currentQuestionIndex < data.diagnosis.questions.length
-            ) {
-              currentIndex = state.currentQuestionIndex;
-            }
+                ? state.currentQuestionIndex
+                : 0;
+            currentIndex = restored.firstInvalidRequiredIndex ?? savedIndex;
           }
         } catch {
           // 壊れた保存データは無視して最初から始める
