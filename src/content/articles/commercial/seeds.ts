@@ -61,6 +61,7 @@ import { dainichiEfh1219dVsPanasonicDsFwx1200Seed } from "./dainichi-efh-1219d-v
 import { panasonicDbBm1lVsDbRm3mSeed } from "./panasonic-db-bm1l-vs-db-rm3m";
 import { tanitaBc772VsOmronHbf702tSeed } from "./tanita-bc-772-vs-omron-hbf-702t";
 import { panasonicEwDp57VsPhilipsHx9911Seed } from "./panasonic-ew-dp57-vs-philips-hx9911";
+import { casioPxS1100VsYamahaP225Seed } from "./casio-px-s1100-vs-yamaha-p-225";
 
 export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   roborockQrevoCurvVsDreameX50Seed,
@@ -121,4 +122,5 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   panasonicDbBm1lVsDbRm3mSeed,
   tanitaBc772VsOmronHbf702tSeed,
   panasonicEwDp57VsPhilipsHx9911Seed,
+  casioPxS1100VsYamahaP225Seed,
 ];
