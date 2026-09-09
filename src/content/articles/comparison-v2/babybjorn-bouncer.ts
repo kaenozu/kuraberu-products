@@ -53,8 +53,9 @@ export const entry = defineComparisonV2("babybjorn-bouncer", {
     },
     {
       label: "安全基準・保証",
-      left: "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
-      right: "SG認証。ASTM・ENに準拠。2年保証（公式楽天市場店の案内）。",
+      left: "SG認証。ASTM・ENに準拠。10年保証（正規保証1年＋ユーザー登録9年）。",
+      right:
+        "SG認証。ASTM・ENに準拠。10年保証（正規保証1年＋ユーザー登録9年）。",
     },
     {
       label: "公式ショップ価格（2026-08-10確認）",

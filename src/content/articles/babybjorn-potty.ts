@@ -20,12 +20,17 @@ export const pottyArticle = defineArticleMetadata({
   summary:
     "「スマートポッティ」と「ポッティチェア」を、ベビービョルン公式の商品ページ・形状・サイズ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-28",
-  productInfoCheckedAt: "2026-08-16",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-28",
   purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-smart-potty.jpg",
   changeLog: [
+    {
+      date: "2026-09-09",
+      summary:
+        "公式ページで再確認し、ポッティチェアのサイズ・重量を公式表記へ修正、スマートポッティの中桶付きを明記。",
+    },
     {
       date: "2026-08-28",
       summary:

@@ -39,7 +39,7 @@ export const entry = defineComparisonV2("babybjorn", {
       left: "幅広なパッド入りショルダーベルト＋エルゴノミックランバーサポート付き幅広ウエストベルト。腰に荷重を分散し肩の負担を軽減。",
       right: "パッド入りショルダーベルト。ウエストベルトなし。",
     },
-    { label: "製品重量", left: "約892g。", right: "約500g。" },
+    { label: "製品重量", left: "約0.9kg。", right: "約500g。" },
     {
       label: "素材",
       left: "メッシュ・3Dジャージー。",
@@ -47,8 +47,8 @@ export const entry = defineComparisonV2("babybjorn", {
     },
     {
       label: "保証期間",
-      left: "2年（正規保証1年＋ユーザー登録1年）。",
-      right: "2年（正規保証1年＋ユーザー登録1年）。",
+      left: "10年（正規保証1年＋ユーザー登録9年）。",
+      right: "10年（正規保証1年＋ユーザー登録9年）。",
     },
     {
       label: "公式ショップ価格（2026-08-10確認）",
