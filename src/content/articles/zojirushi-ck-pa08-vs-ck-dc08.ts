@@ -15,12 +15,17 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
   summary:
     "CK-PA08とCK-DC08を、象印公式の商品ページで確認できる仕様・安全設計・手入れ方法に分けて比較します。",
   publishedAt: "2026-08-13",
-  modifiedAt: "2026-08-14",
-  productInfoCheckedAt: "2026-08-13",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-13",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/zojirushi-ck-pa08.webp",
   changeLog: [
+    {
+      date: "2026-09-09",
+      summary:
+        "両モデルの公式ページで再確認し、CK-PA08にも注ぎ口ほこりブロックと6つの安全設計の記載があるため比較表・FAQ・leadを更新。",
+    },
     {
       date: "2026-08-14",
       summary:
@@ -48,7 +53,7 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
   rightModel: {
     brand: "象印",
     line: "CK-DC08",
-    tagline: "安全・ほこり対策なら",
+    tagline: "軽さ・注ぎやすさなら",
     image: "/products/zojirushi-ck-dc08.png",
     imageAlt: "象印 CK-DC08 電気ケトル",
     officialHref: "https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/",
@@ -70,17 +75,15 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
     },
     {
       label: "ほこり対策",
-      left: "今回確認した公式ページでは記載なし",
+      left: "注ぎ口ほこりブロック",
       right: "注ぎ口ほこりブロック",
-      highlight: "right",
-      highlightNote: "公式記載あり",
+      highlight: null,
     },
     {
       label: "安全設計",
-      left: "今回確認した公式ページでは詳細記載なし",
+      left: "6つの安全設計",
       right: "6つの安全設計",
-      highlight: "right",
-      highlightNote: "安全設計を明記",
+      highlight: null,
     },
     {
       label: "ふた・手入れ",
@@ -88,7 +91,7 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
       right: "軽くはずせるふた",
     },
   ],
-  lead: "象印の0.8L電気ケトル「CK-PA08」と「CK-DC08」を比較します。どちらも1300Wで同じ容量・沸とう時間ですが、公式に案内されている安全設計やほこり対策、ふたと手入れの情報に違いがあります。",
+  lead: "象印の0.8L電気ケトル「CK-PA08」と「CK-DC08」を比較します。どちらも1300Wで同じ容量・沸とう時間に加え、注ぎ口ほこりブロックや6つの安全設計が公式に案内されています。本体の軽さや広口内容器など、ふたと手入れの情報に違いがあります。",
   socialProofQuery: "象印 CK-PA08 CK-DC08 電気ケトル",
   officialSources: [
     {
@@ -104,7 +107,7 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
     {
       question: "象印 CK-PA08 と CK-DC08 はどっち？",
       answer:
-        "どちらも0.8L・1300Wで、カップ1杯約60秒、満水約4分の電気ケトルです。CK-PA08は軽くはずせるふたや広口内容器、CK-DC08は注ぎ口ほこりブロックや転倒湯もれ防止構造など6つの安全設計が公式に案内されています。手入れのしやすさを中心に見るか、安全設計やほこり対策を重視するかで確認する候補が変わります。",
+        "どちらも0.8L・1300Wで、カップ1杯約60秒、満水約4分の電気ケトルです。注ぎ口ほこりブロックや転倒湯もれ防止構造など6つの安全設計は両モデルとも公式に案内されています。CK-PA08は広口内容器や選べる2つの注ぎ方、CK-DC08は本体約0.8kgの軽さや見やすい水量窓・なめらか注ぎ口が案内されています。手入れのしやすさを中心に見るか、軽さや注ぎやすさを重視するかで確認する候補が変わります。",
     },
     {
       question: "容量と沸とう時間は違う？",
@@ -119,7 +122,7 @@ export const zojirushiElectricKettleArticle = defineArticleMetadata({
     {
       question: "ほこり対策を重視するならどっち？",
       answer:
-        "CK-DC08には、公式に「注ぎ口ほこりブロック」が案内されています。CK-PA08にも広口内容器や軽くはずせるふたが案内されていますが、今回確認した公式ページでは同じ名称の注ぎ口ほこりブロックは確認できませんでした。",
+        "両モデルとも、公式に「注ぎ口ほこりブロック」が案内されています。ロックボタンと連動して注ぎ口が開閉し、ほこりなどが入りにくい構造です。CK-PA08には広口内容器や軽くはずせるふたも案内されています。",
     },
   ],
 });

@@ -154,13 +154,13 @@
     },
     {
       "articleId": "zojirushi-ck-pa08-vs-ck-dc08",
-      "checkedAt": "2026-08-13",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:77cc962f5163698aece725f209876865154654ecd824a4546df3842688c80d24",
       "officialUrls": [
         "https://www.zojirushi.co.jp/syohin/pot_kettle/kettle/ck-dc/",
         "https://www.zojirushi.co.jp/syohin/stan/product/electric_kettle/ck-pa.html"
       ],
-      "note": "質量 0.9/0.8kg（プレート含む 1.1/1.0kg）・1300W・沸とう時間（カップ1杯約60秒・満水約4分）を公式ページで確認"
+      "note": "質量 0.9/0.8kg（プレート含む 1.1/1.0kg）・1300W・沸とう時間（カップ1杯約60秒・満水約4分）を公式ページで確認。2026-09-09再確認で両モデルとも注ぎ口ほこりブロック・6つの安全設計の記載あり"
     },
     {
       "articleId": "tefal-dv4030j0-vs-dv8070j0",
@@ -214,13 +214,13 @@
     },
     {
       "articleId": "thermos-kfm-020-vs-kfi-020",
-      "checkedAt": "2026-08-15",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:06a8841f580441140cbb00f06de4eb749a2e9a2192ff68bde96dac59d6d0d7c9",
       "officialUrls": [
         "https://www.thermos.jp/product/series/kfi.html",
         "https://www.thermos.jp/product/series/kfm.html"
       ],
-      "note": "対応熱源・重量 約0.4kg・寸法・価格をサーモス公式シリーズページで確認（2026-08-15）"
+      "note": "対応熱源・重量 約0.4kg・寸法・価格をサーモス公式シリーズページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "tiger-mta-j050-guide",
@@ -253,13 +253,13 @@
     },
     {
       "articleId": "tiger-pcj-a080-vs-pcm-a080",
-      "checkedAt": "2026-08-17",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:abf2aa253eabf87f7090e7cb3b7ab46eb9aeb32e3557a108d3b50c458b7060d5",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pcj-a/",
         "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pcm-a/"
       ],
-      "note": ""
+      "note": "容量0.8L・カップ1杯約45/60秒・サイズ・質量・1300W・蒸気レス（PCJ）・安全設計を公式ページで確認（2026-09-09再確認、変更なし）。PCJ-Aは生産終了品、PCM-Aは数量限定品の表示あり"
     },
     {
       "articleId": "tiger-pct-a120-vs-pct-a150",
