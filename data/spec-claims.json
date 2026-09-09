@@ -134,13 +134,13 @@
     },
     {
       "articleId": "yamazaki-condor-wagon-vs-self-wagon",
-      "checkedAt": "2026-08-16",
+      "checkedAt": "2026-09-08",
       "claimsFingerprint": "sha256:778e7b60e77f45f21247959cc61876d6cff9981d90727496a696366bb7a5a561",
       "officialUrls": [
         "https://product.yamazaki-sangyo.co.jp/product/209460",
         "https://product.yamazaki-sangyo.co.jp/product/209477"
       ],
-      "note": "寸法・重量 1.4/1.1kg を公式ページで確認"
+      "note": "寸法・重量 1.4/1.1kg を公式ページで確認（2026-09-08再確認で一致）"
     },
     {
       "articleId": "yamazaki-dust-wagon-45l-2division-vs-3division",
@@ -174,13 +174,13 @@
     },
     {
       "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-08",
       "claimsFingerprint": "sha256:b15408c6273418269bf00fea7a7319c3cb7d219adb9e5fa5d1d3f358cf640c06",
       "officialUrls": [
         "https://www.kingjim.co.jp/products/tepra/sr-mk1.html",
         "https://www.kingjim.co.jp/products/tepra/sr-r2500p.html"
       ],
-      "note": "寸法・質量 420/470g・テープ幅を公式ページで確認"
+      "note": "寸法・質量 420/470g・テープ幅を公式ページで確認（2026-09-08再確認で一致）"
     },
     {
       "articleId": "panasonic-f-yhvx120-vs-f-yhvx90",
