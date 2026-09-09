@@ -54,6 +54,7 @@ import { dysonV12VsMicroPlusSeed } from "./dyson-v12-vs-micro-plus";
 import { braunSeries9proVsSeries7Seed } from "./braun-series9pro-vs-series7";
 import { delonghiEcam22112bVsEcam25023sbSeed } from "./delonghi-ecam22112b-vs-ecam25023sb";
 import { zojirushiNxAb10VsTigerJrtA100Seed } from "./zojirushi-nx-ab10-vs-tiger-jrt-a100";
+import { zojirushiEqJa22VsEqFa22Seed } from "./zojirushi-eq-ja22-vs-eq-fa22";
 
 export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   roborockQrevoCurvVsDreameX50Seed,
@@ -107,4 +108,5 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   delonghiEcam22112bVsEcam25023sbSeed,
   irobotRoombaJ9plusVsJ7Seed,
   zojirushiNxAb10VsTigerJrtA100Seed,
+  zojirushiEqJa22VsEqFa22Seed,
 ];
