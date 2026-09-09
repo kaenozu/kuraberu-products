@@ -15,8 +15,8 @@ export const yamazakiLaundryWireBasketArticle = defineArticleMetadata({
   summary:
     "ランドリーワイヤーバスケット タワー スリム MとLを、山崎実業公式の商品ページで確認できるサイズ・重量・容量・耐荷重に分けて比較します。",
   publishedAt: "2026-08-25",
-  modifiedAt: "2026-08-25",
-  productInfoCheckedAt: "2026-08-25",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-25",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-laundry-wire-basket-m.jpg",
