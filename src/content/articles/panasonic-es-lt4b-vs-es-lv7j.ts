@@ -16,8 +16,8 @@ export const panasonicShaverEsLt4bVsEsLv7jArticle = defineArticleMetadata({
   summary:
     "ES-LT4BとES-LV7Jを、パナソニック公式の刃数・寸法・質量・充電方式・防水仕様に分けて比較します。",
   publishedAt: "2026-08-19",
-  modifiedAt: "2026-08-19",
-  productInfoCheckedAt: "2026-08-19",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-19",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/panasonic-es-lt4b.jpg",

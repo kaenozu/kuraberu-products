@@ -224,12 +224,12 @@
     },
     {
       "articleId": "tiger-mta-j050-guide",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:7b121193698ddf31fa3f0b6c17edc1b585637d7b7b2f93661dca8a10c076732e",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
       ],
-      "note": ""
+      "note": "容量0.5/0.8L・質量約0.26/0.36kg・保冷8/7℃以下・保温68/75℃以上（6時間）・寸法を公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "panasonic-eh-na9m-vs-eh-na7m",
@@ -292,23 +292,23 @@
     },
     {
       "articleId": "panasonic-es-lt4b-vs-es-lv7j",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:43721782c288c3cf75eaac276109dd74ee5a36c616af87a66ef5fe17e026ae95",
       "officialUrls": [
         "https://panasonic.jp/shaver/products/ES-LT4B.html",
         "https://panasonic.jp/shaver/products/ES-LV7J.html"
       ],
-      "note": ""
+      "note": "刃数3/5枚刃・質量約155/210g・寸法・充電方式を公式仕様ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "yamajitsu-film-holder-242286-vs-242287",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:93e50d83bde3cc2a37293e1f334baae92e826c2245a6d369d39d82e017fa24c6",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/242286",
         "https://www.yamajitsu.co.jp/products/242287"
       ],
-      "note": ""
+      "note": "収納対象・対応サイズ・商品サイズ・重量140/120g・耐荷重2kgを公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "zojirushi-eq-aa22-vs-eq-sa22",
