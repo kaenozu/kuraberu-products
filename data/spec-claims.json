@@ -382,13 +382,13 @@
     },
     {
       "articleId": "panasonic-ne-ms4c-vs-ne-bs5c",
-      "checkedAt": "2026-09-05",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:5c2801ef16f71792e05cb42984215b6314d241fb6ba00fe86acbc02d0650eeeb",
       "officialUrls": [
         "https://panasonic.jp/range/products/NE-BS5C.html",
         "https://panasonic.jp/range/products/NE-MS4C.html"
       ],
-      "note": ""
+      "note": "庫内容量26L・庫内寸法・質量14.2/14.7kg・グリル方式・自動メニュー51/55・外形寸法を公式仕様ページで確認（2026-09-09再確認、変更なし）"
     }
   ]
 }

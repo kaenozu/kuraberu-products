@@ -18,8 +18,8 @@ export const panasonicNeMs4cVsNeBs5cArticle = defineArticleMetadata({
   summary:
     "NE-MS4CとNE-BS5Cを、庫内寸法・質量・グリル加熱方式・操作部・自動メニュー数の公式仕様で比較します。",
   publishedAt: "2026-09-03",
-  modifiedAt: "2026-09-03",
-  productInfoCheckedAt: "2026-09-03",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-09-03",
   purchaseLinkStatus: "direct",
   imagePath: "/products/panasonic-ne-ms4c.png",
