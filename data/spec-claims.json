@@ -4,53 +4,53 @@
   "entries": [
     {
       "articleId": "babybjorn",
-      "checkedAt": "2026-08-26",
-      "claimsFingerprint": "sha256:d8373122f36da086a3f87e77e905229688a4e45131340a267f2c4e140609defe",
+      "checkedAt": "2026-09-09",
+      "claimsFingerprint": "sha256:03476c8e583f4e4216ee88e86c77c3187d939a2d6640ac21985fbaeac51f6557",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-harmony/grey-beige-3d-mesh/",
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-mini/"
       ],
-      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
+      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認。2026-09-09再確認で保証10年（1年＋登録9年）・HARMONY重量約0.9kgへ修正"
     },
     {
       "articleId": "babybjorn-onekai",
-      "checkedAt": "2026-08-26",
-      "claimsFingerprint": "sha256:a3602f8a34363c929b095491aa2c98dc0b0b202130adeff63135e3d9d776cf87",
+      "checkedAt": "2026-09-09",
+      "claimsFingerprint": "sha256:b03cb8f384df379f9a68aa21569292876cbc772b458643057acea8bf5e3a7a7e",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-move/navy-blue-3d-mesh/",
         "https://www.babybjorn.jp/products/baby-carriers/baby-carrier-one-air/"
       ],
-      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認"
+      "note": "キャリアの対象体重・サイズ目安・表示価格を公式比較表/公式ページで確認。2026-09-09再確認で保証10年・MOVEサポート有・ONE KAI重量約0.95kgへ修正"
     },
     {
       "articleId": "babybjorn-bouncer",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:8ab8882d28e9d4c783914632cb5e3eb2cef543904b206fe15e4136e5d8805761",
       "officialUrls": [
         "https://www.babybjorn.jp/products/baby-bouncers/bouncer-balance-soft/sky-blue-white-mesh-light-grey/",
         "https://www.babybjorn.jp/products/baby-bouncers/bouncer-bliss/"
       ],
-      "note": "寸法 幅約39×奥行約89×高さ46-58cm・重量 約2.1kg を公式製品ページで確認"
+      "note": "寸法 幅約39×奥行約89×高さ46-58cm・重量 約2.1kg を公式製品ページで確認。2026-09-09再確認で保証10年へ修正、他は変更なし"
     },
     {
       "articleId": "babybjorn-cradle",
-      "checkedAt": "2026-08-26",
-      "claimsFingerprint": "sha256:bbe6cb33b39b95c3273cf9590785ba1f5000d2af9b1a5ba9c6cc28d2da93312f",
+      "checkedAt": "2026-09-09",
+      "claimsFingerprint": "sha256:48b45049b7fbb77e08a7d60b419fbcebe2c22c55e94a42627de009de66a432cf",
       "officialUrls": [
-        "https://www.aprica.jp/products/home/bed/coconel_air/",
-        "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/"
+        "https://www.aprica.jp/products/home/detail/bed/coconel_air_ab/",
+        "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/baby-cradle/"
       ],
-      "note": "本体重量を約6kg に修正（PR #172）。表示価格 49,500円（2026-08-10時点）"
+      "note": "本体重量を約6kg に修正（PR #172）。表示価格 49,500円（2026-08-10時点）。2026-09-09再確認で公式URL移転に対応（ココネル旧URLは404）、仕様に変更なし"
     },
     {
       "articleId": "babybjorn-potty",
-      "checkedAt": "2026-08-26",
-      "claimsFingerprint": "sha256:e993268ed18770f5c368cd937715a32d6aefc8ef783922ed72e49a1c726e7f34",
+      "checkedAt": "2026-09-09",
+      "claimsFingerprint": "sha256:a9ac586b3b4d3daaf9d556f064ebef826bf5778fb2c7bbd8830103d348ae3691",
       "officialUrls": [
         "https://www.babybjorn.jp/products/bathroom/potty-chair/",
         "https://www.babybjorn.jp/products/bathroom/smart-potty/"
       ],
-      "note": "スマートポッティ重量を約540g に修正（PR #173、公式商品ページ）。表示価格 3,080円（2026-08-10時点）を2026-08-16再確認"
+      "note": "スマートポッティ重量を約540g に修正（PR #173、公式商品ページ）。表示価格 3,080円（2026-08-10時点）を2026-08-16再確認。2026-09-09再確認でチェアのサイズ・重量を公式表記へ修正、スマートの中桶付きを明記"
     },
     {
       "articleId": "pigeon-bottle-160-240",
@@ -372,13 +372,13 @@
     },
     {
       "articleId": "shupot",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:5d37ee5634698c2a84c236bbecfef370db8ab54952321eb69004b9662adf3deb",
       "officialUrls": [
         "https://shop.pigeon.co.jp/products/1032018",
         "https://shop.pigeon.co.jp/products/2000638s"
       ],
-      "note": ""
+      "note": "電源・吸引調整・定格15分/片鼻5秒・洗浄可否を公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "panasonic-ne-ms4c-vs-ne-bs5c",

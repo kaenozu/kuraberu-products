@@ -19,12 +19,17 @@ export const babybjornArticle = defineArticleMetadata({
   summary:
     "「HARMONY」と「MINI」を、ベビービョルン公式の比較表・対象月齢・抱っこの種類・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-28",
-  productInfoCheckedAt: "2026-08-10",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-28",
   purchaseLinkStatus: "verified",
   imagePath: "/products/babybjorn-harmony.jpg",
   changeLog: [
+    {
+      date: "2026-09-09",
+      summary:
+        "公式ページで再確認し、保証期間を10年（正規保証1年＋ユーザー登録9年）へ更新、HARMONY重量を公式表記の約0.9kgへ修正。",
+    },
     {
       date: "2026-08-28",
       summary:

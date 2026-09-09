@@ -16,8 +16,8 @@ export const shupotArticle = defineArticleMetadata({
   summary:
     "「電動 シュポット」と「手動 シュポットポンプ＋フィット鼻ノズル」を、公式情報・お手入れ・価格・確認状況に分けて比較します。",
   publishedAt: "2026-08-10",
-  modifiedAt: "2026-08-17",
-  productInfoCheckedAt: "2026-08-10",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/shupot-dendo.jpg",
   changeLog: [

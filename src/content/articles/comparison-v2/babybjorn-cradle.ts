@@ -8,7 +8,7 @@ export const entry = defineComparisonV2("babybjorn-cradle", {
     image: "/products/babybjorn-cradle.jpg",
     imageAlt: "ベビービョルン クレードル",
     officialHref:
-      "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/",
+      "https://www.babybjorn.jp/products/baby-cradle-and-travel-crib/baby-cradle/",
     guidePoints: ["新生児期の揺らして寝かしつけを重視する人の候補"],
     productId: "babybjorn-cradle",
   },
@@ -18,7 +18,8 @@ export const entry = defineComparisonV2("babybjorn-cradle", {
     tagline: "長く使えて折りたためるベビーベッドを探す人の候補",
     image: "/products/aprica-coconel-air.jpg",
     imageAlt: "アップリカ ココネルエアー AB",
-    officialHref: "https://www.aprica.jp/products/home/bed/coconel_air/",
+    officialHref:
+      "https://www.aprica.jp/products/home/detail/bed/coconel_air_ab/",
     guidePoints: ["長く使えて折りたためるベビーベッドを探す人の候補"],
     productId: "aprica-coconel-air",
   },
