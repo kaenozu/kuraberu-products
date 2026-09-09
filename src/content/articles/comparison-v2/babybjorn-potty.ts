@@ -44,7 +44,7 @@ export const entry = defineComparisonV2("babybjorn-potty", {
       right: "中桶付き。中桶を取り外してそのまま流せる。",
     },
     {
-      label: "公式ショップ価格（2026-08-10確認）",
+      label: "公式ショップ価格（2026-09-09確認）",
       left: "3,080円。",
       right: "4,180円。",
     },
