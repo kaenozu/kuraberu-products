@@ -80,6 +80,7 @@ describe("Amazon Associates integration", () => {
         productId: "thermos-jnl-s500",
         placement: "article-end",
         purchaseLinkStatus: "verified",
+        showAmazon: true,
       },
     });
 
@@ -102,6 +103,7 @@ describe("Amazon Associates integration", () => {
         href: validRakutenUrl,
         productId: "thermos-jnl-s500",
         purchaseLinkStatus: "unverified",
+        showAmazon: true,
       },
     });
 

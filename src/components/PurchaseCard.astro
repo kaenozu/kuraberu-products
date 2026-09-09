@@ -26,6 +26,8 @@ interface Props {
    * AffiliateButton 側で URL の妥当性を検証する。
    */
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
+  /** Amazon CTAを記事単位で試験公開する場合だけtrueにする。 */
+  showAmazon?: boolean;
 }
 
 const {
@@ -40,6 +42,7 @@ const {
   requiredTerms,
   imageUrl,
   purchaseLinkStatus,
+  showAmazon = false,
 } = Astro.props;
 
 // unverified / unavailable の購入リンクは CTA を表示しない (#549)。
@@ -51,7 +54,7 @@ const showCta =
 const showPending =
   !showCta && (purchaseLinkStatus === "unverified" || !purchaseLinkStatus);
 const amazonSearchUrl =
-  showCta && purchaseLinkStatus === "verified"
+  showAmazon && showCta && purchaseLinkStatus === "verified"
     ? toAmazonAssociateSearchUrl(name, import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG)
     : undefined;
 const resolvedImage = resolveImage(imagePath);

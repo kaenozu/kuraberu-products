@@ -77,6 +77,8 @@ interface Props {
   purchaseWarning?: string;
   disclaimer?: string;
   diagnosisHref?: string;
+  /** Amazon CTAを記事単位で試験公開する場合だけtrueにする。 */
+  showAmazon?: boolean;
 }
 
 // 型アサーション（as）ではなく Props 注釈で受ける。
@@ -398,8 +400,8 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <div class="purchase-cards">
       {(left.purchaseHref || right.purchaseHref) ? (
         <>
-          <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />
-          <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} />
+          <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
+          <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
         </>
       ) : null}
     </div>
