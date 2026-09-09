@@ -312,23 +312,23 @@
     },
     {
       "articleId": "zojirushi-eq-aa22-vs-eq-sa22",
-      "checkedAt": "2026-08-19",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:646a657a62176fef70f0d778fa57f3cf4481010009d9eff38463954ac5badb55",
       "officialUrls": [
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-aa/",
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sa/"
       ],
-      "note": ""
+      "note": "タイマー15/30分・外形寸法・庫内寸法・質量3.9/4.3kg・1000W・2枚焼きを公式ページで確認（2026-09-09再確認、変更なし）。両機種とも在庫限定品の表示あり"
     },
     {
       "articleId": "panasonic-mc-nx810km-vs-mc-nx700k",
-      "checkedAt": "2026-08-24",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:4cb14237a097bf61aceadf74478c7dcaf90e837fffbedf23dcb8b82bdf1525ed",
       "officialUrls": [
         "https://panasonic.jp/soji/products/MC-NX700K/spec.html",
         "https://panasonic.jp/soji/products/MC-NX810KM/spec.html"
       ],
-      "note": ""
+      "note": "質量1.9/2.0kg・寸法・集じん0.15/0.9L・使用時間・ノズル機能を公式仕様ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "yamazaki-laundry-wire-basket-m-vs-l",
@@ -342,13 +342,13 @@
     },
     {
       "articleId": "zojirushi-eq-sb22-vs-eq-ah22",
-      "checkedAt": "2026-08-20",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:2874fecd384b27e2eda62bf3fdf4f1b06a6ffbbc1c6e935a5bb523869be83493",
       "officialUrls": [
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-ah/",
         "https://www.zojirushi.co.jp/syohin/kitchen/toaster/eq-sb/"
       ],
-      "note": ""
+      "note": "タイマー30分・外形寸法・庫内寸法・質量4.3/4.0kg・1000W・2枚焼きを公式ページで確認（2026-09-09再確認、変更なし）。両機種とも在庫限定品の表示あり"
     },
     {
       "articleId": "yamazaki-ofuda-stand-rin-vs-single",

@@ -18,8 +18,8 @@ export const zojirushiToasterArticle = defineArticleMetadata({
   summary:
     "EQ-AA22とEQ-SA22を、象印公式の商品ページで確認できるタイマー・サイズ・庫内寸法・質量に分けて比較します。",
   publishedAt: "2026-08-19",
-  modifiedAt: "2026-08-19",
-  productInfoCheckedAt: "2026-08-19",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-19",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/zojirushi-eq-aa22.png",
