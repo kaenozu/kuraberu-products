@@ -82,6 +82,7 @@
 | `dyson-v12-vs-micro-plus`                        | 公開済み                       |
 | `braun-series9pro-vs-series7`                    | 公開済み                       |
 | `delonghi-ecam22112b-vs-ecam25023sb`             | 公開済み                       |
+| `irobot-roomba-j9plus-vs-j7`                     | 公開済み                       |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
