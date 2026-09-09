@@ -15,8 +15,8 @@ export const zojirushiEqSb22VsAh22Article = defineArticleMetadata({
   summary:
     "EQ-SB22とEQ-AH22を、象印公式の商品ページで確認できるタイマー・サイズ・庫内寸法・質量に分けて比較します。",
   publishedAt: "2026-08-20",
-  modifiedAt: "2026-08-20",
-  productInfoCheckedAt: "2026-08-20",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-20",
   purchaseLinkStatus: "unverified",
   imagePath: "/products/zojirushi-eq-sb22.png",

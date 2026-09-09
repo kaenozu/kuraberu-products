@@ -19,8 +19,8 @@ export const panasonicMcNx810kmVsMcNx700kArticle = defineArticleMetadata({
   summary:
     "MC-NX810KMとMC-NX700Kを、パナソニック公式の集じん方式・使用時間・質量・寸法・ノズル機能に分けて比較します。",
   publishedAt: "2026-08-24",
-  modifiedAt: "2026-08-31",
-  productInfoCheckedAt: "2026-08-24",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-31",
   purchaseLinkStatus: "direct",
   imagePath: "/products/panasonic-mc-nx810km.jpg",
