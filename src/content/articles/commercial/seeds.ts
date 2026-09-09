@@ -56,6 +56,7 @@ import { delonghiEcam22112bVsEcam25023sbSeed } from "./delonghi-ecam22112b-vs-ec
 import { zojirushiNxAb10VsTigerJrtA100Seed } from "./zojirushi-nx-ab10-vs-tiger-jrt-a100";
 import { zojirushiEqJa22VsEqFa22Seed } from "./zojirushi-eq-ja22-vs-eq-fa22";
 import { dainichiHdRxt525VsPanasonicFeKxu07Seed } from "./dainichi-hd-rxt525-vs-panasonic-fe-kxu07";
+import { tefalCy8768jpVsPanasonicSrMp300Seed } from "./tefal-cy8768jp-vs-panasonic-sr-mp300";
 
 export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   roborockQrevoCurvVsDreameX50Seed,
@@ -111,4 +112,5 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   zojirushiNxAb10VsTigerJrtA100Seed,
   zojirushiEqJa22VsEqFa22Seed,
   dainichiHdRxt525VsPanasonicFeKxu07Seed,
+  tefalCy8768jpVsPanasonicSrMp300Seed,
 ];
