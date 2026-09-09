@@ -15,8 +15,8 @@ export const tigerPctA120VsPctA150Article = defineArticleMetadata({
   summary:
     "PCT-A120とPCT-A150を、タイガー公式の商品ページで確認できる容量・質量・消費電力・沸とう時間に分けて比較します。",
   publishedAt: "2026-08-17",
-  modifiedAt: "2026-08-29",
-  productInfoCheckedAt: "2026-08-17",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinkStatus: "verified",
   purchaseLinksCheckedAt: "2026-08-29",
   imagePath: "/products/tiger-pct-a120.jpg",
