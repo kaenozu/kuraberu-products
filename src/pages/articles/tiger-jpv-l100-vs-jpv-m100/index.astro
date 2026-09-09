@@ -13,16 +13,16 @@ const lModel = {brand: 'タイガー', line: 'JPV-L100', image: '/products/tiger
 const mModel = {brand: 'タイガー', line: 'JPV-M100', image: '/products/tiger-jpv-m100.webp', imageAlt: 'タイガー 圧力IHジャー炊飯器 JPV-M100', audience: '価格を抑えたエントリーモデルを選びたい人の候補', official: mOfficial};
 
 const faqEntries = [
-  {question: 'タイガー JPV-L100 と JPV-M100 の違いは？', answer: 'タイガー公式ページでは、どちらも5.5合の圧力IHジャー炊飯器です。JPV-L100は上位モデル、JPV-M100はエントリーモデルとして案内されています。公式オンライン価格はL100が57,800円から、M100が49,800円からです。'},
+  {question: 'タイガー JPV-L100 と JPV-M100 の違いは？', answer: 'タイガー公式ページでは、どちらも5.5合の圧力IHジャー炊飯器です。JPV-L100は上位モデル、JPV-M100はエントリーモデルとして案内されています。タイガー公式はオープン価格のため、価格は購入時点の販売ページで確認してください。'},
   {question: '炊飯容量やサイズ、重さは違う？', answer: '今回確認した5.5合モデルでは、容量はどちらも0.5〜5.5合、サイズは幅25.7×奥行38×高さ21.4cm、質量は約5.4kgです。'},
-  {question: '価格が安いのはどっち？', answer: '公式オンラインページの表示価格では、JPV-M100が49,800円から、JPV-L100が57,800円からです。販売店の価格・在庫・ポイント・送料は購入時点で確認してください。'},
-  {question: 'どちらを選べばよい？', answer: '公式ページ上の位置づけと価格を優先するなら、価格を抑えたJPV-M100が候補です。上位モデルの機能を優先するならJPV-L100を確認してください。'},
+  {question: '価格が安いのはどっち？', answer: 'タイガー公式はオープン価格のため、どちらが安いかは購入時点の販売ページで確認してください。販売店の価格・在庫・ポイント・送料は購入時点で確認してください。'},
+  {question: 'どちらを選べばよい？', answer: '公式ページ上の位置づけと価格を優先するなら、購入時点の販売ページで両機種の価格を比べてください。上位モデルの機能を優先するならJPV-L100を確認してください。'},
 ];
 
 const keyDiffRows: KeyDiffRow[] = [
   {label: 'モデルの位置づけ', left: '上位モデル', right: 'エントリーモデル', highlight: 'left', highlightNote: '機能を優先'},
   {label: '炊飯方式・容量', left: '圧力IH・0.5〜5.5合', right: '圧力IH・0.5〜5.5合'},
-  {label: '公式オンライン価格', left: '57,800円〜', right: '49,800円〜', highlight: 'right', highlightNote: '8,000円安い', bar: {left: 57800, right: 49800}, direction: 'lower-is-better'},
+  {label: '価格', left: '販売ページで確認（タイガー公式はオープン価格）', right: '販売ページで確認（タイガー公式はオープン価格）'},
   {label: 'サイズ', left: '25.7×38×21.4cm', right: '25.7×38×21.4cm'},
   {label: '質量', left: '約5.4kg', right: '約5.4kg'},
 ];
