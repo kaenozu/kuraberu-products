@@ -126,7 +126,8 @@ const faq = seed.faqEntries?.length
         answer: `メーカー公式ページで商品を特定でき、共通する仕様とモデルごとの差分を確認できる組み合わせを比較対象にしています。`,
       },
     ];
-const hasSocialProof = Boolean(seed.socialProofQuery);
+const socialProofQuery = seed.socialProofQuery ?? `${seed.leftProduct} ${seed.rightProduct}`;
+const hasSocialProof = Boolean(socialProofQuery);
 const hasOfficialProse = seed.officialProse && seed.officialProse.length > 0;
 const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
 ---
@@ -186,7 +187,7 @@ const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
 
     {hasSocialProof && (
       <ArticleSocialProof
-        query={seed.socialProofQuery!}
+        query={socialProofQuery}
         checkedAt={seed.socialProofCheckedAt}
         hasPosts={seed.socialProofHasPosts}
         bestMatch={seed.socialProofBestMatch as any}
@@ -210,7 +211,7 @@ const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
       </ArticleSocialProof>
     )}
 
-    <details class="fold-section" id="specs">
+    <details class="fold-section" id="specs" open>
       <summary>詳細仕様（公式ページで確認した項目）</summary>
       <div class="table-scroll">
         <table class="comparison">

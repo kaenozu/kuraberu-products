@@ -69,6 +69,9 @@ interface Props {
   specRows?: readonly SpecRow[];
   socialProofQuery?: string;
   socialProofCheckedAt?: string;
+  socialProofHasPosts?: boolean;
+  socialProofBestMatch?: string;
+  embeds?: readonly { provider: string; url: string; title: string; match: string; purpose?: string; tone?: string; autoload?: boolean; compact?: boolean }[];
   faqEntries?: readonly { question: string; answer: string }[];
   leftPurchaseName?: string;
   leftPurchaseAudience?: string;
@@ -156,6 +159,9 @@ if (props.articleId) {
       specRows: props.specRows,
       socialProofQuery: article.socialProofQuery ?? `${lm.brand} ${lm.line} ${rm.line}`,
       socialProofCheckedAt: article.socialProofCheckedAt,
+      socialProofHasPosts: article.socialProofHasPosts,
+      socialProofBestMatch: article.socialProofBestMatch,
+      embeds: article.embeds,
       faqEntries: [...article.faqEntries],
       leftPurchaseName: `${lm.brand} ${lm.line}`,
       leftPurchaseAudience: leftAudiences,
@@ -286,8 +292,11 @@ if (props.articleId) {
     officialDescription: props.officialDescription ?? "",
     officialLinks: props.officialLinks ?? [],
     specRows: props.specRows,
-    socialProofQuery: props.socialProofQuery ?? "",
+    socialProofQuery: props.socialProofQuery ?? `${props.left.brand} ${props.left.line} ${props.right.brand} ${props.right.line}`,
     socialProofCheckedAt: props.socialProofCheckedAt,
+    socialProofHasPosts: props.socialProofHasPosts,
+    socialProofBestMatch: props.socialProofBestMatch,
+    embeds: props.embeds,
     faqEntries: props.faqEntries,
     leftPurchaseName: props.leftPurchaseName,
     leftPurchaseAudience: props.leftPurchaseAudience,
@@ -321,7 +330,7 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
     <ArticleComparisonV2 left={left} right={right} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} purchaseLinkStatus={articleMetadata.purchaseLinkStatus} diagnosisHref={resolved.diagnosisHref} />
     {summaryParagraph && <p>{summaryParagraph}</p>}
-    <details class="fold-section" id="specs">
+    <details class="fold-section" id="specs" open>
       <summary>詳細仕様（公式ページで確認した項目）</summary>
 
       <div class="table-scroll">

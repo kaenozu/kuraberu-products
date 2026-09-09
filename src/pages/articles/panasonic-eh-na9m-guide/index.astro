@@ -3,6 +3,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import RelatedArticles from '../../../components/RelatedArticles.astro';
 import PurchaseCard from '../../../components/PurchaseCard.astro';
 import TrustLine from '../../../components/TrustLine.astro';
+import ArticleSocialProof from '../../../components/ArticleSocialProof.astro';
 import {panasonicEhNa9mGuideArticle as articleMetadata} from '../../../content/articles';
 import { articlePurchaseLinks } from '../../../lib/products';
 
@@ -70,6 +71,8 @@ const faqEntries = [
       <li>質量は約580g（公式仕様）。</li>
       <li>本体寸法は高さ22.1×幅16.1×奥行7.4cm（公式仕様）。</li>
     </ul>
+
+    <ArticleSocialProof query="パナソニック ナノケア EH-NA9M" />
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">

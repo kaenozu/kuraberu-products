@@ -86,6 +86,19 @@ export type ArticleMetadataBase = {
   socialProofQuery?: string;
   /** 比較記事: ソーシャルプルーフ確認日。 */
   socialProofCheckedAt?: string;
+  /** SNS投稿の存在・採用ランク・公式埋め込み。 */
+  socialProofHasPosts?: boolean;
+  socialProofBestMatch?: "model" | "series" | "brand";
+  embeds?: readonly {
+    provider: string;
+    url: string;
+    title: string;
+    match: string;
+    purpose?: string;
+    tone?: string;
+    autoload?: boolean;
+    compact?: boolean;
+  }[];
   /** 比較記事: 購入時の注意テキスト。 */
   purchaseWarning?: string;
   /** 比較記事: 免責事項テキスト。 */
