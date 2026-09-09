@@ -263,12 +263,12 @@
     },
     {
       "articleId": "tiger-pct-a120-vs-pct-a150",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:21e0fe1ca30ea8b76aa2e2e5463a6e7d0fcbba2aad6e521433b54359cbc67196",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/kettle-pot/pct-a/"
       ],
-      "note": ""
+      "note": "容量1.2/1.5L・質量0.73/0.77kg（本体のみ）・1300W・カップ1杯約59秒を公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "zojirushi-ec-kv50-vs-ec-ma60",
@@ -282,13 +282,13 @@
     },
     {
       "articleId": "panasonic-f-px60c-vs-f-px70c",
-      "checkedAt": "2026-08-19",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:f4057619b12a9893b7749b602600261a9290f8548997bf618990218bb811faba",
       "officialUrls": [
         "https://panasonic.jp/airrich/products/F-PX60C.html",
         "https://panasonic.jp/airrich/products/F-PX70C.html"
       ],
-      "note": ""
+      "note": "適用床面積27/31畳（旧基準）・8畳清浄約11/10分・寸法・重量5.9/5.1kg・フィルター交換約10/3.5年を公式仕様ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "panasonic-es-lt4b-vs-es-lv7j",
@@ -362,13 +362,13 @@
     },
     {
       "articleId": "yamazaki-dishwasher-rack-241925-vs-241926",
-      "checkedAt": "2026-08-18",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:4c03f82c8061a0b4d0bfd8abeeff7bf2c7c9f807ebadea4952f87ea75e6b0a33",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/241925",
         "https://www.yamajitsu.co.jp/products/241926"
       ],
-      "note": ""
+      "note": "サイズ・重量3150/3350g・耐荷重25kg・フック250g・設置カウンター高さ8〜12/12〜20.5cmを公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "shupot",
