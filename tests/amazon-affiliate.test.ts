@@ -3,6 +3,8 @@ import { experimental_AstroContainer as AstroContainer } from "astro/container";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   normalizeOptionalAmazonAssociateTag,
+  isAmazonProductDetailUrl,
+  toAmazonAssociateProductUrl,
   toAmazonAssociateSearchUrl,
   validateBuildEnvironment,
 } from "../config/runtime-env.mjs";
@@ -50,6 +52,27 @@ describe("Amazon Associates integration", () => {
     expect(url.searchParams.get("tag")).toBe("example-22");
   });
 
+  it("builds a tagged Amazon.co.jp product-detail link and rejects search URLs", () => {
+    expect(
+      isAmazonProductDetailUrl("https://www.amazon.co.jp/dp/B0D9XZ5MQF"),
+    ).toBe(true);
+    expect(
+      isAmazonProductDetailUrl("https://www.amazon.co.jp/s?k=JNL-S500"),
+    ).toBe(false);
+    expect(
+      toAmazonAssociateProductUrl(
+        "https://www.amazon.co.jp/dp/B0D9XZ5MQF?ref=search",
+        "example-22",
+      ),
+    ).toBe("https://www.amazon.co.jp/dp/B0D9XZ5MQF?tag=example-22");
+    expect(
+      toAmazonAssociateProductUrl(
+        "https://www.amazon.co.jp/s?k=JNL-S500",
+        "example-22",
+      ),
+    ).toBeUndefined();
+  });
+
   it("keeps Amazon optional in build validation but validates a configured tag", () => {
     expect(
       validateBuildEnvironment({ DEPLOYMENT_ENV: "preview" })
@@ -80,10 +103,14 @@ describe("Amazon Associates integration", () => {
         productId: "thermos-jnl-s500",
         placement: "article-end",
         purchaseLinkStatus: "verified",
+        amazonHref: "https://www.amazon.co.jp/dp/B0D9XZ5MQF",
+        showAmazon: true,
       },
     });
 
     expect(html).toContain("Amazonで商品を確認");
+    expect(html).toContain("/dp/B0D9XZ5MQF?tag=example-22");
+    expect(html).not.toContain("/s?k=");
     expect(html).toContain("tag=example-22");
     expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
     expect(html).toContain('data-amazon-cta="purchase"');
@@ -102,6 +129,7 @@ describe("Amazon Associates integration", () => {
         href: validRakutenUrl,
         productId: "thermos-jnl-s500",
         purchaseLinkStatus: "unverified",
+        showAmazon: true,
       },
     });
 

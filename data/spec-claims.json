@@ -74,8 +74,8 @@
     },
     {
       "articleId": "tiger-jpv-l100-vs-jpv-m100",
-      "checkedAt": "2026-08-16",
-      "claimsFingerprint": "sha256:09e0f7726ee0047a57748b15b14b849ea564b427778ffa8ed0d602405ac30f4d",
+      "checkedAt": "2026-09-08",
+      "claimsFingerprint": "sha256:f07efc05251cd45a0778b530edc8ee853ed30f0223e763addd4d050daf8074e4",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-l/",
         "https://www.tiger-corporation.com/ja/jpn/product/rice-cooker/jpv-m/"
@@ -134,13 +134,13 @@
     },
     {
       "articleId": "yamazaki-condor-wagon-vs-self-wagon",
-      "checkedAt": "2026-08-16",
+      "checkedAt": "2026-09-08",
       "claimsFingerprint": "sha256:778e7b60e77f45f21247959cc61876d6cff9981d90727496a696366bb7a5a561",
       "officialUrls": [
         "https://product.yamazaki-sangyo.co.jp/product/209460",
         "https://product.yamazaki-sangyo.co.jp/product/209477"
       ],
-      "note": "寸法・重量 1.4/1.1kg を公式ページで確認"
+      "note": "寸法・重量 1.4/1.1kg を公式ページで確認（2026-09-08再確認で一致）"
     },
     {
       "articleId": "yamazaki-dust-wagon-45l-2division-vs-3division",
@@ -164,23 +164,23 @@
     },
     {
       "articleId": "tefal-dv4030j0-vs-dv8070j0",
-      "checkedAt": "2026-08-16",
+      "checkedAt": "2026-09-08",
       "claimsFingerprint": "sha256:f37f35623cfd766b616b3908034eb12af97a03d6827964eca7ff0cf836ea9fc7",
       "officialUrls": [
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steam-rafrai-1830009402/",
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steamsupre-1830009138/"
       ],
-      "note": "重量 690/680g・タンク 120/140mL・800/950W・スチーム量・連続運転 約9/約14分を公式比較表で確認"
+      "note": "重量 690/680g・タンク 120/140mL・800/950W・スチーム量・連続運転 約9/約14分を公式比較表で確認（2026-09-08再確認で一致）"
     },
     {
       "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-08",
       "claimsFingerprint": "sha256:b15408c6273418269bf00fea7a7319c3cb7d219adb9e5fa5d1d3f358cf640c06",
       "officialUrls": [
         "https://www.kingjim.co.jp/products/tepra/sr-mk1.html",
         "https://www.kingjim.co.jp/products/tepra/sr-r2500p.html"
       ],
-      "note": "寸法・質量 420/470g・テープ幅を公式ページで確認"
+      "note": "寸法・質量 420/470g・テープ幅を公式ページで確認（2026-09-08再確認で一致）"
     },
     {
       "articleId": "panasonic-f-yhvx120-vs-f-yhvx90",

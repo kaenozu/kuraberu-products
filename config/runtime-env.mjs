@@ -92,6 +92,33 @@ export function toAmazonAssociateSearchUrl(query, associateTag) {
   return url.toString();
 }
 
+/** Return a tagged Amazon.co.jp product-detail URL; reject searches and redirects. */
+export function toAmazonAssociateProductUrl(value, associateTag) {
+  const tag = normalizeOptionalAmazonAssociateTag(associateTag);
+  if (!tag || !isAmazonProductDetailUrl(value)) return undefined;
+
+  const url = new URL(value);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("tag", tag);
+  return url.toString();
+}
+
+export function isAmazonProductDetailUrl(value) {
+  if (!isAllowedAmazonUrl(value)) return false;
+  try {
+    const url = new URL(value);
+    if (
+      url.hostname.toLowerCase() !== "www.amazon.co.jp" &&
+      url.hostname.toLowerCase() !== "amazon.co.jp"
+    )
+      return false;
+    return /^\/(?:dp|gp\/product)\/[A-Z0-9]{10}\/?$/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
 export function isAllowedRakutenUrl(value) {
   if (!nonEmpty(value)) return false;
 
@@ -189,8 +216,21 @@ const RAKUTEN_AFFILIATE_ID_PATTERN =
 function rakutenAffiliateRedirectPrefix(environment = process.env) {
   const defaultPrefix = `https://hb.afl.rakuten.co.jp/hgc/${DEFAULT_RAKUTEN_AFFILIATE_ID}/?pc=`;
   const affiliateId = environment.RAKUTEN_AFFILIATE_ID?.trim();
-  if (!affiliateId) return defaultPrefix;
+  const isProduction = environment.DEPLOYMENT_ENV === "production";
+  if (!affiliateId) {
+    if (isProduction) {
+      throw new Error(
+        "RAKUTEN_AFFILIATE_ID is required in production to avoid baking the default affiliate ID into static HTML",
+      );
+    }
+    return defaultPrefix;
+  }
   if (!RAKUTEN_AFFILIATE_ID_PATTERN.test(affiliateId)) {
+    if (isProduction) {
+      throw new Error(
+        "RAKUTEN_AFFILIATE_ID format is invalid in production; refusing to fall back to the default affiliate ID",
+      );
+    }
     console.warn(
       "RAKUTEN_AFFILIATE_ID の形式が不正なため既定のアフィリエイトIDへフォールバックします",
     );
@@ -279,8 +319,16 @@ export function validateBuildEnvironment(environment = process.env) {
   );
   const rakutenApiReady =
     configuredApiCredentials.length === RAKUTEN_API_CREDENTIALS.length;
+  // RAKUTEN_AFFILIATE_ID is also the required redirect identifier for
+  // static affiliate URLs. It may therefore be present without the API
+  // credentials when direct purchase URLs are configured. Only a partial
+  // API core (Application ID / Access Key) is invalid by itself.
+  const configuredApiCoreCredentials = [
+    "RAKUTEN_APPLICATION_ID",
+    "RAKUTEN_ACCESS_KEY",
+  ].filter((name) => nonEmpty(environment[name]));
   if (
-    configuredApiCredentials.length > 0 &&
+    configuredApiCoreCredentials.length > 0 &&
     configuredApiCredentials.length < RAKUTEN_API_CREDENTIALS.length
   ) {
     throw new Error(

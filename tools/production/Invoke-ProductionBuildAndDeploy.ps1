@@ -60,7 +60,7 @@ $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
 $runDirectory = [System.IO.Path]::GetFullPath((Join-Path $repo "$OutputRoot/production-build-$stamp"))
 New-Item -ItemType Directory -Path $runDirectory -Force | Out-Null
 $oldEnv = @{}
-$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID','PUBLIC_BUILD_SHA')
+$names = @('DEPLOYMENT_ENV','PUBLIC_SITE_URL','PUBLIC_RAKUTEN_PREMIUM_URL','PUBLIC_RAKUTEN_SARASARA_URL','PUBLIC_CONTACT_URL','PUBLIC_AMAZON_ASSOCIATE_TAG','RAKUTEN_APPLICATION_ID','RAKUTEN_ACCESS_KEY','RAKUTEN_AFFILIATE_ID','PUBLIC_BUILD_SHA')
 foreach ($name in $names) { $oldEnv[$name] = [Environment]::GetEnvironmentVariable($name, 'Process') }
 
 try {

@@ -72,7 +72,7 @@ Remote-only作業では、ローカルworktreeの有無やローカルprocessを
 ## コンテンツと広告
 
 - メーカー等の一次情報を優先し、確認日と参照先を残します。
-- 未確認の数値、価格、体験談、評価、review数を補いません。
+- 未確認の数値、価格、在庫、体験談、評価、review数を補いません。
 - 実際に使用していない商品を使用したとは記載しません。
 - 広告linkは編集内容と分離し、広告であることを明示します。
 - 外部投稿は公式embedまたは原文linkだけを使用し、screenshot転載や本文保存を行いません。
@@ -104,6 +104,11 @@ pnpm build
 pnpm check:rendered
 pnpm check:deployment
 pnpm check:external-link-syntax
+pnpm check:official-links
+pnpm check:source-relevancy
+pnpm check:price-claims
+pnpm check:csp-embed
+pnpm check:spec-claims
 pnpm test
 git diff --check
 ```

@@ -38,14 +38,20 @@ pnpm install --frozen-lockfile
 
 ## 品質ゲート
 
-通常は次をまとめた `pnpm verify` を実行します。
+反復作業中はビルド・ネットワーク・テスト不要の `pnpm verify:fast` (pnpm版固定 + format + lint + typecheck + env/content検証 + radius整合性) を使い、Ready化前にフルゲートを通します。ネットワーク依存の購入リンク整合性と `vitest` はfastの対象外です。
+
+```bash
+pnpm verify:fast
+```
+
+通常は次をまとめた `pnpm verify` (`verify:lint` + `verify:build`) を実行します。`verify:build` が先頭で `astro build` するため、`verify` 自体は追加のbuildを行いません。
 
 ```bash
 pnpm verify
 git diff --check
 ```
 
-個別確認が必要な場合:
+個別確認が必要な場合 (`package.json` の実体に合わせること):
 
 ```bash
 pnpm format:check
@@ -54,13 +60,23 @@ pnpm typecheck
 pnpm validate:env
 pnpm validate:content
 pnpm build
+pnpm check:image-magic
+pnpm check:css-usage
 pnpm check:rendered
 pnpm check:deployment
+pnpm check:post-deploy
 pnpm check:external-link-syntax
+pnpm check:official-links
+pnpm check:source-relevancy
+pnpm check:price-claims
+pnpm check:csp-embed
+pnpm check:spec-claims
 pnpm test
 ```
 
 `check:external-link-syntax` はネットワーク到達性を保証しません。公開前のリンク到達性は別の受入確認として実施します。
+
+`check:source-relevancy` と `check:price-claims` は warn-first 運用です（`--strict` 付きでのみ違反を失敗にします）。公式正規ページの例外は `docs/source-relevancy-allowlist.md` に登録します。
 
 ### Browser / network E2E
 

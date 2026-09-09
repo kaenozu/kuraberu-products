@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
+  applySourceRelevancyAllowlist,
   checkSourceRelevancy,
   collectArticleSourceRecords,
   extractModelTokens,
   findSourceRelevancyFindings,
+  parseSourceRelevancyAllowlist,
   sourceContainsToken,
   sourceSearchTarget,
 } from "../scripts/check-source-relevancy.mjs";
@@ -117,5 +119,45 @@ describe("source relevancy gate (issue #370)", () => {
         expect(violation.tokens.length).toBeGreaterThan(0);
       }
     }
+  });
+
+  it("parses the allowlist table by id and url", () => {
+    const entries = parseSourceRelevancyAllowlist(
+      [
+        "| id | url | reason |",
+        "| --- | --- | --- |",
+        "| `recolte-automatic-cooker-vs-panasonic-nf-pc400` | `https://recolte-jp.com/products/auto-cooking-pot/` | 公式商品ページ |",
+        "| broken |",
+      ].join("\n"),
+    );
+    expect(entries).toEqual([
+      {
+        id: "recolte-automatic-cooker-vs-panasonic-nf-pc400",
+        url: "https://recolte-jp.com/products/auto-cooking-pot/",
+        reason: "公式商品ページ",
+      },
+    ]);
+  });
+
+  it("removes allowlisted violations and drops emptied articles", () => {
+    const { findings } = findSourceRelevancyFindings(fixtureRegistry);
+    const filtered = applySourceRelevancyAllowlist(findings, [
+      {
+        id: "maker-b-wrong-source",
+        url: "https://www.maker-b.example.jp/items/zz-unrelated/",
+        reason: "test",
+      },
+    ]);
+    expect(
+      filtered.find(
+        (finding: { id: string }) => finding.id === "maker-b-wrong-source",
+      ),
+    ).toBeUndefined();
+    // 未登録の除外は効果なし
+    expect(
+      applySourceRelevancyAllowlist(findings, [
+        { id: "other", url: "https://example.com/", reason: "test" },
+      ]),
+    ).toHaveLength(findings.length);
   });
 });
