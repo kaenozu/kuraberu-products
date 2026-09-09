@@ -51,9 +51,9 @@ export const entry = defineComparisonV2("babybjorn", {
       right: "10年（正規保証1年＋ユーザー登録9年）。",
     },
     {
-      label: "公式ショップ価格（2026-08-10確認）",
-      left: "27,280円〜。",
-      right: "9,680円〜。",
+      label: "公式ショップ価格（2026-09-09確認）",
+      left: "34,100円〜。",
+      right: "12,100円〜。",
     },
   ],
 });

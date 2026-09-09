@@ -29,7 +29,7 @@ export const babybjornBouncerArticle = defineArticleMetadata({
     {
       date: "2026-09-09",
       summary:
-        "公式ページで再確認し、保証を10年（正規保証1年＋ユーザー登録9年）へ更新。",
+        "公式ページで再確認し、保証を10年（正規保証1年＋ユーザー登録9年）へ更新、公式ショップ価格を2026-09-09確認値へ更新。",
     },
     {
       date: "2026-08-17",

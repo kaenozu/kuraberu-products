@@ -52,7 +52,7 @@ export const entry = defineComparisonV2("babybjorn-onekai", {
       right: "10年（正規保証1年＋ユーザー登録9年）。",
     },
     {
-      label: "公式ショップ価格（2026-08-10確認）",
+      label: "公式ショップ価格（2026-09-09確認）",
       left: "27,500円。",
       right: "22,000円。",
     },
