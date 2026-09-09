@@ -15,7 +15,7 @@ export const thermosKfm020VsKfi020Article = defineArticleMetadata({
   summary:
     "サーモス KFM-020とKFI-020を、公式ページで確認できる対応熱源・重量・寸法・価格に分けて比較します。",
   publishedAt: "2026-08-15",
-  modifiedAt: "2026-08-15",
+  modifiedAt: "2026-09-09",
   productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-15",
   purchaseLinkStatus: "unverified",

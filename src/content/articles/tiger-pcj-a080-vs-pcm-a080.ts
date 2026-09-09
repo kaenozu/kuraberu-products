@@ -15,7 +15,7 @@ export const tigerKettlePcjVsPcmArticle = defineArticleMetadata({
   summary:
     "PCJ-A080とPCM-A080を、タイガー公式の商品ページで確認できる容量・沸とう時間・サイズ・質量・安全設計に分けて比較します。",
   publishedAt: "2026-08-17",
-  modifiedAt: "2026-08-17",
+  modifiedAt: "2026-09-09",
   productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-08-17",
   purchaseLinkStatus: "unverified",
