@@ -28,6 +28,11 @@ export function toAmazonAssociateSearchUrl(
   query: unknown,
   associateTag: string | undefined,
 ): string | undefined;
+export function toAmazonAssociateProductUrl(
+  value: unknown,
+  associateTag: string | undefined,
+): string | undefined;
+export function isAmazonProductDetailUrl(value: unknown): boolean;
 export function isAllowedRakutenUrl(value: unknown): boolean;
 export function isAllowedAmazonUrl(value: unknown): boolean;
 export function isRakutenProductDetailUrl(value: unknown): boolean;

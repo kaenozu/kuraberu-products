@@ -49,6 +49,7 @@ interface Side {
   officialHref: string;
   guidePoints: string[];
   purchaseHref?: string;
+  amazonHref?: string;
   productId?: string;
 }
 
@@ -400,8 +401,8 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <div class="purchase-cards">
       {(left.purchaseHref || right.purchaseHref) ? (
         <>
-          <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
-          <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
+          <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} amazonHref={left.amazonHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
+          <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} amazonHref={right.amazonHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
         </>
       ) : null}
     </div>

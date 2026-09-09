@@ -92,6 +92,33 @@ export function toAmazonAssociateSearchUrl(query, associateTag) {
   return url.toString();
 }
 
+/** Return a tagged Amazon.co.jp product-detail URL; reject searches and redirects. */
+export function toAmazonAssociateProductUrl(value, associateTag) {
+  const tag = normalizeOptionalAmazonAssociateTag(associateTag);
+  if (!tag || !isAmazonProductDetailUrl(value)) return undefined;
+
+  const url = new URL(value);
+  url.search = "";
+  url.hash = "";
+  url.searchParams.set("tag", tag);
+  return url.toString();
+}
+
+export function isAmazonProductDetailUrl(value) {
+  if (!isAllowedAmazonUrl(value)) return false;
+  try {
+    const url = new URL(value);
+    if (
+      url.hostname.toLowerCase() !== "www.amazon.co.jp" &&
+      url.hostname.toLowerCase() !== "amazon.co.jp"
+    )
+      return false;
+    return /^\/(?:dp|gp\/product)\/[A-Z0-9]{10}\/?$/i.test(url.pathname);
+  } catch {
+    return false;
+  }
+}
+
 export function isAllowedRakutenUrl(value) {
   if (!nonEmpty(value)) return false;
 
