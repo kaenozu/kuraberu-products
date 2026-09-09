@@ -65,6 +65,10 @@ jobs:
       - name: Verify production configuration and output
         env:
           DEPLOYMENT_ENV: production
+          # Direct Rakuten URLs are sufficient for this CI production-config test.
+          # RAKUTEN_AFFILIATE_ID is the redirect identifier used by static URLs;
+          # real API credentials are not needed when the API path is unused.
+          RAKUTEN_AFFILIATE_ID: 0123456789abcdef.01234567.fedcba9876543210.89abcdef
           PUBLIC_SITE_URL: https://ci.kuraberu-products.invalid
           PUBLIC_RAKUTEN_PREMIUM_URL: https://hb.afl.rakuten.co.jp/ci/premium
           PUBLIC_RAKUTEN_SARASARA_URL: https://hb.afl.rakuten.co.jp/ci/sarasara

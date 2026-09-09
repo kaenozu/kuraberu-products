@@ -49,6 +49,9 @@ import { ankerSoundcoreLiberty4NcVsSonyWfC710nSeed } from "./anker-soundcore-lib
 import { panasonicNeBs6eVsNeBs5eSeed } from "./panasonic-ne-bs6e-vs-ne-bs5e";
 import { panasonicEsPv6aVsEsPv3aSeed } from "./panasonic-es-pv6a-vs-es-pv3a";
 import { yamazakiRefrigeratorRack240057Vs240059Seed } from "./yamazaki-refrigerator-rack-240057-vs-240059";
+import { dysonV12VsMicroPlusSeed } from "./dyson-v12-vs-micro-plus";
+import { braunSeries9proVsSeries7Seed } from "./braun-series9pro-vs-series7";
+import { delonghiEcam22112bVsEcam25023sbSeed } from "./delonghi-ecam22112b-vs-ecam25023sb";
 
 export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   roborockQrevoCurvVsDreameX50Seed,
@@ -97,4 +100,7 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   panasonicNeBs6eVsNeBs5eSeed,
   panasonicEsPv6aVsEsPv3aSeed,
   yamazakiRefrigeratorRack240057Vs240059Seed,
+  dysonV12VsMicroPlusSeed,
+  braunSeries9proVsSeries7Seed,
+  delonghiEcam22112bVsEcam25023sbSeed,
 ];

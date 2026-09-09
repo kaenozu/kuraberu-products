@@ -7,7 +7,7 @@
 import { Picture } from 'astro:assets';
 import AffiliateButton from './AffiliateButton.astro';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
-import {toAmazonAssociateSearchUrl} from '../../config/runtime-env.mjs';
+import {toAmazonAssociateProductUrl, toAmazonAssociateSearchUrl} from '../../config/runtime-env.mjs';
 import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
@@ -26,6 +26,9 @@ interface Props {
    * AffiliateButton 側で URL の妥当性を検証する。
    */
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
+  /** Amazon商品詳細URL。未指定時は試験用検索URLへフォールバックする。 */
+  amazonHref?: string;
+  showAmazon?: boolean;
 }
 
 const {
@@ -40,6 +43,8 @@ const {
   requiredTerms,
   imageUrl,
   purchaseLinkStatus,
+  amazonHref,
+  showAmazon = false,
 } = Astro.props;
 
 // unverified / unavailable の購入リンクは CTA を表示しない (#549)。
@@ -50,8 +55,12 @@ const showCta =
   (purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct");
 const showPending =
   !showCta && (purchaseLinkStatus === "unverified" || !purchaseLinkStatus);
+const amazonProductUrl =
+  showAmazon && showCta && purchaseLinkStatus === "verified" && amazonHref
+    ? toAmazonAssociateProductUrl(amazonHref, import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG)
+    : undefined;
 const amazonSearchUrl =
-  showCta && purchaseLinkStatus === "verified"
+  showAmazon && showCta && purchaseLinkStatus === "verified" && !amazonHref
     ? toAmazonAssociateSearchUrl(name, import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG)
     : undefined;
 const resolvedImage = resolveImage(imagePath);
@@ -82,10 +91,10 @@ const resolvedImage = resolveImage(imagePath);
         searchQuery={searchQuery}
         requiredTerms={requiredTerms}
       />
-      {amazonSearchUrl && (
+      {(amazonProductUrl ?? amazonSearchUrl) && (
         <a
           class="cta cta-card amazon-purchase-link"
-          href={amazonSearchUrl}
+          href={amazonProductUrl ?? amazonSearchUrl}
           target="_blank"
           rel="sponsored nofollow noopener noreferrer"
           data-amazon-cta="purchase"

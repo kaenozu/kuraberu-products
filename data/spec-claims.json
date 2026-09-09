@@ -134,13 +134,13 @@
     },
     {
       "articleId": "yamazaki-condor-wagon-vs-self-wagon",
-      "checkedAt": "2026-08-16",
+      "checkedAt": "2026-09-08",
       "claimsFingerprint": "sha256:778e7b60e77f45f21247959cc61876d6cff9981d90727496a696366bb7a5a561",
       "officialUrls": [
         "https://product.yamazaki-sangyo.co.jp/product/209460",
         "https://product.yamazaki-sangyo.co.jp/product/209477"
       ],
-      "note": "寸法・重量 1.4/1.1kg を公式ページで確認"
+      "note": "寸法・重量 1.4/1.1kg を公式ページで確認（2026-09-08再確認で一致）"
     },
     {
       "articleId": "yamazaki-dust-wagon-45l-2division-vs-3division",
@@ -164,13 +164,13 @@
     },
     {
       "articleId": "tefal-dv4030j0-vs-dv8070j0",
-      "checkedAt": "2026-08-16",
+      "checkedAt": "2026-09-08",
       "claimsFingerprint": "sha256:f37f35623cfd766b616b3908034eb12af97a03d6827964eca7ff0cf836ea9fc7",
       "officialUrls": [
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steam-rafrai-1830009402/",
         "https://www.t-fal.co.jp/irons-steamer/garment-steamer-2way/products/steamsupre-1830009138/"
       ],
-      "note": "重量 690/680g・タンク 120/140mL・800/950W・スチーム量・連続運転 約9/約14分を公式比較表で確認"
+      "note": "重量 690/680g・タンク 120/140mL・800/950W・スチーム量・連続運転 約9/約14分を公式比較表で確認（2026-09-08再確認で一致）"
     },
     {
       "articleId": "kingjim-tepra-sr-r2500p-vs-sr-mk1",

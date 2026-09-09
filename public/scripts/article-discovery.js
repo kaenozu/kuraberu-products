@@ -49,7 +49,11 @@
     ["狭い", ["寸法"]],
     ["片付け", ["収納"]],
   ]);
-  const initialMarkup = results.innerHTML;
+  // 初期表示のスナップショットは innerHTML 文字列ではなく
+  // ノードのクローンで保持する（XSS 検査の死角を作らないため）。
+  const initialNodes = [...results.childNodes].map((node) =>
+    node.cloneNode(true),
+  );
   let index = [];
   try {
     index = JSON.parse(indexNode.textContent || "[]");
@@ -182,7 +186,9 @@
       visible = matches.length;
       if (pagination instanceof HTMLElement) pagination.hidden = true;
     } else {
-      results.innerHTML = initialMarkup;
+      results.replaceChildren(
+        ...initialNodes.map((node) => node.cloneNode(true)),
+      );
       visible =
         index.length || results.querySelectorAll("[data-article-card]").length;
       if (pagination instanceof HTMLElement) pagination.hidden = false;
