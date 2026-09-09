@@ -204,13 +204,13 @@
     },
     {
       "articleId": "panasonic-ne-fl1a-vs-ne-fl1c",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:02a752eb5f3f9cb8dab9696eddd59c8f8c7986642757471534e2039aec619121",
       "officialUrls": [
         "https://panasonic.jp/range/products/NE-FL1A.html",
         "https://panasonic.jp/range/products/NE-FL1C.html"
       ],
-      "note": "庫内容量・外形寸法・質量・自動メニュー数をパナソニック公式仕様ページで確認（2026-08-15）"
+      "note": "庫内容量・外形寸法・質量・自動メニュー数をパナソニック公式仕様ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "thermos-kfm-020-vs-kfi-020",
@@ -224,12 +224,12 @@
     },
     {
       "articleId": "tiger-mta-j050-guide",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:7b121193698ddf31fa3f0b6c17edc1b585637d7b7b2f93661dca8a10c076732e",
       "officialUrls": [
         "https://www.tiger-corporation.com/ja/jpn/product/vacuum-insulated-products/mta-j/"
       ],
-      "note": ""
+      "note": "容量0.5/0.8L・質量約0.26/0.36kg・保冷8/7℃以下・保温68/75℃以上（6時間）・寸法を公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "panasonic-eh-na9m-vs-eh-na7m",
@@ -292,23 +292,23 @@
     },
     {
       "articleId": "panasonic-es-lt4b-vs-es-lv7j",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:43721782c288c3cf75eaac276109dd74ee5a36c616af87a66ef5fe17e026ae95",
       "officialUrls": [
         "https://panasonic.jp/shaver/products/ES-LT4B.html",
         "https://panasonic.jp/shaver/products/ES-LV7J.html"
       ],
-      "note": ""
+      "note": "刃数3/5枚刃・質量約155/210g・寸法・充電方式を公式仕様ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "yamajitsu-film-holder-242286-vs-242287",
-      "checkedAt": "2026-08-26",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:93e50d83bde3cc2a37293e1f334baae92e826c2245a6d369d39d82e017fa24c6",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/242286",
         "https://www.yamajitsu.co.jp/products/242287"
       ],
-      "note": ""
+      "note": "収納対象・対応サイズ・商品サイズ・重量140/120g・耐荷重2kgを公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "zojirushi-eq-aa22-vs-eq-sa22",
@@ -332,13 +332,13 @@
     },
     {
       "articleId": "yamazaki-laundry-wire-basket-m-vs-l",
-      "checkedAt": "2026-08-25",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:9256e8018cc9ec64b8789a7309606b02532be8d51f81552455657aa0f2944362",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/240001",
         "https://www.yamajitsu.co.jp/products/240002"
       ],
-      "note": ""
+      "note": "サイズ・重量1450/1650g・容量23/33L・耐荷重3/4kgを公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "zojirushi-eq-sb22-vs-eq-ah22",
@@ -352,13 +352,13 @@
     },
     {
       "articleId": "yamazaki-ofuda-stand-rin-vs-single",
-      "checkedAt": "2026-08-25",
+      "checkedAt": "2026-09-09",
       "claimsFingerprint": "sha256:c7bdfac53b42c55091d61fe1cc1f135d9a27f97290a2e8426945c58665363b18",
       "officialUrls": [
         "https://www.yamajitsu.co.jp/products/242255",
         "https://www.yamajitsu.co.jp/products/242256"
       ],
-      "note": ""
+      "note": "サイズ・重量250/95g・内寸・材質・生産国を公式ページで確認（2026-09-09再確認、変更なし）"
     },
     {
       "articleId": "yamazaki-dishwasher-rack-241925-vs-241926",

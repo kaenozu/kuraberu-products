@@ -15,8 +15,8 @@ export const yamazakiOfudaStandArticle = defineArticleMetadata({
   summary:
     "神札スタンド リンとリン シングルを、山崎実業公式の商品ページで確認できるサイズ・重量・内寸・材質に分けて比較します。",
   publishedAt: "2026-08-25",
-  modifiedAt: "2026-09-01",
-  productInfoCheckedAt: "2026-08-25",
+  modifiedAt: "2026-09-09",
+  productInfoCheckedAt: "2026-09-09",
   purchaseLinksCheckedAt: "2026-09-01",
   purchaseLinkStatus: "verified",
   imagePath: "/products/yamazaki-ofuda-stand-rin.jpg",
