@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（115本）
+## 現在の公開済み（116本）
 
 | slug                                              | 状態                           |
 | ------------------------------------------------- | ------------------------------ |
@@ -127,6 +127,7 @@
 | `iris-fk-c5-vs-panasonic-fd-f06x2`                | 公開済み                       |
 | `juki-hzl-f400jp-vs-brother-ps202`                | 公開済み                       |
 | `omron-mc-681-vs-terumo-c205`                     | 公開済み                       |
+| `fitbit-charge-6-vs-xiaomi-smart-band-9`          | 公開済み                       |
 | `panasonic-be-fd633-vs-bridgestone-a6xc41`        | 公開済み                       |
 | `dainichi-efh-1219d-vs-panasonic-ds-fwx1200`      | 公開済み                       |
 
