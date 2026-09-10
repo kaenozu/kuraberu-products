@@ -64,6 +64,7 @@ import { panasonicEwDp57VsPhilipsHx9911Seed } from "./panasonic-ew-dp57-vs-phili
 import { casioPxS1100VsYamahaP225Seed } from "./casio-px-s1100-vs-yamaha-p-225";
 import { omronHem7281tVsTerumoP2020Seed } from "./omron-hem-7281t-vs-terumo-p2020";
 import { jukiHzlF400jpVsBrotherPs202Seed } from "./juki-hzl-f400jp-vs-brother-ps202";
+import { omronMc681VsTerumoC205Seed } from "./omron-mc-681-vs-terumo-c205";
 import { panasonicBeFd633VsBridgestoneA6xc41Seed } from "./panasonic-be-fd633-vs-bridgestone-a6xc41";
 import { irisFkC5VsPanasonicFdF06x2Seed } from "./iris-fk-c5-vs-panasonic-fd-f06x2";
 
@@ -131,4 +132,5 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   irisFkC5VsPanasonicFdF06x2Seed,
   jukiHzlF400jpVsBrotherPs202Seed,
   panasonicBeFd633VsBridgestoneA6xc41Seed,
+  omronMc681VsTerumoC205Seed,
 ];
