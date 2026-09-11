@@ -53,6 +53,7 @@ export { yamazakiOfudaStandArticle } from "./yamazaki-ofuda-stand-rin-vs-single"
 export { yamazakiDishwasherRackArticle } from "./yamazaki-dishwasher-rack-241925-vs-241926";
 export { yamazakiMagnetKitchenShelfArticle } from "./yamazaki-magnet-kitchen-shelf-240005-vs-241830";
 export { yamazakiRainmatF216VsLonstepArticle } from "./yamazaki-rainmat-f216-vs-lonstep";
+export { canonPixusTs8830VsEpsonEp887aArticle } from "./canon-pixus-ts8830-vs-epson-ep-887a";
 export { zojirushiElectricKettleArticle } from "./zojirushi-ck-pa08-vs-ck-dc08";
 export { tefalGarmentSteamerArticle } from "./tefal-dv4030j0-vs-dv8070j0";
 export { kingjimTepraArticle } from "./kingjim-tepra-sr-r2500p-vs-sr-mk1";
@@ -108,6 +109,7 @@ import { yamazakiOfudaStandArticle } from "./yamazaki-ofuda-stand-rin-vs-single"
 import { yamazakiDishwasherRackArticle } from "./yamazaki-dishwasher-rack-241925-vs-241926";
 import { yamazakiMagnetKitchenShelfArticle } from "./yamazaki-magnet-kitchen-shelf-240005-vs-241830";
 import { yamazakiRainmatF216VsLonstepArticle } from "./yamazaki-rainmat-f216-vs-lonstep";
+import { canonPixusTs8830VsEpsonEp887aArticle } from "./canon-pixus-ts8830-vs-epson-ep-887a";
 import { zojirushiElectricKettleArticle } from "./zojirushi-ck-pa08-vs-ck-dc08";
 import { tefalGarmentSteamerArticle } from "./tefal-dv4030j0-vs-dv8070j0";
 import { kingjimTepraArticle } from "./kingjim-tepra-sr-r2500p-vs-sr-mk1";
@@ -182,6 +184,7 @@ export const articleMetadata: readonly ArticleMetadata[] = Object.freeze([
   yamazakiDishwasherRackArticle,
   yamazakiMagnetKitchenShelfArticle,
   yamazakiRainmatF216VsLonstepArticle,
+  canonPixusTs8830VsEpsonEp887aArticle,
   panasonicNeMs4cVsNeBs5cArticle,
   ...additionalCommercialArticles,
 ]);
