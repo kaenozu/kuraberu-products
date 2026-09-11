@@ -37,8 +37,11 @@ export const ARTICLES_EXCLUDE = new Set([
   "types.ts",
 ]);
 
+// export文がprettierで行分割されても（`defineArticleMetadata(` と `{` の
+// 間に改行が入っても）記事ブロックを検出できる。#786 では長いexport名が
+// 折り返され、単一行前提の正規表現から漏れてspec coverageが失敗した。
 const ARTICLE_BLOCK =
-  /export const \w+\s*=\s*defineArticleMetadata\(\{([\s\S]*?)\n\}\);/g;
+  /export const \w+\s*=\s*defineArticleMetadata\(\s*\{([\s\S]*?)\n\}\s*\);/g;
 
 function stringField(body, key) {
   const match = body.match(new RegExp(`\\b${key}:\\s*"((?:[^"\\\\]|\\\\.)*)"`));

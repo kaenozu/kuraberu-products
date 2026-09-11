@@ -54,6 +54,19 @@ describe("parseArticles", () => {
     });
   });
 
+  it("parses an export split across lines by prettier (#786)", () => {
+    const wrapped = fixture.replace(
+      "export const alphaArticle = defineArticleMetadata({",
+      "export const alphaArticleWithAnExtremelyLongExportName = defineArticleMetadata(\n  {",
+    );
+    const articles = parseArticles(wrapped);
+    expect(articles).toHaveLength(1);
+    expect(articles[0]).toMatchObject({
+      id: "alpha-vs-beta",
+      path: "/articles/alpha-vs-beta/",
+    });
+  });
+
   it("parses every article in the real articles", () => {
     const dir = "src/content/articles";
     const exclude = new Set(["index.ts", "commercial.ts", "types.ts"]);
