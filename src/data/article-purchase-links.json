@@ -590,5 +590,13 @@
   "yamazaki-rainmat-f216-vs-lonstep:right": {
     "name": "山崎産業 ロンステップマット（#12）",
     "purchaseUrl": "https://item.rakuten.co.jp/hrc/4903180304356/"
+  },
+  "canon-pixus-ts8830-vs-epson-ep-887a:left": {
+    "name": "キヤノン PIXUS TS8830",
+    "purchaseUrl": "https://item.rakuten.co.jp/biccamera/4549292237412/"
+  },
+  "canon-pixus-ts8830-vs-epson-ep-887a:right": {
+    "name": "エプソン カラリオ EP-887A",
+    "purchaseUrl": "https://item.rakuten.co.jp/epson/ep-887a/"
   }
 }

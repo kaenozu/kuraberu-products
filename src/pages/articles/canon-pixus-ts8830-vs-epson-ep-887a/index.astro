@@ -1,0 +1,54 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { canonPixusTs8830VsEpsonEp887aArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://personal.canon.jp/product/printer/pixus/lineup/ts8830'
+const rightOfficial = 'https://www.epson.jp/products/colorio/ep887a/'
+const leftImage = '/products/canon-pixus-ts8830.jpg'
+const rightImage = '/products/epson-ep-887a.jpg'
+const leftAudience = '写真の速さと6色の高画質を優先する人向け'
+const rightAudience = 'コンパクトさとスマホ連携の快適さを優先する人向け'
+
+const faqEntries = [
+  {question: 'PIXUS TS8830とカラリオ EP-887Aの違いは？', answer: '公式仕様では、TS8830は6色ハイブリッドインクでL判フチなし約10秒、EP-887Aは染料6色でL判フチなし約13秒です。どちらも4.3型タッチパネルと自動両面印刷に対応しています。'},
+  {question: '印刷コストが安いのはどちら？', answer: '公式の測定条件では、L判フチなし写真のインク・用紙合計コストはTS8830が約22.9円（大容量）、EP-887Aが約26.2円（増量）です。測定原稿や条件の詳細は各公式ページを確認してください。'},
+  {question: 'インクの方式は違いますか？', answer: 'TS8830は顔料ブラックを含む6色ハイブリッド（独立）、EP-887Aは染料6色（独立、カニシリーズ）です。文書のシャープさと写真の発色のバランスが違います。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: 'インク方式', left: '6色ハイブリッド（独立）', right: '染料6色（独立）', highlight: null},
+  {label: 'L判フチなし速度', left: '約10秒', right: '約13秒', highlight: 'left', highlightNote: '約3秒速い'},
+  {label: 'L判コスト（インク・用紙）', left: '約22.9円（大容量）', right: '約26.2円（増量）', highlight: 'left', highlightNote: '約3.3円安い'},
+  {label: 'タッチパネル', left: '4.3型タッチ', right: '4.3型ワイドタッチ', highlight: null},
+  {label: '給紙', left: '2WAY（背面＋前面）', right: '前面2段＋背面手差し', highlight: null},
+  {label: 'ディスクレーベル', left: '対応', right: '対応', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'キヤノン', line: 'PIXUS TS8830', tagline: '速さと6色高画質なら', image: leftImage, imageAlt: 'キヤノン PIXUS TS8830', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['canon-pixus-ts8830-vs-epson-ep-887a:left'].purchaseUrl}}
+  right={{brand: 'エプソン', line: 'カラリオ EP-887A', tagline: '快適なスマホ連携なら', image: rightImage, imageAlt: 'エプソン カラリオ EP-887A', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['canon-pixus-ts8830-vs-epson-ep-887a:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'キヤノン PIXUS TS8830 とエプソン カラリオ EP-887A を、メーカー公式ページで確認できるインク方式・印刷速度・印刷コスト・パネルの範囲で比較します。'}
+  summaryParagraph={'TS8830はL判約10秒・約22.9円と速度とコストで先行し、EP-887Aはコンパクト設計とスマホ連携の快適さが特長です。写真と文書のどちらを多く印刷するかで選んでください。'}
+  officialDescription={'仕様の根拠は、キヤノン公式とセイコーエプソン公式の商品ページで2026年9月11日に確認しました。価格・在庫は購入前に販売先で確認してください。'}
+  officialLinks={[
+    {label: 'PIXUS TS8830 公式商品ページ', href: leftOfficial},
+    {label: 'カラリオ EP-887A 公式商品ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'PIXUS TS8830 EP-887A 比較'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'キヤノン PIXUS TS8830'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'エプソン カラリオ EP-887A'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: 'キヤノン公式：PIXUS TS8830', href: leftOfficial, checkedAt: '2026-09-11'},
+    {label: 'セイコーエプソン公式：カラリオ EP-887A', href: rightOfficial, checkedAt: '2026-09-11'},
+  ]}
+/>

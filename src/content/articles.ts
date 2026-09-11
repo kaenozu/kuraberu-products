@@ -21,6 +21,7 @@ export {
   babybjornArticle,
   babybjornBouncerArticle,
   babybjornOnekaiArticle,
+  canonPixusTs8830VsEpsonEp887aArticle,
   combiTheSArticle,
   cradleArticle,
   kingjimTepraArticle,

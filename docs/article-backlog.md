@@ -140,6 +140,15 @@
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
 
+### キヤノン PIXUS TS8830 vs エプソン カラリオ EP-887A（実装中）
+
+- 記事slug: `canon-pixus-ts8830-vs-epson-ep-887a`
+- 状態: 本PRで実装中。公式個別ページ・比較軸・画像・楽天確認済み詳細2件を確認済み。
+- 比較軸: インク方式、L判速度、L判コスト、パネル、給紙、ディスクレーベル。
+- 公式ページ: [PIXUS TS8830](https://personal.canon.jp/product/printer/pixus/lineup/ts8830) / [カラリオ EP-887A](https://www.epson.jp/products/colorio/ep887a/)
+- 購入導線: direct実装（biccamera/4549292237412、epson/ep-887a）。
+- 調査メモ: `C:\Users\neoen\kuraberu-notes\printer-ts8830-vs-ep887a-candidate-2026-09-11.md`
+
 ## 追加確認・保留
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE

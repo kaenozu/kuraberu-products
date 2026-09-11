@@ -409,6 +409,16 @@
         "https://product.yamazaki-sangyo.co.jp/product/F-216-BR"
       ],
       "note": "使用サイズ・厚み・材質・重量を山崎産業公式商品ページで確認（2026-09-11再確認、HTTP 200）"
+    },
+    {
+      "articleId": "canon-pixus-ts8830-vs-epson-ep-887a",
+      "checkedAt": "2026-09-11",
+      "claimsFingerprint": "sha256:784720881b90bd2a60853f5c18f3c12e9ac83c68cf688acceed6b5509d392766",
+      "officialUrls": [
+        "https://personal.canon.jp/product/printer/pixus/lineup/ts8830",
+        "https://www.epson.jp/products/colorio/ep887a/"
+      ],
+      "note": "インク方式・L判速度・L判コスト・パネル・給紙を両メーカー公式商品ページで確認（2026-09-11再確認、HTTP 200）"
     }
   ]
 }
