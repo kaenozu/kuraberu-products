@@ -598,5 +598,13 @@
   "canon-pixus-ts8830-vs-epson-ep-887a:right": {
     "name": "エプソン カラリオ EP-887A",
     "purchaseUrl": "https://item.rakuten.co.jp/epson/ep-887a/"
+  },
+  "gopro-hero13-black-vs-dji-osmo-action-5-pro:left": {
+    "name": "GoPro HERO13 Black CHDHX-131",
+    "purchaseUrl": "https://item.rakuten.co.jp/biccamera/4595319442147/"
+  },
+  "gopro-hero13-black-vs-dji-osmo-action-5-pro:right": {
+    "name": "DJI Osmo Action 5 Pro Standard Combo",
+    "purchaseUrl": "https://item.rakuten.co.jp/dji-shop/6941565981066c/"
   }
 }

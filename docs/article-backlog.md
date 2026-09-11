@@ -141,6 +141,15 @@
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
 
+### GoPro HERO13 Black vs DJI Osmo Action 5 Pro（実装中）
+
+- 記事slug: `gopro-hero13-black-vs-dji-osmo-action-5-pro`
+- 状態: 本PRで実装中。公式商品・仕様ページ・画像・楽天確認済み詳細2件を確認済み。
+- 比較軸: 動画最大解像度、スロー、電池持ち、防水、手ブレ補正、写真画素数。
+- 公式ページ: [HERO13 Black](https://gopro.com/ja/jp/shop/cameras/buy/hero13black/CHDHX-131-master.html) / [Osmo Action 5 Pro](https://www.dji.com/jp/mobile/osmo-action-5-pro)
+- 購入導線: direct実装（biccamera/4595319442147、dji-shop/6941565981066c）。
+- 調査メモ: `C:\Users\neoen\kuraberu-notes\actioncam-hero13-vs-action5pro-candidate-2026-09-11.md`
+
 ## 追加確認・保留
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE

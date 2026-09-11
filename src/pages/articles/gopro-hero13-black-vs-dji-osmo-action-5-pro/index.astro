@@ -1,0 +1,54 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { goproHero13BlackVsDjiOsmoAction5ProArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://gopro.com/ja/jp/shop/cameras/buy/hero13black/CHDHX-131-master.html'
+const rightOfficial = 'https://www.dji.com/jp/mobile/osmo-action-5-pro'
+const leftImage = '/products/gopro-hero13-black.jpg'
+const rightImage = '/products/dji-osmo-action-5-pro.jpg'
+const leftAudience = '最高解像度とスローモーションの強さを優先する人向け'
+const rightAudience = '電池持ちと暗所・夜景の強さを優先する人向け'
+
+const faqEntries = [
+  {question: 'HERO13 BlackとOsmo Action 5 Proの違いは？', answer: '公式仕様では、HERO13 Blackは5.3K60・720p 400fpsのバーストスローモーション、Osmo Action 5 Proは1/1.3インチセンサーと最大4時間の電池持ちが特長です。どちらも4K/120fpsと10-bit記録に対応しています。'},
+  {question: '電池持ちが長いのはどちら？', answer: '公式発表では、HERO13 Blackが1080p30で2.5時間超（Enduro 1900mAh）、Osmo Action 5 Proが最大4時間（1950mAh）です。撮影条件で変わるため目安としてください。'},
+  {question: '防水性能は？', answer: 'HERO13 Blackは水深10mまでの防水、Osmo Action 5 ProはIP68です。温泉や腐食性液体での使用は避けるよう案内されています。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '動画最大解像度', left: '5.3K60', right: '4K/120fps', highlight: 'left', highlightNote: '解像度が高い'},
+  {label: 'スローモーション', left: '720p 400fps（バースト）', right: '4K 100/120fps', highlight: null},
+  {label: '電池持ち（公式）', left: '1080p30で2.5時間超', right: '最大4時間', highlight: 'right', highlightNote: '長時間に強い'},
+  {label: '防水', left: '水深10m', right: 'IP68', highlight: null},
+  {label: '手ブレ補正', left: 'HyperSmooth 6.0', right: 'HorizonSteady対応', highlight: null},
+  {label: '写真', left: '24.7MP切出', right: '40MP', highlight: 'right', highlightNote: '画素数が高い'},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'GoPro', line: 'HERO13 Black', tagline: '解像度とスローなら', image: leftImage, imageAlt: 'GoPro HERO13 Black', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['gopro-hero13-black-vs-dji-osmo-action-5-pro:left'].purchaseUrl}}
+  right={{brand: 'DJI', line: 'Osmo Action 5 Pro', tagline: '電池持ちと暗所なら', image: rightImage, imageAlt: 'DJI Osmo Action 5 Pro', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['gopro-hero13-black-vs-dji-osmo-action-5-pro:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'GoPro HERO13 Black と DJI Osmo Action 5 Pro を、メーカー公式ページで確認できる動画性能・電池持ち・防水・手ブレ補正の範囲で比較します。'}
+  summaryParagraph={'HERO13 Blackは5.3Kと400fpsスローが強み、Osmo Action 5 Proは最大4時間の電池持ちと1/1.3インチセンサーが強みです。撮りたいシーンと撮影時間で選んでください。'}
+  officialDescription={'仕様の根拠は、GoPro公式とDJI公式の商品・仕様ページで2026年9月11日に確認しました。価格・在庫は購入前に販売先で確認してください。'}
+  officialLinks={[
+    {label: 'HERO13 Black 公式商品ページ', href: leftOfficial},
+    {label: 'Osmo Action 5 Pro 公式商品ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'HERO13 Black Osmo Action 5 Pro 比較'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'GoPro HERO13 Black CHDHX-131'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'DJI Osmo Action 5 Pro Standard Combo'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: 'GoPro公式：HERO13 Black', href: leftOfficial, checkedAt: '2026-09-11'},
+    {label: 'DJI公式：Osmo Action 5 Pro', href: rightOfficial, checkedAt: '2026-09-11'},
+  ]}
+/>
