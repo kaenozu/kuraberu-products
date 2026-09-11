@@ -1,0 +1,53 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { yamazakiMagnetKitchenShelfArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://www.yamajitsu.co.jp/products/240005'
+const rightOfficial = 'https://www.yamajitsu.co.jp/products/241830'
+const leftImage = '/products/yamazaki-magnet-kitchen-shelf-s.jpg'
+const rightImage = '/products/yamazaki-magnet-kitchen-shelf-wide.jpg'
+const leftAudience = '設置幅を抑え、調味料などを置く棚を作りたい人向け'
+const rightAudience = '幅のある棚と大きめの収納面を優先したい人向け'
+
+const faqEntries = [
+  {question: 'マグネットキッチン棚 Sとワイドの違いは？', answer: '公式仕様では、Sは幅30×奥行7.2×高さ6cm、ワイドは幅50×奥行14×高さ12cmです。耐荷重はSが3kg、ワイドが4kgです。'},
+  {question: 'どちらが軽い？', answer: '商品重量はSが405g、ワイドが1800gです。公式の重量を確認し、設置場所と載せたいものに合わせて選んでください。'},
+  {question: 'どこに取り付けられる？', answer: '公式ページでは、マグネットがつく凹凸のない平らな面やスチール面で使用できると案内されています。設置前に取り付け面を確認してください。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '商品サイズ（幅×奥行×高さ）', left: '30×7.2×6cm', right: '50×14×12cm', highlight: 'left', highlightNote: '設置幅を抑えやすい'},
+  {label: '商品重量', left: '405g', right: '1800g', highlight: 'left', highlightNote: '約1395g軽い'},
+  {label: '耐荷重', left: '3kg', right: '4kg', highlight: 'right', highlightNote: '1kg大きい'},
+  {label: '内寸', left: '棚板 W29.3×D6.2cm', right: '棚内寸 W50×D13cm', highlight: null},
+  {label: '設置できる面', left: 'マグネットがつく凹凸のない平らな面・スチール面', right: 'マグネットがつく凹凸のない平らな面・スチール面', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: '山崎実業 tower', line: 'マグネットキッチン棚 タワー S（240005）', tagline: '設置幅を抑えるなら', image: leftImage, imageAlt: '山崎実業 tower マグネットキッチン棚 タワー S', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['yamazaki-magnet-kitchen-shelf-240005-vs-241830:left'].purchaseUrl}}
+  right={{brand: '山崎実業 tower', line: 'マグネットキッチン棚 タワー ワイド（241830）', tagline: '収納面を広く取るなら', image: rightImage, imageAlt: '山崎実業 tower マグネットキッチン棚 タワー ワイド', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['yamazaki-magnet-kitchen-shelf-240005-vs-241830:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'山崎実業のマグネットキッチン棚 タワー Sとワイドを、設置幅・棚の大きさ・重量・耐荷重で比較します。公式ページに記載された仕様をもとに、置きたい場所と収納量のどちらを先に確認するか整理します。'}
+  summaryParagraph={'Sは幅と重量を抑えやすく、ワイドは幅50cm・耐荷重4kgの棚を作れます。取り付け面の条件を確認したうえで、置きたいものと設置場所に合うサイズを選んでください。'}
+  officialDescription={'仕様の根拠は、山崎実業公式の商品ページ（240005・241830）で2026年9月11日に確認しました。価格・在庫・取り付け面の状態は購入前に販売先と設置場所で再確認してください。'}
+  officialLinks={[
+    {label: 'マグネットキッチン棚 タワー S 公式商品ページ', href: leftOfficial},
+    {label: 'マグネットキッチン棚 タワー ワイド 公式商品ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'山崎実業 マグネットキッチン棚 240005 241830'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'マグネットキッチン棚 タワー S（240005）'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'マグネットキッチン棚 タワー ワイド（241830）'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: '山崎実業公式：マグネットキッチン棚 タワー S', href: leftOfficial, checkedAt: '2026-09-11'},
+    {label: '山崎実業公式：マグネットキッチン棚 タワー ワイド', href: rightOfficial, checkedAt: '2026-09-11'},
+  ]}
+/>
