@@ -19,7 +19,7 @@ export const yamazakiRainmatF216VsLonstepArticle = defineArticleMetadata({
   modifiedAt: "2026-09-11",
   productInfoCheckedAt: "2026-09-11",
   purchaseLinksCheckedAt: "2026-09-11",
-  purchaseLinkStatus: "verified",
+  purchaseLinkStatus: "unverified",
   imagePath: "/products/yamazaki-rainmat-f216.jpg",
   changeLog: [
     {
@@ -29,7 +29,7 @@ export const yamazakiRainmatF216VsLonstepArticle = defineArticleMetadata({
     {
       date: "2026-09-11",
       summary:
-        "公式商品ページ2件と購入リンク2件の到達性を再確認し、最新mainへ移植して公開。",
+        "公式商品ページ2件の到達性を再確認し、最新mainへ移植。購入リンクは検索ページに遷移する短縮URLだったため fail-closed で未設定とし、確認済み商品詳細ページの用意後に付与する。",
     },
   ],
 });
