@@ -391,6 +391,16 @@
       "note": "庫内容量26L・庫内寸法・質量14.2/14.7kg・グリル方式・自動メニュー51/55・外形寸法を公式仕様ページで確認（2026-09-09再確認、変更なし）"
     },
     {
+      "articleId": "yamazaki-magnet-kitchen-shelf-240005-vs-241830",
+      "checkedAt": "2026-09-11",
+      "claimsFingerprint": "sha256:e7fba08777c9559c86d94988b08d298a16aaf92496d80374f8b9c5ea195e9b63",
+      "officialUrls": [
+        "https://www.yamajitsu.co.jp/products/240005",
+        "https://www.yamajitsu.co.jp/products/241830"
+      ],
+      "note": "商品サイズ・内寸・重量・耐荷重を山崎実業公式商品ページで確認（2026-09-11再確認、HTTP 200）"
+    },
+    {
       "articleId": "yamazaki-rainmat-f216-vs-lonstep",
       "checkedAt": "2026-09-11",
       "claimsFingerprint": "sha256:c2e3b7d14f1d28f91ac90c3cceec53fe9e2abe022ab723a53411a52094f481b8",
