@@ -419,6 +419,16 @@
         "https://www.epson.jp/products/colorio/ep887a/"
       ],
       "note": "インク方式・L判速度・L判コスト・パネル・給紙を両メーカー公式商品ページで確認（2026-09-11再確認、HTTP 200）"
+    },
+    {
+      "articleId": "gopro-hero13-black-vs-dji-osmo-action-5-pro",
+      "checkedAt": "2026-09-11",
+      "claimsFingerprint": "sha256:a5a6bf24127cc5db66f027c1305ddc3305ef10714075be045d228bbc78db1870",
+      "officialUrls": [
+        "https://gopro.com/ja/jp/shop/cameras/buy/hero13black/CHDHX-131-master.html",
+        "https://www.dji.com/jp/mobile/osmo-action-5-pro"
+      ],
+      "note": "動画最大解像度・電池持ち・防水・手ブレ補正・写真画素数を両メーカー公式ページで確認（2026-09-11再確認、HTTP 200）"
     }
   ]
 }
