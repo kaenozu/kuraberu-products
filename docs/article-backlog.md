@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（117本）
+## 現在の公開済み（113本）
 
 | slug                                              | 状態                           |
 | ------------------------------------------------- | ------------------------------ |
@@ -71,13 +71,9 @@
 | `logicool-zone-vibe-100-vs-zone-300`              | 公開済み                       |
 | `roborock-qrevo-curv-vs-dreame-x50`               | 公開済み                       |
 | `makita-cl107-vs-cl286`                           | 公開済み                       |
-| `iris-airfryer-fvx-d3-vs-tefal-ey201`             | 公開済み                       |
 | `recolte-automatic-cooker-vs-panasonic-nf-pc400`  | 公開済み                       |
-| `brita-marella-vs-zero-water`                     | 公開済み                       |
-| `tiger-jpv-l100-vs-zojirushi-nw-fc10`             | 公開済み                       |
 | `sharp-kc-s50-vs-panasonic-f-vxw55`               | 公開済み                       |
 | `anker-soundcore-liberty-4-nc-vs-sony-wf-c710n`   | 公開済み                       |
-| `xiaomi-redmi-watch-5-vs-huawei-band-10`          | 公開済み                       |
 | `panasonic-eh-na9m-vs-refa-beautech`              | 公開済み                       |
 | `dyson-v12-vs-micro-plus`                         | 公開済み                       |
 | `braun-series9pro-vs-series7`                     | 公開済み                       |
