@@ -54,6 +54,8 @@ import {
   yamazakiLaundryWireBasketArticle,
   yamazakiOfudaStandArticle,
   yamazakiDishwasherRackArticle,
+  yamazakiMagnetKitchenShelfArticle,
+  yamazakiRainmatF216VsLonstepArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
 import { site } from "../src/config/site";
@@ -88,7 +90,7 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(86);
+    expect(publicArticleMetadata).toHaveLength(101);
     const newlyPublishedIds = [
       "yamazaki-dishwasher-rack-241925-vs-241926",
       "panasonic-mc-nx810km-vs-mc-nx700k",
@@ -117,6 +119,19 @@ describe("article metadata", () => {
       "zojirushi-nx-ab10-vs-tiger-jrt-a100",
       "zojirushi-eq-ja22-vs-eq-fa22",
       "dainichi-hd-rxt525-vs-panasonic-fe-kxu07",
+      "tefal-cy8768jp-vs-panasonic-sr-mp300",
+      "dainichi-efh-1219d-vs-panasonic-ds-fwx1200",
+      "panasonic-db-bm1l-vs-db-rm3m",
+      "tanita-bc-772-vs-omron-hbf-702t",
+      "panasonic-ew-dp57-vs-philips-hx9911",
+      "casio-px-s1100-vs-yamaha-p-225",
+      "omron-hem-7281t-vs-terumo-p2020",
+      "iris-fk-c5-vs-panasonic-fd-f06x2",
+      "juki-hzl-f400jp-vs-brother-ps202",
+      "panasonic-be-fd633-vs-bridgestone-a6xc41",
+      "omron-mc-681-vs-terumo-c205",
+      "fitbit-charge-6-vs-xiaomi-smart-band-9",
+      "zojirushi-cv-gb22-vs-tiger-pim-g220",
     ];
     for (const id of newlyPublishedIds) {
       expect(publicArticleMetadata.some((article) => article.id === id)).toBe(
@@ -224,6 +239,8 @@ describe("article metadata", () => {
       yamazakiLaundryWireBasketArticle,
       yamazakiOfudaStandArticle,
       yamazakiDishwasherRackArticle,
+      yamazakiMagnetKitchenShelfArticle,
+      yamazakiRainmatF216VsLonstepArticle,
       panasonicNeMs4cVsNeBs5cArticle,
       ...additionalCommercialArticles,
     ]);
@@ -254,7 +271,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(98);
+    ).toHaveLength(113);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);

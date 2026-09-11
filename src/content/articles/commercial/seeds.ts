@@ -56,6 +56,19 @@ import { delonghiEcam22112bVsEcam25023sbSeed } from "./delonghi-ecam22112b-vs-ec
 import { zojirushiNxAb10VsTigerJrtA100Seed } from "./zojirushi-nx-ab10-vs-tiger-jrt-a100";
 import { zojirushiEqJa22VsEqFa22Seed } from "./zojirushi-eq-ja22-vs-eq-fa22";
 import { dainichiHdRxt525VsPanasonicFeKxu07Seed } from "./dainichi-hd-rxt525-vs-panasonic-fe-kxu07";
+import { tefalCy8768jpVsPanasonicSrMp300Seed } from "./tefal-cy8768jp-vs-panasonic-sr-mp300";
+import { dainichiEfh1219dVsPanasonicDsFwx1200Seed } from "./dainichi-efh-1219d-vs-panasonic-ds-fwx1200";
+import { panasonicDbBm1lVsDbRm3mSeed } from "./panasonic-db-bm1l-vs-db-rm3m";
+import { tanitaBc772VsOmronHbf702tSeed } from "./tanita-bc-772-vs-omron-hbf-702t";
+import { panasonicEwDp57VsPhilipsHx9911Seed } from "./panasonic-ew-dp57-vs-philips-hx9911";
+import { casioPxS1100VsYamahaP225Seed } from "./casio-px-s1100-vs-yamaha-p-225";
+import { omronHem7281tVsTerumoP2020Seed } from "./omron-hem-7281t-vs-terumo-p2020";
+import { jukiHzlF400jpVsBrotherPs202Seed } from "./juki-hzl-f400jp-vs-brother-ps202";
+import { omronMc681VsTerumoC205Seed } from "./omron-mc-681-vs-terumo-c205";
+import { fitbitCharge6VsXiaomiSmartBand9Seed } from "./fitbit-charge-6-vs-xiaomi-smart-band-9";
+import { zojirushiCvGb22VsTigerPimG220Seed } from "./zojirushi-cv-gb22-vs-tiger-pim-g220";
+import { panasonicBeFd633VsBridgestoneA6xc41Seed } from "./panasonic-be-fd633-vs-bridgestone-a6xc41";
+import { irisFkC5VsPanasonicFdF06x2Seed } from "./iris-fk-c5-vs-panasonic-fd-f06x2";
 
 export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   roborockQrevoCurvVsDreameX50Seed,
@@ -111,4 +124,17 @@ export const commercialArticleSeeds: readonly CommercialArticleSeed[] = [
   zojirushiNxAb10VsTigerJrtA100Seed,
   zojirushiEqJa22VsEqFa22Seed,
   dainichiHdRxt525VsPanasonicFeKxu07Seed,
+  tefalCy8768jpVsPanasonicSrMp300Seed,
+  dainichiEfh1219dVsPanasonicDsFwx1200Seed,
+  panasonicDbBm1lVsDbRm3mSeed,
+  tanitaBc772VsOmronHbf702tSeed,
+  panasonicEwDp57VsPhilipsHx9911Seed,
+  casioPxS1100VsYamahaP225Seed,
+  omronHem7281tVsTerumoP2020Seed,
+  irisFkC5VsPanasonicFdF06x2Seed,
+  jukiHzlF400jpVsBrotherPs202Seed,
+  panasonicBeFd633VsBridgestoneA6xc41Seed,
+  omronMc681VsTerumoC205Seed,
+  fitbitCharge6VsXiaomiSmartBand9Seed,
+  zojirushiCvGb22VsTigerPimG220Seed,
 ];

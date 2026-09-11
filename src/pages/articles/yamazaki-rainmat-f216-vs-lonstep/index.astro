@@ -1,0 +1,52 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { yamazakiRainmatF216VsLonstepArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://product.yamazaki-sangyo.co.jp/product/F-216-BR'
+const rightOfficial = 'https://product.yamazaki-sangyo.co.jp/product/4903180304356'
+const leftImage = '/products/yamazaki-rainmat-f216.jpg'
+const rightImage = '/products/yamazaki-lonstep-f1.jpg'
+const leftAudience = '雨天時の吸水性と大きなサイズへの対応を優先する人向け'
+const rightAudience = '標準サイズの防炎マットを選びたい人向け'
+
+const faqEntries = [
+  { question: '雨天用超吸水マットとロンステップマットの違いは？', answer: '山崎産業公式ページで確認できる主な違いは、F-216が雨天用超吸水マットで、使用サイズを1200mm×10mまで対応できることです。ロンステップマット（#12）は900×1200mmで、防炎適合品と記載されています。' },
+  { question: '厚みが薄いのはどちら？', answer: '公式表記では、F-216の厚みは12mm、ロンステップマット（#12）は9mmです。' },
+  { question: '材質は同じですか？', answer: 'F-216はパイルがポリエステル、バッキングがPVC。ロンステップマット（#12）はパイルがナイロン、バッキングがPVCです。' },
+  { question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。' },
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  { label: '商品名', left: '雨天用超吸水マット F-216-BR', right: 'ロンステップマット（#12）', highlight: null },
+  { label: '使用サイズ', left: '1200mm×10mまで', right: '900×1200mm', highlight: 'left', highlightNote: '大きなサイズに対応' },
+  { label: '厚み', left: '12mm', right: '9mm', highlight: 'right', highlightNote: '3mm薄い' },
+  { label: '材質', left: 'パイル：ポリエステル／バッキング：PVC', right: 'パイル：ナイロン／バッキング：PVC', highlight: null },
+  { label: '重量', left: '約4kg/㎡', right: '約3.8kg', highlight: null },
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{ brand: '山崎産業', line: '雨天用超吸水マット F-216-BR', tagline: '吸水性・大きなサイズなら', image: leftImage, imageAlt: '山崎産業 雨天用超吸水マット F-216-BR', imageWidth: 969, imageHeight: 701, officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['yamazaki-rainmat-f216-vs-lonstep:left'].purchaseUrl }}
+  right={{ brand: '山崎産業', line: 'ロンステップマット（#12）', tagline: '薄さ・防炎適合品なら', image: rightImage, imageAlt: '山崎産業 ロンステップマット #12', imageWidth: 2520, imageHeight: 1995, officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['yamazaki-rainmat-f216-vs-lonstep:right'].purchaseUrl }}
+  keyDiffRows={keyDiffRows}
+  lead={'山崎産業の雨天用超吸水マット F-216 とロンステップマット（#12）を、メーカー公式ページで確認できるサイズ・厚み・材質・重量の範囲で比較します。'}
+  officialDescription={'仕様の根拠は、山崎産業公式の商品ページで2026年9月11日に確認しました。価格・在庫・用途への適合は販売先と設置条件を確認してください。'}
+  officialLinks={[
+    { label: 'F-216-BR 公式商品ページ', href: leftOfficial },
+    { label: 'ロンステップマット（#12）公式商品ページ', href: rightOfficial },
+  ]}
+  socialProofQuery={'山崎産業 F-216-BR ロンステップマット #12'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'山崎産業 雨天用超吸水マット F-216-BR'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'山崎産業 ロンステップマット（#12）'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    { label: '山崎産業公式：雨天用超吸水マット F-216-BR', href: leftOfficial, checkedAt: '2026-09-11' },
+    { label: '山崎産業公式：ロンステップマット（#12）', href: rightOfficial, checkedAt: '2026-09-11' },
+  ]}
+/>

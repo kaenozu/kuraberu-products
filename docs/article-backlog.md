@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（104本）
+## 現在の公開済み（115本）
 
 | slug                                              | 状態                           |
 | ------------------------------------------------- | ------------------------------ |
@@ -71,13 +71,9 @@
 | `logicool-zone-vibe-100-vs-zone-300`              | 公開済み                       |
 | `roborock-qrevo-curv-vs-dreame-x50`               | 公開済み                       |
 | `makita-cl107-vs-cl286`                           | 公開済み                       |
-| `iris-airfryer-fvx-d3-vs-tefal-ey201`             | 公開済み                       |
 | `recolte-automatic-cooker-vs-panasonic-nf-pc400`  | 公開済み                       |
-| `brita-marella-vs-zero-water`                     | 公開済み                       |
-| `tiger-jpv-l100-vs-zojirushi-nw-fc10`             | 公開済み                       |
 | `sharp-kc-s50-vs-panasonic-f-vxw55`               | 公開済み                       |
 | `anker-soundcore-liberty-4-nc-vs-sony-wf-c710n`   | 公開済み                       |
-| `xiaomi-redmi-watch-5-vs-huawei-band-10`          | 公開済み                       |
 | `panasonic-eh-na9m-vs-refa-beautech`              | 公開済み                       |
 | `dyson-v12-vs-micro-plus`                         | 公開済み                       |
 | `braun-series9pro-vs-series7`                     | 公開済み                       |
@@ -118,6 +114,21 @@
 | `yamazaki-ofuda-stand-rin-vs-single`              | 公開済み                       |
 | `yamazaki-dishwasher-rack-241925-vs-241926`       | 公開済み                       |
 | `dainichi-hd-rxt525-vs-panasonic-fe-kxu07`        | 公開済み                       |
+| `tefal-cy8768jp-vs-panasonic-sr-mp300`            | 公開済み                       |
+| `panasonic-db-bm1l-vs-db-rm3m`                    | 公開済み                       |
+| `tanita-bc-772-vs-omron-hbf-702t`                 | 公開済み                       |
+| `panasonic-ew-dp57-vs-philips-hx9911`             | 公開済み                       |
+| `casio-px-s1100-vs-yamaha-p-225`                  | 公開済み                       |
+| `omron-hem-7281t-vs-terumo-p2020`                 | 公開済み                       |
+| `iris-fk-c5-vs-panasonic-fd-f06x2`                | 公開済み                       |
+| `juki-hzl-f400jp-vs-brother-ps202`                | 公開済み                       |
+| `omron-mc-681-vs-terumo-c205`                     | 公開済み                       |
+| `fitbit-charge-6-vs-xiaomi-smart-band-9`          | 公開済み                       |
+| `zojirushi-cv-gb22-vs-tiger-pim-g220`             | 公開済み                       |
+| `panasonic-be-fd633-vs-bridgestone-a6xc41`        | 公開済み                       |
+| `dainichi-efh-1219d-vs-panasonic-ds-fwx1200`      | 公開済み                       |
+| `yamazaki-rainmat-f216-vs-lonstep`                | 公開済み（購入リンク未設定）   |
+| `yamazaki-magnet-kitchen-shelf-240005-vs-241830`  | 公開済み（購入リンク未設定）   |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 

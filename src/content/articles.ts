@@ -61,6 +61,8 @@ export {
   yamazakiLaundryWireBasketArticle,
   yamazakiOfudaStandArticle,
   yamazakiTowerDeskPanelArticle,
+  yamazakiMagnetKitchenShelfArticle,
+  yamazakiRainmatF216VsLonstepArticle,
   zojirushiCoffeeArticle,
   zojirushiElectricKettleArticle,
   zojirushiEqSb22VsAh22Article,
