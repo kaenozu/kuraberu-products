@@ -134,80 +134,13 @@
 
 ## 次の候補
 
-### 日立 BD-SX130K vs BD-STX130K（実装済み・PR作成待ち）
+現在、確定した次の候補はない。ここに挙げていた10件はすべて公開済みのため、
+2026-09-11に候補節をリセットした。公開済み記事は上の表を正とする。
 
-- 記事slug: `hitachi-bd-sx130k-vs-bd-stx130k`
-- 状態: 専用worktreeで実装。preview verify PASS。PR作成待ち。
-- 比較軸: 洗濯・乾燥容量、操作パネル、温水、シワ伸ばし、乾燥方式、質量。
-- 公式ページ: [BD-SX130K](https://kadenfan.hitachi.co.jp/wash/lineup/bd-sx130k/) / [BD-STX130K](https://kadenfan.hitachi.co.jp/wash/lineup/bd-stx130k/)
-- 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
-
-- `tiger-pcj-a080-vs-pcm-a080` は記事実装済み（専用PRで検証中）。
-
-### 象印 EQ-SB22 vs EQ-AH22（今回実装・PR作成前）
-
-- 記事slug: `zojirushi-eq-sb22-vs-eq-ah22`
-- 状態: clean専用worktreeで実装中。公式個別ページ・仕様・画像・楽天公式短縮URL2本を確認済み。
-- 比較軸: 外形寸法、庫内寸法、本体質量、タイマー、消費電力、焼ける枚数。
-
-### パナソニック F-PX60C vs F-PX70C（PR #279 でレビュー中）
-
-- 記事slug: `panasonic-f-px60c-vs-f-px70c`
-- 状態: PR #279 でレビュー中。`DEPLOYMENT_ENV=preview pnpm verify` PASS。
-- 比較軸: 適用床面積、8畳の清浄時間、外形寸法、質量、風量、運転音、消費電力、集じんフィルター交換。
-- 公式ページ: [F-PX60C](https://panasonic.jp/airrich/products/F-PX60C.html) / [F-PX70C](https://panasonic.jp/airrich/products/F-PX70C.html)
-- 調査メモ: `C:\\Users\\neoen\\kuraberu-notes\\panasonic-aircleaner-f-px60c-vs-f-px70c-research-2026-08-18.md`
-- 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
-
-### パナソニック NE-MS4C vs NE-BS5C（今回実装）
-
-- 記事slug: `panasonic-ne-ms4c-vs-ne-bs5c`
-- 状態: 専用worktreeで実装中。公式商品・仕様ページ、公式画像、楽天公式UI短縮URL2本を確認済み。
-- 比較軸: 庫内寸法、質量、グリル加熱方式、操作部、自動メニュー数。
-- 公式ページ: [NE-MS4C](https://panasonic.jp/range/products/NE-MS4C.html) / [NE-BS5C](https://panasonic.jp/range/products/NE-BS5C.html)
-
-これまで「次の候補」に挙げていたパナソニック衣類乾燥除湿機・ティファール電気ケトル・シャープ空気清浄機・コンビチャイルドシートはすべて公開済みです。次は非育児カテゴリ（生活雑貨・デスク用品・キッチン家電など）から、公式ページで比較軸を裏取りできる2商品ペアを選定する。
-
-### パナソニック NE-FL1A vs NE-FL1C（公開済み）
-
-- 記事slug: `panasonic-ne-fl1a-vs-ne-fl1c`
-- 状態: 公開済み。公開後の公式情報・購入リンク更新時に再確認する。
-- 公式ページ: [NE-FL1A](https://panasonic.jp/range/products/NE-FL1A.html) / [NE-FL1C](https://panasonic.jp/range/products/NE-FL1C.html)
-- 比較軸: 総庫内容量、庫内寸法、本体質量、自動メニュー数。
-- 購入導線: 楽天公式UIで画面表示された短縮URL2本を実装済み。
-- 公開確認: 記事URL・生成HTML・CTAは定期巡回で確認する。
-
-### 象印 EQ-SB22 vs EQ-AH22（PR #336 でレビュー中・CTA着地確認 #337 進行中）
-
-- 記事slug: `zojirushi-eq-sb22-vs-eq-ah22`
-- 状態: PR #336 でレビュー中。公式個別ページ・仕様・画像・楽天公式短縮URL2本を確認済み。CTA着地確認は #337 で進行中。
-- 比較軸: 外形寸法、庫内寸法、本体質量、タイマー、消費電力、焼ける枚数。
-
-### 象印 EC-KV50 vs EC-MA60（実装済み・verify済み・PR作成前）
-
-- slug: `zojirushi-ec-kv50-vs-ec-ma60`
-- 公式個別ページ、比較仕様、公式画像、楽天公式短縮URL2本を確認済み。
-- 調査メモ: `C:\\Users\\neoen\\kuraberu-notes\\zojirushi-ec-kv50-ec-ma60-research-2026-08-17.md`
+新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
+確認状態をここへ追記し、公開時に上の表へ移す。
 
 ## 追加確認・保留
-
-### 山崎実業 冷蔵庫中棚下高さ調節ラック S vs L（実装）
-
-- slug: `yamazaki-refrigerator-rack-240057-vs-240059`
-- 公式ページで商品名・型番・サイズ・重量・耐荷重・耐熱耐冷温度を2026-09-03にGET確認。
-- 楽天は成果短縮URLが商品詳細へ着地しなかったため、商品単体通常URLを商品名・型番・ショップと照合してdirect実装。
-
-### パナソニック ナノケア EH-NA9M vs EH-NA7M（公開済み・購入リンク未検証）
-
-- slug: `panasonic-eh-na9m-vs-eh-na7m`
-- 状態: 公開済み。公式商品ページ・仕様ページを確認。購入リンクは未検証。
-- 比較軸: 搭載機能、モード、風量、質量、収納性。
-
-### サーモス KFM-020 vs KFI-020（公開済み）
-
-- slug: `thermos-kfm-020-vs-kfi-020`
-- 状態: 公開済み。公式ページと楽天公式短縮URLを確認済み。
-- 比較軸: 対応熱源、内径、本体寸法、本体重量、メーカー希望小売価格
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE
 
