@@ -389,6 +389,16 @@
         "https://panasonic.jp/range/products/NE-MS4C.html"
       ],
       "note": "庫内容量26L・庫内寸法・質量14.2/14.7kg・グリル方式・自動メニュー51/55・外形寸法を公式仕様ページで確認（2026-09-09再確認、変更なし）"
+    },
+    {
+      "articleId": "yamazaki-rainmat-f216-vs-lonstep",
+      "checkedAt": "2026-09-11",
+      "claimsFingerprint": "sha256:c2e3b7d14f1d28f91ac90c3cceec53fe9e2abe022ab723a53411a52094f481b8",
+      "officialUrls": [
+        "https://product.yamazaki-sangyo.co.jp/product/4903180304356",
+        "https://product.yamazaki-sangyo.co.jp/product/F-216-BR"
+      ],
+      "note": "使用サイズ・厚み・材質・重量を山崎産業公式商品ページで確認（2026-09-11再確認、HTTP 200）"
     }
   ]
 }
