@@ -24,7 +24,7 @@ export {
   canonPixusTs8830VsEpsonEp887aArticle,
   combiTheSArticle,
   cradleArticle,
-  goproHero13BlackVsDjiOsmoAction5ProArticle,
+  goproHero13VsDjiAction5ProArticle,
   kingjimTepraArticle,
   merriesNewbornArticle,
   merriesPantsArticle,

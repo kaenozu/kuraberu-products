@@ -57,7 +57,7 @@ import {
   yamazakiMagnetKitchenShelfArticle,
   yamazakiRainmatF216VsLonstepArticle,
   canonPixusTs8830VsEpsonEp887aArticle,
-  goproHero13BlackVsDjiOsmoAction5ProArticle,
+  goproHero13VsDjiAction5ProArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
 import { site } from "../src/config/site";
@@ -244,7 +244,7 @@ describe("article metadata", () => {
       yamazakiMagnetKitchenShelfArticle,
       yamazakiRainmatF216VsLonstepArticle,
       canonPixusTs8830VsEpsonEp887aArticle,
-      goproHero13BlackVsDjiOsmoAction5ProArticle,
+      goproHero13VsDjiAction5ProArticle,
       panasonicNeMs4cVsNeBs5cArticle,
       ...additionalCommercialArticles,
     ]);
