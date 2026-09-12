@@ -39,6 +39,7 @@ export {
   panasonicMcNx810kmVsMcNx700kArticle,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicNeMs4cVsNeBs5cArticle,
+  panasonicF55hy3VsSharpMf55rArticle,
   panasonicShaverEsLt4bVsEsLv7jArticle,
   panasonicVacuumArticle,
   pigeonBottle240Article,
