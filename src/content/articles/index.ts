@@ -55,6 +55,7 @@ export { yamazakiMagnetKitchenShelfArticle } from "./yamazaki-magnet-kitchen-she
 export { yamazakiRainmatF216VsLonstepArticle } from "./yamazaki-rainmat-f216-vs-lonstep";
 export { canonPixusTs8830VsEpsonEp887aArticle } from "./canon-pixus-ts8830-vs-epson-ep-887a";
 export { goproHero13VsDjiAction5ProArticle } from "./gopro-hero13-black-vs-dji-osmo-action-5-pro";
+export { panasonicF55hy3VsSharpMf55rArticle } from "./panasonic-nr-f55hy3-vs-sharp-sj-mf55r";
 export { zojirushiElectricKettleArticle } from "./zojirushi-ck-pa08-vs-ck-dc08";
 export { tefalGarmentSteamerArticle } from "./tefal-dv4030j0-vs-dv8070j0";
 export { kingjimTepraArticle } from "./kingjim-tepra-sr-r2500p-vs-sr-mk1";
@@ -112,6 +113,7 @@ import { yamazakiMagnetKitchenShelfArticle } from "./yamazaki-magnet-kitchen-she
 import { yamazakiRainmatF216VsLonstepArticle } from "./yamazaki-rainmat-f216-vs-lonstep";
 import { canonPixusTs8830VsEpsonEp887aArticle } from "./canon-pixus-ts8830-vs-epson-ep-887a";
 import { goproHero13VsDjiAction5ProArticle } from "./gopro-hero13-black-vs-dji-osmo-action-5-pro";
+import { panasonicF55hy3VsSharpMf55rArticle } from "./panasonic-nr-f55hy3-vs-sharp-sj-mf55r";
 import { zojirushiElectricKettleArticle } from "./zojirushi-ck-pa08-vs-ck-dc08";
 import { tefalGarmentSteamerArticle } from "./tefal-dv4030j0-vs-dv8070j0";
 import { kingjimTepraArticle } from "./kingjim-tepra-sr-r2500p-vs-sr-mk1";
@@ -188,6 +190,7 @@ export const articleMetadata: readonly ArticleMetadata[] = Object.freeze([
   yamazakiRainmatF216VsLonstepArticle,
   canonPixusTs8830VsEpsonEp887aArticle,
   goproHero13VsDjiAction5ProArticle,
+  panasonicF55hy3VsSharpMf55rArticle,
   panasonicNeMs4cVsNeBs5cArticle,
   ...additionalCommercialArticles,
 ]);

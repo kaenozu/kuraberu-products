@@ -1,0 +1,53 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { panasonicF55hy3VsSharpMf55rArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://panasonic.jp/reizo/products/NR-F55HY3.html'
+const rightOfficial = 'https://jp.sharp/reizo/products/sjmf55r/'
+const leftImage = '/products/panasonic-nr-f55hy3.jpg'
+const rightImage = '/products/sharp-sj-mf55r.jpg'
+const leftAudience = '幅65cmの省スペースで大容量を使いたい人向け'
+const rightAudience = '大容量冷凍と節電・運転支援を優先する人向け'
+
+const faqEntries = [
+  {question: 'NR-F55HY3とSJ-MF55Rの違いは？', answer: '公式仕様では、NR-F55HY3は定格内容積551L・幅650mm・年間消費電力量266kWh、SJ-MF55Rは545L・幅730mm・283kWhです。省スペースか冷凍室の使い勝手かが選び分けの軸になります。'},
+  {question: '消費電力が少ないのはどちら？', answer: '年間消費電力量（JIS測定）はNR-F55HY3が266kWh、SJ-MF55Rが283kWhです。使用条件で変わるため目安としてください。'},
+  {question: '冷凍室の特長は？', answer: 'SJ-MF55Rは大容量のメガフリーザーに快速冷凍・新鮮冷凍を備えます。NR-F55HY3の冷凍室仕様は公式商品ページで確認してください。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。冷蔵庫は搬入・設置条件も販売先で確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '定格内容積', left: '551L', right: '545L', highlight: 'left', highlightNote: '6L大きい'},
+  {label: '幅', left: '650mm', right: '730mm', highlight: 'left', highlightNote: '80mmスリム'},
+  {label: '年間消費電力量', left: '266kWh/年', right: '283kWh/年', highlight: 'left', highlightNote: '17kWh少ない'},
+  {label: '省エネ機能', left: 'AIエコナビ', right: 'つないでもっと節電（最大約35％）', highlight: null},
+  {label: '高さ', left: '1,850mm', right: '1,838mm', highlight: 'right', highlightNote: '12mm低い'},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'パナソニック', line: 'NR-F55HY3', tagline: '省スペースで大容量なら', image: leftImage, imageAlt: 'パナソニック NR-F55HY3', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-nr-f55hy3-vs-sharp-sj-mf55r:left'].purchaseUrl}}
+  right={{brand: 'シャープ', line: 'SJ-MF55R', tagline: '冷凍の使い勝手なら', image: rightImage, imageAlt: 'シャープ SJ-MF55R', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-nr-f55hy3-vs-sharp-sj-mf55r:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'パナソニック NR-F55HY3 とシャープ SJ-MF55R を、メーカー公式ページで確認できる内容積・寸法・消費電力・省エネ機能の範囲で比較します。'}
+  summaryParagraph={'NR-F55HY3は幅650mmの省スペースと内容積・消費電力で先行し、SJ-MF55Rはメガフリーザーと節電・運転支援の充実が特長です。設置場所の幅を測ってから選んでください。'}
+  officialDescription={'仕様の根拠は、パナソニック公式とシャープ公式の商品・仕様ページで2026年9月12日に確認しました。価格・在庫・搬入条件は購入前に販売先で確認してください。'}
+  officialLinks={[
+    {label: 'NR-F55HY3 公式商品ページ', href: leftOfficial},
+    {label: 'SJ-MF55R 公式商品ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'NR-F55HY3 SJ-MF55R 比較'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'パナソニック NR-F55HY3'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'シャープ SJ-MF55R'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: 'パナソニック公式：NR-F55HY3', href: leftOfficial, checkedAt: '2026-09-12'},
+    {label: 'シャープ公式：SJ-MF55R', href: rightOfficial, checkedAt: '2026-09-12'},
+  ]}
+/>
