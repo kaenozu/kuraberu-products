@@ -144,6 +144,15 @@
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
 
+### パナソニック HH-CF1285A vs アイリス CL12DL-6.1シリーズ（実装中）
+
+- 記事slug: `panasonic-hh-cf1285a-vs-iris-cl12dl`
+- 状態: 本PRで実装中。公式商品・仕様ページ・画像・楽天確認済み詳細2件を確認済み。
+- 比較軸: 適用畳数、消費電力、演色性、調光調色、タイマー。
+- 公式ページ: [HH-CF1285A 仕様](https://panasonic.jp/light/products/HH-CF1285A/spec.html) / [LEDシーリングライト](https://www.irisohyama.co.jp/led/ceiling)
+- 購入導線: direct実装（masanios/hh-cf1285a、irisplaza-r/281031）。
+- 調査メモ: `C:\Users\neoen\kuraberu-notes\ceiling-hhcf1285a-vs-cl12dl-candidate-2026-09-12.md`
+
 ## 追加確認・保留
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE

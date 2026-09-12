@@ -1,0 +1,53 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { panasonicHhCf1285aVsIrisCl12dlArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://panasonic.jp/light/products/HH-CF1285A/spec.html'
+const rightOfficial = 'https://www.irisohyama.co.jp/led/ceiling'
+const leftImage = '/products/panasonic-hh-cf1285a.jpg'
+const rightImage = '/products/iris-cl12dl.jpg'
+const leftAudience = '照らし分けと文字の見やすさを優先する人向け'
+const rightAudience = 'シンプルさと低価格を優先する人向け'
+
+const faqEntries = [
+  {question: 'HH-CF1285AとCL12DLの違いは？', answer: '公式仕様では、HH-CF1285Aは消費電力45.9W・演色性Ra83・連続調光100～5％、CL12DL-6.1シリーズは消費電力39.2W・演色性Ra85・調光10段階です。どちらも12畳・調光調色対応です。'},
+  {question: '電気代が安いのはどちら？', answer: '消費電力はHH-CF1285Aが45.9W、CL12DL-6.1シリーズが39.2Wです。使用時間と電気料金単価で変わるため目安としてください。'},
+  {question: '調光調色の違いは？', answer: 'HH-CF1285Aは100％～約5％の連続調光と昼光色～電球色の連続調色、CL12DL-6.1シリーズは調光10段階・調色11段階です。るすばん・おやすみタイマーはHH-CF1285A、おやすみタイマーはCL12DL-6.1シリーズにもあります。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '適用畳数', left: '12畳', right: '12畳', highlight: null},
+  {label: '消費電力', left: '45.9W', right: '39.2W', highlight: 'right', highlightNote: '6.7W少ない'},
+  {label: '演色性', left: 'Ra83', right: 'Ra85', highlight: 'right', highlightNote: '色の再現性が高い'},
+  {label: '調光調色', left: '連続調光100-5％・昼光～電球', right: '調光10段階・調色11段階', highlight: null},
+  {label: 'タイマー', left: 'るすばん・おやすみ', right: 'おやすみ（10/30分）', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'パナソニック', line: 'HH-CF1285A', tagline: '照らし分けなら', image: leftImage, imageAlt: 'パナソニック HH-CF1285A', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['panasonic-hh-cf1285a-vs-iris-cl12dl:left'].purchaseUrl}}
+  right={{brand: 'アイリスオーヤマ', line: 'CL12DL-6.1シリーズ', tagline: 'シンプルさなら', image: rightImage, imageAlt: 'アイリス CL12DL-6.1シリーズ', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['panasonic-hh-cf1285a-vs-iris-cl12dl:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'パナソニック HH-CF1285A とアイリス CL12DL-6.1シリーズを、メーカー公式ページで確認できる消費電力・演色性・調光調色の範囲で比較します。'}
+  summaryParagraph={'HH-CF1285Aは照らし分けと文字の見やすさが強み、CL12DL-6.1シリーズは消費電力の少なさとシンプルさが強みです。調光調色の使い方で選んでください。'}
+  officialDescription={'仕様の根拠は、パナソニック公式とアイリスオーヤマ公式の商品・仕様ページで2026年9月12日に確認しました。価格・在庫は購入前に販売先で確認してください。'}
+  officialLinks={[
+    {label: 'HH-CF1285A 公式仕様ページ', href: leftOfficial},
+    {label: 'LEDシーリングライト 公式一覧ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'HH-CF1285A CL12DL 比較'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'パナソニック HH-CF1285A'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'アイリス CL12DL-6.1シリーズ'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: 'パナソニック公式：HH-CF1285A', href: leftOfficial, checkedAt: '2026-09-12'},
+    {label: 'アイリスオーヤマ公式：LEDシーリングライト', href: rightOfficial, checkedAt: '2026-09-12'},
+  ]}
+/>

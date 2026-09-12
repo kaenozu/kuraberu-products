@@ -622,5 +622,13 @@
   "amazon-echo-dot-5th-vs-google-nest-mini-2nd:right": {
     "name": "Google Nest Mini 第2世代",
     "purchaseUrl": "https://item.rakuten.co.jp/blade/glnest-n21t-h201216/"
+  },
+  "panasonic-hh-cf1285a-vs-iris-cl12dl:left": {
+    "name": "パナソニック HH-CF1285A",
+    "purchaseUrl": "https://item.rakuten.co.jp/masanios/hh-cf1285a/"
+  },
+  "panasonic-hh-cf1285a-vs-iris-cl12dl:right": {
+    "name": "アイリス CL12DL-6.1シリーズ",
+    "purchaseUrl": "https://item.rakuten.co.jp/irisplaza-r/281031/"
   }
 }
