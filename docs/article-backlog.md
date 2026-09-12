@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（119本）
+## 現在の公開済み（120本）
 
 | slug                                              | 状態                           |
 | ------------------------------------------------- | ------------------------------ |
@@ -133,6 +133,7 @@
 | `gopro-hero13-black-vs-dji-osmo-action-5-pro`     | 公開済み                       |
 | `panasonic-nr-f55hy3-vs-sharp-sj-mf55r`           | 公開済み                       |
 | `amazon-echo-dot-5th-vs-google-nest-mini-2nd`     | 公開済み                       |
+| `panasonic-hh-cf1285a-vs-iris-cl12dl`             | 公開済み                       |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
@@ -143,15 +144,6 @@
 
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
-
-### パナソニック HH-CF1285A vs アイリス CL12DL-6.1シリーズ（実装中）
-
-- 記事slug: `panasonic-hh-cf1285a-vs-iris-cl12dl`
-- 状態: 本PRで実装中。公式商品・仕様ページ・画像・楽天確認済み詳細2件を確認済み。
-- 比較軸: 適用畳数、消費電力、演色性、調光調色、タイマー。
-- 公式ページ: [HH-CF1285A 仕様](https://panasonic.jp/light/products/HH-CF1285A/spec.html) / [LEDシーリングライト](https://www.irisohyama.co.jp/led/ceiling)
-- 購入導線: direct実装（masanios/hh-cf1285a、irisplaza-r/281031）。
-- 調査メモ: `C:\Users\neoen\kuraberu-notes\ceiling-hhcf1285a-vs-cl12dl-candidate-2026-09-12.md`
 
 ## 追加確認・保留
 
