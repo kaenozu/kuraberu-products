@@ -59,6 +59,7 @@ import {
   canonPixusTs8830VsEpsonEp887aArticle,
   goproHero13VsDjiAction5ProArticle,
   panasonicF55hy3VsSharpMf55rArticle,
+  echoDot5thVsNestMini2ndArticle,
 } from "../src/content/articles";
 import { _setBuildReferenceDate } from "../src/content/articles/types";
 import { site } from "../src/config/site";
@@ -93,7 +94,7 @@ function articleSlugs(): string[] {
 
 describe("article metadata", () => {
   it("includes verified commercial articles in public discovery surfaces", () => {
-    expect(publicArticleMetadata).toHaveLength(104);
+    expect(publicArticleMetadata).toHaveLength(105);
     const newlyPublishedIds = [
       "yamazaki-dishwasher-rack-241925-vs-241926",
       "panasonic-mc-nx810km-vs-mc-nx700k",
@@ -247,6 +248,7 @@ describe("article metadata", () => {
       canonPixusTs8830VsEpsonEp887aArticle,
       goproHero13VsDjiAction5ProArticle,
       panasonicF55hy3VsSharpMf55rArticle,
+      echoDot5thVsNestMini2ndArticle,
       panasonicNeMs4cVsNeBs5cArticle,
       ...additionalCommercialArticles,
     ]);
@@ -277,7 +279,7 @@ describe("article metadata", () => {
     // 比較記事は productCount: 2、単一商品記事（商品ガイド）は productCount: 1。
     expect(
       articleMetadata.filter((article) => article.productCount === 2),
-    ).toHaveLength(116);
+    ).toHaveLength(117);
     expect(
       articleMetadata.filter((article) => article.productCount === 1),
     ).toEqual([panasonicBabyMonitorArticle, panasonicEhNa9mGuideArticle]);
