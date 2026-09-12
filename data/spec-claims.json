@@ -459,6 +459,16 @@
         "https://www.irisohyama.co.jp/led/ceiling"
       ],
       "note": "適用畳数・消費電力・演色性・調光調色・タイマーを両メーカー公式ページで確認（2026-09-12再確認、HTTP 200）"
+    },
+    {
+      "articleId": "bruno-boe021-vs-iris-php-1002tc",
+      "checkedAt": "2026-09-12",
+      "claimsFingerprint": "sha256:0056c73294c3b77050bdf33ad1aeea679286a0df6050532780a2ecf1c116ab22",
+      "officialUrls": [
+        "https://bruno-inc.com/?am=07760192&pg=product_detail",
+        "https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID=7166779F"
+      ],
+      "note": "本体サイズ・質量・消費電力・温度調節・付属プレートを両メーカー公式ページで確認（2026-09-12再確認、HTTP 200）"
     }
   ]
 }
