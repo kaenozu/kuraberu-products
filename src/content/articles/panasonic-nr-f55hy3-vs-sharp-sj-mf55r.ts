@@ -21,10 +21,7 @@ export const panasonicF55hy3VsSharpMf55rArticle = defineArticleMetadata({
   purchaseLinksCheckedAt: "2026-09-12",
   purchaseLinkStatus: "direct",
   imagePath: "/products/panasonic-nr-f55hy3.jpg",
-  aboutProductNames: [
-    "パナソニック NR-F55HY3",
-    "シャープ SJ-MF55R",
-  ],
+  aboutProductNames: ["パナソニック NR-F55HY3", "シャープ SJ-MF55R"],
   changeLog: [
     {
       date: "2026-09-12",
