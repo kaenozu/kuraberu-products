@@ -18,6 +18,7 @@ export {
   type ComparisonArticleMetadata,
   defineArticleMetadata,
   // Individual article exports (alphabetical by slug)
+  echoDot5thVsNestMini2ndArticle,
   babybjornArticle,
   babybjornBouncerArticle,
   babybjornOnekaiArticle,

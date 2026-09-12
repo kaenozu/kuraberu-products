@@ -1,0 +1,54 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { echoDot5thVsNestMini2ndArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://www.amazon.co.jp/Echo-Dot-%E3%82%A8%E3%82%B3%E3%83%BC%E3%83%89%E3%83%83%E3%83%88-%E7%AC%AC5%E4%B8%96%E4%BB%A3-Alexa-%E3%82%BB%E3%83%B3%E3%82%B5%E3%83%BC%E6%90%AD%E8%BC%89-%E9%AE%AE%E3%82%84%E3%81%8B%E3%81%AA%E3%82%B5%E3%82%A6%E3%83%B3%E3%83%89-%E3%83%81%E3%83%A3%E3%82%B3%E3%83%BC%E3%83%AB/dp/B09B8SZLLG'
+const rightOfficial = 'https://support.google.com/googlehome/answer/7072284?hl=ja'
+const leftImage = '/products/amazon-echo-dot-5th.jpg'
+const rightImage = '/products/google-nest-mini-2nd.jpg'
+const leftAudience = 'アレクサ中心の暮らしを作りたい人向け'
+const rightAudience = 'Googleサービス中心の暮らしを作りたい人向け'
+
+const faqEntries = [
+  {question: 'Echo Dot 第5世代とNest Mini 第2世代の違いは？', answer: '公式仕様では、Echo Dot 第5世代は100×100×89mm・304g・44mmスピーカー、Nest Mini 第2世代は直径98×高さ42mm・181g・40mmスピーカーです。音声アシスタントはアレクサとGoogle アシスタントで分かれます。'},
+  {question: '軽いのはどちら？', answer: '本体質量はEcho Dot 第5世代が304g、Nest Mini 第2世代が181gです。置き場所や持ち運びの有無で選んでください。'},
+  {question: 'スマートホーム連携は？', answer: 'どちらもMatterに対応しています。Nest Mini 第2世代はChromecastを内蔵し、Echo Dot 第5世代は温度センサーとタップ操作を備えます。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: 'サイズ', left: '100×100×89mm', right: '直径98×高さ42mm', highlight: null},
+  {label: '質量', left: '304g', right: '181g', highlight: 'right', highlightNote: '123g軽い'},
+  {label: 'スピーカー', left: '44mm前面放射', right: '40mm 360°サウンド', highlight: null},
+  {label: '音声アシスタント', left: 'Alexa', right: 'Google アシスタント', highlight: null},
+  {label: '連携', left: 'Matter対応', right: 'Matter対応＋Chromecast内蔵', highlight: 'right', highlightNote: 'キャストに強い'},
+  {label: 'センサー・操作', left: '温度センサー＋タップ操作', right: '静電容量タッチ', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'Amazon', line: 'Echo Dot 第5世代', tagline: 'アレクサ中心なら', image: leftImage, imageAlt: 'Amazon Echo Dot 第5世代', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['amazon-echo-dot-5th-vs-google-nest-mini-2nd:left'].purchaseUrl}}
+  right={{brand: 'Google', line: 'Nest Mini 第2世代', tagline: 'Google中心なら', image: rightImage, imageAlt: 'Google Nest Mini 第2世代', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['amazon-echo-dot-5th-vs-google-nest-mini-2nd:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'Echo Dot 第5世代 と Google Nest Mini 第2世代を、メーカー公式ページで確認できるサイズ・質量・スピーカー・連携の範囲で比較します。'}
+  summaryParagraph={'Echo Dot 第5世代は44mmスピーカーと温度センサーが強み、Nest Mini 第2世代は181gの軽さとChromecast内蔵が強みです。使っている音声アシスタントに合わせて選んでください。'}
+  officialDescription={'仕様の根拠は、Amazon公式商品ページとGoogle公式サポート仕様ページで2026年9月12日に確認しました。価格・在庫は購入前に販売先で確認してください。'}
+  officialLinks={[
+    {label: 'Echo Dot 第5世代 公式商品ページ', href: leftOfficial},
+    {label: 'Nest Mini 仕様 公式サポートページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'Echo Dot 第5世代 Nest Mini 第2世代 比較'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'Amazon Echo Dot 第5世代'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'Google Nest Mini 第2世代'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: 'Amazon公式：Echo Dot 第5世代', href: leftOfficial, checkedAt: '2026-09-12'},
+    {label: 'Google公式：Nest Mini 仕様', href: rightOfficial, checkedAt: '2026-09-12'},
+  ]}
+/>

@@ -143,6 +143,15 @@
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
 
+### Echo Dot 第5世代 vs Nest Mini 第2世代（実装中）
+
+- 記事slug: `amazon-echo-dot-5th-vs-google-nest-mini-2nd`
+- 状態: 本PRで実装中。公式商品・仕様ページ・画像・楽天確認済み詳細2件を確認済み。
+- 比較軸: サイズ、質量、スピーカー、アシスタント、連携、センサー・操作。
+- 公式ページ: [Echo Dot 第5世代](https://www.amazon.co.jp/Echo-Dot-%E3%82%A8%E3%82%B3%E3%83%BC%E3%83%89%E3%83%83%E3%83%88-%E7%AC%AC5%E4%B8%96%E4%BB%A3-Alexa-%E3%82%BB%E3%83%B3%E3%82%B5%E3%83%BC%E6%90%AD%E8%BC%89-%E9%AE%AE%E3%82%84%E3%81%8B%E3%81%AA%E3%82%B5%E3%82%A6%E3%83%B3%E3%83%89-%E3%83%81%E3%83%A3%E3%82%B3%E3%83%BC%E3%83%AB/dp/B09B8SZLLG) / [Nest Mini 仕様](https://support.google.com/googlehome/answer/7072284?hl=ja)
+- 購入導線: direct実装（biccamera/0840080512204、blade/glnest-n21t-h201216）。
+- 調査メモ: `C:\Users\neoen\kuraberu-notes\smartspeaker-echodot-vs-nestmini-candidate-2026-09-12.md`
+
 ## 追加確認・保留
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE
