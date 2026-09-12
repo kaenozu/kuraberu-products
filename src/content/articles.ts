@@ -19,6 +19,7 @@ export {
   defineArticleMetadata,
   // Individual article exports (alphabetical by slug)
   echoDot5thVsNestMini2ndArticle,
+  brunoBoe021VsIrisPhp1002tcArticle,
   babybjornArticle,
   babybjornBouncerArticle,
   babybjornOnekaiArticle,

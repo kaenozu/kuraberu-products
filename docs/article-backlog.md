@@ -145,6 +145,15 @@
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
 
+### BRUNO BOE021 vs アイリス PHP-1002TC（実装中）
+
+- 記事slug: `bruno-boe021-vs-iris-php-1002tc`
+- 状態: 本PRで実装中。公式商品ページ・画像・楽天確認済み詳細2件を確認済み。
+- 比較軸: 本体サイズ、質量、消費電力、温度調節、付属プレート、使用人数目安。
+- 公式ページ: [BOE021](https://bruno-inc.com/?am=07760192&pg=product_detail) / [PHP-1002TC](https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID=7166779F)
+- 購入導線: direct実装（bruno-official/1702868、irisplaza-r/7166779）。
+- 調査メモ: `C:\Users\neoen\kuraberu-notes\hotplate-boe021-vs-php1002tc-candidate-2026-09-12.md`
+
 ## 追加確認・保留
 
 ### アップリカ ラクーナ クッションフリー AF vs プラス AE

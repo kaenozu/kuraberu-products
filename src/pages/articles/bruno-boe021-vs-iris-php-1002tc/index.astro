@@ -1,0 +1,54 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { brunoBoe021VsIrisPhp1002tcArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://bruno-inc.com/?am=07760192&pg=product_detail'
+const rightOfficial = 'https://www.irisplaza.co.jp/index.php?KB=SHOSAI&SID=7166779F'
+const leftImage = '/products/bruno-boe021.jpg'
+const rightImage = '/products/iris-php-1002tc.jpg'
+const leftAudience = 'デザインと出しっぱなしの可愛さを優先する人向け'
+const rightAudience = '深鍋つきの多用途さを優先する人向け'
+
+const faqEntries = [
+  {question: 'BOE021とPHP-1002TCの違いは？', answer: '公式仕様では、BOE021は375×140×235mm・2.3kg・1200W、PHP-1002TCは384×250×179mm（深鍋時）・2.2kg・1000Wです。付属プレートはBOE021が平面・たこ焼き、PHP-1002TCが平面・たこ焼き・深鍋です。'},
+  {question: '出力が大きいのはどちら？', answer: '消費電力はBOE021が1200W、PHP-1002TCが1000Wです。温度調節はどちらも保温～250℃です。'},
+  {question: '鍋料理もしたい場合は？', answer: '深鍋プレートが付属するPHP-1002TCが向いています。BOE021の深鍋は別売りオプションです。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の型番検索ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '本体サイズ', left: '375×140×235mm', right: '384×250×179mm（深鍋時）', highlight: null},
+  {label: '質量', left: '2.3kg', right: '2.2kg（深鍋時）', highlight: 'right', highlightNote: '0.1kg軽い'},
+  {label: '消費電力', left: '1200W', right: '1000W', highlight: null},
+  {label: '温度調節', left: '保温～250℃無段階', right: '保温～250℃', highlight: null},
+  {label: '付属プレート', left: '平面・たこ焼き', right: '平面・たこ焼き・深鍋', highlight: 'right', highlightNote: '鍋つき'},
+  {label: '使用人数目安', left: '1～3人', right: '2～4人', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'BRUNO', line: 'コンパクトホットプレート BOE021', tagline: 'デザインとなら', image: leftImage, imageAlt: 'BRUNO コンパクトホットプレート BOE021', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['bruno-boe021-vs-iris-php-1002tc:left'].purchaseUrl}}
+  right={{brand: 'アイリスオーヤマ', line: '着脱式ホットプレート PHP-1002TC', tagline: '鍋まで使うなら', image: rightImage, imageAlt: 'アイリス 着脱式ホットプレート PHP-1002TC', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['bruno-boe021-vs-iris-php-1002tc:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'BRUNO BOE021 とアイリス PHP-1002TC を、メーカー公式ページで確認できるサイズ・質量・出力・付属プレートの範囲で比較します。'}
+  summaryParagraph={'BOE021はA4サイズのコンパクトさとデザインが強み、PHP-1002TCは深鍋つきの多用途さが強みです。鍋料理をするかどうかで選んでください。'}
+  officialDescription={'仕様の根拠は、BRUNO公式とアイリスオーヤマ公式通販の商品ページで2026年9月12日に確認しました。価格・在庫は購入前に販売先で確認してください。'}
+  officialLinks={[
+    {label: 'BOE021 公式商品ページ', href: leftOfficial},
+    {label: 'PHP-1002TC 公式通販ページ', href: rightOfficial},
+  ]}
+  socialProofQuery={'BOE021 PHP-1002TC 比較'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'BRUNO コンパクトホットプレート BOE021'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'アイリス 着脱式ホットプレート PHP-1002TC'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: 'BRUNO公式：BOE021', href: leftOfficial, checkedAt: '2026-09-12'},
+    {label: 'アイリスオーヤマ公式通販：PHP-1002TC', href: rightOfficial, checkedAt: '2026-09-12'},
+  ]}
+/>

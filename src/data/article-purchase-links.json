@@ -630,5 +630,13 @@
   "panasonic-hh-cf1285a-vs-iris-cl12dl:right": {
     "name": "アイリス CL12DL-6.1シリーズ",
     "purchaseUrl": "https://item.rakuten.co.jp/irisplaza-r/281031/"
+  },
+  "bruno-boe021-vs-iris-php-1002tc:left": {
+    "name": "BRUNO コンパクトホットプレート BOE021",
+    "purchaseUrl": "https://item.rakuten.co.jp/bruno-official/1702868/"
+  },
+  "bruno-boe021-vs-iris-php-1002tc:right": {
+    "name": "アイリス 着脱式ホットプレート PHP-1002TC",
+    "purchaseUrl": "https://item.rakuten.co.jp/irisplaza-r/7166779/"
   }
 }
