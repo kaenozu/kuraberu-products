@@ -130,8 +130,8 @@
 | `yamazaki-rainmat-f216-vs-lonstep`                | 公開済み（購入リンク未設定）   |
 | `yamazaki-magnet-kitchen-shelf-240005-vs-241830`  | 公開済み（購入リンク未設定）   |
 | `canon-pixus-ts8830-vs-epson-ep-887a`             | 公開済み                       |
-| `gopro-hero13-black-vs-dji-osmo-action-5-pro`   | 公開済み                       |
-| `panasonic-nr-f55hy3-vs-sharp-sj-mf55r`          | 公開済み                       |
+| `gopro-hero13-black-vs-dji-osmo-action-5-pro`     | 公開済み                       |
+| `panasonic-nr-f55hy3-vs-sharp-sj-mf55r`           | 公開済み                       |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
