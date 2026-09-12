@@ -247,8 +247,8 @@ describe("article metadata", () => {
       yamazakiRainmatF216VsLonstepArticle,
       canonPixusTs8830VsEpsonEp887aArticle,
       goproHero13VsDjiAction5ProArticle,
-      panasonicF55hy3VsSharpMf55rArticle,
       echoDot5thVsNestMini2ndArticle,
+      panasonicF55hy3VsSharpMf55rArticle,
       panasonicNeMs4cVsNeBs5cArticle,
       ...additionalCommercialArticles,
     ]);
