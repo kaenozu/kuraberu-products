@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（116本）
+## 現在の公開済み（118本）
 
 | slug                                              | 状態                           |
 | ------------------------------------------------- | ------------------------------ |
@@ -130,6 +130,8 @@
 | `yamazaki-rainmat-f216-vs-lonstep`                | 公開済み（購入リンク未設定）   |
 | `yamazaki-magnet-kitchen-shelf-240005-vs-241830`  | 公開済み（購入リンク未設定）   |
 | `canon-pixus-ts8830-vs-epson-ep-887a`             | 公開済み                       |
+| `gopro-hero13-black-vs-dji-osmo-action-5-pro`     | 公開済み                       |
+| `panasonic-nr-f55hy3-vs-sharp-sj-mf55r`           | 公開済み                       |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
@@ -140,24 +142,6 @@
 
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
-
-### パナソニック NR-F55HY3 vs シャープ SJ-MF55R（実装中）
-
-- 記事slug: `panasonic-nr-f55hy3-vs-sharp-sj-mf55r`
-- 状態: 本PRで実装中。公式商品・仕様ページ・画像・楽天確認済み詳細2件を確認済み。
-- 比較軸: 定格内容積、幅、年間消費電力、省エネ機能、高さ。
-- 公式ページ: [NR-F55HY3](https://panasonic.jp/reizo/products/NR-F55HY3.html) / [SJ-MF55R](https://jp.sharp/reizo/products/sjmf55r/)
-- 購入導線: direct実装（panasonic-store/nr-f55hy3-n、e-cutestyle/p000000933596）。
-- 調査メモ: `C:\Users\neoen\kuraberu-notes\fridge-nrf55hy3-vs-sjmf55p-candidate-2026-09-12.md`
-
-### GoPro HERO13 Black vs DJI Osmo Action 5 Pro（実装中）
-
-- 記事slug: `gopro-hero13-black-vs-dji-osmo-action-5-pro`
-- 状態: 本PRで実装中。公式商品・仕様ページ・画像・楽天確認済み詳細2件を確認済み。
-- 比較軸: 動画最大解像度、スロー、電池持ち、防水、手ブレ補正、写真画素数。
-- 公式ページ: [HERO13 Black](https://gopro.com/ja/jp/shop/cameras/buy/hero13black/CHDHX-131-master.html) / [Osmo Action 5 Pro](https://www.dji.com/jp/mobile/osmo-action-5-pro)
-- 購入導線: direct実装（biccamera/4595319442147、dji-shop/6941565981066c）。
-- 調査メモ: `C:\Users\neoen\kuraberu-notes\actioncam-hero13-vs-action5pro-candidate-2026-09-11.md`
 
 ## 追加確認・保留
 
