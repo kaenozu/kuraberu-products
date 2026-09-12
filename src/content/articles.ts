@@ -19,6 +19,7 @@ export {
   defineArticleMetadata,
   // Individual article exports (alphabetical by slug)
   echoDot5thVsNestMini2ndArticle,
+  brunoBoe021VsIrisPhp1002tcArticle,
   babybjornArticle,
   babybjornBouncerArticle,
   babybjornOnekaiArticle,
@@ -37,6 +38,7 @@ export {
   panasonicEhNa9mVsEhNa7mArticle,
   panasonicFyhvx120VsFyhvx90Article,
   panasonicHairDryerArticle,
+  panasonicHhCf1285aVsIrisCl12dlArticle,
   panasonicMcNx810kmVsMcNx700kArticle,
   panasonicNeFl1aVsNeFl1cArticle,
   panasonicNeMs4cVsNeBs5cArticle,
