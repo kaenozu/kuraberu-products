@@ -7,7 +7,7 @@
 import { Picture } from 'astro:assets';
 import AffiliateButton from './AffiliateButton.astro';
 import {ARTICLE_LAYOUT} from '../../config/article-layout.mjs';
-import {toAmazonAssociateProductUrl, toAmazonAssociateSearchUrl} from '../../config/runtime-env.mjs';
+import {toAmazonAssociateProductUrl} from '../../config/runtime-env.mjs';
 import {resolveImage} from '../lib/image-resolver';
 
 interface Props {
@@ -26,7 +26,7 @@ interface Props {
    * AffiliateButton 側で URL の妥当性を検証する。
    */
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
-  /** Amazon商品詳細URL。未指定時は試験用検索URLへフォールバックする。 */
+  /** Amazon商品詳細URL。ASINから台帳で生成し、検索URLは受け付けない。 */
   amazonHref?: string;
   showAmazon?: boolean;
 }
@@ -59,10 +59,6 @@ const amazonProductUrl =
   showAmazon && showCta && purchaseLinkStatus === "verified" && amazonHref
     ? toAmazonAssociateProductUrl(amazonHref, import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG)
     : undefined;
-const amazonSearchUrl =
-  showAmazon && showCta && purchaseLinkStatus === "verified" && !amazonHref
-    ? toAmazonAssociateSearchUrl(name, import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG)
-    : undefined;
 const resolvedImage = resolveImage(imagePath);
 ---
 
@@ -91,10 +87,10 @@ const resolvedImage = resolveImage(imagePath);
         searchQuery={searchQuery}
         requiredTerms={requiredTerms}
       />
-      {(amazonProductUrl ?? amazonSearchUrl) && (
+      {amazonProductUrl && (
         <a
           class="cta cta-card amazon-purchase-link"
-          href={amazonProductUrl ?? amazonSearchUrl}
+          href={amazonProductUrl}
           target="_blank"
           rel="sponsored nofollow noopener noreferrer"
           data-amazon-cta="purchase"

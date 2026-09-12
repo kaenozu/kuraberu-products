@@ -125,8 +125,14 @@ export const thermosTigerBottlePair = {
 export interface ArticlePurchaseLink {
   /** 表示名（例: ムーニー 低刺激であんしん） */
   name: string;
-  /** 購入（アフィリエイト）URL */
+  /** 旧フィールド。段階移行完了後に廃止する。 */
   purchaseUrl: string;
+  /** 楽天市場で照合した商品詳細URL（identity）。 */
+  rakutenProductUrl?: string;
+  /** 楽天アフィリエイトの成果計測URL（公開CTA専用）。 */
+  rakutenAffiliateUrl?: string;
+  /** Amazon.co.jpの商品ASIN（検索結果URLは許可しない）。 */
+  amazonAsin?: string;
 }
 
 export const articlePurchaseLinks: Record<string, ArticlePurchaseLink> =
