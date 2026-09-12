@@ -68,8 +68,8 @@ export async function collectOpenPrs(repo) {
   ]);
   const prs = [];
   for (const pr of pulls) {
-    const compare = ghJson(["repos", repo, `compare/main...${pr.head.sha}`]);
-    const headCommit = ghJson(["repos", repo, `commits/${pr.head.sha}`]);
+    const compare = ghJson([`repos/${repo}/compare/main...${pr.head.sha}`]);
+    const headCommit = ghJson([`repos/${repo}/commits/${pr.head.sha}`]);
     const committerDate = headCommit.commit?.committer?.date;
     prs.push({
       number: pr.number,
