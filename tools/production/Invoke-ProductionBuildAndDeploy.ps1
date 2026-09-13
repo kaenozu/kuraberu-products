@@ -80,7 +80,10 @@ try {
         $env:PUBLIC_RAKUTEN_SARASARA_URL = $SarasaraUrl
         $env:RAKUTEN_APPLICATION_ID = $null
         $env:RAKUTEN_ACCESS_KEY = $null
-        $env:RAKUTEN_AFFILIATE_ID = $null
+        # Direct URLs do not need the Rakuten API core credentials, but static
+        # affiliate search URLs still require RAKUTEN_AFFILIATE_ID in
+        # production. Preserve the process value supplied by the protected
+        # GitHub Environment instead of erasing it here.
     }
 
     Push-Location $repo
