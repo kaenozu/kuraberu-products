@@ -10,7 +10,7 @@
 4. 体験談・口コミを比較の根拠にせず、公式情報中心で構成できる
 5. 既存記事と検索意図・対象商品が過度に重複しない
 
-## 現在の公開済み（121本）
+## 現在の公開済み（122本）
 
 | slug                                              | 状態                           |
 | ------------------------------------------------- | ------------------------------ |
@@ -135,6 +135,7 @@
 | `amazon-echo-dot-5th-vs-google-nest-mini-2nd`     | 公開済み                       |
 | `panasonic-hh-cf1285a-vs-iris-cl12dl`             | 公開済み                       |
 | `bruno-boe021-vs-iris-php-1002tc`                 | 公開済み                       |
+| `balmuda-the-toaster-vs-aladdin-graphite-toaster` | 公開済み                       |
 
 記事の公開日・変更日・公式確認日は `src/content/articles.ts` を正本とする。ここには履歴やPR番号を重複して持たせない。
 
@@ -145,15 +146,6 @@
 
 新たに着手する場合は、選定基準に沿ってslug・比較軸・公式URL・購入導線の
 確認状態をここへ追記し、公開時に上の表へ移す。
-
-### BALMUDA The Toaster vs アラジン グラファイトトースター（実装中）
-
-- 記事slug: `balmuda-the-toaster-vs-aladdin-graphite-toaster`
-- 状態: 本PRで実装中。公式スペック（スチームvsグラファイト加熱、サイズ・消費電力・温度調節）、楽天確認済み詳細2件、画像2件を確認済み。
-- 比較軸: 加熱方式、本体・庫内サイズ、質量、定格消費電力、温度調節、タイマー。
-- 公式ページ: [BALMUDA The Toaster スペック](https://www.balmuda.com/jp/toaster/spec) / [アラジン グラファイトトースター（2枚焼き）](https://aladdin-aic.com/product/toaster2)
-- 購入導線: direct実装（akindo/k11a-bk [K11A]、hotnet-shop/070943 [AET-GS13D]）。
-- 調査メモ: `C:\Users\neoen\kuraberu-notes\toaster-balmuda-vs-aladdin-candidate-2026-09-13.md`
 
 ## 追加確認・保留
 
