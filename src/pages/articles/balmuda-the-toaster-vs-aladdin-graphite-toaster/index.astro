@@ -1,0 +1,56 @@
+---
+import { articlePurchaseLinks } from '../../../lib/products'
+import ArticleComparisonPage from '../../../components/ArticleComparisonPage.astro'
+import type { KeyDiffRow } from '../../../components/VisualKeyDifferences.astro'
+import { balmudaTheToasterVsAladdinArticle as articleMetadata } from '../../../content/articles'
+
+const leftOfficial = 'https://www.balmuda.com/jp/toaster/spec'
+const rightOfficial = 'https://aladdin-aic.com/product/toaster2'
+const leftImage = '/products/balmuda-the-toaster.jpg'
+const rightImage = '/products/aladdin-graphite-toaster-gs13d.jpg'
+const leftAudience = 'デザインとスチーム仕立ての味を優先する人向け'
+const rightAudience = '0.2秒発熱の速さとコスパを優先する人向け'
+
+const faqEntries = [
+  {question: 'BALMUDAとアラジン、どちらが美味しく焼ける？', answer: '加熱方式が異なります。BALMUDAは蒸気（スチーム5cc）で表面を焼き上げて内部の水分を閉じ込め、アラジンはグラファイトヒータが0.2秒で発熱して高温庫内で一気に焼きます。好みの食感で選ぶのがおすすめです。'},
+  {question: '価格差はどれくらい？', answer: 'メーカー公式の価格は、BALMUDA The Toasterが約38,500円（税込）、アラジン グラファイトトースター2枚焼きが約14,300円（税込）です。販売先によって変動するため、購入時点の価格は楽天市場の商品詳細で確認してください。'},
+  {question: 'サイズはどちらが小さい？', answer: '公式仕様では、BALMUDAが357×321×209mm・約4.1kg、アラジンが350×295×235mm・約3.4kgです。アラジンがやや軽く、幅も短めです。'},
+  {question: 'トーストは何枚焼ける？', answer: 'どちらも食パン2枚焼きです。庫内寸法はBALMUDAが275×224×178mm、アラジンが310×235×87mmで、アラジンのほうが幅広です。'},
+  {question: '楽天市場の価格は掲載していますか？', answer: '価格・在庫・送料・ポイントは販売先で変わるため、楽天市場の商品詳細ページで購入時点の表示を確認してください。'},
+] as const
+
+const keyDiffRows: KeyDiffRow[] = [
+  {label: '加熱方式', left: '蒸気＋石英管ヒーター（スチーム5cc）', right: 'グラファイトヒータ（0.2秒で発熱）', highlight: null},
+  {label: '本体サイズ', left: '357×321×209mm', right: '350×295×235mm', highlight: null},
+  {label: '庫内サイズ', left: '275×224×178mm', right: '310×235×87mm', highlight: 'right', highlightNote: '幅広'},
+  {label: '質量', left: '約4.1kg', right: '約3.4kg', highlight: 'right', highlightNote: '0.7kg軽い'},
+  {label: '定格消費電力', left: '1300W', right: '1270W', highlight: null},
+  {label: '温度調節', left: 'クラシックモード170/200/230℃', right: '100℃〜280℃無段階', highlight: 'right', highlightNote: '上限280℃'},
+  {label: 'タイマー', left: '1〜10・15分', right: '15分（報知音付き）', highlight: null},
+]
+
+---
+
+<ArticleComparisonPage
+  articleMetadata={articleMetadata}
+  left={{brand: 'BALMUDA', line: 'The Toaster K11A', tagline: 'スチームである味', image: leftImage, imageAlt: 'BALMUDA The Toaster K11A', officialHref: leftOfficial, guidePoints: [leftAudience], purchaseHref: articlePurchaseLinks['balmuda-the-toaster-vs-aladdin-graphite-toaster:left'].purchaseUrl}}
+  right={{brand: 'アラジン', line: 'グラファイトトースター 2枚焼き AET-GS13D', tagline: '0.2秒発熱の速さ', image: rightImage, imageAlt: 'アラジン グラファイトトースター 2枚焼き AET-GS13D', officialHref: rightOfficial, guidePoints: [rightAudience], purchaseHref: articlePurchaseLinks['balmuda-the-toaster-vs-aladdin-graphite-toaster:right'].purchaseUrl}}
+  keyDiffRows={keyDiffRows}
+  lead={'BALMUDA The Toaster（K11A）とアラジン グラファイトトースター2枚焼き（AET-GS13D）を、メーカー公式ページで確認できるサイズ・質量・定格消費電力・温度調節の範囲で比較します。'}
+  summaryParagraph={'BALMUDAは蒸気で外はサクッと中はしっとり、アラジンは0.2秒発熱のグラファイトヒータで高速・高温調理が持ち味です。加熱方式の好みと予算で選んでください。'}
+  officialDescription={'仕様の根拠は、BALMUDA公式とアラジン公式の商品ページで2026年9月13日に確認しました。価格・在庫は購入前に販売先で確認してください。'}
+  officialLinks={[
+    {label: 'BALMUDA THE TOASTER 公式スペック', href: leftOfficial},
+    {label: 'アラジン グラファイトトースター（2枚焼き） 公式', href: rightOfficial},
+  ]}
+  socialProofQuery={'BALMUDA The Toaster アラジン トースター 比較'}
+  faqEntries={faqEntries}
+  leftPurchaseName={'BALMUDA The Toaster K11A'}
+  leftPurchaseAudience={leftAudience}
+  rightPurchaseName={'アラジン グラファイトトースター 2枚焼き AET-GS13D'}
+  rightPurchaseAudience={rightAudience}
+  sourceLinks={[
+    {label: 'BALMUDA公式：The Toaster スペック', href: leftOfficial, checkedAt: '2026-09-13'},
+    {label: 'アラジン公式：グラファイトトースター 2枚焼き', href: rightOfficial, checkedAt: '2026-09-13'},
+  ]}
+/>
