@@ -43,6 +43,25 @@ export const onRequestPost: PagesFunction<Env> = async () =>
 
 // ─── GET Handler: read from KV + summary ──────────────────────────────────────
 
+/** GET hours の既定・下限・上限（時間）。上限168=7日間でKV全走査を防ぐ。 */
+export const PERF_HOURS_DEFAULT = 24;
+export const PERF_HOURS_MIN = 1;
+export const PERF_HOURS_MAX = 168;
+
+/**
+ * hours クエリ値を検証して範囲へ丸める。
+ * 未指定・数値以外・NaN・Infinity は既定値、範囲外は上限/下限へ丸める。
+ */
+export function clampPerfHours(value: unknown): number {
+  const parsed =
+    typeof value === "string" ? Number.parseInt(value, 10) : Number.NaN;
+  if (!Number.isFinite(parsed)) return PERF_HOURS_DEFAULT;
+  const floored = Math.floor(parsed);
+  if (floored < PERF_HOURS_MIN) return PERF_HOURS_MIN;
+  if (floored > PERF_HOURS_MAX) return PERF_HOURS_MAX;
+  return floored;
+}
+
 /** GET /api/rakuten-perf — 直近N時間のサマリーを返す */
 export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
   const rate = await enforceRateLimit(
@@ -63,7 +82,7 @@ export const onRequestGet: PagesFunction<Env> = async ({ request, env }) => {
 
   try {
     const url = new URL(request.url);
-    const hours = parseInt(url.searchParams.get("hours") ?? "24", 10);
+    const hours = clampPerfHours(url.searchParams.get("hours"));
     const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000).toISOString();
 
     const list = await kv.list({ prefix: PERF_KV_PREFIX });
