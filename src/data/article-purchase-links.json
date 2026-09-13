@@ -638,5 +638,13 @@
   "bruno-boe021-vs-iris-php-1002tc:right": {
     "name": "アイリス 着脱式ホットプレート PHP-1002TC",
     "purchaseUrl": "https://item.rakuten.co.jp/irisplaza-r/7166779/"
+  },
+  "balmuda-the-toaster-vs-aladdin-graphite-toaster:left": {
+    "name": "BALMUDA The Toaster K11A",
+    "purchaseUrl": "https://item.rakuten.co.jp/akindo/k11a-bk/"
+  },
+  "balmuda-the-toaster-vs-aladdin-graphite-toaster:right": {
+    "name": "アラジン グラファイトトースター 2枚焼き AET-GS13D",
+    "purchaseUrl": "https://item.rakuten.co.jp/hotnet-shop/070943/"
   }
 }

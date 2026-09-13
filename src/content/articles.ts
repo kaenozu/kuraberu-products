@@ -20,6 +20,7 @@ export {
   // Individual article exports (alphabetical by slug)
   echoDot5thVsNestMini2ndArticle,
   brunoBoe021VsIrisPhp1002tcArticle,
+  balmudaTheToasterVsAladdinArticle,
   babybjornArticle,
   babybjornBouncerArticle,
   babybjornOnekaiArticle,
