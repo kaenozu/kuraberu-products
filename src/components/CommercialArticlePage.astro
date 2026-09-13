@@ -226,7 +226,7 @@ const hasSourceLinks = seed.sourceLinks && seed.sourceLinks.length > 0;
 
     <h2 id="faq">よくある質問</h2>
     <div class="faq-list">
-      {faq.map((entry) => <details class="faq-item"><summary><h3>{entry.question}</h3></summary><p>{entry.answer}</p></details>)}
+      {faq.map((entry) => <details class="faq-item"><summary><span>{entry.question}</span></summary><p>{entry.answer}</p></details>)}
     </div>
 
     <h2>購入前の注意</h2>

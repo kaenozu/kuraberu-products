@@ -135,7 +135,7 @@ const clientData = {
     <div class="faq-list">
       {pageContent.faq.map((entry: (typeof pageContent.faq)[number]) => (
         <details class="faq-item">
-          <summary><h3>{entry.question}</h3></summary>
+          <summary><span>{entry.question}</span></summary>
           <p>{entry.answer}</p>
         </details>
       ))}
