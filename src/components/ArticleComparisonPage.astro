@@ -126,11 +126,20 @@ if (props.articleId) {
     const lm = article.leftModel;
     const rm = article.rightModel;
 
-    const toSide = (m: ComparisonSide, side: "left" | "right"): Side => ({
-      ...m,
-      guidePoints: [...m.guidePoints],
-      purchaseHref: (articlePurchaseLinks as Record<string, { purchaseUrl: string }>)[`${purchaseKey}:${side}`]?.purchaseUrl,
-    });
+    const toSide = (m: ComparisonSide, side: "left" | "right"): Side => {
+      const purchase = (articlePurchaseLinks as Record<string, {
+        rakutenAffiliateUrl?: string;
+        amazonAsin?: string;
+      }>)[`${purchaseKey}:${side}`];
+      return {
+        ...m,
+        guidePoints: [...m.guidePoints],
+        purchaseHref: purchase?.rakutenAffiliateUrl,
+        amazonHref: purchase?.amazonAsin
+          ? `https://www.amazon.co.jp/dp/${purchase.amazonAsin}`
+          : undefined,
+      };
+    };
 
     const leftAudiences = lm.guidePoints.length > 0 ? lm.guidePoints[0] : `${lm.line}を選ぶ人向け`;
     const rightAudiences = rm.guidePoints.length > 0 ? rm.guidePoints[0] : `${rm.line}を選ぶ人向け`;
@@ -190,17 +199,26 @@ if (props.articleId) {
     }
     const seed = manualArticleSeeds.find((s) => s.id === props.articleId);
 
-    const toSideFromComp = (side: "left" | "right"): Side => ({
-      brand: compEntry[side].brand,
-      line: compEntry[side].line,
-      tagline: compEntry[side].tagline,
-      image: compEntry[side].image,
-      imageAlt: compEntry[side].imageAlt,
-      officialHref: compEntry[side].officialHref,
-      guidePoints: [...compEntry[side].guidePoints],
-      productId: compEntry[side].productId,
-      purchaseHref: (articlePurchaseLinks as Record<string, { purchaseUrl: string }>)[`${purchaseKey}:${side}`]?.purchaseUrl,
-    });
+    const toSideFromComp = (side: "left" | "right"): Side => {
+      const purchase = (articlePurchaseLinks as Record<string, {
+        rakutenAffiliateUrl?: string;
+        amazonAsin?: string;
+      }>)[`${purchaseKey}:${side}`];
+      return {
+        brand: compEntry[side].brand,
+        line: compEntry[side].line,
+        tagline: compEntry[side].tagline,
+        image: compEntry[side].image,
+        imageAlt: compEntry[side].imageAlt,
+        officialHref: compEntry[side].officialHref,
+        guidePoints: [...compEntry[side].guidePoints],
+        productId: compEntry[side].productId,
+        purchaseHref: purchase?.rakutenAffiliateUrl,
+        amazonHref: purchase?.amazonAsin
+          ? `https://www.amazon.co.jp/dp/${purchase.amazonAsin}`
+          : undefined,
+      };
+    };
 
     const leftSide = toSideFromComp("left");
     const rightSide = toSideFromComp("right");
@@ -319,6 +337,7 @@ const {
   purchaseWarning, disclaimer,
 } = resolved;
 const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left: r.left, right: r.right }))) as SpecRow[];
+const shouldShowAmazon = props.showAmazon ?? articleMetadata.purchaseLinkStatus === "verified";
 ---
 
 <BaseLayout title={articleMetadata.title} description={articleMetadata.description} article={articleMetadata} faq={faqEntries}>
@@ -410,8 +429,8 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <div class="purchase-cards">
       {(left.purchaseHref || right.purchaseHref) ? (
         <>
-          <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} amazonHref={left.amazonHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
-          <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} amazonHref={right.amazonHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={props.showAmazon} />
+          <PurchaseCard name={leftPurchaseName} audience={leftPurchaseAudience} href={left.purchaseHref} amazonHref={left.amazonHref} imagePath={left.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={shouldShowAmazon} />
+          <PurchaseCard name={rightPurchaseName} audience={rightPurchaseAudience} href={right.purchaseHref} amazonHref={right.amazonHref} imagePath={right.image} placement="article-end" note="価格・在庫は販売先でご確認ください。" purchaseLinkStatus={articleMetadata.purchaseLinkStatus} showAmazon={shouldShowAmazon} />
         </>
       ) : null}
     </div>

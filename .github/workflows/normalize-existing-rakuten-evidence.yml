@@ -1,0 +1,80 @@
+name: normalize existing Rakuten evidence
+
+on:
+  push:
+    branches:
+      - fix/affiliate-completeness-gate-2
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: fix/affiliate-completeness-gate-2
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Normalize only evidence already present in purchaseUrl
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from urllib.parse import parse_qs, unquote, urlparse
+
+          path = Path('src/data/article-purchase-links.json')
+          data = json.loads(path.read_text())
+          product_added = 0
+          affiliate_added = 0
+
+          affiliate_hosts = {'hb.afl.rakuten.co.jp', 'r10.to', 'a.r10.to'}
+          for key, entry in data.items():
+              raw = entry.get('purchaseUrl')
+              if not isinstance(raw, str) or not raw:
+                  continue
+              parsed = urlparse(raw)
+              host = parsed.hostname or ''
+              if host == 'item.rakuten.co.jp':
+                  if not entry.get('rakutenProductUrl'):
+                      entry['rakutenProductUrl'] = raw
+                      product_added += 1
+                  continue
+              if host not in affiliate_hosts:
+                  continue
+              if not entry.get('rakutenAffiliateUrl'):
+                  entry['rakutenAffiliateUrl'] = raw
+                  affiliate_added += 1
+              if host == 'hb.afl.rakuten.co.jp' and not entry.get('rakutenProductUrl'):
+                  pc = parse_qs(parsed.query).get('pc', [])
+                  if pc:
+                      candidate = unquote(pc[0])
+                      candidate_url = urlparse(candidate)
+                      if candidate_url.scheme == 'https' and candidate_url.hostname == 'item.rakuten.co.jp':
+                          entry['rakutenProductUrl'] = candidate
+                          product_added += 1
+
+          path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
+          print(f'rakutenProductUrl added={product_added}')
+          print(f'rakutenAffiliateUrl added={affiliate_added}')
+          PY
+      - run: pnpm exec prettier --check src/data/article-purchase-links.json
+      - run: pnpm test -- --run tests/affiliate-link-completeness.test.ts
+      - run: node scripts/check-purchase-link-consistency.mjs || true
+      - name: Commit evidence normalization
+        run: |
+          git diff --check
+          if git diff --quiet -- src/data/article-purchase-links.json; then
+            echo "No existing Rakuten evidence to normalize."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/article-purchase-links.json
+          git commit -m "data: normalize existing Rakuten link evidence"
+          git push origin HEAD:fix/affiliate-completeness-gate-2

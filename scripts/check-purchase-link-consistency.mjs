@@ -34,6 +34,60 @@ const REGISTRY_FILE = "data/article-purchase-links.json";
 const ARTICLES_FILE = "content/articles.ts";
 const MODULAR_ARTICLES_DIR = "content/articles";
 
+const AMAZON_ASIN_PATTERN = /^[A-Z0-9]{10}$/i;
+const RAKUTEN_AFFILIATE_HOST_PATTERN =
+  /^https:\/\/(?:[^./]+\.)?(?:hb\.afl\.rakuten\.co\.jp|r10\.to|a\.r10\.to)(?:\/|$)/i;
+
+/**
+ * verified 比較記事の各商品について、楽天・Amazon双方の成果計測情報を検査する。
+ * 商品identity（rakutenProductUrl）と成果計測URL（rakutenAffiliateUrl）を分離し、
+ * 通常の item.rakuten.co.jp URL や Amazon検索URLを公開CTAとして許可しない。
+ *
+ * @param {{ registry: Record<string, {name?: string, purchaseUrl?: string, rakutenProductUrl?: string, rakutenAffiliateUrl?: string, amazonAsin?: string}>; verifiedComparisons: readonly string[]; }} options
+ * @returns {Array<{key: string, missing?: string[], invalid?: string[]}>}
+ */
+export function checkAffiliateLinkCompleteness({
+  registry = {},
+  verifiedComparisons = [],
+} = {}) {
+  const findings = [];
+  for (const articleId of verifiedComparisons) {
+    for (const side of ["left", "right"]) {
+      const key = `${articleId}:${side}`;
+      const entry = registry[key];
+      const missing = [];
+      const invalid = [];
+      if (!entry || typeof entry !== "object") {
+        findings.push({ key, missing: ["registry entry"] });
+        continue;
+      }
+      if (
+        typeof entry.rakutenProductUrl !== "string" ||
+        !entry.rakutenProductUrl.trim()
+      )
+        missing.push("rakutenProductUrl");
+      if (
+        typeof entry.rakutenAffiliateUrl !== "string" ||
+        !entry.rakutenAffiliateUrl.trim()
+      )
+        missing.push("rakutenAffiliateUrl");
+      else if (!RAKUTEN_AFFILIATE_HOST_PATTERN.test(entry.rakutenAffiliateUrl))
+        invalid.push("rakutenAffiliateUrl");
+      if (typeof entry.amazonAsin !== "string" || !entry.amazonAsin.trim())
+        missing.push("amazonAsin");
+      else if (!AMAZON_ASIN_PATTERN.test(entry.amazonAsin.trim()))
+        invalid.push("amazonAsin");
+      if (missing.length || invalid.length)
+        findings.push({
+          key,
+          ...(missing.length ? { missing } : {}),
+          ...(invalid.length ? { invalid } : {}),
+        });
+    }
+  }
+  return findings;
+}
+
 // CTA audit cache: fresh evidence from a past strict (non-skip) audit.
 // When ALLOW_NETWORK_SKIP=1, skipped CTAs are NOT counted as audited.
 // Instead, coverage requires either network-resolved evidence OR a fresh cache.
@@ -627,6 +681,36 @@ if (
     "purchase link consistency ok: all purchase links reference the articlePurchaseLinks registry; block keys match article-end PurchaseCards in every comparison article",
   );
   const counts = countPurchaseLinkStatuses();
+  const rawRegistry = JSON.parse(
+    fs.readFileSync(path.join("src", REGISTRY_FILE), "utf8"),
+  );
+  const statusesForCompleteness = loadArticleStatuses();
+  const verifiedComparisons = [...statusesForCompleteness.entries()]
+    .filter(
+      ([id, status]) =>
+        status === "verified" &&
+        (rawRegistry[`${id}:left`] !== undefined ||
+          rawRegistry[`${id}:right`] !== undefined),
+    )
+    .map(([id]) => id);
+  const affiliateFindings = checkAffiliateLinkCompleteness({
+    registry: rawRegistry,
+    verifiedComparisons,
+  });
+  if (affiliateFindings.length) {
+    throw new Error(
+      [
+        `affiliate completeness failure: ${affiliateFindings.length} verified comparison side(s) are missing valid Rakuten + Amazon metadata`,
+        ...affiliateFindings.map(
+          (finding) =>
+            `- ${finding.key}: ${[
+              ...(finding.missing ?? []).map((field) => `missing ${field}`),
+              ...(finding.invalid ?? []).map((field) => `invalid ${field}`),
+            ].join(", ")}`,
+        ),
+      ].join("\n"),
+    );
+  }
   console.log(`purchase link status audit: ${JSON.stringify(counts)}`);
 
   const { ctas, statuses } = collectVerifiedCtaUrls();
