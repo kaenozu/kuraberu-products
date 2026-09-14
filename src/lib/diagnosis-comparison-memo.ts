@@ -30,7 +30,7 @@ export function extractArticleIdsFromProduct(product: {
 
 /** 比較メモの状態をlocalStorageから読み取る */
 export function loadComparisonMemo(
-  knownIds: readonly string[],
+  knownIds?: readonly string[],
 ): ComparisonMemoState {
   try {
     const raw = localStorage.getItem(comparisonMemoStorageKey);
@@ -41,22 +41,23 @@ export function loadComparisonMemo(
 }
 
 /** 比較メモの状態をlocalStorageに保存する */
-export function saveComparisonMemo(state: ComparisonMemoState): void {
+export function saveComparisonMemo(state: ComparisonMemoState): boolean {
   try {
     const encoded = encodeComparisonMemo(state.ids);
     localStorage.setItem(comparisonMemoStorageKey, encoded);
+    return true;
   } catch {
-    // プライベートモード等で保存できない場合は黙って無視する
+    return false;
   }
 }
 
 /** 商品の関連記事を比較メモに追加する */
 export function addProductArticlesToMemo(
   product: { articleUrls: readonly string[] },
-  knownIds: readonly string[],
+  _knownIds: readonly string[],
 ): { added: string[]; alreadyExists: string[]; atLimit: boolean } {
   const articleIds = extractArticleIdsFromProduct(product);
-  const memoState = loadComparisonMemo(knownIds);
+  const memoState = loadComparisonMemo();
 
   const added: string[] = [];
   const alreadyExists: string[] = [];
@@ -81,8 +82,8 @@ export function addProductArticlesToMemo(
     }
   }
 
-  if (added.length > 0) {
-    saveComparisonMemo(currentState);
+  if (added.length > 0 && !saveComparisonMemo(currentState)) {
+    return { added: [], alreadyExists, atLimit };
   }
 
   return { added, alreadyExists, atLimit };
@@ -91,20 +92,20 @@ export function addProductArticlesToMemo(
 /** 商品が比較メモに含まれているかどうかを判定する */
 export function isProductInMemo(
   product: { articleUrls: readonly string[] },
-  knownIds: readonly string[],
+  _knownIds: readonly string[],
 ): boolean {
   const articleIds = extractArticleIdsFromProduct(product);
-  const memoState = loadComparisonMemo(knownIds);
+  const memoState = loadComparisonMemo();
   return articleIds.some((id) => memoState.ids.includes(id));
 }
 
 /** 比較メモから商品の関連記事を削除する */
 export function removeProductArticlesFromMemo(
   product: { articleUrls: readonly string[] },
-  knownIds: readonly string[],
+  _knownIds: readonly string[],
 ): { removed: string[] } {
   const articleIds = extractArticleIdsFromProduct(product);
-  const memoState = loadComparisonMemo(knownIds);
+  const memoState = loadComparisonMemo();
 
   const removed: string[] = [];
   let currentState = memoState;
@@ -118,8 +119,8 @@ export function removeProductArticlesFromMemo(
     }
   }
 
-  if (removed.length > 0) {
-    saveComparisonMemo(currentState);
+  if (removed.length > 0 && !saveComparisonMemo(currentState)) {
+    return { removed: [] };
   }
 
   return { removed };

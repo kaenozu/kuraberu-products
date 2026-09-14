@@ -9,6 +9,8 @@ import { isVerifiedRakutenPurchaseDestination } from "../../config/runtime-env.m
 import { reasonMessages } from "../domain/diagnosis/reasons";
 import type {
   DiagnosisResult,
+  DiagnosisQuestion,
+  DiagnosisAnswers,
   Product,
   PurchaseLink,
   RankedProduct,
@@ -37,6 +39,43 @@ export function hasAnswer(
   return (
     answer !== undefined && answer !== null && String(answer).trim().length > 0
   );
+}
+
+export function sanitizeDiagnosisAnswers(
+  questions: readonly DiagnosisQuestion[],
+  raw: unknown,
+): { answers: DiagnosisAnswers; firstInvalidRequiredIndex: number | null } {
+  const answers: DiagnosisAnswers = {};
+  const candidate =
+    raw && typeof raw === "object" && !Array.isArray(raw)
+      ? (raw as Record<string, unknown>)
+      : {};
+
+  questions.forEach((question) => {
+    const value = candidate[question.id];
+    const optionIds = new Set(
+      (question.options ?? []).map((option) => option.id),
+    );
+    const valid =
+      question.type === "multi"
+        ? Array.isArray(value) &&
+          value.length > 0 &&
+          value.every((item) => typeof item === "string" && optionIds.has(item))
+        : question.type === "number"
+          ? typeof value === "number" && Number.isFinite(value)
+          : typeof value === "string" && optionIds.has(value);
+    if (valid) answers[question.id] = value as DiagnosisAnswers[string];
+  });
+
+  const firstInvalidRequiredIndex =
+    questions.findIndex(
+      (question) => question.required && !hasAnswer(answers[question.id]),
+    ) ?? -1;
+  return {
+    answers,
+    firstInvalidRequiredIndex:
+      firstInvalidRequiredIndex >= 0 ? firstInvalidRequiredIndex : null,
+  };
 }
 
 /**

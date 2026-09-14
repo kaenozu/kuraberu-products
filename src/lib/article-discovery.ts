@@ -88,8 +88,13 @@ export function matchesArticle(
       ...subjects,
     ].join(" "),
   );
-  const expandedQuery = expandWithSynonyms(query);
-  return expandedQuery.split(" ").every((term) => haystack.includes(term));
+  const queryGroups = query
+    .split(" ")
+    .filter(Boolean)
+    .map((term) => [term, ...(SYNONYMS.get(term) ?? [])]);
+  return queryGroups.every((group) =>
+    group.some((term) => haystack.includes(term)),
+  );
 }
 
 export function parseDiscoveryState(

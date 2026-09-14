@@ -125,6 +125,46 @@ describe("diagnosis-comparison-memo", () => {
       expect(saved.ids).toContain("article-2");
     });
 
+    it("preserves memo entries outside the diagnosis category", () => {
+      localStorageMock.set(
+        comparisonMemoStorageKey,
+        JSON.stringify({
+          version: 1,
+          ids: ["article-outside-category", "article-1"],
+        }),
+      );
+
+      const result = addProductArticlesToMemo(
+        { articleUrls: ["/articles/article-2/"] },
+        ["article-1", "article-2"],
+      );
+
+      expect(result.added).toEqual(["article-2"]);
+      expect(
+        JSON.parse(localStorageMock.get(comparisonMemoStorageKey) ?? "{}").ids,
+      ).toEqual(["article-outside-category", "article-1", "article-2"]);
+    });
+
+    it("preserves memo entries outside the diagnosis category when removing", () => {
+      localStorageMock.set(
+        comparisonMemoStorageKey,
+        JSON.stringify({
+          version: 1,
+          ids: ["article-outside-category", "article-1"],
+        }),
+      );
+
+      const result = removeProductArticlesFromMemo(
+        { articleUrls: ["/articles/article-1/"] },
+        ["article-1"],
+      );
+
+      expect(result.removed).toEqual(["article-1"]);
+      expect(
+        JSON.parse(localStorageMock.get(comparisonMemoStorageKey) ?? "{}").ids,
+      ).toEqual(["article-outside-category"]);
+    });
+
     it("does not add duplicates", () => {
       // Pre-populate memo
       localStorageMock.set(
@@ -141,29 +181,28 @@ describe("diagnosis-comparison-memo", () => {
       expect(result.alreadyExists).toEqual(["article-1"]);
     });
 
-    it("respects memo limit", () => {
-      // Pre-populate memo with items at the limit using knownIds
-      const existingIds = Array.from(
-        { length: comparisonMemoLimit },
-        (_, i) => `article-${(i % 3) + 1}`,
+    it("respects memo limit with unique ids", () => {
+      const limitKnownIds = Array.from(
+        { length: comparisonMemoLimit + 1 },
+        (_, i) => `article-${i + 1}`,
       );
+      const existingIds = limitKnownIds.slice(0, comparisonMemoLimit);
       localStorageMock.set(
         comparisonMemoStorageKey,
         encodeComparisonMemo(existingIds),
       );
 
-      // Verify the memo is at the limit
       const saved = JSON.parse(
         localStorageMock.get(comparisonMemoStorageKey) ?? "{}",
       );
-      expect(saved.ids.length).toBe(comparisonMemoLimit);
+      expect(saved.ids).toHaveLength(comparisonMemoLimit);
 
-      // Try to add a new article that's not in the memo
-      const product = { articleUrls: ["/articles/article-1/"] };
-      const result = addProductArticlesToMemo(product, knownIds);
+      const result = addProductArticlesToMemo(
+        { articleUrls: [`/articles/article-${comparisonMemoLimit + 1}/`] },
+        limitKnownIds,
+      );
 
-      // article-1 is already in the memo, so it should be in alreadyExists
-      expect(result.alreadyExists).toContain("article-1");
+      expect(result.atLimit).toBe(true);
       expect(result.added).toEqual([]);
     });
   });

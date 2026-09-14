@@ -64,6 +64,7 @@
   const articleSearchText = (article) =>
     normalize(
       [
+        article.title,
         article.headline,
         article.summary,
         article.category,
@@ -75,14 +76,8 @@
     );
 
   // 同義語展開: クエリ語を同義語集合で拡張してから記事テキストと照合する。
-  const expandQueryWithSynonyms = (terms) => {
-    const expanded = [...terms];
-    for (const term of terms) {
-      const syns = SYNONYMS.get(term);
-      if (syns) expanded.push(...syns);
-    }
-    return expanded;
-  };
+  const expandQueryWithSynonyms = (terms) =>
+    terms.map((term) => [term, ...(SYNONYMS.get(term) || [])]);
 
   const createCard = (article) => {
     const card = document.createElement("article");
@@ -178,8 +173,8 @@
         (article) =>
           (!category.value || article.category === category.value) &&
           (!(tag && tag.value) || (article.tags || []).includes(tag.value)) &&
-          expandQueryWithSynonyms(terms).every((term) =>
-            articleSearchText(article).includes(term),
+          expandQueryWithSynonyms(terms).every((group) =>
+            group.some((term) => articleSearchText(article).includes(term)),
           ),
       );
       results.replaceChildren(...matches.map(createCard));
