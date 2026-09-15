@@ -70,8 +70,7 @@ describe("environment variable configuration", () => {
   it("accepts direct Rakuten URLs with only the affiliate redirect ID", () => {
     const result = validateBuildEnvironment({
       ...productionBase,
-      RAKUTEN_AFFILIATE_ID:
-        "01234567.89abcdef.01234567.89abcdef",
+      RAKUTEN_AFFILIATE_ID: "01234567.89abcdef.01234567.89abcdef",
       PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
       PUBLIC_RAKUTEN_SARASARA_URL: "https://hb.afl.rakuten.co.jp/ci/sarasara",
     });
