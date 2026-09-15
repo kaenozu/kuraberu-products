@@ -71,7 +71,7 @@ describe("environment variable configuration", () => {
     const result = validateBuildEnvironment({
       ...productionBase,
       RAKUTEN_AFFILIATE_ID:
-        "0123456789abcdef.01234567.fedcba9876543210.89abcdef",
+        "01234567.89abcdef.01234567.89abcdef",
       PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
       PUBLIC_RAKUTEN_SARASARA_URL: "https://hb.afl.rakuten.co.jp/ci/sarasara",
     });
