@@ -24,7 +24,8 @@ export const thermosTigerBottleArticle = defineArticleMetadata({
   changeLog: [
     {
       date: "2026-09-15",
-      summary: "SNS欄に、JNLシリーズ旧型の利用者投稿への直接リンクとX検索リンクを追加。",
+      summary:
+        "SNS欄に、JNLシリーズ旧型の利用者投稿への直接リンクとX検索リンクを追加。",
     },
     {
       date: "2026-09-01",
