@@ -2,10 +2,23 @@ import { readFileSync, readdirSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   createExternalEmbedConfig,
+  createXSearchUrl,
   EXTERNAL_EMBED_PROVIDERS,
 } from "../src/lib/external-embeds";
 
 describe("external embed URL validation", () => {
+  it("creates a safe X search link from a non-empty query", () => {
+    const url = new URL(createXSearchUrl('"JNL-S500" OR "MTA-J050"'));
+
+    expect(url.origin).toBe("https://x.com");
+    expect(url.pathname).toBe("/search");
+    expect(url.searchParams.get("q")).toBe('"JNL-S500" OR "MTA-J050"');
+    expect(url.searchParams.get("src")).toBe("typed_query");
+    expect(() => createXSearchUrl("  ")).toThrow(
+      "Xの検索語を指定してください。",
+    );
+  });
+
   it("normalizes supported official URLs", () => {
     expect(
       createExternalEmbedConfig(

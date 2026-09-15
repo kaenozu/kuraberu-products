@@ -2,6 +2,7 @@
 // SNS投稿がある場合は埋め込みを表示し、ない場合も参考情報欄の空状態を表示する。
 // 比較の根拠は常にメーカー公式情報であり、SNSは参考情報に限定する。
 import type { ExternalEmbedMatchRank } from "../lib/external-embeds";
+import { createXSearchUrl } from "../lib/external-embeds";
 
 interface Props {
   query: string;
@@ -13,6 +14,7 @@ interface Props {
 
 const { hasPosts = false, bestMatch } = Astro.props;
 const visible = Boolean(Astro.props.query?.trim());
+const xSearchUrl = visible ? createXSearchUrl(Astro.props.query) : undefined;
 ---
 {visible ? (
   <section
@@ -27,7 +29,13 @@ const visible = Boolean(Astro.props.query?.trim());
     {hasPosts && bestMatch && bestMatch !== "brand" ? (
       <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
     ) : (
-      <p class="sns-posts-note">今回の検索では、対象商品を明確に確認できる投稿は見つかりませんでした。</p>
+      <div class="sns-empty-state">
+        <p class="sns-posts-note">個別に確認した投稿はまだ掲載していません。Xで関連する投稿を検索できます。</p>
+        <a class="card-link sns-search-link" href={xSearchUrl} target="_blank" rel="noopener noreferrer">
+          Xで関連する投稿を探す →
+        </a>
+        <p class="sns-search-caption">検索結果には対象型番と一致しない投稿が含まれる場合があります。</p>
+      </div>
     )}
     <slot />
   </section>
@@ -42,5 +50,22 @@ const visible = Boolean(Astro.props.query?.trim());
     margin: 0;
     color: var(--text-muted, #666);
     font-size: 0.9rem;
+  }
+
+  .sns-empty-state {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+  }
+
+  .sns-search-link {
+    width: fit-content;
+    min-height: 44px;
+  }
+
+  .sns-search-caption {
+    margin: 0;
+    color: var(--text-muted, #666);
+    font-size: 0.8rem;
   }
 </style>

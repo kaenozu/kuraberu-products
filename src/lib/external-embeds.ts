@@ -28,6 +28,18 @@ export type ExternalEmbedConfig = {
   minimumHeight: number;
 };
 
+export function createXSearchUrl(query: string): string {
+  const normalizedQuery = query.trim();
+  if (!normalizedQuery) {
+    throw new Error("Xの検索語を指定してください。");
+  }
+
+  const url = new URL("https://x.com/search");
+  url.searchParams.set("q", normalizedQuery);
+  url.searchParams.set("src", "typed_query");
+  return url.toString();
+}
+
 const providerLabels: Record<ExternalEmbedProvider, string> = {
   x: "X",
   youtube: "YouTube",
