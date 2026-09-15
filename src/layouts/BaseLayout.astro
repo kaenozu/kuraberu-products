@@ -6,6 +6,7 @@ import {site} from '../config/site';
 import type {ArticleMetadata} from '../content/articles';
 import {contentTypeFor} from '../../config/article-layout.mjs';
 import {safeJsonForScript} from '../lib/safe-json';
+import {resolveImageSize} from '../lib/image-resolver';
 
 interface Props {
   title?: string;
@@ -34,6 +35,9 @@ const currentPath = Astro.url.pathname;
 const articleImage = article?.imagePath
   ? new URL(article.imagePath, `${site.url}/`).toString()
   : undefined;
+// og:image の実寸。src/assets/products/ の eager glob（ImageMetadata）から width/height を得る。
+// 外部URLや解決不能な画像は undefined になり、その場合は width/height メタを省略する。
+const articleImageSize = resolveImageSize(article?.imagePath);
 // 記事の JSON-LD 分化（article:content-type と同一の contentTypeFor から導出）。
 // 商品名を宣言した記事だけ about（schema.org Product）を出力する:
 // 商品ガイド = 1 商品、比較記事 = 2 商品。未宣言の比較記事は about を出さない。
@@ -136,12 +140,17 @@ const faqStructuredData = faq && faq.length > 0
     {articleImage && (
       <>
         <meta property="og:image" content={articleImage} />
-        {/* OGP バリデータ警告回避のため summary_large_image 推奨サイズ (1200x630) を併記。
-            記事画像の実寸は記事ごとに異なるが、実寸不明の状態でもバリデータは warning のみ。
-            正確な実寸は記事画像アセット側に imageWidth/imageHeight が追加された時点で
-            そちらを参照する (#557)。 */}
-        <meta property="og:image:width" content="1200" />
-        <meta property="og:image:height" content="630" />
+        {/* 記事画像の実寸は ImageMetadata からそのまま出力する。#557 で awaitしていた
+            アセット側の imageWidth/imageHeight と同等の情報をビルド時に解決できるため。
+            寸法が不明（外部URL等）の場合は width/height を出さない:
+            OGP バリデータは warning のみなので、実寸と食い違う固定 1200x630 を
+            併記するより省略する方が正確。 */}
+        {articleImageSize && (
+          <>
+            <meta property="og:image:width" content={String(articleImageSize.width)} />
+            <meta property="og:image:height" content={String(articleImageSize.height)} />
+          </>
+        )}
         <meta property="og:image:alt" content={article?.headline ?? title} />
       </>
     )}

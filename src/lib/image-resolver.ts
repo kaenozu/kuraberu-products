@@ -46,3 +46,28 @@ export function resolveImage(path: string | undefined): any | undefined {
   }
   return mod.default;
 }
+
+/**
+ * 画像パスの実寸（ImageMetadata の width/height）を返す。
+ *
+ * resolveImage() と違い、該当画像なしや外部URLではビルドエラーにせず undefined を返す。
+ * 用途は og:image の width/height 補助メタの出力であり、存在しない画像そのものは
+ * 各コンポーネントの resolveImage() が既にビルドエラーにしているため、ここでは
+ * 寸法が得られない場合にメタを省略できる形にする。
+ */
+export function resolveImageSize(
+  path: string | undefined,
+): { width: number; height: number } | undefined {
+  if (!path) return undefined;
+  // 外部URLはローカル最適化の対象外（寸法も不明）
+  if (path.startsWith("http://") || path.startsWith("https://"))
+    return undefined;
+  // "/products/xxx.jpg" → "/src/assets/products/xxx.jpg"
+  const normalized = path.replace(/^\/products\//, "/src/assets/products/");
+  const mod = imageModules[normalized];
+  const meta = mod?.default;
+  if (typeof meta?.width === "number" && typeof meta?.height === "number") {
+    return { width: meta.width, height: meta.height };
+  }
+  return undefined;
+}
