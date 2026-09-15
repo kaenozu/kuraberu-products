@@ -12,6 +12,7 @@ import { getViteConfig } from "astro/config";
 // 閾値は現行実測値より少し下に置き、大幅な後退だけを検知する。
 export default getViteConfig({
   test: {
+    setupFiles: ["./tests/vitest-setup.ts"],
     coverage: {
       provider: "v8",
       reporter: ["text", "lcov"],
