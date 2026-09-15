@@ -88,7 +88,7 @@ const resolvedRightImage = right ? resolveImage(right.image) : undefined;
               <p class="hero-product-tagline">{product.tagline}<b>こちら</b></p>
             )}
             <div class="hero-product-actions">
-              <a class="hero-official" href={product.officialHref} target="_blank" rel="noopener noreferrer">公式</a>
+              <a class="hero-official" href={product.officialHref} target="_blank" rel="noopener noreferrer">メーカー公式ページを見る ↗</a>
             </div>
           </article>
         );
@@ -234,9 +234,26 @@ const resolvedRightImage = right ? resolveImage(right.image) : undefined;
     filter: brightness(1.05);
   }
   .hero-official {
-    font-size: 0.8rem;
-    color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.72);
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    font-weight: 650;
+    line-height: 1.35;
+    text-align: center;
+    text-decoration-thickness: 1px;
     text-underline-offset: 3px;
+  }
+  .hero-official:hover {
+    border-color: var(--product-color);
+    color: var(--ink);
+    background: #fff;
   }
   @media (max-width: 720px) {
     .hero-compare-grid {

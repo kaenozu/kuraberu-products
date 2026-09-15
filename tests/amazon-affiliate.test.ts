@@ -136,7 +136,8 @@ describe("Amazon Associates integration", () => {
     const amazonLink = html.match(
       /<a(?=[^>]*amazon-purchase-link)[\s\S]*?<\/a>/,
     )?.[0];
-    expect(amazonLink).toContain("cta-card-image");
+    expect(amazonLink).not.toContain("cta-card-image");
+    expect(html.match(/class="purchase-card__image"/g)).toHaveLength(1);
     expect(amazonLink).toContain("amazon-purchase-link");
   });
 
