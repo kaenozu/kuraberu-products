@@ -939,7 +939,7 @@ a {
 .article-pagination a:hover,
 .article-pagination a:focus-visible {
   border-color: var(--ink);
-  background: var(--wash);
+  background: var(--section-alt);
 }
 .article-pagination__current {
   border-color: var(--ink);
