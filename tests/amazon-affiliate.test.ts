@@ -115,6 +115,7 @@ describe("Amazon Associates integration", () => {
         name: "サーモス JNL-S500",
         audience: "軽さを優先する人向け",
         href: validRakutenUrl,
+        imagePath: "/products/thermos-jnl-s500.jpg",
         productId: "thermos-jnl-s500",
         placement: "article-end",
         purchaseLinkStatus: "verified",
@@ -132,6 +133,11 @@ describe("Amazon Associates integration", () => {
     expect(html).toContain('data-product-id="thermos-jnl-s500"');
     expect(html).toContain('data-placement="article-end"');
     expect(html).toContain("（広告）");
+    const amazonLink = html.match(
+      /<a(?=[^>]*amazon-purchase-link)[\s\S]*?<\/a>/,
+    )?.[0];
+    expect(amazonLink).toContain("cta-card-image");
+    expect(amazonLink).toContain("amazon-purchase-link");
   });
 
   it("shows a tracked Amazon search CTA on every verified card when configured", async () => {
