@@ -70,9 +70,9 @@ const resolvedImage = resolveImage(imagePath);
   <div class="purchase-card__main">
     {(resolvedImage || imageUrl) && (
       resolvedImage ? (
-        <Picture class="purchase-card__image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
+        <Picture class="purchase-card__image" src={resolvedImage} alt="" width={160} height={160} loading="lazy" formats={["avif", "webp"]} />
       ) : (
-        <img class="purchase-card__image" src={imageUrl} alt="" width="96" height="96" loading="lazy" referrerpolicy="no-referrer" />
+        <img class="purchase-card__image" src={imageUrl} alt="" width="160" height="160" loading="lazy" referrerpolicy="no-referrer" />
       )
     )}
     <div class="purchase-card__body">
@@ -86,7 +86,6 @@ const resolvedImage = resolveImage(imagePath);
         href={href}
         productId={productId}
         label="楽天市場で商品ページを見る"
-        imagePath={imagePath}
         placement={placement}
         searchQuery={searchQuery}
         requiredTerms={requiredTerms}
@@ -101,9 +100,6 @@ const resolvedImage = resolveImage(imagePath);
           data-product-id={productId}
           data-placement={placement}
         >
-          {resolvedImage && (
-            <Picture class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
-          )}
           <span class="cta-card-body">
             <span class="cta-card-label">Amazonで商品を確認</span>
             <span class="cta-card-sub"><span class="ad-note">（広告）</span> →</span>
