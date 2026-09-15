@@ -101,7 +101,13 @@ const resolvedImage = resolveImage(imagePath);
           data-product-id={productId}
           data-placement={placement}
         >
-          Amazonで商品を確認 → <span class="ad-note">（広告）</span>
+          {resolvedImage && (
+            <Picture class="cta-card-image" src={resolvedImage} alt="" width={96} height={96} loading="lazy" formats={["avif", "webp"]} />
+          )}
+          <span class="cta-card-body">
+            <span class="cta-card-label">Amazonで商品を確認</span>
+            <span class="cta-card-sub"><span class="ad-note">（広告）</span> →</span>
+          </span>
         </a>
       )}
     </>

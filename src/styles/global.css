@@ -1211,6 +1211,21 @@ a {
   border-color: transparent;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
 }
+.purchase-card .cta.cta-card.amazon-purchase-link {
+  background: #fffaf0;
+  color: #1a1a1a;
+  border: 1px solid #d3a400;
+  border-left: 4px solid #e3a008;
+}
+.purchase-card .cta.cta-card.amazon-purchase-link:hover {
+  border-color: #b88600;
+  border-left-color: #b88600;
+  box-shadow: 0 2px 8px rgba(120, 82, 0, 0.18);
+}
+.purchase-card .amazon-purchase-link .cta-card-sub,
+.purchase-card .amazon-purchase-link .ad-note {
+  color: #51472f;
+}
 .purchase-card .cta-card-sub {
   color: rgba(255, 255, 255, 0.75);
 }
