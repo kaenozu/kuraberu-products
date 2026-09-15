@@ -15,10 +15,10 @@ export const yamazakiMagnetKitchenShelfArticle = defineArticleMetadata({
   summary:
     "マグネットキッチン棚 タワー Sとワイドを、山崎実業公式のサイズ・耐荷重・設置条件に分けて比較します。",
   publishedAt: "2026-09-11",
-  modifiedAt: "2026-09-11",
+  modifiedAt: "2026-09-13",
   productInfoCheckedAt: "2026-09-11",
-  purchaseLinksCheckedAt: "2026-09-11",
-  purchaseLinkStatus: "unverified",
+  purchaseLinksCheckedAt: "2026-09-13",
+  purchaseLinkStatus: "direct",
   imagePath: "/products/yamazaki-magnet-kitchen-shelf-s.jpg",
   aboutProductNames: [
     "山崎実業 マグネットキッチン棚 タワー S",
@@ -34,6 +34,11 @@ export const yamazakiMagnetKitchenShelfArticle = defineArticleMetadata({
       date: "2026-09-11",
       summary:
         "公式商品ページ2件の到達性を再確認し、最新mainへ移植。購入リンクは検索ページに遷移する短縮URLだったため fail-closed で未設定とし、確認済み商品詳細ページの用意後に付与する。",
+    },
+    {
+      date: "2026-09-13",
+      summary:
+        "商品詳細ページを確認できたため購入リンク2件を付与（S: livingut/486976、ワイド: kaguzaku/yj-5078）。いずれも item.rakuten.co.jp の商品詳細URLで200を確認。",
     },
   ],
 });
