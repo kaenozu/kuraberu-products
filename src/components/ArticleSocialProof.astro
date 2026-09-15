@@ -1,7 +1,8 @@
 ---
-// SNS投稿がある場合は埋め込みを表示し、ない場合も参考情報欄の空状態を表示する。
+// SNS投稿が確認できた場合は投稿または直接リンクを表示し、ない場合も検索先を案内する。
 // 比較の根拠は常にメーカー公式情報であり、SNSは参考情報に限定する。
 import type { ExternalEmbedMatchRank } from "../lib/external-embeds";
+import { createExternalEmbedConfig, createXSearchUrl } from "../lib/external-embeds";
 
 interface Props {
   query: string;
@@ -9,10 +10,19 @@ interface Props {
   hasPosts?: boolean;
   /** 埋め込み投稿の採用基準ランクの最上位（model / series / brand）。brand のみなら非表示 */
   bestMatch?: ExternalEmbedMatchRank;
+  /** 投稿本文を転載せず、確認済みの公開投稿へ直接案内する。 */
+  directPosts?: readonly { label: string; href: string; note?: string }[];
+  searchLabel?: string;
+  searchCaption?: string;
 }
 
-const { hasPosts = false, bestMatch } = Astro.props;
+const { hasPosts = false, bestMatch, directPosts = [], searchLabel, searchCaption } = Astro.props;
 const visible = Boolean(Astro.props.query?.trim());
+const xSearchUrl = visible ? createXSearchUrl(Astro.props.query) : undefined;
+const curatedPosts = directPosts.map((post) => ({
+  ...post,
+  href: createExternalEmbedConfig("x", post.href).canonicalUrl,
+}));
 ---
 {visible ? (
   <section
@@ -24,10 +34,32 @@ const visible = Boolean(Astro.props.query?.trim());
     <p>
       SNS投稿は実際の利用者の感想を知るための参考情報です。商品の仕様や比較結論の根拠には使用していません。比較の根拠はメーカー公式情報のみです。
     </p>
-    {hasPosts && bestMatch && bestMatch !== "brand" ? (
-      <p class="sns-posts-note">対象商品を確認できる投稿を参考情報として掲載しています。</p>
-    ) : (
-      <p class="sns-posts-note">今回の検索では、対象商品を明確に確認できる投稿は見つかりませんでした。</p>
+    {hasPosts && bestMatch && bestMatch !== "brand" && curatedPosts.length > 0 ? (
+      <div class="sns-curated-posts">
+        <p class="sns-posts-note">対象商品または同シリーズについて確認できる公開投稿へのリンクです。投稿内容は参考情報としてご覧ください。</p>
+        <ul>
+          {curatedPosts.map((post) => post.href && (
+            <li>
+              <a class="card-link sns-post-link" href={post.href} target="_blank" rel="noopener noreferrer">
+                {post.label} →
+              </a>
+              {post.note && <p class="sns-search-caption">{post.note}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ) : !hasPosts || !bestMatch || bestMatch === "brand" || curatedPosts.length === 0 ? (
+      <div class="sns-empty-state">
+        <p class="sns-posts-note">個別に確認した投稿はまだ掲載していません。Xで関連する投稿を検索できます。</p>
+      </div>
+    ) : null}
+    {xSearchUrl && (
+      <div class="sns-search-fallback">
+        <a class="card-link sns-search-link" href={xSearchUrl} target="_blank" rel="noopener noreferrer">
+          {searchLabel ?? (curatedPosts.length > 0 ? "Xでほかの投稿を探す →" : "Xで関連する投稿を探す →")}
+        </a>
+        <p class="sns-search-caption">{searchCaption ?? "検索結果には対象型番と一致しない投稿が含まれる場合があります。"}</p>
+      </div>
     )}
     <slot />
   </section>
@@ -42,5 +74,37 @@ const visible = Boolean(Astro.props.query?.trim());
     margin: 0;
     color: var(--text-muted, #666);
     font-size: 0.9rem;
+  }
+
+  .sns-empty-state {
+    display: grid;
+    justify-items: start;
+    gap: 0.75rem;
+  }
+
+  .sns-curated-posts ul {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0.75rem 0 0;
+    padding-left: 1.25rem;
+  }
+
+  .sns-post-link,
+  .sns-search-link {
+    width: fit-content;
+    min-height: 44px;
+  }
+
+  .sns-search-fallback {
+    display: grid;
+    justify-items: start;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .sns-search-caption {
+    margin: 0;
+    color: var(--text-muted, #666);
+    font-size: 0.8rem;
   }
 </style>
