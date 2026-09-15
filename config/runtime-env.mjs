@@ -340,6 +340,11 @@ export function validateBuildEnvironment(environment = process.env) {
     if (!siteUrl) {
       throw new Error("Missing required production variable: PUBLIC_SITE_URL");
     }
+    if (!amazonAssociateTag) {
+      throw new Error(
+        "Missing required production variable: PUBLIC_AMAZON_ASSOCIATE_TAG",
+      );
+    }
 
     const directUrlsReady = Boolean(rakutenPremiumUrl && rakutenSarasaraUrl);
     if (!directUrlsReady && !rakutenApiReady) {

@@ -31,9 +31,10 @@ interface Props {
   commonNote?: string;
   /** 購入リンクの検証状態。verified を明示した場合だけ CTA を表示する。 */
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
+  showNextStepPurchaseCtas?: boolean;
 }
 
-const { left, right, rows, checkedAt, diagnosisHref, commonNote, purchaseLinkStatus } = Astro.props;
+const { left, right, rows, checkedAt, diagnosisHref, commonNote, purchaseLinkStatus, showNextStepPurchaseCtas = true } = Astro.props;
 ---
 {/*
   記事比較の標準骨格（Article Layout v3、2026-08-18 更新）:
@@ -64,6 +65,7 @@ const { left, right, rows, checkedAt, diagnosisHref, commonNote, purchaseLinkSta
     right={{ label: `${right.brand} ${right.line}`, href: right.purchaseHref, productId: right.productId, image: right.image }}
     diagnosisHref={diagnosisHref}
     purchaseLinkStatus={purchaseLinkStatus}
+    showPurchaseCtas={showNextStepPurchaseCtas}
   />
   <TrustLine checkedAt={checkedAt} />
 </section>

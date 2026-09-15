@@ -56,6 +56,8 @@ describe("article CTA layout vs metadata productCount", () => {
             /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
           ) ?? []
         ).length;
+        const nextStepPurchaseDisabled =
+          /data-next-step-purchase="disabled"/i.test(renderedHtml);
 
         // 全記事がアフィリエイトリンクを表示するようになったため、
         // purchaseLinkStatus に関わらず検証を実行する。
@@ -87,7 +89,9 @@ describe("article CTA layout vs metadata productCount", () => {
               article.purchaseLinkStatus === "unverified" ||
               !isComparison)
               ? 0
-              : set.cardsPerProduct * article.productCount;
+              : set.comparisonOnly && nextStepPurchaseDisabled
+                ? 0
+                : set.cardsPerProduct * article.productCount;
           if (set.comparisonOnly) {
             expect(
               nextStepBuyCount,
@@ -110,7 +114,7 @@ describe("article CTA layout vs metadata productCount", () => {
             ? expectedPurchaseCtasPerArticle(
                 article.productCount,
                 ARTICLE_LAYOUT,
-              )
+              ) - (nextStepPurchaseDisabled ? article.productCount : 0)
             : ARTICLE_LAYOUT.ctaSets
                 .filter((set) => !set.comparisonOnly)
                 .reduce(

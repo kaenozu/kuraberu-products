@@ -220,12 +220,19 @@ export function validateRenderedHtml({ distDirectory = "dist" } = {}) {
       )?.[1] ?? null;
     const hasPurchaseCtas =
       purchaseLinkStatus === "verified" || purchaseLinkStatus === "direct";
+    const nextStepPurchaseDisabled = /data-next-step-purchase="disabled"/i.test(
+      html,
+    );
     const expectedCtaCount = !hasPurchaseCtas
       ? 0
-      : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT);
+      : expectedPurchaseCtasPerArticle(productCount, ARTICLE_LAYOUT) -
+        (nextStepPurchaseDisabled ? productCount : 0);
     const expectedCtasByPlacement = !hasPurchaseCtas
       ? {}
       : expectedPlacementCounts(productCount, ARTICLE_LAYOUT);
+    if (nextStepPurchaseDisabled) {
+      expectedCtasByPlacement["next-step"] = 0;
+    }
     errors.push(...validateArticleContentType(relative, html, productCount));
     errors.push(...validateSourceToggle(relative, html));
     errors.push(...validateArticleTrustLine(relative, html));

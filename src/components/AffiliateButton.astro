@@ -79,12 +79,8 @@ const valid = isVerifiedRakutenPurchaseDestination(resolvedHref) && (isRakutenPr
 const ctaRel = isAffiliateHref
   ? 'sponsored nofollow noopener noreferrer'
   : 'nofollow noopener noreferrer';
-const ctaLabel = isAffiliateHref
-  ? label
-  : '楽天市場で商品ページを見る';
-const ctaSubLabel = isAffiliateHref
-  ? (subLabel ?? '商品ページを確認する')
-  : '商品ページを確認する';
+const ctaLabel = label ?? '楽天市場で商品ページを見る';
+const ctaSubLabel = isAffiliateHref ? (subLabel ?? '') : '';
 const resolvedImage = resolveImage(imagePath);
 ---
 {valid ? (
@@ -103,7 +99,7 @@ const resolvedImage = resolveImage(imagePath);
     )}
     <span class="cta-card-body">
       <span class="cta-card-label">{ctaLabel}</span>
-      <span class="cta-card-sub">{ctaSubLabel} →{isAffiliateHref && <span class="ad-note">（広告）</span>}</span>
+      <span class="cta-card-sub">{ctaSubLabel}{ctaSubLabel ? ' ' : ''}→{isAffiliateHref && <span class="ad-note">（広告）</span>}</span>
     </span>
   </a>
 ) : (

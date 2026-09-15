@@ -188,7 +188,10 @@ export function validateArticleNextStep(relative, html) {
       /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
     ),
   ];
-  const expectedBuyLinks = hasPurchaseCtas ? 2 : 0;
+  const nextStepPurchaseDisabled = /data-next-step-purchase="disabled"/i.test(
+    section,
+  );
+  const expectedBuyLinks = !nextStepPurchaseDisabled && hasPurchaseCtas ? 2 : 0;
   if (buyLinks.length !== expectedBuyLinks) {
     errors.push(
       `${relative}: next-step block must render exactly ${expectedBuyLinks} purchase buttons (next-step__buy), found ${buyLinks.length}`,

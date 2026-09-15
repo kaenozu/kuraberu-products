@@ -24,6 +24,21 @@ describe("Amazon Associates integration", () => {
     vi.unstubAllEnvs();
   });
 
+  it("keeps the thermos comparison wired to both verified product ASINs", () => {
+    const source = readFileSync(
+      "src/pages/articles/thermos-tiger-bottle/index.astro",
+      "utf8",
+    );
+    expect(source).toContain(
+      "amazonHref: 'https://www.amazon.co.jp/dp/B0D9XZ5MQF'",
+    );
+    expect(source).toContain(
+      "amazonHref: 'https://www.amazon.co.jp/dp/B0FGCX6KN4'",
+    );
+    expect(source).toContain("showAmazon={true}");
+    expect(source).toContain("showNextStepPurchaseCtas={false}");
+  });
+
   it("normalizes an optional tracking ID and rejects malformed values", () => {
     expect(normalizeOptionalAmazonAssociateTag(undefined)).toBeUndefined();
     expect(normalizeOptionalAmazonAssociateTag("   ")).toBeUndefined();
