@@ -69,6 +69,14 @@ Remote-only作業では、ローカルworktreeの有無やローカルprocessを
 - errorの握りつぶし、test skip、型安全性低下、lint無効化で問題を隠しません。
 - network処理にはtimeoutと安全なfallbackを設けます。
 
+## サイト構造とコンテンツ編集（このリポジトリ固有）
+
+- Astro静的サイト（`output: "static"`）。記事は `src/content/articles/` 配下のTypeScriptファイルで `defineArticleMetadata()` を使って定義し、`src/content/articles/index.ts` が単一レジストリとして再exportする（消費者コードはここだけをimportする）。
+- 新規記事の雛形は `pnpm article:add`（`node scripts/article-add.mjs`）で生成する。
+- 購入リンクは `src/data/article-purchase-links.json` と各記事の `purchaseLinkStatus` をセットで管理する。`purchaseLinkStatus` は `verified` / `unverified` / `unavailable` を基本とし、楽天商品詳細URL（`item.rakuten.co.jp`）を直接参照する場合は `direct` を使う（`check:rendered` は `verified` と `direct` を購入CTA表示対象にする）。`check:purchase-link-consistency` が整合性を検証する（ネットワーク検証。オフライン時は `ALLOW_NETWORK_SKIP=1` で警告のみになる）。
+- 記事・カテゴリ追加の手順は `docs/site-management.md`、記事候補の管理は `docs/article-backlog.md`、リサーチの雛形は `docs/article-research-template.md` を参照する。
+- 用語表記の扱い（例: 「沸とう」）は `CONTRIBUTING.md` を正とする。
+
 ## コンテンツと広告
 
 - メーカー等の一次情報を優先し、確認日と参照先を残します。
@@ -79,6 +87,8 @@ Remote-only作業では、ローカルworktreeの有無やローカルprocessを
 
 ## 秘密情報と本番操作
 
+GitHub mergeは本番反映を意味しません。本番反映は `tools/production/Invoke-ProductionBuildAndDeploy.ps1` か `.github/workflows/deploy-production.yml` の workflow_dispatch（`expected_sha` + `confirm: DEPLOY`）でのみ行います。
+
 次は明示的な許可なしに実施しません。
 
 - Production deploy、traffic切替、公開URL変更
@@ -88,32 +98,30 @@ Remote-only作業では、ローカルworktreeの有無やローカルprocessを
 
 秘密情報、接続文字列、token、個人情報をlog、screenshot、commit、Issue、PRへ含めません。
 
+## ローカル実行環境（Windows開発機の注意）
+
+- PowerShellの実行ポリシーで `pnpm.ps1` が起動できないため、pnpmは `& "$env:APPDATA\npm\pnpm.cmd" ...` で呼ぶ。Nodeは `.node-version`（24）、正規のinstall経路は `corepack enable` + `pnpm install --frozen-lockfile`。
+- worktreeに新規 `pnpm install --frozen-lockfile` すると、`satteri` のoptional native binding欠落でvitest（astro経由の `vitest.config.ts` 読み込み）が `ERR_DLOPEN_FAILED` で起動しない事象がある。回避はastroをimportしない最小の仮vitest configを一時配置して純ロジックの `tests/` だけ実行し、実行後に削除する。リポジトリ直下（`main` checkout）のnode_modulesは正常で、単独のworktreeにinstallし直す必要はない。
+- `DEPLOYMENT_ENV` は未設定時 `preview`。production buildは `PUBLIC_SITE_URL` 等が必須で、`config/runtime-env.mjs` がビルド開始時に検査する（不足だとビルド失敗）。個別コマンドの一覧は `CONTRIBUTING.md` を参照。
+
 ## 検証
 
 ### ローカル作業
 
-変更内容に応じ、次を直列で実行します。
+検証は対象に応じて次の3段階で行います（個別コマンドの実体は `package.json`、一覧は `CONTRIBUTING.md` を正とする）。
 
-```bash
-pnpm format:check
-pnpm lint
-pnpm typecheck
-pnpm validate:env
-pnpm validate:content
-pnpm build
-pnpm check:rendered
-pnpm check:deployment
-pnpm check:external-link-syntax
-pnpm check:official-links
-pnpm check:source-relevancy
-pnpm check:price-claims
-pnpm check:csp-embed
-pnpm check:spec-claims
-pnpm test
-git diff --check
-```
+- 反復中（build・network不要）: `pnpm verify:fast`
+- Ready化前のフルゲート: `pnpm verify`（＝ `verify:lint` + `verify:build`。`verify:build` が先頭で `astro build` するため、`verify` 単体でformat/lint/typecheck/env/content/build/生成物検証/vitestが一巡する）→ 最後に `git diff --check`
+- dist・browser依存: `pnpm test:dist`（build後のdist検証）、`pnpm test:e2e`（`pnpm exec playwright install chromium` が必要）。E2Eの失敗をskip・timeout延長・assertion弱体化で隠さない。
 
-終了codeだけでなく、実行件数、skip、warning、生成page数、差分を確認します。Production設定検証はtest用URLを使い、本物のsecretを使用しません。
+注意点:
+
+- `verify:lint` は vitest（coverage付き）と購入リンク整合性（ネットワーク）を含む。CIは `ALLOW_NETWORK_SKIP=1` で実行される。
+- `check:source-relevancy` / `check:price-claims` は warn-first（`--strict` 付きでのみ失敗）。公式ページの例外は `docs/source-relevancy-allowlist.md` に登録する。
+- 外部リンクの実到達性（200〜399=OK / 404・410=失敗 / 403・429・5xx=警告）は `check:external-link-reachability` が別ゲート。
+- Production設定の検証はtest用URL（`.invalid`）を使い、本物のsecretは使わない。
+
+終了codeだけでなく、実行件数、skip、warning、生成page数、差分も確認します。
 
 ### Remote-only GitHub作業
 
