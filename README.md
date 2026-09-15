@@ -85,7 +85,7 @@ Production では次が必須です。
 - `PUBLIC_CONTACT_URL`: 問い合わせ先 HTTPS URL
 - `PUBLIC_BUILD_SHA`: デプロイ検証用のビルド元コミットSHA。`tools/production/Invoke-ProductionBuildAndDeploy.ps1` が本番ビルド時に自動注入し、`Invoke-PostDeployVerification.ps1` が配信HTMLの `meta[name=build-sha]` と突合する。通常は手動設定不要。
 
-`PUBLIC_AMAZON_ASSOCIATE_TAG` を設定したビルドでは、Amazonアソシエイト・プログラムの識別文言を共通フッターに表示します。実際のトラッキングIDはコードやIssue/PRへ記録せず、デプロイ環境から注入してください。
+`PUBLIC_AMAZON_ASSOCIATE_TAG` を設定したビルドでは、Amazonアソシエイト・プログラムの識別文言を共通フッターに表示します。ProductionではAmazon導線を公開条件にするため、この値が必須です。実際のトラッキングIDはコードやIssue/PRへ記録せず、デプロイ環境から注入してください。
 
 お問い合わせAPI（`/api/contact`）の同一IPからの連続送信は、`wrangler.jsonc` の `ratelimits` バインディング（Workers Rate Limiting API）で1分あたり5件に制限しています。カウンタはCloudflareロケーション単位・結果整合性のため、厳密な会計ではなくスパム抑止です。バインディング未設定またはRate Limiting APIエラー時は **503でfail-closed** とし、レート制限を迂回して送信を継続しません。通常の上限超過は429と`Retry-After`を返します。`namespace_id` はこのアカウント内で一意な正の整数文字列を選んでください。
 

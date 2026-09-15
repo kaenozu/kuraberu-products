@@ -26,7 +26,7 @@ interface Props {
    * AffiliateButton 側で URL の妥当性を検証する。
    */
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
-  /** Amazon商品詳細URL。未指定時は試験用検索URLへフォールバックする。 */
+  /** Amazon商品詳細URL。未指定時は商品名の検索結果へリンクする。 */
   amazonHref?: string;
   showAmazon?: boolean;
 }
@@ -44,7 +44,7 @@ const {
   imageUrl,
   purchaseLinkStatus,
   amazonHref,
-  showAmazon = false,
+  showAmazon = Boolean(import.meta.env.PUBLIC_AMAZON_ASSOCIATE_TAG?.trim()),
 } = Astro.props;
 
 // unverified / unavailable の購入リンクは CTA を表示しない (#549)。
@@ -85,7 +85,7 @@ const resolvedImage = resolveImage(imagePath);
       <AffiliateButton
         href={href}
         productId={productId}
-        label="楽天市場で確認する"
+        label="楽天市場で商品ページを見る"
         imagePath={imagePath}
         placement={placement}
         searchQuery={searchQuery}

@@ -18,6 +18,7 @@ function exampleEnvVars(): Set<string> {
 const productionBase = {
   DEPLOYMENT_ENV: "production",
   PUBLIC_SITE_URL: "https://kuraberu-products.pages.dev",
+  PUBLIC_AMAZON_ASSOCIATE_TAG: "example-22",
 } as const;
 
 describe("environment variable configuration", () => {
@@ -99,6 +100,18 @@ describe("environment variable configuration", () => {
         PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
       }),
     ).toThrow(/Production purchase links/);
+  });
+
+  it("rejects production without the Amazon Associates tag", () => {
+    const { PUBLIC_AMAZON_ASSOCIATE_TAG: _tag, ...withoutAmazonTag } =
+      productionBase;
+    expect(() =>
+      validateBuildEnvironment({
+        ...withoutAmazonTag,
+        PUBLIC_RAKUTEN_PREMIUM_URL: "https://hb.afl.rakuten.co.jp/ci/premium",
+        PUBLIC_RAKUTEN_SARASARA_URL: "https://hb.afl.rakuten.co.jp/ci/sarasara",
+      }),
+    ).toThrow(/PUBLIC_AMAZON_ASSOCIATE_TAG/);
   });
 
   it("rejects partial API credentials and unsafe public URLs", () => {

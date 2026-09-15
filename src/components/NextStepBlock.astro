@@ -33,9 +33,11 @@ interface Props {
   diagnosisHref?: string;
   /** 購入リンクの検証状態。verified を明示した場合だけ CTA を表示する。 */
   purchaseLinkStatus: "verified" | "direct" | "unverified" | "unavailable";
+  /** 購入導線を記事末尾カードへ一本化する記事では false。 */
+  showPurchaseCtas?: boolean;
 }
 
-const {left, right, diagnosisHref, purchaseLinkStatus} = Astro.props;
+const {left, right, diagnosisHref, purchaseLinkStatus, showPurchaseCtas = true} = Astro.props;
 const leftImage = resolveImage(left.image);
 const rightImage = resolveImage(right.image);
 // #436: 購入リンクは「pc 到達先が商品詳細ページのアフィリエイトURL」か
@@ -54,12 +56,12 @@ const leftCta = showCta ? leftHref : undefined;
 const rightCta = showCta ? rightHref : undefined;
 ---
 
-<section class="next-step" aria-label="次にすること" data-next-step>
+<section class="next-step" aria-label="次にすること" data-next-step data-next-step-purchase={showPurchaseCtas ? "enabled" : "disabled"}>
   <div class="subsection-heading">
     <p class="section-label">次にすること</p>
     <h2 id="next-step">迷ったら、ここから決める</h2>
   </div>
-  {(leftCta || rightCta) ? (
+  {showPurchaseCtas && (leftCta || rightCta) ? (
     <div class="next-step__grid">
       {leftCta ? (
         <a
@@ -98,10 +100,12 @@ const rightCta = showCta ? rightHref : undefined;
         </a>
       ) : null}
     </div>
-  ) : (
+  ) : showPurchaseCtas ? (
     <p class="next-step__buy next-step__buy--missing next-step__buy--single" data-purchase-status={purchaseLinkStatus}>
       販売先を確認中です
     </p>
+  ) : (
+    <p class="next-step__note">購入リンクは記事末尾の購入カードにまとめています。</p>
   )}
   {diagnosisHref ? (
     <p class="next-step__diagnosis">

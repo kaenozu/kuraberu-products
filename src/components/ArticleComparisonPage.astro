@@ -81,8 +81,10 @@ interface Props {
   purchaseWarning?: string;
   disclaimer?: string;
   diagnosisHref?: string;
-  /** Amazon CTAを記事単位で試験公開する場合だけtrueにする。 */
+  /** Amazon CTAの表示を記事単位で上書きする。既定値は購入カード側で環境変数から決める。 */
   showAmazon?: boolean;
+  /** 購入CTAを記事末尾カードに一本化する場合は false。 */
+  showNextStepPurchaseCtas?: boolean;
 }
 
 // 型アサーション（as）ではなく Props 注釈で受ける。
@@ -328,7 +330,7 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
     <ComparisonMemoButton articleId={articleMetadata.id} />
     <p class="lead">{lead}</p>
     <nav class="jump-nav" aria-label="ページ内ジャンプ"><a href="#key-differences">違い</a><a href="#decision-guide">結局どっち？</a><a href="#faq">FAQ</a></nav>
-    <ArticleComparisonV2 left={left} right={right} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} purchaseLinkStatus={articleMetadata.purchaseLinkStatus} diagnosisHref={resolved.diagnosisHref} />
+    <ArticleComparisonV2 left={left} right={right} rows={keyDiffRows} checkedAt={articleMetadata.productInfoCheckedAt} purchaseLinkStatus={articleMetadata.purchaseLinkStatus} diagnosisHref={resolved.diagnosisHref} showNextStepPurchaseCtas={props.showNextStepPurchaseCtas} />
     {summaryParagraph && <p>{summaryParagraph}</p>}
     <details class="fold-section" id="specs" open>
       <summary>詳細仕様（公式ページで確認した項目）</summary>
