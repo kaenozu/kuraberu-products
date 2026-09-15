@@ -218,7 +218,7 @@ a {
   outline-offset: 3px;
   border-radius: var(--radius-sm);
 }
-.faq-item h3 {
+.faq-item summary > span {
   font-size: 1.05rem;
   margin: 0;
   line-height: 1.4;
