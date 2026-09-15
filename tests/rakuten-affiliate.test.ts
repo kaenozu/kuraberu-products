@@ -59,7 +59,7 @@ describe("toAffiliateRakutenSearchUrl / toAffiliateRakutenUrl (#387)", () => {
   });
 
   it("prefers RAKUTEN_AFFILIATE_ID when it is a well-formed affiliate ID", () => {
-    const custom = "0123456789abcdef.01234567.fedcba9876543210.89abcdef";
+    const custom = "01234567.89abcdef.01234567.89abcdef";
     const url = toAffiliateRakutenUrl(
       "https://search.rakuten.co.jp/search/mall/F-YHVX120",
       undefined,

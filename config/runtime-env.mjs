@@ -211,7 +211,7 @@ export function isVerifiedRakutenPurchaseDestination(value) {
 // 環境変数なしでも壊れないため）。商品ソース側に hb.afl を直書きしない。
 const DEFAULT_RAKUTEN_AFFILIATE_ID = "34e76967.d5cc3ae1.34e76968.3eade5e6";
 const RAKUTEN_AFFILIATE_ID_PATTERN =
-  /^[0-9a-f]{16}\.[0-9a-f]{8}\.[0-9a-f]{16}\.[0-9a-f]{8}$/i;
+  /^[0-9a-f]{8}\.[0-9a-f]{8}\.[0-9a-f]{8}\.[0-9a-f]{8}$/i;
 
 function rakutenAffiliateRedirectPrefix(environment = process.env) {
   const defaultPrefix = `https://hb.afl.rakuten.co.jp/hgc/${DEFAULT_RAKUTEN_AFFILIATE_ID}/?pc=`;
