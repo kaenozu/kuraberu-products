@@ -71,6 +71,9 @@ interface Props {
   socialProofCheckedAt?: string;
   socialProofHasPosts?: boolean;
   socialProofBestMatch?: string;
+  socialProofLinks?: readonly { label: string; href: string; note?: string }[];
+  socialProofSearchLabel?: string;
+  socialProofSearchCaption?: string;
   embeds?: readonly { provider: string; url: string; title: string; match: string; purpose?: string; tone?: string; autoload?: boolean; compact?: boolean }[];
   faqEntries?: readonly { question: string; answer: string }[];
   leftPurchaseName?: string;
@@ -105,6 +108,9 @@ let resolved: {
   socialProofCheckedAt?: string;
   socialProofHasPosts?: boolean;
   socialProofBestMatch?: string;
+  socialProofLinks?: readonly { label: string; href: string; note?: string }[];
+  socialProofSearchLabel?: string;
+  socialProofSearchCaption?: string;
   embeds?: readonly { provider: string; url: string; title: string; match: string; purpose?: string; tone?: string; autoload?: boolean; compact?: boolean }[];
   faqEntries: readonly { question: string; answer: string }[];
   leftPurchaseName: string;
@@ -298,6 +304,9 @@ if (props.articleId) {
     socialProofCheckedAt: props.socialProofCheckedAt,
     socialProofHasPosts: props.socialProofHasPosts,
     socialProofBestMatch: props.socialProofBestMatch,
+    socialProofLinks: props.socialProofLinks,
+    socialProofSearchLabel: props.socialProofSearchLabel,
+    socialProofSearchCaption: props.socialProofSearchCaption,
     embeds: props.embeds,
     faqEntries: props.faqEntries,
     leftPurchaseName: props.leftPurchaseName,
@@ -382,6 +391,9 @@ const specRows = (specRowsProp ?? keyDiffRows.map((r) => ({ label: r.label, left
         checkedAt={resolved.socialProofCheckedAt}
         hasPosts={resolved.socialProofHasPosts}
         bestMatch={resolved.socialProofBestMatch as any}
+        directPosts={resolved.socialProofLinks}
+        searchLabel={resolved.socialProofSearchLabel}
+        searchCaption={resolved.socialProofSearchCaption}
       >
         {resolved.embeds && resolved.embeds.length > 0 && (
           <div class="sns-embeds">
