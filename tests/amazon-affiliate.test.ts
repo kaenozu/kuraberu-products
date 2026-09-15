@@ -134,6 +134,40 @@ describe("Amazon Associates integration", () => {
     expect(html).toContain("（広告）");
   });
 
+  it("shows a tracked Amazon search CTA on every verified card when configured", async () => {
+    vi.stubEnv("PUBLIC_AMAZON_ASSOCIATE_TAG", "example-22");
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(PurchaseCard, {
+      props: {
+        name: "タイガー MTA-J050",
+        audience: "持ち運びやすさを優先する人向け",
+        href: validRakutenUrl,
+        purchaseLinkStatus: "verified",
+      },
+    });
+
+    expect(html).toContain(
+      "/s?k=%E3%82%BF%E3%82%A4%E3%82%AC%E3%83%BC+MTA-J050&amp;tag=example-22",
+    );
+    expect(html).toContain('rel="sponsored nofollow noopener noreferrer"');
+    expect(html).toContain('data-amazon-cta="purchase"');
+    expect(html).toContain("（広告）");
+  });
+
+  it("does not show a default Amazon CTA when no associate ID is configured", async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(PurchaseCard, {
+      props: {
+        name: "タイガー MTA-J050",
+        audience: "持ち運びやすさを優先する人向け",
+        href: validRakutenUrl,
+        purchaseLinkStatus: "verified",
+      },
+    });
+
+    expect(html).not.toContain("data-amazon-cta=");
+  });
+
   it("suppresses the Amazon CTA when purchaseLinkStatus is unverified (#549)", async () => {
     vi.stubEnv("PUBLIC_AMAZON_ASSOCIATE_TAG", "example-22");
     const container = await AstroContainer.create();

@@ -616,14 +616,18 @@ describe.skipIf(!hasDist)("article diagnosis CTA (rendered dist)", () => {
         /<a\b[^>]*class="[^"]*\bnext-step__buy\b[^"]*"[^>]*>/gi,
       );
       const article = articleMetadata.find((item) => item.id === slug);
+      const nextStepPurchaseDisabled =
+        /data-next-step-purchase="disabled"/i.test(html);
       expect(
         buyLinks?.length ?? 0,
-        `${slug}: next-step has 2 purchase buttons unless unavailable`,
+        `${slug}: next-step purchase buttons respect the article layout`,
       ).toBe(
-        article?.purchaseLinkStatus === "verified" ||
-          article?.purchaseLinkStatus === "direct"
-          ? 2
-          : 0,
+        nextStepPurchaseDisabled
+          ? 0
+          : article?.purchaseLinkStatus === "verified" ||
+              article?.purchaseLinkStatus === "direct"
+            ? 2
+            : 0,
       );
       const specsIndex = html.indexOf('id="specs"');
       const blockIndex = html.indexOf('class="next-step"');

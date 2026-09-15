@@ -81,7 +81,7 @@ interface Props {
   purchaseWarning?: string;
   disclaimer?: string;
   diagnosisHref?: string;
-  /** Amazon CTAを記事単位で試験公開する場合だけtrueにする。 */
+  /** Amazon CTAの表示を記事単位で上書きする。既定値は購入カード側で環境変数から決める。 */
   showAmazon?: boolean;
   /** 購入CTAを記事末尾カードに一本化する場合は false。 */
   showNextStepPurchaseCtas?: boolean;
